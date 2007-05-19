@@ -68,6 +68,15 @@ namespace EVEMon.SkillPlanner
             this.lblComparedToBase = new System.Windows.Forms.Label();
             this.lblThisDate = new System.Windows.Forms.Label();
             this.lblThisSpan = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mnLoadAtts = new System.Windows.Forms.ToolStripMenuItem();
+            this.miNoImplants = new System.Windows.Forms.ToolStripMenuItem();
+            this.miCurrentClone = new System.Windows.Forms.ToolStripMenuItem();
+            this.miJumpClone1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miJumpClone2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miJumpClone3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miJumpClone4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miJumpClone5 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).BeginInit();
@@ -79,6 +88,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -396,7 +406,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripLabel1,
             this.toolStripButton1,
             this.toolStripButton2});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(558, 25);
             this.toolStrip1.TabIndex = 1;
@@ -533,6 +543,80 @@ namespace EVEMon.SkillPlanner
             this.lblThisSpan.TabIndex = 0;
             this.lblThisSpan.Text = "label23";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnLoadAtts});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(558, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // mnLoadAtts
+            // 
+            this.mnLoadAtts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miNoImplants,
+            this.miCurrentClone,
+            this.miJumpClone1,
+            this.miJumpClone2,
+            this.miJumpClone3,
+            this.miJumpClone4,
+            this.miJumpClone5});
+            this.mnLoadAtts.Name = "mnLoadAtts";
+            this.mnLoadAtts.Size = new System.Drawing.Size(105, 20);
+            this.mnLoadAtts.Text = "Load Attributes...";
+            this.mnLoadAtts.DropDownOpening += new System.EventHandler(this.mnLoadAtts_DropDownOpening);
+            // 
+            // miNoImplants
+            // 
+            this.miNoImplants.Name = "miNoImplants";
+            this.miNoImplants.Size = new System.Drawing.Size(152, 22);
+            this.miNoImplants.Text = "No Implants";
+            this.miNoImplants.Click += new System.EventHandler(this.miNoImplants_Click);
+            // 
+            // miCurrentClone
+            // 
+            this.miCurrentClone.Name = "miCurrentClone";
+            this.miCurrentClone.Size = new System.Drawing.Size(152, 22);
+            this.miCurrentClone.Text = "Current Clone";
+            this.miCurrentClone.Click += new System.EventHandler(this.miCurrentClone_Click);
+            // 
+            // miJumpClone1
+            // 
+            this.miJumpClone1.Name = "miJumpClone1";
+            this.miJumpClone1.Size = new System.Drawing.Size(152, 22);
+            this.miJumpClone1.Text = "Jump Clone 1";
+            this.miJumpClone1.Click += new System.EventHandler(this.miJumpClone1_Click);
+            // 
+            // miJumpClone2
+            // 
+            this.miJumpClone2.Name = "miJumpClone2";
+            this.miJumpClone2.Size = new System.Drawing.Size(152, 22);
+            this.miJumpClone2.Text = "Jump Clone 2";
+            this.miJumpClone2.Click += new System.EventHandler(this.miJumpClone2_Click);
+            // 
+            // miJumpClone3
+            // 
+            this.miJumpClone3.Name = "miJumpClone3";
+            this.miJumpClone3.Size = new System.Drawing.Size(152, 22);
+            this.miJumpClone3.Text = "Jump Clone 3";
+            this.miJumpClone3.Click += new System.EventHandler(this.miJumpClone3_Click);
+            // 
+            // miJumpClone4
+            // 
+            this.miJumpClone4.Name = "miJumpClone4";
+            this.miJumpClone4.Size = new System.Drawing.Size(152, 22);
+            this.miJumpClone4.Text = "Jump Clone 4";
+            this.miJumpClone4.Click += new System.EventHandler(this.miJumpClone4_Click);
+            // 
+            // miJumpClone5
+            // 
+            this.miJumpClone5.Name = "miJumpClone5";
+            this.miJumpClone5.Size = new System.Drawing.Size(152, 22);
+            this.miJumpClone5.Text = "Jump Clone 5";
+            this.miJumpClone5.Click += new System.EventHandler(this.miJumpClone5_Click);
+            // 
             // ImplantCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -542,7 +626,9 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "ImplantCalculator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -564,6 +650,8 @@ namespace EVEMon.SkillPlanner
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -610,5 +698,14 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblComparedToCurrent;
         private System.Windows.Forms.Label lblComparedToBase;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnLoadAtts;
+        private System.Windows.Forms.ToolStripMenuItem miNoImplants;
+        private System.Windows.Forms.ToolStripMenuItem miCurrentClone;
+        private System.Windows.Forms.ToolStripMenuItem miJumpClone1;
+        private System.Windows.Forms.ToolStripMenuItem miJumpClone2;
+        private System.Windows.Forms.ToolStripMenuItem miJumpClone3;
+        private System.Windows.Forms.ToolStripMenuItem miJumpClone4;
+        private System.Windows.Forms.ToolStripMenuItem miJumpClone5;
     }
 }

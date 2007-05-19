@@ -136,12 +136,40 @@ namespace EVEMon.SkillPlanner
             CalculatePlanTimes();
         }
 
+        private void LoadImplantSet(string implantSet)
+        {
+            m_disablePlanCalc = true;
+            try
+            {
+                LoadAttribute(EveAttribute.Intelligence, nudIntelligence, implantSet);
+                LoadAttribute(EveAttribute.Charisma, nudCharisma, implantSet);
+                LoadAttribute(EveAttribute.Perception, nudPerception, implantSet);
+                LoadAttribute(EveAttribute.Memory, nudMemory, implantSet);
+                LoadAttribute(EveAttribute.Willpower, nudWillpower, implantSet);
+            }
+            finally
+            {
+                m_disablePlanCalc = false;
+            }
+
+            CalculatePlanTimes();
+        }
+
+
         private void LoadAttribute(EveAttribute attrib, NumericUpDown nud, bool withImplants)
         {
             int baseAttr =
                 Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, withImplants));
             nud.Value = baseAttr;
         }
+
+        private void LoadAttribute(EveAttribute attrib, NumericUpDown nud, string implantSet)
+        {
+            int baseAttr =
+                Convert.ToInt32(m_grandCharacterInfo.GetEffectiveAttribute(attrib, null, false, implantSet));
+            nud.Value = baseAttr;
+        }
+
 
         private void nudIntelligence_ValueChanged(object sender, EventArgs e)
         {
@@ -314,5 +342,50 @@ namespace EVEMon.SkillPlanner
             if (m_planEditor == null) return;
             m_planEditor.ShowWithImplantCalc(this);
         }
+
+        private void mnLoadAtts_DropDownOpening(object sender, EventArgs e)
+        {
+            int numClones = m_grandCharacterInfo.GetSkill("Infomorph Psychology").Level;
+            ToolStripItemCollection  menuItems = mnLoadAtts.DropDownItems;
+            for (int i = 2 + numClones; i < 7; i++) menuItems[i].Enabled = false;
+        }
+
+        private void miNoImplants_Click(object sender, EventArgs e)
+        {
+            LoadCurrent(false);
+        }
+
+
+        private void miCurrentClone_Click(object sender, EventArgs e)
+        {
+            LoadCurrent(true);
+        }
+
+        // WARNING!! If / When implants get named then this code must be amended!!!
+        private void miJumpClone1_Click(object sender, EventArgs e)
+        {
+            LoadImplantSet("Clone 1");
+        }
+
+        private void miJumpClone2_Click(object sender, EventArgs e)
+        {
+            LoadImplantSet("Clone 2");
+        }
+
+        private void miJumpClone3_Click(object sender, EventArgs e)
+        {
+            LoadImplantSet("Clone 3");
+        }
+
+        private void miJumpClone4_Click(object sender, EventArgs e)
+        {
+            LoadImplantSet("Clone 4");
+        }
+
+        private void miJumpClone5_Click(object sender, EventArgs e)
+        {
+            LoadImplantSet("Clone 5");
+        }
+
     }
 }

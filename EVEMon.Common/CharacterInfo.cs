@@ -455,11 +455,36 @@ namespace EVEMon.Common
                                             bool includeLearning, bool includeImplants)
         {
             double result = Convert.ToDouble(m_attributes[attribute]);
-            double learningBonus = 1.0F;
             if (includeImplants)
             {
                 result += getImplantValue(attribute);
             }
+ 
+            return ApplyLearningToAttribute(attribute, scratchpad, includeLearning, result);
+        }
+
+        public double GetEffectiveAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad,
+                                            bool includeLearning, string implantSet)
+        {
+            double result = Convert.ToDouble(m_attributes[attribute]);
+
+            if (m_implantSets.ContainsKey(implantSet))
+            {
+                ImplantSet impSet = m_implantSets[implantSet];
+                int ind = (int)attribute;
+                UserImplant imp = impSet[ind];
+                if (imp != null)
+                    result += imp.Bonus;
+            }
+            return ApplyLearningToAttribute(attribute, scratchpad, includeLearning, result);
+        }
+
+
+        private double ApplyLearningToAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad,
+                                    bool includeLearning, double attributeValue)
+        {
+            double result = attributeValue;
+            double learningBonus = 1.0F;
 
             // XXX: include implants on scratchpad?
             SkillGroup learningSg = m_skillGroups["Learning"];
@@ -508,6 +533,7 @@ namespace EVEMon.Common
                 return result;
             }
         }
+
 
         public double getImplantValue(EveAttribute eveAttribute)
         {
@@ -821,6 +847,10 @@ namespace EVEMon.Common
                             z[y.Slot - 1] = y;
                     }
                     string key = string.Empty;
+
+                    // WARNING! If (or when) clones get proper james, then the implant calc
+                    // will need amending too - see WARNING comment in ImplantCalculator.cs
+                    // in the menu event handlers
                     switch (x.Number)
                     {
                         case 0:
