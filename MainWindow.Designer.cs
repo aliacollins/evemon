@@ -74,6 +74,7 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcCharacterTabs = new EVEMon.DraggableTabControl();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -274,6 +275,7 @@ namespace EVEMon
             // plansToolStripMenuItem
             // 
             this.plansToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
             this.manageToolStripMenuItem,
             this.toolStripSeparator7});
             this.plansToolStripMenuItem.Name = "plansToolStripMenuItem";
@@ -431,6 +433,13 @@ namespace EVEMon
             this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
             this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
             // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
+            this.newToolStripMenuItem.Text = "&NewÅc";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -505,5 +514,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem inEvenetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOwnedSkillbooksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sendToInEveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
     }
 }

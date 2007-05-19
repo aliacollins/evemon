@@ -1225,9 +1225,9 @@ namespace EVEMon
 
         private void plansToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            while (plansToolStripMenuItem.DropDownItems.Count > 2)
+            while (plansToolStripMenuItem.DropDownItems.Count > 3)
             {
-                plansToolStripMenuItem.DropDownItems.RemoveAt(2);
+                plansToolStripMenuItem.DropDownItems.RemoveAt(3);
             }
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm == null)
@@ -1260,6 +1260,15 @@ namespace EVEMon
             if (cm != null)
             {
                 cm.ShowPlanSelectWindow();
+            }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm != null)
+            {
+                cm.ShowNewPlanWindow();
             }
         }
 
