@@ -254,7 +254,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.miNewPlan.Name = "miNewPlan";
             this.miNewPlan.Size = new System.Drawing.Size(257, 24);
-            this.miNewPlan.Text = "&New PlanÅc";
+            this.miNewPlan.Text = "&New Plan‚Ä¶";
             this.miNewPlan.Click += new System.EventHandler(this.miNewPlan_Click);
             // 
             // miLoadPlanFromFile
@@ -262,14 +262,14 @@ namespace EVEMon.SkillPlanner
             this.miLoadPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miLoadPlanFromFile.Image")));
             this.miLoadPlanFromFile.Name = "miLoadPlanFromFile";
             this.miLoadPlanFromFile.Size = new System.Drawing.Size(257, 24);
-            this.miLoadPlanFromFile.Text = "&Load Plan from FileÅc";
+            this.miLoadPlanFromFile.Text = "&Load Plan from File‚Ä¶";
             this.miLoadPlanFromFile.Click += new System.EventHandler(this.miLoadPlanFromFile_Click);
             // 
             // miLoadPlanFromCharacter
             // 
             this.miLoadPlanFromCharacter.Name = "miLoadPlanFromCharacter";
             this.miLoadPlanFromCharacter.Size = new System.Drawing.Size(257, 24);
-            this.miLoadPlanFromCharacter.Text = "Load Plan from &CharacterÅc";
+            this.miLoadPlanFromCharacter.Text = "Load Plan from &Character‚Ä¶";
             this.miLoadPlanFromCharacter.Click += new System.EventHandler(this.miLoadPlanFromCharacter_Click);
             // 
             // mEdit

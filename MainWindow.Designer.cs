@@ -437,7 +437,7 @@ namespace EVEMon
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
-            this.newToolStripMenuItem.Text = "&NewÅc";
+            this.newToolStripMenuItem.Text = "&New‚Ä¶";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // MainWindow
