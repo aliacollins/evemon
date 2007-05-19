@@ -40,6 +40,7 @@ namespace EVEMon
 
             slDevelopers.Add("mrcue", "03");
             slDevelopers.Add("Collin Grady", "03");
+            slDevelopers.Add("Grauw", "03");
 
             slDevelopers.Add("DCShadow", "04");
             slDevelopers.Add("Jalon Mevek", "04");
@@ -59,7 +60,6 @@ namespace EVEMon
             slDevelopers.Add("Galideeth", "05");
             slDevelopers.Add("gareth", "05");
             slDevelopers.Add("gavinl", "05");
-            slDevelopers.Add("Grauw", "05");
             slDevelopers.Add("happyslinky", "05");
             slDevelopers.Add("justinian", "05");
             slDevelopers.Add("Kw4h", "05");
