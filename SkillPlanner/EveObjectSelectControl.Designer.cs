@@ -28,17 +28,22 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EveObjectSelectControl));
             this.tbSearchText = new System.Windows.Forms.TextBox();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbSearchList = new System.Windows.Forms.ListBox();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbSkillFilter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tvItems = new CodersLab.Windows.Controls.TreeView();
+            this.contextMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -100,6 +105,28 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.TabIndex = 25;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 52);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(157, 24);
+            this.cmiExpandAll.Text = "Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(157, 24);
+            this.cmiCollapseAll.Text = "Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // panel1
             // 
@@ -167,6 +194,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tvItems
             // 
+            this.tvItems.ContextMenuStrip = this.contextMenu;
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Margin = new System.Windows.Forms.Padding(2);
@@ -189,6 +217,7 @@ namespace EVEMon.SkillPlanner
             this.Name = "EveObjectSelectControl";
             this.Size = new System.Drawing.Size(185, 398);
             this.Load += new System.EventHandler(this.EveObjectSelectControl_Load);
+            this.contextMenu.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
@@ -210,5 +239,8 @@ namespace EVEMon.SkillPlanner
         protected System.Windows.Forms.Label lbSearchTextHint;
         protected System.Windows.Forms.PictureBox pbSearchImage;
         protected System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
     }
 }

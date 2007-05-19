@@ -263,5 +263,15 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion
+
+        private void cmiExpandAll_Click(object sender, EventArgs e)
+        {
+            tvItems.ExpandAll();
+        }
+
+        private void cmiCollapseAll_Click(object sender, EventArgs e)
+        {
+            tvItems.CollapseAll();
+        }
     }
 }
