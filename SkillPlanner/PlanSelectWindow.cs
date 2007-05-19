@@ -71,7 +71,6 @@ namespace EVEMon.SkillPlanner
             try
             {
                 lbPlanList.Items.Clear();
-                lbPlanList.Items.Add("<New Plan>");
 
                 if (planCache == null || calculateTime) 
                 {
@@ -126,28 +125,15 @@ namespace EVEMon.SkillPlanner
 
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // If we have selected the <New Plan> (index 0) and any others then make it so we've
-            // selected only <New Plan>
-            if (lbPlanList.SelectedIndices.Contains(0) && lbPlanList.SelectedIndices.Count > 1)
-            {
-                lbPlanList.SelectedIndices.Clear();
-                lbPlanList.Items[0].Selected = true;
-            }
-
-            // If we have 1 and only 1 plan selected, and it isn't the <New Plan> we 
-            // can move it, rename it or delete it.
-            if (lbPlanList.SelectedItems.Count == 1 && !lbPlanList.SelectedIndices.Contains(0))
+            // If we have 1 and only 1 plan selected we can move it
+            if (lbPlanList.SelectedItems.Count == 1)
             {
                 int idx = lbPlanList.SelectedIndices[0];
-                tsbMoveUp.Enabled = (idx > 1);
+                tsbMoveUp.Enabled = (idx > 0);
                 tsbMoveDown.Enabled = (idx < lbPlanList.Items.Count - 1);
-                tsbRenamePlan.Enabled = true;
-				tsbDeletePlan.Enabled = true;
             } else {
                 tsbMoveUp.Enabled = false;
                 tsbMoveDown.Enabled = false;
-                tsbRenamePlan.Enabled = false;
-                tsbDeletePlan.Enabled = false;
             }
 
             // The Open button in enabled if there is at least 1 selected item
@@ -196,10 +182,6 @@ namespace EVEMon.SkillPlanner
                         }
                     }
                 }
-            }
-            else if (lbPlanList.SelectedIndices[0] == 0)
-            {
-                m_result = null;
             }
             else
             {
@@ -346,12 +328,12 @@ namespace EVEMon.SkillPlanner
         }
 
 
-        private void tsddFromFile_Click(object sender, EventArgs e)
+        private void miLoadPlanFromFile_Click(object sender, EventArgs e)
         {
             LoadPlan();
         }
 
-        private void tsddFromCharacter_Click(object sender, EventArgs e)
+        private void miLoadPlanFromCharacter_Click(object sender, EventArgs e)
         {
             using (CrossPlanSelect cps = new CrossPlanSelect(m_grandCharacterInfo.Name))
             {
@@ -398,7 +380,7 @@ namespace EVEMon.SkillPlanner
             PopulatePlanList(true);
         }
 
-        private void tsbRenamePlan_Click(object sender, EventArgs e)
+        private void miRename_Click(object sender, EventArgs e)
         {
             using (NewPlanWindow f = new NewPlanWindow())
             {
@@ -459,7 +441,7 @@ namespace EVEMon.SkillPlanner
             lbPlanList.Items[idx + 1].Selected = true;
         }
 
-        private void tsbDeletePlan_Click(object sender, EventArgs e)
+        private void miDelete_Click(object sender, EventArgs e)
         {
             string planName;
             string title = "Delete Plan";
@@ -474,7 +456,7 @@ namespace EVEMon.SkillPlanner
             }
 
             DialogResult dr = MessageBox.Show("Are you sure you want to delete " + planName +
-                                              "\"?", title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                              "?", title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                                               MessageBoxDefaultButton.Button2);
             if (dr != DialogResult.Yes)
             {
@@ -488,32 +470,11 @@ namespace EVEMon.SkillPlanner
             }
             lbPlanList.SelectedItems.Clear();
         }
-        #region Dragging
-        private void lbPlanList_DragEnter(object sender, DragEventArgs e)
-        {
-            // Don't allow <New Plan> to be dragged!
-            if (lbPlanList.SelectedItems.Count == 1 && lbPlanList.SelectedItems[0].Index == 0)
-            {
-   
-            }
-        }
 
+        #region Dragging
         private void lbPlanList_ListViewItemsDragging(object sender, ListViewDragEventArgs e)
         {
-            // Don't allow <New Plan> to be dragged!
-            if (lbPlanList.SelectedItems.Count == 1 && lbPlanList.SelectedItems[0].Index == 0)
-            {
-                e.Cancel = true;
-            }
-            // don't allow stuff to be dragged before <New Plan>!
-            else if (e.MovingTo == 0)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                m_planOrderChanged = true;
-            }
+            m_planOrderChanged = true;
         }
         #endregion
 
@@ -546,49 +507,38 @@ namespace EVEMon.SkillPlanner
                 ListViewItem a = (ListViewItem)x;
                 ListViewItem b = (ListViewItem)y;
 
-                // ALWAYS ensure that New Plan is first!
-                if (a.Text == "<New Plan>") 
+                if (m_sortOrder == SortOrder.Descending)
                 {
-                    compareResult = -1;
+                    ListViewItem tmp = b;
+                    b=a;
+                    a=tmp;
                 }
-                else if (b.Text == "<New Plan>")
-                {
-                    compareResult = 1;
-                }
-                else
-                {
-                    if (m_sortOrder == SortOrder.Descending)
-                    {
-                        ListViewItem tmp = b;
-                        b=a;
-                        a=tmp;
-                    }
 
-                    switch (m_sortColumn)
-                    {
-                        case 0: // sort by name
-                             compareResult = String.Compare(a.Text, b.Text);
-                            break;
-                        case 1: // Time
-                            
-                            Settings s = Settings.GetInstance();
-                            Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, a.Text);
-                            TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p,false);
-                            p = s.GetPlanByName(m_planSelectWindow.m_charKey, b.Text);
-                            TimeSpan t2 = m_planSelectWindow.FindPlanTimeSpan(p, false);
-                            compareResult = TimeSpan.Compare(t1, t2);
-                            if (compareResult == 0)
-                                compareResult = String.Compare(a.Text, b.Text);
-                            break;
-                        case 2:  //# skills
-                            int s1 = Int32.Parse(a.SubItems[2].Text);
-                            int s2 = Int32.Parse(b.SubItems[2].Text);
-                            compareResult = s1 - s2;
-                            if (compareResult == 0)
-                                compareResult = String.Compare(a.Text, b.Text);
-                            break;
-                    }
+                switch (m_sortColumn)
+                {
+                    case 0: // sort by name
+                         compareResult = String.Compare(a.Text, b.Text);
+                        break;
+                    case 1: // Time
+                        
+                        Settings s = Settings.GetInstance();
+                        Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, a.Text);
+                        TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p,false);
+                        p = s.GetPlanByName(m_planSelectWindow.m_charKey, b.Text);
+                        TimeSpan t2 = m_planSelectWindow.FindPlanTimeSpan(p, false);
+                        compareResult = TimeSpan.Compare(t1, t2);
+                        if (compareResult == 0)
+                            compareResult = String.Compare(a.Text, b.Text);
+                        break;
+                    case 2:  //# skills
+                        int s1 = Int32.Parse(a.SubItems[2].Text);
+                        int s2 = Int32.Parse(b.SubItems[2].Text);
+                        compareResult = s1 - s2;
+                        if (compareResult == 0)
+                            compareResult = String.Compare(a.Text, b.Text);
+                        break;
                 }
+
                 return compareResult;
             }
 
@@ -638,39 +588,45 @@ namespace EVEMon.SkillPlanner
 
         #region Context Menu
 
-        private void lbPlanList_MouseDown(object sender, MouseEventArgs e)
+        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (lbPlanList.SelectedItems.Count > 1)
             {
-                ListViewItem lvi = lbPlanList.GetItemAt(e.X, e.Y);
-                if (lvi != null && lvi.Text != "<New Plan>")
-                {
-                    // If multiple items selected, grey out the context menu
-                    if (lbPlanList.SelectedItems.Count > 1)
-                    {
-                        deletePlanToolStripMenuItem.Text = "Delete Plans";
-                        deletePlanToolStripMenuItem.Enabled = true;
-                        renamePlanToolStripMenuItem.Enabled = false;
-                        openPlanToolStripMenuItem.Text = "Merge Plans";
-                    }
-                    else
-                    {
-                        deletePlanToolStripMenuItem.Text = "Delete Plan";
-                        deletePlanToolStripMenuItem.Enabled = true;
-                        renamePlanToolStripMenuItem.Enabled = true;
-                        openPlanToolStripMenuItem.Enabled = true;
-                        openPlanToolStripMenuItem.Text = "Open Plan";
-                    }
-                    contextMenuStrip1.Show((lbPlanList.PointToScreen(new System.Drawing.Point(e.X,e.Y))));
-                }
+                cmiDelete.Enabled = true;
+                cmiRename.Enabled = false;
+                cmiOpen.Text = "Merge";
+            }
+            else if (lbPlanList.SelectedItems.Count == 1)
+            {
+                cmiDelete.Enabled = true;
+                cmiRename.Enabled = true;
+                cmiOpen.Enabled = true;
+                cmiOpen.Text = "Open";
+            }
+            else
+            {
+                e.Cancel = true;
             }
         }
         #endregion
 
-        private void tsbLoadPlan_Click(object sender, EventArgs e)
+        private void miNewPlan_Click(object sender, EventArgs e)
+        {
+            m_result = null;
+            DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        private void mFile_DropDownOpening(object sender, EventArgs e)
         {
             // See if we have multiple characters to determine if load from character is enabled
-            tsddFromCharacter.Enabled = (m_settings.CharacterList.Count + m_settings.CharFileList.Count) > 1;
+            miLoadPlanFromCharacter.Enabled = (m_settings.CharacterList.Count + m_settings.CharFileList.Count) > 1;
+        }
+
+        private void mEdit_DropDownOpening(object sender, EventArgs e)
+        {
+            miRename.Enabled = lbPlanList.SelectedItems.Count == 1;
+            miDelete.Enabled = lbPlanList.SelectedItems.Count >= 1;
         }
 
     }
