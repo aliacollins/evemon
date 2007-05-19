@@ -215,7 +215,7 @@
     <Compile Include="SkillPlanner\ItemSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\ItemSelectControl.designer.cs">
+    <Compile Include="SkillPlanner\ItemSelectControl.Designer.cs">
       <DependentUpon>ItemSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipSelectControl.cs">
@@ -230,7 +230,7 @@
     <Compile Include="SkillPlanner\EveObjectSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\EveObjectSelectControl.designer.cs">
+    <Compile Include="SkillPlanner\EveObjectSelectControl.Designer.cs">
       <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\PersistentSplitContainer.cs">
