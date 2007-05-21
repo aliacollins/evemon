@@ -28,7 +28,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>"characterID does not belong to you."</value> will be the only value in the entire class other than "characterID"
         /// <value>"You are trying too fast."</value> will be one of three values in the class, the others being "characterID" and "tryAgainIn"
-        /// <value>""</value> or <value>null</value> when the operation was successful
+		/// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
         /// This is the variable that needs checking to see if the thing has worked.
         [XmlElement("error")]
         public string Error
@@ -258,6 +258,15 @@ namespace EVEMon.Common
             get { return m_AlertRaisedAlready; }
             set { m_AlertRaisedAlready = value; }
         }
+
+		[XmlIgnore]
+		public bool isSkillInTraining
+		{
+			get
+			{
+				return ((Error == "" || Error == null) && m_startTime != DateTime.MinValue);
+			}
+		}
 
         public object Clone()
         {

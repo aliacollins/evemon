@@ -847,7 +847,7 @@ namespace EVEMon.Common
                     }
                     string key = string.Empty;
 
-                    // WARNING! If (or when) clones get proper james, then the implant calc
+                    // WARNING! If (or when) clones get proper names, then the implant calc
                     // will need amending too - see WARNING comment in ImplantCalculator.cs
                     // in the menu event handlers
                     switch (x.Number)
@@ -1023,11 +1023,13 @@ namespace EVEMon.Common
 						(m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
 						m_OldSkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))
             {
-                this.CancelCurrentSkillTraining();
+				this.CancelCurrentSkillTraining();
             }
             if (!firstRun && m_OldSkillInTraining != null)
             {
-                Skill _OSIT = m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
+                Skill _OSIT = null;
+				if (m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))
+					_OSIT = m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
                 if (_OSIT != null)
                 {
                     bool add = false;
@@ -1125,6 +1127,27 @@ namespace EVEMon.Common
             set { m_OldSkillInTraining = value; }
         }
 
+		/// <summary>  
+        /// Recursively check that a skill has all it's prereqs changed.  
+        /// </summary>  
+		private void MarkPrereqsTrained(Skill s)
+		{
+			foreach (Skill.Prereq pReq in s.Prereqs)
+			{
+				if (pReq != null)
+				{
+					if (pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
+					{
+						if (pReq.Skill.UnadjustedCurrentSkillPoints == 0)
+							MarkPrereqsTrained(pReq.Skill);
+						pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
+						pReq.Skill.Known = true;
+						OnSkillChanged(pReq.Skill);
+					}
+				}
+			}
+		}  
+
         public void checkTrainingSkills(SerializableSkillTrainingInfo SkillInTraining)
         {
             // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
@@ -1134,55 +1157,83 @@ namespace EVEMon.Common
             Skill _SkillInTraining = null;
             DateTime _SITLocalCompleteTime = DateTime.MinValue;
             DateTime _SITLocalStartTime = DateTime.MinValue;
-            if (SkillInTraining != null)
-            {
-                _SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-                _SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
-                _SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
-                // This would be a good place to change the prereqs too so they are also trained up fully.
-                // This just does one level of prereqs... we really need recursive updating...
-                if (_SkillInTraining != null)
-                {
-                    // All PreReqs must have been trained for this to be training.
-                    foreach (Skill.Prereq pReq in _SkillInTraining.Prereqs)
-                    {
-                        if (pReq != null && pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
-                        {
-                            pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
-                            pReq.Skill.Known = true;
-                            OnSkillChanged(pReq.Skill);
-                        }
-                    }
-                    // Once we have done the pre-reqs, we can set this skill's current skill points
-                    if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
-                    {
-                        _SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
-                        _SkillInTraining.Known = true;
-                        OnSkillChanged(_SkillInTraining);
-                    }
-                    // Now look at the previous skill we were training and set accordingly.
-                    // We haven't changed the current and old skills yet, so...
-                    if (m_SkillInTraining != null && m_SkillInTraining.TrainingSkillWithTypeID != SkillInTraining.TrainingSkillWithTypeID)
-                    {
-                        if (SkillInTraining.getTrainingStartTime < m_SkillInTraining.getTrainingEndTime)
-                        {
-                            // We need to adjust the SP of the previously training skill as it was changed before completion
-                            // I'm assuming here that you haven't changed implants or something and it's not a prereq of the current skill in training
-                            // You could stick some extra checks in here to make sure.
-                            Skill theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-                            theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
-                            OnSkillChanged(theOneImInterestedIn);
-                        }
-                    }
-                }
-            }
+			DateTime _SITLocalUpdateTime = DateTime.MinValue;
+			if (SkillInTraining != null)
+			{
+				_SITLocalUpdateTime = ((DateTime)SkillInTraining.GetDateTimeAtUpdate.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+				if (SkillInTraining.isSkillInTraining)
+				{
+					_SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
+					_SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+					_SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+					// This would be a good place to change the prereqs too so they are also trained up fully.
+					// This just does one level of prereqs... we really need recursive updating...
+					if (_SkillInTraining != null)
+					{
+						// All PreReqs must have been trained for this to be training.
+						MarkPrereqsTrained(_SkillInTraining);
+
+						// Once we have done the pre-reqs, we can set this skill's current skill points
+						if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
+						{
+							_SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
+							_SkillInTraining.Known = true;
+							OnSkillChanged(_SkillInTraining);
+						}
+					}
+					else
+					{
+						// unknown skill in training...
+					}
+					// Now look at the previous skill we were training and set accordingly.
+					// We haven't changed the current and old skills yet, so...
+					if (m_SkillInTraining != null && m_SkillInTraining.TrainingSkillWithTypeID != SkillInTraining.TrainingSkillWithTypeID)
+					{
+						if (m_SkillInTraining.isSkillInTraining)
+						{
+							if (SkillInTraining.getTrainingStartTime < m_SkillInTraining.getTrainingEndTime)
+							{
+								// We need to adjust the SP of the previously training skill as it was changed before completion
+								// I'm assuming here that you haven't changed implants (actually, that wouldn't matter) or something and it's not a prereq of the current skill in training
+								// You could stick some extra checks in here to make sure.
+								Skill theOneImInterestedIn = null;
+								if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+									theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+								if (theOneImInterestedIn != null)
+								{
+									theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
+									OnSkillChanged(theOneImInterestedIn);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					// No currently training skill
+					// Did we have a previous one?
+					if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
+					{
+						Skill theOneImInterestedIn = null;
+						if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+							theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+						if (theOneImInterestedIn != null)
+						{
+							if (SkillInTraining.GetDateTimeAtUpdate < m_SkillInTraining.getTrainingEndTime)
+								theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
+							OnSkillChanged(theOneImInterestedIn);
+						}
+					}
+				}
+			}
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
 			if (m_SkillInTraining != null &&
                     (SkillInTraining == null || 
                     (SkillInTraining != null &&
-						(SkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
-						(SkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime)))))
+						(!SkillInTraining.isSkillInTraining ||
+						SkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
+						SkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
@@ -1203,8 +1254,8 @@ namespace EVEMon.Common
                         {
                             check = true;
                             oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
-                            m_OldSkillInTraining.AlertRaisedAlready = false;
-                            OnSkillChanged(oldskill);
+							OnSkillChanged(oldskill);
+							m_OldSkillInTraining.AlertRaisedAlready = false;
                         }
                     }
                     else
@@ -1237,39 +1288,74 @@ namespace EVEMon.Common
                     // Now we depart even more from the version above.
                     // We have to deal with making this character actually show that he is learning the
                     // skill the XML file says he's learning. But we do this carefully as it may be complete
-                    Skill newTrainingSkill = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID];
-                    int level = SkillInTraining.TrainingSkillToLevel;
-                    int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
-                    bool SkillComplete = (_SITLocalCompleteTime < DateTime.Now);
-                    DateTime _OSITLocalCompleteTime = DateTime.MinValue;
-                    if (m_OldSkillInTraining != null)
-                    {
-                        _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
-                    }
-
-                    if (newTrainingSkill != null)
-                    {
-                        if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
-                        {
-                            if (m_OldSkillInTraining != null && m_OldSkillInTraining.AlertRaisedAlready && newTrainingSkill.Id == m_OldSkillInTraining.TrainingSkillWithTypeID && level == m_OldSkillInTraining.TrainingSkillToLevel)
-                            {
-                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
-                            }
-                            if (m_OldSkillInTraining == null || !m_OldSkillInTraining.AlertRaisedAlready || (m_OldSkillInTraining != null && (newTrainingSkill.Id != m_OldSkillInTraining.TrainingSkillWithTypeID || (newTrainingSkill.Id == m_OldSkillInTraining.TrainingSkillWithTypeID && SkillInTraining.TrainingSkillToLevel != m_OldSkillInTraining.TrainingSkillToLevel))))
-                            {
-                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
-                                m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+					Skill newTrainingSkill = null;
+					if (m_AllSkillsByID.ContainsKey(SkillInTraining.TrainingSkillWithTypeID))
+						newTrainingSkill = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID];
+					if (newTrainingSkill == null)
+					{
+						// no recorgnised skill in training
+						if (SkillInTraining.Error == "" || SkillInTraining.Error == null)
+						{
+							// Actually had a report that no skill is training
+							if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
+							{
+								Skill oldskill = null;
+								if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+								{
+									oldskill = m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+									if (m_SkillInTraining.getTrainingEndTime < SkillInTraining.GetDateTimeAtUpdate)
+									{
+										oldskill.CurrentSkillPoints = m_SkillInTraining.TrainingSkillDestinationSP;
+										OnSkillChanged(oldskill);
+										m_SkillInTraining.AlertRaisedAlready = true;
+										OnDownloadAttemptComplete(this.Name, oldskill.Name, true);
+									}
+									else
+									{
+										oldskill.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
+										OnSkillChanged(oldskill);
+									}
+								}
+							}
+							if (m_SkillInTraining != null)
+								m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
+							if (SkillInTraining != null)
+								m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+						}
+						else
+						{
+							// there was an error getting the info about the currently training skill
+						}
+					}
+					else if (newTrainingSkill != null)
+					{
+						int level = SkillInTraining.TrainingSkillToLevel;
+						int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
+						bool SkillComplete = (_SITLocalCompleteTime < DateTime.Now);
+						DateTime _OSITLocalCompleteTime = DateTime.MinValue;
+						if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
+						{
+							if (m_SkillInTraining != null && m_SkillInTraining.AlertRaisedAlready && newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && level == m_SkillInTraining.TrainingSkillToLevel)
+							{
+								newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
+								OnSkillChanged(newTrainingSkill);
+							}
+							if (m_SkillInTraining == null || (m_SkillInTraining != null && (!m_SkillInTraining.AlertRaisedAlready || newTrainingSkill.Id != m_SkillInTraining.TrainingSkillWithTypeID || (newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && SkillInTraining.TrainingSkillToLevel != m_SkillInTraining.TrainingSkillToLevel))))
+							{
+								newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
+								OnSkillChanged(newTrainingSkill);
+								m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
 								m_OldSkillInTraining.AlertRaisedAlready = true;
-                                OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
-                            }
-							m_SkillInTraining = null;
-                        }
-                        else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
-                        {
-                            m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-                            newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime);
-                        }
-                    }
+								m_SkillInTraining = null;
+								OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
+							}
+						}
+						else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
+						{
+							m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+							newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime);
+						}
+					}
                 }
                 // Now to activate normal runtime skill completion monitoring
                 m_attemptedDLComplete = true;
@@ -1333,15 +1419,20 @@ namespace EVEMon.Common
 
         public void triggerSkillComplete(string CharacterName)
         { // Basically trigger the event when a skill completes between downloads
-            Skill newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+            Skill newlyCompletedSkill = null;
+			if (m_SkillInTraining != null && m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+				newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+			string name = null;
             if (newlyCompletedSkill != null)
             {
+				name = newlyCompletedSkill.Name;
                 newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
                 m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
                 m_SkillInTraining = null;
+				m_OldSkillInTraining.AlertRaisedAlready = true;
                 this.CancelCurrentSkillTraining();
             }
-            OnDownloadAttemptComplete(CharacterName, newlyCompletedSkill.Name, true);
+            OnDownloadAttemptComplete(CharacterName, name, true);
         }
 
         private void OnDownloadAttemptComplete(string CharacterName, string skillName, bool Complete)

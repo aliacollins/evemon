@@ -527,7 +527,11 @@ namespace EVEMon.Common
 
         internal void StopTraining()
         {
-            m_inTraining = false;
+			if (m_inTraining)
+			{
+				OnTrainingStatusChanged();
+			}
+			m_inTraining = false;
             m_trainingToLevel = 0;
             m_estimatedCompletion = DateTime.MaxValue;
             OnChanged();

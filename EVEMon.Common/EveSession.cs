@@ -736,8 +736,6 @@ namespace EVEMon.Common
                         return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
                     }
                     DateTime end = ssti.getTrainingEndTime;
-                    if (end == DateTime.MinValue)
-                        return (1000 * ssti.TimerToNextUpdate); // No skill training so set timer accordingly and be done
                 }
 
                 invokeControl.Invoke(new MethodInvoker(delegate

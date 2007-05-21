@@ -1032,7 +1032,7 @@ namespace EVEMon
                 return;
             }
 
-            if (m_grandCharacterInfo.SerialSIT != null)
+            if (m_grandCharacterInfo.SerialSIT != null && m_grandCharacterInfo.SerialSIT.isSkillInTraining)
             {
                 SerializableSkillTrainingInfo SIT = m_grandCharacterInfo.SerialSIT;
                 Skill SSIT = m_grandCharacterInfo.AllSkillsByTypeID[SIT.TrainingSkillWithTypeID];
@@ -1050,7 +1050,7 @@ namespace EVEMon
 
                 pnlTraining.Visible = true;
             }
-            else if (m_grandCharacterInfo.SerialSIT == null)
+            else if (m_grandCharacterInfo.SerialSIT == null || (m_grandCharacterInfo.SerialSIT != null && !m_grandCharacterInfo.SerialSIT.isSkillInTraining))
             {
                 m_skillTrainingName = String.Empty;
                 m_estimatedCompletion = DateTime.MaxValue;
@@ -2014,11 +2014,15 @@ namespace EVEMon
                     }
                 }
             }
-            if (m_grandCharacterInfo.DLComplete && m_estimatedCompletion < DateTime.Now &&
-                m_grandCharacterInfo.SerialSIT != null)
+            if (m_grandCharacterInfo.DLComplete &&
+                m_grandCharacterInfo.OldSerialSIT != null &&
+				m_grandCharacterInfo.OldSerialSIT.getTrainingEndTime < DateTime.Now &&
+				m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
+				m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id &&
+				!m_grandCharacterInfo.OldSerialSIT.AlertRaisedAlready)
             {
                 // Trigger event on skill completion
-                // The 'event' for a skill completion is in GrandCharacterInfo.cs, depending on what is wanted
+                // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
 
                 // The following line triggers the required code in GrandCharacterInfo.cs for that character
