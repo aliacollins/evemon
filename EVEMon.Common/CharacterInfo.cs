@@ -1018,14 +1018,13 @@ namespace EVEMon.Common
             {
                 _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
             }
-			if (m_SkillInTraining != null &&
-                    m_OldSkillInTraining != null &&
+			if (m_SkillInTraining != null && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining &&
 						(m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
 						m_OldSkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))
             {
 				this.CancelCurrentSkillTraining();
             }
-            if (!firstRun && m_OldSkillInTraining != null)
+            if (!firstRun && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining)
             {
                 Skill _OSIT = null;
 				if (m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))

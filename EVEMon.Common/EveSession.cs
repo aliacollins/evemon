@@ -735,7 +735,6 @@ namespace EVEMon.Common
                                                                    }));
                         return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
                     }
-                    DateTime end = ssti.getTrainingEndTime;
                 }
 
                 invokeControl.Invoke(new MethodInvoker(delegate
