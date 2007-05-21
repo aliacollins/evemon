@@ -534,7 +534,6 @@ namespace EVEMon.Common
             }
         }
 
-
         public double getImplantValue(EveAttribute eveAttribute)
         {
             double result = 0.0F;
@@ -1091,7 +1090,8 @@ namespace EVEMon.Common
                             // To make doubly sure we have no old training skills lurking ...out with the old...
                             this.CancelCurrentSkillTraining();
                             // ...and in with the new
-                            _OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime);
+							m_SkillInTraining = (SerializableSkillTrainingInfo)m_OldSkillInTraining.Clone();
+							_OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime);
                         }
                     }
                 }
@@ -1259,8 +1259,10 @@ namespace EVEMon.Common
                             {
                                 newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
                                 m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+								m_OldSkillInTraining.AlertRaisedAlready = true;
                                 OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
                             }
+							m_SkillInTraining = null;
                         }
                         else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
                         {
