@@ -34,6 +34,10 @@ namespace EVEMon.SkillPlanner
             this.btnCancel = new System.Windows.Forms.Button();
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lbPlanList = new EVEMon.SkillPlanner.DraggableListView();
+            this.PlanName = new System.Windows.Forms.ColumnHeader();
+            this.PlanDate = new System.Windows.Forms.ColumnHeader();
+            this.PlanSkills = new System.Windows.Forms.ColumnHeader();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiRename = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,10 +57,6 @@ namespace EVEMon.SkillPlanner
             this.mEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.miRename = new System.Windows.Forms.ToolStripMenuItem();
             this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.lbPlanList = new EVEMon.SkillPlanner.DraggableListView();
-            this.PlanName = new System.Windows.Forms.ColumnHeader();
-            this.PlanDate = new System.Windows.Forms.ColumnHeader();
-            this.PlanSkills = new System.Windows.Forms.ColumnHeader();
             this.panel1.SuspendLayout();
             this.contextMenu.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -68,10 +68,9 @@ namespace EVEMon.SkillPlanner
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 8);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(9, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(307, 17);
+            this.label1.Size = new System.Drawing.Size(242, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Select a plan to open, or multiple plans to merge:";
             // 
@@ -79,10 +78,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(112, 4);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancel.Location = new System.Drawing.Point(84, 3);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 30);
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -100,205 +98,11 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.lbPlanList);
             this.panel1.Controls.Add(this.toolStrip2);
-            this.panel1.Location = new System.Drawing.Point(12, 29);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.MinimumSize = new System.Drawing.Size(407, 203);
+            this.panel1.Location = new System.Drawing.Point(9, 22);
+            this.panel1.MinimumSize = new System.Drawing.Size(305, 155);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(631, 431);
+            this.panel1.Size = new System.Drawing.Size(473, 327);
             this.panel1.TabIndex = 6;
-            // 
-            // contextMenu
-            // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiOpen,
-            this.cmiRename,
-            this.cmiDelete});
-            this.contextMenu.Name = "contextMenuStrip1";
-            this.contextMenu.Size = new System.Drawing.Size(133, 76);
-            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // cmiOpen
-            // 
-            this.cmiOpen.Name = "cmiOpen";
-            this.cmiOpen.Size = new System.Drawing.Size(152, 24);
-            this.cmiOpen.Text = "Open";
-            this.cmiOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // cmiRename
-            // 
-            this.cmiRename.Name = "cmiRename";
-            this.cmiRename.Size = new System.Drawing.Size(152, 24);
-            this.cmiRename.Text = "Rename";
-            // 
-            // cmiDelete
-            // 
-            this.cmiDelete.Name = "cmiDelete";
-            this.cmiDelete.Size = new System.Drawing.Size(152, 24);
-            this.cmiDelete.Text = "Delete";
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.tsbMoveUp,
-            this.tsbMoveDown});
-            this.toolStrip2.Location = new System.Drawing.Point(581, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(50, 431);
-            this.toolStrip2.TabIndex = 0;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(47, 20);
-            this.toolStripLabel1.Text = "Move:";
-            // 
-            // tsbMoveUp
-            // 
-            this.tsbMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMoveUp.Enabled = false;
-            this.tsbMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveUp.Image")));
-            this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbMoveUp.Name = "tsbMoveUp";
-            this.tsbMoveUp.Size = new System.Drawing.Size(47, 20);
-            this.tsbMoveUp.Text = "Move Up";
-            this.tsbMoveUp.Click += new System.EventHandler(this.tsbMoveUp_Click);
-            // 
-            // tsbMoveDown
-            // 
-            this.tsbMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMoveDown.Enabled = false;
-            this.tsbMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveDown.Image")));
-            this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbMoveDown.Name = "tsbMoveDown";
-            this.tsbMoveDown.Size = new System.Drawing.Size(47, 20);
-            this.tsbMoveDown.Text = "Move Down";
-            this.tsbMoveDown.Click += new System.EventHandler(this.tsbMoveDown_Click);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 2);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 28);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 8, 0, 16);
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(645, 528);
-            this.tableLayoutPanel1.TabIndex = 8;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.btnCancel);
-            this.flowLayoutPanel1.Controls.Add(this.btnOpen);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(423, 474);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 10, 8, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(216, 38);
-            this.flowLayoutPanel1.TabIndex = 2;
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpen.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOpen.Enabled = false;
-            this.flowLayoutPanel1.SetFlowBreak(this.btnOpen, true);
-            this.btnOpen.Location = new System.Drawing.Point(4, 4);
-            this.btnOpen.Margin = new System.Windows.Forms.Padding(4);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(100, 30);
-            this.btnOpen.TabIndex = 4;
-            this.btnOpen.Text = "Open";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mFile,
-            this.mEdit});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(645, 28);
-            this.menuStrip1.TabIndex = 9;
-            this.menuStrip1.Text = "menuBar";
-            // 
-            // mFile
-            // 
-            this.mFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNewPlan,
-            this.miLoadPlanFromFile,
-            this.miLoadPlanFromCharacter});
-            this.mFile.Name = "mFile";
-            this.mFile.Size = new System.Drawing.Size(44, 24);
-            this.mFile.Text = "&File";
-            // 
-            // miNewPlan
-            // 
-            this.miNewPlan.Name = "miNewPlan";
-            this.miNewPlan.Size = new System.Drawing.Size(257, 24);
-            this.miNewPlan.Text = "&New Plan…";
-            this.miNewPlan.Click += new System.EventHandler(this.miNewPlan_Click);
-            // 
-            // miLoadPlanFromFile
-            // 
-            this.miLoadPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miLoadPlanFromFile.Image")));
-            this.miLoadPlanFromFile.Name = "miLoadPlanFromFile";
-            this.miLoadPlanFromFile.Size = new System.Drawing.Size(257, 24);
-            this.miLoadPlanFromFile.Text = "&Load Plan from File…";
-            this.miLoadPlanFromFile.Click += new System.EventHandler(this.miLoadPlanFromFile_Click);
-            // 
-            // miLoadPlanFromCharacter
-            // 
-            this.miLoadPlanFromCharacter.Name = "miLoadPlanFromCharacter";
-            this.miLoadPlanFromCharacter.Size = new System.Drawing.Size(257, 24);
-            this.miLoadPlanFromCharacter.Text = "Load Plan from &Character…";
-            this.miLoadPlanFromCharacter.Click += new System.EventHandler(this.miLoadPlanFromCharacter_Click);
-            // 
-            // mEdit
-            // 
-            this.mEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRename,
-            this.miDelete});
-            this.mEdit.Name = "mEdit";
-            this.mEdit.Size = new System.Drawing.Size(47, 24);
-            this.mEdit.Text = "&Edit";
-            this.mEdit.DropDownOpening += new System.EventHandler(this.mEdit_DropDownOpening);
-            // 
-            // miRename
-            // 
-            this.miRename.Image = ((System.Drawing.Image)(resources.GetObject("miRename.Image")));
-            this.miRename.Name = "miRename";
-            this.miRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.miRename.Size = new System.Drawing.Size(156, 24);
-            this.miRename.Text = "&Rename";
-            this.miRename.Click += new System.EventHandler(this.miRename_Click);
-            // 
-            // miDelete
-            // 
-            this.miDelete.Image = ((System.Drawing.Image)(resources.GetObject("miDelete.Image")));
-            this.miDelete.Name = "miDelete";
-            this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.miDelete.Size = new System.Drawing.Size(156, 24);
-            this.miDelete.Text = "&Delete";
-            this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
             // lbPlanList
             // 
@@ -312,9 +116,8 @@ namespace EVEMon.SkillPlanner
             this.lbPlanList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbPlanList.FullRowSelect = true;
             this.lbPlanList.Location = new System.Drawing.Point(0, 0);
-            this.lbPlanList.Margin = new System.Windows.Forms.Padding(4);
             this.lbPlanList.Name = "lbPlanList";
-            this.lbPlanList.Size = new System.Drawing.Size(581, 431);
+            this.lbPlanList.Size = new System.Drawing.Size(435, 327);
             this.lbPlanList.TabIndex = 2;
             this.lbPlanList.UseCompatibleStateImageBehavior = false;
             this.lbPlanList.View = System.Windows.Forms.View.Details;
@@ -337,19 +140,211 @@ namespace EVEMon.SkillPlanner
             // 
             this.PlanSkills.Text = "Skills";
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiOpen,
+            this.cmiRename,
+            this.cmiDelete});
+            this.contextMenu.Name = "contextMenuStrip1";
+            this.contextMenu.Size = new System.Drawing.Size(125, 70);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // cmiOpen
+            // 
+            this.cmiOpen.Name = "cmiOpen";
+            this.cmiOpen.Size = new System.Drawing.Size(124, 22);
+            this.cmiOpen.Text = "Open";
+            this.cmiOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // cmiRename
+            // 
+            this.cmiRename.Name = "cmiRename";
+            this.cmiRename.Size = new System.Drawing.Size(124, 22);
+            this.cmiRename.Text = "Rename";
+            // 
+            // cmiDelete
+            // 
+            this.cmiDelete.Name = "cmiDelete";
+            this.cmiDelete.Size = new System.Drawing.Size(124, 22);
+            this.cmiDelete.Text = "Delete";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.tsbMoveUp,
+            this.tsbMoveDown});
+            this.toolStrip2.Location = new System.Drawing.Point(435, 0);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(38, 327);
+            this.toolStrip2.TabIndex = 0;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(35, 13);
+            this.toolStripLabel1.Text = "Move:";
+            // 
+            // tsbMoveUp
+            // 
+            this.tsbMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMoveUp.Enabled = false;
+            this.tsbMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveUp.Image")));
+            this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveUp.Name = "tsbMoveUp";
+            this.tsbMoveUp.Size = new System.Drawing.Size(35, 20);
+            this.tsbMoveUp.Text = "Move Up";
+            this.tsbMoveUp.Click += new System.EventHandler(this.tsbMoveUp_Click);
+            // 
+            // tsbMoveDown
+            // 
+            this.tsbMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMoveDown.Enabled = false;
+            this.tsbMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveDown.Image")));
+            this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMoveDown.Name = "tsbMoveDown";
+            this.tsbMoveDown.Size = new System.Drawing.Size(35, 20);
+            this.tsbMoveDown.Text = "Move Down";
+            this.tsbMoveDown.Click += new System.EventHandler(this.tsbMoveDown_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(6, 6, 0, 12);
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(484, 401);
+            this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel1.Controls.Add(this.btnCancel);
+            this.flowLayoutPanel1.Controls.Add(this.btnOpen);
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(317, 360);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 8, 6, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(162, 29);
+            this.flowLayoutPanel1.TabIndex = 2;
+            // 
+            // btnOpen
+            // 
+            this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpen.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOpen.Enabled = false;
+            this.flowLayoutPanel1.SetFlowBreak(this.btnOpen, true);
+            this.btnOpen.Location = new System.Drawing.Point(3, 3);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(75, 23);
+            this.btnOpen.TabIndex = 4;
+            this.btnOpen.Text = "Open";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mFile,
+            this.mEdit});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(484, 24);
+            this.menuStrip1.TabIndex = 9;
+            this.menuStrip1.Text = "menuBar";
+            // 
+            // mFile
+            // 
+            this.mFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miNewPlan,
+            this.miLoadPlanFromFile,
+            this.miLoadPlanFromCharacter});
+            this.mFile.Name = "mFile";
+            this.mFile.Size = new System.Drawing.Size(35, 20);
+            this.mFile.Text = "&File";
+            this.mFile.DropDownOpening += new System.EventHandler(this.mFile_DropDownOpening);
+            // 
+            // miNewPlan
+            // 
+            this.miNewPlan.Name = "miNewPlan";
+            this.miNewPlan.Size = new System.Drawing.Size(216, 22);
+            this.miNewPlan.Text = "&New Plan…";
+            this.miNewPlan.Click += new System.EventHandler(this.miNewPlan_Click);
+            // 
+            // miLoadPlanFromFile
+            // 
+            this.miLoadPlanFromFile.Image = ((System.Drawing.Image)(resources.GetObject("miLoadPlanFromFile.Image")));
+            this.miLoadPlanFromFile.Name = "miLoadPlanFromFile";
+            this.miLoadPlanFromFile.Size = new System.Drawing.Size(216, 22);
+            this.miLoadPlanFromFile.Text = "&Load Plan from File…";
+            this.miLoadPlanFromFile.Click += new System.EventHandler(this.miLoadPlanFromFile_Click);
+            // 
+            // miLoadPlanFromCharacter
+            // 
+            this.miLoadPlanFromCharacter.Name = "miLoadPlanFromCharacter";
+            this.miLoadPlanFromCharacter.Size = new System.Drawing.Size(216, 22);
+            this.miLoadPlanFromCharacter.Text = "Load Plan from &Character…";
+            this.miLoadPlanFromCharacter.Click += new System.EventHandler(this.miLoadPlanFromCharacter_Click);
+            // 
+            // mEdit
+            // 
+            this.mEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miRename,
+            this.miDelete});
+            this.mEdit.Name = "mEdit";
+            this.mEdit.Size = new System.Drawing.Size(37, 20);
+            this.mEdit.Text = "&Edit";
+            this.mEdit.DropDownOpening += new System.EventHandler(this.mEdit_DropDownOpening);
+            // 
+            // miRename
+            // 
+            this.miRename.Image = ((System.Drawing.Image)(resources.GetObject("miRename.Image")));
+            this.miRename.Name = "miRename";
+            this.miRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.miRename.Size = new System.Drawing.Size(152, 22);
+            this.miRename.Text = "&Rename";
+            this.miRename.Click += new System.EventHandler(this.miRename_Click);
+            // 
+            // miDelete
+            // 
+            this.miDelete.Image = ((System.Drawing.Image)(resources.GetObject("miDelete.Image")));
+            this.miDelete.Name = "miDelete";
+            this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.miDelete.Size = new System.Drawing.Size(152, 22);
+            this.miDelete.Text = "&Delete";
+            this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
+            // 
             // PlanSelectWindow
             // 
             this.AcceptButton = this.btnOpen;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(645, 556);
+            this.ClientSize = new System.Drawing.Size(484, 425);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(482, 422);
+            this.MinimumSize = new System.Drawing.Size(364, 331);
             this.Name = "PlanSelectWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
