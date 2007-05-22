@@ -236,7 +236,7 @@ namespace EVEMon
             // 
             this.saveXMLToolStripMenuItem.Name = "saveXMLToolStripMenuItem";
             this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.saveXMLToolStripMenuItem.Text = "&Save XML...";
+            this.saveXMLToolStripMenuItem.Text = "&Save Character Info...";
             this.saveXMLToolStripMenuItem.Click += new System.EventHandler(this.saveXMLToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
