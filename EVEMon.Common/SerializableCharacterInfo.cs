@@ -376,6 +376,13 @@ namespace EVEMon.Common
                             }
                         }
                     }
+                    foreach (SerializableSkillGroup sg in sci.SkillGroups)
+                    {
+                        foreach (SerializableSkill s in sg.Skills)
+                        {
+                            s.LastConfirmedLevel = s.Level;
+                        }
+                    }
                     return sci;
                 }
             }

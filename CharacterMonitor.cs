@@ -2015,11 +2015,12 @@ namespace EVEMon
                 }
             }
             if (m_grandCharacterInfo.DLComplete &&
-                m_grandCharacterInfo.OldSerialSIT != null &&
-				m_grandCharacterInfo.OldSerialSIT.getTrainingEndTime < DateTime.Now &&
-				m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
-				m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id &&
-				!m_grandCharacterInfo.OldSerialSIT.AlertRaisedAlready)
+                m_grandCharacterInfo.SerialSIT != null &&
+                m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
+                m_grandCharacterInfo.SerialSIT.isSkillInTraining &&
+                !m_grandCharacterInfo.SerialSIT.AlertRaisedAlready &&
+				m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id &&
+                ((DateTime)m_grandCharacterInfo.SerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.SerialSIT.TQOffset))).ToLocalTime() < DateTime.Now)
             {
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted

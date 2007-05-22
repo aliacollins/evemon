@@ -1001,7 +1001,7 @@ namespace EVEMon.Common
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
                         if (ci.TimeLeftInCache != -1)
-                            gs.LastConfirmedLvl = gs.Level;
+                            gs.LastConfirmedLvl = s.Level;
                         else
                             gs.LastConfirmedLvl = s.LastConfirmedLevel;
                     }
