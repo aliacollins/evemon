@@ -1468,11 +1468,18 @@ namespace CodersLab.Windows.Controls
 					break;
 
 				case Keys.Left:
-					tnMostRecentSelectedNode.Collapse();
+                    if (tnMostRecentSelectedNode.IsExpanded)
+                        tnMostRecentSelectedNode.Collapse();
+                    else
+                        tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Parent;
 					break;
 
 				case Keys.Right:
-					tnMostRecentSelectedNode.Expand();
+                    if (!tnMostRecentSelectedNode.IsExpanded)
+                        tnMostRecentSelectedNode.Expand();
+                    else
+                        if (tnMostRecentSelectedNode.Nodes != null)
+                            tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Nodes[0];
 					break;
 
 				case Keys.Home:
@@ -1515,10 +1522,12 @@ namespace CodersLab.Windows.Controls
 				switch (e.KeyCode)
 				{
 					case Keys.Down:
+                    case Keys.Right:
 						tnToMakeVisible = GetNextTreeNode(tnMostRecentSelectedNode, true, 5);
 						break;
 
 					case Keys.Up:
+                    case Keys.Left:
 						tnToMakeVisible = GetNextTreeNode(tnMostRecentSelectedNode, false, 5);
 						break;
 
