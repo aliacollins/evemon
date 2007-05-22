@@ -214,13 +214,13 @@ namespace EVEMon.Common
         /// <returns>Time it will take.</returns>
         private TimeSpan GetTimeSpanForPoints(int points)
         {
-            return GetTimeSpanForPoints(points, null,true);
+            return GetTimeSpanForPoints(points, null, true);
         }
 
-        private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad,Boolean includeImplants)
+        private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
-            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad,true,includeImplants);
-            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad,true,includeImplants);
+            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad, true, includeImplants);
+            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad, true, includeImplants);
             double minutes = Convert.ToDouble(points) / (primAttr + (secondaryAttr / 2));
             return TimeSpan.FromMinutes(minutes);
         }
@@ -352,13 +352,13 @@ namespace EVEMon.Common
 
         public string FormattedCost
         {
-            get 
+            get
             {
                 if (m_cost > 0)
                     return String.Format("{0:0,0,0}", m_cost);
                 else
                     return "0";
-             }
+            }
         }
 
         public bool Owned
@@ -459,7 +459,7 @@ namespace EVEMon.Common
         public event EventHandler Changed;
         public event EventHandler TrainingStatusChanged;
 
-        public class Prereq : EntityRequiredSkill 
+        public class Prereq : EntityRequiredSkill
         {
             private Skill m_pointedSkill;
 
@@ -527,11 +527,11 @@ namespace EVEMon.Common
 
         internal void StopTraining()
         {
-			if (m_inTraining)
-			{
-				OnTrainingStatusChanged();
-			}
-			m_inTraining = false;
+            if (m_inTraining)
+            {
+                OnTrainingStatusChanged();
+            }
+            m_inTraining = false;
             m_trainingToLevel = 0;
             m_estimatedCompletion = DateTime.MaxValue;
             OnChanged();
@@ -567,14 +567,14 @@ namespace EVEMon.Common
         {
             return GetTrainingTimeOfLevelOnly(level, includeCurrentSP, scratchpad, true);
         }
-        
-        public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad,Boolean includeImplants)
+
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
-            int pointsNeeded = GetPointsForLevelOnly(level,includeCurrentSP);
-            return this.GetTimeSpanForPoints(pointsNeeded, scratchpad,includeImplants);
+            int pointsNeeded = GetPointsForLevelOnly(level, includeCurrentSP);
+            return this.GetTimeSpanForPoints(pointsNeeded, scratchpad, includeImplants);
         }
 
-        public int GetPointsForLevelOnly(int level,bool includeCurrentSP)
+        public int GetPointsForLevelOnly(int level, bool includeCurrentSP)
         {
             int startSp = GetPointsRequiredForLevel(level - 1);
             int endSp = GetPointsRequiredForLevel(level);
@@ -667,18 +667,18 @@ namespace EVEMon.Common
             return HasAsPrerequisite(gs, ref neededLevel, true);
         }
 
-		/// <summary>
-		/// Checks whether a certain skill is an immediate prerequisite of this skill,
-		/// and the level needed
-		/// </summary>
-		/// <param name="gs">Skill that may be an immediate prereq</param>
-		/// <param name="neededLevel">needed level of skill</param>
-		/// <returns>Skill gs is an immediate prereq of this skill</returns>
-		public bool HasAsImmedPrereq(Skill gs, out int neededLevel)
-		{
-			neededLevel = 0;
-			return HasAsPrerequisite(gs, ref neededLevel, false);
-		}
+        /// <summary>
+        /// Checks whether a certain skill is an immediate prerequisite of this skill,
+        /// and the level needed
+        /// </summary>
+        /// <param name="gs">Skill that may be an immediate prereq</param>
+        /// <param name="neededLevel">needed level of skill</param>
+        /// <returns>Skill gs is an immediate prereq of this skill</returns>
+        public bool HasAsImmedPrereq(Skill gs, out int neededLevel)
+        {
+            neededLevel = 0;
+            return HasAsPrerequisite(gs, ref neededLevel, false);
+        }
 
         /// <summary>
         /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
@@ -689,13 +689,13 @@ namespace EVEMon.Common
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         public bool HasAsPrerequisite(Skill gs, out int neededLevel)
         {
-			neededLevel = 0;
+            neededLevel = 0;
             return HasAsPrerequisite(gs, ref neededLevel, true);
         }
 
         /// <summary>
         /// Checks whether a certain skill is a prerequisite of this skill, and what level it needs.
-		/// Find the highest level needed by searching entire prerequisite tree.
+        /// Find the highest level needed by searching entire prerequisite tree.
         /// </summary>
         /// <param name="gs">Skill to check.</param>
         /// <param name="neededLevel">The level that is needed. Out parameter.</param>
@@ -703,12 +703,13 @@ namespace EVEMon.Common
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         private bool HasAsPrerequisite(Skill gs, ref int neededLevel, bool recurse)
         {
-            foreach (Prereq pp in this.Prereqs) {
-				if (pp.Skill == gs)
-					neededLevel = Math.Max(pp.Level, neededLevel);
+            foreach (Prereq pp in this.Prereqs)
+            {
+                if (pp.Skill == gs)
+                    neededLevel = Math.Max(pp.Level, neededLevel);
 
-				if (recurse)
-					pp.Skill.HasAsPrerequisite(gs, ref neededLevel, true);
+                if (recurse)
+                    pp.Skill.HasAsPrerequisite(gs, ref neededLevel, true);
             }
             return (neededLevel > 0);
         }
@@ -848,7 +849,8 @@ namespace EVEMon.Common
 
         public static int Height
         {
-            get {
+            get
+            {
                 Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
                 return Math.Max(fontr.Height * 2 + PAD_TOP + LINE_VPAD + PAD_TOP, SKILL_DETAIL_HEIGHT);
             }

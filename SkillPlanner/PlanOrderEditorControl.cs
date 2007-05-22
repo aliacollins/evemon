@@ -59,9 +59,13 @@ namespace EVEMon.SkillPlanner
         {
             tmrAutoRefresh.Enabled = false;
             if (m_plan == null)
+            {
                 lvSkills.Items.Clear();
+            }
             else
+            {
                 UpdateSkillList();
+            }
         }
 
         private void OnSkillChanged(object sender, SkillChangedEventArgs e)
@@ -120,7 +124,7 @@ namespace EVEMon.SkillPlanner
 
         #region Skill List View
         private void UpdateSkillList()
-        {            
+        {
             if (m_plan == null) return;
             lvSkills.BeginUpdate();
             try
@@ -134,9 +138,7 @@ namespace EVEMon.SkillPlanner
                         lvi.Tag = pe;
 
                         // Highlight entries that were planned, if option enabled.
-                        if (!m_WorksafeMode &&
-                            m_HighlightPlannedSkills &&
-                            pe.EntryType == Plan.Entry.Type.Planned)
+                        if (!m_WorksafeMode && m_HighlightPlannedSkills && pe.EntryType == Plan.Entry.Type.Planned)
                         {
                             lvi.Font = m_plannedSkillFont;
                         }
@@ -177,9 +179,9 @@ namespace EVEMon.SkillPlanner
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                                                  {
-                                                      UpdateListViewItems();
-                                                  }));
+                                              {
+                                                  UpdateListViewItems();
+                                              }));
                 return;
             }
 
@@ -204,15 +206,15 @@ namespace EVEMon.SkillPlanner
                     }
 
                     TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
-                    TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad,false);
+                    TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad, false);
                     TimeSpan trainTimeImpCalc = trainTime;
                     if (m_implantCalculator != null)
                     {
-                        int points = gs.GetPointsForLevelOnly(pe.Level,true);
+                        int points = gs.GetPointsForLevelOnly(pe.Level, true);
                         int baseP = m_implantCalculator.getBaseAttributeValue(gs.PrimaryAttribute);
                         baseP += scratchpad.GetAttributeBonus(gs.PrimaryAttribute);
                         double p = m_implantCalculator.EffectiveAttr(baseP);
-                        int  baseS = m_implantCalculator.getBaseAttributeValue(gs.SecondaryAttribute);
+                        int baseS = m_implantCalculator.getBaseAttributeValue(gs.SecondaryAttribute);
                         baseS += scratchpad.GetAttributeBonus(gs.SecondaryAttribute);
                         double s = m_implantCalculator.EffectiveAttr(baseS);
                         double minutes = Convert.ToDouble(points) / (p + (s / 2));
@@ -228,10 +230,12 @@ namespace EVEMon.SkillPlanner
                     }
                     double deltaPointsOfLevel = Convert.ToDouble(reqToThisLevel - reqBeforeThisLevel);
                     double pctComplete = pointsInThisLevel / deltaPointsOfLevel;
-                    
+
                     // A really... well, I dislike this "fix" but...
                     if (pctComplete > 1.0)
+                    {
                         pctComplete = 1.0;
+                    }
 
                     DateTime thisStart = start;
                     start += trainTime;
@@ -259,7 +263,9 @@ namespace EVEMon.SkillPlanner
                     string BlockingEntry = string.Empty;
                     bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
                     if (isBlocked)
+                    {
                         BlockingEntry = "DOWNTIME";
+                    }
                     if (!isBlocked && m_settings != null)
                     {
                         for (int j = 0; j < m_settings.Schedule.Count; j++)
@@ -286,10 +292,9 @@ namespace EVEMon.SkillPlanner
                                 }
                             }
                         }
-                    } 
+                    }
                     if (isBlocked) lvi.ForeColor = Color.Red;
                     // end of schedule checking
-
 
                     for (int x = 0; x < lvSkills.Columns.Count; x++)
                     {
@@ -370,9 +375,13 @@ namespace EVEMon.SkillPlanner
                                         if (!pe.Skill.Known)
                                         {
                                             if (pe.Skill.Owned)
+                                            {
                                                 res = "Owned";
+                                            }
                                             else
+                                            {
                                                 res = pe.Skill.FormattedCost;
+                                            }
                                         }
                                     }
                                     break;
@@ -395,7 +404,7 @@ namespace EVEMon.SkillPlanner
                             }
                             else
                             {
-                                if (trainTimeImpCalc < trainTime)res = "-";
+                                if (trainTimeImpCalc < trainTime) res = "-";
                                 t = trainTime - trainTimeImpCalc;
                             }
                             res += Skill.TimeSpanToDescriptiveText(t, DescriptiveTextOptions.IncludeCommas);
@@ -406,9 +415,7 @@ namespace EVEMon.SkillPlanner
 
                         lvi.SubItems[x].Text = res;
                     }
-
                     lvi.SubItems[lvSkills.Columns.Count].Text = pe.EntryType.ToString();
-
                     scratchpad.ApplyALevelOf(gs);
                 }
             }
@@ -428,170 +435,28 @@ namespace EVEMon.SkillPlanner
             // Because this occurs before the reordering happens, we have to delay the
             // Order update a bit...
             ThreadPool.QueueUserWorkItem(delegate
-                                             {
-                                                 this.Invoke(new MethodInvoker(delegate
-                                                                                   {
-                                                                                       StringBuilder sb =
-                                                                                           new StringBuilder();
-                                                                                       SortedDictionary
-                                                                                           <int,
-                                                                                               ColumnPreference.
-                                                                                                   ColumnType> order =
-                                                                                                       new
-                                                                                                           SortedDictionary
-                                                                                                               <int,
-                                                                                                                   ColumnPreference
-                                                                                                                       .
-                                                                                                                       ColumnType
-                                                                                                                   >();
-                                                                                       for (int i = 0;
-                                                                                            i < lvSkills.Columns.Count;
-                                                                                            i++)
-                                                                                       {
-                                                                                           ColumnHeader ch =
-                                                                                               lvSkills.Columns[i];
-                                                                                           order.Add(ch.DisplayIndex,
-                                                                                                     (
-                                                                                                     ColumnPreference.
-                                                                                                         ColumnType)
-                                                                                                     ch.Tag);
-                                                                                       }
-                                                                                       foreach (
-                                                                                           KeyValuePair
-                                                                                               <int,
-                                                                                                   ColumnPreference.
-                                                                                                       ColumnType> pair
-                                                                                               in order)
-                                                                                       {
-                                                                                           if (sb.Length != 0)
-                                                                                           {
-                                                                                               sb.Append(',');
-                                                                                           }
-                                                                                           sb.Append(
-                                                                                               pair.Value.ToString());
-                                                                                       }
-
-                                                                                       m_plan.ColumnPreference.Order =
-                                                                                           sb.ToString();
-                                                                                       Program.Settings.Save();
-                                                                                   }));
-                                             });
-        }
-
-        private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lvSkills.SelectedIndices.Count == 0)
             {
-                tsbMoveUp.Enabled = false;
-                tsbMoveDown.Enabled = false;
-            }
-            else
-            {
-                tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
-                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] !=
-                                       lvSkills.Items.Count - 1);
-            }
-
-            // Update the colour of all items
-
-            foreach (ListViewItem current in lvSkills.Items)
-            {
-                bool isSameSkill = false;
-                bool isPreRequisite = false;
-                bool isPostRequisite = false;
-
-                if (!m_WorksafeMode &&
-                    m_HighlightPrerequisites &&
-                    lvSkills.SelectedItems.Count == 1)
+                this.Invoke(new MethodInvoker(delegate
                 {
-                    Plan.Entry currentSkill = (Plan.Entry)current.Tag;
-                    Plan.Entry selectedSkill = (Plan.Entry)lvSkills.SelectedItems[0].Tag;
-                    // Single select so check for pre-requisite highlighting
-                    int neededLevel;
-                    if (currentSkill.Skill.HasAsImmedPrereq(selectedSkill.Skill, out neededLevel))
+                    StringBuilder sb = new StringBuilder();
+                    SortedDictionary<int, ColumnPreference.ColumnType> order = new SortedDictionary<int, ColumnPreference.ColumnType>();
+                    for (int i = 0; i < lvSkills.Columns.Count; i++)
                     {
-                        if (currentSkill.Level == 1 && neededLevel >= selectedSkill.Level)
-                            isPostRequisite = true;
+                        ColumnHeader ch = lvSkills.Columns[i];
+                        order.Add(ch.DisplayIndex, (ColumnPreference.ColumnType)ch.Tag);
                     }
-                    if (selectedSkill.Skill.HasAsImmedPrereq(currentSkill.Skill, out neededLevel))
+                    foreach (KeyValuePair<int, ColumnPreference.ColumnType> pair in order)
                     {
-                        if (currentSkill.Level == neededLevel)
-                            isPreRequisite = true;
-                    }
-                    if (currentSkill.SkillName == selectedSkill.SkillName)
-                    {
-                        isSameSkill = true;
-                    }
-                }
-
-                if (isSameSkill)
-                {
-                    //current.BackColor = Color.LightYellow;
-                    current.StateImageIndex = 1;
-                }
-                else if (isPreRequisite)
-                {
-                    //current.BackColor = Color.LightPink;
-                    current.StateImageIndex = 2;
-                }
-                else if (isPostRequisite)
-                {
-                    //current.BackColor = Color.LightGreen;
-                    current.StateImageIndex = 0;
-                }
-                else
-                {
-                    //current.BackColor = lvSkills.BackColor;
-                    current.StateImageIndex = -1;
-                }
-            }
-            if (lvSkills.SelectedItems.Count > 1)
-            {
-                List<Skill> countedSkills = new List<Skill>();
-                TimeSpan selectedTrainTime = TimeSpan.Zero;
-                TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
-                int cost = 0;
-
-                // need to loop through all entries to include effect of training skills
-                // in the total time of selected skills.
-                EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
-                for (int i = 0; i < lvSkills.Items.Count; i++)
-                {
-                    ListViewItem lvi = lvSkills.Items[i];
-                    Plan.Entry pe = (Plan.Entry)lvi.Tag;
-                    Skill gs = pe.Skill;
-                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
-                    if (lvSkills.SelectedItems.Contains(lvi))
-                    {
-                        // ensure cost is only counted once!
-                        if (!countedSkills.Contains(gs))
+                        if (sb.Length != 0)
                         {
-                            countedSkills.Add(gs);
-                            if (!gs.Known && !gs.Owned)
-                                cost += gs.Cost;
+                            sb.Append(',');
                         }
-                        selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
-                        selectedTimeWithLearning += trainTime;
+                        sb.Append(pair.Value.ToString());
                     }
-                    scratchpad.ApplyALevelOf(gs);
-                }
-
-                String sb = String.Format("{0} Skills selected, Training time: {1}",
-                                            lvSkills.SelectedItems.Count,
-                                            Skill.TimeSpanToDescriptiveText(selectedTrainTime,DescriptiveTextOptions.IncludeCommas));
-                if (selectedTimeWithLearning != selectedTrainTime)
-                {
-                    sb += String.Format(" ({0} with preceding learning skills)", Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning,DescriptiveTextOptions.IncludeCommas));
-                }
-                if (cost > 0)
-                    sb += String.Format(", cost of unknown skills is {0:0,0,0}", cost); 
-                m_plannerWindow.UpdateStatusBarSelected(sb);
-            }
-            else
-            {
-                // reset the status bar to normal in case multiple items were previously selected
-                m_plannerWindow.UpdateStatusBar();
-            }
+                    m_plan.ColumnPreference.Order = sb.ToString();
+                    Program.Settings.Save();
+                }));
+            });
         }
 
         private void lvSkills_ItemHover(object sender, ListViewItemMouseHoverEventArgs e)
@@ -647,10 +512,7 @@ namespace EVEMon.SkillPlanner
                     {
                         try
                         {
-                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(
-                                                                                               typeof(
-                                                                                                   ColumnPreference.
-                                                                                                   ColumnType), ts, true);
+                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(typeof(ColumnPreference.ColumnType), ts, true);
                             if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
                             {
                                 AddColumn(ct);
@@ -686,8 +548,7 @@ namespace EVEMon.SkillPlanner
                         ColumnHeader ch = lvSkills.Columns[i];
                         if (ch.Tag != null)
                         {
-                            ColumnPreference.ColumnDisplayAttribute cda =
-                                ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
+                            ColumnPreference.ColumnDisplayAttribute cda = ColumnPreference.GetAttribute((ColumnPreference.ColumnType)ch.Tag);
                             ch.Width = cda.Width;
                         }
                     }
@@ -717,7 +578,7 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion Skill List View
-        
+
         #region Implant Calc
 
         private ImplantCalculator m_implantCalculator = null;
@@ -726,7 +587,7 @@ namespace EVEMon.SkillPlanner
             if (m_implantCalculator == null)
             {
                 m_implantCalculator = ic;
-                ic.Disposed +=new EventHandler(ic_Disposed);
+                ic.Disposed += new EventHandler(ic_Disposed);
                 UpdateListColumns();
             }
             UpdateListViewItems();
@@ -745,7 +606,7 @@ namespace EVEMon.SkillPlanner
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
             miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
-            miChangeNote.Enabled = (lvSkills.SelectedItems.Count >0);
+            miChangeNote.Enabled = (lvSkills.SelectedItems.Count > 0);
             miChangePriority.Enabled = miChangeNote.Enabled;
             if (lvSkills.SelectedItems.Count == 1)
             {
@@ -806,7 +667,7 @@ namespace EVEMon.SkillPlanner
             {
                 miSubPlan.Enabled = true;
             }
-            else 
+            else
             {
                 miSubPlan.Enabled = false;
             }
@@ -841,7 +702,7 @@ namespace EVEMon.SkillPlanner
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key
-            RemoveEntry();            
+            RemoveEntry();
         }
 
         private void miChangePriority_Click(object sender, EventArgs e)
@@ -853,7 +714,7 @@ namespace EVEMon.SkillPlanner
                     Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
                     f.Priority = pe.Priority;
                 }
-                else 
+                else
                 {
                     f.Priority = Plan.Entry.DEFAULT_PRIORITY;
                 }
@@ -862,14 +723,14 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 Dictionary<Plan.Entry, Plan.Entry> backup = new Dictionary<Plan.Entry, Plan.Entry>();
-				bool loweringPriorities = true; // if only lowering priorities
+                bool loweringPriorities = true; // if only lowering priorities
                 foreach (ListViewItem lvi in lvSkills.SelectedItems)
                 {
                     Plan.Entry penew = lvi.Tag as Plan.Entry;
                     Plan.Entry peold = (Plan.Entry)penew.Clone();
-					loweringPriorities &= (f.Priority > peold.Priority);
+                    loweringPriorities &= (f.Priority > peold.Priority);
                     penew.Priority = f.Priority;
-                    backup.Add(penew,peold);
+                    backup.Add(penew, peold);
                 }
 
                 if (!m_plan.CheckPriorities(false))
@@ -927,11 +788,12 @@ namespace EVEMon.SkillPlanner
             string sn = "Selected Skills";
             string noteText = "";
             Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
-			noteText = pe.Notes;
-			if (lvSkills.SelectedItems.Count == 1)
-				sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
+            noteText = pe.Notes;
+            if (lvSkills.SelectedItems.Count == 1)
+                sn = pe.SkillName + " " + Skill.GetRomanForInt(pe.Level);
 
-			using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn)) {
+            using (EditEntryNoteWindow f = new EditEntryNoteWindow(sn))
+            {
                 f.NoteText = noteText;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
@@ -941,8 +803,10 @@ namespace EVEMon.SkillPlanner
             }
             if (lvSkills.SelectedItems.Count == 1)
                 pe.Notes = noteText;
-            else {
-                foreach (ListViewItem lvi in lvSkills.SelectedItems) {
+            else
+            {
+                foreach (ListViewItem lvi in lvSkills.SelectedItems)
+                {
                     pe = lvi.Tag as Plan.Entry;
                     pe.Notes = noteText;
                 }
@@ -1004,7 +868,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
- 
+
         private void miMarkOwned_Click(object sender, EventArgs e)
         {
             Plan.Entry pe = lvSkills.SelectedItems[0].Tag as Plan.Entry;
@@ -1201,7 +1065,7 @@ namespace EVEMon.SkillPlanner
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst,f.Priority);
+                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst, f.Priority);
                     tsbMoveDown.Enabled = false;
                     tsbMoveUp.Enabled = false;
                 }
@@ -1246,7 +1110,9 @@ namespace EVEMon.SkillPlanner
                 return;
             }
             if (m_settings == null)
+            {
                 m_settings = Settings.GetInstance();
+            }
         }
 
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1255,12 +1121,138 @@ namespace EVEMon.SkillPlanner
             {
                 miShowInSkillBrowser_Click(sender, e);
             }
-         }
+        }
 
-		private void lvSkills_KeyDown(object sender, KeyEventArgs e) {
-			if (e.Control && e.KeyCode == Keys.Enter)
-				if (lvSkills.SelectedItems.Count > 0)
-					miChangeNote_Click(sender, e);
-		}
-     }
+        private void lvSkills_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                if (lvSkills.SelectedItems.Count > 0)
+                {
+                    miChangeNote_Click(sender, e);
+                }
+            }
+        }
+
+        private void lvSkills_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (lvSkills.SelectedIndices.Count == 0)
+            {
+                tsbMoveUp.Enabled = false;
+                tsbMoveDown.Enabled = false;
+            }
+            else
+            {
+                tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
+                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] != lvSkills.Items.Count - 1);
+            }
+
+            // Update the colour of all items
+
+            foreach (ListViewItem current in lvSkills.Items)
+            {
+                bool isSameSkill = false;
+                bool isPreRequisite = false;
+                bool isPostRequisite = false;
+
+                if (!m_WorksafeMode && m_HighlightPrerequisites && lvSkills.SelectedItems.Count == 1)
+                {
+                    Plan.Entry currentSkill = (Plan.Entry)current.Tag;
+                    Plan.Entry selectedSkill = (Plan.Entry)lvSkills.SelectedItems[0].Tag;
+                    // Single select so check for pre-requisite highlighting
+                    int neededLevel;
+                    if (currentSkill.Skill.HasAsImmedPrereq(selectedSkill.Skill, out neededLevel))
+                    {
+                        if (currentSkill.Level == 1 && neededLevel >= selectedSkill.Level)
+                        {
+                            isPostRequisite = true;
+                        }
+                    }
+                    if (selectedSkill.Skill.HasAsImmedPrereq(currentSkill.Skill, out neededLevel))
+                    {
+                        if (currentSkill.Level == neededLevel)
+                        {
+                            isPreRequisite = true;
+                        }
+                    }
+                    if (currentSkill.SkillName == selectedSkill.SkillName)
+                    {
+                        isSameSkill = true;
+                    }
+                }
+
+                if (isSameSkill)
+                {
+                    //current.BackColor = Color.LightYellow;
+                    current.StateImageIndex = 1;
+                }
+                else if (isPreRequisite)
+                {
+                    //current.BackColor = Color.LightPink;
+                    current.StateImageIndex = 2;
+                }
+                else if (isPostRequisite)
+                {
+                    //current.BackColor = Color.LightGreen;
+                    current.StateImageIndex = 0;
+                }
+                else
+                {
+                    //current.BackColor = lvSkills.BackColor;
+                    current.StateImageIndex = -1;
+                }
+            }
+            if (lvSkills.SelectedItems.Count > 1)
+            {
+                List<Skill> countedSkills = new List<Skill>();
+                TimeSpan selectedTrainTime = TimeSpan.Zero;
+                TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
+                int cost = 0;
+
+                // need to loop through all entries to include effect of training skills
+                // in the total time of selected skills.
+                EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                for (int i = 0; i < lvSkills.Items.Count && i < e.ItemIndex; i++)
+                {
+                    ListViewItem lvi = lvSkills.Items[i];
+                    Plan.Entry pe = (Plan.Entry)lvi.Tag;
+                    Skill gs = pe.Skill;
+                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                    if (lvSkills.SelectedItems.Contains(lvi))
+                    {
+                        // ensure cost is only counted once!
+                        if (!countedSkills.Contains(gs))
+                        {
+                            countedSkills.Add(gs);
+                            if (!gs.Known && !gs.Owned)
+                            {
+                                cost += gs.Cost;
+                            }
+                        }
+                        selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
+                        selectedTimeWithLearning += trainTime;
+                    }
+                    scratchpad.ApplyALevelOf(gs);
+                }
+
+                String sb = String.Format("{0} Skills selected, Training time: {1}",
+                                            lvSkills.SelectedItems.Count,
+                                            Skill.TimeSpanToDescriptiveText(selectedTrainTime, DescriptiveTextOptions.IncludeCommas));
+                if (selectedTimeWithLearning != selectedTrainTime)
+                {
+                    sb += String.Format(" ({0} with preceding learning skills)", Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning, DescriptiveTextOptions.IncludeCommas));
+                }
+                if (cost > 0)
+                {
+                    sb += String.Format(", cost of unknown skills is {0:0,0,0}", cost);
+                }
+                m_plannerWindow.UpdateStatusBarSelected(sb);
+            }
+            else
+            {
+                // reset the status bar to normal in case multiple items were previously selected
+                m_plannerWindow.UpdateStatusBar();
+            }
+        }
+    }
 }
