@@ -25,12 +25,16 @@ namespace EVEMon.SkillPlanner
         private bool m_allSkillsKnown;
         private bool m_skillsUnplanned;
 
+        private bool m_showImages;
+
         public ShipBrowserControl()
         {
             InitializeComponent();
             this.scShipSelect.RememberDistanceKey = "ShipBrowser";
             shipSelectControl_SelectedShipChanged(null, null);
+            m_showImages = !Settings.GetInstance().WorksafeMode;
             InitializeDisplayControl();
+
         }
 
         private  static AttributeDisplayControl m_DisplayAttributes = null;
@@ -104,6 +108,16 @@ namespace EVEMon.SkillPlanner
                 m_DisplayAttributes.add(new AttributeDisplayData(false, "agility", "Agility", false, false));
         	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Other","Other",false,true));
             }
+            
+            if (this.DesignMode)
+            {
+                return;
+            }
+ 
+            if (!m_showImages)
+            {
+                panel3.Size = new Size(0, this.Size.Height - lvShipProperties.Size.Height);
+            }
         }
 
         private static string m_propName;
@@ -123,39 +137,45 @@ namespace EVEMon.SkillPlanner
 
         private void shipSelectControl_SelectedShipChanged(object sender, EventArgs e)
         {
-            Bitmap b = new Bitmap(256, 256);
-            using (Graphics g = Graphics.FromImage(b))
+            Settings settings = Settings.GetInstance();
+            if (m_showImages)
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 256, 256));
+                Bitmap b = new Bitmap(256, 256);
+                using (Graphics g = Graphics.FromImage(b))
+                {
+                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 256, 256));
+                }
+                pbShipImage.Image = b;
             }
-            pbShipImage.Image = b;
-
             if (shipSelectControl.SelectedObject != null)
             {
                 Ship s = shipSelectControl.SelectedObject as Ship;
                 int shipId = s.Id;
 
-                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources"))
+                if (m_showImages)
                 {
-                    System.Resources.IResourceReader basic;
-                    basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources");
-                    System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
-                    while (basicx.MoveNext())
+                    if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources"))
                     {
-                        if (basicx.Key.ToString() == "_" + s.Id)
+                        System.Resources.IResourceReader basic;
+                        basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources");
+                        System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                        while (basicx.MoveNext())
                         {
-                            pbShipImage.Image = (System.Drawing.Image)basicx.Value;
+                            if (basicx.Key.ToString() == "_" + s.Id)
+                            {
+                                pbShipImage.Image = (System.Drawing.Image)basicx.Value;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    EveSession.GetImageAsync(
-                        "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
-                        shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
-                                                              {
-                                                                  GotShipImage(shipId, i);
-                                                              });
+                    else
+                    {
+                        EveSession.GetImageAsync(
+                            "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
+                            shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
+                                                                  {
+                                                                      GotShipImage(shipId, i);
+                                                                  });
+                    }
                 }
 
                 lblShipClass.Text = s.Type + " > " + s.Race;

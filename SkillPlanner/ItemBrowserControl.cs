@@ -13,8 +13,22 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             this.splitContainer1.RememberDistanceKey = "ItemBrowser";
+            m_showImages = !Settings.GetInstance().WorksafeMode;
+            if (this.DesignMode)
+            {
+                return;
+            }
+
+            if (!m_showImages)
+            {
+                pbItemIcon.Size = new Size(0, 0);
+                lblItemCategory.Location = new Point(3,lblItemCategory.Location.Y);
+                lblItemName.Location = new Point(3, lblItemName.Location.Y);
+            }
+ 
         }
 
+        private bool m_showImages;
         private bool m_allSkillsKnown;
         private bool m_skillsUnplanned;
 
@@ -48,13 +62,15 @@ namespace EVEMon.SkillPlanner
             }
             if (item != null)
             {
-                Bitmap b = new Bitmap(pbItemIcon.ClientSize.Width, pbItemIcon.ClientSize.Height);
-                using (Graphics g = Graphics.FromImage(b))
+                if (m_showImages)
                 {
-                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
+                    Bitmap b = new Bitmap(pbItemIcon.ClientSize.Width, pbItemIcon.ClientSize.Height);
+                    using (Graphics g = Graphics.FromImage(b))
+                    {
+                        g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
+                    }
+                    pbItemIcon.Image = b;
                 }
-                pbItemIcon.Image = b;
-
                 StringBuilder sb = new StringBuilder();
                 ItemCategory cat = item.ParentCategory;
                 while (cat != null)
@@ -107,7 +123,7 @@ namespace EVEMon.SkillPlanner
                     btnItemSkillsAdd.Enabled = false;
                 }
 
-                if (!String.IsNullOrEmpty(item.Icon))
+                if (!String.IsNullOrEmpty(item.Icon) && m_showImages)
                 {
                     bool pic_got = false;
                     System.Resources.IResourceReader basic;
