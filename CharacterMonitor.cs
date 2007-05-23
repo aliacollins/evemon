@@ -2015,7 +2015,7 @@ namespace EVEMon
                 // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
                 DateTime unadjustedLocalEndtime = ((DateTime)m_grandCharacterInfo.SerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.SerialSIT.TQOffset))).ToLocalTime();
-                if (!m_grandCharacterInfo.SerialSIT.PreWarningGiven && m_settings.NotificationOffset != 0 && unadjustedLocalEndtime.AddSeconds(-m_settings.NotificationOffset).Subtract(new TimeSpan(4,30,30,0)) < DateTime.Now)
+                if (!m_grandCharacterInfo.SerialSIT.PreWarningGiven && m_settings.NotificationOffset != 0 && unadjustedLocalEndtime.AddSeconds(-m_settings.NotificationOffset) < DateTime.Now)
                 {
                     m_grandCharacterInfo.SerialSIT.PreWarningGiven = true;
                     // here we raise a msg about skill about to complete and to get your butt into game and prepare the next skill.
