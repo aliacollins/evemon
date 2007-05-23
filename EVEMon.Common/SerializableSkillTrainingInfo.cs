@@ -250,6 +250,15 @@ namespace EVEMon.Common
             set { m_TQOffset = value; }
         }
 
+        private bool m_PreWarningGiven = false;
+
+        [XmlElement("PreWarningGive")]
+        public bool PreWarningGiven
+        {
+            get { return m_PreWarningGiven; }
+            set { m_PreWarningGiven = value; }
+        }
+
         private bool m_AlertRaisedAlready = false;
 
         [XmlElement("AlertRaisedAlready")]
@@ -283,6 +292,7 @@ namespace EVEMon.Common
             ssti.m_destSP = this.m_destSP;
             ssti.m_toLevel = this.m_toLevel;
             ssti.m_TQOffset = this.m_TQOffset;
+            ssti.PreWarningGiven = this.PreWarningGiven;
             ssti.m_AlertRaisedAlready = this.m_AlertRaisedAlready;
             return ssti;
         }
@@ -301,6 +311,7 @@ namespace EVEMon.Common
             this.m_destSP = ssti.m_destSP;
             this.m_toLevel = ssti.m_toLevel;
             this.m_TQOffset = ssti.m_TQOffset;
+            this.PreWarningGiven = ssti.PreWarningGiven;
             this.m_AlertRaisedAlready = ssti.m_AlertRaisedAlready;
         }
     }

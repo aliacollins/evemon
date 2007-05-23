@@ -205,7 +205,7 @@ namespace EVEMon
             WorksafeChangedCallback(null, null);
 
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
-            m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
+            //m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace EVEMon
             m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
             m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
             m_settings.ScheduleEntriesChanged -= new EventHandler<EventArgs>(m_settings_ScheduleEntriesChanged);
-            m_settings.NotificationOffsetChanged -= new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
+            //m_settings.NotificationOffsetChanged -= new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
         }
 
         void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
@@ -1023,8 +1023,7 @@ namespace EVEMon
                 double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.PrimaryAttribute) +
                                        (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.SecondaryAttribute) / 2));
                 lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
-                DateTime LocalComplete = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
-                m_estimatedCompletion = LocalComplete.AddSeconds(-m_settings.NotificationOffset);
+                m_estimatedCompletion = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
 
                 m_settings_ScheduleEntriesChanged(null, null);
 
@@ -1044,11 +1043,11 @@ namespace EVEMon
 
         }
 
-        void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
+        /*void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
         {
-            if (m_grandCharacterInfo.CurrentlyTrainingSkill != null)
-                m_estimatedCompletion = m_grandCharacterInfo.CurrentlyTrainingSkill.EstimatedCompletion.AddSeconds(-m_settings.NotificationOffset);
-        }
+            if (m_grandCharacterInfo.SerialSIT != null && m_grandCharacterInfo.SerialSIT.isSkillInTraining)
+                m_estimatedCompletion = m_grandCharacterInfo.SerialSIT.getTrainingEndTime.AddSeconds(-m_settings.NotificationOffset);
+        }*/
 
         /// <summary>
         /// Handles everything when the character's training skill has changed.  Called by GrandCharacterInfo.
@@ -2010,17 +2009,25 @@ namespace EVEMon
                 m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
                 m_grandCharacterInfo.SerialSIT.isSkillInTraining &&
                 !m_grandCharacterInfo.SerialSIT.AlertRaisedAlready &&
-				m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id &&
-                ((DateTime)m_grandCharacterInfo.SerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.SerialSIT.TQOffset))).ToLocalTime() < DateTime.Now)
+				m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id)
             {
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
-
-                // The following line triggers the required code in GrandCharacterInfo.cs for that character
-                m_grandCharacterInfo.triggerSkillComplete(m_charName);
-
-                UpdateSkillHeaderStats();
+                DateTime unadjustedLocalEndtime = ((DateTime)m_grandCharacterInfo.SerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.SerialSIT.TQOffset))).ToLocalTime();
+                if (!m_grandCharacterInfo.SerialSIT.PreWarningGiven && m_settings.NotificationOffset != 0 && unadjustedLocalEndtime.AddSeconds(-m_settings.NotificationOffset) < DateTime.Now)
+                {
+                    // here we raise a msg about skill about to complete and to get your butt into game and prepare the next skill.
+                    MessageBox.Show("The Character: " + m_charName + "\nis about to complete skill: " + m_grandCharacterInfo.AllSkillsByTypeID[m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID].Name + "\nin: " + m_settings.NotificationOffset + " Seconds",
+                                    "Pre-Completion Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    m_grandCharacterInfo.SerialSIT.PreWarningGiven = true;
+                }
+                if (unadjustedLocalEndtime < DateTime.Now)
+                {
+                    // The following line triggers the required code in GrandCharacterInfo.cs for that character
+                    m_grandCharacterInfo.triggerSkillComplete(m_charName);
+                    UpdateSkillHeaderStats();
+                }
             }
             if (m_updatingPortrait == false && pbCharImage.Image == null)
             {
@@ -2129,7 +2136,8 @@ namespace EVEMon
                             DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(ci.TrainingSkillInfo.TQOffset)).ToLocalTime();
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
-                                         (adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
+                                         //(adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
+                                         adjustedEndTime);
                         }
                     }
                     writeSubSep();
