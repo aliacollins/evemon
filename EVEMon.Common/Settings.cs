@@ -1346,6 +1346,46 @@ namespace EVEMon.Common
 
         public event EventHandler<EventArgs> ScheduleEntriesChanged;
 
+        public bool SkillIsBlockedAt(DateTime time, out string blockingEntry)
+        {
+            blockingEntry = string.Empty;
+
+            // check if it will be in downtime
+            bool isBlocked = (time.ToUniversalTime().Hour == 11);
+            if (isBlocked)
+            {
+                blockingEntry = "DOWNTIME";
+                return true;
+            }
+
+            // check schedule entries to see if they overlap the imput time
+            for (int j = 0; j < Schedule.Count; j++)
+            {
+                ScheduleEntry temp = Schedule[j];
+                if (temp.GetType() == typeof(SimpleScheduleEntry))
+                {
+                    SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
+                    if (y.Blocking(time))
+                    {
+                        blockingEntry = y.Title;
+                        return true;
+                    }
+                }
+                else if (temp.GetType() == typeof(RecurringScheduleEntry))
+                {
+                    RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
+                    if (y.Blocking(time))
+                    {
+                        blockingEntry = y.Title;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
         #endregion //Schedule Entries
 
         private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();

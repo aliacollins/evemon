@@ -261,38 +261,9 @@ namespace EVEMon.SkillPlanner
 
                     // See if this entry conflicts witha  schedule entry
                     string BlockingEntry = string.Empty;
-                    bool isBlocked = (thisEnd.ToUniversalTime().Hour == 11);
-                    if (isBlocked)
-                    {
-                        BlockingEntry = "DOWNTIME";
-                    }
-                    if (!isBlocked && m_settings != null)
-                    {
-                        for (int j = 0; j < m_settings.Schedule.Count; j++)
-                        {
-                            ScheduleEntry temp = m_settings.Schedule[j];
-                            if (temp.GetType() == typeof(SimpleScheduleEntry))
-                            {
-                                SimpleScheduleEntry y = (SimpleScheduleEntry)temp;
-                                if (y.Blocking(thisEnd))
-                                {
-                                    isBlocked = true;
-                                    BlockingEntry = y.Title;
-                                    break;
-                                }
-                            }
-                            else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                            {
-                                RecurringScheduleEntry y = (RecurringScheduleEntry)temp;
-                                if (y.Blocking(thisEnd))
-                                {
-                                    isBlocked = true;
-                                    BlockingEntry = y.Title;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+
+                    bool isBlocked = m_settings.SkillIsBlockedAt(thisEnd, out BlockingEntry);
+                    
                     if (isBlocked) lvi.ForeColor = Color.Red;
                     // end of schedule checking
 

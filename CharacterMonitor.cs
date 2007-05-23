@@ -245,41 +245,9 @@ namespace EVEMon
             {
                 Skill gs = m_grandCharacterInfo.CurrentlyTrainingSkill;
 
-                bool isBlocked = (m_estimatedCompletion.ToUniversalTime().Hour == 11);
-
-                lblScheduleWarning.Visible = false;
-                if (isBlocked)
-                {
-                    // downtime blocking should take prioity
-                    lblScheduleWarning.Text = "Schedule Conflict-Downtime!";
-                }
-                else
-                {
-                    for (int i = 0; i < m_settings.Schedule.Count; i++)
-                    {
-                        ScheduleEntry temp = m_settings.Schedule[i];
-                        if (temp.GetType() == typeof(SimpleScheduleEntry))
-                        {
-                            SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                            if (x.Blocking(m_estimatedCompletion))
-                            {
-                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                isBlocked = true;
-                                break;
-                            }
-                        }
-                        else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                        {
-                            RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                            if (x.Blocking(m_estimatedCompletion))
-                            {
-                                lblScheduleWarning.Text = "Schedule Conflict-" + x.Title;
-                                isBlocked = true;
-                                break;
-                            }
-                        }
-                    }
-                }
+                string conflictText = String.Empty;
+                bool isBlocked = m_settings.SkillIsBlockedAt(m_estimatedCompletion, out conflictText);
+                lblScheduleWarning.Text = conflictText;
                 lblScheduleWarning.Visible = isBlocked;
             }
         }
