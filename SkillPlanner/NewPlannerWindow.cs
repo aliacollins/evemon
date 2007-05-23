@@ -226,10 +226,7 @@ namespace EVEMon.SkillPlanner
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(delegate
-                                                  {
-                                                      UpdateStatusBar();
-                                                  }));
+                this.Invoke(new MethodInvoker(UpdateStatusBar));
                 return;
             }
 

@@ -491,10 +491,18 @@ namespace EVEMon
         /// </summary>
         public void UpdateCharacterInfo()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(UpdateCharacterInfo));
+                return;
+            }
             try
             {
-                this.tmrUpdate_Tick(null, null);
-                UpdateThrobberLabel();
+                if (throbber.State != Throbber.ThrobberState.Strobing)
+                {
+                    tmrUpdate_Tick(null, null);
+                    UpdateThrobberLabel();
+                }
             }
             catch
             {
@@ -703,6 +711,12 @@ namespace EVEMon
         /// </summary>
         private void UpdateThrobberLabel()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(UpdateThrobberLabel));
+                return;
+            }
+
             if (throbber.State == Throbber.ThrobberState.Rotating)
             {
                 lblUpdateTimer.Visible = false;
@@ -1928,6 +1942,15 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                                                  {
+                                                      tmrUpdate_Tick(sender, e);
+                                                  }));
+                return;
+            }
+
             if (throbber.State == Throbber.ThrobberState.Rotating)
             {
                 return;

@@ -178,10 +178,7 @@ namespace EVEMon.SkillPlanner
             if (m_settings == null) m_settings = Settings.GetInstance();
             if (this.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(delegate
-                                              {
-                                                  UpdateListViewItems();
-                                              }));
+                this.Invoke(new MethodInvoker(UpdateListViewItems));
                 return;
             }
 
