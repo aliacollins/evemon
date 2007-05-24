@@ -322,8 +322,21 @@ namespace EVEMon.Common
         {
             try
             {
-                string stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
+                string stxt;
+                /*
+                int testcharid = ;
+                string testxmlfilepath = "";
+                if (charId != testcharid)*/
+                stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
                          charId.ToString());
+                /*else
+                {
+                    FileStream fs = new FileStream(testxmlfilepath + "test.xml", FileMode.Open);
+                    StreamReader reader = new StreamReader(fs);
+                    stxt = reader.ReadToEnd();
+                    reader.Dispose();
+                    fs.Dispose();
+                }*/
                 if (String.IsNullOrEmpty(stxt))
                 {
                     return null;

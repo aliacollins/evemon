@@ -1418,20 +1418,22 @@ namespace EVEMon.Common
 
         public void triggerSkillComplete(string CharacterName)
         { // Basically trigger the event when a skill completes between downloads
-            Skill newlyCompletedSkill = null;
-			if (m_SkillInTraining != null && m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
-				newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-			string name = null;
-            if (newlyCompletedSkill != null)
+            if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
             {
-				name = newlyCompletedSkill.Name;
-                newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(newlyCompletedSkill.TrainingToLevel);
-                m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
-                m_SkillInTraining = null;
-				m_OldSkillInTraining.AlertRaisedAlready = true;
-                this.CancelCurrentSkillTraining();
+                Skill newlyCompletedSkill = null;
+                if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+                    newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                string name = null;
+                if (newlyCompletedSkill != null)
+                {
+                    name = newlyCompletedSkill.Name;
+                    newlyCompletedSkill.CurrentSkillPoints = newlyCompletedSkill.GetPointsRequiredForLevel(m_SkillInTraining.TrainingSkillToLevel);
+                    m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
+                    m_SkillInTraining = null;
+                    this.CancelCurrentSkillTraining();
+                }
+                OnDownloadAttemptComplete(CharacterName, name, true);
             }
-            OnDownloadAttemptComplete(CharacterName, name, true);
         }
 
         private void OnDownloadAttemptComplete(string CharacterName, string skillName, bool Complete)

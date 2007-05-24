@@ -2021,8 +2021,9 @@ namespace EVEMon
                     MessageBox.Show("The Character: " + m_charName + "\nis about to complete skill: " + m_grandCharacterInfo.AllSkillsByTypeID[m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID].Name + "\nin: " + m_settings.NotificationOffset + " Seconds",
                                     "Pre-Completion Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
-                if (unadjustedLocalEndtime < DateTime.Now)
+                if (!m_grandCharacterInfo.SerialSIT.AlertRaisedAlready && unadjustedLocalEndtime < DateTime.Now)
                 {
+                    m_grandCharacterInfo.SerialSIT.AlertRaisedAlready = true;
                     // The following line triggers the required code in GrandCharacterInfo.cs for that character
                     m_grandCharacterInfo.triggerSkillComplete(m_charName);
                     UpdateSkillHeaderStats();
