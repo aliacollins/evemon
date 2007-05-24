@@ -1766,11 +1766,10 @@ namespace EVEMon
                         percentDone = s.GetPercentDone();
                         PointsRemain = s.GetPointsRequiredForLevel(NextLevel) - s.CurrentSkillPoints;
                         string CurrentlyDone =
-                            String.Format("Completed lvl {0}: {1}/{2} ({3})",
+                            String.Format("Completed lvl {0}: {1}/{2}",
                                           Skill.GetRomanForInt(s.Level),
                                           s.CurrentSkillPoints.ToString("#,##0"),
-                                          s.GetPointsRequiredForLevel(s.Level).ToString("#,##0"),
-                                          percentDone.ToString("P0"));
+                                          s.GetPointsRequiredForLevel(s.Level).ToString("#,##0"));
                         string ToNextLevel =
                             String.Format("To Level {0}: {1} Skill Points required",
                                           Skill.GetRomanForInt(NextLevel),
@@ -1791,7 +1790,7 @@ namespace EVEMon
                         ttToolTip.Active = true;
                         ttToolTip.SetToolTip(lbSkills,
                                              String.Format(
-                                                 "Level V Complete: {0}/{1} (100%)\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4} {5}",
+                                                 "Level V Complete: {0}/{1}\nNo further training required\n{2}\nPrimary: {3}, Secondary: {4} {5}",
                                                  s.CurrentSkillPoints.ToString("#,##0"),
                                                  s.GetPointsRequiredForLevel(5).ToString("#,##0"),
                                                  s.DescriptionNl.ToString(), s.PrimaryAttribute.ToString(),
