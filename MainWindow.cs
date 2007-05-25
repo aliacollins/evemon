@@ -484,16 +484,10 @@ namespace EVEMon
                         string sa = e.CharacterName + " has finished learning " + e.SkillName + " " + skillLevelString + ".";
 
                         m_completedSkills.Add(sa);
+                        if (m_completedSkills.Count > 1)
+                            sa = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                        ShowBalloonTip("EVEMon - Skill Training Completed", "Skill Training Completed", sa);
 
-                        niAlertIcon.Text = "EVEMon - Skill Training Completed";
-                        niAlertIcon.BalloonTipTitle = "Skill Training Completed";
-                        if (m_completedSkills.Count == 1)
-                            niAlertIcon.BalloonTipText = sa;
-                        else if (m_completedSkills.Count > 1)
-                            niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
-                        niAlertIcon.BalloonTipIcon = ToolTipIcon.Info;
-                        niAlertIcon.Visible = true;
-                        niAlertIcon.ShowBalloonTip(30000);
                         tmrAlertRefresh.Enabled = false;
                         tmrAlertRefresh.Interval = 60000;
                         tmrAlertRefresh.Enabled = true;
@@ -517,9 +511,13 @@ namespace EVEMon
                                 tmrAlertRefresh.Enabled = false;
                             }
                             if (m_completedSkills.Count == 1)
+                            {
                                 niAlertIcon.BalloonTipText = m_completedSkills[0];
+                            }
                             else if (m_completedSkills.Count > 1)
+                            {
                                 niAlertIcon.BalloonTipText = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                            }
                         }
                     }
                 }
@@ -663,6 +661,22 @@ namespace EVEMon
                     }
                 }
             }
+        }
+
+        public void ShowBalloonTip(string iconTitle, string title, string message)
+        {
+            ShowBalloonTip(iconTitle, title, message, ToolTipIcon.Info);
+        }
+
+        public void ShowBalloonTip(string iconTitle, string title, string message, ToolTipIcon icon)
+        {
+            EveServer.GetInstance().PendingAlerts = true;
+            niAlertIcon.Text = iconTitle;
+            niAlertIcon.BalloonTipTitle = title;
+            niAlertIcon.BalloonTipText = message;
+            niAlertIcon.BalloonTipIcon = icon;
+            niAlertIcon.Visible = true;
+            niAlertIcon.ShowBalloonTip(30000);
         }
 
         private void niMinimizeIcon_Click(object sender, EventArgs e)
@@ -935,13 +949,7 @@ namespace EVEMon
                 }));
                 return;
             }
-            EveServer.GetInstance().PendingAlerts = true;
-            niAlertIcon.Text = "EVEMon - Server Status Information";
-            niAlertIcon.BalloonTipTitle = "Server Status Information";
-            niAlertIcon.BalloonTipText = e.info;
-            niAlertIcon.BalloonTipIcon = e.icon;
-            niAlertIcon.Visible = true;
-            niAlertIcon.ShowBalloonTip(30000);
+            ShowBalloonTip("EVEMon - Server Status Information", "Server Status Information", e.info, e.icon);
             tmrAlertRefresh.Enabled = false;
             tmrAlertRefresh.Interval = 60000;
             tmrAlertRefresh.Enabled = true;

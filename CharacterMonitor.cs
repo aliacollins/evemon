@@ -2018,8 +2018,43 @@ namespace EVEMon
                 {
                     m_grandCharacterInfo.SerialSIT.PreWarningGiven = true;
                     // here we raise a msg about skill about to complete and to get your butt into game and prepare the next skill.
-                    MessageBox.Show("The Character: " + m_charName + "\nis about to complete skill: " + m_grandCharacterInfo.AllSkillsByTypeID[m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID].Name + "\nin: " + m_settings.NotificationOffset + " Seconds",
-                                    "Pre-Completion Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    if (m_settings.EnableBalloonTips)
+                    {
+                        string skillLevelString;
+
+                        switch (m_grandCharacterInfo.CurrentlyTrainingSkill.Level)
+                        {
+                            case 1: skillLevelString = "I"; break;
+                            case 2: skillLevelString = "II"; break;
+                            case 3: skillLevelString = "III"; break;
+                            case 4: skillLevelString = "IV"; break;
+                            case 5: skillLevelString = "V"; break;
+                            default: skillLevelString = "0"; break;
+                        }
+                        string timeLeft = "";
+                        int min = (int)Math.Floor((double)(m_settings.NotificationOffset / 60));
+                        int sec = m_settings.NotificationOffset % 60;
+
+                        if (min > 0)
+                        {
+                            timeLeft += String.Format("{0}m", min);
+                        }
+                        if (min > 0 && sec > 0)
+                        {
+                            timeLeft += ", ";
+                        }
+                        if (sec > 0)
+                        {
+                            timeLeft += String.Format("{0}s", sec);
+                        }
+
+                        string sa = String.Format("{0} will finish learning {1} {2} in: {3}.",
+                                                    m_charName,
+                                                    m_grandCharacterInfo.AllSkillsByTypeID[m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID].Name,
+                                                    skillLevelString,
+                                                    timeLeft);
+                        Program.MainWindow.ShowBalloonTip("EVEMon - Skill Completion Imminent", "Skill Completion Imminent", sa);
+                    }
                 }
                 if (!m_grandCharacterInfo.SerialSIT.AlertRaisedAlready && unadjustedLocalEndtime < DateTime.Now)
                 {
