@@ -66,6 +66,7 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scShipSelect.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.scShipSelect.Location = new System.Drawing.Point(0, 0);
+            this.scShipSelect.Margin = new System.Windows.Forms.Padding(2);
             this.scShipSelect.Name = "scShipSelect";
             // 
             // scShipSelect.Panel1
@@ -81,7 +82,7 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.RememberDistanceKey = null;
             this.scShipSelect.Size = new System.Drawing.Size(650, 413);
             this.scShipSelect.SplitterDistance = 163;
-            this.scShipSelect.SplitterWidth = 3;
+            this.scShipSelect.SplitterWidth = 5;
             this.scShipSelect.TabIndex = 1;
             // 
             // shipSelectControl
@@ -110,7 +111,7 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.FullRowSelect = true;
             this.lvShipProperties.Location = new System.Drawing.Point(3, 37);
             this.lvShipProperties.Name = "lvShipProperties";
-            this.lvShipProperties.Size = new System.Drawing.Size(216, 373);
+            this.lvShipProperties.Size = new System.Drawing.Size(214, 373);
             this.lvShipProperties.TabIndex = 3;
             this.lvShipProperties.UseCompatibleStateImageBehavior = false;
             this.lvShipProperties.View = System.Windows.Forms.View.Details;
@@ -132,7 +133,7 @@ namespace EVEMon.SkillPlanner
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.panel1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(225, 0);
+            this.panel2.Location = new System.Drawing.Point(223, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3);

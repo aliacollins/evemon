@@ -162,12 +162,14 @@ namespace EVEMon.SkillPlanner
             this.cmiRename.Name = "cmiRename";
             this.cmiRename.Size = new System.Drawing.Size(124, 22);
             this.cmiRename.Text = "Rename";
+            this.cmiRename.Click += new System.EventHandler(this.miRename_Click);
             // 
             // cmiDelete
             // 
             this.cmiDelete.Name = "cmiDelete";
             this.cmiDelete.Size = new System.Drawing.Size(124, 22);
             this.cmiDelete.Text = "Delete";
+            this.cmiDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
             // toolStrip2
             // 

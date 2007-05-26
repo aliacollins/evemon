@@ -586,7 +586,7 @@ namespace EVEMon.SkillPlanner
                             sb.Append("Also Need To Train:");
                             otherSkillsNeeded = true;
                         }
-                        sb.Append(String.Format("\n{0} {1}",prereqs[i].Name,roman[prereqs[i].Level - 1]));
+                        sb.Append(String.Format("\n{0} {1}",prereqs[i].Name, Skill.GetRomanForInt(prereqs[i].Level)));
                     }
                 }
             }
@@ -785,7 +785,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // we know this prereq, but not to a high enough level
                     prNum++;
-                    sb.Append(String.Format("{0}. {1} (Known to level {2})\n", prNum, prs.Name, roman[prs.Level - 1]));
+                    sb.Append(String.Format("{0}. {1} (Known to level {2})\n", prNum, prs.Name, prs.RomanLevel));
                 }
             }
             else

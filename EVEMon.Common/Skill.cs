@@ -418,6 +418,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Return current Level in Roman
+        /// </summary>
+        public string RomanLevel
+        {
+            get
+            {
+                return Skill.GetRomanForInt(this.Level);
+            }
+        }
+
+        /// <summary>
         /// Gets whether this skill is partially trained (true) or fully trained (false).
         /// </summary>
         public bool PartiallyTrained
@@ -801,27 +812,15 @@ namespace EVEMon.Common
         /// <returns>Integer number.</returns>
         public static int GetIntForRoman(string r)
         {
-            if (r == "I")
+            switch (r)
             {
-                return 1;
+                case "I": return 1;
+                case "II": return 2;
+                case "III": return 3;
+                case "IV": return 4;
+                case "V": return 5;
+                default: return 0;
             }
-            else if (r == "II")
-            {
-                return 2;
-            }
-            else if (r == "III")
-            {
-                return 3;
-            }
-            else if (r == "IV")
-            {
-                return 4;
-            }
-            else if (r == "V")
-            {
-                return 5;
-            }
-            return 0;
         }
 
         /// <summary>

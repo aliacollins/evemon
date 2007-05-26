@@ -224,18 +224,7 @@ namespace EVEMon
             if (!e.Complete)
                 return;
 
-            string skillLevelString;
-            int skillLevel = Program.MainWindow.GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level;
-
-            switch (skillLevel)
-            {
-                case 1: skillLevelString = "I"; break;
-                case 2: skillLevelString = "II"; break;
-                case 3: skillLevelString = "III"; break;
-                case 4: skillLevelString = "IV"; break;
-                case 5: skillLevelString = "V"; break;
-                default: skillLevelString = "0"; break;
-            }
+            string skillLevelString = Program.MainWindow.GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).RomanLevel;
             LCD._COMPLETESTR = e.CharacterName + "\nhas finished learning skill\n" + e.SkillName + " " + skillLevelString;
             LCD.SkillCompleted();
         }

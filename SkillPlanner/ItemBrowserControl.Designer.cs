@@ -29,6 +29,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.splitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
+            this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.lvItemProperties = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -42,7 +43,6 @@ namespace EVEMon.SkillPlanner
             this.lblItemName = new System.Windows.Forms.Label();
             this.lblItemCategory = new System.Windows.Forms.Label();
             this.pbItemIcon = new System.Windows.Forms.PictureBox();
-            this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -55,6 +55,7 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -72,8 +73,23 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.RememberDistanceKey = null;
             this.splitContainer1.Size = new System.Drawing.Size(650, 413);
             this.splitContainer1.SplitterDistance = 163;
-            this.splitContainer1.SplitterWidth = 3;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // itemSelectControl1
+            // 
+            this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
+            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.itemSelectControl1.Name = "itemSelectControl1";
+            this.itemSelectControl1.Plan = null;
+            this.itemSelectControl1.SelectedObject = null;
+            this.itemSelectControl1.SelectedObjects = null;
+            this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
+            this.itemSelectControl1.TabIndex = 0;
+            this.itemSelectControl1.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
             // 
             // lvItemProperties
             // 
@@ -87,7 +103,7 @@ namespace EVEMon.SkillPlanner
             this.lvItemProperties.FullRowSelect = true;
             this.lvItemProperties.Location = new System.Drawing.Point(3, 73);
             this.lvItemProperties.Name = "lvItemProperties";
-            this.lvItemProperties.Size = new System.Drawing.Size(204, 337);
+            this.lvItemProperties.Size = new System.Drawing.Size(202, 337);
             this.lvItemProperties.TabIndex = 8;
             this.lvItemProperties.UseCompatibleStateImageBehavior = false;
             this.lvItemProperties.View = System.Windows.Forms.View.Details;
@@ -106,7 +122,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lblItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblItemDescription.Location = new System.Drawing.Point(214, 73);
+            this.lblItemDescription.Location = new System.Drawing.Point(212, 73);
             this.lblItemDescription.Name = "lblItemDescription";
             this.lblItemDescription.Size = new System.Drawing.Size(268, 215);
             this.lblItemDescription.TabIndex = 10;
@@ -120,7 +136,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox2.Controls.Add(this.lblItemSkill3);
             this.groupBox2.Controls.Add(this.lblItemSkill2);
             this.groupBox2.Controls.Add(this.lblItemSkill1);
-            this.groupBox2.Location = new System.Drawing.Point(214, 291);
+            this.groupBox2.Location = new System.Drawing.Point(212, 291);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(268, 119);
             this.groupBox2.TabIndex = 9;
@@ -201,21 +217,6 @@ namespace EVEMon.SkillPlanner
             this.pbItemIcon.Size = new System.Drawing.Size(64, 64);
             this.pbItemIcon.TabIndex = 5;
             this.pbItemIcon.TabStop = false;
-            // 
-            // itemSelectControl1
-            // 
-            this.itemSelectControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.itemSelectControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemSelectControl1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.itemSelectControl1.Location = new System.Drawing.Point(0, 0);
-            this.itemSelectControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.itemSelectControl1.Name = "itemSelectControl1";
-            this.itemSelectControl1.Plan = null;
-            this.itemSelectControl1.SelectedObject = null;
-            this.itemSelectControl1.SelectedObjects = null;
-            this.itemSelectControl1.Size = new System.Drawing.Size(163, 413);
-            this.itemSelectControl1.TabIndex = 0;
-            this.itemSelectControl1.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.itemSelectControl1_SelectedItemChanged);
             // 
             // ItemBrowserControl
             // 

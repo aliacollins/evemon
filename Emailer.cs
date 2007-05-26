@@ -33,17 +33,8 @@ namespace EVEMon
             bool useShortFormat = settings.EmailUseShortFormat;
             StringBuilder messageText = new StringBuilder();
             messageText.Append(charName + " has finished training " + skillName + " ");
-            string skillLevelString;
+            string skillLevelString = Skill.GetRomanForInt(SkillLevel);
 
-            switch (SkillLevel)
-            {
-                case 1: skillLevelString = "I"; break;
-                case 2: skillLevelString="II"; break;
-                case 3: skillLevelString="III"; break;
-                case 4: skillLevelString="IV"; break;
-                case 5: skillLevelString="V"; break;
-                default: skillLevelString = "0"; break;
-            }
             if (!useShortFormat)
             {
                 messageText.Append("\r\n\r\nNext skills listed in plans:\r\n\r\n");

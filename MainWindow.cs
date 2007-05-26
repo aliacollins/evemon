@@ -470,17 +470,7 @@ namespace EVEMon
 
                     if (m_settings.EnableBalloonTips)
                     {
-                        string skillLevelString;
-
-                        switch (skillLevel)
-                        {
-                            case 1: skillLevelString = "I"; break;
-                            case 2: skillLevelString = "II"; break;
-                            case 3: skillLevelString = "III"; break;
-                            case 4: skillLevelString = "IV"; break;
-                            case 5: skillLevelString = "V"; break;
-                            default: skillLevelString = "0"; break;
-                        }
+                        string skillLevelString = Skill.GetRomanForInt(skillLevel);
                         string sa = e.CharacterName + " has finished learning " + e.SkillName + " " + skillLevelString + ".";
 
                         m_completedSkills.Add(sa);
@@ -1326,4 +1316,5 @@ namespace EVEMon
         }
     }
 }
+
 

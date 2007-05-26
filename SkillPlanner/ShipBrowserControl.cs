@@ -227,13 +227,14 @@ namespace EVEMon.SkillPlanner
                     // remove excess columns that might have been added by 'compare with' earlier
                     while (lvShipProperties.Columns.Count > 2)
                         lvShipProperties.Columns.RemoveAt(2);
+
                     // (re)construct ship properties list
                     lvShipProperties.Items.Clear();
 
                     // display the properties in a logical sequence
-                                         
+
                     ListViewItem listItem = null;
-                    for (int i=0;i<m_DisplayAttributes.Count;i++)
+                    for (int i = 0; i < m_DisplayAttributes.Count; i++)
                     {
                         AttributeDisplayData att = m_DisplayAttributes[i];
                         if (att.isHeader)
@@ -262,9 +263,9 @@ namespace EVEMon.SkillPlanner
                                 listItem.Name = att.xmlName;
                                 lvShipProperties.Items.Add(listItem);
                             }
-                       }
-                    }                    
-                    
+                        }
+                    }
+
                     // Display any properties not shown in the sorted list
                     foreach (EntityProperty prop in s.Properties)
                     {
@@ -496,6 +497,7 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
+
 
 
 
