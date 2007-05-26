@@ -45,10 +45,7 @@ namespace EVEMon.SkillPlanner
 
         private void OnSelectedSkillChanged()
         {
-            if (SelectedSkillChanged != null)
-            {
                 SelectedSkillChanged(this, new EventArgs());
-            }
         }
 
         public ImageList GetIconSet(int index)
@@ -501,10 +498,7 @@ namespace EVEMon.SkillPlanner
         {
             TreeNode tn = tvItems.SelectedNode;
             Skill gs = tn.Tag as Skill;
-            if (gs != null)
-            {
                 this.SelectedSkill = gs;
-            }
         }
 
         private void SkillSelectControl_Load(object sender, EventArgs e)
@@ -575,5 +569,49 @@ namespace EVEMon.SkillPlanner
                 e.Handled = true;
             }
         }
+
+        private void cmiExpandAll_Click(object sender, EventArgs e)
+        {
+            tvItems.ExpandAll();
+        }
+
+        private void cmiCollapseAll_Click(object sender, EventArgs e)
+        {
+            tvItems.CollapseAll();
+        }
+
+        private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeViewHitTestInfo tvHit = tvItems.HitTest(e.Location);
+                if (tvHit.Location == TreeViewHitTestLocations.Label)
+                    tvItems.SelectedNode = e.Node;
+            }
+        }
+
+        private void cmiCollapseSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.Collapse();
+        }
+
+        private void cmiExpandSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.ExpandAll();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cmiCollapseSelected.Enabled = cmiExpandSelected.Enabled = (tvItems.SelectedNode.GetNodeCount(true) > 0);
+            string aString;
+            if (cmiCollapseSelected.Enabled)
+                aString = tvItems.SelectedNode.Text;
+            else
+                aString = "Selected";
+
+            cmiExpandSelected.Text = "Expand " + aString;
+            cmiCollapseSelected.Text = "Collapse " + aString;
+        }
+
     }
 }

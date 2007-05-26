@@ -273,5 +273,28 @@ namespace EVEMon.SkillPlanner
         {
             tvItems.CollapseAll();
         }
+
+        private void cmiExpandSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.ExpandAll();
+        }
+
+        private void cmiCollapseSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.Collapse();
+        }
+
+        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cmiExpandSelected.Enabled = cmiCollapseSelected.Enabled = (tvItems.SelectedNode != null && tvItems.SelectedNode.GetNodeCount(true) > 0);
+            string aString;
+            if (cmiCollapseSelected.Enabled)
+                aString = tvItems.SelectedNode.Text;
+            else
+                aString = "Selected";
+
+            cmiExpandSelected.Text = "Expand " + aString;
+            cmiCollapseSelected.Text = "Collapse " + aString;
+        }
     }
 }

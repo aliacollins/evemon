@@ -34,6 +34,11 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText = new System.Windows.Forms.TextBox();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.tvItems = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.lbSearchList = new System.Windows.Forms.ListBox();
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
@@ -48,6 +53,7 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -111,12 +117,54 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvItems.ContextMenuStrip = this.contextMenuStrip1;
+            this.tvItems.HideSelection = false;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Margin = new System.Windows.Forms.Padding(2);
             this.tvItems.Name = "tvItems";
             this.tvItems.Size = new System.Drawing.Size(262, 313);
             this.tvItems.TabIndex = 20;
             this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
+            this.tvItems.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvItems_NodeMouseClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(170, 114);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(169, 22);
+            this.cmiExpandAll.Text = "Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(169, 22);
+            this.cmiCollapseAll.Text = "Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // lbSearchList
             // 
@@ -295,6 +343,7 @@ namespace EVEMon.SkillPlanner
             this.Size = new System.Drawing.Size(262, 413);
             this.Load += new System.EventHandler(this.SkillSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -322,5 +371,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ComboBox cbSkillFilter;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
     }
 }

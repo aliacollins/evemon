@@ -43,6 +43,8 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tvItems = new CodersLab.Windows.Controls.TreeView();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -109,22 +111,25 @@ namespace EVEMon.SkillPlanner
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(158, 52);
+            this.contextMenu.Size = new System.Drawing.Size(170, 92);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiExpandAll
             // 
             this.cmiExpandAll.Name = "cmiExpandAll";
-            this.cmiExpandAll.Size = new System.Drawing.Size(157, 24);
+            this.cmiExpandAll.Size = new System.Drawing.Size(169, 22);
             this.cmiExpandAll.Text = "Expand All";
             this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
             // 
             // cmiCollapseAll
             // 
             this.cmiCollapseAll.Name = "cmiCollapseAll";
-            this.cmiCollapseAll.Size = new System.Drawing.Size(157, 24);
+            this.cmiCollapseAll.Size = new System.Drawing.Size(169, 22);
             this.cmiCollapseAll.Text = "Collapse All";
             this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
@@ -205,6 +210,20 @@ namespace EVEMon.SkillPlanner
             this.tvItems.TabIndex = 22;
             this.tvItems.SelectionsChanged += new System.EventHandler(this.tvItems_SelectionsChanged);
             // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
             // EveObjectSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -242,5 +261,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
     }
 }
