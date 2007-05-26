@@ -1239,6 +1239,18 @@ namespace EVEMon.Common
             }
             if (!firstRun)
             {
+                if (SkillInTraining != null && SkillInTraining.isSkillInTraining)
+                {
+                    if (m_SkillInTraining != null && m_SkillInTraining.PreWarningGiven && m_SkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID && SkillInTraining.getTrainingEndTime == m_SkillInTraining.getTrainingEndTime)
+                    {
+                        SkillInTraining.PreWarningGiven = true;
+                    }
+                    if (m_OldSkillInTraining != null && m_OldSkillInTraining.AlertRaisedAlready && m_OldSkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID && SkillInTraining.getTrainingEndTime == m_OldSkillInTraining.getTrainingEndTime)
+                    {
+                        SkillInTraining.PreWarningGiven = true;
+                        SkillInTraining.AlertRaisedAlready = true;
+                    }
+                }
                 // Go through the m_OldSkillInTraining stuff.
                 if (m_OldSkillInTraining != null && this.m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))
                 {
@@ -1249,12 +1261,12 @@ namespace EVEMon.Common
                     DateTime _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
                     if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
-                        if (_OSITLocalCompleteTime <= DateTime.Now && SkillInTraining != null && _OSITLocalCompleteTime > _SITLocalStartTime)
+                        if (_OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
                         {
                             check = true;
                             oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
-							OnSkillChanged(oldskill);
-							m_OldSkillInTraining.AlertRaisedAlready = false;
+                            OnSkillChanged(oldskill);
+                            m_OldSkillInTraining.AlertRaisedAlready = false;
                         }
                     }
                     else
