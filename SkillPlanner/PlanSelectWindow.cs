@@ -48,7 +48,7 @@ namespace EVEMon.SkillPlanner
         private void SavePlanOrder()
         {
             List<string> newOrder = new List<string>();
-            for (int i = 1; i < lbPlanList.Items.Count; i++)
+            for (int i = 0; i < lbPlanList.Items.Count; i++)
             {
                 newOrder.Add((string)lbPlanList.Items[i].Text);
             }
@@ -63,7 +63,7 @@ namespace EVEMon.SkillPlanner
             lbPlanList.ListViewItemSorter = null;
         }
 
-        private Dictionary<Plan,TimeSpan> planCache = null;
+        private Dictionary<Plan, TimeSpan> planCache = null;
 
         private void PopulatePlanList(bool calculateTime)
         {
@@ -72,23 +72,23 @@ namespace EVEMon.SkillPlanner
             {
                 lbPlanList.Items.Clear();
 
-                if (planCache == null || calculateTime) 
+                if (planCache == null || calculateTime)
                 {
                     calculateTime = true;
-                    planCache = new Dictionary<Plan,TimeSpan>();
+                    planCache = new Dictionary<Plan, TimeSpan>();
                 }
                 foreach (string PlanName in m_settings.GetPlansForCharacter(m_charKey))
                 {
                     Plan tmpPlan = m_settings.GetPlanByName(m_charKey, PlanName);
-                    TimeSpan tsPlan = FindPlanTimeSpan(tmpPlan,calculateTime);
-                	ListViewItem lvi = new ListViewItem(PlanName); 
-					lvi.Text = PlanName;
-					lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(	tsPlan,
+                    TimeSpan tsPlan = FindPlanTimeSpan(tmpPlan, calculateTime);
+                    ListViewItem lvi = new ListViewItem(PlanName);
+                    lvi.Text = PlanName;
+                    lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(tsPlan,
                                                                             DescriptiveTextOptions.FullText |
                                                                             DescriptiveTextOptions.IncludeCommas |
                                                                             DescriptiveTextOptions.SpaceText));
-					lvi.SubItems.Add(tmpPlan.UniqueSkillCount.ToString());
-					lbPlanList.Items.Add(lvi);
+                    lvi.SubItems.Add(tmpPlan.UniqueSkillCount.ToString());
+                    lbPlanList.Items.Add(lvi);
                 }
             }
             finally
@@ -100,11 +100,11 @@ namespace EVEMon.SkillPlanner
 
         private TimeSpan FindPlanTimeSpan(Plan plan, bool ignoreCache)
         {
-            if (planCache == null) 
+            if (planCache == null)
             {
                 ignoreCache = true;
                 planCache = new Dictionary<Plan, TimeSpan>();
-            }               
+            }
 
             if (plan.GrandCharacterInfo == null)
             {
@@ -118,8 +118,8 @@ namespace EVEMon.SkillPlanner
             else
             {
                 tsPlan = plan.GetTotalTime(null);
-                planCache.Add(plan,tsPlan);
-           }
+                planCache.Add(plan, tsPlan);
+            }
             return tsPlan;
         }
 
@@ -131,7 +131,9 @@ namespace EVEMon.SkillPlanner
                 int idx = lbPlanList.SelectedIndices[0];
                 tsbMoveUp.Enabled = (idx > 0);
                 tsbMoveDown.Enabled = (idx < lbPlanList.Items.Count - 1);
-            } else {
+            }
+            else
+            {
                 tsbMoveUp.Enabled = false;
                 tsbMoveDown.Enabled = false;
             }
@@ -158,7 +160,7 @@ namespace EVEMon.SkillPlanner
 
                 foreach (ListViewItem plan in lbPlanList.SelectedItems)
                 {
-                    string s = (string) plan.Text;
+                    string s = (string)plan.Text;
                     Plan p = m_settings.GetPlanByName(m_charKey, s);
                     foreach (Plan.Entry entry in p.Entries)
                     {
@@ -185,7 +187,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                string s = (string) lbPlanList.SelectedItems[0].Text;
+                string s = (string)lbPlanList.SelectedItems[0].Text;
                 m_result = m_settings.GetPlanByName(m_charKey, s);
             }
             if (m_planOrderChanged)
@@ -217,10 +219,10 @@ namespace EVEMon.SkillPlanner
                 Plan loadedPlan = null;
                 using (Stream s = new FileStream(ofdOpenDialog.FileName, FileMode.Open, FileAccess.Read))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof (Plan));
+                    XmlSerializer xs = new XmlSerializer(typeof(Plan));
                     try
                     {
-                        loadedPlan = (Plan) xs.Deserialize(s);
+                        loadedPlan = (Plan)xs.Deserialize(s);
                     }
                     catch (Exception ex)
                     {
@@ -231,7 +233,7 @@ namespace EVEMon.SkillPlanner
                         {
                             try
                             {
-                                loadedPlan = (Plan) xs.Deserialize(gzs);
+                                loadedPlan = (Plan)xs.Deserialize(gzs);
                             }
                             catch (Exception e)
                             {
@@ -294,7 +296,7 @@ namespace EVEMon.SkillPlanner
                     try
                     {
                         m_settings.AddPlanFor(m_charKey, loadedPlan, newPlanName);
-                        
+
                     }
                     catch (ApplicationException err)
                     {
@@ -347,7 +349,7 @@ namespace EVEMon.SkillPlanner
                     using (NewPlanWindow f = new NewPlanWindow())
                     {
                         f.Text = "Save Plan As";
-                        f.PlanName = charName+"-"+planName;
+                        f.PlanName = charName + "-" + planName;
                         dr = f.ShowDialog();
                         if (dr == DialogResult.Cancel)
                         {
@@ -384,7 +386,7 @@ namespace EVEMon.SkillPlanner
         {
             using (NewPlanWindow f = new NewPlanWindow())
             {
-                string oldName = (string) lbPlanList.SelectedItems[0].Text;
+                string oldName = (string)lbPlanList.SelectedItems[0].Text;
                 f.Text = "Rename Plan";
                 f.PlanName = oldName;
                 DialogResult dr = f.ShowDialog();
@@ -510,20 +512,20 @@ namespace EVEMon.SkillPlanner
                 if (m_sortOrder == SortOrder.Descending)
                 {
                     ListViewItem tmp = b;
-                    b=a;
-                    a=tmp;
+                    b = a;
+                    a = tmp;
                 }
 
                 switch (m_sortColumn)
                 {
                     case 0: // sort by name
-                         compareResult = String.Compare(a.Text, b.Text);
+                        compareResult = String.Compare(a.Text, b.Text);
                         break;
                     case 1: // Time
-                        
+
                         Settings s = Settings.GetInstance();
                         Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, a.Text);
-                        TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p,false);
+                        TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p, false);
                         p = s.GetPlanByName(m_planSelectWindow.m_charKey, b.Text);
                         TimeSpan t2 = m_planSelectWindow.FindPlanTimeSpan(p, false);
                         compareResult = TimeSpan.Compare(t1, t2);
@@ -543,17 +545,17 @@ namespace EVEMon.SkillPlanner
             }
 
 
-            private SortOrder  m_sortOrder = SortOrder.None;
+            private SortOrder m_sortOrder = SortOrder.None;
 
-            public SortOrder  OrderOfSort
+            public SortOrder OrderOfSort
             {
                 get { return m_sortOrder; }
                 set { m_sortOrder = value; }
             }
-	
-	
+
+
         }
-  
+
         private void lbPlanList_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             m_planOrderChanged = true;

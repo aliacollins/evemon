@@ -22,9 +22,10 @@ namespace EVEMon.Common
 
         private bool m_useLogitechG15Display = false;
 
-        public bool UseLogitechG15Display {
+        public bool UseLogitechG15Display
+        {
             get { return m_useLogitechG15Display; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -60,7 +61,9 @@ namespace EVEMon.Common
                 {
                     m_notificationOffset = value;
                     if (NotificationOffsetChanged != null)
+                    {
                         NotificationOffsetChanged(this, new EventArgs());
+                    }
                 }
             }
         }
@@ -82,7 +85,9 @@ namespace EVEMon.Common
         private void OnUseLogitechG15DisplayChanged()
         {
             if (UseLogitechG15DisplayChanged != null)
+            {
                 UseLogitechG15DisplayChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
@@ -107,7 +112,9 @@ namespace EVEMon.Common
         private void OnHighlightPlannedSkillsChanged()
         {
             if (HighlightPlannedSkillsChanged != null)
+            {
                 HighlightPlannedSkillsChanged(this, new EventArgs());
+            }
         }
 
         private bool m_HighlightPrerequisites;
@@ -128,10 +135,12 @@ namespace EVEMon.Common
         private void OnHighlightPrerequisitesChanged()
         {
             if (HighlightPrerequisitesChanged != null)
+            {
                 HighlightPrerequisitesChanged(this, new EventArgs());
+            }
         }
 
-        private bool m_DimUntrainable=true;
+        private bool m_DimUntrainable = true;
         public event EventHandler<EventArgs> DimUntrainableChanged;
 
         public bool SkillPlannerDimUntrainable
@@ -149,7 +158,9 @@ namespace EVEMon.Common
         private void OnDimUntrainableChanged()
         {
             if (DimUntrainableChanged != null)
+            {
                 DimUntrainableChanged(this, new EventArgs());
+            }
         }
 
         #endregion
@@ -187,7 +198,7 @@ namespace EVEMon.Common
         public List<CharFileInfo> CharFileList
         {
             get { return m_charFileList; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -301,7 +312,7 @@ namespace EVEMon.Common
                     m_DisableEVEMonVersionCheck = value;
                 }
             }
-        }	
+        }
 
         private bool m_enableBalloonTips = true;
 
@@ -458,7 +469,7 @@ namespace EVEMon.Common
             }
         }
 
-        #endregion // Email Settings
+        #endregion
 
         private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;
 
@@ -576,8 +587,12 @@ namespace EVEMon.Common
         private void OnShowLoginNameChanged()
         {
             if (ShowLoginNameChanged != null)
+            {
                 ShowLoginNameChanged(this, new EventArgs());
+            }
         }
+
+        #region Pie Chart
 
         private List<SerializableColor> m_skillPieChartColors = new List<SerializableColor>();
 
@@ -635,9 +650,11 @@ namespace EVEMon.Common
             }
         }
 
+        #endregion
+
         #region Owned Skills
 
-        private List<Pair<string,string>> m_ownedbooks = new List<Pair<string,string>>();
+        private List<Pair<string, string>> m_ownedbooks = new List<Pair<string, string>>();
 
         public List<Pair<string, string>> OwnedBooks
         {
@@ -649,7 +666,9 @@ namespace EVEMon.Common
             foreach (Pair<string, string> x in m_ownedbooks)
             {
                 if (x.A == charName)
-                    yield return x.B; 
+                {
+                    yield return x.B;
+                }
             }
         }
 
@@ -693,7 +712,7 @@ namespace EVEMon.Common
         #region Plan Settings
 
         // needs to be before plans.
-        
+
         ColumnPreference m_columnPreferences = new ColumnPreference();
 
         public ColumnPreference ColumnPreferences
@@ -717,13 +736,21 @@ namespace EVEMon.Common
 
         private const string PLAN_DEFAULT = "Default Plan";
 
+
+        /// <summary>
+        /// Count the plans for a character.
+        /// </summary>
+        /// <param name="charName">The character whose plans we wish to count.</param>
+        /// <returns>The number of plans the character has.</returns>
         public int GetPlanCountForCharacter(string charName)
         {
             int count = 0;
             foreach (Pair<string, Plan> x in m_plans)
             {
                 if (x.A.StartsWith(charName + "::"))
+                {
                     count++;
+                }
             }
             return count;
         }
@@ -733,12 +760,22 @@ namespace EVEMon.Common
             foreach (Pair<string, Plan> x in m_plans)
             {
                 if (x.A == charName)
+                {
                     yield return PLAN_DEFAULT;
+                }
                 else if (x.A.StartsWith(charName + "::"))
+                {
                     yield return x.A.Substring(charName.Length + 2);
+                }
             }
         }
 
+        /// <summary>
+        /// Finds a plan by name.
+        /// </summary>
+        /// <param name="charName">The character whose plans we're going to search.</param>
+        /// <param name="planName">The plan name to look for.</param>
+        /// <returns>The plan if found; null if not.</returns>
         public Plan GetPlanByName(string charName, string planName)
         {
             Plan p = null;
@@ -747,18 +784,20 @@ namespace EVEMon.Common
                 if (planName == PLAN_DEFAULT && x.A == charName)
                 {
                     x.B.Name = PLAN_DEFAULT;
-                    p =  x.B;
+                    p = x.B;
                     break;
                 }
                 else if (x.A == charName + "::" + planName)
                 {
                     x.B.Name = planName;
-                    p =  x.B;
+                    p = x.B;
                     break;
                 }
             }
             if (p == null)
+            {
                 return p;
+            }
 
             SerializableCharacterInfo sci = this.GetCharacterInfo(charName);
             if (sci != null)
@@ -775,16 +814,28 @@ namespace EVEMon.Common
             return p;
         }
 
+        /// <summary>
+        /// Adds a plan.
+        /// </summary>
+        /// <param name="charName">The character to add a plan for.</param>
+        /// <param name="plan">The plan to add.</param>
+        /// <param name="planName">The name to assign to it.</param>
         public void AddPlanFor(string charName, Plan plan, string planName)
         {
             if (GetPlanByName(charName, planName) != null)
+            {
                 throw new ApplicationException("That plan already exists.");
+            }
 
             Pair<string, Plan> p = new Pair<string, Plan>();
             if (planName == PLAN_DEFAULT)
+            {
                 p.A = charName;
+            }
             else
+            {
                 p.A = charName + "::" + planName;
+            }
             p.B = plan;
             lock (mutexLock)
             {
@@ -794,9 +845,14 @@ namespace EVEMon.Common
             this.Save();
         }
 
+        /// <summary>
+        /// Removes a plan.
+        /// </summary>
+        /// <param name="charName">The character whose plan is to be removed.</param>
+        /// <param name="planName">The plan name to remove.</param>
         public void RemovePlanFor(string charName, string planName)
         {
-            lock(mutexLock)
+            lock (mutexLock)
             {
                 for (int i = 0; i < m_plans.Count; i++)
                 {
@@ -805,24 +861,33 @@ namespace EVEMon.Common
                         Plan p = m_plans[i].B;
                         p.CloseEditor();
                         m_plans.RemoveAt(i);
-                        i--;
+                        break;
                     }
                     else if (m_plans[i].A == charName + "::" + planName)
                     {
                         Plan p = m_plans[i].B;
                         p.CloseEditor();
                         m_plans.RemoveAt(i);
-                        i--;
+                        break;
                     }
                 }
             }
             this.Save();
         }
 
+        /// <summary>
+        /// Renames a plan.
+        /// </summary>
+        /// <param name="charName">The character whose plan is to be renamed.</param>
+        /// <param name="planName">The current plan name.</param>
+        /// <param name="newName">The new plan name.</param>
+        /// <returns>True if the plan was found and renamed, false if not.</returns>
         public bool RenamePlanFor(string charName, string planName, string newName)
         {
             if (GetPlanByName(charName, newName) != null)
+            {
                 return false;
+            }
 
             bool found = false;
             lock (mutexLock)
@@ -838,9 +903,13 @@ namespace EVEMon.Common
                     else if (m_plans[i].A == charName + "::" + planName)
                     {
                         if (newName != PLAN_DEFAULT)
+                        {
                             m_plans[i].A = charName + "::" + newName;
+                        }
                         else
+                        {
                             m_plans[i].A = charName;
+                        }
                         found = true;
                         break;
                     }
@@ -850,65 +919,65 @@ namespace EVEMon.Common
             return found;
         }
 
+        /// <summary>
+        /// Remove all plans for a character.
+        /// </summary>
+        /// <param name="charName">The character whose plans are to be removed.</param>
         public void RemoveAllPlansFor(string charName)
         {
             lock (mutexLock)
             {
-                for (int i = 0; i < m_plans.Count; i++)
+                for (int i = m_plans.Count; i >= 0; i--)
                 {
                     if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
                     {
                         Plan p = m_plans[i].B;
                         p.CloseEditor();
                         m_plans.RemoveAt(i);
-                        i--;
                     }
                 }
             }
             this.Save();
         }
 
+        /// <summary>
+        /// Rearranges the order of m_plans to match the order of the strings in newOrder
+        /// </summary>
+        /// <param name="charName">The character whose plans we are to reorder.</param>
+        /// <param name="newOrder">The new plan order.</param>
         public void RearrangePlansFor(string charName, List<string> newOrder)
         {
             lock (mutexLock)
             {
                 List<Pair<string, Plan>> plans = new List<Pair<string, Plan>>();
-                for (int i = 0; i < newOrder.Count; i++)
-                {
-                    plans.Add(null);
-                }
-                for (int i = 0; i < m_plans.Count; i++)
-                {
-                    if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
-                    {
-                        Pair<string, Plan> tp = m_plans[i];
-                        m_plans.RemoveAt(i);
-                        i--;
 
-                        bool added = false;
-                        string tPlanName = null;
-                        if (tp.A == charName)
-                            tPlanName = PLAN_DEFAULT;
-                        else
-                            tPlanName = tp.A.Substring(tp.A.IndexOf("::") + 2);
-                        for (int x = 0; x < newOrder.Count; x++)
+                foreach (string planName in newOrder)
+                {
+                    int index = -1;
+                    // Look for plan matching planName
+                    for (int i = 0; i < m_plans.Count; i++)
+                    {
+                        if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
                         {
-                            if (newOrder[x] == tPlanName)
-                            {
-                                plans[x] = tp;
-                                added = true;
-                                break;
-                            }
+                            Pair<string, Plan> tp = m_plans[i];
+                            string tPlanName = (tp.A == charName ? PLAN_DEFAULT : tp.A.Substring(tp.A.IndexOf("::") + 2));
+                            index = (tPlanName == planName ? i : index);
                         }
-                        if (!added)
-                            plans.Add(tp);
+                    }
+                    // If the plan was found, move it from old list to new
+                    if (index != -1)
+                    {
+                        plans.Add(m_plans[index]);
+                        m_plans.RemoveAt(index);
                     }
                 }
-                foreach (Pair<string, Plan> p in plans)
+                // sanity check - keep any plans that didn't match (this shouldn't happen though)
+                for (int i = 0; i < m_plans.Count; i++)
                 {
-                    if (p != null)
-                        m_plans.Add(p);
+                    plans.Add(m_plans[i]);
+                    m_plans.RemoveAt(i);
                 }
+                m_plans.AddRange(plans);
             }
             this.Save();
         }
@@ -916,7 +985,7 @@ namespace EVEMon.Common
         #endregion Plan Settings
 
         #region Character Cache
- 
+
         private List<SerializableCharacterInfo> m_cachedCharacterInfo = new List<SerializableCharacterInfo>();
 
         public List<SerializableCharacterInfo> CachedCharacterInfo
@@ -929,7 +998,9 @@ namespace EVEMon.Common
             foreach (SerializableCharacterInfo sci in m_cachedCharacterInfo)
             {
                 if (sci.Name == charName)
+                {
                     return sci;
+                }
             }
             return null;
         }
@@ -941,7 +1012,9 @@ namespace EVEMon.Common
                 for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
                 {
                     if (m_cachedCharacterInfo[i].Name == charName)
+                    {
                         m_cachedCharacterInfo.RemoveAt(i);
+                    }
                 }
             }
         }
@@ -1014,7 +1087,7 @@ namespace EVEMon.Common
             }
         }
 
-        #endregion // Character Cache
+        #endregion
 
         #region Worksafe Settings
 
@@ -1035,12 +1108,14 @@ namespace EVEMon.Common
         private void OnWorksafeChanged()
         {
             if (WorksafeChanged != null)
+            {
                 WorksafeChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> WorksafeChanged;
 
-        #endregion // Worksafe Settings
+        #endregion
 
         private bool m_playSoundOnSkillComplete = true;
 
@@ -1106,12 +1181,14 @@ namespace EVEMon.Common
         private void OnRunIGBServerChanged()
         {
             if (RunIGBServerChanged != null)
+            {
                 RunIGBServerChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> RunIGBServerChanged;
 
-        #endregion // In Game Browser server
+        #endregion
 
         private bool m_relocateEveWindow = false;
 
@@ -1131,7 +1208,9 @@ namespace EVEMon.Common
         private void OnRelocateEveWindowChanged()
         {
             if (RelocateEveWindowChanged != null)
+            {
                 RelocateEveWindowChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> RelocateEveWindowChanged;
@@ -1203,7 +1282,7 @@ namespace EVEMon.Common
         public string CustomTQAddress
         {
             get { return m_customTQAddress == null ? "" : m_customTQAddress; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -1231,7 +1310,7 @@ namespace EVEMon.Common
         public bool UseCustomTQCheckSettings
         {
             get { return m_useCustomTQCheckSettings; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -1246,7 +1325,7 @@ namespace EVEMon.Common
         public bool CheckTranquilityStatus
         {
             get { return m_checkTranquilityStatus; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -1271,13 +1350,17 @@ namespace EVEMon.Common
         private void OnShowTQBalloonChanged()
         {
             if (ShowTQBalloonChanged != null)
+            {
                 ShowTQBalloonChanged(this, new EventArgs());
+            }
         }
 
         private void OnCheckTranquilityStatusChanged()
         {
             if (CheckTranquilityStatusChanged != null)
+            {
                 CheckTranquilityStatusChanged(this, new EventArgs());
+            }
         }
 
         public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
@@ -1287,16 +1370,16 @@ namespace EVEMon.Common
         public int StatusUpdateInterval
         {
             get { return m_statusUpdateInterval; }
-            set 
+            set
             {
-                lock(mutexLock)
+                lock (mutexLock)
                 {
-                    m_statusUpdateInterval = value; 
+                    m_statusUpdateInterval = value;
                 }
             }
         }
 
-        #endregion // Tranquility Status
+        #endregion
 
         #region Schedule Entries
 
@@ -1307,7 +1390,7 @@ namespace EVEMon.Common
         public List<ScheduleEntry> Schedule
         {
             get { return m_schedule; }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -1340,7 +1423,9 @@ namespace EVEMon.Common
             lock (mutexLock)
             {
                 if (ScheduleEntriesChanged != null)
+                {
                     ScheduleEntriesChanged(this, new EventArgs());
+                }
             }
         }
 
@@ -1386,7 +1471,7 @@ namespace EVEMon.Common
         }
 
 
-        #endregion //Schedule Entries
+        #endregion
 
         private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();
 
@@ -1401,7 +1486,7 @@ namespace EVEMon.Common
                 }
             }
         }
-	
+
         private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
 
         public SerializableDictionary<string, Rectangle> SavedWindowLocations
@@ -1444,7 +1529,7 @@ namespace EVEMon.Common
             // THis tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
             // copy and ask if that is to be used.
             // If the settings file is ok, then back it up.
-            
+
             try
             {
                 if (File.Exists(SettingsFileName))
@@ -1457,7 +1542,7 @@ namespace EVEMon.Common
                         if (backupExists)
                         {
                             DialogResult dr = MessageBox.Show("Your settings file is corrupt. There is a backup available, do you want to use the backup file?", "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                            if (dr ==  DialogResult.No)
+                            if (dr == DialogResult.No)
                             {
                                 Settings s = new Settings();
                                 m_instance = s;
@@ -1476,7 +1561,7 @@ namespace EVEMon.Common
                     else
                     {
                         // We have a non-zero length settings file - so make a copy.
-                        File.Copy(SettingsFileName,SettingsFileName + ".bak",true);
+                        File.Copy(SettingsFileName, SettingsFileName + ".bak", true);
                     }
                     Settings result = LoadFromFile(fileName);
                     return result;
@@ -1531,9 +1616,9 @@ namespace EVEMon.Common
                 {
                     if (m_DataDir == String.Empty)
                     {
-                        m_SettingsFile = "/settings.xml";
+                        m_SettingsFile = @"\settings.xml";
 #if DEBUG
-                        m_SettingsFile = "/settings-debug.xml";
+                        m_SettingsFile = @"\settings-debug.xml";
 #endif
 
                         m_DataDir = Directory.GetCurrentDirectory();
@@ -1542,12 +1627,16 @@ namespace EVEMon.Common
 
                         if (!File.Exists(fn))
                         {
-                            m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/EVEMon";
+                            m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\EVEMon";
                         }
                         if (!Directory.Exists(m_DataDir))
+                        {
                             Directory.CreateDirectory(m_DataDir);
-                        if (!Directory.Exists(m_DataDir + "\\cache"))
-                            Directory.CreateDirectory(m_DataDir + "\\cache");
+                        }
+                        if (!Directory.Exists(m_DataDir + @"\cache"))
+                        {
+                            Directory.CreateDirectory(m_DataDir + @"\cache");
+                        }
                     }
                     return m_DataDir;
                 }
@@ -1558,7 +1647,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return EveMonDataDir +  m_SettingsFile;
+                return EveMonDataDir + m_SettingsFile;
             }
         }
 
@@ -1572,7 +1661,7 @@ namespace EVEMon.Common
 
             // This should also massively reduce the possiblilty of creating a blank settings file when
             // Save() is called simultaniously from multiple threads.
-    
+
             m_saveTimer.Change(10000, System.Threading.Timeout.Infinite);
         }
 
@@ -1616,7 +1705,7 @@ namespace EVEMon.Common
             s.Save();
         }
 
-        #endregion // Settings File Save / Load
+        #endregion
 
         public bool AddFileCharacter(CharFileInfo cfi)
         {
@@ -1625,7 +1714,9 @@ namespace EVEMon.Common
                 foreach (CharFileInfo tx in m_charFileList)
                 {
                     if (cfi.Filename == tx.Filename)
+                    {
                         return false;
+                    }
                 }
                 m_charFileList.Add(cfi);
             }
@@ -1640,7 +1731,9 @@ namespace EVEMon.Common
                 foreach (CharLoginInfo tx in m_characterList)
                 {
                     if (cli.CharacterName == tx.CharacterName)
+                    {
                         return false;
+                    }
                 }
                 m_characterList.Add(cli);
             }
@@ -1712,7 +1805,7 @@ namespace EVEMon.Common
                                 break;
                             }
                         }
-                        if (found) continue;
+                        if (found) { continue; }
 
                         foreach (CharFileInfo cfi in m_charFileList)
                         {
@@ -1748,7 +1841,7 @@ namespace EVEMon.Common
                     return m_tabOrder;
                 }
             }
-            set 
+            set
             {
                 lock (mutexLock)
                 {
@@ -1780,7 +1873,7 @@ namespace EVEMon.Common
         #region Browser Defaults
 
         private bool m_ShowT1Items = true;
-        
+
         public bool ShowT1Items
         {
             get { return m_ShowT1Items; }
@@ -1794,7 +1887,7 @@ namespace EVEMon.Common
         }
 
         private bool m_ShowT2Items = true;
-        
+
         public bool ShowT2Items
         {
             get { return m_ShowT2Items; }
@@ -1808,7 +1901,7 @@ namespace EVEMon.Common
         }
 
         private bool m_ShowNamedItems = true;
-        
+
         public bool ShowNamedItems
         {
             get { return m_ShowNamedItems; }
@@ -1921,7 +2014,7 @@ namespace EVEMon.Common
 
         private bool m_ShowFactionShips = true;
 
-        public bool ShowFactionShips 
+        public bool ShowFactionShips
         {
             get { return m_ShowFactionShips; }
             set
@@ -1988,8 +2081,8 @@ namespace EVEMon.Common
                 }
             }
         }
-	
-	    private int m_plannerTab = 0;
+
+        private int m_plannerTab = 0;
 
         public int PlannerTab
         {
@@ -2030,11 +2123,11 @@ namespace EVEMon.Common
                 }
             }
         }
-        
-        private int m_skillBrowserSort=0;
+
+        private int m_skillBrowserSort = 0;
 
         public int SkillBrowserSort
-        {   
+        {
             get { return m_skillBrowserSort; }
             set
             {
@@ -2044,8 +2137,8 @@ namespace EVEMon.Common
                 }
             }
         }
-        
-        private String m_skillBrowserSearch  = String.Empty;
+
+        private String m_skillBrowserSearch = String.Empty;
 
         public String SkillBrowserSearch
         {
@@ -2072,7 +2165,7 @@ namespace EVEMon.Common
                 }
             }
         }
-	
+
         private int m_shipBrowserFilter = 0;
 
         public int ShipBrowserFilter
@@ -2100,12 +2193,12 @@ namespace EVEMon.Common
                 }
             }
         }
-        
+
         #endregion
     }
 
     [XmlRoot("proxySetting")]
-    public class ProxySetting: ICloneable
+    public class ProxySetting : ICloneable
     {
         private string m_host = String.Empty;
 
@@ -2177,7 +2270,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot]
-    public class SerializableDictionary<TKey, TValue>: Dictionary<TKey, TValue>, IXmlSerializable
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
         #region IXmlSerializable Members
 
@@ -2208,8 +2301,10 @@ namespace EVEMon.Common
                 reader.ReadEndElement();
                 reader.MoveToContent();
             }
-            if(this.Count != 0)
+            if (this.Count != 0)
+            {
                 reader.ReadEndElement();
+            }
             reader.ReadEndElement();
         }
 

@@ -2020,7 +2020,19 @@ namespace EVEMon
                     // here we raise a msg about skill about to complete and to get your butt into game and prepare the next skill.
                     if (m_settings.EnableBalloonTips)
                     {
-                        string skillLevelString = m_grandCharacterInfo.CurrentlyTrainingSkill.RomanLevel;
+                        string skillLevelString;
+
+                        // Do not refactor - has to be 1 above the current or it's a level off :)
+                        switch (m_grandCharacterInfo.CurrentlyTrainingSkill.Level + 1)
+                        {
+                            case 1: skillLevelString = "I"; break;
+                            case 2: skillLevelString = "II"; break;
+                            case 3: skillLevelString = "III"; break;
+                            case 4: skillLevelString = "IV"; break;
+                            case 5: skillLevelString = "V"; break;
+                            default: skillLevelString = "0"; break;
+                        }
+
                         string timeLeft = "";
                         int min = (int)Math.Floor((double)(m_settings.NotificationOffset / 60));
                         int sec = m_settings.NotificationOffset % 60;

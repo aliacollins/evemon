@@ -120,13 +120,13 @@ namespace EVEMon.Common
 
         public ColumnPreference ColumnPreference
         {
-            get 
+            get
             {
                 if (m_columnPreference == null)
                 {
                     m_columnPreference = Settings.GetInstance().ColumnPreferences;
                 }
-                return m_columnPreference; 
+                return m_columnPreference;
             }
             set { m_columnPreference = value; }
         }
@@ -186,7 +186,7 @@ namespace EVEMon.Common
             }
         }
         #endregion Event suppression
-        
+
         #region Suggestions
         private bool? m_attributeSuggestion = null;
 
@@ -247,7 +247,7 @@ namespace EVEMon.Common
             m_attributeSuggestion = CheckForTimeBenefit("Empathy", "Presence", baseTime);
             if (m_attributeSuggestion == true) return;
 
-            m_attributeSuggestion = CheckForLearningBenefit(baseTime,null);
+            m_attributeSuggestion = CheckForLearningBenefit(baseTime, null);
             if (m_attributeSuggestion == true) return;
         }
 
@@ -337,7 +337,7 @@ namespace EVEMon.Common
                     if (gs.Level < level && !this.IsPlanned(gs, level))
                     {
                         if ((level < 5 && ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa)
-                                            || (gs == gsb && gsa == bestGs && gsb.Level < gsa.Level))) 
+                                            || (gs == gsb && gsa == bestGs && gsb.Level < gsa.Level)))
                             || ((level == 5 && bestLevel == 5) && ((gs == bestGs) || (bestGs == gsb && gs == gsa))))
                         {
                             Plan.Entry pe = new Plan.Entry();
@@ -356,14 +356,14 @@ namespace EVEMon.Common
         private bool CheckForLearningBenefit(TimeSpan baseTime, List<Plan.Entry> entries)
         {
             Skill learning = GrandCharacterInfo.SkillGroups["Learning"]["Learning"];
-            
+
             TimeSpan bestTime = baseTime;
             TimeSpan addedTrainingTime = TimeSpan.Zero;
             int bestLevel = -1;
             int added = 0;
             for (int i = 0; i < 5; i++)
             {
-                int level = i+1;
+                int level = i + 1;
                 if (learning.Level < level && !this.IsPlanned(learning, level))
                 {
                     EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
@@ -382,7 +382,7 @@ namespace EVEMon.Common
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    int level = i+1;
+                    int level = i + 1;
                     if (learning.Level < level && !this.IsPlanned(learning, level))
                     {
                         if (level <= bestLevel)
@@ -556,7 +556,7 @@ namespace EVEMon.Common
                     }
                 }
                 CheckPriorities(true);
-                
+
                 // TODO - sanity check priorities (in case this is called by learning suggestions/plan import etc
             }
             finally
@@ -565,67 +565,89 @@ namespace EVEMon.Common
             }
         }
 
-		public bool CheckPriorities(bool fixConflicts)
-		{
-			return CheckPriorities(fixConflicts, false);
-		}
+        public bool CheckPriorities(bool fixConflicts)
+        {
+            return CheckPriorities(fixConflicts, false);
+        }
 
-		/// <summary>
-		/// Find the highest priority of all dependants of a skill
-		/// </summary>
-		/// <param name="posSkillToCheck"></param>
-		int HighestDepPriority(int posSkillToCheck)
-		{
-			Plan.Entry pe = m_entries[posSkillToCheck];
-			Skill s = pe.Skill;
+        /// <summary>
+        /// Find the highest priority of all dependants of a skill
+        /// </summary>
+        /// <param name="posSkillToCheck"></param>
+        int HighestDepPriority(int posSkillToCheck)
+        {
+            Plan.Entry pe = m_entries[posSkillToCheck];
+            Skill s = pe.Skill;
 
-			int highestDepPriority = Int32.MaxValue;
+            int highestDepPriority = Int32.MaxValue;
 
-			for (int j = posSkillToCheck + 1; j < m_entries.Count; ++j) {
-				Plan.Entry ped = m_entries[j];
-				Skill sd = ped.Skill;
-				if (sd.Name == s.Name && pe.Level < ped.Level) {
-					if (ped.Priority < highestDepPriority)
-						highestDepPriority = ped.Priority;
-				}
-				else {
-					int neededLevel;
-					bool hap = sd.HasAsPrerequisite(s, out neededLevel);
-					if (hap && neededLevel >= pe.Level) {
-						if (ped.Priority < highestDepPriority)
-							highestDepPriority = ped.Priority;
-					}
-				}
-			}
+            if (s == null)
+            {
+                return highestDepPriority;
+            }
 
-			return highestDepPriority;
-		}
+            for (int j = posSkillToCheck + 1; j < m_entries.Count; ++j)
+            {
+                Plan.Entry ped = m_entries[j];
+                Skill sd = ped.Skill;
+                if (sd == null)
+                {
+                    continue;
+                }
+                if (sd.Name == s.Name && pe.Level < ped.Level)
+                {
+                    if (ped.Priority < highestDepPriority)
+                    {
+                        highestDepPriority = ped.Priority;
+                    }
+                }
+                else
+                {
+                    int neededLevel;
+                    bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+                    if (hap && neededLevel >= pe.Level)
+                    {
+                        if (ped.Priority < highestDepPriority)
+                        {
+                            highestDepPriority = ped.Priority;
+                        }
+                    }
+                }
+            }
 
-		/// <summary>
-		/// Lower priorities of all dependant skills to match parent skill
-		/// </summary>
-		/// <param name="posSkill">position of parent skill</param>
-		public void LowerDepSkills(int posSkill) {
-			Plan.Entry pe = m_entries[posSkill];
-			Skill s = pe.Skill;
+            return highestDepPriority;
+        }
 
-			for (int j = posSkill + 1; j < m_entries.Count; ++j) {
-				Plan.Entry ped = m_entries[j];
-				Skill sd = ped.Skill;
-				if (sd.Name == s.Name && pe.Level < ped.Level) {
-					if (ped.Priority < pe.Priority)
-						ped.Priority = pe.Priority;
-				}
-				else {
-					int neededLevel = 0;
-					bool hap = sd.HasAsPrerequisite(s, out neededLevel);
-					if (hap && neededLevel >= pe.Level) {
-						if (ped.Priority < pe.Priority)
-							ped.Priority = pe.Priority;
-					}
-				}
-			}
-		}
+        /// <summary>
+        /// Lower priorities of all dependant skills to match parent skill
+        /// </summary>
+        /// <param name="posSkill">position of parent skill</param>
+        public void LowerDepSkills(int posSkill)
+        {
+            Plan.Entry pe = m_entries[posSkill];
+            Skill s = pe.Skill;
+
+            for (int j = posSkill + 1; j < m_entries.Count; ++j)
+            {
+                Plan.Entry ped = m_entries[j];
+                Skill sd = ped.Skill;
+                if (sd.Name == s.Name && pe.Level < ped.Level)
+                {
+                    if (ped.Priority < pe.Priority)
+                        ped.Priority = pe.Priority;
+                }
+                else
+                {
+                    int neededLevel = 0;
+                    bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+                    if (hap && neededLevel >= pe.Level)
+                    {
+                        if (ped.Priority < pe.Priority)
+                            ped.Priority = pe.Priority;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Check that the plan has a consistant set of priorities (i.e. pre-reqs have a higher priority
@@ -633,27 +655,30 @@ namespace EVEMon.Common
         /// 
         /// If fixConflicts is true, then we set the priority of prerequisites to the same as the 
         /// highest priority of any dependant skill
-		/// unless loweringPriorities is true, then we set all dependant skills to the priority of the
-		/// prerequisite
+        /// unless loweringPriorities is true, then we set all dependant skills to the priority of the
+        /// prerequisite
         /// </summary>
         /// <param name="fixConflicts"></param>
-		/// <param name="loweringPriorities"></param>
-		/// <returns>priorities are ok</returns>
+        /// <param name="loweringPriorities"></param>
+        /// <returns>priorities are ok</returns>
         public bool CheckPriorities(bool fixConflicts, bool loweringPriorities)
         {
             bool planOK = true;
             // check all plan entries
-            for (int i = 0; i < m_entries.Count; i++) {
+            for (int i = 0; i < m_entries.Count; i++)
+            {
                 Plan.Entry pe = m_entries[i];
                 int highestDepPriority = HighestDepPriority(i);
                 // find all dependants on this skill and get the highest priority
-                if (pe.Priority > highestDepPriority) {
+                if (pe.Priority > highestDepPriority)
+                {
                     planOK = false;
-                    if (fixConflicts) {
-						if (loweringPriorities)
-							LowerDepSkills(i);
-						else
-							pe.Priority = highestDepPriority;
+                    if (fixConflicts)
+                    {
+                        if (loweringPriorities)
+                            LowerDepSkills(i);
+                        else
+                            pe.Priority = highestDepPriority;
                     }
                     else
                         break;
@@ -723,9 +748,9 @@ namespace EVEMon.Common
 
         public int PlannedLevel(Skill gs)
         {
-            for (int i=5;i>0;i--)
+            for (int i = 5; i > 0; i--)
             {
-                if (IsPlanned(gs,i))
+                if (IsPlanned(gs, i))
                     return i;
             }
             return 0;
@@ -733,7 +758,7 @@ namespace EVEMon.Common
 
         public bool IsPlanned(Skill gs, int level)
         {
-            return Priority(gs,level) != Int32.MinValue;
+            return Priority(gs, level) != Int32.MinValue;
         }
 
         public int Priority(Skill gs, int level)
@@ -813,7 +838,7 @@ namespace EVEMon.Common
                     }
                     // not planned - check again  if trained or already in the candidate entries
                     // (need a second check to ensure other prepreqs have not added this yet)
-                    else if (ShouldAdd(pgs, i, planEntries,Note))
+                    else if (ShouldAdd(pgs, i, planEntries, Note))
                     {
                         Plan.Entry pe = new Plan.Entry();
                         pe.SkillName = pgs.Name;
@@ -838,7 +863,7 @@ namespace EVEMon.Common
             PlanTo(gs, level, n, false);
         }
 
-        public void PlanTo(Skill gs, int level,string note)
+        public void PlanTo(Skill gs, int level, string note)
         {
             PlanTo(gs, level, note, false);
         }
@@ -883,7 +908,7 @@ namespace EVEMon.Common
             }
         }
 
-        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd,string Note,bool withConfirm)
+        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd, string Note, bool withConfirm)
         {
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             m_lowestPrereqPriority = Int32.MinValue;
@@ -905,7 +930,7 @@ namespace EVEMon.Common
                             // get the Priority and see if it's the lowest so far (higher numbers = lower priority)...
                             int pr = Priority(gs, i);
                             if (pr > m_lowestPrereqPriority) m_lowestPrereqPriority = pr;
-    
+
                             //Skill at this level is planned - just update the Note.
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
@@ -975,7 +1000,7 @@ namespace EVEMon.Common
         }
 
         private int m_lowestPrereqPriority;
-       
+
         public void AddList(List<Plan.Entry> planEntries)
         {
             this.SuppressEvents();
@@ -989,14 +1014,14 @@ namespace EVEMon.Common
                     if (pe.AddNoteonly)
                     {
                         Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
-                        if (pn != null )
-                         if (!pn.Notes.Contains(pe.Notes))
-                        {
-                            if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
-                            pn.Notes = pn.Notes + pe.Notes;
-                            pn.Priority = pe.Priority;
-                            m_entries.ForceUpdate(pn, ChangeType.Added);
-                        }
+                        if (pn != null)
+                            if (!pn.Notes.Contains(pe.Notes))
+                            {
+                                if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
+                                pn.Notes = pn.Notes + pe.Notes;
+                                pn.Priority = pe.Priority;
+                                m_entries.ForceUpdate(pn, ChangeType.Added);
+                            }
                     }
                     else
                     {
@@ -1132,16 +1157,16 @@ namespace EVEMon.Common
 
         public void Merge(SerializableCharacterInfo ci)
         {
-            foreach(Plan.Entry entry in this.Entries)
+            foreach (Plan.Entry entry in this.Entries)
             {
                 SkillGroup sg = entry.Skill.SkillGroup;
                 Skill s = entry.Skill;
 
                 // Check to see if this planned skills SkilLGroup exists in this SCI
                 SerializableSkillGroup currSsg = null;
-                foreach(SerializableSkillGroup ssg in ci.SkillGroups)
+                foreach (SerializableSkillGroup ssg in ci.SkillGroups)
                 {
-                    if(ssg.Id == sg.ID)
+                    if (ssg.Id == sg.ID)
                     {
                         currSsg = ssg;
                         break;
@@ -1149,21 +1174,21 @@ namespace EVEMon.Common
                 }
 
                 // We don't currently have this skill group, so add it
-                if(currSsg == null)
+                if (currSsg == null)
                 {
-                    currSsg = new SerializableSkillGroup ();
+                    currSsg = new SerializableSkillGroup();
                     currSsg.Id = sg.ID;
                     currSsg.Name = sg.Name;
-                    currSsg.Skills = new List<SerializableSkill> ();
-                    ci.SkillGroups.Add (currSsg);
+                    currSsg.Skills = new List<SerializableSkill>();
+                    ci.SkillGroups.Add(currSsg);
                 }
 
                 // Now check to see if the skill already exists in the group (which will be false
                 // if we just created this group, but that's okay)
                 SerializableSkill currSs = null;
-                foreach(SerializableSkill ss in currSsg.Skills)
+                foreach (SerializableSkill ss in currSsg.Skills)
                 {
-                    if(ss.Id == s.Id)
+                    if (ss.Id == s.Id)
                     {
                         currSs = ss;
                         break;
@@ -1171,18 +1196,18 @@ namespace EVEMon.Common
                 }
 
                 // If it doesn't exist, create it
-                if(currSs == null)
+                if (currSs == null)
                 {
-                    currSs = new SerializableSkill ();
+                    currSs = new SerializableSkill();
                     currSs.Name = s.Name;
                     currSs.Id = s.Id;
                     currSs.GroupId = sg.ID;
                     currSs.Rank = s.Rank;
-                    currSsg.Skills.Add (currSs);
+                    currSsg.Skills.Add(currSs);
                 }
 
                 currSs.Level = entry.Level;
-                currSs.SkillPoints = s.GetPointsRequiredForLevel (entry.Level);
+                currSs.SkillPoints = s.GetPointsRequiredForLevel(entry.Level);
             }
         }
 
@@ -1209,7 +1234,7 @@ namespace EVEMon.Common
         private WeakReference<Form> m_plannerWindow;
 
         [XmlIgnore]
-        public WeakReference<Form> PlannerWindow 
+        public WeakReference<Form> PlannerWindow
         {
             set { m_plannerWindow = value; }
             get { return m_plannerWindow; }
@@ -1334,7 +1359,7 @@ namespace EVEMon.Common
             TimeSpan totalTrainingTime = TimeSpan.Zero;
             DateTime curDt = DateTime.Now;
             int num = 0;
-            
+
             foreach (Plan.Entry pe in this.Entries)
             {
                 bool shoppingListCandidate = !(pe.Skill.Known || pe.Level != 1 || pe.Skill.Owned);
@@ -1371,7 +1396,7 @@ namespace EVEMon.Common
                 curDt += trainingTime;
                 DateTime finishDate = curDt;
                 totalTrainingTime += trainingTime;
-                
+
                 if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate || (pto.EntryCost && shoppingListCandidate))
                 {
                     sw.Write(" (");
@@ -1472,7 +1497,7 @@ namespace EVEMon.Common
                     boldStart();
                     if (TrainingCost > 0)
                     {
-                        sw.Write(String.Format("{0:0,0,0} ISK",TrainingCost));
+                        sw.Write(String.Format("{0:0,0,0} ISK", TrainingCost));
                     }
                     else
                     {
@@ -1514,7 +1539,7 @@ namespace EVEMon.Common
                 }
             }
 
-  
+
 
             private Plan m_owner;
             private string m_skillName;
@@ -1684,7 +1709,7 @@ namespace EVEMon.Common
                 Plan.Entry pe = new Plan.Entry();
                 pe.SkillName = this.SkillName;
                 pe.Level = this.Level;
-                pe.Priority =  this.Priority;
+                pe.Priority = this.Priority;
                 pe.PlanGroups = (System.Collections.ArrayList)this.PlanGroups.Clone();
                 pe.EntryType = this.EntryType;
                 pe.Notes = this.Notes;
