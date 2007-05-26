@@ -97,20 +97,24 @@
       </body>
     </html>
   </xsl:template>
-  
+
   <xsl:template name="implantBody">
     <xsl:param name="classType"/>
     <xsl:param name="displayType"/>
     <tr>
       <xsl:element name="td">
-        <xsl:attribute name="class">implantName <xsl:value-of select="$classType"/>ImplantName</xsl:attribute>
+        <xsl:attribute name="class">
+          implantName <xsl:value-of select="$classType"/>ImplantName
+        </xsl:attribute>
         <xsl:value-of select="augmentatorName/child::text()"/>
       </xsl:element>
       <xsl:element name="td">
-        <xsl:attribute name="class">implantBonus <xsl:value-of select="$classType"/>ImplantBonus</xsl:attribute>
+        <xsl:attribute name="class">
+          implantBonus <xsl:value-of select="$classType"/>ImplantBonus
+        </xsl:attribute>
         +<xsl:value-of select="augmentatorValue/child::text()"/><xsl:value-of select="' '"/><xsl:value-of select="$displayType"/>
       </xsl:element>
-    </tr>    
+    </tr>
   </xsl:template>
 
   <xsl:template match="intelligenceBonus">

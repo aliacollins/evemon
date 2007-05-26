@@ -23,10 +23,6 @@ namespace EVEMon
         private string m_url;
         private string m_fileName;
 
-        private void UpdateDownloadForm_Load(object sender, EventArgs e)
-        {
-        }
-
         private HttpWebRequest m_request;
         private HttpWebResponse m_response;
         private FileStream m_targetFile;
@@ -63,7 +59,7 @@ namespace EVEMon
 
             try
             {
-                m_response = (HttpWebResponse) m_request.EndGetResponse(ar);
+                m_response = (HttpWebResponse)m_request.EndGetResponse(ar);
                 m_netStream = m_response.GetResponseStream();
                 m_targetFile = new FileStream(m_fileName, FileMode.Create, FileAccess.Write, FileShare.None);
                 UpdateStatusText();
@@ -166,7 +162,7 @@ namespace EVEMon
             if (m_response.ContentLength > 0)
             {
                 label1.Text = String.Format("Downloading update ({0}%, {1} of {2} bytes received)...",
-                                            m_bytesRead*100/m_response.ContentLength, m_bytesRead,
+                                            m_bytesRead * 100 / m_response.ContentLength, m_bytesRead,
                                             m_response.ContentLength);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;

@@ -355,9 +355,13 @@ namespace EVEMon.Common
             get
             {
                 if (m_cost > 0)
+                {
                     return String.Format("{0:0,0,0}", m_cost);
+                }
                 else
+                {
                     return "0";
+                }
             }
         }
 
@@ -436,9 +440,14 @@ namespace EVEMon.Common
             get
             {
                 bool pt;
-                if (Level == 0 && Known) pt = true;
+                if (Level == 0 && Known)
+                {
+                    pt = true;
+                }
                 else
+                {
                     pt = CurrentSkillPoints > GetPointsRequiredForLevel(Level);
+                }
                 return pt;
             }
         }
@@ -717,10 +726,14 @@ namespace EVEMon.Common
             foreach (Prereq pp in this.Prereqs)
             {
                 if (pp.Skill == gs)
+                {
                     neededLevel = Math.Max(pp.Level, neededLevel);
+                }
 
                 if (recurse)
+                {
                     pp.Skill.HasAsPrerequisite(gs, ref neededLevel, true);
+                }
             }
             return (neededLevel > 0);
         }

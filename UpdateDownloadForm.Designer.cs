@@ -77,7 +77,6 @@ namespace EVEMon
             this.Text = "Downloading Update...";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UpdateDownloadForm_FormClosed);
             this.Shown += new System.EventHandler(this.UpdateDownloadForm_Shown);
-            this.Load += new System.EventHandler(this.UpdateDownloadForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -35,8 +35,8 @@ namespace EVEMon
             slDevelopers.Add("Brad Stone", "01");
             slDevelopers.Add("Eewec Ourbyni", "01");
 
-            slDevelopers.Add("Six Anari","02");
-            slDevelopers.Add("Anders Chydenius","02");
+            slDevelopers.Add("Six Anari", "02");
+            slDevelopers.Add("Anders Chydenius", "02");
 
             slDevelopers.Add("mrcue", "03");
             slDevelopers.Add("Collin Grady", "03");
@@ -134,42 +134,17 @@ namespace EVEMon
             if (e.Index > -1)
             {
                 string sLine = slOutput.GetByIndex(e.Index).ToString();
-                if (sLine.Contains(":")) 
+                if (sLine.Contains(":"))
                 {
                     //sLine = sLine + ":";
                     e.Graphics.DrawString(sLine, myFontbold, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
                 }
                 else
                 {
-                    sLine = "  "+sLine;
+                    sLine = "  " + sLine;
                     e.Graphics.DrawString(sLine, myFont, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
                 }
             }
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lstDevelopers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel3_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

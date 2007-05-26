@@ -34,16 +34,16 @@ namespace EVEMon
                 else
                 {
                     // if not let the user know and leave the text box unchanged
-                    MessageBox.Show("EVE Executable (eve.exe) not found in " + fbdOpenDir.SelectedPath + " please select a valid EVE instalation folder.", "Invalid Folder", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("EVE Executable (eve.exe) not found in " + fbdOpenDir.SelectedPath + " please select a valid EVE installation folder.", "Invalid Folder", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
 
-//                FileOk = true;
-//
-//                //anders - find the real character.  This probably burns too much time to stay here, but I like it
-//                XmlDocument xdoc = new XmlDocument();
-//                xdoc.Load(ofdOpenXml.FileName);
-//                XmlElement cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
-//                tbFileCharName.Text = cElement.Attributes["name"].Value;
+                //                FileOk = true;
+                //
+                //                //anders - find the real character.  This probably burns too much time to stay here, but I like it
+                //                XmlDocument xdoc = new XmlDocument();
+                //                xdoc.Load(ofdOpenXml.FileName);
+                //                XmlElement cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
+                //                tbFileCharName.Text = cElement.Attributes["name"].Value;
             }
 
         }

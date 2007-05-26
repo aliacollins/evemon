@@ -51,9 +51,8 @@ namespace EVEMon
             Plan.PlannerWindowFactory = new PlannerWindowFactory();
             EveSession.MainThread = Thread.CurrentThread;
             InstallerDeleter.Schedule();
-            
-            AppDomain.CurrentDomain.UnhandledException +=
-                new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
             Settings.GetInstance().SaveImmediate();

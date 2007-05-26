@@ -62,12 +62,13 @@ namespace EVEMon
                                     {
                                         //print long message once
                                         if (minDays == 1)
+                                        {
                                             messageText.Append("\r\n" + "Longer skills from " + planName + ":\r\n");
+                                        }
 
                                         minDays = trainTime.Days + minDays;
                                     }
-                                    messageText.Append("\t" + entry.SkillName +
-                                        " " + entry.Level);
+                                    messageText.Append("\t" + entry.SkillName + " " + entry.Level);
 
                                     if (entry.Notes != null && entry.Notes.Length > 0)
                                     {
@@ -77,9 +78,13 @@ namespace EVEMon
                                     string timeText = String.Format("{0:00}:{1:00}:{2:00}", trainTime.Hours, trainTime.Minutes, trainTime.Seconds);
 
                                     if (trainTime.Days > 0)
+                                    {
                                         messageText.Append(" - " + trainTime.Days + "d, " + timeText);
+                                    }
                                     else
+                                    {
                                         messageText.Append(" - " + timeText);
+                                    }
 
                                     messageText.Append("\r\n");
                                 }
@@ -108,9 +113,13 @@ namespace EVEMon
             }
             m.m_serverRequiresSsl = settings.EmailServerRequiresSsl;
             if (settings.PortNumber > 0)
+            {
                 return m.Send(settings.PortNumber);
+            }
             else
+            {
                 return m.Send();
+            }
         }
 
         private bool Send()

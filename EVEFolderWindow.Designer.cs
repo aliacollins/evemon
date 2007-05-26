@@ -103,6 +103,7 @@ namespace EVEMon
             this.Controls.Add(this.btnCancel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EVEFolderWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EVE Folder";
             this.ResumeLayout(false);
             this.PerformLayout();

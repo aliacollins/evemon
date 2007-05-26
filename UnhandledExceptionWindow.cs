@@ -34,16 +34,16 @@ namespace EVEMon
                     int oWidth = i.Width;
                     if (i.Height > pbBugImage.ClientSize.Height)
                     {
-                        Double scale = Convert.ToDouble(pbBugImage.ClientSize.Height)/Convert.ToDouble(i.Height);
-                        oHeight = Convert.ToInt32(oHeight*scale);
-                        oWidth = Convert.ToInt32(oWidth*scale);
+                        Double scale = Convert.ToDouble(pbBugImage.ClientSize.Height) / Convert.ToDouble(i.Height);
+                        oHeight = Convert.ToInt32(oHeight * scale);
+                        oWidth = Convert.ToInt32(oWidth * scale);
                         Bitmap b = new Bitmap(i, new Size(oWidth, oHeight));
 
                         int oRight = pbBugImage.Right;
                         pbBugImage.ClientSize = new Size(oWidth, oHeight);
                         pbBugImage.Image = b;
                         pbBugImage.Left = oRight - pbBugImage.Width;
-                        pbBugImage.Top = (panel1.ClientSize.Height/2) - (pbBugImage.Height/2);
+                        pbBugImage.Top = (panel1.ClientSize.Height / 2) - (pbBugImage.Height / 2);
                     }
                 }
             }

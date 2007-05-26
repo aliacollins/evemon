@@ -21,10 +21,7 @@ namespace EVEMon
         private static void DoIt(object state)
         {
             m_timer = null;
-            foreach (
-                string s in
-                    Directory.GetFiles(Environment.CurrentDirectory, "EVEMon-install-*.exe",
-                                       SearchOption.TopDirectoryOnly))
+            foreach (string s in Directory.GetFiles(Environment.CurrentDirectory, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {

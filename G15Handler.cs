@@ -13,7 +13,7 @@ namespace EVEMon
     class G15Handler
     {
         public static EVEMon.LogitechG15.Lcdisplay LCD;
-        public string ActiveCharacter 
+        public string ActiveCharacter
         {
             get { return m_activeCharacter; }
             set { m_activeCharacter = value; }
@@ -25,7 +25,7 @@ namespace EVEMon
         private static bool m_shouldTerminate = false;
         private static string m_activeCharacter = null;
         private static Dictionary<string, CharacterInfo> m_Chars = new Dictionary<string, CharacterInfo>();
- 
+
         /// <summary>
         /// Initialises the G15 event handles
         /// </summary>
@@ -51,10 +51,14 @@ namespace EVEMon
         public static void CharListUpdate()
         {
             if (Program.Settings.CharacterList.Count == 0)
+            {
                 return;
+            }
 
             if (LCD == null)
+            {
                 return;
+            }
 
             List<string> names = new List<string>();
             foreach (CharLoginInfo info in Program.Settings.CharacterList)
@@ -71,7 +75,9 @@ namespace EVEMon
                 {
                     CharacterInfo i = Program.MainWindow.GetGrandCharacterInfo(info.CharacterName);
                     if (i == null)
+                    {
                         return;
+                    }
                     m_Chars.Add(info.CharacterName, i);
                     i.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);
                     i.SkillChanged += new SkillChangedHandler(SkillChangedHandler);
@@ -82,7 +88,9 @@ namespace EVEMon
             foreach (string n in m_Chars.Keys)
             {
                 if (!names.Contains(n))
+                {
                     rem.Add(n);
+                }
             }
             foreach (string r in rem)
             {
@@ -120,7 +128,9 @@ namespace EVEMon
         private static void GetActiveCharData()
         {
             if (m_activeCharacter == null || m_activeCharacter == "" || LCD == null)
+            {
                 return;
+            }
 
             if (!m_Chars.ContainsKey(m_activeCharacter))
             {
@@ -164,7 +174,9 @@ namespace EVEMon
             {
                 Skill gs = gci.CurrentlyTrainingSkill;
                 if (gs == null)
+                {
                     continue;
+                }
 
                 long tmp = LCD.leasttime.Ticks - (gs.EstimatedCompletion.Ticks - DateTime.Now.Ticks);
                 if (tmp > 0)
@@ -199,11 +211,15 @@ namespace EVEMon
         private static void OnLCDRefreshChange(string CharName)
         {
             if (CharName == null)
+            {
                 return;
+            }
 
             CharacterMonitor cm = Program.MainWindow.GetCharacterMonitor(CharName);
             if (cm == null)
+            {
                 return;
+            }
 
             cm.UpdateCharacterInfo();
         }
@@ -213,16 +229,18 @@ namespace EVEMon
         /// </summary>
         private static void OnLCDAutoCycleChange(bool Cycle)
         {
-             Program.Settings.G15ACycle = Cycle;
+            Program.Settings.G15ACycle = Cycle;
         }
-        
+
         /// <summary>
         /// The handler which is called when a skill has been completed.
         /// </summary>
         private static void DownloadAttemptCompleted(object sender, CharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
             if (!e.Complete)
+            {
                 return;
+            }
 
             string skillLevelString = Program.MainWindow.GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).RomanLevel;
             LCD._COMPLETESTR = e.CharacterName + "\nhas finished learning skill\n" + e.SkillName + " " + skillLevelString;
@@ -235,7 +253,9 @@ namespace EVEMon
         private static void UseLogitechG15DisplayChanged(object sender, EventArgs e)
         {
             if (m_startupError)
+            {
                 return;
+            }
 
             if (Program.Settings.UseLogitechG15Display)
             {
@@ -269,7 +289,9 @@ namespace EVEMon
 
                 // dont register the event handler if something has gone wrong
                 if (!m_threadRunning)
+                {
                     return;
+                }
 
                 // register the events
                 EVEMon.LogitechG15.Lcdisplay.OnCharNameChange += new CharChangeHandler(OnLCDActiveCharacterChange);
@@ -296,7 +318,7 @@ namespace EVEMon
                 EVEMon.LogitechG15.Lcdisplay.OnAutoCycleChange -= new CharAutoCycleHandler(OnLCDAutoCycleChange);
                 //EVEMon.LogitechG15.Lcdisplay.OnButtonPress -= new OnButtonPressHandler(OnLCDButtonPress);
             }
-            
+
             foreach (CharacterInfo gci in m_Chars.Values)
             {
                 gci.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);

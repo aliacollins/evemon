@@ -25,8 +25,7 @@ namespace EVEMon
         {
             m_semaphore = new Semaphore(0, 1, "EVEMonInstance", out m_createdNew);
             //m_waitHandle = 
-            ThreadPool.RegisterWaitForSingleObject(m_semaphore,
-                                                   new WaitOrTimerCallback(SemaphoreReleased), null, -1, false);
+            ThreadPool.RegisterWaitForSingleObject(m_semaphore, new WaitOrTimerCallback(SemaphoreReleased), null, -1, false);
         }
 
         public bool CreatedNew

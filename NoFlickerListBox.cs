@@ -5,7 +5,8 @@ namespace EVEMon
 {
     public class NoFlickerListBox : ListBox
     {
-/*      // This code that has been rem'd out is what I'm currently working on....
+        /*
+        // This code that has been rem'd out is what I'm currently working on....
         // it does some odd stuff atm.
         public NoFlickerListBox()
         {
@@ -22,20 +23,21 @@ namespace EVEMon
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            /*if (this != null)
+            if (this != null)
             {
                 for (int i = this.TopIndex; i < this.TopIndex + 4; i++)
                 {
 
                 }
                 base.OnPaint(e);
-            //}
+            }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             base.OnPaintBackground(e);
-        }*/
+        }
+         */
 
         private enum WM
         {
@@ -47,9 +49,9 @@ namespace EVEMon
         {
             switch (m.Msg)
             {
-                case (int) WM.WM_ERASEBKGND:
+                case (int)WM.WM_ERASEBKGND:
                     PaintNonItemRegion();
-                    m.Msg = (int) WM.WM_NULL;
+                    m.Msg = (int)WM.WM_NULL;
                     break;
             }
             base.WndProc(ref m);

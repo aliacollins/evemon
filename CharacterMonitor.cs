@@ -134,8 +134,7 @@ namespace EVEMon
                 }
                 if (m_cfi.MonitorFile)
                 {
-                    m_characterFileWatch = new FileSystemWatcher(
-                        Path.GetDirectoryName(m_cfi.Filename), Path.GetFileName(m_cfi.Filename));
+                    m_characterFileWatch = new FileSystemWatcher(Path.GetDirectoryName(m_cfi.Filename), Path.GetFileName(m_cfi.Filename));
                     m_characterFileWatch.Created += new FileSystemEventHandler(CharacterFileUpdatedCallback);
                     m_characterFileWatch.Changed += new FileSystemEventHandler(CharacterFileUpdatedCallback);
                     m_characterFileWatch.EnableRaisingEvents = true;
@@ -345,10 +344,14 @@ namespace EVEMon
                         toremove = true;
                     }
                     if (toremove)
+                    {
                         m_settings.OldSkillsDict.Remove(m_charName);
+                    }
                 }
                 if (add && m_grandCharacterInfo.OldSerialSIT.AlertRaisedAlready)
+                {
                     m_settings.OldSkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
+                }
             }
             m_settings.Save();
         }
@@ -392,7 +395,9 @@ namespace EVEMon
             UpdateGrandCharacterInfo();
 
             if (m_settings.OldSkillsDict.ContainsKey(m_charName))
+            {
                 m_grandCharacterInfo.OldSerialSIT = (SerializableSkillTrainingInfo)m_settings.OldSkillsDict[m_charName].Clone();
+            }
 
             UpdateTrainingSkillInfo();
         }
@@ -527,9 +532,7 @@ namespace EVEMon
             {
                 if (m_estimatedCompletion > now)
                 {
-                    SetLcdData(m_charName + ": " +
-                             TimeSpanDescriptiveShort(m_estimatedCompletion),
-                                 m_estimatedCompletion - now);
+                    SetLcdData(m_charName + ": " + TimeSpanDescriptiveShort(m_estimatedCompletion), m_estimatedCompletion - now);
                 }
                 else
                 {
@@ -758,8 +761,7 @@ namespace EVEMon
         private void UpdateCharacterImageRemote()
         {
             pbCharImage.Image = null;
-            EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId,
-                                              new GetImageCallback(GotCharacterImage));
+            EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId, new GetImageCallback(GotCharacterImage));
         }
 
         /// <summary>
@@ -1391,9 +1393,13 @@ namespace EVEMon
                 firstSkill = false;
                 sb.Append(skillName);
                 if (sortedSkills[skillName])
+                {
                     sb.Append(" (prereqs met)");
+                }
                 else
+                {
                     sb.Append(" (prereqs not met)");
+                }
             }
             if (firstSkill) sb.Append("You don't have any skills marked as Owned");
             MessageBox.Show(sb.ToString(), String.Format("Skills owned by {0}", GrandCharacterInfo.Name), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1536,13 +1542,15 @@ namespace EVEMon
                 // The Array 'numberOfPixelsToMove' contains the number of pixels the
                 // list box 'lbSkills' needs to scroll for each line... the question
                 // is, how to tell it that and get it to do so smoothly.
-                /* // This doesn't work...
+                /*
+                // This doesn't work...
                 for (int i = 0; i < Math.Abs(Lines); i++)
                 {
                     System.Drawing.Drawing2D.Matrix translateMatrix = new System.Drawing.Drawing2D.Matrix();
                     translateMatrix.Translate(0, numberOfPixelsToMove[i]);
                     mousePath.Transform(translateMatrix);
-                } */
+                }
+                 */
                 lbSkills.Invalidate();
                 // invalidate is a temporary fix that does give limited functionality for purpose.
             }
@@ -1608,9 +1616,7 @@ namespace EVEMon
                     catch (ApplicationException err)
                     {
                         ExceptionHandler.LogException(err, true);
-                        DialogResult xdr =
-                            MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel,
-                                            MessageBoxIcon.Error);
+                        DialogResult xdr = MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                         if (xdr == DialogResult.Cancel)
                         {
                             return;
@@ -1943,9 +1949,9 @@ namespace EVEMon
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate
-                                                  {
-                                                      tmrUpdate_Tick(sender, e);
-                                                  }));
+                                              {
+                                                  tmrUpdate_Tick(sender, e);
+                                              }));
                 return;
             }
 
@@ -2008,7 +2014,7 @@ namespace EVEMon
                 m_grandCharacterInfo.CurrentlyTrainingSkill != null &&
                 m_grandCharacterInfo.SerialSIT.isSkillInTraining &&
                 !m_grandCharacterInfo.SerialSIT.AlertRaisedAlready &&
-				m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id)
+                m_grandCharacterInfo.SerialSIT.TrainingSkillWithTypeID == m_grandCharacterInfo.CurrentlyTrainingSkill.Id)
             {
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted
@@ -2020,18 +2026,7 @@ namespace EVEMon
                     // here we raise a msg about skill about to complete and to get your butt into game and prepare the next skill.
                     if (m_settings.EnableBalloonTips)
                     {
-                        string skillLevelString;
-
-                        // Do not refactor - has to be 1 above the current or it's a level off :)
-                        switch (m_grandCharacterInfo.CurrentlyTrainingSkill.Level + 1)
-                        {
-                            case 1: skillLevelString = "I"; break;
-                            case 2: skillLevelString = "II"; break;
-                            case 3: skillLevelString = "III"; break;
-                            case 4: skillLevelString = "IV"; break;
-                            case 5: skillLevelString = "V"; break;
-                            default: skillLevelString = "0"; break;
-                        }
+                        string skillLevelString = Skill.GetRomanForInt(m_grandCharacterInfo.CurrentlyTrainingSkill.Level + 1);
 
                         string timeLeft = "";
                         int min = (int)Math.Floor((double)(m_settings.NotificationOffset / 60));
@@ -2173,7 +2168,7 @@ namespace EVEMon
                             DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(ci.TrainingSkillInfo.TQOffset)).ToLocalTime();
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
-                                         //(adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
+                                //(adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
                                          adjustedEndTime);
                         }
                     }
@@ -2320,13 +2315,17 @@ namespace EVEMon
                         foreach (string s in f.ResultBonuses.Keys)
                         {
                             if (s != "Auto")
+                            {
                                 m_grandCharacterInfo.implantSets[s] = new ImplantSet(f.ResultBonuses[s].Array);
+                            }
                         }
                         List<string> removesets = new List<string>();
                         foreach (string s in m_grandCharacterInfo.implantSets.Keys)
                         {
                             if (!f.ResultBonuses.ContainsKey(s) && s != "Auto")
+                            {
                                 removesets.Add(s);
+                            }
                         }
                         foreach (string s in removesets)
                         {
@@ -2341,7 +2340,9 @@ namespace EVEMon
                                 {
                                     UserImplant x = m_grandCharacterInfo.implantSets["Auto"].Array[i];
                                     if (x != null)
+                                    {
                                         m_grandCharacterInfo.ImplantBonuses.Add(x);
+                                    }
                                 }
                             }
                             else
@@ -2350,14 +2351,22 @@ namespace EVEMon
                                 {
                                     UserImplant x = null;
                                     if (i < m_grandCharacterInfo.implantSets["Auto"].Array.GetLength(0))
+                                    {
                                         x = m_grandCharacterInfo.implantSets["Auto"].Array[i];
+                                    }
                                     UserImplant y = null;
                                     if (i < m_grandCharacterInfo.implantSets["Current"].Array.GetLength(0))
+                                    {
                                         y = m_grandCharacterInfo.implantSets["Current"].Array[i];
+                                    }
                                     if (y != null)
+                                    {
                                         m_grandCharacterInfo.ImplantBonuses.Add(y);
+                                    }
                                     else if (x != null)
+                                    {
                                         m_grandCharacterInfo.ImplantBonuses.Add(x);
+                                    }
                                 }
                             }
                         }
@@ -2367,7 +2376,9 @@ namespace EVEMon
                             {
                                 UserImplant x = m_grandCharacterInfo.implantSets["Current"].Array[i];
                                 if (x != null)
+                                {
                                     m_grandCharacterInfo.ImplantBonuses.Add(x);
+                                }
                             }
                         }
                     }
@@ -2386,10 +2397,7 @@ namespace EVEMon
 
         public EveSession Session
         {
-            get
-            {
-                return m_session;
-            }
+            get { return m_session; }
         }
     }
 }

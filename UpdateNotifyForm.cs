@@ -98,10 +98,6 @@ namespace EVEMon
             this.Close();
         }
 
-        private void UpdateNotifyForm_Load(object sender, EventArgs e)
-        {
-        }
-
         private void UpdateNotifyForm_Shown(object sender, EventArgs e)
         {
             UpdateInformation();

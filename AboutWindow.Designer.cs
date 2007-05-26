@@ -93,7 +93,6 @@ namespace EVEMon
             this.label6.Size = new System.Drawing.Size(169, 13);
             this.label6.TabIndex = 0;
             this.label6.Text = "Developers and Contributors";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // lstDevelopers
             // 
@@ -110,7 +109,6 @@ namespace EVEMon
             this.lstDevelopers.Sorted = true;
             this.lstDevelopers.TabIndex = 2;
             this.lstDevelopers.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lstDevelopers_DrawItem);
-            this.lstDevelopers.SelectedIndexChanged += new System.EventHandler(this.lstDevelopers_SelectedIndexChanged);
             // 
             // verticalFlowPanel1
             // 
@@ -162,10 +160,9 @@ namespace EVEMon
             this.flowLayoutPanel3.Location = new System.Drawing.Point(100, 7);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(170, 52);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(166, 52);
             this.flowLayoutPanel3.TabIndex = 8;
             this.flowLayoutPanel3.WrapContents = false;
-            this.flowLayoutPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel3_Paint);
             // 
             // label1
             // 
@@ -191,7 +188,7 @@ namespace EVEMon
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 26);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(164, 13);
+            this.label2.Size = new System.Drawing.Size(160, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Copyright © 2006  Timothy Fries";
             // 
@@ -214,7 +211,6 @@ namespace EVEMon
             this.label5.Size = new System.Drawing.Size(288, 281);
             this.label5.TabIndex = 6;
             this.label5.Text = resources.GetString("label5.Text");
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -277,7 +273,6 @@ namespace EVEMon
             this.label4.Size = new System.Drawing.Size(292, 13);
             this.label4.TabIndex = 3;
             this.label4.Text = "Continued by Anders Chydenius and the listed Contributors";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 

@@ -37,9 +37,7 @@ namespace EVEMon
         {
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                m_size =
-                    TextRenderer.MeasureText(g, this.Text, this.Font, new Size(0, 0),
-                                             TextFormatFlags.NoClipping | TextFormatFlags.NoPadding);
+                m_size = TextRenderer.MeasureText(g, this.Text, this.Font, new Size(0, 0), TextFormatFlags.NoClipping | TextFormatFlags.NoPadding);
             }
             m_size = new Size(m_size.Width + 6, m_size.Height + 4);
             this.ClientSize = m_size;
@@ -51,11 +49,9 @@ namespace EVEMon
             Graphics g = e.Graphics;
 
             g.FillRectangle(SystemBrushes.Info, e.ClipRectangle);
-            g.DrawRectangle(SystemPens.InfoText, 0, 0, this.ClientSize.Width - 1,
-                            this.ClientSize.Height - 1);
-            TextRenderer.DrawText(e.Graphics, this.Text, this.Font,
-                                  new Point(3, 2), SystemColors.InfoText, Color.Transparent,
-                                  TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+            g.DrawRectangle(SystemPens.InfoText, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            TextRenderer.DrawText(e.Graphics, this.Text, this.Font, new Point(3, 2), SystemColors.InfoText,
+                                    Color.Transparent, TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
         }
 
         internal class NativeMethods
@@ -67,10 +63,7 @@ namespace EVEMon
 
 
             [DllImport("user32.dll")]
-            public static extern IntPtr FindWindow(
-                string lpClassName,
-                string lpWindowName
-                );
+            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
             public const string TaskbarClass = "Shell_TrayWnd";
 
@@ -80,7 +73,7 @@ namespace EVEMon
                 public static APPBARDATA Create()
                 {
                     APPBARDATA appBarData = new APPBARDATA();
-                    appBarData.cbSize = Marshal.SizeOf(typeof (APPBARDATA));
+                    appBarData.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
                     return appBarData;
                 }
 
@@ -269,8 +262,7 @@ namespace EVEMon
         private int hHook = 0;
 
         [DllImport("user32", SetLastError = true)]
-        private static extern int SetWindowsHookEx(int idHook, LowLevelMouseDelegate lpfn, IntPtr hInstance,
-                                                   int threadId);
+        private static extern int SetWindowsHookEx(int idHook, LowLevelMouseDelegate lpfn, IntPtr hInstance, int threadId);
 
         [DllImport("user32")]
         private static extern bool UnhookWindowsHookEx(int idHook);
@@ -299,7 +291,7 @@ namespace EVEMon
 
             hHook = SetWindowsHookEx(WH_MOUSE_LL,
                                      m_delegate,
-                                     //Marshal.GetHINSTANCE(this.GetType().Module),
+                //Marshal.GetHINSTANCE(this.GetType().Module),
                                      hinst,
                                      0);
             if (hHook == 0)
@@ -326,7 +318,7 @@ namespace EVEMon
             {
                 if (nCode <= 0)
                 {
-                    switch ((int) wParam)
+                    switch ((int)wParam)
                     {
                         case WM_MOUSEMOVE:
                             OnMouseMove();

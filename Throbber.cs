@@ -48,8 +48,10 @@ namespace EVEMon
                     }
 
                     //Trigger a redraw
-                    if(this.IsHandleCreated)
+                    if (this.IsHandleCreated)
+                    {
                         this.Invoke(new AnimatorDelegate(this.Refresh));
+                    }
                 }
                 else if (_animatorThread == null)
                 {
@@ -66,7 +68,9 @@ namespace EVEMon
             InitializeComponent();
 
             if (_strobeFrame == null)
+            {
                 InitImages();
+            }
 
             this.MinimumSize = new Size(24, 24);
             this.MaximumSize = new Size(24, 24);
@@ -77,11 +81,15 @@ namespace EVEMon
             if (_state != ThrobberState.Stopped)
             {
                 if (_currentFrame != null) //Draw whatever the animator thread chooses
-                    pe.Graphics.DrawImage(_currentFrame, 0, 0); 
+                {
+                    pe.Graphics.DrawImage(_currentFrame, 0, 0);
+                }
                 //If _currentFrame is null, we're in the blank part of the strobe. Draw nothing, appear transparent
             }
             else
+            {
                 pe.Graphics.DrawImage(_strobeFrame, 0, 0);
+            }
 
             // Calling the base class OnPaint
             base.OnPaint(pe);
@@ -97,13 +105,19 @@ namespace EVEMon
                 {
                     //Switch the strobe frame
                     if (_currentFrame == null)
+                    {
                         _currentFrame = _strobeFrame;
+                    }
                     else
+                    {
                         _currentFrame = null;
+                    }
 
                     //Redraw and sleep
-                    if(this.IsHandleCreated)
+                    if (this.IsHandleCreated)
+                    {
                         this.Invoke(new AnimatorDelegate(this.Refresh));
+                    }
                     Thread.Sleep(500);
                 }
                 else if (_state == ThrobberState.Rotating)
@@ -113,8 +127,10 @@ namespace EVEMon
                     _currentFrame = _movingFrames[counter];
 
                     //Redraw and sleep
-                    if(this.IsHandleCreated)
+                    if (this.IsHandleCreated)
+                    {
                         this.Invoke(new AnimatorDelegate(this.Refresh));
+                    }
                     Thread.Sleep(100);
                 }
             }
@@ -133,9 +149,7 @@ namespace EVEMon
                 _strobeFrame = new Bitmap(width, height);
                 using (Graphics g = Graphics.FromImage(_strobeFrame))
                 {
-                    g.DrawImage(b, new Rectangle(0, 0, width, height),
-                                    new Rectangle(0, 0, width, height),
-                                    GraphicsUnit.Pixel);
+                    g.DrawImage(b, new Rectangle(0, 0, width, height), new Rectangle(0, 0, width, height), GraphicsUnit.Pixel);
                 }
 
                 //Make the moving Images
@@ -145,11 +159,9 @@ namespace EVEMon
                     Bitmap ib = new Bitmap(width, height);
                     using (Graphics g = Graphics.FromImage(ib))
                     {
-                        g.DrawImage(b, new Rectangle(0, 0, width, height),
-                                    new Rectangle(i * width, 0, width, height),
-                                    GraphicsUnit.Pixel);
+                        g.DrawImage(b, new Rectangle(0, 0, width, height), new Rectangle(i * width, 0, width, height), GraphicsUnit.Pixel);
                     }
-                    _movingFrames[i-1] = ib;
+                    _movingFrames[i - 1] = ib;
                 }
             }
         }

@@ -36,11 +36,17 @@ namespace EVEMon
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
 
             if (rbSystemTrayOptionsNever.Checked)
+            {
                 s.SystemTrayOptions = SystemTrayDisplayOptions.Never;
+            }
             else if (rbSystemTrayOptionsMinimized.Checked)
+            {
                 s.SystemTrayOptions = SystemTrayDisplayOptions.Minimized;
+            }
             else if (rbSystemTrayOptionsAlways.Checked)
+            {
                 s.SystemTrayOptions = SystemTrayDisplayOptions.Always;
+            }
 
             s.CloseToTray = cbCloseToTray.Checked;
             s.TitleToTime = cbTitleToTime.Checked;
@@ -89,7 +95,7 @@ namespace EVEMon
             //IGB Options
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.IGBServerPublic = cbIGBPublic.Checked;
-            s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);                
+            s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
 
             s.TooltipString = tbTooltipString.Text;
 
@@ -107,7 +113,7 @@ namespace EVEMon
             }
             s.HttpProxy = httpSetting;
             s.CustomTQAddress = tbTQServerAddress.Text;
-            s.CustomTQPort    = tbTQServerPort.Text;
+            s.CustomTQPort = tbTQServerPort.Text;
             s.UseCustomTQCheckSettings = cbCustomTQSettings.Checked;
             s.ShowTQBalloon = cbShowTQBalloon.Checked;
 
@@ -126,10 +132,7 @@ namespace EVEMon
 
         private void ShowErrorMessage(string caption, string message)
         {
-            MessageBox.Show(message,
-                            caption,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private bool ValidateTQSettings()
@@ -157,18 +160,20 @@ namespace EVEMon
                 return false;
             }
 
-
             return true;
         }
 
-        private bool ValidateIGBSettings() {
+        private bool ValidateIGBSettings()
+        {
             int l_igbPort = -1;
-            try {
+            try
+            {
                 l_igbPort = Int32.Parse(tb_IgbPort.Text);
             }
-            catch (FormatException) {}
+            catch (FormatException) { }
 
-            if ((l_igbPort < System.Net.IPEndPoint.MinPort) || (l_igbPort > System.Net.IPEndPoint.MaxPort)) {
+            if ((l_igbPort < System.Net.IPEndPoint.MinPort) || (l_igbPort > System.Net.IPEndPoint.MaxPort))
+            {
                 MessageBox.Show(string.Format("IGB port value must be between {0} and {1}",
                     System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort),
                     "Invalid IGB Port",
@@ -242,22 +247,32 @@ namespace EVEMon
             cbShowLoginName.Checked = m_settings.ShowLoginName;
 
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
+            {
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
+            }
             else
+            {
                 cbScreenList.SelectedIndex = 0;
+            }
 
             // Skill Icon Set
             if (m_settings.SkillIconGroup <= cbSkillIconSet.Items.Count && m_settings.SkillIconGroup > 0)
+            {
                 cbSkillIconSet.SelectedIndex = m_settings.SkillIconGroup - 1;
+            }
             else
+            {
                 cbSkillIconSet.SelectedIndex = 0;
+            }
 
             cbShowBalloonTips.Checked = m_settings.EnableBalloonTips;
             cbPlaySoundOnSkillComplete.Checked = m_settings.PlaySoundOnSkillComplete;
             cbShowCompletedSkillsDialog.Checked = m_settings.EnableSkillCompleteDialog;
 
             if (m_settings.NotificationOffset > 600)
+            {
                 m_settings.NotificationOffset = 600;
+            }
             tbNotificationOffset.Value = m_settings.NotificationOffset;
             lblNotificationOffset.Text = FormatOffset(m_settings.NotificationOffset);
 
@@ -292,15 +307,17 @@ namespace EVEMon
 
             cbTooltipDisplay.Items.Clear();
             for (int i = 0; i < tooltipCodes.Length; i++)
+            {
                 cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltipCodes[i]));
+            }
             cbTooltipDisplay.Items.Add(" -- Custom -- ");
 
             tbTooltipString.Text = m_settings.TooltipString;
 
             // New bits to allow custom server/port options when checking the server status
-            tbTQServerAddress.Text      = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
-            tbTQServerPort.Text         = m_settings.CustomTQPort != "" ? m_settings.CustomTQPort : "26000";
-            cbCustomTQSettings.Checked  = m_settings.UseCustomTQCheckSettings;
+            tbTQServerAddress.Text = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
+            tbTQServerPort.Text = m_settings.CustomTQPort != "" ? m_settings.CustomTQPort : "26000";
+            cbCustomTQSettings.Checked = m_settings.UseCustomTQCheckSettings;
 
             // If we're using custom TQ settings enable the groupbox and hence the options
             tlpCustomTQSettings.Enabled = cbCustomTQSettings.Checked;
@@ -399,8 +416,7 @@ namespace EVEMon
             ApplyToSettings(ts);
             if (!Emailer.SendTestMail(ts))
             {
-                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
+                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -483,7 +499,9 @@ namespace EVEMon
         private void um_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             if (e.NewestVersion <= new Version(m_settings.IgnoreUpdateVersion))
+            {
                 return;
+            }
 
             this.Invoke(new MethodInvoker(delegate
             {
@@ -509,9 +527,14 @@ namespace EVEMon
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count - 1)
+            {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)].DefaultValue.ToString();
-            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + (cbSkillIconSet.SelectedIndex + 1) + "\\" + groupname + ".resources")) || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources"))
+            }
+            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + (cbSkillIconSet.SelectedIndex + 1) + "\\" + groupname + ".resources"))
+                || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources"))
+            {
                 groupname = null;
+            }
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
@@ -564,8 +587,12 @@ namespace EVEMon
                 int index = tooltipCodes.Length;
 
                 for (int i = 0; i < tooltipCodes.Length; i++)
+                {
                     if (tooltipCodes[i].Equals(tbTooltipString.Text))
+                    {
                         index = i;
+                    }
+                }
 
                 cbTooltipDisplay.SelectedIndex = index;
                 DisplayCustomControls(index == tooltipCodes.Length);
@@ -581,33 +608,48 @@ namespace EVEMon
                     string value = String.Empty;
                     char capture = m.Groups[1].Value[0];
 
-                    if (capture == 'n')
-                        value = "John Doe";
-                    else if (capture == 'b')
-                        value = "183,415,254.05";
-                    else if (capture == 's')
-                        value = "Gunnery";
-                    else if (capture == 'd')
-                        value = "9/15/2006 6:36 PM";
-                    else if (capture == 'r')
-                        value = "2h, 53m, 28s";
-                    else
+                    switch (capture)
                     {
-                        int level = -1;
-                        if (capture == 'c')
-                            level = 3;
-                        else if (capture == 't')
-                            level = 4;
+                        case 'n':
+                            value = "John Doe";
+                            break;
+                        case 'b':
+                            value = "183,415,254.05";
+                            break;
+                        case 's':
+                            value = "Gunnery";
+                            break;
+                        case 'd':
+                            value = "9/15/2006 6:36 PM";
+                            break;
+                        case 'r':
+                            value = "2h, 53m, 28s";
+                            break;
+                        default:
+                            int level = -1;
+                            if (capture == 'c')
+                            {
+                                level = 3;
+                            }
+                            else if (capture == 't')
+                            {
+                                level = 4;
+                            }
 
-                        if (m.Groups[1].Value.Length > 1 && level >= 0)
-                        {
-                            capture = m.Groups[1].Value[1];
+                            if (m.Groups[1].Value.Length > 1 && level >= 0)
+                            {
+                                capture = m.Groups[1].Value[1];
 
-                            if (capture == 'i')
-                                value = level.ToString();
-                            else if (capture == 'r')
-                                value = Skill.GetRomanForInt(level);
-                        }
+                                if (capture == 'i')
+                                {
+                                    value = level.ToString();
+                                }
+                                else if (capture == 'r')
+                                {
+                                    value = Skill.GetRomanForInt(level);
+                                }
+                            }
+                            break;
                     }
 
                     return value;
@@ -630,8 +672,10 @@ namespace EVEMon
             }
         }
 
-        // Toggles the visibility of the tooltip example display and code label,
-        // as well as the readonly status of the tooltip string itself.
+        /// <summary>
+        /// Toggles the visibility of the tooltip example display and code label, as well as the readonly status of the tooltip string itself.
+        /// </summary>
+        /// <param name="custom">Show tbTooltipTestDisplay?</param>
         private void DisplayCustomControls(bool custom)
         {
             tbTooltipTestDisplay.Visible = custom;

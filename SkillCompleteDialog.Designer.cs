@@ -28,7 +28,6 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillCompleteDialog));
             this.label1 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -40,10 +39,9 @@ namespace EVEMon
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(214, 13);
+            this.label1.Size = new System.Drawing.Size(216, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "The following skills have completed training:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnOk
             // 
@@ -79,7 +77,6 @@ namespace EVEMon
             this.Name = "SkillCompleteDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Skill Training Complete";
-            this.Load += new System.EventHandler(this.SkillCompleteDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

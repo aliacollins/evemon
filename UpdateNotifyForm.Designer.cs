@@ -142,7 +142,6 @@ namespace EVEMon
             this.Text = "Update Available";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UpdateNotifyForm_FormClosed);
             this.Shown += new System.EventHandler(this.UpdateNotifyForm_Shown);
-            this.Load += new System.EventHandler(this.UpdateNotifyForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
