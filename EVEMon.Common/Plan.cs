@@ -1015,13 +1015,16 @@ namespace EVEMon.Common
                     {
                         Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
                         if (pn != null)
+                        {
                             if (!pn.Notes.Contains(pe.Notes))
                             {
-                                if (pn.Notes != "") pn.Notes = pn.Notes + ", ";
+                                if (pn.Notes != "")
+                                    pn.Notes = pn.Notes + ", ";
                                 pn.Notes = pn.Notes + pe.Notes;
                                 pn.Priority = pe.Priority;
                                 m_entries.ForceUpdate(pn, ChangeType.Added);
                             }
+                        }
                     }
                     else
                     {
