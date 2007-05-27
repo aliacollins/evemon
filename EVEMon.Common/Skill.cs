@@ -18,11 +18,11 @@ namespace EVEMon.Common
         private IEnumerable<Prereq> m_prereqs;
         private int m_currentSkillPoints;
         private int m_lastConfirmedLvl;
-        private int m_cost;
+        private long m_cost;
         bool m_owned;
 
         public Skill(CharacterInfo gci, bool pub, string name, int id, string description,
-                          EveAttribute a1, EveAttribute a2, int rank, int cost, bool owned, IEnumerable<Prereq> prereqs)
+                          EveAttribute a1, EveAttribute a2, int rank, long cost, bool owned, IEnumerable<Prereq> prereqs)
         {
             m_owner = gci;
             m_public = pub;
@@ -47,8 +47,7 @@ namespace EVEMon.Common
                 Skill.Prereq p = new Skill.Prereq(pre.Name, pre.Level);
                 prereqs.Add(p);
             }
-            return new Skill(m_owner, m_public, _name, _id, _description, m_primaryAttribute, m_secondaryAttribute,
-                m_rank, m_cost, m_owned, prereqs);
+            return new Skill(m_owner, m_public, _name, _id, _description, m_primaryAttribute, m_secondaryAttribute, m_rank, m_cost, m_owned, prereqs);
         }
 
         public void SetOwner(CharacterInfo gci)
@@ -345,7 +344,7 @@ namespace EVEMon.Common
             return strWrapped;
         }
 
-        public int Cost
+        public long Cost
         {
             get { return m_cost; }
         }
@@ -654,7 +653,10 @@ namespace EVEMon.Common
                 }
                 alreadyCountedList[gs] = Math.Max(fromPoints, toPoints);
 
-                result += gs.GetPrerequisiteTime(alreadyCountedList, ref timeIsCurrentlyTraining);
+                if (pp.Skill.Id != this.Id)
+                {
+                    result += gs.GetPrerequisiteTime(alreadyCountedList, ref timeIsCurrentlyTraining);
+                }
             }
             return result;
         }

@@ -104,7 +104,7 @@ namespace EVEMon.Common
                         {
                             throw new FormatException("Skill " + _name + ": rank string: " + _srank + " ", fe);
                         }
-                        int _cost = 0;
+                        long _cost = 0;
 
                         // for a very very few users, this throws an exception on the skill "Salvage drone operation" - I have NO IDEA why.
                         // - Brad 9 May 2007
@@ -112,15 +112,14 @@ namespace EVEMon.Common
                         try
                         {
                             string cost = sel.GetAttribute("c");
-                            _cost = Convert.ToInt32(cost);
+                            _cost = Convert.ToInt64(cost);
                         }
                         catch (FormatException)
                         {
                             // Ignore the exception - cost is zero anyway.
                         }
 
-                        Skill gs = new Skill(
-                            this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
+                        Skill gs = new Skill(this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
                         gs.Changed += new EventHandler(gs_Changed);
                         gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
                         m_AllSkillsByID[_id] = gs;

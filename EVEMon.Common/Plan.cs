@@ -458,11 +458,11 @@ namespace EVEMon.Common
             }
         }
         [XmlIgnore]
-        public int TrainingCost
+        public long TrainingCost
         {
             get
             {
-                int cost = 0;
+                long cost = 0;
                 Dictionary<string, bool> counted = new Dictionary<string, bool>();
                 foreach (Plan.Entry pe in m_entries)
                 {

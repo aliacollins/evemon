@@ -238,11 +238,10 @@ namespace EVEMon.SkillPlanner
                                                 m_plan.UniqueSkillCount == 1 ? "" : "s",
                                                 Skill.TimeSpanToDescriptiveText(res,
                                                                                      DescriptiveTextOptions.Default |
-                                                                                     DescriptiveTextOptions.
-                                                                                         IncludeCommas |
+                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                      DescriptiveTextOptions.SpaceText),
                                                  m_plan.TrainingCost);
-            int cost = m_plan.TrainingCost;
+            long cost = m_plan.TrainingCost;
             if (cost > 0)
             {
                 slblStatusText.Text += String.Format(" Cost: {0:0,0,0} ISK",cost);

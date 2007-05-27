@@ -300,8 +300,10 @@ namespace EVEMon.SkillPlanner
                 thisLevel.Add(si);
                 //m_alreadyInLayout.Add(pp.Skill, si);
                 parentSi.AddChild(si);
-
-                BuildPrereqs(si, level + 1);
+                if (si.Skill.Id != parentSi.Skill.Id)
+                {
+                    BuildPrereqs(si, level + 1);
+                }
                 //}
                 //else
                 //{

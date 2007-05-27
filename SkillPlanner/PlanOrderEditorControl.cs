@@ -1175,7 +1175,7 @@ namespace EVEMon.SkillPlanner
                 List<Skill> countedSkills = new List<Skill>();
                 TimeSpan selectedTrainTime = TimeSpan.Zero;
                 TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
-                int cost = 0;
+                long cost = 0;
 
                 // need to loop through all entries to include effect of training skills
                 // in the total time of selected skills.
