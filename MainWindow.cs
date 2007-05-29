@@ -1091,7 +1091,7 @@ namespace EVEMon
                 string[] characterInfo = character.Split(split);
                 string planLookup = characterInfo[characterInfo.Length - 1];
                 ToolStripMenuItem characterItem = new ToolStripMenuItem(characterInfo[0]);
-                characterItem.ToolTipText = planLookup;
+                characterItem.Tag = planLookup;
                 foreach (string planName in m_settings.GetPlansForCharacter(planLookup))
                 {
                     ToolStripMenuItem planItem = new ToolStripMenuItem(planName);
@@ -1105,7 +1105,7 @@ namespace EVEMon
         void planItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Plan plan = m_settings.GetPlanByName(planItem.OwnerItem.ToolTipText, planItem.Text);
+            Plan plan = m_settings.GetPlanByName((string)planItem.OwnerItem.Tag, planItem.Text);
             plan.ShowEditor(m_settings, GetGrandCharacterInfo(planItem.OwnerItem.Text));
         }
 

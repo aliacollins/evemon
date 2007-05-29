@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
 
         private void OnSelectedSkillChanged()
         {
-                SelectedSkillChanged(this, new EventArgs());
+            SelectedSkillChanged(this, new EventArgs());
         }
 
         public ImageList GetIconSet(int index)
@@ -54,7 +54,9 @@ namespace EVEMon.SkillPlanner
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
             if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
+            {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+            }
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
@@ -129,10 +131,10 @@ namespace EVEMon.SkillPlanner
                     break;
 
                 case "Not Known - Unowned":
-                     sf = delegate(Skill gs)
-                        {
-                            return !gs.Known && !gs.Owned;
-                        };
+                    sf = delegate(Skill gs)
+                       {
+                           return !gs.Known && !gs.Owned;
+                       };
                     break;
 
                 case "Not Known - Owned":
@@ -194,9 +196,13 @@ namespace EVEMon.SkillPlanner
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
             if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
+            {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+            }
             if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + index + "\\" + groupname + ".resources")) || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources"))
+            {
                 groupname = null;
+            }
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
@@ -364,7 +370,7 @@ namespace EVEMon.SkillPlanner
                              };
                     dk = delegate(Skill gs, object v)
                              {
-                                 TimeSpan ts = (TimeSpan) v;
+                                 TimeSpan ts = (TimeSpan)v;
                                  if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                                  {
                                      return "-";
@@ -379,7 +385,7 @@ namespace EVEMon.SkillPlanner
                              };
                     mu = delegate(IComparable v)
                              {
-                                 TimeSpan ts = (TimeSpan) v;
+                                 TimeSpan ts = (TimeSpan)v;
                                  if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                                  {
                                      ts -= TimeSpan.FromTicks(1);
@@ -404,7 +410,7 @@ namespace EVEMon.SkillPlanner
                              };
                     dk = delegate(Skill gs, object v)
                              {
-                                 TimeSpan ts = (TimeSpan) v;
+                                 TimeSpan ts = (TimeSpan)v;
                                  if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                                  {
                                      return "-";
@@ -418,7 +424,7 @@ namespace EVEMon.SkillPlanner
                              };
                     mu = delegate(IComparable v)
                              {
-                                 TimeSpan ts = (TimeSpan) v;
+                                 TimeSpan ts = (TimeSpan)v;
                                  if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                                  {
                                      ts -= TimeSpan.FromTicks(1);
@@ -498,7 +504,7 @@ namespace EVEMon.SkillPlanner
         {
             TreeNode tn = tvItems.SelectedNode;
             Skill gs = tn.Tag as Skill;
-                this.SelectedSkill = gs;
+            this.SelectedSkill = gs;
         }
 
         private void SkillSelectControl_Load(object sender, EventArgs e)
@@ -507,9 +513,9 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
- 
-//            cbSkillFilter.SelectedIndex = 0;
-//            cbSorting.SelectedIndex = 0;
+
+            //            cbSkillFilter.SelectedIndex = 0;
+            //            cbSorting.SelectedIndex = 0;
             try
             {
                 m_settings = Settings.GetInstance();
@@ -517,7 +523,9 @@ namespace EVEMon.SkillPlanner
                 cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
                 cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
                 if (m_settings.StoreBrowserFilters)
+                {
                     tbSearchText.Text = m_settings.SkillBrowserSearch;
+                }
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
             catch (Exception err)
@@ -586,7 +594,9 @@ namespace EVEMon.SkillPlanner
             {
                 TreeViewHitTestInfo tvHit = tvItems.HitTest(e.Location);
                 if (tvHit.Location == TreeViewHitTestLocations.Label)
+                {
                     tvItems.SelectedNode = e.Node;
+                }
             }
         }
 
@@ -600,17 +610,36 @@ namespace EVEMon.SkillPlanner
             tvItems.SelectedNode.ExpandAll();
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void cmSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             cmiCollapseSelected.Enabled = cmiExpandSelected.Enabled = (tvItems.SelectedNode.GetNodeCount(true) > 0);
+            cmiPlanTo.Enabled = !cmiCollapseSelected.Enabled;
+            if (tvItems.SelectedNode.GetNodeCount(true) == 0)
+            {
+                for (int i = 1; i <= cmiPlanTo.DropDownItems.Count; i++)
+                {
+                    cmiPlanTo.DropDownItems[String.Format("level{0}ToolStripMenuItem", i)].Enabled = m_plan.PlannedLevel(this.SelectedSkill) != i && this.SelectedSkill.Level < i;
+                }
+            }
             string aString;
             if (cmiCollapseSelected.Enabled)
+            {
                 aString = tvItems.SelectedNode.Text;
+            }
             else
+            {
                 aString = "Selected";
+            }
 
             cmiExpandSelected.Text = "Expand " + aString;
             cmiCollapseSelected.Text = "Collapse " + aString;
+        }
+
+        private void levelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
+            int level = Convert.ToInt32(levelItem.Text.Remove(0, 7));
+            m_plan.PlanTo(this.SelectedSkill, level);
         }
 
     }

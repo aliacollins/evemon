@@ -51,20 +51,20 @@ namespace EVEMon.SkillPlanner
             this.miPlanGroups = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tmrAutoRefresh = new System.Windows.Forms.Timer(this.components);
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tsPlan = new System.Windows.Forms.ToolStrip();
+            this.tslMove = new System.Windows.Forms.ToolStripLabel();
             this.tsbMoveUp = new System.Windows.Forms.ToolStripButton();
             this.tsbMoveDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.tslSort = new System.Windows.Forms.ToolStripLabel();
             this.tsbSort = new System.Windows.Forms.ToolStripButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pHeader = new System.Windows.Forms.Panel();
             this.llSuggestionLink = new System.Windows.Forms.LinkLabel();
             this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
             this.cmsContextMenu.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.tsPlan.SuspendLayout();
+            this.pHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmsContextMenu
@@ -228,27 +228,27 @@ namespace EVEMon.SkillPlanner
             this.tmrAutoRefresh.Interval = 30000;
             this.tmrAutoRefresh.Tick += new System.EventHandler(this.tmrAutoRefresh_Tick);
             // 
-            // toolStrip1
+            // tsPlan
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
+            this.tsPlan.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tsPlan.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tslMove,
             this.tsbMoveUp,
             this.tsbMoveDown,
             this.toolStripSeparator1,
-            this.toolStripLabel3,
+            this.tslSort,
             this.tsbSort});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(38, 558);
-            this.toolStrip1.TabIndex = 10;
-            this.toolStrip1.Text = "toolStrip1";
+            this.tsPlan.Location = new System.Drawing.Point(0, 0);
+            this.tsPlan.Name = "tsPlan";
+            this.tsPlan.Size = new System.Drawing.Size(38, 558);
+            this.tsPlan.TabIndex = 10;
+            this.tsPlan.Text = "planToolStrip";
             // 
-            // toolStripLabel1
+            // tslMove
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(35, 13);
-            this.toolStripLabel1.Text = "Move:";
+            this.tslMove.Name = "tslMove";
+            this.tslMove.Size = new System.Drawing.Size(35, 13);
+            this.tslMove.Text = "Move:";
             // 
             // tsbMoveUp
             // 
@@ -278,11 +278,11 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1.Size = new System.Drawing.Size(35, 6);
             this.toolStripSeparator1.Visible = false;
             // 
-            // toolStripLabel3
+            // tslSort
             // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(35, 13);
-            this.toolStripLabel3.Text = "Sort:";
+            this.tslSort.Name = "tslSort";
+            this.tslSort.Size = new System.Drawing.Size(35, 13);
+            this.tslSort.Text = "Sort:";
             // 
             // tsbSort
             // 
@@ -294,14 +294,14 @@ namespace EVEMon.SkillPlanner
             this.tsbSort.Text = "Sort Plan Entries";
             this.tsbSort.Click += new System.EventHandler(this.tsbSort_Click);
             // 
-            // panel1
+            // pHeader
             // 
-            this.panel1.Controls.Add(this.llSuggestionLink);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(38, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(645, 21);
-            this.panel1.TabIndex = 11;
+            this.pHeader.Controls.Add(this.llSuggestionLink);
+            this.pHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pHeader.Location = new System.Drawing.Point(38, 0);
+            this.pHeader.Name = "pHeader";
+            this.pHeader.Size = new System.Drawing.Size(645, 21);
+            this.pHeader.TabIndex = 11;
             // 
             // llSuggestionLink
             // 
@@ -352,16 +352,16 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvSkills);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.pHeader);
+            this.Controls.Add(this.tsPlan);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "PlanOrderEditorControl";
             this.Size = new System.Drawing.Size(683, 558);
             this.Load += new System.EventHandler(this.PlanOrderEditorControl_Load);
             this.cmsContextMenu.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.tsPlan.ResumeLayout(false);
+            this.tsPlan.PerformLayout();
+            this.pHeader.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -374,16 +374,16 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miRemoveFromPlan;
         private System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.Timer tmrAutoRefresh;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStrip tsPlan;
+        private System.Windows.Forms.ToolStripLabel tslMove;
         private System.Windows.Forms.ToolStripButton tsbMoveUp;
         private System.Windows.Forms.ToolStripButton tsbMoveDown;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pHeader;
         private System.Windows.Forms.LinkLabel llSuggestionLink;
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripLabel tslSort;
         private System.Windows.Forms.ToolStripButton tsbSort;
         private System.Windows.Forms.ImageList ilSkillDependency;
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
