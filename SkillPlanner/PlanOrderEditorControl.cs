@@ -1180,7 +1180,7 @@ namespace EVEMon.SkillPlanner
                 // need to loop through all entries to include effect of training skills
                 // in the total time of selected skills.
                 EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
-                for (int i = 0; i < lvSkills.Items.Count && i < e.ItemIndex; i++)
+                for (int i = 0; i < lvSkills.Items.Count && i <= e.ItemIndex; i++)
                 {
                     ListViewItem lvi = lvSkills.Items[i];
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
