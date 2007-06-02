@@ -1572,14 +1572,63 @@ namespace EVEMon
                 }
                 p = psw.ResultPlan;
             }
-            if (p != null && p.Name != null)
+
+            // Check for a merged plan
+            if (p == null || p.Name == null)
             {
-                p.ShowEditor(m_settings, m_grandCharacterInfo);
-            }
-            else
-            {
-                ShowNewPlanWindow();
-            }
+                // OK, User has requested to merge plans so ask for a name
+                bool doAgain = true;
+                // keep going till we get a valid name or they cancel..
+                while (doAgain) 
+                {
+                    // Ask for a plan name
+                    using (NewPlanWindow npw = new NewPlanWindow())
+                    {
+                        DialogResult dr = npw.ShowDialog();
+                        if (dr == DialogResult.Cancel)
+                        {
+                            // They changed their mind
+                            return;
+                        }
+                        string planName = npw.Result;
+
+                        if (p == null)
+                        {
+                            p = new Plan();
+                        }
+                        try
+                        {
+                            // we hae a name, check it's not already defined
+                            if (m_cfi == null)
+                            {
+                                m_settings.AddPlanFor(m_grandCharacterInfo.Name, p, planName);
+                            }
+                            else
+                            {
+                                m_settings.AddPlanFor(m_cfi.Filename, p, planName);
+                            }
+                            // No exception, we're good to go.
+                            doAgain = false;
+                        }
+                        catch (ApplicationException err)
+                        {
+                            // Plan name already exists. Go round again...
+                            ExceptionHandler.LogException(err, true);
+                            DialogResult xdr =
+                                MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel,
+                                                MessageBoxIcon.Error);
+                            if (xdr == DialogResult.Cancel)
+                            {
+                                // unless they changed their mind...
+                                return;
+                            }
+                        }
+                    }
+                }
+
+            } // end of merge plans processing.
+
+            p.ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
         public void ShowNewPlanWindow()
