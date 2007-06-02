@@ -160,6 +160,13 @@ namespace EVEMon.SkillPlanner
                               "view the list of skills you've added to your plan, choose " +
                               "\"View Plan\" from the dropdown in the upper left.");
             UpdateStatusBar();
+
+            if (tabControl.SelectedIndex == 0)
+            {
+                // Force update of column widths in case we've just created a new plan
+                // from within the planner window.
+                planEditor.UpdateListColumns();
+            }
         }
 
         private void NewPlannerWindow_FormClosed(object sender, FormClosedEventArgs e)
