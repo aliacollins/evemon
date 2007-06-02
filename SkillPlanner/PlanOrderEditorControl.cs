@@ -1089,6 +1089,7 @@ namespace EVEMon.SkillPlanner
             {
                 m_settings = Settings.GetInstance();
             }
+            tmrSelect.Enabled = false;
         }
 
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1110,8 +1111,41 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void lvSkills_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void tmrSelect_Tick(object sender, EventArgs e)
         {
+            tmrSelect.Enabled = false;
+            SelectedIndexChanged();
+
+        }
+
+        private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /* Calculating the summary status for all selected skills is a 
+             * slow operation. If user does a shift-click to select multiple rows, 
+             * then this event handler will be called for every item in the selectiom.
+             * i.e. if tehre are 100 entries in the plan, and user clicks 1st item and shift-clicks
+             * the last item, then this handler will be called 100 times - but we're
+             * only interested in the last event from a shift-click - so we start a
+             * timer that runs for 100 milliseconds before we process the event.
+             * If the timer is already running, then we don't do anything.
+             * Hence, we only respond to one event every 100 milliseconds.
+             * Cunning!!
+            */
+            if (tmrSelect.Enabled) return;
+            tmrSelect.Interval = 100;
+            tmrSelect.Enabled = true;
+            tmrSelect.Start();
+        }
+
+         private void SelectedIndexChanged()
+        {
+             // This is the real event handler, after we've suppressed rapid multiple events
+             if (InvokeRequired)
+             {
+                this.Invoke(new MethodInvoker(SelectedIndexChanged));
+                return;
+            }
+
             if (lvSkills.SelectedIndices.Count == 0)
             {
                 tsbMoveUp.Enabled = false;
@@ -1188,7 +1222,7 @@ namespace EVEMon.SkillPlanner
                 // need to loop through all entries to include effect of training skills
                 // in the total time of selected skills.
                 EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
-                for (int i = 0; i < lvSkills.Items.Count && i <= e.ItemIndex; i++)
+                for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
                     ListViewItem lvi = lvSkills.Items[i];
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
