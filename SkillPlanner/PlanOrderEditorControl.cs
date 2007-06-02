@@ -107,6 +107,14 @@ namespace EVEMon.SkillPlanner
             set { m_HighlightPlannedSkills = value; UpdateSkillList(); }
         }
 
+        private bool m_HighlightConflicts = false;
+        public bool HighlightConflicts
+        {
+            get { return m_HighlightConflicts; }
+            set { m_HighlightConflicts = value; UpdateSkillList(); }
+        }
+
+
         private bool m_DimUntrainable = false;
         public bool DimUntrainable
         {
@@ -261,7 +269,7 @@ namespace EVEMon.SkillPlanner
 
                     bool isBlocked = m_settings.SkillIsBlockedAt(thisEnd, out BlockingEntry);
                     
-                    if (isBlocked) lvi.ForeColor = Color.Red;
+                    if (isBlocked && m_HighlightConflicts) lvi.ForeColor = Color.Red;
                     // end of schedule checking
 
                     for (int x = 0; x < lvSkills.Columns.Count; x++)

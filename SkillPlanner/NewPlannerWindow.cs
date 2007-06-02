@@ -84,6 +84,7 @@ namespace EVEMon.SkillPlanner
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             
             // Watch for changes to worksafe settings and plan changes
@@ -111,6 +112,7 @@ namespace EVEMon.SkillPlanner
             planEditor.HighlightPlannedSkills = m_settings.SkillPlannerHighlightPlannedSkills;
             planEditor.HighlightPrerequisites = m_settings.SkillPlannerHighlightPrerequisites;
             planEditor.DimUntrainable = m_settings.SkillPlannerDimUntrainable;
+            planEditor.HighlightConflicts = m_settings.SkillPlannerHighlightConflicts;
         }
 
         public void ShowSkillInTree(Skill gs)
@@ -191,7 +193,8 @@ namespace EVEMon.SkillPlanner
                     m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                     m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                     m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.DimUntrainableChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);                      
+                    m_settings.DimUntrainableChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightConflictsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                 }
                 m_settings = value;
                 if (m_settings != null)
@@ -200,6 +203,7 @@ namespace EVEMon.SkillPlanner
                     m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                     m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                     m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+                    m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
                 }
             }
         }
@@ -318,6 +322,7 @@ namespace EVEMon.SkillPlanner
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
+            m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             
             // Watch for changes to worksafe settings and plan changes

@@ -163,6 +163,30 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_HighlightConflicts = true;
+        public event EventHandler<EventArgs> HighlightConflictsChanged;
+
+        public bool SkillPlannerHighlightConflicts
+        {
+            get { return m_HighlightConflicts; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightConflicts = value; OnHighlightConflictsChanged();
+                }
+            }
+        }
+
+        private void OnHighlightConflictsChanged()
+        {
+            if (HighlightConflictsChanged != null)
+            {
+                HighlightConflictsChanged(this, new EventArgs());
+            }
+        }
+
+
         #endregion
 
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
