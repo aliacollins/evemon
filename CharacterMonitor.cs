@@ -165,7 +165,7 @@ namespace EVEMon
                 else
                 {
                     tmrUpdateCharacter.Enabled = false;
-                    throbber.Visible = false;
+                    //throbber.Visible = false;
                 }
             }
             else
@@ -423,7 +423,8 @@ namespace EVEMon
                 ttToolTip.IsBalloon = true;
                 //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
                 tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
-                tmrUpdateCharacter.Enabled = true;
+                if (m_settings.DisableXMLAutoUpdate == false)
+                    tmrUpdateCharacter.Enabled = true;
 
                 if (tmrMinTrainingSkillRetry.Enabled == false)
                 {
@@ -1322,8 +1323,11 @@ namespace EVEMon
         {
             ttToolTip.SetToolTip(throbber, "Could not get character data!\nClick to try again.");
             ttToolTip.IsBalloon = true;
-            tmrUpdateCharacter.Interval = 1000 * 60 * 30;
-            tmrUpdateCharacter.Enabled = true;
+            if (m_settings.DisableXMLAutoUpdate == false)
+            {
+                tmrUpdateCharacter.Interval = 1000 * 60 * 30;
+                tmrUpdateCharacter.Enabled = true;
+            }
             SetErrorThrobber();
             this.m_grandCharacterInfo.checkOldSkill();
         }
