@@ -951,7 +951,7 @@ namespace EVEMon.Common
         {
             lock (mutexLock)
             {
-                for (int i = m_plans.Count; i >= 0; i--)
+                for (int i = m_plans.Count-1; i >= 0; --i)
                 {
                     if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
                     {
@@ -1550,7 +1550,7 @@ namespace EVEMon.Common
             if (m_instance != null)
                 return m_instance;
 
-            // THis tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
+            // This tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
             // copy and ask if that is to be used.
             // If the settings file is ok, then back it up.
 
