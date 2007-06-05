@@ -343,7 +343,6 @@ namespace EVEMon.Common
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = gs.Name;
                             pe.Level = level;
-                            new Plan.Entry();
                             pe.EntryType = Plan.Entry.Type.Planned;
                             entries.Add(pe);
                         }
@@ -390,7 +389,6 @@ namespace EVEMon.Common
                             Plan.Entry pe = new Plan.Entry();
                             pe.SkillName = learning.Name;
                             pe.Level = level;
-                            new Plan.Entry();
                             pe.EntryType = Plan.Entry.Type.Planned;
                             entries.Add(pe);
                         }
@@ -751,7 +749,9 @@ namespace EVEMon.Common
             for (int i = 5; i > 0; i--)
             {
                 if (IsPlanned(gs, i))
+                {
                     return i;
+                }
             }
             return 0;
         }
@@ -985,7 +985,9 @@ namespace EVEMon.Common
                         foreach (Plan.Entry pe in planEntries)
                         {
                             if (!pe.AddNoteonly)
+                            {
                                 pe.Priority = m_lowestPrereqPriority;
+                            }
                         }
                         AddList(planEntries);
                     }
@@ -1019,7 +1021,9 @@ namespace EVEMon.Common
                             if (!pn.Notes.Contains(pe.Notes))
                             {
                                 if (pn.Notes != "")
+                                {
                                     pn.Notes = pn.Notes + ", ";
+                                }
                                 pn.Notes = pn.Notes + pe.Notes;
                                 pn.Priority = pe.Priority;
                                 m_entries.ForceUpdate(pn, ChangeType.Added);
@@ -1541,8 +1545,6 @@ namespace EVEMon.Common
                     m_entry = entry;
                 }
             }
-
-
 
             private Plan m_owner;
             private string m_skillName;

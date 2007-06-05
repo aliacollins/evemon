@@ -40,6 +40,8 @@ namespace EVEMon.SkillPlanner
             skillBrowser.GrandCharacterInfo = m_plan.GrandCharacterInfo;
 
             planEditor.Plan = m_plan;
+            // Shouldn't need this
+            planEditor.GrandCharacterInfo = m_plan.GrandCharacterInfo;
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
@@ -47,46 +49,24 @@ namespace EVEMon.SkillPlanner
             itemBrowser.Plan = m_plan;
             PopulateTsPlans();
 
-            // Open up to the user's last used tab
-
-            /* This wasn't popular...
-            switch (m_settings.PlannerTab)
-            {
-                case 0: // plan
-                    if (m_plan.Entries.Count == 0)
-                        // jump straight to the skill browser
-                        tabControl.SelectedTab = tpSkillBrowser;
-                    else
-                        tabControl.SelectedTab = tpPlanQueue;
-                    break;
-                case 1:
-                    tabControl.SelectedTab = tpSkillBrowser;
-                    break;
-                case 2:
-                    tabControl.SelectedTab = tpShipBrowser;
-                    break;
-                case 3:
-                    tabControl.SelectedTab = tpItemBrowser;
-                    break;
-            }
-
-            */ 
-            
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
+            {
                 // jump straight to the skill browser
                 tabControl.SelectedTab = tpSkillBrowser;
+            }
             else
+            {
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
-            
-             
+            }
+
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-            
+
             // Watch for changes to worksafe settings and plan changes
             m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
 
@@ -98,13 +78,17 @@ namespace EVEMon.SkillPlanner
         void tsddiTemp_MouseEnter(object sender, EventArgs e)
         {
             if (((ToolStripDropDownItem)sender).BackColor == SystemColors.Highlight)
+            {
                 ((ToolStripDropDownItem)sender).ForeColor = SystemColors.MenuText;
+            }
         }
 
         void tsddiTemp_MouseLeave(object sender, EventArgs e)
         {
             if (((ToolStripDropDownItem)sender).BackColor == SystemColors.Highlight)
+            {
                 ((ToolStripDropDownItem)sender).ForeColor = SystemColors.HighlightText;
+            }
         }
 
         private void m_settings_SkillHighlightingChanged(object sender, EventArgs e)
@@ -153,7 +137,7 @@ namespace EVEMon.SkillPlanner
             }
             // Set the title
             this.Text = m_plan.GrandCharacterInfo.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
-            this.RememberPositionKey = "SkillPlannerWindow"; 
+            this.RememberPositionKey = "SkillPlannerWindow";
 
             // Show the hint tip
             TipWindow.ShowTip("planner",
@@ -179,10 +163,10 @@ namespace EVEMon.SkillPlanner
         }
 
         Settings m_settings;
-        
+
         private CharFileInfo m_cfi = null;
         private String m_planKey;
-        
+
         public Settings Settings
         {
             get { return m_settings; }
@@ -255,7 +239,7 @@ namespace EVEMon.SkillPlanner
             long cost = m_plan.TrainingCost;
             if (cost > 0)
             {
-                slblStatusText.Text += String.Format(" Cost: {0:0,0,0} ISK",cost);
+                slblStatusText.Text += String.Format(" Cost: {0:0,0,0} ISK", cost);
             }
 
             if (m_plan.HasAttributeSuggestion)
@@ -299,7 +283,6 @@ namespace EVEMon.SkillPlanner
             skillBrowser.GrandCharacterInfo = m_plan.GrandCharacterInfo;
 
             planEditor.Plan = m_plan;
-
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
@@ -309,22 +292,28 @@ namespace EVEMon.SkillPlanner
             // Tell ths skill explorer form we#re switching plans
             // this has to be done after we've told the skill browser about the plan!
             if (m_skillExplorer != null)
+            {
                 m_skillExplorer.PlanChanged();
+            }
 
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
+            {
                 // jump straight to the skill browser
                 tabControl.SelectedTab = tpSkillBrowser;
+            }
             else
+            {
                 // Jump to the plan queue
                 tabControl.SelectedTab = tpPlanQueue;
+            }
 
             m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
             m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-            
+
             // Watch for changes to worksafe settings and plan changes
             m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
 
@@ -387,7 +376,7 @@ namespace EVEMon.SkillPlanner
                 m_plan.CheckForMissingPrerequisites();
 
                 // Arrange the learning skills in the plan in optimal order
-                PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true,false);
+                PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true, false);
             }
             finally
             {
@@ -409,7 +398,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 if (s == "<New Plan>")
-                {                    
+                {
                     bool doAgain = true;
                     while (doAgain)
                     {
@@ -428,7 +417,6 @@ namespace EVEMon.SkillPlanner
                             }
                             try
                             {
-                               
                                 m_settings.AddPlanFor(m_planKey, p, planName);
                                 p.PlannerWindow = new WeakReference<Form>(this);
                                 doAgain = false;
@@ -436,9 +424,7 @@ namespace EVEMon.SkillPlanner
                             catch (ApplicationException err)
                             {
                                 ExceptionHandler.LogException(err, true);
-                                DialogResult xdr =
-                                    MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel,
-                                                    MessageBoxIcon.Error);
+                                DialogResult xdr = MessageBox.Show(err.Message, "Failed to Add Plan", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
                                 if (xdr == DialogResult.Cancel)
                                 {
                                     return;
@@ -454,7 +440,7 @@ namespace EVEMon.SkillPlanner
         #region Plan serialization
         private void tsbCopyForum_Click(object sender, EventArgs e)
         {
-            PlanTextOptions pto = (PlanTextOptions) m_settings.DefaultCopyOptions.Clone();
+            PlanTextOptions pto = (PlanTextOptions)m_settings.DefaultCopyOptions.Clone();
             using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, true))
             {
                 if (pto.Markup == MarkupType.Undefined)
@@ -499,7 +485,7 @@ namespace EVEMon.SkillPlanner
         {
             sfdSave.Title = "Save to File";
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Skill Plan";
-            sfdSave.FilterIndex = (int) SaveType.Emp;
+            sfdSave.FilterIndex = (int)SaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
             if (dr == DialogResult.Cancel)
             {
@@ -510,9 +496,9 @@ namespace EVEMon.SkillPlanner
             try
             {
                 PlanTextOptions pto = null;
-                if ((SaveType) sfdSave.FilterIndex == SaveType.Text)
+                if ((SaveType)sfdSave.FilterIndex == SaveType.Text)
                 {
-                    pto = (PlanTextOptions) m_settings.DefaultSaveOptions.Clone();
+                    pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
                     using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, false))
                     {
                         if (pto.Markup == MarkupType.Undefined)
@@ -534,7 +520,7 @@ namespace EVEMon.SkillPlanner
 
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    switch ((SaveType) sfdSave.FilterIndex)
+                    switch ((SaveType)sfdSave.FilterIndex)
                     {
                         case SaveType.Emp:
                             using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
@@ -566,13 +552,13 @@ namespace EVEMon.SkillPlanner
 
         private void SerializePlanTo(Stream s)
         {
-            XmlSerializer xs = new XmlSerializer(typeof (Plan));
+            XmlSerializer xs = new XmlSerializer(typeof(Plan));
             xs.Serialize(s, m_plan);
         }
         #endregion Plan serialization
 
         #region Implant Calculator
-        private  ImplantCalculator m_implantCalcWindow = null;
+        private ImplantCalculator m_implantCalcWindow = null;
 
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
@@ -585,7 +571,7 @@ namespace EVEMon.SkillPlanner
             {
                 m_implantCalcWindow = new ImplantCalculator(m_plan.GrandCharacterInfo, m_plan);
                 m_implantCalcWindow.Show();
-                m_implantCalcWindow.Disposed +=new EventHandler(m_implantCalcWindow_Disposed);
+                m_implantCalcWindow.Disposed += new EventHandler(m_implantCalcWindow_Disposed);
             }
             m_implantCalcWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
         }
@@ -616,7 +602,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
- 
+
         private void PopulateTsPlans()
         {
             tsddbPlans.DropDownItems.Clear();
@@ -646,7 +632,7 @@ namespace EVEMon.SkillPlanner
             PopulateTsPlans();
         }
 
-        private void tsbExportToXml_Click (object sender, EventArgs e)
+        private void tsbExportToXml_Click(object sender, EventArgs e)
         {
             sfdSave.Title = "Export to XML";
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Planned Character Export";
@@ -661,25 +647,25 @@ namespace EVEMon.SkillPlanner
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                SerializableCharacterInfo ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterInfo ();
-                m_plan.Merge (ci);
-                using(FileStream fs = new FileStream(fileName, FileMode.Create))
+                SerializableCharacterInfo ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterInfo();
+                m_plan.Merge(ci);
+                using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    XmlSerializer ser = new XmlSerializer (typeof (SerializableCharacterInfo));
-                    ser.Serialize (fs, ci);
+                    XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
+                    ser.Serialize(fs, ci);
                 }
                 this.Cursor = Cursors.Default;
             }
             catch (InvalidOperationException ioe)
             {
-                ExceptionHandler.LogException (ioe, true);
-                MessageBox.Show ("There was an error writing out the file:\n\n" + ioe.Message,
+                ExceptionHandler.LogException(ioe, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + ioe.Message,
                                 "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (IOException err)
             {
-                ExceptionHandler.LogException (err, true);
-                MessageBox.Show ("There was an error writing out the file:\n\n" + err.Message,
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
                                 "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -705,9 +691,8 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-    
-
         #region Print Plan
+
         WebBrowser printBrowser;
         private void tsbPrintPlan_Click(object sender, EventArgs e)
         {
@@ -740,9 +725,8 @@ namespace EVEMon.SkillPlanner
             e.Graphics.DrawImage(bmp, 0, 0);
 
         }
-
-     }
-    #endregion
+        #endregion
+    }
 
     public class PlannerWindowFactory : IPlannerWindowFactory
     {

@@ -39,19 +39,6 @@ namespace EVEMon.SkillPlanner
             this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.lbSearchList = new System.Windows.Forms.ListBox();
-            this.lbSearchTextHint = new System.Windows.Forms.Label();
-            this.lbNoMatches = new System.Windows.Forms.Label();
-            this.cbShowNonPublic = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cbSorting = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lvSortedSkillList = new System.Windows.Forms.ListView();
-            this.chName = new System.Windows.Forms.ColumnHeader();
-            this.chSortKey = new System.Windows.Forms.ColumnHeader();
-            this.ilSkillIcons1 = new System.Windows.Forms.ImageList(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cmiPlanTo = new System.Windows.Forms.ToolStripMenuItem();
             this.level1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,10 +46,23 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbSearchList = new System.Windows.Forms.ListBox();
+            this.lbSearchTextHint = new System.Windows.Forms.Label();
+            this.lbNoMatches = new System.Windows.Forms.Label();
+            this.cbShowNonPublic = new System.Windows.Forms.CheckBox();
+            this.lblFilter = new System.Windows.Forms.Label();
+            this.cbSorting = new System.Windows.Forms.ComboBox();
+            this.lblSort = new System.Windows.Forms.Label();
+            this.lvSortedSkillList = new System.Windows.Forms.ListView();
+            this.chName = new System.Windows.Forms.ColumnHeader();
+            this.chSortKey = new System.Windows.Forms.ColumnHeader();
+            this.ilSkillIcons = new System.Windows.Forms.ImageList(this.components);
+            this.pnlFilter = new System.Windows.Forms.Panel();
+            this.pnlResults = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.cmSkills.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.pnlFilter.SuspendLayout();
+            this.pnlResults.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbSkillFilter
@@ -121,10 +121,8 @@ namespace EVEMon.SkillPlanner
             // 
             // tvItems
             // 
-            this.tvItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tvItems.ContextMenuStrip = this.cmSkills;
+            this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.HideSelection = false;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
             this.tvItems.Margin = new System.Windows.Forms.Padding(2);
@@ -133,6 +131,7 @@ namespace EVEMon.SkillPlanner
             this.tvItems.TabIndex = 20;
             this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
             this.tvItems.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvItems_NodeMouseClick);
+            this.tvItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvItems_ItemDrag);
             // 
             // cmSkills
             // 
@@ -144,7 +143,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1,
             this.cmiPlanTo});
             this.cmSkills.Name = "contextMenuStrip1";
-            this.cmSkills.Size = new System.Drawing.Size(159, 142);
+            this.cmSkills.Size = new System.Drawing.Size(159, 120);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
             // cmiExpandSelected
@@ -174,6 +173,58 @@ namespace EVEMon.SkillPlanner
             this.cmiCollapseAll.Size = new System.Drawing.Size(158, 22);
             this.cmiCollapseAll.Text = "Collapse All";
             this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
+            // 
+            // cmiPlanTo
+            // 
+            this.cmiPlanTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.level1ToolStripMenuItem,
+            this.level2ToolStripMenuItem,
+            this.level3ToolStripMenuItem,
+            this.level4ToolStripMenuItem,
+            this.level5ToolStripMenuItem});
+            this.cmiPlanTo.Name = "cmiPlanTo";
+            this.cmiPlanTo.Size = new System.Drawing.Size(158, 22);
+            this.cmiPlanTo.Text = "&Plan to...";
+            // 
+            // level1ToolStripMenuItem
+            // 
+            this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
+            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level1ToolStripMenuItem.Text = "Level &1";
+            this.level1ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
+            // 
+            // level2ToolStripMenuItem
+            // 
+            this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
+            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level2ToolStripMenuItem.Text = "Level &2";
+            this.level2ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
+            // 
+            // level3ToolStripMenuItem
+            // 
+            this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
+            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level3ToolStripMenuItem.Text = "Level &3";
+            this.level3ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
+            // 
+            // level4ToolStripMenuItem
+            // 
+            this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
+            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level4ToolStripMenuItem.Text = "Level &4";
+            this.level4ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
+            // 
+            // level5ToolStripMenuItem
+            // 
+            this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
+            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level5ToolStripMenuItem.Text = "Level &5";
+            this.level5ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // lbSearchList
             // 
@@ -231,15 +282,15 @@ namespace EVEMon.SkillPlanner
             this.cbShowNonPublic.UseVisualStyleBackColor = true;
             this.cbShowNonPublic.CheckedChanged += new System.EventHandler(this.cbShowNonPublic_CheckedChanged);
             // 
-            // label1
+            // lblFilter
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "Filter:";
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(-1, 6);
+            this.lblFilter.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(35, 13);
+            this.lblFilter.TabIndex = 25;
+            this.lblFilter.Text = "Filter:";
             // 
             // cbSorting
             // 
@@ -258,15 +309,15 @@ namespace EVEMon.SkillPlanner
             this.cbSorting.TabIndex = 26;
             this.cbSorting.SelectedIndexChanged += new System.EventHandler(this.cbSorting_SelectedIndexChanged);
             // 
-            // label2
+            // lblSort
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 31);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 27;
-            this.label2.Text = "Sort:";
+            this.lblSort.AutoSize = true;
+            this.lblSort.Location = new System.Drawing.Point(-1, 31);
+            this.lblSort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblSort.Name = "lblSort";
+            this.lblSort.Size = new System.Drawing.Size(31, 13);
+            this.lblSort.TabIndex = 27;
+            this.lblSort.Text = "Sort:";
             // 
             // lvSortedSkillList
             // 
@@ -294,109 +345,57 @@ namespace EVEMon.SkillPlanner
             // 
             this.chSortKey.Text = "Sort";
             // 
-            // ilSkillIcons1
+            // ilSkillIcons
             // 
-            this.ilSkillIcons1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilSkillIcons1.ImageStream")));
-            this.ilSkillIcons1.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilSkillIcons1.Images.SetKeyName(0, "book");
-            this.ilSkillIcons1.Images.SetKeyName(1, "PrereqsNOTMet");
-            this.ilSkillIcons1.Images.SetKeyName(2, "PrereqsMet");
-            this.ilSkillIcons1.Images.SetKeyName(3, "lvl0");
-            this.ilSkillIcons1.Images.SetKeyName(4, "lvl1");
-            this.ilSkillIcons1.Images.SetKeyName(5, "lvl2");
-            this.ilSkillIcons1.Images.SetKeyName(6, "lvl3");
-            this.ilSkillIcons1.Images.SetKeyName(7, "lvl4");
-            this.ilSkillIcons1.Images.SetKeyName(8, "lvl5");
+            this.ilSkillIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilSkillIcons.ImageStream")));
+            this.ilSkillIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilSkillIcons.Images.SetKeyName(0, "book");
+            this.ilSkillIcons.Images.SetKeyName(1, "PrereqsNOTMet");
+            this.ilSkillIcons.Images.SetKeyName(2, "PrereqsMet");
+            this.ilSkillIcons.Images.SetKeyName(3, "lvl0");
+            this.ilSkillIcons.Images.SetKeyName(4, "lvl1");
+            this.ilSkillIcons.Images.SetKeyName(5, "lvl2");
+            this.ilSkillIcons.Images.SetKeyName(6, "lvl3");
+            this.ilSkillIcons.Images.SetKeyName(7, "lvl4");
+            this.ilSkillIcons.Images.SetKeyName(8, "lvl5");
             // 
-            // panel1
+            // pnlFilter
             // 
-            this.panel1.Controls.Add(this.cbSorting);
-            this.panel1.Controls.Add(this.cbSkillFilter);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.pbSearchImage);
-            this.panel1.Controls.Add(this.lbSearchTextHint);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.tbSearchText);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 78);
-            this.panel1.TabIndex = 29;
+            this.pnlFilter.Controls.Add(this.cbSorting);
+            this.pnlFilter.Controls.Add(this.cbSkillFilter);
+            this.pnlFilter.Controls.Add(this.lblSort);
+            this.pnlFilter.Controls.Add(this.pbSearchImage);
+            this.pnlFilter.Controls.Add(this.lbSearchTextHint);
+            this.pnlFilter.Controls.Add(this.lblFilter);
+            this.pnlFilter.Controls.Add(this.tbSearchText);
+            this.pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlFilter.Location = new System.Drawing.Point(0, 0);
+            this.pnlFilter.Margin = new System.Windows.Forms.Padding(2);
+            this.pnlFilter.Name = "pnlFilter";
+            this.pnlFilter.Size = new System.Drawing.Size(200, 78);
+            this.pnlFilter.TabIndex = 29;
             // 
-            // panel2
+            // pnlResults
             // 
-            this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lbNoMatches);
-            this.panel2.Controls.Add(this.lbSearchList);
-            this.panel2.Controls.Add(this.tvItems);
-            this.panel2.Controls.Add(this.lvSortedSkillList);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 78);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 313);
-            this.panel2.TabIndex = 30;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
-            // 
-            // cmiPlanTo
-            // 
-            this.cmiPlanTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.level1ToolStripMenuItem,
-            this.level2ToolStripMenuItem,
-            this.level3ToolStripMenuItem,
-            this.level4ToolStripMenuItem,
-            this.level5ToolStripMenuItem});
-            this.cmiPlanTo.Name = "cmiPlanTo";
-            this.cmiPlanTo.Size = new System.Drawing.Size(158, 22);
-            this.cmiPlanTo.Text = "&Plan to...";
-            // 
-            // level1ToolStripMenuItem
-            // 
-            this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
-            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.level1ToolStripMenuItem.Text = "Level &1";
-            this.level1ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
-            // 
-            // level2ToolStripMenuItem
-            // 
-            this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
-            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.level2ToolStripMenuItem.Text = "Level &2";
-            this.level2ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
-            // 
-            // level3ToolStripMenuItem
-            // 
-            this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
-            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.level3ToolStripMenuItem.Text = "Level &3";
-            this.level3ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
-            // 
-            // level4ToolStripMenuItem
-            // 
-            this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
-            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.level4ToolStripMenuItem.Text = "Level &4";
-            this.level4ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
-            // 
-            // level5ToolStripMenuItem
-            // 
-            this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
-            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.level5ToolStripMenuItem.Text = "Level &5";
-            this.level5ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
+            this.pnlResults.AutoSize = true;
+            this.pnlResults.Controls.Add(this.lbNoMatches);
+            this.pnlResults.Controls.Add(this.lbSearchList);
+            this.pnlResults.Controls.Add(this.tvItems);
+            this.pnlResults.Controls.Add(this.lvSortedSkillList);
+            this.pnlResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlResults.Location = new System.Drawing.Point(0, 78);
+            this.pnlResults.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlResults.Name = "pnlResults";
+            this.pnlResults.Size = new System.Drawing.Size(200, 313);
+            this.pnlResults.TabIndex = 30;
             // 
             // SkillSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlResults);
+            this.Controls.Add(this.pnlFilter);
             this.Controls.Add(this.cbShowNonPublic);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -405,9 +404,9 @@ namespace EVEMon.SkillPlanner
             this.Load += new System.EventHandler(this.SkillSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.cmSkills.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this.pnlFilter.ResumeLayout(false);
+            this.pnlFilter.PerformLayout();
+            this.pnlResults.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -421,16 +420,16 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lbSearchTextHint;
         private System.Windows.Forms.Label lbNoMatches;
         private System.Windows.Forms.CheckBox cbShowNonPublic;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblFilter;
         private System.Windows.Forms.ComboBox cbSorting;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblSort;
         private System.Windows.Forms.ListView lvSortedSkillList;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chSortKey;
-        private System.Windows.Forms.ImageList ilSkillIcons1;
+        private System.Windows.Forms.ImageList ilSkillIcons;
         public System.Windows.Forms.TreeView tvItems;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlFilter;
+        private System.Windows.Forms.Panel pnlResults;
         private System.Windows.Forms.ComboBox cbSkillFilter;
         private System.Windows.Forms.ContextMenuStrip cmSkills;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;

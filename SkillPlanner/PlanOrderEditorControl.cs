@@ -45,6 +45,7 @@ namespace EVEMon.SkillPlanner
                     m_plan.GrandCharacterInfo.SkillChanged -= new SkillChangedHandler(OnSkillChanged);
                 }
                 m_plan = value;
+                this.skillSelectControl.Plan = value;
                 if (m_plan != null)
                 {
                     m_plan.Changed += new EventHandler<EventArgs>(OnPlanChanged);
@@ -53,6 +54,11 @@ namespace EVEMon.SkillPlanner
                 UpdateListColumns();
                 OnPlanChanged(null, null);
             }
+        }
+
+        public CharacterInfo GrandCharacterInfo
+        {
+            set { this.skillSelectControl.GrandCharacterInfo = value; }
         }
 
         private void OnPlanChanged(object sender, EventArgs e)
@@ -268,7 +274,7 @@ namespace EVEMon.SkillPlanner
                     string BlockingEntry = string.Empty;
 
                     bool isBlocked = m_settings.SkillIsBlockedAt(thisEnd, out BlockingEntry);
-                    
+
                     if (isBlocked && m_HighlightConflicts) lvi.ForeColor = Color.Red;
                     // end of schedule checking
 
@@ -1115,7 +1121,6 @@ namespace EVEMon.SkillPlanner
         {
             tmrSelect.Enabled = false;
             SelectedIndexChanged();
-
         }
 
         private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
@@ -1130,18 +1135,21 @@ namespace EVEMon.SkillPlanner
              * If the timer is already running, then we don't do anything.
              * Hence, we only respond to one event every 100 milliseconds.
              * Cunning!!
-            */
-            if (tmrSelect.Enabled) return;
+             */
+            if (tmrSelect.Enabled)
+            {
+                return;
+            }
             tmrSelect.Interval = 100;
             tmrSelect.Enabled = true;
             tmrSelect.Start();
         }
 
-         private void SelectedIndexChanged()
+        private void SelectedIndexChanged()
         {
-             // This is the real event handler, after we've suppressed rapid multiple events
-             if (InvokeRequired)
-             {
+            // This is the real event handler, after we've suppressed rapid multiple events
+            if (InvokeRequired)
+            {
                 this.Invoke(new MethodInvoker(SelectedIndexChanged));
                 return;
             }
@@ -1263,6 +1271,136 @@ namespace EVEMon.SkillPlanner
                 // reset the status bar to normal in case multiple items were previously selected
                 m_plannerWindow.UpdateStatusBar();
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            pscPlan.Panel2Collapsed = !pscPlan.Panel2Collapsed;
+            tsbToggleSkills.Checked = !pscPlan.Panel2Collapsed;
+            pscPlan.SplitterDistance = pscPlan.Width - 200;
+            UpdateListColumns();
+        }
+
+        private static Skill GetDraggingSkill(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode"))
+            {
+                return (Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
+            }
+            return null;
+        }
+
+        private MouseButtons m_dragButton = MouseButtons.None;
+
+        private void SetDragMouseButton(DragEventArgs e)
+        {
+            if ((e.KeyState & 1) == 1)
+            {
+                m_dragButton = MouseButtons.Left;
+            }
+            else if ((e.KeyState & 2) == 2)
+            {
+                m_dragButton = MouseButtons.Right;
+            }
+        }
+
+        private ListViewItem BuildPlanItemForSkill(Skill gs)
+        {
+            int newLevel = m_plan.PlannedLevel(gs) + 1;
+            if (gs.Level > newLevel)
+            {
+                newLevel = gs.Level + 1;
+            }
+            if (newLevel > 5) return new ListViewItem("ERROR");
+
+            Plan.Entry newEntry = new Plan.Entry();
+            newEntry.SkillName = gs.Name;
+            newEntry.Level = newLevel;
+            newEntry.EntryType = Plan.Entry.Type.Planned;
+
+            ListViewItem newItem = new ListViewItem(gs.Name + " " + Skill.GetRomanForInt(newLevel));
+            newItem.Tag = newEntry;
+            return newItem;
+        }
+
+        private void lvSkills_DragDrop(object sender, DragEventArgs e)
+        {
+            Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                Point cp = lvSkills.PointToClient(new Point(e.X, e.Y));
+                ListViewItem hoverItem = lvSkills.GetItemAt(cp.X, cp.Y);
+                int dragIndex = lvSkills.Items.Count;
+                if (hoverItem != null)
+                {
+                    Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
+                    dragIndex = hoverItem.Index;
+                    if (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2)))
+                    {
+                        dragIndex++;
+                    }
+                }
+                if (m_dragButton == MouseButtons.Left || m_dragButton == MouseButtons.Right)
+                {
+                    ListViewItem newItem = BuildPlanItemForSkill(dragSkill);
+                    if (newItem.Text != "ERROR")
+                    {
+                        lvSkills.Items.Insert(dragIndex, newItem);
+                    }
+                }
+                //FIXME: need to add a context menu that pops up here and lets you pick a higher
+                // level when dragging, but at present I am unsure how to do that and want to get
+                // the basic feature in :)
+                //else if (m_dragButton == MouseButtons.Right)
+                //{
+                //    MessageBox.Show("Right Drag -> Drop");
+                //    // pop context menu to pick level (check skill select context menu for specifics)
+                //}
+                lvSkills.ClearDropMarker();
+                e.Effect = DragDropEffects.None;
+                m_dragButton = MouseButtons.None;
+                RebuildPlanFromListViewOrder();
+            }
+        }
+
+        private void lvSkills_DragOver(object sender, DragEventArgs e)
+        {
+            SetDragMouseButton(e);
+            Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                e.Effect = DragDropEffects.Move;
+                Point cp = lvSkills.PointToClient(new Point(e.X, e.Y));
+                ListViewItem hoverItem = lvSkills.GetItemAt(cp.X, cp.Y);
+                if (hoverItem != null)
+                {
+                    Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
+                    lvSkills.DrawDropMarker(hoverItem.Index, (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2))));
+                    if ((e.KeyState & 8) == 8 && System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+                }
+                else
+                {
+                    lvSkills.ClearDropMarker();
+                }
+            }
+        }
+
+        private void lvSkills_DragEnter(object sender, DragEventArgs e)
+        {
+            SetDragMouseButton(e);
+            Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+        }
+
+        private void lvSkills_DragLeave(object sender, EventArgs e)
+        {
+            m_dragButton = MouseButtons.None;
         }
     }
 }

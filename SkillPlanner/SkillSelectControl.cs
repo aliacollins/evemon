@@ -45,7 +45,10 @@ namespace EVEMon.SkillPlanner
 
         private void OnSelectedSkillChanged()
         {
-            SelectedSkillChanged(this, new EventArgs());
+            if (SelectedSkillChanged != null)
+            {
+                SelectedSkillChanged(this, new EventArgs());
+            }
         }
 
         public ImageList GetIconSet(int index)
@@ -81,7 +84,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                return this.ilSkillIcons1;
+                return this.ilSkillIcons;
             }
         }
 
@@ -113,85 +116,87 @@ namespace EVEMon.SkillPlanner
                 default:
                 case "All": // All Skills
                     sf = delegate
-                             {
-                                 return true;
-                             };
+                         {
+                             return true;
+                         };
                     break;
                 case "Known": // Known Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return gs.Known;
-                             };
+                         {
+                             return gs.Known;
+                         };
                     break;
                 case "Not Known": // Not Known Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return !gs.Known;
-                             };
+                         {
+                             return !gs.Known;
+                         };
                     break;
 
                 case "Not Known - Unowned":
                     sf = delegate(Skill gs)
-                       {
-                           return !gs.Known && !gs.Owned;
-                       };
+                         {
+                             return !gs.Known && !gs.Owned;
+                         };
                     break;
 
                 case "Not Known - Owned":
                     sf = delegate(Skill gs)
-                       {
-                           return !gs.Known && gs.Owned;
-                       };
+                         {
+                             return !gs.Known && gs.Owned;
+                         };
                     break;
 
                 case "Not Known - Trainable":
                     sf = delegate(Skill gs)
-                       {
-                           return !gs.Known && gs.PrerequisitesMet;
-                       };
+                         {
+                             return !gs.Known && gs.PrerequisitesMet;
+                         };
                     break;
 
                 case "Planned": // Planned Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return m_plan.IsPlanned(gs);
-                             };
+                         {
+                             return m_plan.IsPlanned(gs);
+                         };
                     break;
                 case "Level I Ready": // Level I Ready Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return gs.Level == 0 && gs.PrerequisitesMet;
-                             };
+                         {
+                             return gs.Level == 0 && gs.PrerequisitesMet;
+                         };
                     break;
                 case "Trainable (All)": // Trainable Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return gs.PrerequisitesMet && gs.Level < 5;
-                             };
+                         {
+                             return gs.PrerequisitesMet && gs.Level < 5;
+                         };
                     break;
 
                 case "Partially Trained": // partially trained skils
                     sf = delegate(Skill gs)
-                             {
-                                 return gs.PartiallyTrained;
-                             };
+                         {
+                             return gs.PartiallyTrained;
+                         };
                     break;
                 case "Not Planned": // Not Planned Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return !(m_plan.IsPlanned(gs) || gs.Level == 5);
-                             };
+                         {
+                             return !(m_plan.IsPlanned(gs) || gs.Level == 5);
+                         };
                     break;
                 case "Not Planned - Trainable": // Not Planned & Trainable Skills
                     sf = delegate(Skill gs)
-                             {
-                                 return !m_plan.IsPlanned(gs) && gs.PrerequisitesMet && gs.Level < 5;
-                             };
+                         {
+                             return !m_plan.IsPlanned(gs) && gs.PrerequisitesMet && gs.Level < 5;
+                         };
                     break;
             }
             int index = Settings.GetInstance().SkillIconGroup;
             if (index == 0)
+            {
                 index = 1;
+            }
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
@@ -199,20 +204,21 @@ namespace EVEMon.SkillPlanner
             {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             }
-            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + index + "\\" + groupname + ".resources")) || !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources"))
+            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group" + index + @"\" + groupname + ".resources")) ||
+                !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group0\Default.resources"))
             {
                 groupname = null;
             }
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group0\Default.resources");
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + index + "\\" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group" + index + @"\" + groupname + ".resources");
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
@@ -226,7 +232,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                def = this.ilSkillIcons1;
+                def = this.ilSkillIcons;
             }
             tvItems.Nodes.Clear();
             tvItems.ImageList = def;
@@ -238,9 +244,6 @@ namespace EVEMon.SkillPlanner
                 {
                     if (sf(gs) && (gs.Public || cbShowNonPublic.Checked))
                     {
-                        // The following is here for when/if skillbooks ever get an 'Owned' flag
-                        // 'Owned' flag - for those pesky skills you can't train yet but
-                        //                have gone and bought the book for already anyway.
                         TreeNode stn;
                         if (gs.Level == 0)
                         {
@@ -251,11 +254,17 @@ namespace EVEMon.SkillPlanner
                             else
                             {
                                 if (gs.Owned)
+                                {
                                     stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("Book"), tvItems.ImageList.Images.IndexOfKey("Book"));
+                                }
                                 else if (gs.PrerequisitesMet) // prereqs met
+                                {
                                     stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("PrereqsMet"), tvItems.ImageList.Images.IndexOfKey("PrereqsMet"));
+                                }
                                 else
+                                {
                                     stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet"), tvItems.ImageList.Images.IndexOfKey("PrereqsNOTMet"));
+                                }
                             }
                         }
                         else
@@ -293,7 +302,9 @@ namespace EVEMon.SkillPlanner
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (m_settings.StoreBrowserFilters)
+            {
                 m_settings.SkillBrowserSearch = tbSearchText.Text;
+            }
             SearchTextChanged();
         }
 
@@ -359,90 +370,87 @@ namespace EVEMon.SkillPlanner
                 case 1: // Training time to next level
                     sortColName = "Time";
                     sk = delegate(Skill gs)
+                         {
+                             int curLevel = gs.Level;
+                             if (curLevel == 5)
                              {
-                                 int curLevel = gs.Level;
-                                 if (curLevel == 5)
-                                 {
-                                     return TimeSpan.MaxValue;
-                                 }
-                                 int nextLevel = curLevel + 1;
-                                 return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(nextLevel);
-                             };
+                                 return TimeSpan.MaxValue;
+                             }
+                             int nextLevel = curLevel + 1;
+                             return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(nextLevel);
+                         };
                     dk = delegate(Skill gs, object v)
+                         {
+                             TimeSpan ts = (TimeSpan)v;
+                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                              {
-                                 TimeSpan ts = (TimeSpan)v;
-                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                                 {
-                                     return "-";
-                                 }
-                                 else
-                                 {
-                                     int nextLevel = gs.Level + 1;
-                                     return
-                                         Skill.GetRomanForInt(nextLevel) + ": " +
-                                         Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
-                                 }
-                             };
+                                 return "-";
+                             }
+                             else
+                             {
+                                 int nextLevel = gs.Level + 1;
+                                 return Skill.GetRomanForInt(nextLevel) + ": " +
+                                        Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
+                             }
+                         };
                     mu = delegate(IComparable v)
+                         {
+                             TimeSpan ts = (TimeSpan)v;
+                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                              {
-                                 TimeSpan ts = (TimeSpan)v;
-                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                                 {
-                                     ts -= TimeSpan.FromTicks(1);
-                                 }
-                                 else
-                                 {
-                                     ts += TimeSpan.FromTicks(1);
-                                 }
-                                 return ts;
-                             };
+                                 ts -= TimeSpan.FromTicks(1);
+                             }
+                             else
+                             {
+                                 ts += TimeSpan.FromTicks(1);
+                             }
+                             return ts;
+                         };
                     break;
                 case 2: // Training time to level V
                     sortColName = "Time";
                     sk = delegate(Skill gs)
+                         {
+                             int curLevel = gs.Level;
+                             if (curLevel == 5)
                              {
-                                 int curLevel = gs.Level;
-                                 if (curLevel == 5)
-                                 {
-                                     return TimeSpan.MaxValue;
-                                 }
-                                 return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(5);
-                             };
+                                 return TimeSpan.MaxValue;
+                             }
+                             return gs.GetPrerequisiteTime() + gs.GetTrainingTimeToLevel(5);
+                         };
                     dk = delegate(Skill gs, object v)
+                         {
+                             TimeSpan ts = (TimeSpan)v;
+                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                              {
-                                 TimeSpan ts = (TimeSpan)v;
-                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                                 {
-                                     return "-";
-                                 }
-                                 else
-                                 {
-                                     return
-                                         Skill.GetRomanForInt(5) + ": " +
-                                         Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
-                                 }
-                             };
+                                 return "-";
+                             }
+                             else
+                             {
+                                 return Skill.GetRomanForInt(5) + ": " +
+                                        Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
+                             }
+                         };
                     mu = delegate(IComparable v)
+                         {
+                             TimeSpan ts = (TimeSpan)v;
+                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
                              {
-                                 TimeSpan ts = (TimeSpan)v;
-                                 if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                                 {
-                                     ts -= TimeSpan.FromTicks(1);
-                                 }
-                                 else
-                                 {
-                                     ts += TimeSpan.FromTicks(1);
-                                 }
-                                 return ts;
-                             };
+                                 ts -= TimeSpan.FromTicks(1);
+                             }
+                             else
+                             {
+                                 ts += TimeSpan.FromTicks(1);
+                             }
+                             return ts;
+                         };
                     break;
             }
 
             lvSortedSkillList.BeginUpdate();
             try
             {
-                SortedList<IComparable, Pair<Skill, string>> sortedItems =
-                    new SortedList<IComparable, Pair<Skill, string>>();
+                SortedList<IComparable, Pair<Skill, string>> sortedItems = new SortedList<IComparable, Pair<Skill, string>>();
                 foreach (Skill gs in filteredItems.Values)
                 {
                     IComparable sortVal = sk(gs);
@@ -514,8 +522,6 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            //            cbSkillFilter.SelectedIndex = 0;
-            //            cbSorting.SelectedIndex = 0;
             try
             {
                 m_settings = Settings.GetInstance();
@@ -640,6 +646,18 @@ namespace EVEMon.SkillPlanner
             ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
             int level = Convert.ToInt32(levelItem.Text.Remove(0, 7));
             m_plan.PlanTo(this.SelectedSkill, level);
+        }
+
+        private void tvItems_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            if (((TreeNode)e.Item).Nodes.Count == 0)
+            {
+                Skill tmp = (Skill)((TreeNode)e.Item).Tag;
+                if (m_plan.PlannedLevel(tmp) == 5 || tmp.Level == 5) {
+                    return;
+                }
+                DoDragDrop(e.Item, DragDropEffects.Move);
+            }
         }
 
     }

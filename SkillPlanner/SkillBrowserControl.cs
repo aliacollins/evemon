@@ -195,8 +195,8 @@ namespace EVEMon.SkillPlanner
                 lblSkillClass.Text = m_selectedSkill.SkillGroup.Name;
                 lblSkillName.Text = m_selectedSkill.Name + " (" + m_selectedSkill.Rank + ")  " + m_selectedSkill.FormattedCost + " ISK";
                 textboxDescription.Text = m_selectedSkill.Description;
-                lblAttributes.Text = "Primary: " + m_selectedSkill.PrimaryAttribute.ToString() + ", " +
-                                     "Secondary: " + m_selectedSkill.SecondaryAttribute.ToString();
+                lblAttributes.Text = String.Format("Primary: {0}, Secondary: {1}", m_selectedSkill.PrimaryAttribute.ToString(),
+                                                                                   m_selectedSkill.SecondaryAttribute.ToString());
 
                 //int plannedTo = 0;
                 bool anyPlan = false;
@@ -266,8 +266,7 @@ namespace EVEMon.SkillPlanner
                 }
                 sb.Append(Skill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
       
-                TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) +
-                                m_selectedSkill.GetPrerequisiteTime();
+                TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) + m_selectedSkill.GetPrerequisiteTime();
                 if (prts > TimeSpan.Zero)
                 {
                     sb.Append(" (plus ");
@@ -321,8 +320,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private const DescriptiveTextOptions DTO_OPTS =
-            DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
+        private const DescriptiveTextOptions DTO_OPTS = DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText;
 
         private bool SetMenuItemState(ToolStripMenuItem mi, Skill gs, int level)
         {

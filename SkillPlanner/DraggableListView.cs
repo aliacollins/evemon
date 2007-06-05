@@ -44,8 +44,23 @@ namespace EVEMon.SkillPlanner
 
         private bool m_dragging = false;
 
+        private EVEMon.Common.Skill GetDraggingSkill(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode"))
+            {
+                return (EVEMon.Common.Skill)((TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode")).Tag;
+            }
+            return null;
+        }
+
         protected override void OnDragDrop(DragEventArgs e)
         {
+            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                base.OnDragDrop(e);
+                return;
+            }
             base.OnDragDrop(e);
             m_dragging = false;
             ClearDropMarker();
@@ -80,8 +95,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            ArrayList insertItems =
-                new ArrayList(base.SelectedItems.Count);
+            ArrayList insertItems = new ArrayList(base.SelectedItems.Count);
             // Make a copy of all the selected items
 
             foreach (ListViewItem item in base.SelectedItems)
@@ -111,68 +125,14 @@ namespace EVEMon.SkillPlanner
             
         }
 
-        private int m_dropMarkerOn = -1;
-        private bool m_dropMarkerBelow = false;
-
-        private void ClearDropMarker()
-        {
-            if (m_dropMarkerOn != -1)
-            {
-                //Rectangle rr = this.GetItemRect(m_dropMarkerOn);
-                //this.Invalidate(rr);
-                this.RestrictedPaint();
-            }
-            m_dropMarkerOn = -1;
-        }
-
-        private void DrawDropMarker(int index, bool below)
-        {
-            if (m_dropMarkerOn != -1 && m_dropMarkerOn != index)
-            {
-                ClearDropMarker();
-            }
-            if (m_dropMarkerOn != index)
-            {
-                m_dropMarkerOn = index;
-                m_dropMarkerBelow = below;
-                //Rectangle rr = this.GetItemRect(m_dropMarkerOn);
-                //this.Invalidate(rr);
-                this.RestrictedPaint();
-            }
-        }
-
-        private void RestrictedPaint()
-        {
-            Rectangle itemRect = base.GetItemRect(m_dropMarkerOn);
-            Point start;
-            Point end;
-            if (m_dropMarkerBelow)
-            {
-                start = new Point(itemRect.Left, itemRect.Bottom);
-                end = new Point(itemRect.Right, itemRect.Bottom);
-            }
-            else
-            {
-                start = new Point(itemRect.Left, itemRect.Top);
-                end = new Point(itemRect.Right, itemRect.Top);
-            }
-            start = this.PointToScreen(start);
-            end = this.PointToScreen(end);
-            ControlPaint.DrawReversibleLine(start, end, SystemColors.Window);
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            if (m_dragging)
-            {
-                RestrictedPaint();
-            }
-        }
-
         protected override void OnDragOver(DragEventArgs e)
         {
+            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                base.OnDragOver(e);
+                return;
+            }
             if (!this.AllowRowReorder)
             {
                 e.Effect = DragDropEffects.None;
@@ -204,13 +164,14 @@ namespace EVEMon.SkillPlanner
                 }
             }
             base.OnDragOver(e);
-            String text = (String) e.Data.GetData(REORDER.GetType());
+            String text = (String)e.Data.GetData(REORDER.GetType());
             if (text.CompareTo(REORDER) == 0)
             {
                 e.Effect = DragDropEffects.Move;
                 hoverItem.EnsureVisible();
 
-                DrawDropMarker(hoverItem.Index, hoverItem.Index > this.SelectedIndices[0]);
+                Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
+                DrawDropMarker(hoverItem.Index, (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2))));
             }
             else
             {
@@ -221,6 +182,12 @@ namespace EVEMon.SkillPlanner
 
         protected override void OnDragEnter(DragEventArgs e)
         {
+            EVEMon.Common.Skill dragSkill = GetDraggingSkill(e);
+            if (dragSkill != null)
+            {
+                base.OnDragEnter(e);
+                return;
+            }
             base.OnDragEnter(e);
             if (!this.AllowRowReorder)
             {
@@ -235,7 +202,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
             base.OnDragEnter(e);
-            String text = (String) e.Data.GetData(REORDER.GetType());
+            String text = (String)e.Data.GetData(REORDER.GetType());
             if (text.CompareTo(REORDER) == 0)
             {
                 e.Effect = DragDropEffects.Move;
@@ -244,6 +211,54 @@ namespace EVEMon.SkillPlanner
             {
                 e.Effect = DragDropEffects.None;
                 ClearDropMarker();
+            }
+        }
+
+        private int m_dropMarkerOn = -1;
+        private bool m_dropMarkerBelow = false;
+
+        public void ClearDropMarker()
+        {
+            if (m_dropMarkerOn != -1)
+            {
+                this.RestrictedPaint();
+            }
+            m_dropMarkerOn = -1;
+        }
+
+        public void DrawDropMarker(int index, bool below)
+        {
+            if (m_dropMarkerOn != -1 && (m_dropMarkerOn != index || m_dropMarkerBelow != below))
+            {
+                ClearDropMarker();
+            }
+            if (m_dropMarkerOn != index)
+            {
+                m_dropMarkerOn = index;
+                m_dropMarkerBelow = below;
+                this.RestrictedPaint();
+            }
+        }
+
+        private void RestrictedPaint()
+        {
+            Rectangle itemRect = base.GetItemRect(m_dropMarkerOn);
+            Point start;
+            Point end;
+            start = new Point(itemRect.Left, (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
+            end = new Point((this.Width < itemRect.Right ? this.Width : itemRect.Right), (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));
+            start = this.PointToScreen(start);
+            end = this.PointToScreen(end);
+            ControlPaint.DrawReversibleLine(start, end, SystemColors.Window);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (m_dragging)
+            {
+                RestrictedPaint();
             }
         }
 
