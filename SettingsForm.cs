@@ -358,7 +358,7 @@ namespace EVEMon
             }
             if (cbSender.Checked)
             {
-                rk.SetValue("EVEMon", String.Format("{0} {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
+                rk.SetValue("EVEMon", String.Format("\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
             }
             else
             {
