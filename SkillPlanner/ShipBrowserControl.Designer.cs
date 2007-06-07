@@ -28,6 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
             this.lvShipProperties = new System.Windows.Forms.ListView();
@@ -39,16 +40,17 @@ namespace EVEMon.SkillPlanner
             this.lblShipDescription = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblShipSkillC = new System.Windows.Forms.LinkLabel();
+            this.lblShipSkillB = new System.Windows.Forms.LinkLabel();
+            this.lblShipSkillA = new System.Windows.Forms.LinkLabel();
             this.btnShipSkillsAdd = new System.Windows.Forms.Button();
             this.lblShipTimeRequired = new System.Windows.Forms.Label();
-            this.lblShipSkill3 = new System.Windows.Forms.Label();
-            this.lblShipSkill2 = new System.Windows.Forms.Label();
-            this.lblShipSkill1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.pbShipImage = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblShipName = new System.Windows.Forms.Label();
             this.lblShipClass = new System.Windows.Forms.Label();
+            this.ttShip = new System.Windows.Forms.ToolTip(this.components);
             this.scShipSelect.Panel1.SuspendLayout();
             this.scShipSelect.Panel2.SuspendLayout();
             this.scShipSelect.SuspendLayout();
@@ -183,11 +185,11 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblShipSkillC);
+            this.groupBox1.Controls.Add(this.lblShipSkillB);
+            this.groupBox1.Controls.Add(this.lblShipSkillA);
             this.groupBox1.Controls.Add(this.btnShipSkillsAdd);
             this.groupBox1.Controls.Add(this.lblShipTimeRequired);
-            this.groupBox1.Controls.Add(this.lblShipSkill3);
-            this.groupBox1.Controls.Add(this.lblShipSkill2);
-            this.groupBox1.Controls.Add(this.lblShipSkill1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
@@ -196,6 +198,42 @@ namespace EVEMon.SkillPlanner
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Required Skills";
+            // 
+            // lblShipSkillC
+            // 
+            this.lblShipSkillC.AutoSize = true;
+            this.lblShipSkillC.Location = new System.Drawing.Point(6, 43);
+            this.lblShipSkillC.Name = "lblShipSkillC";
+            this.lblShipSkillC.Size = new System.Drawing.Size(55, 13);
+            this.lblShipSkillC.TabIndex = 7;
+            this.lblShipSkillC.TabStop = true;
+            this.lblShipSkillC.Text = "linkLabel2";
+            this.lblShipSkillC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
+            this.lblShipSkillC.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
+            // 
+            // lblShipSkillB
+            // 
+            this.lblShipSkillB.AutoSize = true;
+            this.lblShipSkillB.Location = new System.Drawing.Point(6, 30);
+            this.lblShipSkillB.Name = "lblShipSkillB";
+            this.lblShipSkillB.Size = new System.Drawing.Size(55, 13);
+            this.lblShipSkillB.TabIndex = 6;
+            this.lblShipSkillB.TabStop = true;
+            this.lblShipSkillB.Text = "linkLabel1";
+            this.lblShipSkillB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
+            this.lblShipSkillB.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
+            // 
+            // lblShipSkillA
+            // 
+            this.lblShipSkillA.AutoSize = true;
+            this.lblShipSkillA.Location = new System.Drawing.Point(6, 16);
+            this.lblShipSkillA.Name = "lblShipSkillA";
+            this.lblShipSkillA.Size = new System.Drawing.Size(55, 13);
+            this.lblShipSkillA.TabIndex = 5;
+            this.lblShipSkillA.TabStop = true;
+            this.lblShipSkillA.Text = "linkLabel1";
+            this.lblShipSkillA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
+            this.lblShipSkillA.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
             // 
             // btnShipSkillsAdd
             // 
@@ -215,33 +253,6 @@ namespace EVEMon.SkillPlanner
             this.lblShipTimeRequired.Size = new System.Drawing.Size(79, 13);
             this.lblShipTimeRequired.TabIndex = 3;
             this.lblShipTimeRequired.Text = "Time Required:";
-            // 
-            // lblShipSkill3
-            // 
-            this.lblShipSkill3.AutoSize = true;
-            this.lblShipSkill3.Location = new System.Drawing.Point(6, 43);
-            this.lblShipSkill3.Name = "lblShipSkill3";
-            this.lblShipSkill3.Size = new System.Drawing.Size(63, 13);
-            this.lblShipSkill3.TabIndex = 2;
-            this.lblShipSkill3.Text = "lblShipSkill3";
-            // 
-            // lblShipSkill2
-            // 
-            this.lblShipSkill2.AutoSize = true;
-            this.lblShipSkill2.Location = new System.Drawing.Point(6, 30);
-            this.lblShipSkill2.Name = "lblShipSkill2";
-            this.lblShipSkill2.Size = new System.Drawing.Size(63, 13);
-            this.lblShipSkill2.TabIndex = 1;
-            this.lblShipSkill2.Text = "lblShipSkill2";
-            // 
-            // lblShipSkill1
-            // 
-            this.lblShipSkill1.AutoSize = true;
-            this.lblShipSkill1.Location = new System.Drawing.Point(6, 17);
-            this.lblShipSkill1.Name = "lblShipSkill1";
-            this.lblShipSkill1.Size = new System.Drawing.Size(63, 13);
-            this.lblShipSkill1.TabIndex = 0;
-            this.lblShipSkill1.Text = "lblShipSkill1";
             // 
             // panel3
             // 
@@ -323,9 +334,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnShipSkillsAdd;
         private System.Windows.Forms.Label lblShipTimeRequired;
-        private System.Windows.Forms.Label lblShipSkill3;
-        private System.Windows.Forms.Label lblShipSkill2;
-        private System.Windows.Forms.Label lblShipSkill1;
         private System.Windows.Forms.Label lblShipName;
         private System.Windows.Forms.Label lblShipClass;
         private System.Windows.Forms.PictureBox pbShipImage;
@@ -340,6 +348,10 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private ShipSelectControl shipSelectControl;
+        private System.Windows.Forms.LinkLabel lblShipSkillA;
+        private System.Windows.Forms.LinkLabel lblShipSkillC;
+        private System.Windows.Forms.LinkLabel lblShipSkillB;
+        private System.Windows.Forms.ToolTip ttShip;
 
 
     }

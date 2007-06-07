@@ -187,9 +187,9 @@ namespace EVEMon.SkillPlanner
                 m_allSkillsKnown = true;
                 m_skillsUnplanned = false;
 
-                SetShipSkillLabel(0, lblShipSkill1, s.RequiredSkills);
-                SetShipSkillLabel(1, lblShipSkill2, s.RequiredSkills);
-                SetShipSkillLabel(2, lblShipSkill3, s.RequiredSkills);
+                SetShipSkillLabel(0, lblShipSkillA, s.RequiredSkills);
+                SetShipSkillLabel(1, lblShipSkillB, s.RequiredSkills);
+                SetShipSkillLabel(2, lblShipSkillC, s.RequiredSkills);
 
                 if (! m_allSkillsKnown)
                 {
@@ -404,11 +404,13 @@ namespace EVEMon.SkillPlanner
             else return s;
         }
 
-        private void SetShipSkillLabel(int rnum, Label skillLabel, List<EntityRequiredSkill> list)
+        private void SetShipSkillLabel(int rnum, LinkLabel skillLabel, List<EntityRequiredSkill> list)
         {
             if (list.Count > rnum)
             {
                 Skill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
+                skillLabel.Tag = gs;
+
                 string addText = String.Empty;
                 if (gs.Level >= list[rnum].Level)
                 {
@@ -430,6 +432,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 skillLabel.Text = String.Empty;
+                skillLabel.Tag = null;
             }
         }
 
@@ -494,6 +497,48 @@ namespace EVEMon.SkillPlanner
                 return lvShipProperties.Items.IndexOf(items[0]);
             }
             return -1;
+        }
+
+        private void lblShipSkill_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LinkLabel lbl = sender as LinkLabel;
+            if (lbl.Tag == null) return;
+            NewPlannerWindow pw = m_plan.PlannerWindow.Target as NewPlannerWindow;
+            pw.ShowSkillInTree(lbl.Tag as Skill);
+
+        }
+
+        private void lblShipSkill_MouseHover(object sender, EventArgs e)
+        {
+            LinkLabel lbl = sender as LinkLabel;
+            if (lbl.Tag == null) return;
+            Skill s = lbl.Tag as Skill;
+            StringBuilder prereqs = new StringBuilder(lbl.Text + "\n");
+            prereqs.Append(buildPrereqs(s));
+            ttShip.SetToolTip(lbl, prereqs.ToString());
+            ttShip.IsBalloon = false;
+            ttShip.Active = true;
+        }
+
+        private StringBuilder buildPrereqs(Skill s)
+        {
+            StringBuilder msg = new StringBuilder();
+            foreach (Skill.Prereq p in s.Prereqs)
+            {
+                msg.Append(p.Name + " " + Skill.GetRomanForInt(p.Level));
+                Skill gs = m_plan.GrandCharacterInfo.GetSkill(p.Name);
+                if (gs.Level >= p.Level)
+                {
+                    msg.Append(" (Known)");
+                }
+                else if (Plan.IsPlanned(gs, p.Level))
+                {
+                    msg.Append(" (Planned)");
+                }
+                msg.Append("\n");
+                msg.Append(buildPrereqs(gs));
+            }
+            return msg;
         }
     }
 }

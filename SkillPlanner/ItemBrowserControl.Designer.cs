@@ -28,6 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.lvItemProperties = new System.Windows.Forms.ListView();
@@ -35,14 +36,15 @@ namespace EVEMon.SkillPlanner
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.lblItemDescription = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblItemSkillC = new System.Windows.Forms.LinkLabel();
+            this.lblItemSkillB = new System.Windows.Forms.LinkLabel();
+            this.lblItemSkillA = new System.Windows.Forms.LinkLabel();
             this.btnItemSkillsAdd = new System.Windows.Forms.Button();
             this.lblItemTimeRequired = new System.Windows.Forms.Label();
-            this.lblItemSkill3 = new System.Windows.Forms.Label();
-            this.lblItemSkill2 = new System.Windows.Forms.Label();
-            this.lblItemSkill1 = new System.Windows.Forms.Label();
             this.lblItemName = new System.Windows.Forms.Label();
             this.lblItemCategory = new System.Windows.Forms.Label();
             this.pbItemIcon = new System.Windows.Forms.PictureBox();
+            this.ttItem = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -131,17 +133,53 @@ namespace EVEMon.SkillPlanner
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.lblItemSkillC);
+            this.groupBox2.Controls.Add(this.lblItemSkillB);
+            this.groupBox2.Controls.Add(this.lblItemSkillA);
             this.groupBox2.Controls.Add(this.btnItemSkillsAdd);
             this.groupBox2.Controls.Add(this.lblItemTimeRequired);
-            this.groupBox2.Controls.Add(this.lblItemSkill3);
-            this.groupBox2.Controls.Add(this.lblItemSkill2);
-            this.groupBox2.Controls.Add(this.lblItemSkill1);
             this.groupBox2.Location = new System.Drawing.Point(212, 291);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(268, 119);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Required Skills";
+            // 
+            // lblItemSkillC
+            // 
+            this.lblItemSkillC.AutoSize = true;
+            this.lblItemSkillC.Location = new System.Drawing.Point(15, 48);
+            this.lblItemSkillC.Name = "lblItemSkillC";
+            this.lblItemSkillC.Size = new System.Drawing.Size(55, 13);
+            this.lblItemSkillC.TabIndex = 12;
+            this.lblItemSkillC.TabStop = true;
+            this.lblItemSkillC.Text = "linkLabel1";
+            this.lblItemSkillC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
+            this.lblItemSkillC.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
+            // 
+            // lblItemSkillB
+            // 
+            this.lblItemSkillB.AutoSize = true;
+            this.lblItemSkillB.Location = new System.Drawing.Point(15, 35);
+            this.lblItemSkillB.Name = "lblItemSkillB";
+            this.lblItemSkillB.Size = new System.Drawing.Size(55, 13);
+            this.lblItemSkillB.TabIndex = 11;
+            this.lblItemSkillB.TabStop = true;
+            this.lblItemSkillB.Text = "linkLabel1";
+            this.lblItemSkillB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
+            this.lblItemSkillB.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
+            // 
+            // lblItemSkillA
+            // 
+            this.lblItemSkillA.AutoSize = true;
+            this.lblItemSkillA.Location = new System.Drawing.Point(15, 22);
+            this.lblItemSkillA.Name = "lblItemSkillA";
+            this.lblItemSkillA.Size = new System.Drawing.Size(55, 13);
+            this.lblItemSkillA.TabIndex = 10;
+            this.lblItemSkillA.TabStop = true;
+            this.lblItemSkillA.Text = "linkLabel1";
+            this.lblItemSkillA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
+            this.lblItemSkillA.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
             // 
             // btnItemSkillsAdd
             // 
@@ -161,33 +199,6 @@ namespace EVEMon.SkillPlanner
             this.lblItemTimeRequired.Size = new System.Drawing.Size(79, 13);
             this.lblItemTimeRequired.TabIndex = 8;
             this.lblItemTimeRequired.Text = "Time Required:";
-            // 
-            // lblItemSkill3
-            // 
-            this.lblItemSkill3.AutoSize = true;
-            this.lblItemSkill3.Location = new System.Drawing.Point(15, 48);
-            this.lblItemSkill3.Name = "lblItemSkill3";
-            this.lblItemSkill3.Size = new System.Drawing.Size(35, 13);
-            this.lblItemSkill3.TabIndex = 7;
-            this.lblItemSkill3.Text = "label4";
-            // 
-            // lblItemSkill2
-            // 
-            this.lblItemSkill2.AutoSize = true;
-            this.lblItemSkill2.Location = new System.Drawing.Point(15, 35);
-            this.lblItemSkill2.Name = "lblItemSkill2";
-            this.lblItemSkill2.Size = new System.Drawing.Size(35, 13);
-            this.lblItemSkill2.TabIndex = 6;
-            this.lblItemSkill2.Text = "label3";
-            // 
-            // lblItemSkill1
-            // 
-            this.lblItemSkill1.AutoSize = true;
-            this.lblItemSkill1.Location = new System.Drawing.Point(15, 22);
-            this.lblItemSkill1.Name = "lblItemSkill1";
-            this.lblItemSkill1.Size = new System.Drawing.Size(35, 13);
-            this.lblItemSkill1.TabIndex = 5;
-            this.lblItemSkill1.Text = "label2";
             // 
             // lblItemName
             // 
@@ -247,12 +258,13 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.PictureBox pbItemIcon;
         private System.Windows.Forms.Button btnItemSkillsAdd;
         private System.Windows.Forms.Label lblItemTimeRequired;
-        private System.Windows.Forms.Label lblItemSkill3;
-        private System.Windows.Forms.Label lblItemSkill2;
-        private System.Windows.Forms.Label lblItemSkill1;
         private System.Windows.Forms.ListView lvItemProperties;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private ItemSelectControl itemSelectControl1;
+        private System.Windows.Forms.LinkLabel lblItemSkillA;
+        private System.Windows.Forms.LinkLabel lblItemSkillC;
+        private System.Windows.Forms.LinkLabel lblItemSkillB;
+        private System.Windows.Forms.ToolTip ttItem;
     }
 }

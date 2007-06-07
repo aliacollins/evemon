@@ -89,9 +89,9 @@ namespace EVEMon.SkillPlanner
                 m_allSkillsKnown = true;
                 m_skillsUnplanned = false;
 
-                SetSkillLabel(0, lblItemSkill1, item);
-                SetSkillLabel(1, lblItemSkill2, item);
-                SetSkillLabel(2, lblItemSkill3, item);
+                SetSkillLabel(0, lblItemSkillA, item);
+                SetSkillLabel(1, lblItemSkillB, item);
+                SetSkillLabel(2, lblItemSkillC, item);
 
                 if (!m_allSkillsKnown)
                 {
@@ -246,46 +246,44 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void SetSkillLabel(int skillNum, Label lblSkill, Item i)
+        private void SetSkillLabel(int skillNum, LinkLabel lblSkill, Item i)
         {
             if (i.RequiredSkills.Count <= skillNum)
             {
                 lblSkill.Text = String.Empty;
+                lblSkill.Tag = null;
                 return;
             }
+            
+
 
             EntityRequiredSkill rs = i.RequiredSkills[skillNum];
+            Skill gs = m_plan.GrandCharacterInfo.GetSkill(rs.Name);
             StringBuilder sb = new StringBuilder();
+            lblSkill.Tag = gs;
             sb.Append(rs.Name);
             sb.Append(' ');
             sb.Append(Skill.GetRomanForInt(rs.Level));
-            if (m_plan != null)
+            if (gs.Level >= rs.Level)
             {
-                CharacterInfo gci = m_plan.GrandCharacterInfo;
-                Skill gs = gci.GetSkill(rs.Name);
-                if (gs != null)
+                sb.Append(" (Known)");
+            }
+            else
+            {
+                if (m_plan.IsPlanned(gs, rs.Level))
                 {
-                    if (gs.Level >= rs.Level)
-                 {
-                     sb.Append(" (Known)");
-                 }
-                 else
-                 {
-                     if (m_plan.IsPlanned(gs, rs.Level))
-                     {
-                         sb.Append(" (Planned)");
-                         m_allSkillsKnown = false;
-                     }
-                     else
-                     {
-                         m_allSkillsKnown = false;
-                         m_skillsUnplanned = true;
-                     }
-                 }
+                    sb.Append(" (Planned)");
+                    m_allSkillsKnown = false;
+                }
+                else
+                {
+                    m_allSkillsKnown = false;
+                    m_skillsUnplanned = true;
                 }
             }
             lblSkill.Text = sb.ToString();
         }
+
 
         private void GotItemImage(int itemId, Image i)
         {
@@ -326,5 +324,48 @@ namespace EVEMon.SkillPlanner
             m_plan.PlanSetTo(skillsToAdd, m_note, true);
             itemSelectControl1_SelectedItemChanged(new Object(), new EventArgs());
         }
+
+
+        private void llblItemSkillA_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LinkLabel lbl = sender as LinkLabel;
+            if (lbl.Tag == null) return;
+            NewPlannerWindow pw = m_plan.PlannerWindow.Target as NewPlannerWindow;
+            pw.ShowSkillInTree(lbl.Tag as Skill);
+        }
+
+        private void lblItemSkill_MouseHover(object sender, EventArgs e)
+        {
+            LinkLabel lbl = sender as LinkLabel;
+            if (lbl.Tag == null) return;
+            Skill s = lbl.Tag as Skill;
+            StringBuilder prereqs = new StringBuilder(lbl.Text + "\n");
+            prereqs.Append(buildPrereqs(s));
+            ttItem.SetToolTip(lbl, prereqs.ToString());
+            ttItem.IsBalloon = false;
+            ttItem.Active = true;
+        }
+
+        private StringBuilder buildPrereqs(Skill s)
+        {
+            StringBuilder msg = new StringBuilder();
+            foreach (Skill.Prereq p in s.Prereqs)
+            {
+                msg.Append(p.Name + " " + Skill.GetRomanForInt(p.Level));
+                Skill gs = m_plan.GrandCharacterInfo.GetSkill(p.Name);
+                if (gs.Level >= p.Level)
+                {
+                    msg.Append(" (Known)");
+                }
+                else if (Plan.IsPlanned(gs, p.Level))
+                {
+                    msg.Append(" (Planned)");
+                }
+                msg.Append("\n");
+                msg.Append(buildPrereqs(gs));
+            }
+            return msg;
+        }
+
     }
 }
