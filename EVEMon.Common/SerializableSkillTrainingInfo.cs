@@ -53,7 +53,7 @@ namespace EVEMon.Common
 
         // This is actually unrequired for anything useful.
         [XmlElement("currentTimeTQOffset")]
-        [Obsolete]
+        
         public int Offset
         {
             get { return m_offset; }

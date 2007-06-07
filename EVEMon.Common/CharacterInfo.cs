@@ -1091,7 +1091,7 @@ namespace EVEMon.Common
                             this.CancelCurrentSkillTraining();
                             // ...and in with the new
 							m_SkillInTraining = (SerializableSkillTrainingInfo)m_OldSkillInTraining.Clone();
-							_OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime);
+							_OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime,m_SkillInTraining);
                         }
                     }
                 }
@@ -1363,7 +1363,7 @@ namespace EVEMon.Common
 						else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
 						{
 							m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-							newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime);
+							newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime,m_SkillInTraining);
 						}
 					}
                 }

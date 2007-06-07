@@ -99,7 +99,9 @@ namespace EVEMon.Common
                         return GetPointsRequiredForLevel(m_trainingToLevel);
                     }
 
-                    return GetPointsRequiredForLevel(m_trainingToLevel) - GetPointsForTimeSpan(timeRemainSpan);
+                    timeRemainSpan = DateTime.Now - m_trainingSkillInfo.GetDateTimeAtUpdate.ToLocalTime() + new TimeSpan(0,0,m_trainingSkillInfo.Offset);
+                  
+                    return  m_trainingSkillInfo.EstimatedPointsAtUpdate + GetPointsForTimeSpan(timeRemainSpan);
                 }
                 else
                 {
@@ -506,7 +508,9 @@ namespace EVEMon.Common
 
         private bool m_inTraining = false;
         private int m_trainingToLevel = 0;
+        private SerializableSkillTrainingInfo m_trainingSkillInfo = null;
         private DateTime m_estimatedCompletion = DateTime.MaxValue;
+        
 
         /// <summary>
         /// Gets whether this skill is currently training.
@@ -532,7 +536,7 @@ namespace EVEMon.Common
             get { return m_estimatedCompletion; }
         }
 
-        internal void SetTrainingInfo(int trainingToLevel, DateTime estimatedCompletion)
+        internal void SetTrainingInfo(int trainingToLevel, DateTime estimatedCompletion,SerializableSkillTrainingInfo trainingSkill)
         {
             if (!m_inTraining || m_trainingToLevel != trainingToLevel)
             {
@@ -541,6 +545,7 @@ namespace EVEMon.Common
             m_inTraining = true;
             m_trainingToLevel = trainingToLevel;
             m_estimatedCompletion = estimatedCompletion;
+            m_trainingSkillInfo = trainingSkill;
             OnChanged();
         }
 
