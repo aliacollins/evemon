@@ -336,8 +336,7 @@ namespace EVEMon.Common
                     }
                     if (gs.Level < level && !this.IsPlanned(gs, level))
                     {
-                        if ((level < 5 && ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa)
-                                            || (gs == gsb && gsa == bestGs && gsb.Level < gsa.Level)))
+                        if ((level < 5 && ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa)))
                             || ((level == 5 && bestLevel == 5) && ((gs == bestGs) || (bestGs == gsb && gs == gsa))))
                         {
                             Plan.Entry pe = new Plan.Entry();
