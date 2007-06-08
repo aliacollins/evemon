@@ -236,13 +236,22 @@ namespace EVEMon.Common
                 throw new ApplicationException("Could not retrieve character list.");
             }
 
-            XmlDocument xdoc = new XmlDocument();
-            xdoc.LoadXml(stxt);
             List<Pair<string, int>> nl = new List<Pair<string, int>>();
-            foreach (XmlElement el in xdoc.SelectNodes("/charactersheet/characters/character"))
+
+            // catch System.Xml.XmlException (see trac ticket 539)
+            try
             {
-                nl.Add(new Pair<string, int>(el.GetAttribute("name"),
-                                             Convert.ToInt32(el.GetAttribute("characterID"))));
+                XmlDocument xdoc = new XmlDocument();
+                xdoc.LoadXml(stxt);
+                foreach (XmlElement el in xdoc.SelectNodes("/charactersheet/characters/character"))
+                {
+                    nl.Add(new Pair<string, int>(el.GetAttribute("name"),
+                                                 Convert.ToInt32(el.GetAttribute("characterID"))));
+                }
+            }
+            catch (System.Xml.XmlException xe)
+            {
+                throw new System.Xml.XmlException("XML is " + stxt, xe);
             }
             m_storedCharacterList = nl;
             return m_storedCharacterList;
