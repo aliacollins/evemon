@@ -8,7 +8,7 @@ namespace EVEMon.Common
     public static class EncryptionHelper
     {
         private static string m_key = "e8Now%n(7Or;[+ow"; //keep it secret, keep it safe
-        private static ASCIIEncoding m_encoding = new ASCIIEncoding();
+        private static UTF8Encoding m_encoding = new UTF8Encoding();
 
         public static string Decrypt(string key, string value)
         {
