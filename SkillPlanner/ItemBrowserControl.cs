@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.IO;
 
 namespace EVEMon.SkillPlanner
 {
@@ -129,9 +130,13 @@ namespace EVEMon.SkillPlanner
                     System.Resources.IResourceReader basic;
                     if (item.ParentCategory != null && item.ParentCategory.Name != "Drone Upgrades" && item.ParentCategory.ParentCategory != null && ((item.ParentCategory.ParentCategory.Name == "Drones") || (item.ParentCategory.ParentCategory.ParentCategory != null && item.ParentCategory.ParentCategory.ParentCategory.Name == "Drones")))
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Drones64_64.resources"))
+                        string drones_resouces = String.Format(
+                                "{1}Resources{0}Optional{0}Drones64_64.resources",
+                                Path.DirectorySeparatorChar,
+                                System.AppDomain.CurrentDomain.BaseDirectory);
+                        if (System.IO.File.Exists(drones_resouces))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Drones64_64.resources");
+                            basic = new System.Resources.ResourceReader(drones_resouces);
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {
@@ -145,9 +150,13 @@ namespace EVEMon.SkillPlanner
                     }
                     else
                     {
-                        if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Items64_64.resources"))
+                        string items_resouces = String.Format(
+                                "{1}Resources{0}Optional{0}Items64_64.resources",
+                                Path.DirectorySeparatorChar,
+                                System.AppDomain.CurrentDomain.BaseDirectory);
+                        if (System.IO.File.Exists(items_resouces))
                         {
-                            basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Items64_64.resources");
+                            basic = new System.Resources.ResourceReader(items_resouces);
                             System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                             while (basicx.MoveNext())
                             {

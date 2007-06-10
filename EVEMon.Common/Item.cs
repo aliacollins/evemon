@@ -76,7 +76,10 @@ namespace EVEMon.Common
             }
             if (rootCat == null)
             {
-                string itemfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-items2.xml.gz";
+                string itemfile = String.Format(
+                    "{1}Resources{0}eve-items2.xml.gz",
+                    Path.DirectorySeparatorChar,
+                    System.AppDomain.CurrentDomain.BaseDirectory);
                 if (!File.Exists(itemfile))
                 {
                     throw new ApplicationException(itemfile + " not found!");

@@ -15,7 +15,10 @@ namespace EVEMon.Common
         {
             if (sm_ships == null)
             {
-                string shipfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-ships2.xml.gz";
+                string shipfile = String.Format(
+                    "{1}Resources{0}eve-ships2.xml.gz",
+                    Path.DirectorySeparatorChar,
+                    System.AppDomain.CurrentDomain.BaseDirectory);
                 if (!File.Exists(shipfile))
                 {
                     throw new ApplicationException(shipfile + " not found!");

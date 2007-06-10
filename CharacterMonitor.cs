@@ -746,7 +746,10 @@ namespace EVEMon
         {
             if (pbCharImage.Image == null)
             {
-                string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                string cacheFileName = String.Format(
+                    "{1}{0}cache{0}{2}.png",
+                    Path.DirectorySeparatorChar,
+                    Settings.EveMonDataDir, this.GrandCharacterInfo.CharacterId.ToString());
                 if (File.Exists(cacheFileName))
                 {
                     pbCharImage.Image = PortraitFromCache(cacheFileName);
@@ -783,8 +786,14 @@ namespace EVEMon
             try
             {
                 // generate paths and file patterns required for 
-                string eveCacheFolder = this.GrandCharacterInfo.EVEFolder + "\\cache\\Pictures\\Portraits\\";
-                string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+                string eveCacheFolder = String.Format(
+                    "{1}{0}cache{0}Pictures{0}Portraits{0}",
+                    Path.DirectorySeparatorChar,
+                    this.GrandCharacterInfo.EVEFolder);
+                string cacheFileName = String.Format(
+                    "{1}{0}cache{0}{2}.png",
+                    Path.DirectorySeparatorChar,
+                    Settings.EveMonDataDir, this.GrandCharacterInfo.CharacterId.ToString());
                 int charIDLength = this.GrandCharacterInfo.CharacterId.ToString().Length;
 
                 // create a pattern that matches anything "<characterId>*.png"
@@ -1248,7 +1257,10 @@ namespace EVEMon
         /// <param name="i">The retrieved image.</param>
         private void GotCharacterImage(EveSession sender, Image newImage)
         {
-            string cacheFileName = Settings.EveMonDataDir + "\\cache\\" + this.GrandCharacterInfo.CharacterId.ToString() + ".png";
+            string cacheFileName = String.Format(
+                    "{1}{0}cache{0}{2}.png",
+                    Path.DirectorySeparatorChar,
+                    Settings.EveMonDataDir, this.GrandCharacterInfo.CharacterId.ToString());
 
             //the image was not retrieved - go to plan B
             if (newImage == null)

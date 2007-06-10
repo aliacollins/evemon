@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.IO;
 
 namespace EVEMon.SkillPlanner
 {
@@ -154,10 +155,14 @@ namespace EVEMon.SkillPlanner
 
                 if (m_showImages)
                 {
-                    if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources"))
+                    string ship_resources = String.Format(
+                        "{1}Resources{0}Optional{0}Ships256_256.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory);
+                    if (System.IO.File.Exists(ship_resources))
                     {
                         System.Resources.IResourceReader basic;
-                        basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\Optional\\Ships256_256.resources");
+                        basic = new System.Resources.ResourceReader(ship_resources);
                         System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                         while (basicx.MoveNext())
                         {
@@ -542,6 +547,7 @@ namespace EVEMon.SkillPlanner
         }
     }
 }
+
 
 
 

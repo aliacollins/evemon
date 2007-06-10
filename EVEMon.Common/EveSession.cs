@@ -69,7 +69,10 @@ namespace EVEMon.Common
         {
             get
             {
-                string cacheDir = Settings.EveMonDataDir + "\\cache\\images";
+                string cacheDir = String.Format(
+                    "{1}{0}cache{0}images",
+                    Path.DirectorySeparatorChar,
+                    Settings.EveMonDataDir);
                 if (!Directory.Exists(cacheDir))
                 {
                     Directory.CreateDirectory(cacheDir);
@@ -82,7 +85,7 @@ namespace EVEMon.Common
         {
             if (useCache)
             {
-                string cacheFileName = ImageCacheDirectory + "\\" + GetCacheName(url);
+                string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
                 if (File.Exists(cacheFileName))
                 {
                     try
@@ -149,13 +152,13 @@ namespace EVEMon.Common
         private static void AddImageToCache(string url, Image i)
         {
             string cacheName = GetCacheName(url);
-            using (StreamWriter sw = new StreamWriter(ImageCacheDirectory + "\\file.map", true))
+            using (StreamWriter sw = new StreamWriter(Path.Combine(ImageCacheDirectory, "file.map"), true))
             {
                 sw.WriteLine(String.Format("{0} {1}", cacheName, url));
                 sw.Close();
                 //sw.Dispose();
             }
-            string fn = ImageCacheDirectory + "\\" + cacheName;
+            string fn = Path.Combine(ImageCacheDirectory, cacheName);
             try
             {
                 FileStream fs = new FileStream(fn, FileMode.Create);

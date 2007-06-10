@@ -59,7 +59,10 @@ namespace EVEMon.Common
             /// 
             Dictionary<string, Skill> SkillsByName = new Dictionary<string, Skill>();
 
-            string skillfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-skills2.xml.gz";
+            string skillfile = String.Format(
+                "{1}Resources{0}eve-skills2.xml.gz",
+                Path.DirectorySeparatorChar,
+                System.AppDomain.CurrentDomain.BaseDirectory);
             if (!File.Exists(skillfile))
             {
                 throw new ApplicationException(skillfile + " not found!");

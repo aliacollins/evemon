@@ -23,7 +23,7 @@ namespace EVEMon
             if (dr == DialogResult.OK)
             {
                 // Test to see if EVE executable exists
-                FileInfo eveEXE = new FileInfo(fbdOpenDir.SelectedPath + "\\eve.exe");
+                FileInfo eveEXE = new FileInfo(Path.Combine(fbdOpenDir.SelectedPath, "eve.exe"));
 
                 if (eveEXE.Exists)
                 {

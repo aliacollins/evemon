@@ -1640,9 +1640,9 @@ namespace EVEMon.Common
                 {
                     if (m_DataDir == String.Empty)
                     {
-                        m_SettingsFile = @"\settings.xml";
+                        m_SettingsFile = Path.DirectorySeparatorChar + "settings.xml";
 #if DEBUG
-                        m_SettingsFile = @"\settings-debug.xml";
+                        m_SettingsFile = Path.DirectorySeparatorChar + "settings-debug.xml";
 #endif
 
                         m_DataDir = Directory.GetCurrentDirectory();
@@ -1651,15 +1651,15 @@ namespace EVEMon.Common
 
                         if (!File.Exists(fn))
                         {
-                            m_DataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\EVEMon";
+                            m_DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
                         }
                         if (!Directory.Exists(m_DataDir))
                         {
                             Directory.CreateDirectory(m_DataDir);
                         }
-                        if (!Directory.Exists(m_DataDir + @"\cache"))
+                        if (!Directory.Exists(Path.Combine(m_DataDir, "cache")))
                         {
-                            Directory.CreateDirectory(m_DataDir + @"\cache");
+                            Directory.CreateDirectory(Path.Combine(m_DataDir, "cache"));
                         }
                     }
                     return m_DataDir;

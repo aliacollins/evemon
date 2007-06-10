@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using EVEMon.Common;
 using System.Collections;
+using System.IO;
 
 namespace EVEMon.SkillPlanner
 {
@@ -62,14 +63,24 @@ namespace EVEMon.SkillPlanner
             }
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(
+                    String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory));
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group" + index + "\\" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(
+                    String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        index,
+                        groupname));
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
@@ -204,21 +215,37 @@ namespace EVEMon.SkillPlanner
             {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             }
-            if ((groupname != null && !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group" + index + @"\" + groupname + ".resources")) ||
-                !System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group0\Default.resources"))
+            if ((groupname != null && !System.IO.File.Exists(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        index,
+                        groupname)) ||
+                !System.IO.File.Exists(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory))))
             {
                 groupname = null;
             }
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group0\Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory));
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\icons\Skill_Select\Group" + index + @"\" + groupname + ".resources");
+                basic = new System.Resources.ResourceReader(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        index,
+                        groupname));
                 basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {

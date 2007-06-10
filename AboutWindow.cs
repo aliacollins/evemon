@@ -75,6 +75,7 @@ namespace EVEMon
             slDevelopers.Add("Richard Slater", "05");
             slDevelopers.Add("Ruldar", "05");
             slDevelopers.Add("scoobyrich", "05");
+            slDevelopers.Add("Scolima", "05");
             slDevelopers.Add("Sertan Deras", "05");
             slDevelopers.Add("shaver", "05");
             slDevelopers.Add("Shocky", "05");

@@ -283,7 +283,10 @@ namespace EVEMon.Common
         {
             if (sm_implants == null)
             {
-                string implantfile = System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\eve-implants2.xml.gz";
+                string implantfile = String.Format(
+                    "{1}Resources{0}eve-implants2.xml.gz",
+                    Path.DirectorySeparatorChar,
+                    System.AppDomain.CurrentDomain.BaseDirectory);
                 if (!File.Exists(implantfile))
                 {
                     throw new ApplicationException(implantfile + " not found!");

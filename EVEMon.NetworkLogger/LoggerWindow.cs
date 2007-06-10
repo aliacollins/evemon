@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.IO;
 
 namespace EVEMon.NetworkLogger
 {
@@ -52,8 +53,8 @@ namespace EVEMon.NetworkLogger
 
         private void LoggerWindow_Load(object sender, EventArgs e)
         {
-            tbFilename.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                              "\\EVEMon Network Log.txt";
+            tbFilename.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                              "EVEMon Network Log.txt");
         }
 
         private void button1_Click(object sender, EventArgs e)
