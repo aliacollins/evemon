@@ -175,11 +175,15 @@ namespace EVEMon.Common
             if (m_status != m_lastStatus)
             {
                 if (ServerStatusChanged != null)
+                {
                     ServerStatusChanged(m_instance, new EveServerEventArgs(m_balloonText, m_balloonIcon));
+                }
                 m_lastStatus = m_status;
             }
             if (ServerStatusUpdated != null)
+            {
                 ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+            }
 
             // switch off the semaphore
             m_checkingServer = false;
@@ -189,7 +193,9 @@ namespace EVEMon.Common
         {
             // Check the semaphore to see if we're mid check
             if (m_checkingServer == true)
+            {
                 return;
+            }
 
             // check that we have a network connection
             if (!InternetCS.IsConnectedToInternet())
@@ -198,7 +204,9 @@ namespace EVEMon.Common
                 m_tmrCheck.Interval = 30000;
                 m_statusText = "// Server Status Unknown";
                 if (ServerStatusUpdated != null)
+                {
                     ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+                }
                 return;
             }
 
@@ -225,7 +233,9 @@ namespace EVEMon.Common
                     if (int.TryParse(m_settings.CustomTQPort, out serverPort) && System.Net.IPAddress.TryParse(m_settings.CustomTQAddress, out serverAddress))
                     {
                         if (System.Diagnostics.Debugger.IsAttached)
+                        {
                             System.Diagnostics.Debug.WriteLine("DEBUG: TQ check connecting to [" + serverAddress.ToString() + ":" + serverPort.ToString() + "]");
+                        }
 
                         conn.BeginConnect(serverAddress.ToString(), serverPort, ConnectCallback, conn);
                     }
@@ -277,7 +287,7 @@ namespace EVEMon.Common
         /// Performs a HTTP request to http://google.com
         /// </summary>
         /// <returns>true if internet connection is working properly</returns>
-        public static bool IsConnectedToInternet( )
+        public static bool IsConnectedToInternet()
         {
             try
             {
@@ -285,11 +295,17 @@ namespace EVEMon.Common
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
+                    {
                         return true;
+                    }
                 }
             }
-            catch (Exception)
-            { // maybe log for debugging purposes
+            catch (Exception e)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    System.Diagnostics.Debug.WriteLine("Connection to google.com failed: " + e.Message);
+                }
             }
             return false;
         }
