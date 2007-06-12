@@ -108,8 +108,11 @@ namespace EVEMon
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            ShowError(e.ExceptionObject as Exception);
-            Environment.Exit(1);
+            if (!Debugger.IsAttached)
+            {
+                ShowError(e.ExceptionObject as Exception);
+                Environment.Exit(1);
+            }
         }
 
         public static Settings Settings
@@ -121,11 +124,7 @@ namespace EVEMon
 
         private static void ShowError(Exception e)
         {
-            if (Debugger.IsAttached)
-            {
-                Debugger.Break();
-            }
-            else if (m_showWindowOnError)
+            if (m_showWindowOnError)
             {
                 m_showWindowOnError = false;
                 using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(e))
