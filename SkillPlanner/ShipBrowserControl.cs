@@ -141,15 +141,12 @@ namespace EVEMon.SkillPlanner
             Settings settings = Settings.GetInstance();
             foreach (Control c in scShipSelect.Panel2.Controls)
             {
-                if (c == panel1 || c == lblHelp)
-                    c.Visible = (shipSelectControl.SelectedObject == null);
-                else
-
                     c.Visible = false;
             }
- 
+
             if (shipSelectControl.SelectedObject != null)
             {
+                lblHelp.Visible = false;
                 if (m_showImages)
                 {
                     Bitmap b = new Bitmap(256, 256);
@@ -207,7 +204,7 @@ namespace EVEMon.SkillPlanner
                 SetShipSkillLabel(1, lblShipSkillB, s.RequiredSkills);
                 SetShipSkillLabel(2, lblShipSkillC, s.RequiredSkills);
 
-                if (! m_allSkillsKnown)
+                if (!m_allSkillsKnown)
                 {
                     List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
                     foreach (EntityRequiredSkill srs in s.RequiredSkills)
@@ -222,7 +219,7 @@ namespace EVEMon.SkillPlanner
                                                Skill.TimeSpanToDescriptiveText(trainTime,
                                                                                     DescriptiveTextOptions.IncludeCommas |
                                                                                     DescriptiveTextOptions.SpaceText);
-                    
+
                 }
                 else
                 {
@@ -395,14 +392,19 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
-                    lvShipProperties.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent); 
+                    lvShipProperties.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     lvShipProperties.EndUpdate();
                 }
 
                 foreach (Control c in scShipSelect.Panel2.Controls)
                 {
-                    c.Visible = true;
+                    if (c != lblHelp)
+                        c.Visible = true;
                 }
+            }
+            else
+            {
+                lblHelp.Visible = true;
             }
         }
 

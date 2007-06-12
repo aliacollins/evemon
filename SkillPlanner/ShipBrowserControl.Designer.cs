@@ -33,9 +33,6 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
             this.lblHelp = new System.Windows.Forms.Label();
-            this.lvShipProperties = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pnlShipDescription = new System.Windows.Forms.Panel();
@@ -52,6 +49,9 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblShipName = new System.Windows.Forms.Label();
             this.lblShipClass = new System.Windows.Forms.Label();
+            this.lvShipProperties = new System.Windows.Forms.ListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.ttShip = new System.Windows.Forms.ToolTip(this.components);
             this.scShipSelect.Panel1.SuspendLayout();
             this.scShipSelect.Panel2.SuspendLayout();
@@ -80,10 +80,10 @@ namespace EVEMon.SkillPlanner
             // scShipSelect.Panel2
             // 
             this.scShipSelect.Panel2.Controls.Add(this.lblHelp);
-            this.scShipSelect.Panel2.Controls.Add(this.lvShipProperties);
             this.scShipSelect.Panel2.Controls.Add(this.panel2);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
+            this.scShipSelect.Panel2.Controls.Add(this.lvShipProperties);
             this.scShipSelect.RememberDistanceKey = null;
             this.scShipSelect.Size = new System.Drawing.Size(650, 413);
             this.scShipSelect.SplitterDistance = 163;
@@ -108,38 +108,12 @@ namespace EVEMon.SkillPlanner
             // lblHelp
             // 
             this.lblHelp.AutoSize = true;
-            this.lblHelp.Location = new System.Drawing.Point(12, 125);
+            this.lblHelp.Location = new System.Drawing.Point(3, 128);
             this.lblHelp.Name = "lblHelp";
             this.lblHelp.Size = new System.Drawing.Size(378, 65);
             this.lblHelp.TabIndex = 2;
             this.lblHelp.Text = resources.GetString("lblHelp.Text");
             this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lvShipProperties
-            // 
-            this.lvShipProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvShipProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.lvShipProperties.FullRowSelect = true;
-            this.lvShipProperties.Location = new System.Drawing.Point(3, 37);
-            this.lvShipProperties.Name = "lvShipProperties";
-            this.lvShipProperties.Size = new System.Drawing.Size(214, 373);
-            this.lvShipProperties.TabIndex = 3;
-            this.lvShipProperties.UseCompatibleStateImageBehavior = false;
-            this.lvShipProperties.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Attribute";
-            this.columnHeader1.Width = 200;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Value";
-            this.columnHeader2.Width = 140;
             // 
             // panel2
             // 
@@ -315,6 +289,32 @@ namespace EVEMon.SkillPlanner
             this.lblShipClass.Size = new System.Drawing.Size(65, 13);
             this.lblShipClass.TabIndex = 1;
             this.lblShipClass.Text = "Ship > Class";
+            // 
+            // lvShipProperties
+            // 
+            this.lvShipProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvShipProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.lvShipProperties.FullRowSelect = true;
+            this.lvShipProperties.Location = new System.Drawing.Point(3, 37);
+            this.lvShipProperties.Name = "lvShipProperties";
+            this.lvShipProperties.Size = new System.Drawing.Size(214, 373);
+            this.lvShipProperties.TabIndex = 3;
+            this.lvShipProperties.UseCompatibleStateImageBehavior = false;
+            this.lvShipProperties.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Attribute";
+            this.columnHeader1.Width = 200;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Width = 140;
             // 
             // ShipBrowserControl
             // 
