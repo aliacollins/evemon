@@ -726,7 +726,7 @@ namespace EVEMon
                 tmrAlertRefresh.Enabled = false;
                 //  always show the completed skils box if multiple skills have completed
                 // otherwise user sees a "multiple skills completed, click for more info" message and the click does nothing!
-                if (!EveServer.GetInstance().PendingAlerts && (m_settings.EnableSkillCompleteDialog || (m_completedSkills.Count > 1)))
+                if (EveServer.GetInstance().PendingAlerts && (m_settings.EnableSkillCompleteDialog || (m_completedSkills.Count > 1)))
                 {
                     SkillCompleteDialog f = new SkillCompleteDialog(m_completedSkills);
                     f.FormClosed += delegate { f.Dispose(); };
