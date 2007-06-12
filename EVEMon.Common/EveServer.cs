@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Runtime;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace EVEMon.Common
 {
@@ -271,20 +272,26 @@ namespace EVEMon.Common
     }
 
     public class InternetCS
-{
-
-    //Creating the extern function...
-    [DllImport("wininet.dll")]
-    private extern static bool InternetGetConnectedState( out int Description, int ReservedValue ) ;
-
-    //Creating a function that uses the API function...
-    public static bool IsConnectedToInternet( )
     {
-
-        int Desc ;
-        return InternetGetConnectedState( out Desc, 0 ) ;
-
+        /// <summary>
+        /// Performs a HTTP request to http://google.com
+        /// </summary>
+        /// <returns>true if internet connection is working properly</returns>
+        public static bool IsConnectedToInternet( )
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://google.com");
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        return true;
+                }
+            }
+            catch (Exception)
+            { // maybe log for debugging purposes
+            }
+            return false;
+        }
     }
-
-}
 }
