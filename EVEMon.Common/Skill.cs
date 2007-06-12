@@ -93,7 +93,7 @@ namespace EVEMon.Common
             {
                 if (m_inTraining)
                 {
-                    TimeSpan timeRemainSpan = ((DateTime)m_trainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime().Subtract(DateTime.Now);
+                    TimeSpan timeRemainSpan = ((DateTime)m_trainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_trainingSkillInfo.TQOffset))).ToLocalTime().Subtract(DateTime.Now);
                     if (timeRemainSpan <= TimeSpan.Zero)
                     {
                         return GetPointsRequiredForLevel(m_trainingToLevel);
