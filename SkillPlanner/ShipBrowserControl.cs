@@ -139,19 +139,30 @@ namespace EVEMon.SkillPlanner
         private void shipSelectControl_SelectedShipChanged(object sender, EventArgs e)
         {
             Settings settings = Settings.GetInstance();
-            if (m_showImages)
+            foreach (Control c in scShipSelect.Panel2.Controls)
             {
-                Bitmap b = new Bitmap(256, 256);
-                using (Graphics g = Graphics.FromImage(b))
-                {
-                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 256, 256));
-                }
-                pbShipImage.Image = b;
+                if (c == panel1 || c == lblHelp)
+                    c.Visible = (shipSelectControl.SelectedObject == null);
+                else
+
+                    c.Visible = false;
             }
+ 
             if (shipSelectControl.SelectedObject != null)
             {
+                if (m_showImages)
+                {
+                    Bitmap b = new Bitmap(256, 256);
+                    using (Graphics g = Graphics.FromImage(b))
+                    {
+                        g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 256, 256));
+                    }
+                    pbShipImage.Image = b;
+                }
+
                 Ship s = shipSelectControl.SelectedObject as Ship;
                 int shipId = s.Id;
+
 
                 if (m_showImages)
                 {
@@ -391,13 +402,6 @@ namespace EVEMon.SkillPlanner
                 foreach (Control c in scShipSelect.Panel2.Controls)
                 {
                     c.Visible = true;
-                }
-            }
-            else
-            {
-                foreach (Control c in scShipSelect.Panel2.Controls)
-                {
-                    c.Visible = false;
                 }
             }
         }

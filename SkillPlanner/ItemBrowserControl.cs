@@ -59,7 +59,10 @@ namespace EVEMon.SkillPlanner
             Item item = itemSelectControl1.SelectedObject  as Item;
             foreach (Control c in splitContainer1.Panel2.Controls)
             {
-                c.Visible = (item != null);
+                if ( c == panel1 || c == lblHelp)
+                    c.Visible = (item == null);
+                else
+                    c.Visible = (item != null);
             }
             if (item != null)
             {

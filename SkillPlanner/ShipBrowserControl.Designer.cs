@@ -29,8 +29,10 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
+            this.lblHelp = new System.Windows.Forms.Label();
             this.lvShipProperties = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -77,6 +79,7 @@ namespace EVEMon.SkillPlanner
             // 
             // scShipSelect.Panel2
             // 
+            this.scShipSelect.Panel2.Controls.Add(this.lblHelp);
             this.scShipSelect.Panel2.Controls.Add(this.lvShipProperties);
             this.scShipSelect.Panel2.Controls.Add(this.panel2);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
@@ -101,6 +104,16 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
+            // 
+            // lblHelp
+            // 
+            this.lblHelp.AutoSize = true;
+            this.lblHelp.Location = new System.Drawing.Point(12, 125);
+            this.lblHelp.Name = "lblHelp";
+            this.lblHelp.Size = new System.Drawing.Size(378, 65);
+            this.lblHelp.TabIndex = 2;
+            this.lblHelp.Text = resources.GetString("lblHelp.Text");
+            this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvShipProperties
             // 
@@ -352,6 +365,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.LinkLabel lblShipSkillC;
         private System.Windows.Forms.LinkLabel lblShipSkillB;
         private System.Windows.Forms.ToolTip ttShip;
+        private System.Windows.Forms.Label lblHelp;
 
 
     }
