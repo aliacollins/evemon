@@ -98,7 +98,10 @@ namespace EVEMon.Common
 
             // Performs the same operation that Windows does upon "minimize window".  This releases all memory pages not currently in use
             // which greatly reduces the amount of RAM that a managed application take up when idle.
-            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+            }
         }
 
         [DllImport("kernel32.dll")]
