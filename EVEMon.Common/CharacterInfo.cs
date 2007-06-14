@@ -1263,7 +1263,10 @@ namespace EVEMon.Common
                     DateTime _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
                     if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
-                        if (_OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
+                        // if a skill completed when evemon was shutdown and there is currently no new skill is training
+                        // then _SITlocalTime is 0 (because skillInTraining is null) and this next block of code results in a large negative skillpoint.
+                        // if (_OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
+                        if (SkillInTraining != null && _OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
                         {
                             check = true;
                             oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
