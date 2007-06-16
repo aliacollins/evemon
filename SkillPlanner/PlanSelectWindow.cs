@@ -251,7 +251,10 @@ namespace EVEMon.SkillPlanner
                     while (newPlanName == "")
                     {
                         npw.Text = "Load Plan";
-                        npw.Result = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
+                        if(fileName.StartsWith(m_grandCharacterInfo.Name + " - "))
+                            fileName = fileName.Substring((m_grandCharacterInfo.Name + " - ").Length);
+                        npw.PlanName = fileName;
                         DialogResult xdr = npw.ShowDialog();
                         if (xdr == DialogResult.Cancel)
                         {

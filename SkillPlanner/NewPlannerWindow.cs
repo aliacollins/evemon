@@ -484,7 +484,7 @@ namespace EVEMon.SkillPlanner
         private void tsbSaveAs_Click(object sender, EventArgs e)
         {
             sfdSave.Title = "Save to File";
-            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Skill Plan";
+            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + m_plan.Name;
             sfdSave.FilterIndex = (int)SaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
             if (dr == DialogResult.Cancel)

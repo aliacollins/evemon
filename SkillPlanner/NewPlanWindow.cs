@@ -28,7 +28,6 @@ namespace EVEMon.SkillPlanner
         public string Result
         {
             get { return m_result; }
-            set { m_result = value; }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -50,10 +49,8 @@ namespace EVEMon.SkillPlanner
 
         private void NewPlanWindow_Shown(object sender, EventArgs e)
         {
-            textBox1.Text = m_result;
             textBox1.Text = m_planName;
             textBox1.SelectAll();
-            m_result = String.Empty;
         }
 
     }
