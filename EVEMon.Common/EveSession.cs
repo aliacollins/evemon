@@ -200,6 +200,8 @@ namespace EVEMon.Common
         {
             m_username = username;
             m_password = password;
+            if (m_password == String.Empty) return;
+
             try
             {
                 ReLogin();

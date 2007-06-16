@@ -44,7 +44,14 @@ namespace EVEMon.Common
             get
             {
                 if (String.IsNullOrEmpty(m_encryptedPassword))
+                {
                     m_encryptedPassword = EncryptionHelper.Encrypt(m_username, m_password);
+                    if (m_encryptedPassword == m_password)
+                    {
+                        m_encryptedPassword = String.Empty;
+                        return m_password;
+                    }
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(ENCRYPTED_PREFIX);
                 sb.Append(m_encryptedPassword);
