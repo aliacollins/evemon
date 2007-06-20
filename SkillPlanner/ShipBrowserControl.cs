@@ -379,12 +379,19 @@ namespace EVEMon.SkillPlanner
                         // mark properties with changed value in blue
                         foreach (ListViewItem li in lvShipProperties.Items)
                         {
-                            for (int i = 2; i < li.SubItems.Count; i++)
+                            if (li.SubItems.Count > 1 && li.SubItems.Count != lvShipProperties.Columns.Count)
                             {
-                                if (li.SubItems[i - 1].Text.CompareTo(li.SubItems[i].Text) != 0)
+                                li.BackColor = Color.LightBlue;
+                            }
+                            else
+                            {
+                                for (int i = 2; i < li.SubItems.Count; i++)
                                 {
-                                    li.BackColor = Color.LightBlue;
-                                    break;
+                                    if (li.SubItems[i - 1].Text.CompareTo(li.SubItems[i].Text) != 0)
+                                    {
+                                        li.BackColor = Color.LightBlue;
+                                        break;
+                                    }
                                 }
                             }
                         }
