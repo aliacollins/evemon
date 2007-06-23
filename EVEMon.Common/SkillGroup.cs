@@ -15,15 +15,15 @@ namespace EVEMon.Common
         private int m_ID;
         private Dictionary<string, Skill> m_skills = new Dictionary<string, Skill>();
 
-        public SkillGroup(string name, int id, IEnumerable<Skill> skills)
+        public SkillGroup(StaticSkillGroup sgs, IEnumerable<Skill> _skills)
         {
-            m_name = name;
-            m_ID = id;
-            foreach (Skill gs in skills)
+            m_name = sgs.Name;
+            m_ID = sgs.ID;
+            foreach (Skill cs in _skills)
             {
-                m_skills[gs.Name] = gs;
-                gs.Changed += new EventHandler(gs_Changed);
-                gs.SetSkillGroup(this);
+                m_skills[cs.Name] = cs;
+                cs.Changed += new EventHandler(gs_Changed);
+                cs.SetSkillGroup(this);
             }
         }
 

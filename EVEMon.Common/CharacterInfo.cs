@@ -34,6 +34,7 @@ namespace EVEMon.Common
 
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
         private Dictionary<int, Skill> m_AllSkillsByID = new Dictionary<int, Skill>();
+        private Dictionary<string, Skill> m_AllSkillsByName = new Dictionary<string, Skill>();
 
         public CharacterInfo(int characterId, string name)
         {
@@ -47,107 +48,45 @@ namespace EVEMon.Common
 
         private void BuildSkillTree()
         {
-            // This needs optimising - why are we loading static data
-            // everytime for each character. We need to refactor this
-            // so all the static skill data is only created once.
+            bool bookOwned = false;
+            StaticSkill.LoadStaticSkills();
 
-            ///
-            /// Note from Eewec - I've done my best to optimise this code.
-            /// Before, every character had a copy of the data, AND the skill class had a reference to
-            /// the skill data that had been loaded for the last loaded character.
-            /// Now, it only gets loaded for each character.
-            /// 
-            Dictionary<string, Skill> SkillsByName = new Dictionary<string, Skill>();
 
-            string skillfile = String.Format(
-                "{1}Resources{0}eve-skills2.xml.gz",
-                Path.DirectorySeparatorChar,
-                System.AppDomain.CurrentDomain.BaseDirectory);
-            if (!File.Exists(skillfile))
+            // Get owned books before we add SkillChange handlers
+            List<string> ownedBooks = new List<string>();
+            foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
             {
-                throw new ApplicationException(skillfile + " not found!");
+                ownedBooks.Add(os);
             }
-            using (FileStream s = new FileStream(skillfile, FileMode.Open, FileAccess.Read))
-            using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
+
+            foreach (StaticSkillGroup sgs in StaticSkillGroup.AllStaticGroups)
             {
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.Load(zs);
-
-                foreach (XmlElement sgel in xdoc.SelectNodes("/skills/c"))
+                List<Skill> skills = new List<Skill>();
+                foreach (StaticSkill ss in sgs)
                 {
-                    List<Skill> skills = new List<Skill>();
-                    foreach (XmlElement sel in sgel.SelectNodes("s"))
+                    List<Skill.Prereq> prereqs = new List<Skill.Prereq>(); 
+                    foreach (StaticSkill.Prereq ssp in ss.Prereqs)
                     {
-                        string _name = sel.GetAttribute("n");
-
-                        List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
-                        foreach (XmlElement pel in sel.SelectNodes("p"))
-                        {
-                            Skill.Prereq p = new Skill.Prereq(
-                                pel.GetAttribute("n"),
-                                Convert.ToInt32(pel.GetAttribute("l")));
-                            prereqs.Add(p);
-                        }
-
-                        bool _pub = (sel.GetAttribute("p") != "false");
-                        int _id = Convert.ToInt32(sel.GetAttribute("i"));
-                        string _desc = sel.GetAttribute("d");
-                        EveAttribute _primAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
-                        EveAttribute _secAttr =
-                            (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a2"), true);
-                        int _rank = 0;
-                        string _srank = sel.GetAttribute("r");
-                        
-                        try
-                        {
-                            _rank = Convert.ToInt32(_srank);
-                        }
-                        catch (FormatException fe)
-                        {
-                            throw new FormatException("Skill " + _name + ": rank string: " + _srank + " ", fe);
-                        }
-                        long _cost = 0;
-
-                        // for a very very few users, this throws an exception on the skill "Salvage drone operation" - I have NO IDEA why.
-                        // - Brad 9 May 2007
-
-                        try
-                        {
-                            string cost = sel.GetAttribute("c");
-                            _cost = Convert.ToInt64(cost);
-                        }
-                        catch (FormatException)
-                        {
-                            // Ignore the exception - cost is zero anyway.
-                        }
-
-                        Skill gs = new Skill(this, _pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, false, prereqs);
-                        gs.Changed += new EventHandler(gs_Changed);
-                        gs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
-                        m_AllSkillsByID[_id] = gs;
-                        skills.Add(gs);
-                        SkillsByName[_name] = gs;
+                        Skill.Prereq pr = new Skill.Prereq(ssp);
+                        prereqs.Add(pr);
                     }
-
-                    string _group = sgel.GetAttribute("n");
-                    int _number = Convert.ToInt32(sgel.GetAttribute("g"));
-                    SkillGroup gsg = new SkillGroup(_group, _number, skills);
-                    this.m_skillGroups[gsg.Name] = gsg;
-
-                    foreach (string os in Settings.GetInstance().GetOwnedBooksForCharacter(m_name))
-                    {
-                        if (this.m_skillGroups[gsg.Name].Contains(os))
-                            this.m_skillGroups[gsg.Name][os].Owned = true;
-                    }
+                    bookOwned = ownedBooks.Contains(ss.Name);
+                    Skill cs = new Skill(this, ss, bookOwned,prereqs);
+                    cs.Changed += new EventHandler(gs_Changed);
+                    cs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
+                    m_AllSkillsByID[ss.Id] = cs;
+                    m_AllSkillsByName[ss.Name] = cs;
+                    skills.Add(cs);
                 }
+                SkillGroup gsg = new SkillGroup(sgs, skills);
+                m_skillGroups[gsg.Name] = gsg;
             }
 
             foreach (Skill s in m_AllSkillsByID.Values)
             {
                 foreach (Skill.Prereq pr in s.Prereqs)
                 {
-                    Skill gs = SkillsByName[pr.Name];
+                    Skill gs = m_AllSkillsByName[pr.Name];
                     pr.SetSkill(gs);
                 }
             }

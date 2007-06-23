@@ -7,47 +7,22 @@ using System.Collections;
 
 namespace EVEMon.Common
 {
-    public class Skill : EveObject
+    public class Skill
     {
+        private StaticSkill m_staticData;
         private CharacterInfo m_owner;
-        private bool m_public;
-        private string m_descriptionNl;
-        private EveAttribute m_primaryAttribute;
-        private EveAttribute m_secondaryAttribute;
-        private int m_rank;
         private IEnumerable<Prereq> m_prereqs;
         private int m_currentSkillPoints;
         private int m_lastConfirmedLvl;
-        private long m_cost;
         bool m_owned;
 
-        public Skill(CharacterInfo gci, bool pub, string name, int id, string description,
-                          EveAttribute a1, EveAttribute a2, int rank, long cost, bool owned, IEnumerable<Prereq> prereqs)
+        public Skill(CharacterInfo _gci, StaticSkill _ss, bool _owned, IEnumerable<Prereq> _prereqs)
         {
-            m_owner = gci;
-            m_public = pub;
-            _name = name;
-            _id = id;
-            _description = description;
-            m_descriptionNl = description;
-            m_primaryAttribute = a1;
-            m_secondaryAttribute = a2;
-            m_rank = rank;
-            m_prereqs = prereqs;
+            m_staticData = _ss;
+            m_owner = _gci;
             m_lastConfirmedLvl = 0;
-            m_cost = cost;
-            m_owned = owned;
-        }
-
-        public Skill NewCopy()
-        {
-            List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
-            foreach (Skill.Prereq pre in m_prereqs)
-            {
-                Skill.Prereq p = new Skill.Prereq(pre.Name, pre.Level);
-                prereqs.Add(p);
-            }
-            return new Skill(m_owner, m_public, _name, _id, _description, m_primaryAttribute, m_secondaryAttribute, m_rank, m_cost, m_owned, prereqs);
+            m_prereqs = _prereqs;
+            m_owned = _owned;
         }
 
         public void SetOwner(CharacterInfo gci)
@@ -136,30 +111,7 @@ namespace EVEMon.Common
         /// </summary>
         public EveAttribute AttributeModified
         {
-            get
-            {
-                if (_name == "Analytical Mind" || _name == "Logic")
-                {
-                    return EveAttribute.Intelligence;
-                }
-                else if (_name == "Empathy" || _name == "Presence")
-                {
-                    return EveAttribute.Charisma;
-                }
-                else if (_name == "Instant Recall" || _name == "Eidetic Memory")
-                {
-                    return EveAttribute.Memory;
-                }
-                else if (_name == "Iron Will" || _name == "Focus")
-                {
-                    return EveAttribute.Willpower;
-                }
-                else if (_name == "Spatial Awareness" || _name == "Clarity")
-                {
-                    return EveAttribute.Perception;
-                }
-                return EveAttribute.None;
-            }
+            get { return m_staticData.AttributeModified; }
         }
 
         private bool m_known = false;
@@ -196,8 +148,8 @@ namespace EVEMon.Common
 
         public int GetPointsForTimeSpan(TimeSpan span, EveAttributeScratchpad scratchpad)
         {
-            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad);
-            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad);
+            double primAttr = m_owner.GetEffectiveAttribute(m_staticData.PrimaryAttribute, scratchpad);
+            double secondaryAttr = m_owner.GetEffectiveAttribute(m_staticData.SecondaryAttribute, scratchpad);
             double points = span.TotalMinutes * (primAttr + (secondaryAttr / 2));
             return Convert.ToInt32(Math.Ceiling(points));
         }
@@ -217,8 +169,8 @@ namespace EVEMon.Common
 
         private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
-            double primAttr = m_owner.GetEffectiveAttribute(m_primaryAttribute, scratchpad, true, includeImplants);
-            double secondaryAttr = m_owner.GetEffectiveAttribute(m_secondaryAttribute, scratchpad, true, includeImplants);
+            double primAttr = m_owner.GetEffectiveAttribute(m_staticData.PrimaryAttribute, scratchpad, true, includeImplants);
+            double secondaryAttr = m_owner.GetEffectiveAttribute(m_staticData.SecondaryAttribute, scratchpad, true, includeImplants);
             double minutes = Convert.ToDouble(points) / (primAttr + (secondaryAttr / 2));
             return TimeSpan.FromMinutes(minutes);
         }
@@ -230,17 +182,7 @@ namespace EVEMon.Common
         /// <returns>The required nr. of points.</returns>
         public int GetPointsRequiredForLevel(int level)
         {
-            if (level == 0)
-            {
-                return 0;
-            }
-
-            /* original formula is not accurate and required lots of tweaks. The new formula is accurate and matches other skill
-               point formulae both on forums and in other skill tools */
-            //int pointsForLevel = Convert.ToInt32(250*m_rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
-
-            int pointsForLevel = Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * m_rank));
-            return pointsForLevel;
+            return m_staticData.GetPointsRequiredForLevel(level);
         }
 
         /// <summary>
@@ -259,108 +201,40 @@ namespace EVEMon.Common
             return pointsInThisLevel / deltaPointsOfLevel;
         }
 
+        public int Id
+        {
+            get { return m_staticData.Id; }
+        }
+
+        public string Name
+        {
+            get { return m_staticData.Name; }
+        }
+
+        public string Description
+        {
+            get { return m_staticData.Description; }
+        }
+
         public bool Public
         {
-            get { return m_public; }
+            get { return m_staticData.Public; }
         }
 
         public string DescriptionNl
         {
-            //get { return m_descriptionNl.Replace(@".", ".\n"); }
-            get { return WordWrap(m_descriptionNl, 100); }
+            get { return m_staticData.DescriptionNl; }
         }
 
-        public string WordWrap(string text, int maxLength)
-        {
-            text = text.Replace("\n", " ");
-            text = text.Replace("\r", " ");
-            text = text.Replace(".", ". ");
-            text = text.Replace(">", "> ");
-            text = text.Replace("\t", " ");
-            text = text.Replace(",", ", ");
-            text = text.Replace(";", "; ");
-
-            string[] Words = text.Split(' ');
-            int currentLineLength = 0;
-            ArrayList Lines = new ArrayList(text.Length / maxLength);
-            string currentLine = "";
-            bool InTag = false;
-
-            foreach (string currentWord in Words)
-            {
-                //ignore html
-                if (currentWord.Length > 0)
-                {
-                    if (currentWord.Substring(0, 1) == "<")
-                    {
-                        InTag = true;
-                    }
-                    if (InTag)
-                    {
-                        //handle filenames inside html tags
-                        if (currentLine.EndsWith("."))
-                        {
-                            currentLine += currentWord;
-                        }
-                        else
-                        {
-                            currentLine += " " + currentWord;
-                        }
-                        if (currentWord.IndexOf(">") > -1)
-                        {
-                            InTag = false;
-                        }
-                    }
-                    else
-                    {
-                        if (currentLineLength + currentWord.Length + 1 < maxLength)
-                        {
-                            currentLine += " " + currentWord;
-                            currentLineLength += (currentWord.Length + 1);
-                        }
-                        else
-                        {
-                            Lines.Add(currentLine);
-                            currentLine = currentWord;
-                            currentLineLength = currentWord.Length;
-                        }
-                    }
-                }
-            }
-            if (currentLine != "")
-            {
-                Lines.Add(currentLine);
-            }
-            string[] textLinesStr = new string[Lines.Count];
-            Lines.CopyTo(textLinesStr, 0);
-
-            string strWrapped = "";
-            foreach (string line in textLinesStr)
-            {
-                strWrapped += line + "\n";
-            }
-
-            return strWrapped;
-        }
 
         public long Cost
         {
-            get { return m_cost; }
+            get { return m_staticData.Cost; }
         }
 
         public string FormattedCost
         {
-            get
-            {
-                if (m_cost > 0)
-                {
-                    return String.Format("{0:0,0,0}", m_cost);
-                }
-                else
-                {
-                    return "0";
-                }
-            }
+            get { return m_staticData.FormattedCost; }
         }
 
         public bool Owned
@@ -375,7 +249,7 @@ namespace EVEMon.Common
         /// </summary>
         public EveAttribute PrimaryAttribute
         {
-            get { return m_primaryAttribute; }
+            get { return m_staticData.PrimaryAttribute; }
         }
 
         /// <summary>
@@ -383,7 +257,7 @@ namespace EVEMon.Common
         /// </summary>
         public EveAttribute SecondaryAttribute
         {
-            get { return m_secondaryAttribute; }
+            get { return m_staticData.SecondaryAttribute; }
         }
 
 
@@ -392,7 +266,7 @@ namespace EVEMon.Common
         /// </summary>
         public int Rank
         {
-            get { return m_rank; }
+            get { return m_staticData.Rank; }
         }
 
         /// <summary>
@@ -480,6 +354,18 @@ namespace EVEMon.Common
         public class Prereq : EntityRequiredSkill
         {
             private Skill m_pointedSkill;
+
+            public Prereq()
+            {
+            }
+
+            internal Prereq(StaticSkill.Prereq ssp)
+            {
+                _name = ssp.Name;
+                _level = ssp.Level;
+                m_pointedSkill = null;
+            }
+
 
             public Skill Skill
             {

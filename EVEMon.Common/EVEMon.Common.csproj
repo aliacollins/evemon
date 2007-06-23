@@ -99,6 +99,8 @@
     <Compile Include="SplitButton.designer.cs">
       <DependentUpon>SplitButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="StaticSkill.cs" />
+    <Compile Include="StaticSkillGroup.cs" />
     <Compile Include="StringTable.cs" />
     <Compile Include="TreeView.cs">
       <SubType>Component</SubType>
