@@ -28,34 +28,31 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.verticalFlowPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.tbUsername = new System.Windows.Forms.TextBox();
-            this.tbPassword = new System.Windows.Forms.TextBox();
+            this.tbUserId = new System.Windows.Forms.TextBox();
+            this.tbAuthKey = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.verticalFlowPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(271, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Enter the EVE Online login/password for this character:";
             // 
             // verticalFlowPanel1
             // 
             this.verticalFlowPanel1.AutoSize = true;
             this.verticalFlowPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.verticalFlowPanel1.Controls.Add(this.panel1);
             this.verticalFlowPanel1.Controls.Add(this.label1);
             this.verticalFlowPanel1.Controls.Add(this.tableLayoutPanel1);
             this.verticalFlowPanel1.Controls.Add(this.flowLayoutPanel1);
@@ -64,8 +61,47 @@ namespace EVEMon
             this.verticalFlowPanel1.Location = new System.Drawing.Point(0, 0);
             this.verticalFlowPanel1.Name = "verticalFlowPanel1";
             this.verticalFlowPanel1.Padding = new System.Windows.Forms.Padding(12);
-            this.verticalFlowPanel1.Size = new System.Drawing.Size(328, 235);
+            this.verticalFlowPanel1.Size = new System.Drawing.Size(565, 235);
             this.verticalFlowPanel1.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Location = new System.Drawing.Point(15, 15);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(538, 39);
+            this.panel1.TabIndex = 5;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(0, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(277, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "and paste your UserId and API Key into the form below.";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(128, 0);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(225, 13);
+            this.linkLabel1.TabIndex = 6;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "http://myeve.eve-online.com/api/default.asp";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(0, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(132, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Get Your API Details from ";
             // 
             // tableLayoutPanel1
             // 
@@ -78,15 +114,15 @@ namespace EVEMon
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label3, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tbUsername, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tbPassword, 2, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(15, 37);
+            this.tableLayoutPanel1.Controls.Add(this.tbUserId, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tbAuthKey, 2, 1);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(15, 82);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 12, 3, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(171, 54);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(541, 54);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // label2
@@ -96,9 +132,9 @@ namespace EVEMon
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 27);
+            this.label2.Size = new System.Drawing.Size(46, 27);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Username:";
+            this.label2.Text = "User Id:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label3
@@ -108,27 +144,26 @@ namespace EVEMon
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 27);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 27);
+            this.label3.Size = new System.Drawing.Size(49, 27);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Password:";
+            this.label3.Text = "API Key:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // tbUsername
+            // tbUserId
             // 
-            this.tbUsername.Location = new System.Drawing.Point(68, 3);
-            this.tbUsername.Name = "tbUsername";
-            this.tbUsername.Size = new System.Drawing.Size(100, 21);
-            this.tbUsername.TabIndex = 1;
-            this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
+            this.tbUserId.Location = new System.Drawing.Point(58, 3);
+            this.tbUserId.Name = "tbUserId";
+            this.tbUserId.Size = new System.Drawing.Size(60, 21);
+            this.tbUserId.TabIndex = 1;
+            this.tbUserId.TextChanged += new System.EventHandler(this.tbUserId_TextChanged);
             // 
-            // tbPassword
+            // tbAuthKey
             // 
-            this.tbPassword.Location = new System.Drawing.Point(68, 30);
-            this.tbPassword.Name = "tbPassword";
-            this.tbPassword.Size = new System.Drawing.Size(100, 21);
-            this.tbPassword.TabIndex = 3;
-            this.tbPassword.UseSystemPasswordChar = true;
-            this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
+            this.tbAuthKey.Location = new System.Drawing.Point(58, 30);
+            this.tbAuthKey.Name = "tbAuthKey";
+            this.tbAuthKey.Size = new System.Drawing.Size(480, 21);
+            this.tbAuthKey.TabIndex = 3;
+            this.tbAuthKey.TextChanged += new System.EventHandler(this.tbAuthKey_TextChanged);
             // 
             // flowLayoutPanel1
             // 
@@ -137,7 +172,7 @@ namespace EVEMon
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
             this.flowLayoutPanel1.Controls.Add(this.btnOk);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 103);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 148);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(162, 29);
@@ -165,12 +200,21 @@ namespace EVEMon
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 57);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(271, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Enter the EVE Online API Credentials for this character:";
+            // 
             // ChangeLoginWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(328, 235);
+            this.ClientSize = new System.Drawing.Size(565, 235);
             this.Controls.Add(this.verticalFlowPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -179,10 +223,12 @@ namespace EVEMon
             this.Name = "ChangeLoginWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Change Login";
+            this.Text = "Invalid or Blank API Key.";
             this.Load += new System.EventHandler(this.ChangeLoginWindow_Load);
             this.verticalFlowPanel1.ResumeLayout(false);
             this.verticalFlowPanel1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -193,15 +239,19 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FlowLayoutPanel verticalFlowPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.TextBox tbPassword;
+        private System.Windows.Forms.TextBox tbUserId;
+        private System.Windows.Forms.TextBox tbAuthKey;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label1;
     }
 }

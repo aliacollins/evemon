@@ -1,3 +1,4 @@
+//#define DEBUG_SINGLETHREAD
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Web;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Serialization;
 using System.Reflection;
 
@@ -18,23 +20,25 @@ namespace EVEMon.Common
 {
     public class EveSession
     {
-        #region Static Members
+
+       
         private static Dictionary<string, WeakReference<EveSession>> m_sessions =
             new Dictionary<string, WeakReference<EveSession>>();
 
-        public static EveSession GetSession(string username, string password)
+        public static EveSession GetSession(int userId, string apiKey)
         {
             string junk;
-            return GetSession(username, password, out junk);
+            return GetSession(userId, apiKey , out junk);
         }
 
-        public static EveSession GetSession(string username, string password, out string errMessage)
+
+        public static EveSession GetSession(int userId, string apiKey, out string errMessage)
         {
             lock (m_sessions)
             {
                 errMessage = String.Empty;
 
-                string hkey = username + ":" + password;
+                string hkey = userId + ":" + apiKey;
                 EveSession result = null;
                 if (m_sessions.ContainsKey(hkey))
                 {
@@ -44,7 +48,7 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        EveSession s = new EveSession(username, password);
+                        EveSession s = new EveSession(userId, apiKey);
                         m_sessions[hkey] = new WeakReference<EveSession>(s);
                         result = s;
                     }
@@ -58,10 +62,72 @@ namespace EVEMon.Common
             }
         }
 
+        #region API stuff
+
+        private static string APIBASE = "http://api.eve-online.com";
+        private static string m_ApiCharListUrl = "/account/Characters.xml.aspx";
+        private static string m_ApiTrainingSkill = "/char/SkillIntraining.xml.aspx";
+        private static string m_ApiCharacterSheet = "/char/CharacterSheet.xml.aspx";
+
+        private string m_apiErrorMessage;
+        private int m_apiErrorCode;
+
+        public static string ApiKeyUrl
+        {
+            get { return "http://myeve.eve-online.com/api/Default.asp"; }
+        }
+
+        private static XmlDocument GetCharList(string userId, string apiKey, out string errorMessage)
+        {
+            WebRequestState wrs = new WebRequestState();
+            wrs.SetPost("userid=" + userId + "&apiKey=" + apiKey);
+            errorMessage = string.Empty;
+            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharListUrl, wrs);
+        }
+
+        private XmlDocument GetTrainingSkill(int charId)
+        {
+            WebRequestState wrs = new WebRequestState();
+            wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
+            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiTrainingSkill, wrs);
+        }
+
+        private XmlDocument GetCharacterSheet(int charId)
+        {
+            WebRequestState wrs = new WebRequestState();
+            wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
+            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharacterSheet , wrs);
+        }
+
+
+        private void SetAPIError(XmlElement errorNode)
+        {
+            string text = errorNode.GetAttribute("code");
+            if (text != null) m_apiErrorCode = Int32.Parse(text);
+            m_apiErrorMessage = errorNode.InnerText;
+        }
+
+        public int ApiErrorCode
+        {
+            get { return m_apiErrorCode; }
+        }
+
+        public string ApiErrorMessage
+        {
+            get 
+            {
+                if (m_apiErrorCode > 0)
+                    return String.Format("{0}: {1}", m_apiErrorCode, m_apiErrorMessage);
+                else return null;
+            }
+        }
+ 
+
+        #endregion
+
+        #region Images
         public static void GetCharacterImageAsync(int charId, GetImageCallback callback)
         {
-            // t20 from CCP has broken the 512 sized image
-            //GetImageAsync("http://img.eve.is/serv.asp?s=512&c=" + charId.ToString(), false, callback);
             GetImageAsync("http://img.eve.is/serv.asp?s=256&c=" + charId.ToString(), false, callback);
         }
 
@@ -192,24 +258,16 @@ namespace EVEMon.Common
         }
         #endregion
 
+
         #region Nonstatic Members
-        private string m_username;
-        private string m_password;
+        private int m_userId;
+        private string m_apiKey;
 
-        private EveSession(string username, string password)
+
+        private EveSession(int userId, string apiKey)
         {
-            m_username = username;
-            m_password = password;
-            if (m_password == String.Empty) return;
-
-            try
-            {
-                ReLogin();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("ReLogin() issue: " + ex.Message + "\nPlease confirm that the \"My Character\" page is functional on the eve-online website as that is where you are trying to access!");
-            }
+            m_userId = userId;
+            m_apiKey = apiKey;
             try
             {
                 GetCharacterList();
@@ -220,6 +278,7 @@ namespace EVEMon.Common
             }
         }
 
+        private string m_characterListError = string.Empty;
         private List<Pair<string, int>> m_storedCharacterList = null;
 
         public List<Pair<string, int>> GetCharacterListUncached()
@@ -235,80 +294,31 @@ namespace EVEMon.Common
                 return m_storedCharacterList;
             }
 
-            string stxt = GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp");
-            if (String.IsNullOrEmpty(stxt))
+            List<Pair<string, int>> charList = new List<Pair<string, int>>();
+            XmlDocument xdoc = EveSession.GetCharList(Convert.ToString(m_userId), m_apiKey, out m_characterListError);
+            XmlNode error = xdoc.DocumentElement.SelectSingleNode("descendant::error");
+            if (error != null)
             {
-                throw new ApplicationException("Could not retrieve character list.");
+                m_characterListError = error.InnerText;
+                throw new InvalidDataException(m_characterListError);
             }
-
-            List<Pair<string, int>> nl = new List<Pair<string, int>>();
-
-            // catch System.Xml.XmlException (see trac ticket 539)
-            try
+            else
             {
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.LoadXml(stxt);
-                foreach (XmlElement el in xdoc.SelectNodes("/charactersheet/characters/character"))
+
+                XmlNodeList characters = xdoc.DocumentElement.SelectNodes("descendant::rowset/row");
+                foreach (XmlNode charNode in characters)
                 {
-                    nl.Add(new Pair<string, int>(el.GetAttribute("name"),
-                                                 Convert.ToInt32(el.GetAttribute("characterID"))));
+                    XmlAttributeCollection atts = charNode.Attributes;
+                    string name = atts["name"].InnerText;
+                    int id = Int32.Parse(atts["characterID"].InnerText);
+                    charList.Add(new Pair<string, int>(name, id));
                 }
             }
-            catch (System.Xml.XmlException xe)
-            {
-                throw new System.Xml.XmlException("XML is " + stxt, xe);
-            }
-            m_storedCharacterList = nl;
+            m_storedCharacterList = charList;
             return m_storedCharacterList;
         }
 
-        private string GetSessionUrlText(string url)
-        {
-            bool needLogin = false;
-            int maxTries = 2;
 
-            while (maxTries > 0)
-            {
-                maxTries--;
-                if (needLogin)
-                {
-                    ReLogin();
-                }
-                needLogin = true;
-
-                string myurl = url;
-                if (!String.IsNullOrEmpty(m_requestSid))
-                {
-                    if (myurl.Contains("?"))
-                    {
-                        myurl = myurl + "&sid=" + m_requestSid;
-                    }
-                    else
-                    {
-                        myurl = myurl + "?sid=" + m_requestSid;
-                    }
-                    m_requestSid = null;
-                }
-
-                HttpWebResponse resp = null;
-                WebRequestState wrs = new WebRequestState();
-                wrs.CookieContainer = m_cookies;
-                wrs.AllowRedirects = false;
-                try
-                {
-                    string txt = EVEMonWebRequest.GetUrlString(myurl, wrs, out resp);
-                    if (wrs.RequestError == RequestError.None && resp.StatusCode == HttpStatusCode.OK)
-                    {
-                        return txt;
-                    }
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-            }
-            return String.Empty;
-        }
 
         public int GetCharacterId(string charName)
         {
@@ -322,112 +332,86 @@ namespace EVEMon.Common
             return -1;
         }
 
-        /* This is never actually used, so it's getting commented out for now.
-        public void GetCharacterInfoAsync(int charId, GetCharacterInfoCallback callback)
-        {
-            ThreadPool.QueueUserWorkItem(delegate
-                                             {
-                                                 SerializableCharacterInfo sci = GetCharacterInfo(charId);
-                                                 callback(null, sci);
-                                             });
-        }*/
-
         private SerializableSkillTrainingInfo GetTrainingSkillInfo(int charId)
         {
+            // Get the date and time before we send the request to compensate as much as possible for lag in receiving
+            // and processing the response.
+
+            DateTime requestTime = DateTime.Now;
+            XmlDocument sdoc = null;
             try
             {
-                string stxt;
-                /*
-                int testcharid = ;
-                string testxmlfilepath = "";
-                if (charId != testcharid)*/
-                stxt = GetSessionUrlText("http://myeve.eve-online.com/xml/skilltraining.asp?characterID=" +
-                         charId.ToString());
-                /*else
-                {
-                    FileStream fs = new FileStream(testxmlfilepath + "test.xml", FileMode.Open);
-                    StreamReader reader = new StreamReader(fs);
-                    stxt = reader.ReadToEnd();
-                    reader.Dispose();
-                    fs.Dispose();
-                }*/
-                if (String.IsNullOrEmpty(stxt))
-                {
-                    return null;
-                }
-                XmlDocument sdoc = new XmlDocument();
-                try
-                {
-                    sdoc.LoadXml(stxt);
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                    return null;
-                }
-                SerializableSkillTrainingInfo ssti = null;
-                if (sdoc != null)
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
-                    XmlElement charRoot = sdoc.DocumentElement;
 
-                    int test = Convert.ToInt32(charRoot.GetAttribute("characterID"));
-
-                    using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
-                    {
-                        ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
-                        // This set must only be done at deserialisation when we can compare current time agaisnt machine time
-                        ssti.TQOffset = ((TimeSpan)(ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(DateTime.Now))).TotalMilliseconds;
-                    }
-                }
-                return ssti;
+                sdoc = GetTrainingSkill(charId);
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
                 return null;
             }
+            SerializableSkillTrainingInfo ssti = null;
+            if (sdoc != null)
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
+                XmlElement charRoot = sdoc.DocumentElement;
+                using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+                {
+                    ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+                    // This set must only be done at deserialisation when we can compare current time agaisnt machine time
+                    // TQ is now synched with NNTP but the webserver isn't (checked with Garthagk at ccp)
+                    double  CCPOffset = ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(requestTime).TotalMilliseconds;
+                    ssti.FixServerTimes(CCPOffset);
+                }
+            }
+            return ssti;
         }
 
         /// <summary>
-        /// Gets the character info from the myeve website and stores it in the local cache.
+        /// Gets the character info from the myeve website using the API and stores it in the local cache.
         /// </summary>
         /// <param name="charId">The char id.</param>
-        /// <returns>The SerializableCharacterInfo, fully populated</returns>
-        private SerializableCharacterInfo GetCharacterInfo(int charId)
+        /// <returns>The SerializableCharacterSheet, fully populated</returns>
+        public SerializableCharacterSheet GetCharacterInfo(int charId)
         {
+            m_apiErrorMessage = string.Empty;
+            m_apiErrorCode = 0;
+                            
+            XmlDocument xdoc = null;
             try
             {
-                string xtxt =
-                    GetSessionUrlText("http://myeve.eve-online.com/character/xml.asp?characterID=" + charId.ToString());
-                if (String.IsNullOrEmpty(xtxt))
-                {
-                    return null;
-                }
-                XmlDocument xdoc = new XmlDocument();
-                try
-                {
-                    xdoc.LoadXml(xtxt);
-                }
-                catch (Exception e)
-                {
-                    ExceptionHandler.LogException(e, true);
-                    return null;
-                }
-                int timeLeftInCache = DEFAULT_RETRY_INTERVAL;
-                SerializableCharacterInfo sci = ProcessCharacterXml(xdoc, charId, out timeLeftInCache);
-                sci.TimeLeftInCache = timeLeftInCache;
-
-                //save the xml in the character cache
-                LocalXmlCache.Instance.Save(xdoc);
-                
-                return sci;
+                xdoc = GetCharacterSheet(charId);
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
                 return null;
             }
+
+            SerializableCharacterSheet scs = null;
+            try
+            {
+                // Check for an API Error...
+                XmlElement errorNode = null;
+                 errorNode = xdoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
+                if (errorNode != null)
+                {
+                    SetAPIError(errorNode);
+                    return null;
+                }
+
+                scs = ProcessCharacterXml(xdoc, charId);
+                scs.CharacterSheet.CreateSkillGroups();
+                scs.FromCCP = true;
+                //save the xml in the character cache
+                LocalXmlCache.Instance.Save(xdoc);
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                return null;
+            }
+
+            return scs;
         }
 
         public void UpdateIneveAsync(CharacterInfo info)
@@ -493,20 +477,17 @@ namespace EVEMon.Common
             
         }
 
-        private SerializableCharacterInfo ProcessCharacterXml(XmlDocument xdoc, int charId, out int cacheExpires)
+        private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc, int charId)
         {
-            XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
-            XmlElement charRoot =
-                xdoc.DocumentElement.SelectSingleNode("/charactersheet/characters/character[@characterID='" +
-                                                      charId.ToString() + "']") as XmlElement;
-
-            cacheExpires = Convert.ToInt32(charRoot.GetAttribute("timeLeftInCache"));
-
+            XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));
+            XmlElement charRoot = xdoc.DocumentElement;
             using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
             {
-                return (SerializableCharacterInfo) xs.Deserialize(xnr);
+                return (SerializableCharacterSheet)xs.Deserialize(xnr);
             }
         }
+
+
 
         /// <summary>
         /// Use this function at your peril!!
@@ -589,61 +570,6 @@ namespace EVEMon.Common
             set { m_mainThread = value; }
         }
 
-        private string m_requestSid = null;
-        private CookieContainer m_cookies = null;
-
-        public void ReLogin()
-        {
-            if (m_cookies == null)
-            {
-                m_cookies = new CookieContainer();
-            }
-            WebRequestState wrs = new WebRequestState();
-            wrs.CookieContainer = m_cookies;
-            wrs.AllowRedirects = false;
-            HttpWebResponse resp = null;
-            string s = EVEMonWebRequest.GetUrlString(
-                "https://myeve.eve-online.com/login.asp?username=" +
-                HttpUtility.UrlEncode(m_username, Encoding.GetEncoding("iso-8859-1")) +
-                "&password=" +
-                HttpUtility.UrlEncode(m_password, Encoding.GetEncoding("iso-8859-1")) +
-                "&login=Login&Check=OK&r=&t=/ingameboard.asp&remember=1", wrs, out resp);
-            string loc = null;
-            if (resp != null)
-            {
-                loc = resp.Headers[HttpResponseHeader.Location];
-            }
-            else
-            {
-                throw new ApplicationException(wrs.WebException.Message);
-            }
-            Match sidm = null;
-            if (!String.IsNullOrEmpty(loc))
-            {
-                sidm = Regex.Match(loc, @"sid=(\d+)");
-            }
-            if (sidm != null && sidm.Success)
-            {
-                string sid = sidm.Groups[1].Value;
-                m_requestSid = sid;
-
-                HttpWebResponse resp1 = null;
-                EVEMonWebRequest.GetUrlString(
-                    "http://myeve.eve-online.com/login.asp", wrs, out resp1);
-
-                return;
-            }
-            else if (s.Contains("Login credentials incorrect"))
-            {
-                throw new ApplicationException(
-                    "The username/password supplied is invalid. Please ensure it is entered correctly.");
-            }
-            else
-            {
-                throw new ApplicationException("Failed to get login SID");
-            }
-        }
-
         private class UpdateGCIArgs
         {
             public CharacterInfo GrandCharacterInfo;
@@ -713,12 +639,12 @@ namespace EVEMon.Common
             lock (mutexLock)
             {
                 SerializableSkillTrainingInfo temp = grandCharacterInfo.SerialSIT;
-                SerializableCharacterInfo sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
-
+                SerializableCharacterSheet sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
                 if (sci == null)
                 {
                     autoRand = new Random();
                     grandCharacterInfo.DownloadFailed += 1;
+                    grandCharacterInfo.DownloadError = ApiErrorMessage;
                     double offset = (DEFAULT_RETRY_INTERVAL * grandCharacterInfo.DownloadFailed) + (DEFAULT_RETRY_INTERVAL * autoRand.NextDouble());
                     return (int)offset;
                 }
@@ -726,16 +652,29 @@ namespace EVEMon.Common
                 {
                     grandCharacterInfo.DownloadFailed = 0;
                     sci.TrainingSkillInfo = temp;
-                }
-                sci.XMLExpires = DateTime.Now.Add(TimeSpan.FromMilliseconds(sci.TimeLeftInCache));
+                    // CCP currently alwasy set the CcachedUntil to be one hour from the time of the fetch
+                    // so lets fix that by checking of the cach has expired, if not - override the 
+                    // cachedUntil time  from ccp
+                    if (grandCharacterInfo.XMLExpires > DateTime.Now.ToUniversalTime())
+                    {
+                        // cache hasnt expired yet so leave it at the old time
+                         sci.XMLExpires = grandCharacterInfo.XMLExpires;
+                    }
 
-                if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
-                {
-                    invokeControl.Invoke(new MethodInvoker(delegate
-                                                               {
-                                                                   grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
-                                                               }));
-                }
+               }
+ 
+                // not sure why we don't load it if theres 3.5 minutes left in cache oir cahce is 3.5 minutes old...
+//                if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
+//                {
+                    #if DEBUG_SINGLETHREAD
+                        grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                    #else
+                        invokeControl.Invoke(new MethodInvoker(delegate
+                        {
+                            grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                        }));
+                    #endif
+//                }
                 return sci.TimeLeftInCache;
             }
         }
@@ -751,17 +690,9 @@ namespace EVEMon.Common
                 }
                 else
                 {
-                    string error = ssti.Error;
+                    string error = ssti.APIError.ErrorMessage;
                     if (error == "characterID does not belong to you.")
                         throw new Exception(error); // really should throw an exception here... so now we do!
-                    if (error == "You are trying too fast.")
-                    {
-                        invokeControl.Invoke(new MethodInvoker(delegate
-                                                                   {
-                                                                       grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(grandCharacterInfo.SerialSIT);
-                                                                   }));
-                        return (1000 * ssti.TimerToNextUpdate); // should be setting a timer to retry here.... and now we do thanks to where this function is called.
-                    }
                 }
 
                 invokeControl.Invoke(new MethodInvoker(delegate
@@ -809,18 +740,26 @@ namespace EVEMon.Common
 
     public delegate void GetImageCallback(EveSession sender, Image i);
 
-    // this is never actually used, so I'm commenting it out for now.
-    //public delegate void GetCharacterInfoCallback(EveSession sender, SerializableCharacterInfo ci);
-
     [XmlRoot("attributes")]
     public class EveAttributes
     {
-        private SerializableCharacterInfo m_owner;
 
-        internal void SetOwner(SerializableCharacterInfo ci)
+        // m_owner is used for the adjusted Attribute method, which in turn is only
+        // ever used for the "save as... text" method
+        private CharacterSheetResult m_owner;
+
+        internal void SetOwner(CharacterSheetResult cs)
         {
-            m_owner = ci;
+            m_owner = cs;
         }
+
+//        private SerializableCharacterSheet m_ApiOwner;
+
+//        internal void SetApiOwner(SerializableCharacterSheet cs)
+//        {
+//            m_ApiOwner = cs;
+//        }
+
 
         private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
 
@@ -859,6 +798,7 @@ namespace EVEMon.Common
             set { m_values[(int)EveAttribute.Willpower] = value; }
         }
 
+        // AdjustedXXX are only used by the "save as text" method.
         [XmlIgnore]
         public double AdjustedIntelligence
         {
@@ -889,37 +829,8 @@ namespace EVEMon.Common
             get { return GetAdjustedAttribute(EveAttribute.Willpower); }
         }
 
-        [XmlElement("adjustedIntelligence")]
-        public string _adjustedIntelligence
-        {
-            get { return this.AdjustedIntelligence.ToString("#.00"); }
-        }
-
-        [XmlElement("adjustedCharisma")]
-        public string _adjustedCharisma
-        {
-            get { return this.AdjustedCharisma.ToString("#.00"); }
-        }
-
-        [XmlElement("adjustedPerception")]
-        public string _adjustedPerception
-        {
-            get { return this.AdjustedPerception.ToString("#.00"); }
-        }
-
-        [XmlElement("adjustedMemory")]
-        public string _adjustedMemory
-        {
-            get { return this.AdjustedMemory.ToString("#.00"); }
-        }
-
-        [XmlElement("adjustedWillpower")]
-        public string _adjustedWillpower
-        {
-            get { return this.AdjustedWillpower.ToString("#.00"); }
-        }
-
-        public double GetAttributeAdjustment(EveAttribute eveAttribute, SerializableEveAttributeAdjustment adjustment)
+        // only used by the "save as... text" method
+        private double GetAttributeAdjustment(EveAttribute eveAttribute, SerializableEveAttributeAdjustment adjustment)
         {
             double result = 0.0;
             double learningBonus = 1.0;
@@ -997,6 +908,7 @@ namespace EVEMon.Common
             return result;
         }
 
+        // only used by "save as... text file"
         private double GetAdjustedAttribute(EveAttribute eveAttribute)
         {
             return GetAttributeAdjustment(eveAttribute, SerializableEveAttributeAdjustment.AllWithLearning);

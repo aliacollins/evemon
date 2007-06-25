@@ -63,7 +63,6 @@ namespace EVEMon
             lblNotificationOffset.Text = s.NotificationOffset.ToString() + " sec";
             s.PlaySoundOnSkillComplete = cbPlaySoundOnSkillComplete.Checked;
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
-            s.ShowLoginName = cbShowLoginName.Checked;
             s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
             s.G15ACycle = cbG15ACycle.Checked;
             s.G15ACycleint = (int)ACycleInterval.Value;
@@ -246,8 +245,6 @@ namespace EVEMon
             cbG15ACycle.Checked = m_settings.G15ACycle;
             cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
             ACycleInterval.Value = m_settings.G15ACycleint;
-            cbShowLoginName.Checked = m_settings.ShowLoginName;
-
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
             {
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;

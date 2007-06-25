@@ -59,7 +59,7 @@ namespace EVEMon.Common
             get { return m_skills.Count; }
         }
 
-         public int KnownCount
+        public int KnownCount
         {
             get
             {

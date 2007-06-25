@@ -99,8 +99,8 @@ namespace EVEMon.Common
         /// <param name="xdoc">The character xml to save.</param>
         public void Save(XmlDocument xdoc)
         {
-            XmlNode characterNode = xdoc.SelectSingleNode("//character[race]");
-            string name = characterNode.Attributes["name"].Value;
+            XmlNode characterNode = xdoc.SelectSingleNode("//name");
+            string name = characterNode.InnerText;
             string encodedName = name+".xml";
 
             using (XmlTextWriter writer = new XmlTextWriter(new FileStream(_cacheDirectory + encodedName, FileMode.Create), Encoding.GetEncoding("iso-8859-1")))

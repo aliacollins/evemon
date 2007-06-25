@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -6,179 +7,11 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
-    [XmlRoot("skillTraining")]
+    [XmlRoot("eveapi")]
     public class SerializableSkillTrainingInfo : ICloneable
     {
-        private int m_characterId;
 
-        /// <summary>
-        /// This value will always be the value of the characterId of the character your querying unless something went seriously pear shaped
-        /// </summary>
-        [XmlAttribute("characterID")]
-        public int CharacterId
-        {
-            get { return m_characterId; }
-            set { m_characterId = value; }
-        }
-
-        private string m_error = string.Empty;
-
-        /// <summary>
-        /// If this is non 0 length or not null then an error has occurred
-        /// </summary>
-        /// <value>"characterID does not belong to you."</value> will be the only value in the entire class other than "characterID"
-        /// <value>"You are trying too fast."</value> will be one of three values in the class, the others being "characterID" and "tryAgainIn"
-		/// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
-        /// This is the variable that needs checking to see if the thing has worked.
-        [XmlElement("error")]
-        public string Error
-        {
-            get { return m_error; }
-            set { m_error = value; }
-        }
-
-        private int m_timer;
-        
-        /// <summary>
-        /// this has a value of <value>900</value> when it's been successful - this value may change at little or no notice.
-        /// </summary>
-        [XmlElement("tryAgainIn")]
-        public int TimerToNextUpdate
-        {
-            get { return m_timer; }
-            set { m_timer = value; }
-        }
-        
-        private int m_offset;
-
-        // This is actually unrequired for anything useful.
-        [XmlElement("currentTimeTQOffset")]
-        [Obsolete]
-        public int Offset
-        {
-            get { return m_offset; }
-            set { m_offset = value; }
-        }
-
-        private DateTime m_curTime = DateTime.MinValue;
-
-        [XmlElement("currentTime")]
-        public string CurrentTime
-        {
-            get { return ConvertDateTimeToTimeString(m_curTime); }
-            set { m_curTime = ConvertTimeStringToDateTime(value); }
-        }
-
-        [XmlIgnore]
-        public DateTime GetDateTimeAtUpdate
-        {
-            get { return m_curTime; }
-        }
-        /* This does work, now. The missing piece to the puzzle was [XmlText]
-         * Currently though, Garthagk has yet to revert back to the format that uses this :(
-        private CT m_curTime = new CT();
-
-        [XmlElement("currentTime", typeof(SerializableSkillTrainingInfo.CT))]
-        public CT CurrentTime
-        {
-            get { return m_curTime; }
-            set { m_curTime = value; }
-        }
-
-        [XmlRoot("currentTime")]
-        public class CT
-        {
-            private int m_offset;
-
-            [XmlAttribute("offset")]
-            public int Offset
-            {
-                get { return m_offset; }
-                set { m_offset = value; }
-            }
-
-            private DateTime m_curTime = DateTime.MinValue;
-
-            [XmlText]
-            public string CurrentTime
-            {
-                get { return ConvertDateTimeToTimeString(m_curTime); }
-                set { m_curTime = ConvertTimeStringToDateTime(value); }
-            }
-
-            [XmlIgnore]
-            public DateTime GetDateTimeAtUpdate
-            {
-                get { return m_curTime; }
-            }
-        }
-        */
-        private DateTime m_endTime = DateTime.MinValue;
-
-        [XmlElement("trainingEndTime")]
-        public string TrainingEndTimeString
-        {
-            get { return ConvertDateTimeToTimeString(m_endTime); }
-            set { m_endTime = ConvertTimeStringToDateTime(value); }
-        }
-
-        [XmlIgnore]
-        public DateTime getTrainingEndTime
-        {
-            get { return m_endTime; }
-        }
-
-        private DateTime m_startTime = DateTime.MinValue;
-
-        [XmlElement("trainingStartTime")]
-        public string TrainingStartTimeString
-        {
-            get { return ConvertDateTimeToTimeString(m_startTime); }
-            set { m_startTime = ConvertTimeStringToDateTime(value); }
-        }
-
-        [XmlIgnore]
-        public DateTime getTrainingStartTime
-        {
-            get { return m_startTime; }
-        }
-
-        private int m_typeID;
-
-        [XmlElement("trainingTypeID")]
-        public int TrainingSkillWithTypeID
-        {
-            get { return m_typeID; }
-            set { m_typeID = value; }
-        }
-
-        private int m_startSP;
-
-        [XmlElement("trainingStartSP")]
-        public int TrainingSkillStartSP
-        {
-            get { return m_startSP; }
-            set { m_startSP = value; }
-        }
-
-        private int m_destSP;
-
-        [XmlElement("trainingDestinationSP")]
-        public int TrainingSkillDestinationSP
-        {
-            get { return m_destSP; }
-            set { m_destSP = value; }
-        }
-
-        private int m_toLevel;
-
-        [XmlElement("trainingToLevel")]
-        public int TrainingSkillToLevel
-        {
-            get { return m_toLevel; }
-            set { m_toLevel = value; }
-        }
-
+        #region public static
         public static string ConvertDateTimeToTimeString(DateTime timeUTC)
         {
             // timeUTC  = yyyy-mm-dd hh:mm:ss
@@ -209,46 +42,58 @@ namespace EVEMon.Common
             return dt;
         }
 
-        [XmlIgnore]
-        public int EstimatedCurrentPoints
+        #endregion
+
+        #region CCP Xml Elements
+
+        /// <summary>
+        /// If this is non 0 length or not null then an error has occurred and will this will be the only value in the entire class other than "current time
+        /// </summary>
+        /// <value>"Invalid characterID."</value>
+        /// <value>"Authentication Failure."</value>
+        /// <value>"Cached API key authentication failure"</value>
+        /// <value>"Character does not belong to account"</value>
+        /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"
+        private CCPApiError m_ApiError = new CCPApiError();
+
+        [XmlElement("error")]
+        public CCPApiError APIError
         {
-            get
-            {
-                TimeSpan trainingTime = m_endTime - m_startTime;
-                double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = DateTime.Now - ((DateTime)m_startTime.Subtract(TimeSpan.FromMilliseconds(m_TQOffset))).ToLocalTime();
-                return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
+            get { return m_ApiError; }
+            set { m_ApiError = value; }
+        }
+
+        private DateTime m_curTime = DateTime.MinValue;
+
+        [XmlElement("currentTime")]
+        public string CurrentTime
+        {
+            get { return ConvertDateTimeToTimeString(m_curTime); }
+            set 
+            { 
+                m_curTime = ConvertTimeStringToDateTime(value);
             }
         }
 
-        [XmlIgnore]
-        public int EstimatedPointsAtUpdate
+        private SerializableSkillTrainingInfo.ApiResults m_results = new SerializableSkillTrainingInfo.ApiResults();
+        [XmlElement("result")]
+
+        public SerializableSkillTrainingInfo.ApiResults TrainingResult
         {
-            get
-            {
-                TimeSpan trainingTime = m_endTime - m_startTime;
-                double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-                TimeSpan timeSoFar = m_curTime - m_startTime;
-                return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
-            }
+            get { return m_results; }
+            set { m_results = value; }
         }
 
-        public int EstimatedPointsAtTime(DateTime checkTime)
-        {
-            TimeSpan trainingTime = m_endTime - m_startTime;
-            double spPerMinute = (m_destSP - m_startSP) / trainingTime.TotalMinutes;
-            TimeSpan timeSoFar = checkTime - m_startTime.ToLocalTime();
-            return (m_startSP + (int)(timeSoFar.TotalMinutes * spPerMinute));
-        }
 
-        private double m_TQOffset = 0.0;
-
-        [XmlElement("TQOffset")]
-        public double TQOffset
+        [XmlElement("cachedUntil")]
+        public string CachedUntilTime
         {
-            get { return m_TQOffset; }
-            set { m_TQOffset = value; }
+            get { return ConvertDateTimeToTimeString(m_cachedUntilTime); }
+            set { m_cachedUntilTime = ConvertTimeStringToDateTime(value); }
         }
+        #endregion
+
+        #region EVEMon added elements
 
         private bool m_PreWarningGiven = false;
 
@@ -268,30 +113,157 @@ namespace EVEMon.Common
             set { m_AlertRaisedAlready = value; }
         }
 
-		[XmlIgnore]
-		public bool isSkillInTraining
-		{
-			get
-			{
-				return ((Error == "" || Error == null) && m_startTime != DateTime.MinValue);
-			}
-		}
+        #endregion
+
+        #region non-serialised public fields
+
+        [XmlIgnore]
+        public int TrainingSkillWithTypeID
+        {
+            get { return m_results.TrainingSkillWithTypeID; }
+            set { m_results.TrainingSkillWithTypeID = value; }
+        }
+
+        [XmlIgnore]
+
+        public int TrainingSkillStartSP
+        {
+            get { return m_results.TrainingSkillStartSP; }
+            set { m_results.TrainingSkillStartSP = value; }
+        }
+
+        [XmlIgnore]
+        public int TrainingSkillDestinationSP
+        {
+            get { return m_results.TrainingSkillDestinationSP; }
+            set { m_results.TrainingSkillDestinationSP = value; }
+        }
+
+        [XmlIgnore]
+        public int TrainingSkillToLevel
+        {
+            get { return m_results.TrainingSkillToLevel; }
+            set { m_results.TrainingSkillToLevel = value; }
+        }
+
+        [XmlIgnore]
+        public int SkillInTraining
+        {
+            get { return m_results.SkillInTraining; }
+            set { m_results.SkillInTraining = value; }
+        }
+        
+        [XmlIgnore]
+        public DateTime GetDateTimeAtUpdate
+        {
+            get { return m_curTime; }
+        }
+
+        [XmlIgnore]
+        public DateTime getTrainingStartTime
+        {
+            get { return m_results.TrainingStartTime; }
+        }
+
+        
+        [XmlIgnore]
+        public DateTime getTrainingEndTime
+        {
+            get { return m_results.TrainingEndTime; }
+        }
+
+        [XmlIgnore]
+        public TimeSpan TrainingTime
+        {
+            get { return m_results.TrainingEndTime - m_results.TrainingStartTime; }
+        }
+
+        [XmlIgnore]
+        public double SpPerMinute
+        {
+
+            get { return (m_results.TrainingSkillDestinationSP - m_results.TrainingSkillStartSP) / TrainingTime.TotalMinutes; }
+        }
+
+        [XmlIgnore]
+        public int EstimatedCurrentPoints
+        {
+            get
+            {
+                TimeSpan timeSoFar = DateTime.Now - m_results.TrainingStartTime.ToLocalTime();
+                return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
+            }
+        }
+
+        [XmlIgnore]
+        public int EstimatedPointsAtUpdate
+        {
+            get
+            {
+                TimeSpan timeSoFar = m_curTime - m_results.TrainingStartTime;
+                return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
+            }
+        }
+
+        [XmlIgnore]
+        /// Gets the number of seconds until the next update is available
+        public int TimerToNextUpdate
+        {
+            get
+            {
+                if (APIError.ErrorCode == 0)
+                {
+                    TimeSpan t = m_cachedUntilTime - m_curTime;
+                    return Convert.ToInt32(t.TotalSeconds);
+                }
+                else return 0;
+            }
+        }
+
+        [XmlIgnore]
+        public bool isSkillInTraining
+        {
+            get
+            {
+                return (APIError.ErrorCode == 0 && (m_results.SkillInTraining == 1));
+            }
+        }
+
+
+        #endregion
+
+        #region public methods
+
+        /// <summary>
+        /// Now TQ is synched with nntp (confirmed by Garthagk) but the web server isnt
+        /// so lets fixup the currentTime and cachedUntil time
+        /// This should ONLY be called when the xml is first recieved from CCP
+        /// </summary>
+        /// <param name="millisecondsDrift"></param>
+        public void FixServerTimes(double millisecondsDrift)
+        {
+            TimeSpan drift = new TimeSpan(0,0,0,0,Convert.ToInt32(millisecondsDrift));
+            m_curTime.Subtract(drift);
+            m_cachedUntilTime.Subtract(drift);
+
+        }
+
+        public int EstimatedPointsAtTime(DateTime checkTime)
+        {
+            TimeSpan timeSoFar = checkTime - m_results.TrainingStartTime.ToLocalTime();
+            return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
+        }
+
+        private DateTime m_cachedUntilTime = DateTime.MinValue;
 
         public object Clone()
         {
             SerializableSkillTrainingInfo ssti = new SerializableSkillTrainingInfo();
-            ssti.m_characterId = this.m_characterId;
-            ssti.m_error = (string)this.m_error.Clone();
-            ssti.m_timer = this.m_timer;
-            ssti.m_offset = this.m_offset;
+            ssti.APIError.ErrorCode = this.APIError.ErrorCode;
+            ssti.APIError.ErrorMessage  = (string)this.APIError.ErrorMessage.Clone();
             ssti.m_curTime = this.m_curTime;
-            ssti.m_endTime = this.m_endTime;
-            ssti.m_startTime = this.m_startTime;
-            ssti.m_typeID = this.m_typeID;
-            ssti.m_startSP = this.m_startSP;
-            ssti.m_destSP = this.m_destSP;
-            ssti.m_toLevel = this.m_toLevel;
-            ssti.m_TQOffset = this.m_TQOffset;
+            ssti.m_results = (SerializableSkillTrainingInfo.ApiResults)m_results.Clone();
+            ssti.m_cachedUntilTime = this.m_cachedUntilTime;
             ssti.PreWarningGiven = this.PreWarningGiven;
             ssti.m_AlertRaisedAlready = this.m_AlertRaisedAlready;
             return ssti;
@@ -299,20 +271,122 @@ namespace EVEMon.Common
 
         public void CopyFrom(SerializableSkillTrainingInfo ssti)
         {
-            this.m_characterId = ssti.m_characterId;
-            this.m_error = (string)ssti.m_error.Clone();
-            this.m_timer = ssti.m_timer;
-            this.m_offset = ssti.m_offset;
+            this.APIError.ErrorCode = ssti.APIError.ErrorCode;
+            this.APIError.ErrorMessage = (string)ssti.APIError.ErrorMessage.Clone();
             this.m_curTime = ssti.m_curTime;
-            this.m_endTime = ssti.m_endTime;
-            this.m_startTime = ssti.m_startTime;
-            this.m_typeID = ssti.m_typeID;
-            this.m_startSP = ssti.m_startSP;
-            this.m_destSP = ssti.m_destSP;
-            this.m_toLevel = ssti.m_toLevel;
-            this.m_TQOffset = ssti.m_TQOffset;
+            this.m_results = (SerializableSkillTrainingInfo.ApiResults)ssti.m_results.Clone();
             this.PreWarningGiven = ssti.PreWarningGiven;
             this.m_AlertRaisedAlready = ssti.m_AlertRaisedAlready;
         }
+        #endregion
+
+        #region Results class
+        [XmlRoot("result")]
+        public class ApiResults : ICloneable
+        {
+            private  DateTime m_endTime = DateTime.MinValue;
+
+            [XmlElement("trainingEndTime")]
+            public string TrainingEndTimeString
+            {
+                get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_endTime); }
+                set { m_endTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value); }
+            }
+
+            [XmlIgnore]
+            public DateTime TrainingEndTime
+            {
+                get { return m_endTime; }
+            }
+
+            private DateTime m_startTime = DateTime.MinValue;
+
+            [XmlElement("trainingStartTime")]
+            public string TrainingStartTimeString
+            {
+                get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_startTime); }
+                set { m_startTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value); }
+            }
+
+            [XmlIgnore]
+            public DateTime TrainingStartTime
+            {
+                get { return m_startTime; }
+            }
+
+
+            private int m_typeID;
+
+            [XmlElement("trainingTypeID")]
+            public int TrainingSkillWithTypeID
+            {
+                get { return m_typeID; }
+                set { m_typeID = value; }
+            }
+
+            private int m_startSP;
+
+            [XmlElement("trainingStartSP")]
+            public int TrainingSkillStartSP
+            {
+                get { return m_startSP; }
+                set { m_startSP = value; }
+            }
+
+            private int m_destSP;
+
+            [XmlElement("trainingDestinationSP")]
+            public int TrainingSkillDestinationSP
+            {
+                get { return m_destSP; }
+                set { m_destSP = value; }
+            }
+
+            private int m_toLevel;
+
+            [XmlElement("trainingToLevel")]
+            public int TrainingSkillToLevel
+            {
+                get { return m_toLevel; }
+                set { m_toLevel = value; }
+            }
+            private int m_inTraining;
+
+            [XmlElement("skillInTraining")]
+            public int SkillInTraining
+            {
+                get { return m_inTraining; }
+                set { m_inTraining = value; }
+            }
+
+
+            public Object Clone()
+            {
+                SerializableSkillTrainingInfo.ApiResults ssti = new SerializableSkillTrainingInfo.ApiResults();
+                ssti.m_typeID = this.m_typeID;
+                ssti.m_endTime = this.m_endTime;
+                ssti.m_startTime = this.m_startTime;
+
+                ssti.m_startSP = this.m_startSP;
+                ssti.m_destSP = this.m_destSP;
+                ssti.m_toLevel = this.m_toLevel;
+                ssti.m_inTraining = this.m_inTraining;
+                return ssti;
+
+            }
+            public void CopyFrom(SerializableSkillTrainingInfo.ApiResults ssti)
+            {
+                this.m_startTime = ssti.m_startTime;
+                this.m_endTime = ssti.m_endTime;
+                this.m_typeID = ssti.m_typeID;
+                this.m_startSP = ssti.m_startSP;
+                this.m_destSP = ssti.m_destSP;
+                this.m_toLevel = ssti.m_toLevel;
+                this.m_inTraining =ssti.m_inTraining;
+            }
+        }
+
+        #endregion
+
     }
 }

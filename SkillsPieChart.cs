@@ -66,7 +66,7 @@ namespace EVEMon
 
         private void SkillsPieChart_Load(object sender, EventArgs e)
         {
-            SerializableCharacterInfo c_info = m_settings.GetCharacterInfo(active_character);
+            SerializableCharacterSheet c_info = m_settings.GetCharacterSheet(active_character);
             decimal[] newValues = new decimal[c_info.SkillGroups.Count];
             string[] newTexts = new string[c_info.SkillGroups.Count];
             string[] newToolTips = new string[c_info.SkillGroups.Count];

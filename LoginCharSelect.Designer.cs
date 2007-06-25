@@ -30,11 +30,11 @@ namespace EVEMon
         {
             this.btnCharSelect = new System.Windows.Forms.Button();
             this.tbCharName = new System.Windows.Forms.TextBox();
-            this.tbPassword = new System.Windows.Forms.TextBox();
-            this.tbUsername = new System.Windows.Forms.TextBox();
+            this.tbAuthKey = new System.Windows.Forms.TextBox();
+            this.tbUserId = new System.Windows.Forms.TextBox();
             this.lbLoginCharacter = new System.Windows.Forms.Label();
-            this.lbPassword = new System.Windows.Forms.Label();
-            this.lbUsername = new System.Windows.Forms.Label();
+            this.lbAuthKey = new System.Windows.Forms.Label();
+            this.lbUserId = new System.Windows.Forms.Label();
             this.enterLoginLabel = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -44,6 +44,9 @@ namespace EVEMon
             this.lbAddCharacter = new System.Windows.Forms.Label();
             this.cbCharacterType = new System.Windows.Forms.ComboBox();
             this.gbEveLogin = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblAPILink = new System.Windows.Forms.Label();
+            this.lnkAPI = new System.Windows.Forms.LinkLabel();
             this.gbSavedXML = new System.Windows.Forms.GroupBox();
             this.tbFileCharName = new System.Windows.Forms.TextBox();
             this.lbSavedCharacter = new System.Windows.Forms.Label();
@@ -55,7 +58,7 @@ namespace EVEMon
             // 
             // btnCharSelect
             // 
-            this.btnCharSelect.Location = new System.Drawing.Point(234, 109);
+            this.btnCharSelect.Location = new System.Drawing.Point(177, 131);
             this.btnCharSelect.Name = "btnCharSelect";
             this.btnCharSelect.Size = new System.Drawing.Size(30, 23);
             this.btnCharSelect.TabIndex = 2;
@@ -65,7 +68,7 @@ namespace EVEMon
             // 
             // tbCharName
             // 
-            this.tbCharName.Location = new System.Drawing.Point(128, 109);
+            this.tbCharName.Location = new System.Drawing.Point(71, 132);
             this.tbCharName.Name = "tbCharName";
             this.tbCharName.ReadOnly = true;
             this.tbCharName.Size = new System.Drawing.Size(100, 21);
@@ -73,73 +76,72 @@ namespace EVEMon
             this.tbCharName.TabStop = false;
             this.tbCharName.Text = "(None)";
             // 
-            // tbPassword
+            // tbAuthKey
             // 
-            this.tbPassword.Location = new System.Drawing.Point(128, 82);
-            this.tbPassword.Name = "tbPassword";
-            this.tbPassword.PasswordChar = '*';
-            this.tbPassword.Size = new System.Drawing.Size(100, 21);
-            this.tbPassword.TabIndex = 1;
-            this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
+            this.tbAuthKey.Location = new System.Drawing.Point(61, 100);
+            this.tbAuthKey.Name = "tbAuthKey";
+            this.tbAuthKey.Size = new System.Drawing.Size(328, 21);
+            this.tbAuthKey.TabIndex = 1;
+            this.tbAuthKey.TextChanged += new System.EventHandler(this.tbApiKey_TextChanged);
             // 
-            // tbUsername
+            // tbUserId
             // 
-            this.tbUsername.Location = new System.Drawing.Point(128, 55);
-            this.tbUsername.Name = "tbUsername";
-            this.tbUsername.Size = new System.Drawing.Size(100, 21);
-            this.tbUsername.TabIndex = 0;
-            this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
+            this.tbUserId.Location = new System.Drawing.Point(59, 76);
+            this.tbUserId.Name = "tbUserId";
+            this.tbUserId.Size = new System.Drawing.Size(100, 21);
+            this.tbUserId.TabIndex = 0;
+            this.tbUserId.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
             // 
             // lbLoginCharacter
             // 
             this.lbLoginCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lbLoginCharacter.AutoSize = true;
-            this.lbLoginCharacter.Location = new System.Drawing.Point(63, 112);
+            this.lbLoginCharacter.Location = new System.Drawing.Point(7, 135);
             this.lbLoginCharacter.Name = "lbLoginCharacter";
             this.lbLoginCharacter.Size = new System.Drawing.Size(59, 13);
             this.lbLoginCharacter.TabIndex = 2;
             this.lbLoginCharacter.Text = "Character:";
             this.lbLoginCharacter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lbPassword
+            // lbAuthKey
             // 
-            this.lbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbAuthKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbPassword.AutoSize = true;
-            this.lbPassword.Location = new System.Drawing.Point(65, 85);
-            this.lbPassword.Name = "lbPassword";
-            this.lbPassword.Size = new System.Drawing.Size(57, 13);
-            this.lbPassword.TabIndex = 1;
-            this.lbPassword.Text = "Password:";
-            this.lbPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbAuthKey.AutoSize = true;
+            this.lbAuthKey.Location = new System.Drawing.Point(7, 103);
+            this.lbAuthKey.Name = "lbAuthKey";
+            this.lbAuthKey.Size = new System.Drawing.Size(49, 13);
+            this.lbAuthKey.TabIndex = 1;
+            this.lbAuthKey.Text = "API Key:";
+            this.lbAuthKey.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lbUsername
+            // lbUserId
             // 
-            this.lbUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lbUserId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbUsername.AutoSize = true;
-            this.lbUsername.Location = new System.Drawing.Point(60, 58);
-            this.lbUsername.Name = "lbUsername";
-            this.lbUsername.Size = new System.Drawing.Size(62, 13);
-            this.lbUsername.TabIndex = 0;
-            this.lbUsername.Text = "User name:";
-            this.lbUsername.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbUserId.AutoSize = true;
+            this.lbUserId.Location = new System.Drawing.Point(7, 79);
+            this.lbUserId.Name = "lbUserId";
+            this.lbUserId.Size = new System.Drawing.Size(47, 13);
+            this.lbUserId.TabIndex = 0;
+            this.lbUserId.Text = "User ID:";
+            this.lbUserId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // enterLoginLabel
             // 
             this.enterLoginLabel.AutoSize = true;
-            this.enterLoginLabel.Location = new System.Drawing.Point(15, 28);
+            this.enterLoginLabel.Location = new System.Drawing.Point(6, 17);
             this.enterLoginLabel.Name = "enterLoginLabel";
-            this.enterLoginLabel.Size = new System.Drawing.Size(257, 13);
+            this.enterLoginLabel.Size = new System.Drawing.Size(310, 13);
             this.enterLoginLabel.TabIndex = 1;
-            this.enterLoginLabel.Text = "Enter your EVE Online login and choose a character:";
+            this.enterLoginLabel.Text = "Enter your EVE Online API Parameters and choose a character:";
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(174, 204);
+            this.btnOk.Location = new System.Drawing.Point(276, 234);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -151,7 +153,7 @@ namespace EVEMon
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(255, 204);
+            this.btnCancel.Location = new System.Drawing.Point(357, 234);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -200,7 +202,7 @@ namespace EVEMon
             this.cbCharacterType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCharacterType.FormattingEnabled = true;
             this.cbCharacterType.Items.AddRange(new object[] {
-            "EVE Online Login",
+            "EVE Online API",
             "Saved Character XML"});
             this.cbCharacterType.Location = new System.Drawing.Point(125, 12);
             this.cbCharacterType.Name = "cbCharacterType";
@@ -210,20 +212,52 @@ namespace EVEMon
             // 
             // gbEveLogin
             // 
+            this.gbEveLogin.Controls.Add(this.label1);
+            this.gbEveLogin.Controls.Add(this.lblAPILink);
+            this.gbEveLogin.Controls.Add(this.lnkAPI);
             this.gbEveLogin.Controls.Add(this.btnCharSelect);
             this.gbEveLogin.Controls.Add(this.enterLoginLabel);
             this.gbEveLogin.Controls.Add(this.tbCharName);
-            this.gbEveLogin.Controls.Add(this.lbUsername);
+            this.gbEveLogin.Controls.Add(this.lbUserId);
             this.gbEveLogin.Controls.Add(this.lbLoginCharacter);
-            this.gbEveLogin.Controls.Add(this.tbPassword);
-            this.gbEveLogin.Controls.Add(this.tbUsername);
-            this.gbEveLogin.Controls.Add(this.lbPassword);
+            this.gbEveLogin.Controls.Add(this.tbAuthKey);
+            this.gbEveLogin.Controls.Add(this.tbUserId);
+            this.gbEveLogin.Controls.Add(this.lbAuthKey);
             this.gbEveLogin.Location = new System.Drawing.Point(12, 39);
             this.gbEveLogin.Name = "gbEveLogin";
-            this.gbEveLogin.Size = new System.Drawing.Size(318, 154);
+            this.gbEveLogin.Size = new System.Drawing.Size(395, 181);
             this.gbEveLogin.TabIndex = 7;
             this.gbEveLogin.TabStop = false;
-            this.gbEveLogin.Text = "EVE Online Login";
+            this.gbEveLogin.Text = "EVE Online API Parameters";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(281, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "and paste your User ID and API Key into the form below.";
+            // 
+            // lblAPILink
+            // 
+            this.lblAPILink.AutoSize = true;
+            this.lblAPILink.Location = new System.Drawing.Point(6, 39);
+            this.lblAPILink.Name = "lblAPILink";
+            this.lblAPILink.Size = new System.Drawing.Size(135, 13);
+            this.lblAPILink.TabIndex = 5;
+            this.lblAPILink.Text = "Get your API  details from:";
+            // 
+            // lnkAPI
+            // 
+            this.lnkAPI.AutoSize = true;
+            this.lnkAPI.Location = new System.Drawing.Point(147, 39);
+            this.lnkAPI.Name = "lnkAPI";
+            this.lnkAPI.Size = new System.Drawing.Size(225, 13);
+            this.lnkAPI.TabIndex = 4;
+            this.lnkAPI.TabStop = true;
+            this.lnkAPI.Text = "http://myeve.eve-online.com/api/default.asp";
+            this.lnkAPI.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAPI_LinkClicked);
             // 
             // gbSavedXML
             // 
@@ -283,14 +317,14 @@ namespace EVEMon
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(342, 239);
+            this.ClientSize = new System.Drawing.Size(444, 269);
             this.ControlBox = false;
-            this.Controls.Add(this.gbSavedXML);
             this.Controls.Add(this.gbEveLogin);
             this.Controls.Add(this.cbCharacterType);
             this.Controls.Add(this.lbAddCharacter);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
+            this.Controls.Add(this.gbSavedXML);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -310,11 +344,11 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.Label lbUsername;
-        private System.Windows.Forms.Label lbPassword;
+        private System.Windows.Forms.Label lbUserId;
+        private System.Windows.Forms.Label lbAuthKey;
         private System.Windows.Forms.Label lbLoginCharacter;
-        private System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.TextBox tbPassword;
+        private System.Windows.Forms.TextBox tbUserId;
+        private System.Windows.Forms.TextBox tbAuthKey;
         private System.Windows.Forms.Label enterLoginLabel;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
@@ -331,5 +365,8 @@ namespace EVEMon
         private System.Windows.Forms.OpenFileDialog ofdOpenXml;
         private System.Windows.Forms.TextBox tbFileCharName;
         private System.Windows.Forms.Label lbSavedCharacter;
+        private System.Windows.Forms.LinkLabel lnkAPI;
+        private System.Windows.Forms.Label lblAPILink;
+        private System.Windows.Forms.Label label1;
     }
 }

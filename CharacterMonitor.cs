@@ -1,3 +1,4 @@
+//#define DEBUG_SINGLETHREAD
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,7 +24,7 @@ namespace EVEMon
     {
         private Settings m_settings;
         private CharLoginInfo m_cli;
-        private SerializableCharacterInfo m_sci;
+        private SerializableCharacterSheet m_sci;
         private CharFileInfo m_cfi;
         private EveSession m_session;
         private int m_charId;
@@ -49,7 +50,8 @@ namespace EVEMon
             Text = 1,
             Html = 2,
             Xml = 3,
-            Png = 4
+            OldXml = 4,
+            Png = 5,
         }
 
         private CharacterMonitor()
@@ -79,7 +81,7 @@ namespace EVEMon
         /// <param name="s">The EVEMon settings.</param>
         /// <param name="cfi">The character file info.</param>
         /// <param name="sci">The serializable character, loaded from the file.</param>
-        public CharacterMonitor(CharFileInfo cfi, SerializableCharacterInfo sci)
+        public CharacterMonitor(CharFileInfo cfi, SerializableCharacterSheet sci)
             : this()
         {
             m_cli = null;
@@ -126,8 +128,8 @@ namespace EVEMon
             }
             else
             {
-                m_charId = m_sci.CharacterId;
-                m_grandCharacterInfo = new CharacterInfo(m_sci.CharacterId, m_sci.Name);
+                m_charId = m_sci.CharacterSheet.CharacterId ;
+                m_grandCharacterInfo = new CharacterInfo(m_sci.CharacterSheet.CharacterId, m_sci.CharacterSheet.Name);
                 if (m_charId > 0)
                 {
                     GetCharacterImage();
@@ -141,7 +143,6 @@ namespace EVEMon
                 }
             }
             m_grandCharacterInfo.BioInfoChanged += new EventHandler(BioInfoChangedCallback);
-            m_settings.ShowLoginNameChanged += new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BalanceChanged += new EventHandler(BalanceChangedCallback);
             m_grandCharacterInfo.AttributeChanged += new EventHandler(AttributeChangedCallback);
             m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(CharacterSkillChangedCallback);
@@ -152,15 +153,20 @@ namespace EVEMon
 
             if (m_cli != null)
             {
-                SerializableCharacterInfo sci = m_settings.GetCharacterInfo(m_cli.CharacterName);
+                SerializableCharacterSheet sci = m_settings.GetCharacterSheet(m_cli.CharacterName);
                 if (sci != null)
                 {
-                    m_grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
+                    m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
                 }
                 if (m_settings.DisableXMLAutoUpdate == false)
                 {
+#if DEBUG_SINGLETHREAD
+
+                    tmrUpdate_Tick(this, new EventArgs());
+#else
                     tmrUpdateCharacter.Interval = 10;
                     tmrUpdateCharacter.Enabled = true;
+#endif
                 }
                 else
                 {
@@ -172,7 +178,7 @@ namespace EVEMon
             {
                 tmrUpdateCharacter.Enabled = false;
                 throbber.Visible = false;
-                m_grandCharacterInfo.AssignFromSerializableCharacterInfo(m_sci);
+                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(m_sci);
                 m_sci = null;
             }
 
@@ -223,7 +229,6 @@ namespace EVEMon
                 m_characterFileWatch.EnableRaisingEvents = false;
             }
 
-            m_settings.ShowLoginNameChanged -= new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BioInfoChanged -= new EventHandler(BioInfoChangedCallback);
             m_grandCharacterInfo.BalanceChanged -= new EventHandler(BalanceChangedCallback);
 
@@ -259,10 +264,10 @@ namespace EVEMon
                 return;
             }
 
-            SerializableCharacterInfo sci = SerializableCharacterInfo.CreateFromFile(m_cfi.Filename);
+            SerializableCharacterSheet sci = SerializableCharacterSheet.CreateFromFile(m_cfi.Filename);
             if (sci != null)
             {
-                m_grandCharacterInfo.AssignFromSerializableCharacterInfo(sci);
+                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
             }
         }
 
@@ -321,7 +326,7 @@ namespace EVEMon
         /// <remarks>This makes sure the settings file only has you down with one "last skill trained", then saves the settings file</remarks>
         private void UpdateCachedCopy()
         {
-            SerializableCharacterInfo sci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+            SerializableCharacterSheet sci = m_grandCharacterInfo.ExportSerializableCharacterSheet();
             m_settings.SetCharacterCache(sci);
             if (m_grandCharacterInfo.OldSerialSIT != null && m_grandCharacterInfo.AllSkillsByTypeID.ContainsKey(m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID))
             {
@@ -358,6 +363,7 @@ namespace EVEMon
 
         private void DownloadCharacter()
         {
+
 #if DEBUG_SINGLETHREAD
             GetCharIdAndUpdateInternal(null);
 #else
@@ -375,7 +381,7 @@ namespace EVEMon
             int charId = -1;
             try
             {
-                m_session = EveSession.GetSession(m_cli.Username, m_cli.Password);
+                m_session = EveSession.GetSession(m_cli.UserId, m_cli.ApiKey);
                 charId = m_session.GetCharacterId(m_cli.CharacterName);
             }
             catch (Exception e)
@@ -417,22 +423,31 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                //m_lastUpdate = DateTime.Now;
-                m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
-                ttToolTip.SetToolTip(throbber, "Click to update now.");
-                ttToolTip.IsBalloon = true;
-                //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
-                tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
-                if (m_settings.DisableXMLAutoUpdate == false)
-                    tmrUpdateCharacter.Enabled = true;
-
-                if (tmrMinTrainingSkillRetry.Enabled == false)
+                if (m_session.ApiErrorCode == 0)
                 {
-                    miHitTrainingSkill.Enabled = true;
-                    m_canUpdateSkills = true;
+                    m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
+                    ttToolTip.SetToolTip(throbber, "Click to update now.");
+                    ttToolTip.IsBalloon = true;
+                    //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
+                    tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
+                    if (m_settings.DisableXMLAutoUpdate == false)
+                        tmrUpdateCharacter.Enabled = true;
+
+                    if (tmrMinTrainingSkillRetry.Enabled == false)
+                    {
+                        miHitTrainingSkill.Enabled = true;
+                        m_canUpdateSkills = true;
+                    }
+
+                    StopThrobber();
                 }
 
-                StopThrobber();
+                else
+                {
+                    StopThrobber();
+                    CharacterDownloadFailedCallback();
+                }
+
             }));
         }
 
@@ -1035,7 +1050,8 @@ namespace EVEMon
                 double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.PrimaryAttribute) +
                                        (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.SecondaryAttribute) / 2));
                 lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
-                m_estimatedCompletion = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
+             //   m_estimatedCompletion = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
+                m_estimatedCompletion = SIT.getTrainingEndTime.ToLocalTime();
 
                 m_settings_ScheduleEntriesChanged(null, null);
 
@@ -1234,13 +1250,6 @@ namespace EVEMon
             {
                 lblCharacterName.Text = m_grandCharacterInfo.Name;
             }
-            if (m_settings.ShowLoginName)
-            {
-                if (m_cli != null)
-                {
-                    lblCharacterName.Text += " - Login: " + m_cli.Username;
-                }
-            }
 
             lblBioInfo.Text = m_grandCharacterInfo.Gender + " " +
                               m_grandCharacterInfo.Race + " " +
@@ -1333,7 +1342,20 @@ namespace EVEMon
         /// </summary>
         private void CharacterDownloadFailedCallback()
         {
-            ttToolTip.SetToolTip(throbber, "Could not get character data!\nClick to try again.");
+            StringBuilder throbberTip = new StringBuilder();
+            // Stop an exception on first run using new api interface
+            try
+            {
+                if (m_session.ApiErrorMessage != null)
+                {
+                    throbberTip.Append(String.Format("Error {0}\n", m_session.ApiErrorMessage));
+                }
+            }
+            catch (Exception) { }
+
+            throbberTip.Append("Could not get character data!\nClick to try again.");
+                
+            ttToolTip.SetToolTip(throbber, throbberTip.ToString());
             ttToolTip.IsBalloon = true;
             if (m_settings.DisableXMLAutoUpdate == false)
             {
@@ -1422,7 +1444,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the Click event of the miChangeInfo control.  Displays a new login window and gets username/password from the user.
+        /// Handles the Click event of the miChangeInfo control.  Displays a new login window and gets API Credentials from the user.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -1430,13 +1452,15 @@ namespace EVEMon
         {
             using (ChangeLoginWindow f = new ChangeLoginWindow())
             {
+                f.UserId = m_cli.UserId;
+                f.ShowInvalidKey = false;
                 f.CharacterName = m_grandCharacterInfo.Name;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    m_cli.Username = f.Username;
-                    m_cli.Password = f.Password;
-                    m_session = EveSession.GetSession(f.Username, f.Password);
+                    m_cli.UserId = f.UserId;
+                    m_cli.ApiKey = f.ApiKey;
+                    m_session = EveSession.GetSession(f.UserId, f.ApiKey);
                     m_charId = -1;
                     tmrUpdate_Tick(this, new EventArgs());
 
@@ -1696,7 +1720,7 @@ namespace EVEMon
         public void ShowPlanEditor(string planName)
         {
             String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
-            m_settings.GetPlanByName(planKey, planName).ShowEditor(m_settings, m_grandCharacterInfo);
+            m_settings.GetPlanByCharacter(planKey, m_grandCharacterInfo, planName).ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
@@ -2026,7 +2050,15 @@ namespace EVEMon
             }
 
             tmrUpdateCharacter.Enabled = false;
+            DateTime lastCacheTime = m_grandCharacterInfo.XMLExpires;
+
+
+#if DEBUG_SINGLETHREAD 
+            // don't start the throbber in single thread debug mode
+#else
             StartThrobber();
+#endif
+
             // m_charId is only not -1 when it's a file based char... thus never going to use this function
             // the value we *should* be using is m_grandCharacterInfo.CharacterId BUT
             // that means we don't refresh the session with ccp first after the initial login.
@@ -2035,7 +2067,7 @@ namespace EVEMon
             if (m_charId < 0)
             {
                 DownloadCharacter();
-            }
+           }
             else
             {
                 UpdateGrandCharacterInfo();
@@ -2084,7 +2116,7 @@ namespace EVEMon
                 // Trigger event on skill completion
                 // The 'event' for a skill completion is in CharacterInfo.cs, depending on what is wanted
                 // it should be triggered from there as all skill manipulation is done in that file.
-                DateTime unadjustedLocalEndtime = ((DateTime)m_grandCharacterInfo.SerialSIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_grandCharacterInfo.SerialSIT.TQOffset))).ToLocalTime();
+                DateTime unadjustedLocalEndtime = m_grandCharacterInfo.SerialSIT.getTrainingEndTime.ToLocalTime();
                 if (!m_grandCharacterInfo.SerialSIT.PreWarningGiven && m_settings.NotificationOffset != 0 && unadjustedLocalEndtime.AddSeconds(-m_settings.NotificationOffset) < DateTime.Now)
                 {
                     m_grandCharacterInfo.SerialSIT.PreWarningGiven = true;
@@ -2177,7 +2209,7 @@ namespace EVEMon
         /// <param name="fileName">Name of the file.</param>
         private void SaveTextFile(string fileName)
         {
-            SerializableCharacterInfo ci = m_grandCharacterInfo.ExportSerializableCharacterInfo();
+            SerializableCharacterSheet ci = m_grandCharacterInfo.ExportSerializableCharacterSheet();
             using (StreamWriter sw = new StreamWriter(fileName, false))
             {
                 MethodInvoker writeSep = new MethodInvoker(delegate
@@ -2192,23 +2224,23 @@ namespace EVEMon
                                                                   });
                 sw.WriteLine("BASIC INFO");
                 writeSep();
-                sw.WriteLine("     Name: {0}", ci.Name);
-                sw.WriteLine("   Gender: {0}", ci.Gender);
-                sw.WriteLine("     Race: {0}", ci.Race);
-                sw.WriteLine("Bloodline: {0}", ci.BloodLine);
-                sw.WriteLine("  Balance: {0} ISK", ci.Balance.ToString("#,##0.00"));
+                sw.WriteLine("     Name: {0}", ci.CharacterSheet.Name);
+                sw.WriteLine("   Gender: {0}", ci.CharacterSheet.Gender);
+                sw.WriteLine("     Race: {0}", ci.CharacterSheet.Race);
+                sw.WriteLine("Bloodline: {0}", ci.CharacterSheet.BloodLine);
+                sw.WriteLine("  Balance: {0} ISK", ci.CharacterSheet.Balance.ToString("#,##0.00"));
                 sw.WriteLine();
-                sw.WriteLine("Intelligence: {0}", ci.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("    Charisma: {0}", ci.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("  Perception: {0}", ci.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("      Memory: {0}", ci.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("   Willpower: {0}", ci.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("Intelligence: {0}", ci.CharacterSheet.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("    Charisma: {0}", ci.CharacterSheet.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("  Perception: {0}", ci.CharacterSheet.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("      Memory: {0}", ci.CharacterSheet.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("   Willpower: {0}", ci.CharacterSheet.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
                 sw.WriteLine();
-                if (ci.AttributeBonuses.Bonuses.Count > 0)
+                if (ci.CharacterSheet.AttributeBonuses.Bonuses.Count > 0)
                 {
                     sw.WriteLine("IMPLANTS");
                     writeSep();
-                    foreach (SerializableEveAttributeBonus tb in ci.AttributeBonuses.Bonuses)
+                    foreach (SerializableEveAttributeBonus tb in ci.CharacterSheet.AttributeBonuses.Bonuses)
                     {
                         sw.WriteLine("+{0} {1} : {2}", tb.Amount, tb.EveAttribute.ToString().PadRight(13), tb.Name);
                     }
@@ -2223,14 +2255,15 @@ namespace EVEMon
                                  sg.GetTotalPoints().ToString("#,##0"));
                     foreach (SerializableSkill s in sg.Skills)
                     {
-                        string skillDesc = s.Name + " " + Skill.GetRomanForInt(s.Level) + " (" +
-                                           s.Rank.ToString() + ")";
+                        StaticSkill ss = StaticSkill.GetStaticSkillById(s.Id);
+                        string skillDesc = ss.Name + " " + Skill.GetRomanForInt(s.Level) + " (" +
+                                           ss.Rank.ToString() + ")";
                         sw.WriteLine(": {0} {1}/{2} Points",
                                      skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
-                                     s.SkillLevel5.ToString("#,##0"));
+                                     ss.GetPointsRequiredForLevel(5).ToString("#,##0"));
                         if (ci.TrainingSkillInfo != null && ci.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
                         {
-                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(ci.TrainingSkillInfo.TQOffset)).ToLocalTime();
+                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.ToLocalTime();
                             sw.WriteLine(":  (Currently training to level {0}, completes {1})",
                                          Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
                                 //(adjustedEndTime.AddSeconds(-m_settings.NotificationOffset)).ToString());
@@ -2259,23 +2292,49 @@ namespace EVEMon
                 SavePNGScreenshot(fileName);
                 return;
             }
-            try
+            else if (saveFormat == SaveFormat.Xml)
             {
                 Stream outerStream;
-                XPathDocument xpdoc;
-                if (saveFormat == SaveFormat.Xml)
-                {
-                    outerStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                }
-                else
-                {
-                    outerStream = new MemoryStream(32767);
-                }
+                outerStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
                 try
                 {
                     using (XmlTextWriter xtw = new XmlTextWriter(outerStream, Encoding.UTF8))
                     {
-                        if (saveFormat == SaveFormat.Xml)
+                        xtw.Indentation = 1;
+                        xtw.IndentChar = '\t';
+                        xtw.Formatting = Formatting.Indented;
+                        XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));
+                        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                        ns.Add("", "");
+                        xs.Serialize(xtw, m_grandCharacterInfo.ExportSerializableCharacterSheet(), ns);
+                        xtw.Flush();
+                        return;
+                    }
+                }
+                finally
+                {
+                    outerStream.Dispose();
+                }
+            }
+
+            // we're here - must be old style xml or html
+            try
+            {
+                Stream xmlStream;
+                XPathDocument xpdoc;
+                if (saveFormat == SaveFormat.OldXml)
+                {
+                    xmlStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                }
+                else
+                {
+                    xmlStream = new MemoryStream(32767);
+                }
+                try
+                {
+                    using (XmlTextWriter xtw = new XmlTextWriter(xmlStream, Encoding.UTF8))
+                    {
+                        if (saveFormat == SaveFormat.OldXml)
                         {
                             xtw.Indentation = 1;
                             xtw.IndentChar = '\t';
@@ -2284,15 +2343,17 @@ namespace EVEMon
                         XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
                         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
                         ns.Add("", "");
-                        xs.Serialize(xtw, m_grandCharacterInfo.ExportSerializableCharacterInfo(), ns);
+                        SerializableCharacterSheet scs = m_grandCharacterInfo.ExportSerializableCharacterSheet();
+                        SerializableCharacterInfo  sci = scs.CreateSerializableCharacterInfo();
+                        xs.Serialize(xtw, sci, ns);
                         xtw.Flush();
 
-                        if (saveFormat == SaveFormat.Xml)
+                        if (saveFormat == SaveFormat.OldXml)
                         {
                             return;
                         }
 
-                        MemoryStream ms = (MemoryStream)outerStream;
+                        MemoryStream ms = (MemoryStream)xmlStream;
                         ms.Position = 0;
                         using (StreamReader tr = new StreamReader(ms))
                         {
@@ -2302,7 +2363,7 @@ namespace EVEMon
                 }
                 finally
                 {
-                    outerStream.Dispose();
+                    xmlStream.Dispose();
                 }
 
                 XslCompiledTransform xstDoc2 = new XslCompiledTransform();
@@ -2464,5 +2525,6 @@ namespace EVEMon
         {
             get { return m_session; }
         }
+
     }
 }

@@ -62,9 +62,12 @@
     <Compile Include="BusyDialog.designer.cs">
       <DependentUpon>BusyDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="CCPApiError.cs" />
+    <Compile Include="SerializableCharacterSheet.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SerializableSkillTrainingInfo.cs" />
     <Compile Include="ColumnPreference.cs" />
-    <Compile Include="EncryptionHelper.cs" />
     <Compile Include="EnumAttributeReader.cs" />
     <Compile Include="EVEMonForm.cs">
       <SubType>Form</SubType>

@@ -31,8 +31,8 @@ namespace EVEMon.SkillPlanner
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewPlannerWindow));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.tslSuggestion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsbSaveAs = new System.Windows.Forms.ToolStripButton();
@@ -76,12 +76,6 @@ namespace EVEMon.SkillPlanner
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // slblStatusText
-            // 
-            this.slblStatusText.Name = "slblStatusText";
-            this.slblStatusText.Size = new System.Drawing.Size(79, 17);
-            this.slblStatusText.Text = "0 Skills Planned";
-            // 
             // tslSuggestion
             // 
             this.tslSuggestion.Image = ((System.Drawing.Image)(resources.GetObject("tslSuggestion.Image")));
@@ -93,6 +87,12 @@ namespace EVEMon.SkillPlanner
             this.tslSuggestion.Text = "Suggestion...";
             this.tslSuggestion.Visible = false;
             this.tslSuggestion.Click += new System.EventHandler(this.tslSuggestion_Click);
+            // 
+            // slblStatusText
+            // 
+            this.slblStatusText.Name = "slblStatusText";
+            this.slblStatusText.Size = new System.Drawing.Size(79, 17);
+            this.slblStatusText.Text = "0 Skills Planned";
             // 
             // toolStrip1
             // 
@@ -190,8 +190,8 @@ namespace EVEMon.SkillPlanner
             // 
             // sfdSave
             // 
-            this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML Format (*.xml)|*.xml|Text Format (*.txt)|*.t" +
-                "xt";
+            this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*." +
+                "txt";
             this.sfdSave.Title = "Save to File";
             // 
             // tabControl
@@ -224,6 +224,7 @@ namespace EVEMon.SkillPlanner
             this.planEditor.DimUntrainable = false;
             this.planEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.planEditor.HighlightConflicts = false;
             this.planEditor.HighlightPlannedSkills = false;
             this.planEditor.HighlightPrerequisites = false;
             this.planEditor.Location = new System.Drawing.Point(3, 3);

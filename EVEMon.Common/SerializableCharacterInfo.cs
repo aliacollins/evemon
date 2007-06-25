@@ -117,7 +117,6 @@ namespace EVEMon.Common
         public SerializableCharacterInfo()
         {
             m_attributes = new EveAttributes();
-            m_attributes.SetOwner(this);
         }
 
         private int m_timeLeftInCache = -1;
@@ -246,10 +245,6 @@ namespace EVEMon.Common
             set
             {
                 m_attributes = value;
-                if (value != null)
-                {
-                    value.SetOwner(this);
-                }
             }
         }
 
@@ -342,56 +337,6 @@ namespace EVEMon.Common
             }
             return null;
         }
-
-        public static SerializableCharacterInfo CreateFromFile(string fileName)
-        {
-            try
-            {
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.Load(fileName);
-                XmlElement charRootEl = FindCharacterElement(xdoc);
-
-                if (charRootEl == null)
-                {
-                    return null;
-                }
-
-                SerializableCharacterInfo sci = null;
-                using (XmlNodeReader nxr = new XmlNodeReader(charRootEl))
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof (SerializableCharacterInfo));
-
-                    sci = (SerializableCharacterInfo) xs.Deserialize(nxr);
-                
-                    // recover implant sets from the character cache if present
-                    List<SerializableCharacterInfo> cciList = Settings.GetInstance().CachedCharacterInfo;
-                    if (cciList != null && cciList.Count > 0)
-                    {
-                        foreach (SerializableCharacterInfo csci in  cciList)
-                        {
-                            if (csci.CharacterId == sci.CharacterId)
-                            {
-                                sci.ImplantSets = csci.ImplantSets;
-                                break;
-                            }
-                        }
-                    }
-                    foreach (SerializableSkillGroup sg in sci.SkillGroups)
-                    {
-                        foreach (SerializableSkill s in sg.Skills)
-                        {
-                            s.LastConfirmedLevel = s.Level;
-                        }
-                    }
-                    return sci;
-                }
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, true);
-                return null;
-            }
-        }
     }
 
     [XmlRoot("skillGroup")]
@@ -458,19 +403,20 @@ namespace EVEMon.Common
     [XmlRoot("skill")]
     public class SerializableSkill
     {
-        private string m_name = String.Empty;
         private int m_id;
-        private int m_groupId;
-        private int m_flag;
-        private int m_rank;
         private int m_skillPoints;
         private int m_level;
         private int m_lastConfirmedLvl;
+        private string  m_name = string.Empty;
 
         [XmlAttribute("typeName")]
         public string Name
         {
-            get { return m_name; }
+            get 
+            { 
+                m_name = StaticSkill.GetStaticSkillById(Id).Name; 
+                return m_name;
+            }
             set { m_name = value; }
         }
 
@@ -481,65 +427,31 @@ namespace EVEMon.Common
             set { m_id = value; }
         }
 
-        [XmlElement("groupID")]
-        public int GroupId
+        // fake for the old xml  & html export
+        private int m_fakeInt = 0;
+        [XmlElement("groupId")]
+        public int SkillGroupId
         {
-            get { return m_groupId; }
-            set { m_groupId = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).SkillGroup.ID; }
+            set { m_fakeInt = 0; }
         }
 
         [XmlElement("flag")]
         public int Flag
         {
-            get { return m_flag; }
-            set { m_flag = value; }
+            get { return m_fakeInt; }
+            set { m_fakeInt = 0; }
         }
 
         [XmlElement("rank")]
         public int Rank
         {
-            get { return m_rank; }
-            set
-            {
-                m_rank = value;
-                for (int i = 0; i < 5; i++)
-                {
-                    if (m_skillLevel[i] == 0)
-                    {
-                        m_skillLevel[i] = GetSkillPointsForLevel(m_rank, i + 1);
-                    }
-                }
-            }
+            get { return StaticSkill.GetStaticSkillById(Id).Rank;; }
+            set { m_fakeInt = 0; }
         }
 
-        public static int GetSkillPointsForLevel(int rank, int level)
-        {
-            int pointsForLevel = Convert.ToInt32(250*rank*Math.Pow(32, Convert.ToDouble(level - 1)/2));
-            // There's some sort of weird rounding error
-            // these values need to be corrected by one.
-            if (pointsForLevel == 1414)
-            {
-                pointsForLevel = 1415;
-            }
-            else if (pointsForLevel == 2828)
-            {
-                pointsForLevel = 2829;
-            }
-            else if (pointsForLevel == 7071)
-            {
-                pointsForLevel = 7072;
-            }
-            else if (pointsForLevel == 181019)
-            {
-                pointsForLevel = 181020;
-            }
-            else if (pointsForLevel == 226274)
-            {
-                pointsForLevel = 226275;
-            }
-            return pointsForLevel;
-        }
-
+        // end of the first batch of fake fields
+    
         [XmlElement("skillpoints")]
         public int SkillPoints
         {
@@ -561,57 +473,39 @@ namespace EVEMon.Common
             set { m_lastConfirmedLvl = value; }
         }
 
-        private int[] m_skillLevel = new int[5] {0, 0, 0, 0, 0};
-
         [XmlElement("skilllevel1")]
         public int SkillLevel1
         {
-            get { return m_skillLevel[0]; }
-            set { m_skillLevel[0] = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).GetPointsRequiredForLevel(1); }
+            set { m_fakeInt = 0; }
         }
-
         [XmlElement("skilllevel2")]
         public int SkillLevel2
         {
-            get { return m_skillLevel[1]; }
-            set { m_skillLevel[1] = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).GetPointsRequiredForLevel(2); }
+            set { m_fakeInt = 0; }
         }
-
         [XmlElement("skilllevel3")]
         public int SkillLevel3
         {
-            get { return m_skillLevel[2]; }
-            set { m_skillLevel[2] = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).GetPointsRequiredForLevel(3); }
+            set { m_fakeInt = 0; }
         }
-
         [XmlElement("skilllevel4")]
         public int SkillLevel4
         {
-            get { return m_skillLevel[3]; }
-            set { m_skillLevel[3] = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).GetPointsRequiredForLevel(4); }
+            set { m_fakeInt = 0; }
         }
 
         [XmlElement("skilllevel5")]
         public int SkillLevel5
         {
-            get { return m_skillLevel[4]; }
-            set { m_skillLevel[4] = value; }
+            get { return StaticSkill.GetStaticSkillById(Id).GetPointsRequiredForLevel(5); }
+            set { m_fakeInt = 0; }
         }
 
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("\t");
-            sb.Append(m_name);
-            sb.Append(" ");
-            sb.Append(Skill.GetRomanForInt(m_level));
-            sb.Append(" (Rank ");
-            sb.Append(m_rank.ToString());
-            sb.Append(") ");
-            sb.Append(m_skillPoints.ToString("#,##0"));
-            sb.Append(" points");
-            return sb.ToString();
-        }
+        
     }
 
     [XmlRoot("skillInTraining")]

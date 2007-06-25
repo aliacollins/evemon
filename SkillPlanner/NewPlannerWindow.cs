@@ -473,7 +473,7 @@ namespace EVEMon.SkillPlanner
                             MessageBoxIcon.Information);
         }
 
-        private enum SaveType
+        private enum PlanSaveType
         {
             None = 0,
             Emp = 1,
@@ -481,11 +481,20 @@ namespace EVEMon.SkillPlanner
             Text = 3
         }
 
+        private enum ExportSaveType
+        {
+            None = 0,
+            ShortXml = 1,
+            LongXml = 2
+        }
+
+
         private void tsbSaveAs_Click(object sender, EventArgs e)
         {
             sfdSave.Title = "Save to File";
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + m_plan.Name;
-            sfdSave.FilterIndex = (int)SaveType.Emp;
+            sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+            sfdSave.FilterIndex = (int)PlanSaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
             if (dr == DialogResult.Cancel)
             {
@@ -496,7 +505,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 PlanTextOptions pto = null;
-                if ((SaveType)sfdSave.FilterIndex == SaveType.Text)
+                if ((PlanSaveType)sfdSave.FilterIndex == PlanSaveType.Text)
                 {
                     pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
                     using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, false))
@@ -520,18 +529,18 @@ namespace EVEMon.SkillPlanner
 
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    switch ((SaveType)sfdSave.FilterIndex)
+                    switch ((PlanSaveType)sfdSave.FilterIndex)
                     {
-                        case SaveType.Emp:
+                        case PlanSaveType.Emp:
                             using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
                             {
                                 SerializePlanTo(gzs);
                             }
                             break;
-                        case SaveType.Xml:
+                        case PlanSaveType.Xml:
                             SerializePlanTo(fs);
                             break;
-                        case SaveType.Text:
+                        case PlanSaveType.Text:
                             using (StreamWriter sw = new StreamWriter(fs))
                             {
                                 m_plan.SaveAsText(sw, pto);
@@ -636,7 +645,8 @@ namespace EVEMon.SkillPlanner
         {
             sfdSave.Title = "Export to XML";
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Planned Character Export";
-            sfdSave.FilterIndex = (int)SaveType.Xml;
+            sfdSave.Filter = "XML Short Format (*.xml)|*.xml|XML Long Format (*.xml)|*.xml";
+            sfdSave.FilterIndex = (int)ExportSaveType.ShortXml;
             DialogResult dr = sfdSave.ShowDialog();
             if (dr == DialogResult.Cancel)
             {
@@ -644,15 +654,26 @@ namespace EVEMon.SkillPlanner
             }
 
             string fileName = sfdSave.FileName;
+            ExportSaveType saveType =  (ExportSaveType)sfdSave.FilterIndex;
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                SerializableCharacterInfo ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterInfo();
+                SerializableCharacterSheet ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterSheet();
                 m_plan.Merge(ci);
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
-                    ser.Serialize(fs, ci);
+                    // TODO - Make character + planned skills export work for both xml frmats
+                    if (saveType == ExportSaveType.ShortXml)
+                    {
+                        XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterSheet));
+                        ser.Serialize(fs, ci);
+                    }
+                    else
+                    {
+                        SerializableCharacterInfo cfi = ci.CreateSerializableCharacterInfo();
+                        XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
+                        ser.Serialize(fs, cfi);
+                    }
                 }
                 this.Cursor = Cursors.Default;
             }

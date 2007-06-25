@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using EVEMon.Common;
 
@@ -27,11 +28,11 @@ namespace EVEMon
         //        m_result = preferChar;
         //}
 
-        public CharSelect(EveSession sess)
+        public CharSelect(EveSession s)
             : this()
         {
             lbChars.Items.Clear();
-            foreach (Pair<string, int> p in sess.GetCharacterList())
+            foreach (Pair<string, int> p in s.GetCharacterList())
             {
                 lbChars.Items.Add(p.A);
             }

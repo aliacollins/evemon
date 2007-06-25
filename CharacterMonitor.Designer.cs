@@ -418,12 +418,12 @@ namespace EVEMon
             this.miHitTrainingSkill,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(217, 70);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(233, 70);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(216, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(232, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
@@ -431,7 +431,7 @@ namespace EVEMon
             // 
             this.miHitTrainingSkill.Enabled = false;
             this.miHitTrainingSkill.Name = "miHitTrainingSkill";
-            this.miHitTrainingSkill.Size = new System.Drawing.Size(216, 22);
+            this.miHitTrainingSkill.Size = new System.Drawing.Size(232, 22);
             this.miHitTrainingSkill.Text = "Update Skill Training Info";
             this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
             this.miHitTrainingSkill.Click += new System.EventHandler(this.miHitTrainingSkill_Click);
@@ -439,8 +439,8 @@ namespace EVEMon
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(216, 22);
-            this.miChangeInfo.Text = "Change login information...";
+            this.miChangeInfo.Size = new System.Drawing.Size(232, 22);
+            this.miChangeInfo.Text = "Change API Key information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
             // lblUpdateTimer
@@ -538,7 +538,8 @@ namespace EVEMon
             // 
             // sfdSaveDialog
             // 
-            this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format|*.xml|PNG Image|*.png";
+            this.sfdSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML (Short) Format|*.xml|XML (Long) Format|*" +
+                ".xml|PNG Image|*.png";
             this.sfdSaveDialog.Title = "Save Character Info";
             // 
             // ttToolTip

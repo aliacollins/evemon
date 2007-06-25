@@ -17,11 +17,246 @@ namespace EVEMon.Common
     public class Settings
     {
         // Important!!
+        
         // Any Updates to settings class members must lock(mutexLock)
+        // Also... PLEASE put new settings in the right region 
+        //(use outlining and collapse all to see where they go)
+
         private static Object mutexLock = new Object();
 
-        private bool m_useLogitechG15Display = false;
+        #region Character Lists
+        
+        // Flag to aid in conversion from pre-api use to post-api use.
+        private OldSettings m_oldSettings = null;
+        private bool m_useAPI = false;
+        public bool UseApi
+        {
+            get { return m_useAPI; }
+            set { m_useAPI = value; }
+        }
 
+        private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
+        public List<CharLoginInfo> CharacterList
+        {
+            get { return m_characterList; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_characterList = value;
+                }
+            }
+        }
+
+        private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
+        public List<CharFileInfo> CharFileList
+        {
+            get { return m_charFileList; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_charFileList = value;
+                }
+            }
+        }
+        #endregion
+
+        #region Character Cache
+
+        private List<SerializableCharacterSheet> m_cachedCharacterInfo = new List<SerializableCharacterSheet>();
+
+        public List<SerializableCharacterSheet> CachedCharacterInfo
+        {
+            get { return m_cachedCharacterInfo; }
+        }
+
+        public SerializableCharacterSheet GetCharacterSheet(string charName)
+        {
+            foreach (SerializableCharacterSheet sci in m_cachedCharacterInfo)
+            {
+                if (sci.CharacterSheet.Name == charName)
+                {
+                    return sci;
+                }
+            }
+            return null;
+        }
+
+        public void RemoveCharacterCache(string charName)
+        {
+            lock (mutexLock)
+            {
+                for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
+                {
+                    if (m_cachedCharacterInfo[i].CharacterSheet.Name == charName)
+                    {
+                        m_cachedCharacterInfo.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        public void SetCharacterCache(SerializableCharacterSheet sci)
+        {
+            lock (mutexLock)
+            {
+                RemoveCharacterCache(sci.CharacterSheet.Name);
+                m_cachedCharacterInfo.Add(sci);
+            }
+        }
+        #endregion
+
+        #region old skills
+        private SerializableDictionary<string, SerializableSkillTrainingInfo> m_oldSkillsDict = new SerializableDictionary<string, SerializableSkillTrainingInfo>();
+
+        public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSkillsDict
+        {
+            get { return m_oldSkillsDict; }
+            set
+            {
+                if (value != null)
+                {
+                    lock (mutexLock)
+                    {
+                        m_oldSkillsDict = value;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Owned Skills
+
+        private List<Pair<string, string>> m_ownedbooks = new List<Pair<string, string>>();
+
+        public List<Pair<string, string>> OwnedBooks
+        {
+            get { return m_ownedbooks; }
+        }
+
+        public IEnumerable<string> GetOwnedBooksForCharacter(string charName)
+        {
+            foreach (Pair<string, string> x in m_ownedbooks)
+            {
+                if (x.A == charName)
+                {
+                    yield return x.B;
+                }
+            }
+        }
+
+        public void SetOwnedBooks(string characterName, List<String> ownedBooks)
+        {
+            lock (mutexLock)
+            {
+                List<Pair<string, string>> newList = new List<Pair<string, string>>();
+                bool added = false;
+                foreach (Pair<string, string> x in m_ownedbooks)
+                {
+                    if (x.A == characterName)
+                    {
+                        if (!added)
+                        {
+                            foreach (string book in ownedBooks)
+                            {
+                                newList.Add(new Pair<string, string>(characterName, book));
+                            }
+                            added = true;
+                        }
+                    }
+                    else
+                    {
+                        newList.Add(x);
+                    }
+                }
+                if (!added)
+                {
+                    foreach (string book in ownedBooks)
+                    {
+                        newList.Add(new Pair<string, string>(characterName, book));
+                    }
+                }
+                m_ownedbooks = newList;
+            }
+        }
+
+        #endregion
+
+        #region Settings Form - General Tab
+
+        public bool SystemTrayOptionsIsNever
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Never; }
+        }
+
+        public bool SystemTrayOptionsIsMinimized
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Minimized; }
+        }
+
+        public bool SystemTrayOptionsIsAlways
+        {
+            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Always; }
+        }
+
+        private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;
+        public SystemTrayDisplayOptions SystemTrayOptions
+        {
+            get { return m_systemTrayOptions; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_systemTrayOptions = value;
+                }
+            }
+        }
+
+        private bool m_closeToTray = false;
+        public bool CloseToTray
+        {
+            get { return m_closeToTray; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_closeToTray = value;
+                }
+            }
+        }
+
+        private bool m_relocateEveWindow = false;
+        public bool RelocateEveWindow
+        {
+            get { return m_relocateEveWindow; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_relocateEveWindow = value;
+                    OnRelocateEveWindowChanged();
+                }
+            }
+        }
+        private int m_relocateTargetScreen = 0;
+        public int RelocateTargetScreen
+        {
+            get { return m_relocateTargetScreen; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    if (m_relocateTargetScreen != value)
+                    {
+                        m_relocateTargetScreen = value;
+                        OnRelocateEveWindowChanged();
+                    }
+                }
+            }
+        }
+
+        private bool m_useLogitechG15Display = false;
         public bool UseLogitechG15Display
         {
             get { return m_useLogitechG15Display; }
@@ -36,7 +271,6 @@ namespace EVEMon.Common
         }
 
         private bool m_g15acycle = false;
-
         public bool G15ACycle
         {
             get { return m_g15acycle; }
@@ -49,9 +283,262 @@ namespace EVEMon.Common
             }
         }
 
-        public event EventHandler<EventArgs> NotificationOffsetChanged;
-        private int m_notificationOffset = 0;
+        private int m_g15acycleint = 20;
+        public int G15ACycleint
+        {
+            get { return m_g15acycleint; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15acycleint = value;
+                }
+            }
+        }
 
+        #endregion
+
+        #region Settings Form - Look and Feel
+
+        private bool m_worksafeMode = false;
+        public bool WorksafeMode
+        {
+            get { return m_worksafeMode; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_worksafeMode = value; OnWorksafeChanged();
+                }
+            }
+        }
+
+        private bool m_titleToTime = true;
+
+        public bool TitleToTime
+        {
+            get { return m_titleToTime; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTime = value;
+                }
+            }
+        }
+
+        private int m_titleToTimeLayout = 0;
+        public int TitleToTimeLayout
+        {
+            get { return m_titleToTimeLayout; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTimeLayout = value;
+                }
+            }
+        }
+
+        private bool m_titleToTimeSkill = false;
+        public bool TitleToTimeSkill
+        {
+            get { return m_titleToTimeSkill; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_titleToTimeSkill = value;
+                }
+            }
+        }
+  
+
+        private string m_tooltipString = "%n - %s %tr - %r";
+        public string TooltipString
+        {
+            get { return m_tooltipString; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_tooltipString = value;
+                }
+            }
+        }
+
+        private bool m_HighlightPlannedSkills;
+        public bool SkillPlannerHighlightPlannedSkills
+        {
+            get { return m_HighlightPlannedSkills; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightPlannedSkills = value; OnHighlightPlannedSkillsChanged();
+                }
+            }
+        }
+
+        private bool m_HighlightPrerequisites;
+        public bool SkillPlannerHighlightPrerequisites
+        {
+            get { return m_HighlightPrerequisites; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightPrerequisites = value; OnHighlightPrerequisitesChanged();
+                }
+            }
+        }
+
+        private bool m_DimUntrainable = true;
+        public bool SkillPlannerDimUntrainable
+        {
+            get { return m_DimUntrainable; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DimUntrainable = value; OnDimUntrainableChanged();
+                }
+            }
+        }
+
+        private bool m_HighlightConflicts = true;
+        public bool SkillPlannerHighlightConflicts
+        {
+            get { return m_HighlightConflicts; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightConflicts = value; OnHighlightConflictsChanged();
+                }
+            }
+        }
+
+        private int m_skillIconGroup = 0;
+        public int SkillIconGroup
+        {
+            get { return m_skillIconGroup; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillIconGroup = value;
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region Settings Form - Network Tab
+
+        private bool m_useCustomProxySettings = false;
+        public bool UseCustomProxySettings
+        {
+            get { return m_useCustomProxySettings; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_useCustomProxySettings = value;
+                }
+            }
+        }
+
+        private ProxySetting m_httpProxy = new ProxySetting();
+        public ProxySetting HttpProxy
+        {
+            get { return m_httpProxy; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_httpProxy = value;
+                }
+            }
+        }
+
+        private bool m_runIgbServer = true;
+        private bool m_igbServerPublic = false;
+        private int m_igbPort = 80;
+
+        public bool IGBServerPublic
+        {
+            get { return m_igbServerPublic; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_igbServerPublic = value;
+                    OnRunIGBServerChanged();
+                }
+            }
+        }
+
+        public int IGBServerPort
+        {
+            get
+            {
+                return m_igbPort;
+            }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_igbPort = value;
+                    OnRunIGBServerChanged();
+                }
+            }
+        }
+
+        public bool RunIGBServer
+        {
+            get { return m_runIgbServer; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_runIgbServer = value; OnRunIGBServerChanged();
+                }
+            }
+        }
+
+#endregion
+       
+        #region Settings Form - Alerts Tab
+
+        private bool m_enableBalloonTips = true;
+        public bool EnableBalloonTips
+        {
+            get { return m_enableBalloonTips; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_enableBalloonTips = value;
+                }
+            }
+        }
+
+        private bool m_playSoundOnSkillComplete = true;
+        public bool PlaySoundOnSkillComplete
+        {
+            get { return m_playSoundOnSkillComplete; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_playSoundOnSkillComplete = value;
+                }
+            }
+        }
+
+        private int m_notificationOffset = 0;
         public int NotificationOffset
         {
             get { return m_notificationOffset; }
@@ -68,170 +555,7 @@ namespace EVEMon.Common
             }
         }
 
-        private int m_g15acycleint = 20;
-
-        public int G15ACycleint
-        {
-            get { return m_g15acycleint; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_g15acycleint = value;
-                }
-            }
-        }
-
-        private void OnUseLogitechG15DisplayChanged()
-        {
-            if (UseLogitechG15DisplayChanged != null)
-            {
-                UseLogitechG15DisplayChanged(this, new EventArgs());
-            }
-        }
-
-        public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
-
-        #region Skill Planner Highlighting
-
-        private bool m_HighlightPlannedSkills;
-        public event EventHandler<EventArgs> HighlightPlannedSkillsChanged;
-
-        public bool SkillPlannerHighlightPlannedSkills
-        {
-            get { return m_HighlightPlannedSkills; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_HighlightPlannedSkills = value; OnHighlightPlannedSkillsChanged();
-                }
-            }
-        }
-
-        private void OnHighlightPlannedSkillsChanged()
-        {
-            if (HighlightPlannedSkillsChanged != null)
-            {
-                HighlightPlannedSkillsChanged(this, new EventArgs());
-            }
-        }
-
-        private bool m_HighlightPrerequisites;
-        public event EventHandler<EventArgs> HighlightPrerequisitesChanged;
-
-        public bool SkillPlannerHighlightPrerequisites
-        {
-            get { return m_HighlightPrerequisites; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_HighlightPrerequisites = value; OnHighlightPrerequisitesChanged();
-                }
-            }
-        }
-
-        private void OnHighlightPrerequisitesChanged()
-        {
-            if (HighlightPrerequisitesChanged != null)
-            {
-                HighlightPrerequisitesChanged(this, new EventArgs());
-            }
-        }
-
-        private bool m_DimUntrainable = true;
-        public event EventHandler<EventArgs> DimUntrainableChanged;
-
-        public bool SkillPlannerDimUntrainable
-        {
-            get { return m_DimUntrainable; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_DimUntrainable = value; OnDimUntrainableChanged();
-                }
-            }
-        }
-
-        private void OnDimUntrainableChanged()
-        {
-            if (DimUntrainableChanged != null)
-            {
-                DimUntrainableChanged(this, new EventArgs());
-            }
-        }
-
-        private bool m_HighlightConflicts = true;
-        public event EventHandler<EventArgs> HighlightConflictsChanged;
-
-        public bool SkillPlannerHighlightConflicts
-        {
-            get { return m_HighlightConflicts; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_HighlightConflicts = value; OnHighlightConflictsChanged();
-                }
-            }
-        }
-
-        private void OnHighlightConflictsChanged()
-        {
-            if (HighlightConflictsChanged != null)
-            {
-                HighlightConflictsChanged(this, new EventArgs());
-            }
-        }
-
-
-        #endregion
-
-        private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
-
-        public List<CharLoginInfo> CharacterList
-        {
-            get { return m_characterList; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_characterList = value;
-                }
-            }
-        }
-
-        private string m_tooltipString = "%n - %s %tr - %r";
-
-        public string TooltipString
-        {
-            get { return m_tooltipString; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_tooltipString = value;
-                }
-            }
-        }
-
-        private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
-
-        public List<CharFileInfo> CharFileList
-        {
-            get { return m_charFileList; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_charFileList = value;
-                }
-            }
-        }
         private bool m_enableEmailAlert = false;
-
         public bool EnableEmailAlert
         {
             get { return m_enableEmailAlert; }
@@ -243,11 +567,141 @@ namespace EVEMon.Common
                 }
             }
         }
+        private string m_emailServer;
+        public string EmailServer
+        {
+            get { return m_emailServer; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailServer = value;
+                }
+            }
+        }
 
-        #region XML Update
+        private bool m_emailServerRequiresSsl = false;
+        public bool EmailServerRequiresSsl
+        {
+            get { return m_emailServerRequiresSsl; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailServerRequiresSsl = value;
+                }
+            }
+        }
+
+        private bool m_emailAuthRequired = false;
+        public bool EmailAuthRequired
+        {
+            get { return m_emailAuthRequired; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailAuthRequired = value;
+                }
+            }
+        }
+
+        private string m_emailUsername;
+        private string m_emailPassword;
+
+        public string EmailAuthUsername
+        {
+            get { return m_emailUsername; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailUsername = value;
+                }
+            }
+        }
+        
+        public string EmailAuthPassword
+        {
+            get { return m_emailPassword; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailPassword = value;
+                }
+            }
+        }
+
+        private string m_emailFromAddress;
+        public string EmailFromAddress
+        {
+            get { return m_emailFromAddress; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailFromAddress = value;
+                }
+            }
+        }
+
+        private string m_emailToAddress;
+        public string EmailToAddress
+        {
+            get { return m_emailToAddress; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailToAddress = value;
+                }
+            }
+        }
+
+        private int m_portNumber;
+        public int PortNumber
+        {
+            get { return m_portNumber; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_portNumber = value;
+                }
+            }
+        }
+
+        private bool m_emailUseShortFormat = false;
+        public bool EmailUseShortFormat
+        {
+            get { return m_emailUseShortFormat; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_emailUseShortFormat = value;
+                }
+            }
+        }
+        #endregion
+
+        #region Settings Form - Updates Tab
+
+        private bool m_DisableEVEMonVersionCheck;
+        public bool DisableEVEMonVersionCheck
+        {
+            get { return m_DisableEVEMonVersionCheck; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_DisableEVEMonVersionCheck = value;
+                }
+            }
+        }
 
         private bool m_DisableXMLAutoUpdate;
-
         public bool DisableXMLAutoUpdate
         {
             get { return m_DisableXMLAutoUpdate; }
@@ -261,7 +715,6 @@ namespace EVEMon.Common
         }
 
         private bool m_DeleteCharacterSilently;
-
         public bool DeleteCharacterSilently
         {
             get { return m_DeleteCharacterSilently; }
@@ -275,7 +728,6 @@ namespace EVEMon.Common
         }
 
         private bool m_KeepCharacterPlans;
-
         public bool KeepCharacterPlans
         {
             get { return m_KeepCharacterPlans; }
@@ -322,299 +774,516 @@ namespace EVEMon.Common
             }
         }
 
-        #endregion
-
-        private bool m_DisableEVEMonVersionCheck;
-
-        public bool DisableEVEMonVersionCheck
+        private string m_customTQAddress = "87.237.38.200";
+        public string CustomTQAddress
         {
-            get { return m_DisableEVEMonVersionCheck; }
+            get { return m_customTQAddress == null ? "" : m_customTQAddress; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_DisableEVEMonVersionCheck = value;
+                    m_customTQAddress = value;
                 }
             }
         }
 
-        private bool m_enableBalloonTips = true;
-
-        public bool EnableBalloonTips
+        private string m_customTQPort = "26000";
+        public string CustomTQPort
         {
-            get { return m_enableBalloonTips; }
+            get { return m_customTQPort == null ? "" : m_customTQPort; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_enableBalloonTips = value;
+                    m_customTQPort = value;
                 }
             }
         }
 
-        private bool m_closeToTray = false;
-
-        public bool CloseToTray
+        private bool m_useCustomTQCheckSettings = false;
+        public bool UseCustomTQCheckSettings
         {
-            get { return m_closeToTray; }
+            get { return m_useCustomTQCheckSettings; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_closeToTray = value;
+                    m_useCustomTQCheckSettings = value;
                 }
             }
         }
 
-        #region Email Settings
-
-        private string m_emailServer;
-
-        public string EmailServer
+        private bool m_checkTranquilityStatus = true;
+        public bool CheckTranquilityStatus
         {
-            get { return m_emailServer; }
+            get { return m_checkTranquilityStatus; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_emailServer = value;
-                }
-            }
-        }
-
-        private bool m_emailServerRequiresSsl = false;
-
-        public bool EmailServerRequiresSsl
-        {
-            get { return m_emailServerRequiresSsl; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailServerRequiresSsl = value;
-                }
-            }
-        }
-
-        private bool m_emailAuthRequired = false;
-
-        public bool EmailAuthRequired
-        {
-            get { return m_emailAuthRequired; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailAuthRequired = value;
-                }
-            }
-        }
-
-        private string m_emailUsername;
-        private string m_emailPassword;
-
-        public string EmailAuthUsername
-        {
-            get { return m_emailUsername; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailUsername = value;
-                }
-            }
-        }
-
-        public string EmailAuthPassword
-        {
-            get { return m_emailPassword; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailPassword = value;
-                }
-            }
-        }
-
-        private string m_emailFromAddress;
-
-        public string EmailFromAddress
-        {
-            get { return m_emailFromAddress; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailFromAddress = value;
-                }
-            }
-        }
-
-        private string m_emailToAddress;
-
-        public string EmailToAddress
-        {
-            get { return m_emailToAddress; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailToAddress = value;
-                }
-            }
-        }
-
-        private int m_portNumber;
-
-        public int PortNumber
-        {
-            get { return m_portNumber; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_portNumber = value;
-                }
-            }
-        }
-
-        private bool m_emailUseShortFormat = false;
-
-        public bool EmailUseShortFormat
-        {
-            get { return m_emailUseShortFormat; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_emailUseShortFormat = value;
-                }
-            }
-        }
-
-        #endregion
-
-        private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;
-
-        public SystemTrayDisplayOptions SystemTrayOptions
-        {
-            get { return m_systemTrayOptions; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_systemTrayOptions = value;
-                }
-            }
-        }
-
-        public bool SystemTrayOptionsIsNever
-        {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Never; }
-        }
-
-        public bool SystemTrayOptionsIsMinimized
-        {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Minimized; }
-        }
-
-        public bool SystemTrayOptionsIsAlways
-        {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Always; }
-        }
-
-        private string m_ignoreUpdateVersion = "0.0.0.0";
-
-        public string IgnoreUpdateVersion
-        {
-            get { return m_ignoreUpdateVersion; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    Version v = new Version("0.0.0.0");
-                    try
+                    if (m_checkTranquilityStatus != value)
                     {
-                        v = new Version(value);
+                        m_checkTranquilityStatus = value;
+                        OnCheckTranquilityStatusChanged();
                     }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
-                    m_ignoreUpdateVersion = v.ToString();
                 }
             }
         }
 
-        #region Window Title
-        private bool m_titleToTime = true;
-
-        public bool TitleToTime
+        private bool m_showTQBalloon = true;
+        public bool ShowTQBalloon
         {
-            get { return m_titleToTime; }
+            get { return m_showTQBalloon; }
+            set { m_showTQBalloon = value; }
+        }
+        
+        private int m_statusUpdateInterval = 5;
+        public int StatusUpdateInterval
+        {
+            get { return m_statusUpdateInterval; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_titleToTime = value;
+                    m_statusUpdateInterval = value;
                 }
             }
         }
 
-        private int m_titleToTimeLayout = 0;
-
-        public int TitleToTimeLayout
-        {
-            get { return m_titleToTimeLayout; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_titleToTimeLayout = value;
-                }
-            }
-        }
-
-        private bool m_titleToTimeSkill = false;
-
-        public bool TitleToTimeSkill
-        {
-            get { return m_titleToTimeSkill; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_titleToTimeSkill = value;
-                }
-            }
-        }
         #endregion
 
-        private bool m_showLoginName;
+        #region Settings Form - Events and Event Handlers
+        public event EventHandler<EventArgs> NotificationOffsetChanged;
+        public event EventHandler<EventArgs> UseLogitechG15DisplayChanged;
+        public event EventHandler<EventArgs> HighlightPlannedSkillsChanged;
+        public event EventHandler<EventArgs> HighlightPrerequisitesChanged;
+        public event EventHandler<EventArgs> DimUntrainableChanged;
+        public event EventHandler<EventArgs> HighlightConflictsChanged;
+        public event EventHandler<EventArgs> WorksafeChanged;
+        public event EventHandler<EventArgs> RunIGBServerChanged;
+        public event EventHandler<EventArgs> RelocateEveWindowChanged;
+        public event EventHandler<EventArgs> ShowTQBalloonChanged;
+        public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
 
-        public bool ShowLoginName
+        private void OnUseLogitechG15DisplayChanged()
         {
-            get { return m_showLoginName; }
+            if (UseLogitechG15DisplayChanged != null)
+            {
+                UseLogitechG15DisplayChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnHighlightPlannedSkillsChanged()
+        {
+            if (HighlightPlannedSkillsChanged != null)
+            {
+                HighlightPlannedSkillsChanged(this, new EventArgs());
+            }
+        }
+   
+        private void OnHighlightPrerequisitesChanged()
+        {
+            if (HighlightPrerequisitesChanged != null)
+            {
+                HighlightPrerequisitesChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnDimUntrainableChanged()
+        {
+            if (DimUntrainableChanged != null)
+            {
+                DimUntrainableChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnHighlightConflictsChanged()
+        {
+            if (HighlightConflictsChanged != null)
+            {
+                HighlightConflictsChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnWorksafeChanged()
+        {
+            if (WorksafeChanged != null)
+            {
+                WorksafeChanged(this, new EventArgs());
+            }
+        }
+        
+        private void OnRunIGBServerChanged()
+        {
+            if (RunIGBServerChanged != null)
+            {
+                RunIGBServerChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnRelocateEveWindowChanged()
+        {
+            if (RelocateEveWindowChanged != null)
+            {
+                RelocateEveWindowChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnShowTQBalloonChanged()
+        {
+            if (ShowTQBalloonChanged != null)
+            {
+                ShowTQBalloonChanged(this, new EventArgs());
+            }
+        }
+
+        private void OnCheckTranquilityStatusChanged()
+        {
+            if (CheckTranquilityStatusChanged != null)
+            {
+                CheckTranquilityStatusChanged(this, new EventArgs());
+            }
+        }
+
+        #endregion
+
+        #region Plans
+
+        // needs to be before plans.
+
+        ColumnPreference m_columnPreferences = new ColumnPreference();
+
+        public ColumnPreference ColumnPreferences
+        {
+            get { return m_columnPreferences; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_showLoginName = value;
-                    OnShowLoginNameChanged();
+                    m_columnPreferences = value;
                 }
             }
         }
 
-        public event EventHandler ShowLoginNameChanged;
+        private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
 
-        private void OnShowLoginNameChanged()
+        public List<Pair<string, Plan>> Plans
         {
-            if (ShowLoginNameChanged != null)
+            get { return m_plans; }
+        }
+
+        private const string PLAN_DEFAULT = "Default Plan";
+
+        // WARNING!! Plans are NOT indexed by character name.
+        // If the character is logon based, then they are.. BUT
+        // if the character is file based, then they are index by the filename
+
+        /// <summary>
+        /// Count the plans for a character.
+        /// </summary>
+        /// <param name="charName">The character whose plans we wish to count.</param>
+        /// <returns>The number of plans the character has.</returns>
+        public int GetPlanCountForCharacter(string planKeyName)
+        {
+            int count = 0;
+            foreach (Pair<string, Plan> x in m_plans)
             {
-                ShowLoginNameChanged(this, new EventArgs());
+                if (x.A.StartsWith(planKeyName + "::"))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public IEnumerable<string> GetPlansForCharacter(string planKeyName)
+        {
+            foreach (Pair<string, Plan> x in m_plans)
+            {
+                if (x.A == planKeyName)
+                {
+                    yield return PLAN_DEFAULT;
+                }
+                else if (x.A.StartsWith(planKeyName + "::"))
+                {
+                    yield return x.A.Substring(planKeyName.Length + 2);
+                }
             }
         }
+
+        /// <summary>
+        /// Finds a plan by name. This creates a new character sheet! You might 
+        /// want to use GetPlanByCharacter...
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character whose plans we're going to search.</param>
+        /// <param name="planName">The plan name to look for.</param>
+        /// <returns>The plan if found; null if not.</returns>
+        /// 
+        // TODO - does this really always need to create a whole new charactersheet every time???
+        public Plan GetPlanByName(string planKeyName, string planName)
+        {
+            Plan p = FindPlan(planName, planKeyName);
+            if (p == null)
+            {
+                return p;
+            }
+
+            SerializableCharacterSheet sci = this.GetCharacterSheet(planKeyName);
+            if (sci != null)
+            {
+                CharacterInfo gci = new CharacterInfo(sci.CharacterSheet.CharacterId, planKeyName);
+                gci.AssignFromSerializableCharacterSheet(GetCharacterSheet(planKeyName));
+
+                p.GrandCharacterInfo = gci;
+            }
+            else
+            {
+                p.GrandCharacterInfo = null;
+            }
+            return p;
+        }
+
+
+        /// <summary>
+        /// Finds a plan by characterInfo.
+        /// </summary>
+        /// <param name="charInfo">The character whose plans we're going to search.</param>
+        /// <param name="planName">The plan name to look for.</param>
+        /// <returns>The plan if found; null if not.</returns>
+        /// 
+
+        public Plan GetPlanByCharacter(string planKeyName, CharacterInfo  charInfo, string planName)
+        {
+
+            Plan p = FindPlan(planName, planKeyName);
+            if (p != null)
+            {
+                p.GrandCharacterInfo = charInfo;
+            }
+            return p;
+        }
+
+        private Plan FindPlan(string planName, string planKeyName)
+        {
+            Plan p = null;
+            foreach (Pair<string, Plan> x in m_plans)
+            {
+                if (planName == PLAN_DEFAULT && x.A == planKeyName)
+                {
+                    x.B.Name = PLAN_DEFAULT;
+                    p = x.B;
+                    break;
+                }
+                else if (x.A == planKeyName + "::" + planName)
+                {
+                    x.B.Name = planName;
+                    p = x.B;
+                    break;
+                }
+            }
+            return p;
+        }
+
+        /// <summary>
+        /// Adds a plan.
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character to add a plan for.</param>
+        /// <param name="plan">The plan to add.</param>
+        /// <param name="planName">The name to assign to it.</param>
+        public void AddPlanFor(string planKeyName, Plan plan, string planName)
+        {
+            if (GetPlanByName(planKeyName, planName) != null)
+            {
+                throw new ApplicationException("That plan already exists.");
+            }
+
+            Pair<string, Plan> p = new Pair<string, Plan>();
+            if (planName == PLAN_DEFAULT)
+            {
+                p.A = planKeyName;
+            }
+            else
+            {
+                p.A = planKeyName + "::" + planName;
+            }
+            p.B = plan;
+            lock (mutexLock)
+            {
+                m_plans.Add(p);
+                plan.Name = planName;
+            }
+            this.Save();
+        }
+
+        /// <summary>
+        /// Removes a plan.
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character whose plan is to be removed.</param>
+        /// <param name="planName">The plan name to remove.</param>
+        public void RemovePlanFor(string planKeyName, string planName)
+        {
+            lock (mutexLock)
+            {
+                for (int i = 0; i < m_plans.Count; i++)
+                {
+                    if (planName == PLAN_DEFAULT && m_plans[i].A == planKeyName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                        break;
+                    }
+                    else if (m_plans[i].A == planKeyName + "::" + planName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+            this.Save();
+        }
+
+        /// <summary>
+        /// Renames a plan.
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character whose plan is to be renamed.</param>
+        /// <param name="planName">The current plan name.</param>
+        /// <param name="newName">The new plan name.</param>
+        /// <returns>True if the plan was found and renamed, false if not.</returns>
+        public bool RenamePlanFor(string planKeyName, string planName, string newName)
+        {
+            if (GetPlanByName(planKeyName, newName) != null)
+            {
+                return false;
+            }
+
+            bool found = false;
+            lock (mutexLock)
+            {
+                for (int i = 0; i < m_plans.Count; i++)
+                {
+                    if (planName == PLAN_DEFAULT && m_plans[i].A == planKeyName)
+                    {
+                        m_plans[i].A = planKeyName + "::" + newName;
+                        found = true;
+                        break;
+                    }
+                    else if (m_plans[i].A == planKeyName + "::" + planName)
+                    {
+                        if (newName != PLAN_DEFAULT)
+                        {
+                            m_plans[i].A = planKeyName + "::" + newName;
+                        }
+                        else
+                        {
+                            m_plans[i].A = planKeyName;
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            this.Save();
+            return found;
+        }
+
+        /// <summary>
+        /// Remove all plans for a character.
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character whose plans are to be removed.</param>
+        public void RemoveAllPlansFor(string planKeyName)
+        {
+            lock (mutexLock)
+            {
+                for (int i = m_plans.Count - 1; i >= 0; --i)
+                {
+                    if (m_plans[i].A.StartsWith(planKeyName + "::") || m_plans[i].A == planKeyName)
+                    {
+                        Plan p = m_plans[i].B;
+                        p.CloseEditor();
+                        m_plans.RemoveAt(i);
+                    }
+                }
+            }
+            this.Save();
+        }
+
+        /// <summary>
+        /// Rearranges the order of m_plans to match the order of the strings in newOrder
+        /// </summary>
+        /// <param name="charName">The Plan Key (either char name or filename) for the character whose plans we are to reorder.</param>
+        /// <param name="newOrder">The new plan order.</param>
+        public void RearrangePlansFor(string planKeyName, List<string> newOrder)
+        {
+            lock (mutexLock)
+            {
+                List<Pair<string, Plan>> plans = new List<Pair<string, Plan>>();
+
+                foreach (string planName in newOrder)
+                {
+                    int index = -1;
+                    // Look for plan matching planName
+                    for (int i = 0; i < m_plans.Count; i++)
+                    {
+                        if (m_plans[i].A.StartsWith(planKeyName + "::") || m_plans[i].A == planKeyName)
+                        {
+                            Pair<string, Plan> tp = m_plans[i];
+                            string tPlanName = (tp.A == planKeyName ? PLAN_DEFAULT : tp.A.Substring(tp.A.IndexOf("::") + 2));
+                            index = (tPlanName == planName ? i : index);
+                        }
+                    }
+                    // If the plan was found, move it from old list to new
+                    if (index != -1)
+                    {
+                        plans.Add(m_plans[index]);
+                        m_plans.RemoveAt(index);
+                    }
+                }
+                // sanity check - keep any plans that didn't match (this shouldn't happen though)
+                for (int i = 0; i < m_plans.Count; i++)
+                {
+                    plans.Add(m_plans[i]);
+                    m_plans.RemoveAt(i);
+                }
+                m_plans.AddRange(plans);
+            }
+            this.Save();
+        }
+
+        #endregion Plan Settings
+
+        #region Plan Options
+
+        private PlanTextOptions m_defaultCopyOptions = new PlanTextOptions();
+        private PlanTextOptions m_defaultSaveOptions = new PlanTextOptions();
+
+        public PlanTextOptions DefaultCopyOptions
+        {
+            get { return m_defaultCopyOptions; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_defaultCopyOptions = value;
+                }
+            }
+        }
+
+        public PlanTextOptions DefaultSaveOptions
+        {
+            get { return m_defaultSaveOptions; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_defaultSaveOptions = value;
+                }
+            }
+        }
+
+ #endregion
 
         #region Pie Chart
 
@@ -676,729 +1345,25 @@ namespace EVEMon.Common
 
         #endregion
 
-        #region Owned Skills
-
-        private List<Pair<string, string>> m_ownedbooks = new List<Pair<string, string>>();
-
-        public List<Pair<string, string>> OwnedBooks
+        #region Ignored Updates
+        private string m_ignoreUpdateVersion = "0.0.0.0";
+        public string IgnoreUpdateVersion
         {
-            get { return m_ownedbooks; }
-        }
-
-        public IEnumerable<string> GetOwnedBooksForCharacter(string charName)
-        {
-            foreach (Pair<string, string> x in m_ownedbooks)
+            get { return m_ignoreUpdateVersion; }
+            set
             {
-                if (x.A == charName)
+                lock (mutexLock)
                 {
-                    yield return x.B;
-                }
-            }
-        }
-
-        public void SetOwnedBooks(string characterName, List<String> ownedBooks)
-        {
-            lock (mutexLock)
-            {
-                List<Pair<string, string>> newList = new List<Pair<string, string>>();
-                bool added = false;
-                foreach (Pair<string, string> x in m_ownedbooks)
-                {
-                    if (x.A == characterName)
+                    Version v = new Version("0.0.0.0");
+                    try
                     {
-                        if (!added)
-                        {
-                            foreach (string book in ownedBooks)
-                            {
-                                newList.Add(new Pair<string, string>(characterName, book));
-                            }
-                            added = true;
-                        }
+                        v = new Version(value);
                     }
-                    else
+                    catch (Exception e)
                     {
-                        newList.Add(x);
+                        ExceptionHandler.LogException(e, false);
                     }
-                }
-                if (!added)
-                {
-                    foreach (string book in ownedBooks)
-                    {
-                        newList.Add(new Pair<string, string>(characterName, book));
-                    }
-                }
-                m_ownedbooks = newList;
-            }
-        }
-
-        #endregion
-
-        #region Plan Settings
-
-        // needs to be before plans.
-
-        ColumnPreference m_columnPreferences = new ColumnPreference();
-
-        public ColumnPreference ColumnPreferences
-        {
-            get { return m_columnPreferences; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_columnPreferences = value;
-                }
-            }
-        }
-
-        private List<Pair<string, Plan>> m_plans = new List<Pair<string, Plan>>();
-
-        public List<Pair<string, Plan>> Plans
-        {
-            get { return m_plans; }
-        }
-
-        private const string PLAN_DEFAULT = "Default Plan";
-
-
-        /// <summary>
-        /// Count the plans for a character.
-        /// </summary>
-        /// <param name="charName">The character whose plans we wish to count.</param>
-        /// <returns>The number of plans the character has.</returns>
-        public int GetPlanCountForCharacter(string charName)
-        {
-            int count = 0;
-            foreach (Pair<string, Plan> x in m_plans)
-            {
-                if (x.A.StartsWith(charName + "::"))
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        public IEnumerable<string> GetPlansForCharacter(string charName)
-        {
-            foreach (Pair<string, Plan> x in m_plans)
-            {
-                if (x.A == charName)
-                {
-                    yield return PLAN_DEFAULT;
-                }
-                else if (x.A.StartsWith(charName + "::"))
-                {
-                    yield return x.A.Substring(charName.Length + 2);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Finds a plan by name.
-        /// </summary>
-        /// <param name="charName">The character whose plans we're going to search.</param>
-        /// <param name="planName">The plan name to look for.</param>
-        /// <returns>The plan if found; null if not.</returns>
-        public Plan GetPlanByName(string charName, string planName)
-        {
-            Plan p = null;
-            foreach (Pair<string, Plan> x in m_plans)
-            {
-                if (planName == PLAN_DEFAULT && x.A == charName)
-                {
-                    x.B.Name = PLAN_DEFAULT;
-                    p = x.B;
-                    break;
-                }
-                else if (x.A == charName + "::" + planName)
-                {
-                    x.B.Name = planName;
-                    p = x.B;
-                    break;
-                }
-            }
-            if (p == null)
-            {
-                return p;
-            }
-
-            SerializableCharacterInfo sci = this.GetCharacterInfo(charName);
-            if (sci != null)
-            {
-                CharacterInfo gci = new CharacterInfo(sci.CharacterId, charName);
-                gci.AssignFromSerializableCharacterInfo(GetCharacterInfo(charName));
-
-                p.GrandCharacterInfo = gci;
-            }
-            else
-            {
-                p.GrandCharacterInfo = null;
-            }
-            return p;
-        }
-
-        /// <summary>
-        /// Adds a plan.
-        /// </summary>
-        /// <param name="charName">The character to add a plan for.</param>
-        /// <param name="plan">The plan to add.</param>
-        /// <param name="planName">The name to assign to it.</param>
-        public void AddPlanFor(string charName, Plan plan, string planName)
-        {
-            if (GetPlanByName(charName, planName) != null)
-            {
-                throw new ApplicationException("That plan already exists.");
-            }
-
-            Pair<string, Plan> p = new Pair<string, Plan>();
-            if (planName == PLAN_DEFAULT)
-            {
-                p.A = charName;
-            }
-            else
-            {
-                p.A = charName + "::" + planName;
-            }
-            p.B = plan;
-            lock (mutexLock)
-            {
-                m_plans.Add(p);
-                plan.Name = planName;
-            }
-            this.Save();
-        }
-
-        /// <summary>
-        /// Removes a plan.
-        /// </summary>
-        /// <param name="charName">The character whose plan is to be removed.</param>
-        /// <param name="planName">The plan name to remove.</param>
-        public void RemovePlanFor(string charName, string planName)
-        {
-            lock (mutexLock)
-            {
-                for (int i = 0; i < m_plans.Count; i++)
-                {
-                    if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
-                    {
-                        Plan p = m_plans[i].B;
-                        p.CloseEditor();
-                        m_plans.RemoveAt(i);
-                        break;
-                    }
-                    else if (m_plans[i].A == charName + "::" + planName)
-                    {
-                        Plan p = m_plans[i].B;
-                        p.CloseEditor();
-                        m_plans.RemoveAt(i);
-                        break;
-                    }
-                }
-            }
-            this.Save();
-        }
-
-        /// <summary>
-        /// Renames a plan.
-        /// </summary>
-        /// <param name="charName">The character whose plan is to be renamed.</param>
-        /// <param name="planName">The current plan name.</param>
-        /// <param name="newName">The new plan name.</param>
-        /// <returns>True if the plan was found and renamed, false if not.</returns>
-        public bool RenamePlanFor(string charName, string planName, string newName)
-        {
-            if (GetPlanByName(charName, newName) != null)
-            {
-                return false;
-            }
-
-            bool found = false;
-            lock (mutexLock)
-            {
-                for (int i = 0; i < m_plans.Count; i++)
-                {
-                    if (planName == PLAN_DEFAULT && m_plans[i].A == charName)
-                    {
-                        m_plans[i].A = charName + "::" + newName;
-                        found = true;
-                        break;
-                    }
-                    else if (m_plans[i].A == charName + "::" + planName)
-                    {
-                        if (newName != PLAN_DEFAULT)
-                        {
-                            m_plans[i].A = charName + "::" + newName;
-                        }
-                        else
-                        {
-                            m_plans[i].A = charName;
-                        }
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            this.Save();
-            return found;
-        }
-
-        /// <summary>
-        /// Remove all plans for a character.
-        /// </summary>
-        /// <param name="charName">The character whose plans are to be removed.</param>
-        public void RemoveAllPlansFor(string charName)
-        {
-            lock (mutexLock)
-            {
-                for (int i = m_plans.Count-1; i >= 0; --i)
-                {
-                    if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
-                    {
-                        Plan p = m_plans[i].B;
-                        p.CloseEditor();
-                        m_plans.RemoveAt(i);
-                    }
-                }
-            }
-            this.Save();
-        }
-
-        /// <summary>
-        /// Rearranges the order of m_plans to match the order of the strings in newOrder
-        /// </summary>
-        /// <param name="charName">The character whose plans we are to reorder.</param>
-        /// <param name="newOrder">The new plan order.</param>
-        public void RearrangePlansFor(string charName, List<string> newOrder)
-        {
-            lock (mutexLock)
-            {
-                List<Pair<string, Plan>> plans = new List<Pair<string, Plan>>();
-
-                foreach (string planName in newOrder)
-                {
-                    int index = -1;
-                    // Look for plan matching planName
-                    for (int i = 0; i < m_plans.Count; i++)
-                    {
-                        if (m_plans[i].A.StartsWith(charName + "::") || m_plans[i].A == charName)
-                        {
-                            Pair<string, Plan> tp = m_plans[i];
-                            string tPlanName = (tp.A == charName ? PLAN_DEFAULT : tp.A.Substring(tp.A.IndexOf("::") + 2));
-                            index = (tPlanName == planName ? i : index);
-                        }
-                    }
-                    // If the plan was found, move it from old list to new
-                    if (index != -1)
-                    {
-                        plans.Add(m_plans[index]);
-                        m_plans.RemoveAt(index);
-                    }
-                }
-                // sanity check - keep any plans that didn't match (this shouldn't happen though)
-                for (int i = 0; i < m_plans.Count; i++)
-                {
-                    plans.Add(m_plans[i]);
-                    m_plans.RemoveAt(i);
-                }
-                m_plans.AddRange(plans);
-            }
-            this.Save();
-        }
-
-        #endregion Plan Settings
-
-        #region Character Cache
-
-        private List<SerializableCharacterInfo> m_cachedCharacterInfo = new List<SerializableCharacterInfo>();
-
-        public List<SerializableCharacterInfo> CachedCharacterInfo
-        {
-            get { return m_cachedCharacterInfo; }
-        }
-
-        public SerializableCharacterInfo GetCharacterInfo(string charName)
-        {
-            foreach (SerializableCharacterInfo sci in m_cachedCharacterInfo)
-            {
-                if (sci.Name == charName)
-                {
-                    return sci;
-                }
-            }
-            return null;
-        }
-
-        public void RemoveCharacterCache(string charName)
-        {
-            lock (mutexLock)
-            {
-                for (int i = 0; i < m_cachedCharacterInfo.Count; i++)
-                {
-                    if (m_cachedCharacterInfo[i].Name == charName)
-                    {
-                        m_cachedCharacterInfo.RemoveAt(i);
-                    }
-                }
-            }
-        }
-
-        public void SetCharacterCache(SerializableCharacterInfo sci)
-        {
-            lock (mutexLock)
-            {
-                RemoveCharacterCache(sci.Name);
-                sci.IsCached = true;
-                m_cachedCharacterInfo.Add(sci);
-            }
-        }
-
-        private List<string> m_confirmedTips = new List<string>();
-
-        public List<string> ConfirmedTips
-        {
-            get { return m_confirmedTips; }
-        }
-
-        private List<Pair<string, string>> m_collapsedGroups = new List<Pair<string, string>>();
-
-        public List<Pair<string, string>> CollapsedGroups
-        {
-            get { return m_collapsedGroups; }
-        }
-
-        private SerializableDictionary<string, SerializableSkillTrainingInfo> m_oldSkillsDict = new SerializableDictionary<string, SerializableSkillTrainingInfo>();
-
-        public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSkillsDict
-        {
-            get { return m_oldSkillsDict; }
-            set
-            {
-                if (value != null)
-                {
-                    lock (mutexLock)
-                    {
-                        m_oldSkillsDict = value;
-                    }
-                }
-            }
-        }
-
-        private PlanTextOptions m_defaultCopyOptions = new PlanTextOptions();
-        private PlanTextOptions m_defaultSaveOptions = new PlanTextOptions();
-
-        public PlanTextOptions DefaultCopyOptions
-        {
-            get { return m_defaultCopyOptions; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_defaultCopyOptions = value;
-                }
-            }
-        }
-
-        public PlanTextOptions DefaultSaveOptions
-        {
-            get { return m_defaultSaveOptions; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_defaultSaveOptions = value;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Worksafe Settings
-
-        private bool m_worksafeMode = false;
-
-        public bool WorksafeMode
-        {
-            get { return m_worksafeMode; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_worksafeMode = value; OnWorksafeChanged();
-                }
-            }
-        }
-
-        private void OnWorksafeChanged()
-        {
-            if (WorksafeChanged != null)
-            {
-                WorksafeChanged(this, new EventArgs());
-            }
-        }
-
-        public event EventHandler<EventArgs> WorksafeChanged;
-
-        #endregion
-
-        private bool m_playSoundOnSkillComplete = true;
-
-        public bool PlaySoundOnSkillComplete
-        {
-            get { return m_playSoundOnSkillComplete; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_playSoundOnSkillComplete = value;
-                }
-            }
-        }
-
-        #region In Game Browser server
-
-        private bool m_runIgbServer = true;
-        private bool m_igbServerPublic = false;
-        private int m_igbPort = 80;
-
-        public bool IGBServerPublic
-        {
-            get { return m_igbServerPublic; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_igbServerPublic = value;
-                    OnRunIGBServerChanged();
-                }
-            }
-        }
-
-        public int IGBServerPort
-        {
-            get
-            {
-                return m_igbPort;
-            }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_igbPort = value;
-                    OnRunIGBServerChanged();
-                }
-            }
-        }
-
-        public bool RunIGBServer
-        {
-            get { return m_runIgbServer; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_runIgbServer = value; OnRunIGBServerChanged();
-                }
-            }
-        }
-
-        private void OnRunIGBServerChanged()
-        {
-            if (RunIGBServerChanged != null)
-            {
-                RunIGBServerChanged(this, new EventArgs());
-            }
-        }
-
-        public event EventHandler<EventArgs> RunIGBServerChanged;
-
-        #endregion
-
-        private bool m_relocateEveWindow = false;
-
-        public bool RelocateEveWindow
-        {
-            get { return m_relocateEveWindow; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_relocateEveWindow = value;
-                    OnRelocateEveWindowChanged();
-                }
-            }
-        }
-
-        private void OnRelocateEveWindowChanged()
-        {
-            if (RelocateEveWindowChanged != null)
-            {
-                RelocateEveWindowChanged(this, new EventArgs());
-            }
-        }
-
-        public event EventHandler<EventArgs> RelocateEveWindowChanged;
-
-        private int m_relocateTargetScreen = 0;
-
-        public int RelocateTargetScreen
-        {
-            get { return m_relocateTargetScreen; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    if (m_relocateTargetScreen != value)
-                    {
-                        m_relocateTargetScreen = value;
-                        OnRelocateEveWindowChanged();
-                    }
-                }
-            }
-        }
-
-        private int m_skillIconGroup = 0;
-
-        public int SkillIconGroup
-        {
-            get { return m_skillIconGroup; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_skillIconGroup = value;
-                }
-            }
-        }
-
-        private bool m_useCustomProxySettings = false;
-
-        public bool UseCustomProxySettings
-        {
-            get { return m_useCustomProxySettings; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_useCustomProxySettings = value;
-                }
-            }
-        }
-
-        private ProxySetting m_httpProxy = new ProxySetting();
-
-        public ProxySetting HttpProxy
-        {
-            get { return m_httpProxy; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_httpProxy = value;
-                }
-            }
-        }
-
-        #region Tranquility Status
-
-        private string m_customTQAddress = "87.237.38.200";
-
-        public string CustomTQAddress
-        {
-            get { return m_customTQAddress == null ? "" : m_customTQAddress; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_customTQAddress = value;
-                }
-            }
-        }
-
-        private string m_customTQPort = "26000";
-
-        public string CustomTQPort
-        {
-            get { return m_customTQPort == null ? "" : m_customTQPort; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_customTQPort = value;
-                }
-            }
-        }
-
-        private bool m_useCustomTQCheckSettings = false;
-
-        public bool UseCustomTQCheckSettings
-        {
-            get { return m_useCustomTQCheckSettings; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_useCustomTQCheckSettings = value;
-                }
-            }
-        }
-
-
-        private bool m_checkTranquilityStatus = true;
-
-        public bool CheckTranquilityStatus
-        {
-            get { return m_checkTranquilityStatus; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    if (m_checkTranquilityStatus != value)
-                    {
-                        m_checkTranquilityStatus = value;
-                        OnCheckTranquilityStatusChanged();
-                    }
-                }
-            }
-        }
-
-        private bool m_showTQBalloon = true;
-
-        public bool ShowTQBalloon
-        {
-            get { return m_showTQBalloon; }
-            set { m_showTQBalloon = value; }
-        }
-
-        public event EventHandler<EventArgs> ShowTQBalloonChanged;
-        private void OnShowTQBalloonChanged()
-        {
-            if (ShowTQBalloonChanged != null)
-            {
-                ShowTQBalloonChanged(this, new EventArgs());
-            }
-        }
-
-        private void OnCheckTranquilityStatusChanged()
-        {
-            if (CheckTranquilityStatusChanged != null)
-            {
-                CheckTranquilityStatusChanged(this, new EventArgs());
-            }
-        }
-
-        public event EventHandler<EventArgs> CheckTranquilityStatusChanged;
-
-        private int m_statusUpdateInterval = 5;
-
-        public int StatusUpdateInterval
-        {
-            get { return m_statusUpdateInterval; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_statusUpdateInterval = value;
+                    m_ignoreUpdateVersion = v.ToString();
                 }
             }
         }
@@ -1497,34 +1462,6 @@ namespace EVEMon.Common
 
         #endregion
 
-        private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();
-
-        public SerializableDictionary<string, int> SavedSplitterDistances
-        {
-            get { return m_savedSplitterDistances; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_savedSplitterDistances = value;
-                }
-            }
-        }
-
-        private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
-
-        public SerializableDictionary<string, Rectangle> SavedWindowLocations
-        {
-            get { return m_savedWindowLocations; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_savedWindowLocations = value;
-                }
-            }
-        }
-
         #region Settings File Save / Load
 
         private static Settings m_instance = null;
@@ -1608,14 +1545,48 @@ namespace EVEMon.Common
 
         private static Settings LoadFromFile(string fileName)
         {
+            Settings result = null;
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 XmlSerializer xs = new XmlSerializer(typeof(Settings));
-                Settings result = (Settings)xs.Deserialize(fs);
-                m_instance = result;
-                return result;
+                result = (Settings)xs.Deserialize(fs);
             }
+            if ((result != null) && !result.UseApi)
+            {
+                // We're copnverting from non-api settings
+                result.m_oldSettings = ConvertToApi(fileName, result);
+                result.CopyOldImplants();
+            }
+            if (result != null) result.m_useAPI = true;
+            m_instance = result;
+            return result;
 
+        }
+
+        private static OldSettings ConvertToApi(string fileName, Settings s)
+        {
+            OldSettings result = null;
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(OldSettings));
+                result = (OldSettings)xs.Deserialize(fs);
+            }
+            return result;
+        }
+
+
+        public void CopyOldImplants()
+        {
+            // go through the old cache and pull out implants
+            foreach (SerializableCharacterInfo sci in m_oldSettings.CachedCharacterInfo)
+            {
+                SerializableCharacterSheet scs = new SerializableCharacterSheet();
+                scs.CharacterSheet.Name = sci.Name;
+                scs.CharacterSheet.CharacterId = sci.CharacterId;
+                scs.ImplantSets = sci.ImplantSets;
+                SetCharacterCache(scs);
+            }
+            return;
         }
 
         private static bool m_neverSave = false;
@@ -1731,6 +1702,8 @@ namespace EVEMon.Common
 
         #endregion
 
+        #region character methods
+
         public bool AddFileCharacter(CharFileInfo cfi)
         {
             lock (mutexLock)
@@ -1765,8 +1738,6 @@ namespace EVEMon.Common
             return true;
         }
 
-        #region Character Settings
-
         public ICharacterSettings GetCharacterSettings(string userName)
         {
             foreach (ICharacterSettings guy in m_characterList)
@@ -1784,112 +1755,6 @@ namespace EVEMon.Common
                 }
             }
             return null;
-        }
-
-        #endregion
-
-        #region Main Window Tab Order
-
-        private List<string> m_tabOrderName = new List<string>();
-
-        // List of either CharLoginInfo or CharFileInfo objects in the order
-        // we want them displayed
-        private List<Object> m_tabOrder = new List<object>();
-
-        // this is what we serialize, but access is via the TabOrder property
-        public List<String> TabOrderName
-        {
-            get { return m_tabOrderName; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_tabOrderName = value;
-                }
-            }
-        }
-
-        [XmlIgnore]
-        public List<Object> TabOrder
-        {
-            get
-            {
-                lock (mutexLock)
-                {
-                    // Build list of charFileInfo  and CharLoginInfo objects in the requried tab order
-                    foreach (String name in m_tabOrderName)
-                    {
-                        bool found = false;
-                        foreach (CharLoginInfo ci in m_characterList)
-                        {
-                            if (ci.CharacterName == name)
-                            {
-                                m_tabOrder.Add(ci);
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (found) { continue; }
-
-                        foreach (CharFileInfo cfi in m_charFileList)
-                        {
-                            if (cfi.CharacterName == name)
-                            {
-                                m_tabOrder.Add(cfi);
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    // Now we know that the tab order contains known characters...
-                    // Check if we're missing any
-                    foreach (CharLoginInfo cli in m_characterList)
-                    {
-                        if (!m_tabOrder.Contains(cli))
-                        {
-                            m_tabOrder.Add(cli);
-                        }
-                    }
-                    foreach (CharFileInfo cfi in m_charFileList)
-                    {
-                        if (!m_tabOrder.Contains(cfi))
-                        {
-                            m_tabOrder.Add(cfi);
-                        }
-                    }
-
-                    // Now reset the tab order name list from the TabOrder list, which will remove
-                    // any unknown characetrs from the list
-                    SetTabOrderName();
-                    return m_tabOrder;
-                }
-            }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_tabOrder = value;
-                    SetTabOrderName();
-                }
-            }
-        }
-
-        //  helper method sets the serializable list of tab order names
-        //  from the list of charXXInfo tab order
-        private void SetTabOrderName()
-        {
-            lock (mutexLock)
-            {
-                m_tabOrderName.Clear();
-                foreach (Object o in m_tabOrder)
-                {
-                    CharFileInfo cfi = o as CharFileInfo;
-                    CharLoginInfo cli = o as CharLoginInfo;
-                    if (cli != null) m_tabOrderName.Add(cli.CharacterName);
-                    if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
-                }
-            }
         }
 
         #endregion
@@ -2219,6 +2084,157 @@ namespace EVEMon.Common
         }
 
         #endregion
+
+        #region display states
+
+        private List<string> m_tabOrderName = new List<string>();
+
+        // List of either CharLoginInfo or CharFileInfo objects in the order
+        // we want them displayed
+        private List<Object> m_tabOrder = new List<object>();
+
+        // this is what we serialize, but access is via the TabOrder property
+        public List<String> TabOrderName
+        {
+            get { return m_tabOrderName; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_tabOrderName = value;
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public List<Object> TabOrder
+        {
+            get
+            {
+                lock (mutexLock)
+                {
+                    // Build list of charFileInfo  and CharLoginInfo objects in the requried tab order
+                    foreach (String name in m_tabOrderName)
+                    {
+                        bool found = false;
+                        foreach (CharLoginInfo ci in m_characterList)
+                        {
+                            if (ci.CharacterName == name)
+                            {
+                                m_tabOrder.Add(ci);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) { continue; }
+
+                        foreach (CharFileInfo cfi in m_charFileList)
+                        {
+                            if (cfi.CharacterName == name)
+                            {
+                                m_tabOrder.Add(cfi);
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Now we know that the tab order contains known characters...
+                    // Check if we're missing any
+                    foreach (CharLoginInfo cli in m_characterList)
+                    {
+                        if (!m_tabOrder.Contains(cli))
+                        {
+                            m_tabOrder.Add(cli);
+                        }
+                    }
+                    foreach (CharFileInfo cfi in m_charFileList)
+                    {
+                        if (!m_tabOrder.Contains(cfi))
+                        {
+                            m_tabOrder.Add(cfi);
+                        }
+                    }
+
+                    // Now reset the tab order name list from the TabOrder list, which will remove
+                    // any unknown characetrs from the list
+                    SetTabOrderName();
+                    return m_tabOrder;
+                }
+            }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_tabOrder = value;
+                    SetTabOrderName();
+                }
+            }
+        }
+
+        //  helper method sets the serializable list of tab order names
+        //  from the list of charXXInfo tab order
+        private void SetTabOrderName()
+        {
+            lock (mutexLock)
+            {
+                m_tabOrderName.Clear();
+                foreach (Object o in m_tabOrder)
+                {
+                    CharFileInfo cfi = o as CharFileInfo;
+                    CharLoginInfo cli = o as CharLoginInfo;
+                    if (cli != null) m_tabOrderName.Add(cli.CharacterName);
+                    if (cfi != null) m_tabOrderName.Add(cfi.CharacterName);
+                }
+            }
+        }
+
+        private List<Pair<string, string>> m_collapsedGroups = new List<Pair<string, string>>();
+
+        public List<Pair<string, string>> CollapsedGroups
+        {
+            get { return m_collapsedGroups; }
+        }
+
+        private SerializableDictionary<string, int> m_savedSplitterDistances = new SerializableDictionary<string, int>();
+
+        public SerializableDictionary<string, int> SavedSplitterDistances
+        {
+            get { return m_savedSplitterDistances; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_savedSplitterDistances = value;
+                }
+            }
+        }
+
+        private SerializableDictionary<string, Rectangle> m_savedWindowLocations = new SerializableDictionary<string, Rectangle>();
+
+        public SerializableDictionary<string, Rectangle> SavedWindowLocations
+        {
+            get { return m_savedWindowLocations; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_savedWindowLocations = value;
+                }
+            }
+        }
+
+        #endregion
+
+        #region EVEMon Tips settings
+        private List<string> m_confirmedTips = new List<string>();
+
+        public List<string> ConfirmedTips
+        {
+            get { return m_confirmedTips; }
+        }
+        #endregion
+
     }
 
     [XmlRoot("proxySetting")]
@@ -2357,4 +2373,30 @@ namespace EVEMon.Common
 
         #endregion
     }
+
+    // A conversion class to pull the implants out of a settings file created in 2.1 or earlier
+    [XmlRoot("logindata2")]
+    public class OldSettings
+    {
+        private List<SerializableCharacterInfo> m_cachedCharacterInfo = new List<SerializableCharacterInfo>();
+
+        public List<SerializableCharacterInfo> CachedCharacterInfo
+        {
+            get { return m_cachedCharacterInfo; }
+        }
+
+        public SerializableCharacterInfo GetCharacterInfo(string charName)
+        {
+            foreach (SerializableCharacterInfo sci in m_cachedCharacterInfo)
+            {
+                if (sci.Name == charName)
+                {
+                    return sci;
+                }
+            }
+            return null;
+        }
+
+    }
+
 }

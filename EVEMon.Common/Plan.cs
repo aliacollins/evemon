@@ -51,7 +51,6 @@ namespace EVEMon.Common
 
                         CheckForCompletedSkills();
                         CheckForMissingPrerequisites();
-                        // TODO this is where we need to sanity check prereqs
                     }
                 }
                 finally
@@ -554,7 +553,7 @@ namespace EVEMon.Common
                 }
                 CheckPriorities(true);
 
-                // TODO - sanity check priorities (in case this is called by learning suggestions/plan import etc
+                // do we need to sanity check priorities (in case this is called by learning suggestions/plan import etc?
             }
             finally
             {
@@ -1161,59 +1160,30 @@ namespace EVEMon.Common
             return GetEntry(name, level);
         }
 
-        public void Merge(SerializableCharacterInfo ci)
+        public void Merge(SerializableCharacterSheet scs)
         {
+
             foreach (Plan.Entry entry in this.Entries)
             {
-                SkillGroup sg = entry.Skill.SkillGroup;
                 Skill s = entry.Skill;
-
-                // Check to see if this planned skills SkilLGroup exists in this SCI
-                SerializableSkillGroup currSsg = null;
-                foreach (SerializableSkillGroup ssg in ci.SkillGroups)
+                SerializableKnownSkill ks = null;
+                foreach (SerializableKnownSkill sks in scs.CharacterSheet.KnownSkillsSet.KnownSkills)
                 {
-                    if (ssg.Id == sg.ID)
+                    if (s.Id == sks.SkillId)
                     {
-                        currSsg = ssg;
+                        ks = sks;
                         break;
                     }
                 }
 
-                // We don't currently have this skill group, so add it
-                if (currSsg == null)
+                if (ks == null)
                 {
-                    currSsg = new SerializableSkillGroup();
-                    currSsg.Id = sg.ID;
-                    currSsg.Name = sg.Name;
-                    currSsg.Skills = new List<SerializableSkill>();
-                    ci.SkillGroups.Add(currSsg);
+                    ks = new SerializableKnownSkill(s);
+                    scs.CharacterSheet.KnownSkillsSet.KnownSkills.Add(ks);
                 }
 
-                // Now check to see if the skill already exists in the group (which will be false
-                // if we just created this group, but that's okay)
-                SerializableSkill currSs = null;
-                foreach (SerializableSkill ss in currSsg.Skills)
-                {
-                    if (ss.Id == s.Id)
-                    {
-                        currSs = ss;
-                        break;
-                    }
-                }
-
-                // If it doesn't exist, create it
-                if (currSs == null)
-                {
-                    currSs = new SerializableSkill();
-                    currSs.Name = s.Name;
-                    currSs.Id = s.Id;
-                    currSs.GroupId = sg.ID;
-                    currSs.Rank = s.Rank;
-                    currSsg.Skills.Add(currSs);
-                }
-
-                currSs.Level = entry.Level;
-                currSs.SkillPoints = s.GetPointsRequiredForLevel(entry.Level);
+                ks.SkillLevel = entry.Level;
+                ks.Skillpoints = s.GetPointsRequiredForLevel(entry.Level);
             }
         }
 

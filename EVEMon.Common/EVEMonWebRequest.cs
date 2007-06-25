@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Xml;
+using System.Text;
 
 namespace EVEMon.Common
 {
@@ -32,9 +33,15 @@ namespace EVEMon.Common
     
     public static class EVEMonWebRequest
     {
+        
         public static XmlDocument LoadXml(string url)
         {
             WebRequestState wrs = new WebRequestState();
+            return LoadXml(url, wrs);
+        }
+
+        public static XmlDocument LoadXml(string url, WebRequestState wrs)
+        {
             wrs.Accept = "text/xml,application/xml,application/xhtml+xml;q=0.8,*/*;q=0.5";
             Stream s = GetUrlStream(url, wrs);
             try
@@ -137,6 +144,12 @@ namespace EVEMon.Common
                 HttpWebRequest req = GetWebRequest(url, wrs);
                 try
                 {
+                    if (req.Method == "POST")
+                    {
+                        Stream reqStream = req.GetRequestStream();
+                        reqStream.Write(wrs.PostData, 0, wrs.PostData.Length);
+                        reqStream.Close();
+                    }
                     resp = (HttpWebResponse) req.GetResponse();
                 }
                 catch (WebException ex)
@@ -346,7 +359,8 @@ namespace EVEMon.Common
 
             HttpWebRequest wr = WebRequest.Create(url) as HttpWebRequest;
             wr.AllowAutoRedirect = false;
-            wr.Referer = wrs.Referer;
+            if (wrs.Referer != String.Empty)
+                wr.Referer = wrs.Referer;
             wr.UserAgent = wrs.UserAgent;
             wr.CookieContainer = wrs.CookieContainer;
             wr.Accept = wrs.Accept;
@@ -354,6 +368,14 @@ namespace EVEMon.Common
             wr.Headers[HttpRequestHeader.AcceptCharset] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
             wr.Headers[HttpRequestHeader.Pragma] = "no-cache";
             wr.KeepAlive = true;
+            if (wrs.Method == "POST")
+            {
+                wr.Method = wrs.Method;
+                wr.ContentType = "application/x-www-form-urlencoded";
+                wr.ContentLength = wrs.PostData.Length;
+
+
+            }
             if (s.UseCustomProxySettings)
             {
                 WebProxy prox = new WebProxy(s.HttpProxy.Host, s.HttpProxy.Port);
@@ -399,7 +421,7 @@ namespace EVEMon.Common
             //"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1";
 
         private string m_userAgent;
-        private string m_referer = "http://myeve.eve-online.com/news.asp";
+        private string m_referer = string.Empty;
 
         public string Referer
         {
@@ -428,6 +450,32 @@ namespace EVEMon.Common
         {
             get { return m_accept; }
             set { m_accept = value; }
+        }
+
+        private string m_method = "GET";
+        private string m_contentType=String.Empty;
+        private byte[] m_data;
+        
+        public string Method
+        {
+            get { return m_method; }
+        }
+
+        public int ContentLength
+        {
+            get { return m_data.Length; }
+        }
+
+        public byte[] PostData
+        {
+            get { return m_data; }
+        }
+
+        public void SetPost(string postData)
+        {
+            m_method = "POST";
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            m_data = encoding.GetBytes(postData);
         }
 
         private EventHandler<NetworkLogEventArgs> m_logDelegate;

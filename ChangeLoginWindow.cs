@@ -1,6 +1,8 @@
 using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EVEMon
 {
@@ -19,23 +21,33 @@ namespace EVEMon
             set { m_charName = value; }
         }
 
-        private string m_username = String.Empty;
+        private int m_userId = 0;
 
-        public string Username
+        public int UserId
         {
-            get { return m_username; }
+            get { return m_userId; }
+            set { m_userId = value; }
         }
 
-        private string m_password = String.Empty;
+        private string m_apiKey = String.Empty;
 
-        public string Password
+        public string ApiKey
         {
-            get { return m_password; }
+            get { return m_apiKey; }
+        }
+
+        public bool ShowInvalidKey
+        {
+            set 
+            { this.Text = (value) ? "Invalid Or Empty API Key" : "Change API Key"; }
         }
 
         private void ChangeLoginWindow_Load(object sender, EventArgs e)
         {
-            label1.Text = String.Format("Enter EVE Online login information for {0}:", m_charName);
+            label1.Text = String.Format("Enter EVE Online API Credentials for {0}:", m_charName);
+            if (m_userId >  0)
+                tbUserId.Text = Convert.ToString(m_userId);
+            
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -50,9 +62,15 @@ namespace EVEMon
             bool isLoginOk = false;
             using (BusyDialog.GetScope())
             {
+                int uid = 0;
                 try
                 {
-                    EveSession s = EveSession.GetSession(tbUsername.Text, tbPassword.Text);
+                    uid = Int32.Parse(tbUserId.Text);
+                }
+                catch (Exception) {}
+                try
+                {
+                    EveSession s = EveSession.GetSession(uid, tbAuthKey.Text);
                     isLoginOk = true;
                     if (s.GetCharacterId(m_charName) > 0)
                     {
@@ -67,8 +85,13 @@ namespace EVEMon
             }
             if (isOk)
             {
-                m_username = tbUsername.Text;
-                m_password = tbPassword.Text;
+                m_userId = 0;
+                try
+                {
+                    m_userId = Int32.Parse(tbUserId.Text);
+                }
+                catch (Exception) { }
+                m_apiKey = tbAuthKey.Text;
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -76,31 +99,37 @@ namespace EVEMon
             {
                 if (!isLoginOk)
                 {
-                    MessageBox.Show("Could not log in to EVE Online with that username/password.", "Unable to Log In",
+                    MessageBox.Show("Invalid User Id or API key.", "Unable to Validate",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    MessageBox.Show("Could not find " + m_charName + " on that EVE Online account.",
+                    MessageBox.Show("Could not find " + m_charName + " using that User Id and API Key.",
                                     "Could Not Find Character", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
             }
         }
 
-        private void tbUsername_TextChanged(object sender, EventArgs e)
+        private void tbUserId_TextChanged(object sender, EventArgs e)
         {
             CheckDisables();
         }
 
-        private void tbPassword_TextChanged(object sender, EventArgs e)
+        private void tbAuthKey_TextChanged(object sender, EventArgs e)
         {
             CheckDisables();
         }
 
         private void CheckDisables()
         {
-            btnOk.Enabled = (!String.IsNullOrEmpty(tbUsername.Text) &&
-                             !String.IsNullOrEmpty(tbPassword.Text));
+            btnOk.Enabled = (!String.IsNullOrEmpty(tbUserId.Text) &&
+                             !String.IsNullOrEmpty(tbAuthKey.Text));
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(EveSession.ApiKeyUrl);
+        }
+
     }
 }

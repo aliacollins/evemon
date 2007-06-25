@@ -42,9 +42,8 @@ namespace EVEMon
             Program.MainWindow = this;
             niMinimizeIcon.Text = Application.ProductName;
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
-
+            StaticSkill.LoadStaticSkills();
             G15Handler.Init();
-
 
             AddCharacters();
             if (m_settings.CheckTranquilityStatus)
@@ -65,7 +64,7 @@ namespace EVEMon
         private void AddCharacters()
         {
             List<Object> tabOrder = m_settings.TabOrder;
-
+   
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
             foreach (Object o in tabOrder)
             {
@@ -225,7 +224,7 @@ namespace EVEMon
         /// <returns>true if the character was added</returns>
         private bool AddTab(CharFileInfo cfi, bool silent)
         {
-            SerializableCharacterInfo sci = SerializableCharacterInfo.CreateFromFile(cfi.Filename);
+            SerializableCharacterSheet sci = SerializableCharacterSheet.CreateFromFile(cfi.Filename);
             if (sci == null)
             {
                 if (!silent)
@@ -235,9 +234,9 @@ namespace EVEMon
                 }
                 return false;
             }
-            cfi.CharacterName = sci.Name;
+            cfi.CharacterName = sci.CharacterSheet.Name;
             CharacterMonitor cm = new CharacterMonitor(cfi, sci);
-            AddTab(cfi, "(File) " + sci.Name, cm, "File based character");
+            AddTab(cfi, "(File) " + sci.CharacterSheet.Name, cm);
             return true;
         }
 
@@ -248,8 +247,25 @@ namespace EVEMon
         /// <returns>true if the tab was added ok</returns>
         private bool AddTab(CharLoginInfo cli)
         {
+            if (cli.ApiKey == string.Empty || cli.UserId == 0)
+            {
+                // No API info found - ask user - must be first run.
+                
+                using (ChangeLoginWindow f = new ChangeLoginWindow())
+                {
+                    f.ShowInvalidKey = true;
+                    f.CharacterName = cli.CharacterName;
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        cli.UserId = f.UserId;
+                        cli.ApiKey = f.ApiKey;
+                        EveSession.GetSession(f.UserId, f.ApiKey);
+                    }
+                }
+            }
             CharacterMonitor cm = new CharacterMonitor(cli);
-            AddTab(cli, cli.CharacterName, cm, "Username: " + cli.Username);
+            AddTab(cli, cli.CharacterName, cm);
             return true;
         }
 
@@ -260,16 +276,16 @@ namespace EVEMon
         /// <param name="charInfo">either a file based on online based info object</param>
         /// <param name="title">Titke for the tab  - "character name" or "(file) character name"</param>
         /// <param name="cm">The Character Monitor object to attach to this tab</param>
-        private void AddTab(object charInfo, string title, CharacterMonitor cm, string tooltip)
+        private void AddTab(object charInfo, string title, CharacterMonitor cm)
         {
             TabPage tp = new TabPage(title);
-            tp.ToolTipText = tooltip;
             tp.UseVisualStyleBackColor = true;
             tp.Tag = charInfo;
             tp.Padding = new Padding(5);
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
             cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
+
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
             cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
@@ -583,9 +599,15 @@ namespace EVEMon
                 {
                     if (f.IsLogin)
                     {
+                        int uid = 0;
+                        try
+                        {
+                            uid = Int32.Parse(f.UserId);
+                        }
+                        catch (Exception) { }
                         CharLoginInfo cli = new CharLoginInfo();
-                        cli.Username = f.Username;
-                        cli.Password = f.Password;
+                        cli.UserId = uid;
+                        cli.ApiKey = f.ApiKey;
                         cli.CharacterName = f.CharacterName;
                         if (m_settings.AddCharacter(cli))
                         {

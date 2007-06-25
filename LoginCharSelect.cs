@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -62,7 +63,7 @@ namespace EVEMon
             CharOk = false;
         }
 
-        private void tbPassword_TextChanged(object sender, EventArgs e)
+        private void tbApiKey_TextChanged(object sender, EventArgs e)
         {
             SetNoCharacter();
         }
@@ -80,8 +81,8 @@ namespace EVEMon
                 case 0:
                     m_isLogin = true;
                     m_isFile = false;
-                    m_username = tbUsername.Text;
-                    m_password = tbPassword.Text;
+                    m_userid = tbUserId.Text;
+                    m_apiKey = tbAuthKey.Text;
                     m_characterName = tbCharName.Text;
                     break;
                 case 1:
@@ -99,8 +100,8 @@ namespace EVEMon
         }
 
         private bool m_isLogin;
-        private string m_username;
-        private string m_password;
+        private string m_userid;
+        private string m_apiKey;
         private string m_characterName;
         private bool m_isFile;
         private string m_fileName;
@@ -111,14 +112,14 @@ namespace EVEMon
             get { return m_isLogin; }
         }
 
-        public string Username
+        public string UserId
         {
-            get { return m_username; }
+            get { return m_userid; }
         }
 
-        public string Password
+        public string ApiKey
         {
-            get { return m_password; }
+            get { return m_apiKey; }
         }
 
         public string CharacterName
@@ -143,39 +144,42 @@ namespace EVEMon
 
         private void btnCharSelect_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(tbUsername.Text) || String.IsNullOrEmpty(tbPassword.Text))
+            if (String.IsNullOrEmpty(tbUserId.Text) || String.IsNullOrEmpty(tbAuthKey.Text))
             {
                 SetNoCharacter();
-                MessageBox.Show("Enter your login information first.",
-                                "Login Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("Enter your API information first.",
+                                "Credentials Required", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
+            string errm = string.Empty;
             EveSession s = null;
-            string errm;
             using (BusyDialog.GetScope())
             {
-                s = EveSession.GetSession(tbUsername.Text, tbPassword.Text, out errm);
-            }
-            if (s == null)
-            {
-                SetNoCharacter();
-                //MessageBox.Show("Your login information could not be verified. Please " +
-                //    "ensure it is entered correctly.\n\nThe error message returned was: "+errm, "Unable to Log In",
-                //    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                MessageBox.Show(errm, "Unable to Log In",
-                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
-            }
+                int userId = 0;
+                try 
+                {
+                    userId = Int32.Parse(tbUserId.Text);
+                }
+                catch (Exception) { }
+                s = EveSession.GetSession(userId, tbAuthKey.Text, out errm);
 
-            List<Pair<string, int>> chars = s.GetCharacterListUncached();
-            if (chars.Count == 0)
-            {
-                SetNoCharacter();
-                MessageBox.Show("No characters were found on that account.",
-                                "No Characters Found. This may be because CCP have disabled the online character sheet.",
-                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
+                if (s == null)
+                {
+                    SetNoCharacter();
+                    MessageBox.Show(errm, "Invalid API Credentials",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+                List<Pair<string, int>> chars = s.GetCharacterListUncached();
+                if (chars.Count == 0)
+                {
+                    SetNoCharacter();
+                    MessageBox.Show("No characters were found on with those API Credentials.",
+                                    "No Characters Found. This may be because CCP have disabled the API.",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
             }
 
             using (CharSelect f = new CharSelect(s))
@@ -212,9 +216,31 @@ namespace EVEMon
                 //anders - find the real character.  This probably burns too much time to stay here, but I like it
                 XmlDocument xdoc = new XmlDocument();
                 xdoc.Load(ofdOpenXml.FileName);
-                XmlElement cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
-                tbFileCharName.Text = cElement.Attributes["name"].Value;
+                XmlElement cElement = xdoc.DocumentElement.SelectSingleNode("//result/name") as XmlElement;
+                if (cElement != null)
+                {
+                    // new style API xml
+                    tbFileCharName.Text = cElement.InnerText;
+                }
+                else
+                {
+                    cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
+                    if (cElement != null)
+                    {
+                        // old style xml
+                        tbFileCharName.Text = cElement.Attributes["name"].Value;
+                    }
+                    else
+                    {
+                        tbFileCharName.Text = "Invalid XML File";
+                    }
+                }
             }
+        }
+
+        private void lnkAPI_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(EveSession.ApiKeyUrl);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,8 +24,7 @@ namespace EVEMon.Common
         private string m_EVEFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
-        private DateTime m_expires;
-        
+               
         // These are the new replacements for m_attributeBonuses
         private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
         private Dictionary<string, ImplantSet> m_implantSets = new Dictionary<string, ImplantSet>();
@@ -64,14 +64,14 @@ namespace EVEMon.Common
                 List<Skill> skills = new List<Skill>();
                 foreach (StaticSkill ss in sgs)
                 {
-                    List<Skill.Prereq> prereqs = new List<Skill.Prereq>(); 
+                    List<Skill.Prereq> prereqs = new List<Skill.Prereq>();
                     foreach (StaticSkill.Prereq ssp in ss.Prereqs)
                     {
                         Skill.Prereq pr = new Skill.Prereq(ssp);
                         prereqs.Add(pr);
                     }
                     bookOwned = ownedBooks.Contains(ss.Name);
-                    Skill cs = new Skill(this, ss, bookOwned,prereqs);
+                    Skill cs = new Skill(this, ss, bookOwned, prereqs);
                     cs.Changed += new EventHandler(gs_Changed);
                     cs.TrainingStatusChanged += new EventHandler(gs_TrainingStatusChanged);
                     m_AllSkillsByID[ss.Id] = cs;
@@ -310,6 +310,13 @@ namespace EVEMon.Common
                 m_balance = value;
                 OnBalanceChanged();
             }
+        }
+
+        private DateTime m_xmlExpires = DateTime.MinValue;
+        public DateTime XMLExpires
+        {
+            get { return m_xmlExpires; }
+            set { m_xmlExpires = value; }
         }
 
         private void OnBalanceChanged()
@@ -742,12 +749,6 @@ namespace EVEMon.Common
             }
         }
 
-        public DateTime XMLExpires
-        {
-            get { return m_expires; }
-            set { m_expires = value; }
-        }
-
         public void AssignFromSerializableSkillTrainingInfo(SerializableSkillTrainingInfo sti)
         {
             this.SuppressEvents();
@@ -755,22 +756,231 @@ namespace EVEMon.Common
             this.ResumeEvents();
         }
 
-        public void AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
+
+        //public void AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
+        //{
+        //    this.SuppressEvents();
+        //    this.Name = ci.Name;
+        //    this.CharacterId = ci.CharacterId;
+        //    this.IsCached = ci.IsCached;
+        //    this.Gender = ci.Gender;
+        //    this.Race = ci.Race;
+        //    this.Bloodline = ci.BloodLine;
+        //    this.CorporationName = ci.CorpName;
+            
+        //    if (ci.IsCached == true)
+        //    {
+        //        this.EVEFolder = ci.EVEFolder;
+        //    }
+        //    this.Balance = ci.Balance;
+
+        //    bool getcurrent = false;
+
+        //    if (this.implantSets.Count == 0)
+        //    {
+        //        if (ci.ImplantSets.Count == 0)
+        //            getcurrent = true;
+        //        foreach (SerializableImplantSet x in ci.ImplantSets)
+        //        {
+        //            UserImplant[] z = new UserImplant[10];
+        //            foreach (UserImplant y in x.Implants)
+        //            {
+        //                if (y != null)
+        //                    z[y.Slot - 1] = y;
+        //            }
+        //            string key = string.Empty;
+
+        //            // WARNING! If (or when) clones get proper names, then the implant calc
+        //            // will need amending too - see WARNING comment in ImplantCalculator.cs
+        //            // in the menu event handlers
+        //            switch (x.Number)
+        //            {
+        //                case 0:
+        //                    key = "Auto";
+        //                    break;
+        //                case 1:
+        //                    key = "Current";
+        //                    break;
+        //                case 2:
+        //                case 3:
+        //                case 4:
+        //                case 5:
+        //                case 6:
+        //                    key = "Clone " + (x.Number - 1);
+        //                    break;
+        //                default:
+        //                    key = "Unknown";
+        //                    break;
+        //            }
+        //            this.implantSets.Add(key, new ImplantSet(z));
+        //        }
+        //    }
+
+        //    this.BasePerception = ci.Attributes.BasePerception;
+        //    this.BaseMemory = ci.Attributes.BaseMemory;
+        //    this.BaseWillpower = ci.Attributes.BaseWillpower;
+        //    this.BaseIntelligence = ci.Attributes.BaseIntelligence;
+        //    this.BaseCharisma = ci.Attributes.BaseCharisma;
+
+        //    List<UserImplant> manualBonuses = new List<UserImplant>();
+        //    foreach (UserImplant x in this.ImplantBonuses)
+        //    {
+        //        if (x.Manual && getcurrent)
+        //            manualBonuses.Add(x);
+        //    }
+
+        //    this.ImplantBonuses.Clear();
+
+        //    Slot[] Implants = Slot.GetImplants();
+
+        //    if (this.implantSets.ContainsKey("Auto"))
+        //        this.implantSets.Remove("Auto");
+
+        //    foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
+        //    {
+        //        int slot = UserImplant.AttribToSlot(bonus.EveAttribute);
+        //        if (!bonus.Manual)
+        //        {
+        //            if (slot != 0)
+        //            {
+        //                if (!this.implantSets.ContainsKey("Auto"))
+        //                {
+        //                    this.implantSets.Add("Auto", new ImplantSet());
+        //                }
+        //                this.implantSets["Auto"][slot - 1] = new UserImplant(slot, Implants[slot - 1][bonus.Name], bonus.Manual);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (slot != 0 && getcurrent)
+        //            {
+        //                if (!this.implantSets.ContainsKey("Current"))
+        //                {
+        //                    this.implantSets.Add("Current", new ImplantSet());
+        //                }
+        //                Implant x = Implants[slot - 1][bonus.Name];
+        //                if (x == null)
+        //                {
+        //                    x = new Implant();
+        //                    x.Name = bonus.Name;
+        //                    x.Bonus = bonus.Amount;
+        //                }
+        //                this.implantSets["Current"][slot - 1] = new UserImplant(slot, x, bonus.Manual);
+        //            }
+        //        }
+        //    }
+        //    foreach (UserImplant tb in manualBonuses)
+        //    {
+        //        if (tb.Manual)
+        //        {
+        //            if (tb.Slot != 0)
+        //            {
+        //                if (!this.implantSets.ContainsKey("Current"))
+        //                {
+        //                    this.implantSets.Add("Current", new ImplantSet());
+        //                }
+        //                Implant x = Implants[tb.Slot - 1][tb.Name];
+        //                if (x == null)
+        //                {
+        //                    x = new Implant();
+        //                    x.Name = tb.Name;
+        //                    x.Bonus = tb.Bonus;
+        //                }
+        //                this.implantSets["Current"][tb.Slot - 1] = new UserImplant(tb.Slot, x, tb.Manual);
+        //            }
+        //        }
+        //    }
+        //    if (this.implantSets.ContainsKey("Auto"))
+        //    {
+        //        if (!this.implantSets.ContainsKey("Current"))
+        //        {
+        //            for (int i = 0; i < this.implantSets["Auto"].Array.GetLength(0); i++)
+        //            {
+        //                UserImplant x = this.implantSets["Auto"].Array[i];
+        //                if (x != null)
+        //                    this.ImplantBonuses.Add(x);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            for (int i = 0; i < Math.Max(this.implantSets["Auto"].Array.GetLength(0), this.implantSets["Current"].Array.GetLength(0)); i++)
+        //            {
+        //                UserImplant x = null;
+        //                if (i < this.implantSets["Auto"].Array.GetLength(0))
+        //                    x = this.implantSets["Auto"].Array[i];
+        //                UserImplant y = null;
+        //                if (i < this.implantSets["Current"].Array.GetLength(0))
+        //                    y = this.implantSets["Current"].Array[i];
+        //                if (y != null)
+        //                    this.ImplantBonuses.Add(y);
+        //                else if (x != null)
+        //                    this.ImplantBonuses.Add(x);
+        //            }
+        //        }
+        //    }
+        //    else if (this.implantSets.ContainsKey("Current"))
+        //    {
+        //        for (int i = 0; i < this.implantSets["Current"].Array.GetLength(0); i++)
+        //        {
+        //            UserImplant x = this.implantSets["Current"].Array[i];
+        //            if (x != null)
+        //                this.ImplantBonuses.Add(x);
+        //        }
+        //    }
+
+        //    foreach (SerializableSkillGroup sg in ci.SkillGroups)
+        //    {
+        //        SkillGroup gsg = m_skillGroups[sg.Name];
+        //        foreach (SerializableSkill s in sg.Skills)
+        //        {
+        //            Skill gs = gsg[s.Name];
+        //            if (gs == null)
+        //            {
+        //                MessageBox.Show("The character cache contains the unknown skill " + s.Name + ", which will be removed.",
+        //                            "Unknown skill", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        //            }
+        //            else
+        //            {
+        //                gs.CurrentSkillPoints = s.SkillPoints;
+        //                gs.Known = true;
+        //                if (ci.TimeLeftInCache != -1)
+        //                    gs.LastConfirmedLvl = s.Level;
+        //                else
+        //                    gs.LastConfirmedLvl = s.LastConfirmedLevel;
+        //            }
+        //        }
+        //    }
+        //    checkTrainingSkills(ci.TrainingSkillInfo);
+        //    this.ResumeEvents();
+        //}
+
+  
+        /// <summary>
+        /// Called from CharcterMonitor.start() to load from settings cache for both online and file based
+        /// Called from CharcterMonitor.RelaodFromFile() (when file is updated)
+        /// Called from EveSession.UpdateGrandCharacterInfo when xml is retrieved and there is more than 3 minutes 30 secs left in it's cache
+        /// Called from GetPlanByName in settings.cs (!!! Fix that!!!)
+        /// </summary>
+        /// <param name="ci"></param>
+        public void AssignFromSerializableCharacterSheet(SerializableCharacterSheet ci)
         {
             this.SuppressEvents();
-            this.Name = ci.Name;
-            this.CharacterId = ci.CharacterId;
-            this.IsCached = ci.IsCached;
-            this.Gender = ci.Gender;
-            this.Race = ci.Race;
-            this.Bloodline = ci.BloodLine;
-            this.CorporationName = ci.CorpName;
+            
+            this.Name = ci.CharacterSheet.Name;
+            this.CharacterId = ci.CharacterSheet.CharacterId;
+            this.IsCached = ci.XMLExpires < DateTime.Now.ToUniversalTime();
+            this.Gender = ci.CharacterSheet.Gender;
+            this.Race = ci.CharacterSheet.Race;
+            this.Bloodline = ci.CharacterSheet.BloodLine;
+            this.CorporationName = ci.CharacterSheet.CorpName;
             this.XMLExpires = ci.XMLExpires;
-            if (ci.IsCached == true)
+
+        
+            if (IsCached)
             {
                 this.EVEFolder = ci.EVEFolder;
             }
-            this.Balance = ci.Balance;
+            this.Balance = ci.CharacterSheet.Balance;
 
             bool getcurrent = false;
 
@@ -814,11 +1024,11 @@ namespace EVEMon.Common
                 }
             }
 
-            this.BasePerception = ci.Attributes.BasePerception;
-            this.BaseMemory = ci.Attributes.BaseMemory;
-            this.BaseWillpower = ci.Attributes.BaseWillpower;
-            this.BaseIntelligence = ci.Attributes.BaseIntelligence;
-            this.BaseCharisma = ci.Attributes.BaseCharisma;
+            this.BasePerception = ci.CharacterSheet.Attributes.BasePerception;
+            this.BaseMemory = ci.CharacterSheet.Attributes.BaseMemory;
+            this.BaseWillpower = ci.CharacterSheet.Attributes.BaseWillpower;
+            this.BaseIntelligence = ci.CharacterSheet.Attributes.BaseIntelligence;
+            this.BaseCharisma = ci.CharacterSheet.Attributes.BaseCharisma;
 
             List<UserImplant> manualBonuses = new List<UserImplant>();
             foreach (UserImplant x in this.ImplantBonuses)
@@ -834,7 +1044,7 @@ namespace EVEMon.Common
             if (this.implantSets.ContainsKey("Auto"))
                 this.implantSets.Remove("Auto");
 
-            foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
+            foreach (SerializableEveAttributeBonus bonus in ci.CharacterSheet.AttributeBonuses.Bonuses)
             {
                 int slot = UserImplant.AttribToSlot(bonus.EveAttribute);
                 if (!bonus.Manual)
@@ -941,7 +1151,7 @@ namespace EVEMon.Common
                     {
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
-                        if (ci.TimeLeftInCache != -1)
+                        if (ci.FromCCP)
                             gs.LastConfirmedLvl = s.Level;
                         else
                             gs.LastConfirmedLvl = s.LastConfirmedLevel;
@@ -951,13 +1161,12 @@ namespace EVEMon.Common
             checkTrainingSkills(ci.TrainingSkillInfo);
             this.ResumeEvents();
         }
-
         public void checkOldSkill()
         {
             DateTime _OSITLocalCompleteTime = DateTime.MinValue;
             if (m_OldSkillInTraining != null)
             {
-                _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
+                _OSITLocalCompleteTime = m_OldSkillInTraining.getTrainingEndTime.ToLocalTime();
             }
 			if (m_SkillInTraining != null && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining &&
 						(m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
@@ -1100,12 +1309,12 @@ namespace EVEMon.Common
 			DateTime _SITLocalUpdateTime = DateTime.MinValue;
 			if (SkillInTraining != null)
 			{
-				_SITLocalUpdateTime = ((DateTime)SkillInTraining.GetDateTimeAtUpdate.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+				_SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
 				if (SkillInTraining.isSkillInTraining)
 				{
 					_SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-					_SITLocalCompleteTime = ((DateTime)SkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
-					_SITLocalStartTime = ((DateTime)SkillInTraining.getTrainingStartTime.Subtract(TimeSpan.FromMilliseconds(SkillInTraining.TQOffset))).ToLocalTime();
+					_SITLocalCompleteTime = SkillInTraining.getTrainingEndTime.ToLocalTime();
+					_SITLocalStartTime = SkillInTraining.getTrainingStartTime.ToLocalTime();
 					// This would be a good place to change the prereqs too so they are also trained up fully.
 					// This just does one level of prereqs... we really need recursive updating...
 					if (_SkillInTraining != null)
@@ -1199,7 +1408,7 @@ namespace EVEMon.Common
                     bool check = false;
                     Skill oldskill = this.m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
                     int level = m_OldSkillInTraining.TrainingSkillToLevel;
-                    DateTime _OSITLocalCompleteTime = ((DateTime)m_OldSkillInTraining.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(m_OldSkillInTraining.TQOffset))).ToLocalTime();
+                    DateTime _OSITLocalCompleteTime = m_OldSkillInTraining.getTrainingEndTime.ToLocalTime();
                     if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
                         // if a skill completed when evemon was shutdown and there is currently no new skill is training
@@ -1249,7 +1458,7 @@ namespace EVEMon.Common
 					if (newTrainingSkill == null)
 					{
 						// no recorgnised skill in training
-						if (SkillInTraining.Error == "" || SkillInTraining.Error == null)
+						if (SkillInTraining.APIError.ErrorCode  == 0)
 						{
 							// Actually had a report that no skill is training
 							if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
@@ -1406,25 +1615,32 @@ namespace EVEMon.Common
             }
         }
 
-        public SerializableCharacterInfo ExportSerializableCharacterInfo()
+        /// <summary>
+        /// Create a serializable character sheet from CharacterInfo.
+        /// Called by: SaveTextFile,SaveFile, UpdateCachedCopy, Plan.tsbExportToXml_Click
+        /// </summary>
+        /// <returns></returns>
+        public SerializableCharacterSheet ExportSerializableCharacterSheet()
         {
-            SerializableCharacterInfo ci = new SerializableCharacterInfo();
-            ci.Name = this.Name;
-            ci.CharacterId = this.CharacterId;
-            ci.Gender = this.Gender;
-            ci.Race = this.Race;
-            ci.BloodLine = this.Bloodline;
-            ci.CorpName = this.CorporationName;
+            SerializableCharacterSheet ci = new SerializableCharacterSheet();
+
+            ci.CharacterSheet.Name = this.Name;
+            ci.CharacterSheet.CharacterId = this.CharacterId;
+            ci.CharacterSheet.Gender = this.Gender;
+            ci.CharacterSheet.Race = this.Race;
+            ci.CharacterSheet.BloodLine = this.Bloodline;
+            ci.CharacterSheet.CorpName = this.CorporationName;
             ci.EVEFolder = this.EVEFolder; // to CI
-            ci.Balance = this.Balance;
-            ci.XMLExpires = this.XMLExpires;
+            ci.CharacterSheet.Balance = this.Balance;
+            ci.currentTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(DateTime.Now.ToUniversalTime());
+            ci.CachedUntilTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_xmlExpires.ToUniversalTime());
 
             ci.ImplantSets.Clear();
             foreach (string x in this.implantSets.Keys)
             {
                 SerializableImplantSet z = new SerializableImplantSet(this.implantSets[x].Array);
                 switch (x)
-                { 
+                {
                     case "Auto":
                         z.Number = 0;
                         break;
@@ -1453,11 +1669,11 @@ namespace EVEMon.Common
                 ci.ImplantSets.Add(z);
             }
 
-            ci.Attributes.BaseIntelligence = this.BaseIntelligence;
-            ci.Attributes.BaseCharisma = this.BaseCharisma;
-            ci.Attributes.BasePerception = this.BasePerception;
-            ci.Attributes.BaseMemory = this.BaseMemory;
-            ci.Attributes.BaseWillpower = this.BaseWillpower;
+            ci.CharacterSheet.Attributes.BaseIntelligence = this.BaseIntelligence;
+            ci.CharacterSheet.Attributes.BaseCharisma = this.BaseCharisma;
+            ci.CharacterSheet.Attributes.BasePerception = this.BasePerception;
+            ci.CharacterSheet.Attributes.BaseMemory = this.BaseMemory;
+            ci.CharacterSheet.Attributes.BaseWillpower = this.BaseWillpower;
 
             foreach (UserImplant geab in this.ImplantBonuses)
             {
@@ -1485,35 +1701,23 @@ namespace EVEMon.Common
                     eab.Name = geab.Name;
                     eab.Amount = geab.Bonus;
                     eab.Manual = geab.Manual;
-                    ci.AttributeBonuses.Bonuses.Add(eab);
+                    ci.CharacterSheet.AttributeBonuses.Bonuses.Add(eab);
                 }
             }
 
             foreach (SkillGroup gsg in this.SkillGroups.Values)
             {
-                SerializableSkillGroup sg = new SerializableSkillGroup();
-                bool added = false;
                 foreach (Skill gs in gsg)
                 {
                     if (gs.CurrentSkillPoints > 0)
                     {
-                        SerializableSkill s = new SerializableSkill();
-                        s.Name = gs.Name;
-                        s.Id = gs.Id;
-                        s.GroupId = gsg.ID;
-                        s.Level = gs.Level;
-                        s.Rank = gs.Rank;
-                        s.SkillPoints = gs.CurrentSkillPoints;
+                        SerializableKnownSkill s = new SerializableKnownSkill();
+                        s.SkillId = gs.Id;
+                        s.SkillLevel = gs.Level;
+                        s.Skillpoints = gs.CurrentSkillPoints;
                         s.LastConfirmedLevel = gs.LastConfirmedLvl;
-                        sg.Skills.Add(s);
-                        added = true;
+                        ci.CharacterSheet.KnownSkillsSet.KnownSkills.Add(s);
                     }
-                }
-                if (added)
-                {
-                    sg.Name = gsg.Name;
-                    sg.Id = gsg.ID;
-                    ci.SkillGroups.Add(sg);
                 }
             }
             if (this.m_SkillInTraining != null)
@@ -1551,6 +1755,14 @@ namespace EVEMon.Common
 
             return result;
         }
+
+        private string m_downloadError = null;
+        public string DownloadError
+        {
+            get { return m_downloadError; }
+            set { m_downloadError = value; }
+        }
+
 
         public int DownloadFailed
         {
