@@ -133,9 +133,9 @@ namespace EVEMon
             this.enterLoginLabel.AutoSize = true;
             this.enterLoginLabel.Location = new System.Drawing.Point(6, 17);
             this.enterLoginLabel.Name = "enterLoginLabel";
-            this.enterLoginLabel.Size = new System.Drawing.Size(310, 13);
+            this.enterLoginLabel.Size = new System.Drawing.Size(375, 13);
             this.enterLoginLabel.TabIndex = 1;
-            this.enterLoginLabel.Text = "Enter your EVE Online API Parameters and choose a character:";
+            this.enterLoginLabel.Text = "Enter your LIMITED USE EVE Online API Parameters and choose a character:";
             // 
             // btnOk
             // 
@@ -235,9 +235,9 @@ namespace EVEMon
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(7, 55);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(281, 13);
+            this.label1.Size = new System.Drawing.Size(346, 13);
             this.label1.TabIndex = 6;
-            this.label1.Text = "and paste your User ID and API Key into the form below.";
+            this.label1.Text = "and paste your User ID and LIMITED USE API Key into the form below.";
             // 
             // lblAPILink
             // 

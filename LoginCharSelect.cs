@@ -32,6 +32,13 @@ namespace EVEMon
             }
         }
 
+        private List<string> m_charsToAdd = new List<string>();
+        public List<string> CharsToAdd
+        {
+            get { return m_charsToAdd; }
+
+        }
+
         private bool FileOk
         {
             set
@@ -83,6 +90,11 @@ namespace EVEMon
                     m_isFile = false;
                     m_userid = tbUserId.Text;
                     m_apiKey = tbAuthKey.Text;
+                    if (tbCharName.Text != "(All Characters)")
+                    {
+                        m_charsToAdd.Clear();
+                        m_charsToAdd.Add(tbCharName.Text);
+                    }
                     m_characterName = tbCharName.Text;
                     break;
                 case 1:
@@ -175,14 +187,40 @@ namespace EVEMon
                 if (chars.Count == 0)
                 {
                     SetNoCharacter();
-                    MessageBox.Show("No characters were found on with those API Credentials.",
-                                    "No Characters Found. This may be because CCP have disabled the API.",
+                    MessageBox.Show("No characters were found on with those API Credentials. This may be because CCP have disabled the API.",
+                                    "No Characters Found.",
                                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
+
+                // now see if there aer any new characters to add
+                Settings settings = Settings.GetInstance();
+                List<string> onlineChars = new List<string>();
+                foreach (CharLoginInfo cli in settings.CharacterList)
+                {
+                    onlineChars.Add(cli.CharacterName);
+                }
+
+                m_charsToAdd.Clear();
+                foreach (Pair<string, int> chr in chars)
+                {
+                    if (!onlineChars.Contains(chr.A))
+                    {
+                        m_charsToAdd.Add(chr.A);
+                    }
+                }
+                if (m_charsToAdd.Count == 0)
+                {
+                    SetNoCharacter();
+                    MessageBox.Show("No new characters were found on the account with those API Credentials.",
+                                    "No New Characters Found.",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+
+                }
             }
 
-            using (CharSelect f = new CharSelect(s))
+            using (CharSelect f = new CharSelect(m_charsToAdd))
             {
                 f.ShowDialog();
                 if (f.DialogResult == DialogResult.OK)

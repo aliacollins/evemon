@@ -33,6 +33,7 @@ namespace EVEMon
             this.label6 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -41,7 +42,6 @@ namespace EVEMon
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.verticalFlowPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -99,9 +99,18 @@ namespace EVEMon
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(0, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(132, 13);
+            this.label4.Size = new System.Drawing.Size(197, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Get Your API Details from ";
+            this.label4.Text = "Get Your LIMITED USE API Details from ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 57);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(290, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Enter your LIMITED USE API Credentials for this character:";
             // 
             // tableLayoutPanel1
             // 
@@ -199,15 +208,6 @@ namespace EVEMon
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 57);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(271, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Enter the EVE Online API Credentials for this character:";
             // 
             // ChangeLoginWindow
             // 

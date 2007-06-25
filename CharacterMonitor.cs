@@ -1458,12 +1458,20 @@ namespace EVEMon
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
+                    if (m_cli.UserId == f.UserId && m_cli.ApiKey != f.ApiKey)
+                    {
+                        // userId is same but api key has changed - fix all the api keys for this user id
+                        foreach (CharLoginInfo cli in m_settings.CharacterList)
+                        {
+                            if (cli.UserId == f.UserId)
+                                cli.ApiKey = f.ApiKey;
+                        }
+                    }
                     m_cli.UserId = f.UserId;
                     m_cli.ApiKey = f.ApiKey;
                     m_session = EveSession.GetSession(f.UserId, f.ApiKey);
                     m_charId = -1;
                     tmrUpdate_Tick(this, new EventArgs());
-
                     m_settings.Save();
                 }
             }

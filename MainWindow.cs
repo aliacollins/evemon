@@ -11,6 +11,10 @@ using EVEMon.Common.Schedule;
 using System.Runtime.InteropServices;
 using System.IO;
 
+// TODO fixup up EVEMon/cache and /EVEMon/cache/xml from release 778
+// (check if amy xmls are there that are less that a week old and if so, nove them to the right place
+// then remove the folder.
+
 
 namespace EVEMon
 {
@@ -605,14 +609,17 @@ namespace EVEMon
                             uid = Int32.Parse(f.UserId);
                         }
                         catch (Exception) { }
-                        CharLoginInfo cli = new CharLoginInfo();
-                        cli.UserId = uid;
-                        cli.ApiKey = f.ApiKey;
-                        cli.CharacterName = f.CharacterName;
-                        if (m_settings.AddCharacter(cli))
+                        foreach (string charName in f.CharsToAdd)
                         {
-                            AddTab(cli);
-                            UpdateTabOrder();
+                            CharLoginInfo cli = new CharLoginInfo();
+                            cli.UserId = uid;
+                            cli.ApiKey = f.ApiKey;
+                            cli.CharacterName = charName;
+                            if (m_settings.AddCharacter(cli))
+                            {
+                                AddTab(cli);
+                                UpdateTabOrder();
+                            }
                         }
                     }
                     else if (f.IsFile)

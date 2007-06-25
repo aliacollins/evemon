@@ -28,14 +28,16 @@ namespace EVEMon
         //        m_result = preferChar;
         //}
 
-        public CharSelect(EveSession s)
+        public CharSelect(List<string> s)
             : this()
         {
             lbChars.Items.Clear();
-            foreach (Pair<string, int> p in s.GetCharacterList())
+            foreach (string charName in s)
             {
-                lbChars.Items.Add(p.A);
+                lbChars.Items.Add(charName);
             }
+            if (s.Count > 1)
+                lbChars.Items.Add("(All Characters)");
         }
 
         private void lbChars_DoubleClick(object sender, EventArgs e)
