@@ -119,8 +119,8 @@ namespace EVEMon
 
             TipWindow.ShowTip("startup",
                 "Getting Started",
-                "To begin using EVEMon, click the \"Add Character\" button in " +
-                "the upper left corner of the window, enter your login information " +
+                "To begin using EVEMon, click the File|Add Character... menu option, " +
+                "enter your CCP API information " +
                 "and choose a character to monitor.");
         }
 
@@ -1340,5 +1340,6 @@ namespace EVEMon
         }
     }
 }
+
 
 
