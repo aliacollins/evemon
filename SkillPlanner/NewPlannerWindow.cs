@@ -662,7 +662,6 @@ namespace EVEMon.SkillPlanner
                 m_plan.Merge(ci);
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
-                    // TODO - Make character + planned skills export work for both xml frmats
                     if (saveType == ExportSaveType.ShortXml)
                     {
                         XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterSheet));
