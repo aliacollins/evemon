@@ -67,26 +67,29 @@ namespace EVEMon.SkillPlanner
 
         private void cbRace_SelectedChanged(object sender, EventArgs e)
         {
-            switch (sender)
+            if (sender == cbAmarr)
             {
-                case cbAmarr:
-                    m_settings.ShowAmarrShips = cbAmarr.Checked;
-                    break;
-                case cbCaldari:
-                    m_settings.ShowCaldariShips = cbCaldari.Checked;
-                    break;
-                case cbGallente:
-                    m_settings.ShowGallenteShips = cbGallente.Checked;
-                    break;
-                case cbMinmater:
-                    m_settings.ShowMinmatarShips = cbMinmatar.Checked;
-                    break;
-                case cbFaction:
-                    m_settings.ShowFactionShips = cbFaction.Checked;
-                    break;
-                case cbORE:
-                    m_settings.ShowOreShips = cbORE.Checked;
-                    break;
+                m_settings.ShowAmarrShips = cbAmarr.Checked;
+            }
+            if (sender == cbCaldari)
+            {
+                m_settings.ShowCaldariShips = cbCaldari.Checked;
+            }
+            if (sender == cbGallente)
+            {
+                m_settings.ShowGallenteShips = cbGallente.Checked;
+            }
+            if (sender == cbMinmatar)
+            {
+                m_settings.ShowMinmatarShips = cbMinmatar.Checked;
+            }
+            if (sender == cbFaction)
+            {
+                m_settings.ShowFactionShips = cbFaction.Checked;
+            }
+            if (sender == cbORE)
+            {
+                m_settings.ShowOreShips = cbORE.Checked;
             }
             UpdateDisplay();
         }
