@@ -23,7 +23,7 @@ namespace EVEMon.Common
         private string m_bloodLine;
         private string m_gender;
         private string m_corporationName;
-        private string m_EVEFolder;
+        private string m_portraitFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
                
@@ -292,14 +292,14 @@ namespace EVEMon.Common
 
         public event EventHandler BioInfoChanged;
 
-        public string EVEFolder
+        public string PortraitFolder
         {
-            get { return m_EVEFolder; }
+            get { return m_portraitFolder; }
             set
             {
-                if (m_EVEFolder != value)
+                if (m_portraitFolder != value)
                 {
-                    m_EVEFolder = value;
+                    m_portraitFolder = value;
                 }
             }
         }
@@ -976,12 +976,7 @@ namespace EVEMon.Common
             this.Bloodline = ci.CharacterSheet.BloodLine;
             this.CorporationName = ci.CharacterSheet.CorpName;
             this.XMLExpires = ci.XMLExpires;
-
-        
-            if (IsCached)
-            {
-                this.EVEFolder = ci.EVEFolder;
-            }
+            this.PortraitFolder = ci.PortraitFolder;
             this.Balance = ci.CharacterSheet.Balance;
 
             bool getcurrent = false;
@@ -1652,7 +1647,7 @@ namespace EVEMon.Common
             ci.CharacterSheet.Race = this.Race;
             ci.CharacterSheet.BloodLine = this.Bloodline;
             ci.CharacterSheet.CorpName = this.CorporationName;
-            ci.EVEFolder = this.EVEFolder; // to CI
+            ci.PortraitFolder = this.PortraitFolder; // to CI
             ci.CharacterSheet.Balance = this.Balance;
             ci.currentTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(DateTime.Now.ToUniversalTime());
             ci.CachedUntilTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_xmlExpires.ToUniversalTime());

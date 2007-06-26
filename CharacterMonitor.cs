@@ -809,7 +809,7 @@ namespace EVEMon
             Image i = null;
 
             // test to see if an EVE Folder has been selected
-            if (this.GrandCharacterInfo.EVEFolder == "")
+            if (this.GrandCharacterInfo.PortraitFolder == "")
             {
                 // if the folder has not been selected, ask the user to select it
                 RequestEVEFolder();
@@ -817,11 +817,10 @@ namespace EVEMon
 
             try
             {
-                // generate paths and file patterns required for 
-                string eveCacheFolder = String.Format(
-                    "{1}{0}cache{0}Pictures{0}Portraits{0}",
-                    Path.DirectorySeparatorChar,
-                    this.GrandCharacterInfo.EVEFolder);
+                // retreve path of portrait folder
+                string eveCacheFolder = this.GrandCharacterInfo.PortraitFolder;
+                
+                // generate path of cache
                 string cacheFileName = String.Format(
                     "{1}{0}cache{0}{2}.png",
                     Path.DirectorySeparatorChar,
@@ -887,11 +886,11 @@ namespace EVEMon
         {
             using (EVEFolderWindow f = new EVEFolderWindow())
             {
-                f.EVEFolder = m_grandCharacterInfo.EVEFolder;
+                f.EVEFolder = m_grandCharacterInfo.PortraitFolder;
                 f.ShowDialog();
                 if (f.DialogResult == DialogResult.OK)
                 {
-                    m_grandCharacterInfo.EVEFolder = f.EVEFolder;
+                    m_grandCharacterInfo.PortraitFolder = f.EVEFolder;
                     UpdateCachedCopy();
                 }
             }

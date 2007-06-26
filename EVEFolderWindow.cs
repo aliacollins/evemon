@@ -11,62 +11,85 @@ namespace EVEMon
 {
     public partial class EVEFolderWindow : Form
     {
+        private string DefaultFolderLocation;
+
         public EVEFolderWindow()
         {
             InitializeComponent();
+
+            string MyDocumentsPortraitCache = String.Format(
+                "{0}CCP{0}EVE{0}cache{0}Pictures{0}Portraits", 
+                Path.DirectorySeparatorChar);
+            string LocalApplicationData = Environment.GetFolderPath(
+                Environment.SpecialFolder.LocalApplicationData);
+            DefaultFolderLocation = LocalApplicationData + MyDocumentsPortraitCache;
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void BrowseButton_Click(object sender, EventArgs e)
         {
-            fbdOpenDir.SelectedPath = m_EVEFolder;
-            DialogResult dr = fbdOpenDir.ShowDialog();
+            OpenDirFolderBrowserDialog.SelectedPath = m_portraitFolder;
+            DialogResult dr = OpenDirFolderBrowserDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
-                // Test to see if EVE executable exists
-                FileInfo eveEXE = new FileInfo(Path.Combine(fbdOpenDir.SelectedPath, "eve.exe"));
-
-                if (eveEXE.Exists)
-                {
-                    // if it exists we are good to go, update the text box and let the user click OK
-                    tbFilename.Text = fbdOpenDir.SelectedPath;
-                    btnOk.Enabled = true;
-                }
-                else
-                {
-                    // if not let the user know and leave the text box unchanged
-                    MessageBox.Show("EVE Executable (eve.exe) not found in " + fbdOpenDir.SelectedPath + " please select a valid EVE installation folder.", "Invalid Folder", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                }
-
-                //                FileOk = true;
-                //
-                //                //anders - find the real character.  This probably burns too much time to stay here, but I like it
-                //                XmlDocument xdoc = new XmlDocument();
-                //                xdoc.Load(ofdOpenXml.FileName);
-                //                XmlElement cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
-                //                tbFileCharName.Text = cElement.Attributes["name"].Value;
+                FilenameTextBox.Text = OpenDirFolderBrowserDialog.SelectedPath;
+                OKButton.Enabled = true;
             }
-
         }
 
-        private string m_EVEFolder;
+        private string m_portraitFolder;
 
         public string EVEFolder
         {
-            get { return m_EVEFolder; }
+            get { return m_portraitFolder; }
             set
             {
-                m_EVEFolder = value;
-                tbFilename.Text = value;
+                m_portraitFolder = value;
+                FilenameTextBox.Text = value;
             }
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void OKButton_Click(object sender, EventArgs e)
         {
-            m_EVEFolder = tbFilename.Text;
+            if (SpecifyFolderRadioButton.Checked)
+            {
+                m_portraitFolder = FilenameTextBox.Text;
+            }
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
+        private void DefaultFolderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DefaultFolderRadioButton.Checked)
+            {
+                OKButton.Enabled = true;
+                m_portraitFolder = DefaultFolderLocation;
+            }
+        }
 
+        private void SpecifyFolderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            BrowseButton.Enabled = SpecifyFolderRadioButton.Checked;
+
+            if (SpecifyFolderRadioButton.Checked)
+            {
+                OKButton.Enabled = (FilenameTextBox.Text != "");
+            }
+        }
+
+        private void EVEFolderWindow_Load(object sender, EventArgs e)
+        {
+            if (m_portraitFolder == DefaultFolderLocation)
+            {
+                DefaultFolderRadioButton.Checked = true;
+                BrowseButton.Enabled = false;
+            }
+            else
+            {
+                SpecifyFolderRadioButton.Checked = true;
+                BrowseButton.Enabled = true;
+            }
+        }
     }
 }

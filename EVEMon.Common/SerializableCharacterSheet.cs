@@ -85,7 +85,7 @@ namespace EVEMon.Common
         private string m_EVEFolder = String.Empty;
 
         [XmlElement("EVEFolder")]
-        public string EVEFolder
+        public string PortraitFolder
         {
             get { return m_EVEFolder; }
             set { m_EVEFolder = value; }
