@@ -2109,7 +2109,10 @@ namespace EVEMon
                             lbSkills.Invalidate(lbSkills.GetItemRectangle(idx));
                         }
                         int sgidx = lbSkills.Items.IndexOf(trainingSkill.SkillGroup);
-                        lbSkills.Invalidate(lbSkills.GetItemRectangle(sgidx));
+                        if (sgidx >= 0)
+                        {
+                            lbSkills.Invalidate(lbSkills.GetItemRectangle(sgidx));
+                        }
                         UpdateSkillHeaderStats();
                     }
                 }
