@@ -392,7 +392,7 @@ namespace EVEMon.SkillPlanner
             Plan p = null;
             if (s != null && s != "<New Plan>" && s != m_plan.Name)
             {
-                p = m_settings.GetPlanByName(m_planKey, s);
+                p = m_settings.GetPlanByName(m_planKey, m_plan.GrandCharacterInfo, s);
                 ChangePlan(p);
             }
             else

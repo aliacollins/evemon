@@ -27,6 +27,7 @@ namespace EVEMon.Common
         #region Character Lists
         
         // Flag to aid in conversion from pre-api use to post-api use.
+
         private OldSettings m_oldSettings = null;
         private bool m_useAPI = false;
         public bool UseApi
@@ -1012,14 +1013,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Finds a plan by name. This creates a new character sheet! You might 
-        /// want to use GetPlanByCharacter...
+        /// Finds a plan by name. 
+        /// 
+        /// This creates a new character sheet! 
+        /// You should use the overload that takes a CharacterInfo parameter whereever possible
+        /// USE THIS VERY CAREFULLY AS IT WILL FIRE OF LOTS OF CHARACTER SHEET EVENTS 
+        /// AND CALL CheckTraining()
+        /// 
+        /// Currently NOTHING uses this - and it should remain ever thus.
         /// </summary>
         /// <param name="charName">The Plan Key (either char name or filename) for the character whose plans we're going to search.</param>
         /// <param name="planName">The plan name to look for.</param>
         /// <returns>The plan if found; null if not.</returns>
-        /// 
-        // TODO - does this really always need to create a whole new charactersheet every time???
+        
+        [Obsolete]
         public Plan GetPlanByName(string planKeyName, string planName)
         {
             Plan p = FindPlan(planName, planKeyName);
@@ -1032,6 +1039,7 @@ namespace EVEMon.Common
             if (sci != null)
             {
                 CharacterInfo gci = new CharacterInfo(sci.CharacterSheet.CharacterId, planKeyName);
+                // AssignFromSerializableCharacterSheet fires lots of events and calls the CheckTRainingSkill processing
                 gci.AssignFromSerializableCharacterSheet(GetCharacterSheet(planKeyName));
 
                 p.GrandCharacterInfo = gci;
@@ -1052,7 +1060,7 @@ namespace EVEMon.Common
         /// <returns>The plan if found; null if not.</returns>
         /// 
 
-        public Plan GetPlanByCharacter(string planKeyName, CharacterInfo  charInfo, string planName)
+        public Plan GetPlanByName(string planKeyName, CharacterInfo  charInfo, string planName)
         {
 
             Plan p = FindPlan(planName, planKeyName);
@@ -1092,7 +1100,7 @@ namespace EVEMon.Common
         /// <param name="planName">The name to assign to it.</param>
         public void AddPlanFor(string planKeyName, Plan plan, string planName)
         {
-            if (GetPlanByName(planKeyName, planName) != null)
+            if (FindPlan(planName,planKeyName) != null)
             {
                 throw new ApplicationException("That plan already exists.");
             }
@@ -1154,7 +1162,7 @@ namespace EVEMon.Common
         /// <returns>True if the plan was found and renamed, false if not.</returns>
         public bool RenamePlanFor(string planKeyName, string planName, string newName)
         {
-            if (GetPlanByName(planKeyName, newName) != null)
+            if (FindPlan(newName,planKeyName) != null)
             {
                 return false;
             }

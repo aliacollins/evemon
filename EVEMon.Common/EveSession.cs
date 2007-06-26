@@ -1,4 +1,5 @@
 //#define DEBUG_SINGLETHREAD
+// (If setting DEBUG_SINGLE THREAD, also set it in CharacterMonitor.cs)
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -110,6 +111,7 @@ namespace EVEMon.Common
         public int ApiErrorCode
         {
             get { return m_apiErrorCode; }
+            set { m_apiErrorCode = value; }
         }
 
         public string ApiErrorMessage
@@ -655,11 +657,14 @@ namespace EVEMon.Common
                     // CCP currently alwasy set the CcachedUntil to be one hour from the time of the fetch
                     // so lets fix that by checking of the cach has expired, if not - override the 
                     // cachedUntil time  from ccp
-                    if (grandCharacterInfo.XMLExpires > DateTime.Now.ToUniversalTime())
-                    {
-                        // cache hasnt expired yet so leave it at the old time
-                         sci.XMLExpires = grandCharacterInfo.XMLExpires;
-                    }
+
+                    // OK ccp want us to obey the cache time they send back - always :(
+                    // code removed atthe behest of garthagk...
+                    //if (grandCharacterInfo.XMLExpires.ToUniversalTime() > DateTime.Now.ToUniversalTime())
+                    //{
+                     //   // cache hasnt expired yet so leave it at the old time
+                      //   sci.XMLExpires = grandCharacterInfo.XMLExpires.ToUniversalTime();
+                    //}
 
                }
  

@@ -55,8 +55,8 @@ namespace EVEMon.Common
 
         public DateTime XMLExpires
         {
-            get { return m_cachedUntilTime; }
-            set { m_cachedUntilTime = value; }
+            get { return m_cachedUntilTime.ToUniversalTime(); }
+            set { m_cachedUntilTime = value.ToUniversalTime(); }
         }
 
         #endregion
@@ -113,9 +113,16 @@ namespace EVEMon.Common
         public int TimeLeftInCache
         {
             get 
-            { 
-                TimeSpan ts = m_cachedUntilTime - m_curTime;
-                return Convert.ToInt32(ts.TotalMilliseconds);
+            {
+                if (m_cachedUntilTime > m_curTime)
+                {
+                    TimeSpan ts = m_cachedUntilTime - m_curTime;
+                    return Convert.ToInt32(ts.TotalMilliseconds);
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
 

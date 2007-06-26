@@ -482,11 +482,12 @@ namespace EVEMon
 
                 if (e.Complete)
                 {
+                    CharacterInfo ci = GetCharacterInfo(e.CharacterName);
                     // if the scheduler says be quiet, how much should be suppressed?
                     if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
                         MP3Player.Play("SkillTrained.mp3", true);
 
-                    int skillLevel = GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).Level;
+                    int skillLevel = ci.GetSkill(e.SkillName).Level;
 
                     if (m_settings.EnableBalloonTips)
                     {
@@ -504,7 +505,7 @@ namespace EVEMon
                     }
 
                     if (m_settings.EnableEmailAlert)
-                        Emailer.SendAlertMail(m_settings, skillLevel, e.SkillName, e.CharacterName);
+                        Emailer.SendAlertMail(m_settings, skillLevel, e.SkillName,ci);
                 }
                 else
                 {
@@ -805,7 +806,7 @@ namespace EVEMon
             }
         }
 
-        public CharacterInfo GetGrandCharacterInfo(string charName)
+        public CharacterInfo GetCharacterInfo(string charName)
         {
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
@@ -1134,8 +1135,8 @@ namespace EVEMon
         void planItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Plan plan = m_settings.GetPlanByName((string)planItem.OwnerItem.Tag, planItem.Text);
-            plan.ShowEditor(m_settings, GetGrandCharacterInfo(planItem.OwnerItem.Text));
+            Plan plan = m_settings.GetPlanByName((string)planItem.OwnerItem.Tag, GetCharacterInfo(planItem.OwnerItem.Text),planItem.Text);
+            plan.ShowEditor(m_settings, GetCharacterInfo(planItem.OwnerItem.Text));
         }
 
         private void UpdateTabVisibility(object sender, ControlEventArgs e)

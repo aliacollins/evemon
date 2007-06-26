@@ -13,6 +13,8 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
+
+    // WARNING!!! This should ONLY be constructed from CharacterMonitor. If you need to construct one elsewhere, you;re doing something wrong. - Brad
     public class CharacterInfo
     {
         private string m_name;
@@ -1307,7 +1309,14 @@ namespace EVEMon.Common
             DateTime _SITLocalCompleteTime = DateTime.MinValue;
             DateTime _SITLocalStartTime = DateTime.MinValue;
 			DateTime _SITLocalUpdateTime = DateTime.MinValue;
-			if (SkillInTraining != null)
+
+            if (SkillInTraining != null && !SkillInTraining.isSkillInTraining)
+            {
+                SkillInTraining = null;
+
+            }
+
+			if (SkillInTraining != null && SkillInTraining.isSkillInTraining)
 			{
 				_SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
 				if (SkillInTraining.isSkillInTraining)
@@ -1421,6 +1430,19 @@ namespace EVEMon.Common
                             OnSkillChanged(oldskill);
                             m_OldSkillInTraining.AlertRaisedAlready = false;
                         }
+
+
+                        // Skill has ppreviously completed but character sheet may not have caught up
+                        // we've already done the notifications so just set the skill points to
+                        // what they were at completion.
+                        if (SkillInTraining == null && _OSITLocalCompleteTime <= DateTime.Now)
+                        {
+                            check = false;
+                            oldskill.CurrentSkillPoints = m_OldSkillInTraining.TrainingSkillDestinationSP;
+                            OnSkillChanged(oldskill);
+                        }
+                        
+
                     }
                     else
                     {

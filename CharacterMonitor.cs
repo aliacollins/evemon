@@ -1,4 +1,5 @@
 //#define DEBUG_SINGLETHREAD
+// (If setting DEBUG_SINGLE THREAD, also set it in EVESession.cs)
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -414,6 +415,15 @@ namespace EVEMon
                                                     new UpdateGrandCharacterInfoCallback(GrandCharacterUpdatedCallback));
         }
 
+
+        #if DEBUG_SINGLETHREAD
+        private void GrandCharacterUpdatedCallback(EveSession s, int timeLeftInCache)
+        {
+
+        }
+
+        #else
+
         /// <summary>
         /// Updates the throbber timer when finished updating
         /// </summary>
@@ -450,6 +460,7 @@ namespace EVEMon
 
             }));
         }
+#endif
 
         private void UpdateTrainingSkillInfo()
         {
@@ -464,6 +475,11 @@ namespace EVEMon
         /// <param name="timeLeftInCache">The time left in cache - that is, the minimum time before the xml shows what skill you are training.</param>
         private void TrainingSkillUpdatedCallback(EveSession s, int timeToNextUpdate)
         {
+#if DEBUG_SINGLETHREAD
+            m_canUpdateSkills = false;
+            
+#else
+
             this.Invoke(new MethodInvoker(delegate
             {
                 m_canUpdateSkills = false;
@@ -476,6 +492,7 @@ namespace EVEMon
                     miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToLongTimeString() + ")";
                 }
             }));
+#endif
         }
 
         private bool m_canUpdateSkills = false;
@@ -1342,6 +1359,11 @@ namespace EVEMon
         /// </summary>
         private void CharacterDownloadFailedCallback()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(CharacterDownloadFailedCallback));
+                return;
+            }
             StringBuilder throbberTip = new StringBuilder();
             // Stop an exception on first run using new api interface
             try
@@ -1728,7 +1750,7 @@ namespace EVEMon
         public void ShowPlanEditor(string planName)
         {
             String planKey = (m_cfi == null) ? m_grandCharacterInfo.Name : m_cfi.Filename;
-            m_settings.GetPlanByCharacter(planKey, m_grandCharacterInfo, planName).ShowEditor(m_settings, m_grandCharacterInfo);
+            m_settings.GetPlanByName(planKey, m_grandCharacterInfo, planName).ShowEditor(m_settings, m_grandCharacterInfo);
         }
 
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
@@ -2410,6 +2432,12 @@ namespace EVEMon
 
         private void StartThrobber()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(StartThrobber));
+                return;
+            }
+
             throbber.State = Throbber.ThrobberState.Rotating;
             ttToolTip.SetToolTip(throbber, "Retrieving data from EVE Online...");
             ttToolTip.IsBalloon = true;
@@ -2417,6 +2445,11 @@ namespace EVEMon
 
         private void StopThrobber()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(StopThrobber));
+                return;
+            }
             throbber.State = Throbber.ThrobberState.Stopped;
         }
 

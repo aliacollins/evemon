@@ -222,7 +222,9 @@ namespace EVEMon.IGBService
                 sw.WriteLine(String.Format("<h1>Plan: {0}</h1>",
                                            HttpUtility.HtmlEncode(planName)));
 
-                Plan p = Program.Settings.GetPlanByName(headers["eve.charname"], planName);
+                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve.charname"]);
+
+                Plan p = Program.Settings.GetPlanByName(headers["eve.charname"], ci, planName);
                 if (p == null)
                 {
                     sw.WriteLine("non-existant plan name");
@@ -231,7 +233,7 @@ namespace EVEMon.IGBService
                 {
                     if (p.GrandCharacterInfo == null)
                     {
-                        p.GrandCharacterInfo = Program.MainWindow.GetGrandCharacterInfo(headers["eve.charname"]);
+                        p.GrandCharacterInfo = ci;
                     }
                     if (p.GrandCharacterInfo == null)
                     {

@@ -73,7 +73,7 @@ namespace EVEMon
                 }
                 else
                 {
-                    CharacterInfo i = Program.MainWindow.GetGrandCharacterInfo(info.CharacterName);
+                    CharacterInfo i = Program.MainWindow.GetCharacterInfo(info.CharacterName);
                     if (i == null)
                     {
                         return;
@@ -242,7 +242,7 @@ namespace EVEMon
                 return;
             }
 
-            string skillLevelString = Program.MainWindow.GetGrandCharacterInfo(e.CharacterName).GetSkill(e.SkillName).RomanLevel;
+            string skillLevelString = Program.MainWindow.GetCharacterInfo(e.CharacterName).GetSkill(e.SkillName).RomanLevel;
             LCD._COMPLETESTR = e.CharacterName + "\nhas finished learning skill\n" + e.SkillName + " " + skillLevelString;
             LCD.SkillCompleted();
         }

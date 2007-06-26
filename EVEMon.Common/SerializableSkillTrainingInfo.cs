@@ -147,13 +147,6 @@ namespace EVEMon.Common
         }
 
         [XmlIgnore]
-        public int SkillInTraining
-        {
-            get { return m_results.SkillInTraining; }
-            set { m_results.SkillInTraining = value; }
-        }
-        
-        [XmlIgnore]
         public DateTime GetDateTimeAtUpdate
         {
             get { return m_curTime; }
@@ -169,7 +162,7 @@ namespace EVEMon.Common
         [XmlIgnore]
         public DateTime getTrainingEndTime
         {
-            get { return m_results.TrainingEndTime; }
+            get { return m_results.TrainingEndTime.ToLocalTime(); }
         }
 
         [XmlIgnore]
@@ -225,7 +218,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return (APIError.ErrorCode == 0 && (m_results.SkillInTraining == 1));
+                return (APIError.ErrorCode == 0 && m_results.TrainingEndTime.ToUniversalTime() > DateTime.Now.ToUniversalTime());
             }
         }
 

@@ -28,8 +28,9 @@ namespace EVEMon
                             "This is a test email sent by EVE Character Monitor");
         }
 
-        public static bool SendAlertMail(Settings settings, int SkillLevel, string skillName, string charName)
+        public static bool SendAlertMail(Settings settings, int SkillLevel, string skillName, CharacterInfo characterInfo)
         {
+            string charName = characterInfo.Name;
             bool useShortFormat = settings.EmailUseShortFormat;
             StringBuilder messageText = new StringBuilder();
             messageText.Append(charName + " has finished training " + skillName + " ");
@@ -42,7 +43,7 @@ namespace EVEMon
                 foreach (string planName in settings.GetPlansForCharacter(charName))
                 {
 
-                    Plan p = settings.GetPlanByName(charName, planName);
+                    Plan p = settings.GetPlanByName(charName, characterInfo, planName);
                     if (p.Entries.Count > 0)
                     {
                         EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();

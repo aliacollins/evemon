@@ -20,12 +20,12 @@ namespace EVEMon.SkillPlanner
             : this()
         {
             m_settings = s;
-            m_grandCharacterInfo = gci;
-            m_charKey = m_grandCharacterInfo.Name;
+            m_characterInfo = gci;
+            m_charKey = m_characterInfo.Name;
         }
 
         private Settings m_settings;
-        private CharacterInfo m_grandCharacterInfo;
+        private CharacterInfo m_characterInfo;
         private string m_charKey;
         private bool m_planOrderChanged = false;
 
@@ -59,7 +59,7 @@ namespace EVEMon.SkillPlanner
         private void PlanSelectWindow_Load(object sender, EventArgs e)
         {
             PopulatePlanList(true);
-            m_columnSorter = new PlanListSorter(this);
+            m_columnSorter = new PlanListSorter(this,m_characterInfo);
             lbPlanList.ListViewItemSorter = null;
         }
 
@@ -79,7 +79,7 @@ namespace EVEMon.SkillPlanner
                 }
                 foreach (string PlanName in m_settings.GetPlansForCharacter(m_charKey))
                 {
-                    Plan tmpPlan = m_settings.GetPlanByName(m_charKey, PlanName);
+                    Plan tmpPlan = m_settings.GetPlanByName(m_charKey, m_characterInfo, PlanName);
                     TimeSpan tsPlan = FindPlanTimeSpan(tmpPlan, calculateTime);
                     ListViewItem lvi = new ListViewItem(PlanName);
                     lvi.Text = PlanName;
@@ -108,7 +108,7 @@ namespace EVEMon.SkillPlanner
 
             if (plan.GrandCharacterInfo == null)
             {
-                plan.GrandCharacterInfo = m_grandCharacterInfo;
+                plan.GrandCharacterInfo = m_characterInfo;
             }
             TimeSpan tsPlan;
             if (!ignoreCache && planCache.ContainsKey(plan))
@@ -161,7 +161,7 @@ namespace EVEMon.SkillPlanner
                 foreach (ListViewItem plan in lbPlanList.SelectedItems)
                 {
                     string s = (string)plan.Text;
-                    Plan p = m_settings.GetPlanByName(m_charKey, s);
+                    Plan p = m_settings.GetPlanByName(m_charKey, m_characterInfo, s);
                     foreach (Plan.Entry entry in p.Entries)
                     {
                         Plan.Entry entryInMergedPlan = m_result.GetEntry(entry.SkillName, entry.Level);
@@ -188,7 +188,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 string s = (string)lbPlanList.SelectedItems[0].Text;
-                m_result = m_settings.GetPlanByName(m_charKey, s);
+                m_result = m_settings.GetPlanByName(m_charKey, m_characterInfo, s);
             }
             if (m_planOrderChanged)
             {
@@ -252,8 +252,8 @@ namespace EVEMon.SkillPlanner
                     {
                         npw.Text = "Load Plan";
                         string fileName = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
-                        if(fileName.StartsWith(m_grandCharacterInfo.Name + " - "))
-                            fileName = fileName.Substring((m_grandCharacterInfo.Name + " - ").Length);
+                        if(fileName.StartsWith(m_characterInfo.Name + " - "))
+                            fileName = fileName.Substring((m_characterInfo.Name + " - ").Length);
                         npw.PlanName = fileName;
                         DialogResult xdr = npw.ShowDialog();
                         if (xdr == DialogResult.Cancel)
@@ -262,7 +262,7 @@ namespace EVEMon.SkillPlanner
                         }
                         string PlanName = npw.Result;
 
-                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, PlanName);
+                        Plan oldPlan = m_settings.GetPlanByName(m_charKey, m_characterInfo,PlanName);
                         if (oldPlan == null)
                         {
                             // No plan of the same name, so no replacement necessary
@@ -340,7 +340,7 @@ namespace EVEMon.SkillPlanner
 
         private void miLoadPlanFromCharacter_Click(object sender, EventArgs e)
         {
-            using (CrossPlanSelect cps = new CrossPlanSelect(m_grandCharacterInfo.Name))
+            using (CrossPlanSelect cps = new CrossPlanSelect(m_characterInfo.Name))
             {
                 DialogResult dr = cps.ShowDialog();
                 if (dr == DialogResult.OK)
@@ -364,7 +364,7 @@ namespace EVEMon.SkillPlanner
                     // Get the plan from the other character, and add it here.
                     try
                     {
-                        Plan otherPlan = m_settings.GetPlanByName(charKey, planName);
+                        Plan otherPlan = m_settings.GetPlanByName(charKey, m_characterInfo, planName);
                         m_settings.AddPlanFor(m_charKey, otherPlan, newPlanName);
 
                     }
@@ -402,7 +402,7 @@ namespace EVEMon.SkillPlanner
                 {
                     return;
                 }
-                if (m_settings.GetPlanByName(m_charKey, newName) != null)
+                if (m_settings.GetPlanByName(m_charKey, m_characterInfo, newName) != null)
                 {
                     MessageBox.Show("A plan with that name already exists.",
                                     "Duplicate Plan Name", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -490,15 +490,17 @@ namespace EVEMon.SkillPlanner
         public class PlanListSorter : IComparer
         {
 
-            public PlanListSorter(PlanSelectWindow psw)
+            public PlanListSorter(PlanSelectWindow psw,CharacterInfo ci)
             {
                 OrderOfSort = SortOrder.None;
                 SortColumn = 0;
                 m_planSelectWindow = psw;
+                m_characterInfo = ci;
             }
 
             private PlanSelectWindow m_planSelectWindow;
             private int m_sortColumn;
+            private CharacterInfo m_characterInfo;
 
             public int SortColumn
             {
@@ -527,9 +529,9 @@ namespace EVEMon.SkillPlanner
                     case 1: // Time
 
                         Settings s = Settings.GetInstance();
-                        Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, a.Text);
+                        Plan p = s.GetPlanByName(m_planSelectWindow.m_charKey, m_characterInfo, a.Text);
                         TimeSpan t1 = m_planSelectWindow.FindPlanTimeSpan(p, false);
-                        p = s.GetPlanByName(m_planSelectWindow.m_charKey, b.Text);
+                        p = s.GetPlanByName(m_planSelectWindow.m_charKey,m_characterInfo, b.Text);
                         TimeSpan t2 = m_planSelectWindow.FindPlanTimeSpan(p, false);
                         compareResult = TimeSpan.Compare(t1, t2);
                         if (compareResult == 0)
