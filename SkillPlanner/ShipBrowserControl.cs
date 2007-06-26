@@ -52,62 +52,62 @@ namespace EVEMon.SkillPlanner
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Base price","Base price",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false, "Tech Level", "Tech Level", false, false));
                 // Fitting
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Fitting","Fitting",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"CPU Output","CPU",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"powergrid Output","Powergrid",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Calibration","Calibration",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Fitting","Fitting",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"CPU Output","CPU",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"powergrid Output","Powergrid",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Calibration","Calibration",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"High Slots", "High Slots", false, true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Med Slots","Med Slots",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Low Slots", "Low Slots", false, true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Launcher hardpoints","Launcher Hardpoints",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Turret hardpoints","Turret Hardpoints",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Rig Slots","Rig Slots",false,true));
-        	    // Attributes - structure
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Structure","Structure",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"hp","Structure Hitpoints",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacity","Capacity",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Drone Capacity","Drone Capacity",false,false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Mass","Mass",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Volume","Volume",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"EM dmg resistance","EM Dmg Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Explosive dmg resistance","Explosive Dmg Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Kinetic dmg resistance","Kinetic Dmg Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Thermal dmg resistance","Thermal Dmg Resistance",false,true));
-        	    // Attributes - Armor"Attributes - Armor
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Armor","Armor",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Hitpoints","Armor Hitpoints",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Em Damage Resistance","Armor Em Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Explosive Damage Resistance","Armor Explosive Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Kinetic Damage Resistance","Armor Kinetic Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Thermal Damage Resistance","Armor Thermal Damage Resistance",false,true));
-        	    // Attributes - Shield"Attributes - Shield
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Shield","Shield",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Capacity","Shield Capacity",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield recharge time","Shield Recharge Time",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Em Damage Resistance","Shield Em Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Explosive Damage Resistance","Shield Explosive Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Kinetic Damage Resistance","Shield Kinetic Damage Resistance",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Thermal Damage Resistance","Shield Thermal Damage Resistance",false,true));
-        	    // Attributes - cap"Attributes - cap
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Cap","Capacitor",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacitor Capacity","Capacitor Capacity",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Recharge time","Recharge Time",false,true));
-        	    // Attributes - Targeting
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Targeting","Targeting",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Maximum Targeting Range","Maximum Targeting Range",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Max  Locked Targets","Max Locked Targets",false,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Turret hardpoints","Turret Hardpoints",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Rig Slots","Rig Slots",false,true));
+                // Attributes - structure
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Structure","Structure",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"hp","Structure Hitpoints",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacity","Capacity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Drone Capacity","Drone Capacity",false,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Mass","Mass",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Volume","Volume",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"EM dmg resistance","EM Dmg Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Explosive dmg resistance","Explosive Dmg Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Kinetic dmg resistance","Kinetic Dmg Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Thermal dmg resistance","Thermal Dmg Resistance",false,true));
+                // Attributes - Armor"Attributes - Armor
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Armor","Armor",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Hitpoints","Armor Hitpoints",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Em Damage Resistance","Armor Em Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Explosive Damage Resistance","Armor Explosive Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Kinetic Damage Resistance","Armor Kinetic Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Thermal Damage Resistance","Armor Thermal Damage Resistance",false,true));
+                // Attributes - Shield"Attributes - Shield
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Shield","Shield",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Capacity","Shield Capacity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield recharge time","Shield Recharge Time",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Em Damage Resistance","Shield Em Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Explosive Damage Resistance","Shield Explosive Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Kinetic Damage Resistance","Shield Kinetic Damage Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Shield Thermal Damage Resistance","Shield Thermal Damage Resistance",false,true));
+                // Attributes - cap"Attributes - cap
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Cap","Capacitor",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacitor Capacity","Capacitor Capacity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Recharge time","Recharge Time",false,true));
+                // Attributes - Targeting
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Targeting","Targeting",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Maximum Targeting Range","Maximum Targeting Range",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Max  Locked Targets","Max Locked Targets",false,false));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Targeting Speed", "Targeting Speed", false, false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Scan Resolution","Scan Resolution",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Gravimetric Sensor Strength","Gravimetric Sensor Strength",true,false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"LADAR Sensor Strength","LADAR Sensor Strength",true,false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Magnetometric Sensor Strength","Magnetometric Sensor Strength",true,false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"RADAR Sensor Strength","RADAR Sensor Strength",true,false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Signature Radius","Signature Radius",false,true));
-        	    // Attributes - Propulsion
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Propulsion","Propulsion",false,true));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(false,"Max Velocity","Max Velocity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Scan Resolution","Scan Resolution",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Gravimetric Sensor Strength","Gravimetric Sensor Strength",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"LADAR Sensor Strength","LADAR Sensor Strength",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Magnetometric Sensor Strength","Magnetometric Sensor Strength",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"RADAR Sensor Strength","RADAR Sensor Strength",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Signature Radius","Signature Radius",false,true));
+                // Attributes - Propulsion
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Propulsion","Propulsion",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Max Velocity","Max Velocity",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false, "agility", "Agility", false, false));
-        	    m_DisplayAttributes.add(new AttributeDisplayData(true,"=Other","Other",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(true,"=Other","Other",false,true));
             }
             
             if (this.DesignMode)
@@ -239,7 +239,9 @@ namespace EVEMon.SkillPlanner
                 {
                     // remove excess columns that might have been added by 'compare with' earlier
                     while (lvShipProperties.Columns.Count > 2)
+                    {
                         lvShipProperties.Columns.RemoveAt(2);
+                    }
 
                     // (re)construct ship properties list
                     lvShipProperties.Items.Clear();
@@ -297,7 +299,9 @@ namespace EVEMon.SkillPlanner
                         Ship selectedShip = shipSelectControl.SelectedObjects[i_ship] as Ship;
                         // Skip if it's the mothership or not a ship
                         if (selectedShip == shipSelectControl.SelectedObject || selectedShip == null)
+                        {
                             continue;
+                        }
 
                         // add new column header and values
                         lvShipProperties.Columns.Add(selectedShip.Name);
@@ -335,7 +339,9 @@ namespace EVEMon.SkillPlanner
                                     ListViewItem newItem = lvShipProperties.Items.Insert(lastpos + 1, sp.Name);
                                     newItem.Name = sp.Name;
                                     while (skipColumns-- > 0)
+                                    {
                                         newItem.SubItems.Add("");
+                                    }
                                     newItem.SubItems.Add(removeNegative(sp.Value));
 
                                 }
@@ -368,7 +374,9 @@ namespace EVEMon.SkillPlanner
                                     ListViewItem newItem = lvShipProperties.Items.Add(prop.Name);
                                     newItem.Name = prop.Name;
                                     while (skipColumns-- > 0)
+                                    {
                                         newItem.SubItems.Add("");
+                                    }
                                     newItem.SubItems.Add(removeNegative(prop.Value));
                                 }
 
@@ -406,7 +414,9 @@ namespace EVEMon.SkillPlanner
                 foreach (Control c in scShipSelect.Panel2.Controls)
                 {
                     if (c != lblHelp)
+                    {
                         c.Visible = true;
+                    }
                 }
             }
             else
@@ -418,8 +428,14 @@ namespace EVEMon.SkillPlanner
         // helper function remove any -signs from ship attributes
         private String removeNegative(String s)
         {
-            if (s.StartsWith("-")) return s.Substring(1);
-            else return s;
+            if (s.StartsWith("-"))
+            {
+                return s.Substring(1);
+            }
+            else
+            {
+                return s;
+            }
         }
 
         private void SetShipSkillLabel(int rnum, LinkLabel skillLabel, List<EntityRequiredSkill> list)

@@ -19,10 +19,8 @@ namespace EVEMon.SkillPlanner
 
         public CharacterInfo GrandCharacterInfo
         {
-//            get { return m_grandCharacterInfo; }
             set
             {
-//                m_grandCharacterInfo = value;
                 skillSelectControl.GrandCharacterInfo = value;
             }
         }
@@ -31,7 +29,7 @@ namespace EVEMon.SkillPlanner
         public Plan Plan
         {
             get { return m_plan; }
-            set 
+            set
             {
                 m_plan = value;
                 skillTreeDisplay.Plan = value;
@@ -41,8 +39,8 @@ namespace EVEMon.SkillPlanner
 
         public bool WorksafeMode
         {
-            set {
-                //skillSelectControl.WorksafeMode = value;
+            set
+            {
                 skillTreeDisplay.WorksafeMode = value;
             }
         }
@@ -144,7 +142,7 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
-               
+
                 m_planSelectShowing = thisPss;
                 m_planSelectSelected = plannedTo;
                 cbPlanSelect.SelectedIndexChanged += new EventHandler(cbPlanSelect_SelectedIndexChanged);
@@ -265,7 +263,7 @@ namespace EVEMon.SkillPlanner
                     tts = m_selectedSkill.GetTrainingTimeToLevel(level);
                 }
                 sb.Append(Skill.TimeSpanToDescriptiveText(tts, DescriptiveTextOptions.IncludeCommas));
-      
+
                 TimeSpan prts = m_selectedSkill.GetTrainingTimeToLevel(level - 1) + m_selectedSkill.GetPrerequisiteTime();
                 if (prts > TimeSpan.Zero)
                 {
@@ -276,9 +274,8 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     // we're displaying the next level to train - show %complete
-                     if (m_selectedSkill.Level != 5)
+                    if (m_selectedSkill.Level != 5)
                     {
-                        
                         double percentDone = m_selectedSkill.GetPercentDone();
                         sb.Append(String.Format(" ({0} complete)", percentDone.ToString("P0")));
                     }
@@ -384,7 +381,7 @@ namespace EVEMon.SkillPlanner
 
         private void PlanTo(int level)
         {
-            m_plan.PlanTo(m_selectedSkill, level,true);
+            m_plan.PlanTo(m_selectedSkill, level, true);
             UpdatePlanControl();
         }
 
@@ -398,7 +395,7 @@ namespace EVEMon.SkillPlanner
         #region Skill Enables...
         private void btnEnables_Click(object sender, EventArgs e)
         {
-           ShowSkillInExplorer(m_selectedSkill);
+            ShowSkillInExplorer(m_selectedSkill);
         }
 
         public void ShowSkillInExplorer(Skill s)
@@ -420,15 +417,15 @@ namespace EVEMon.SkillPlanner
         private SkillEnablesForm m_skillEnablesForm = null;
         public SkillEnablesForm EnablesForm
         {
-            set 
-            { 
+            set
+            {
                 m_skillEnablesForm = value;
                 NewPlannerWindow npw = m_plan.PlannerWindow.Target as NewPlannerWindow;
                 if (npw != null)
                     npw.SkillExplorer = value;
             }
         }
-            
+
         #endregion
     }
 }
