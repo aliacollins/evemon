@@ -162,7 +162,7 @@ namespace EVEMon.Common
         [XmlIgnore]
         public DateTime getTrainingEndTime
         {
-            get { return m_results.TrainingEndTime.ToLocalTime(); }
+            get { return m_results.TrainingEndTime.ToUniversalTime(); }
         }
 
         [XmlIgnore]
