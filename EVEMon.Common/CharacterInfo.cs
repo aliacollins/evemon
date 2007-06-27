@@ -13,7 +13,6 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
-
     // WARNING!!! This should ONLY be constructed from CharacterMonitor. If you need to construct one elsewhere, you;re doing something wrong. - Brad
     public class CharacterInfo
     {
@@ -26,7 +25,7 @@ namespace EVEMon.Common
         private string m_portraitFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
-               
+
         // These are the new replacements for m_attributeBonuses
         private MonitoredList<UserImplant> m_CurrentImplants = new MonitoredList<UserImplant>();
         private Dictionary<string, ImplantSet> m_implantSets = new Dictionary<string, ImplantSet>();
@@ -44,15 +43,13 @@ namespace EVEMon.Common
             m_name = name;
 
             BuildSkillTree();
-            m_CurrentImplants.Changed +=
-                new EventHandler<ChangedEventArgs<UserImplant>>(m_implantSet_Changed);
+            m_CurrentImplants.Changed += new EventHandler<ChangedEventArgs<UserImplant>>(m_implantSet_Changed);
         }
 
         private void BuildSkillTree()
         {
             bool bookOwned = false;
             StaticSkill.LoadStaticSkills();
-
 
             // Get owned books before we add SkillChange handlers
             List<string> ownedBooks = new List<string>();
@@ -96,7 +93,7 @@ namespace EVEMon.Common
             // cleanup on aisle 3!
             AutoShrink.Dirty();
         }
-        
+
         private int m_suppressed;
         private Queue<InternalEvent> m_events = new Queue<InternalEvent>();
         private Dictionary<string, bool> m_coalescedEventTable = new Dictionary<string, bool>();
@@ -201,10 +198,10 @@ namespace EVEMon.Common
             }
         }
 
-        public Dictionary<string,ImplantSet> implantSets
+        public Dictionary<string, ImplantSet> implantSets
         {
             get { return m_implantSets; }
-            set 
+            set
             {
                 if (m_implantSets != value)
                 {
@@ -282,12 +279,12 @@ namespace EVEMon.Common
         private void OnBioInfoChanged()
         {
             FireEvent(delegate
-                          {
-                              if (BioInfoChanged != null)
-                              {
-                                  BioInfoChanged(this, new EventArgs());
-                              }
-                          }, "bioinfo");
+            {
+                if (BioInfoChanged != null)
+                {
+                    BioInfoChanged(this, new EventArgs());
+                }
+            }, "bioinfo");
         }
 
         public event EventHandler BioInfoChanged;
@@ -324,12 +321,12 @@ namespace EVEMon.Common
         private void OnBalanceChanged()
         {
             FireEvent(delegate
-                          {
-                              if (BalanceChanged != null)
-                              {
-                                  BalanceChanged(this, new EventArgs());
-                              }
-                          }, "balance");
+            {
+                if (BalanceChanged != null)
+                {
+                    BalanceChanged(this, new EventArgs());
+                }
+            }, "balance");
         }
 
         public event EventHandler BalanceChanged;
@@ -351,12 +348,12 @@ namespace EVEMon.Common
         private void OnAttributeChanged()
         {
             FireEvent(delegate
-                          {
-                              if (AttributeChanged != null)
-                              {
-                                  AttributeChanged(this, new EventArgs());
-                              }
-                          }, "attribute");
+            {
+                if (AttributeChanged != null)
+                {
+                    AttributeChanged(this, new EventArgs());
+                }
+            }, "attribute");
         }
 
         public event EventHandler AttributeChanged;
@@ -409,7 +406,7 @@ namespace EVEMon.Common
             {
                 result += getImplantValue(attribute);
             }
- 
+
             return ApplyLearningToAttribute(attribute, scratchpad, includeLearning, result);
         }
 
@@ -424,14 +421,15 @@ namespace EVEMon.Common
                 int ind = (int)attribute;
                 UserImplant imp = impSet[ind];
                 if (imp != null)
+                {
                     result += imp.Bonus;
+                }
             }
             return ApplyLearningToAttribute(attribute, scratchpad, includeLearning, result);
         }
 
-
         private double ApplyLearningToAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad,
-                                    bool includeLearning, double attributeValue)
+                                                bool includeLearning, double attributeValue)
         {
             double result = attributeValue;
             double learningBonus = 1.0F;
@@ -501,7 +499,9 @@ namespace EVEMon.Common
         public string getImplantName(EveAttribute eveAttribute)
         {
             if (eveAttribute == EveAttribute.None)
+            {
                 return "???";
+            }
             string result = string.Empty;
             foreach (UserImplant geab in ImplantBonuses)
             {
@@ -570,12 +570,12 @@ namespace EVEMon.Common
         {
             OnAttributeChanged();
             FireEvent(delegate
-                          {
-                              if (ImplantSetChanged != null)
-                              {
-                                  ImplantSetChanged(this, new EventArgs());
-                              }
-                          }, "implantset");
+            {
+                if (ImplantSetChanged != null)
+                {
+                    ImplantSetChanged(this, new EventArgs());
+                }
+            }, "implantset");
         }
 
         public event EventHandler ImplantSetChanged;
@@ -611,19 +611,19 @@ namespace EVEMon.Common
             }
 
             FireEvent(delegate
-                          {
-                              Skill[] mySkillsChanged;
-                              lock (m_skillsChanged)
-                              {
-                                  mySkillsChanged = new Skill[m_skillsChanged.Count];
-                                  m_skillsChanged.CopyTo(mySkillsChanged);
-                                  m_skillsChanged.Clear();
-                              }
-                              if (SkillChanged != null)
-                              {
-                                  SkillChanged(this, new SkillChangedEventArgs(mySkillsChanged));
-                              }
-                          }, "skill");
+            {
+                Skill[] mySkillsChanged;
+                lock (m_skillsChanged)
+                {
+                    mySkillsChanged = new Skill[m_skillsChanged.Count];
+                    m_skillsChanged.CopyTo(mySkillsChanged);
+                    m_skillsChanged.Clear();
+                }
+                if (SkillChanged != null)
+                {
+                    SkillChanged(this, new SkillChangedEventArgs(mySkillsChanged));
+                }
+            }, "skill");
             if (m_skillGroups["Learning"].Contains(gs.Name))
             {
                 OnAttributeChanged();
@@ -709,9 +709,9 @@ namespace EVEMon.Common
             if (m_cachedLevelSkillsCount == null)
             {
                 m_cachedLevelSkillsCount = new Dictionary<int, int>();
-                for (int i=1;i<6;i++)
+                for (int i = 1; i < 6; i++)
                 {
-                    m_cachedLevelSkillsCount.Add(i,0);
+                    m_cachedLevelSkillsCount.Add(i, 0);
                     foreach (SkillGroup sg in m_skillGroups.Values)
                     {
                         m_cachedLevelSkillsCount[i] += sg.GetSkillsAtLevel(i);
@@ -758,205 +758,6 @@ namespace EVEMon.Common
             this.ResumeEvents();
         }
 
-
-        //public void AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
-        //{
-        //    this.SuppressEvents();
-        //    this.Name = ci.Name;
-        //    this.CharacterId = ci.CharacterId;
-        //    this.IsCached = ci.IsCached;
-        //    this.Gender = ci.Gender;
-        //    this.Race = ci.Race;
-        //    this.Bloodline = ci.BloodLine;
-        //    this.CorporationName = ci.CorpName;
-            
-        //    if (ci.IsCached == true)
-        //    {
-        //        this.EVEFolder = ci.EVEFolder;
-        //    }
-        //    this.Balance = ci.Balance;
-
-        //    bool getcurrent = false;
-
-        //    if (this.implantSets.Count == 0)
-        //    {
-        //        if (ci.ImplantSets.Count == 0)
-        //            getcurrent = true;
-        //        foreach (SerializableImplantSet x in ci.ImplantSets)
-        //        {
-        //            UserImplant[] z = new UserImplant[10];
-        //            foreach (UserImplant y in x.Implants)
-        //            {
-        //                if (y != null)
-        //                    z[y.Slot - 1] = y;
-        //            }
-        //            string key = string.Empty;
-
-        //            // WARNING! If (or when) clones get proper names, then the implant calc
-        //            // will need amending too - see WARNING comment in ImplantCalculator.cs
-        //            // in the menu event handlers
-        //            switch (x.Number)
-        //            {
-        //                case 0:
-        //                    key = "Auto";
-        //                    break;
-        //                case 1:
-        //                    key = "Current";
-        //                    break;
-        //                case 2:
-        //                case 3:
-        //                case 4:
-        //                case 5:
-        //                case 6:
-        //                    key = "Clone " + (x.Number - 1);
-        //                    break;
-        //                default:
-        //                    key = "Unknown";
-        //                    break;
-        //            }
-        //            this.implantSets.Add(key, new ImplantSet(z));
-        //        }
-        //    }
-
-        //    this.BasePerception = ci.Attributes.BasePerception;
-        //    this.BaseMemory = ci.Attributes.BaseMemory;
-        //    this.BaseWillpower = ci.Attributes.BaseWillpower;
-        //    this.BaseIntelligence = ci.Attributes.BaseIntelligence;
-        //    this.BaseCharisma = ci.Attributes.BaseCharisma;
-
-        //    List<UserImplant> manualBonuses = new List<UserImplant>();
-        //    foreach (UserImplant x in this.ImplantBonuses)
-        //    {
-        //        if (x.Manual && getcurrent)
-        //            manualBonuses.Add(x);
-        //    }
-
-        //    this.ImplantBonuses.Clear();
-
-        //    Slot[] Implants = Slot.GetImplants();
-
-        //    if (this.implantSets.ContainsKey("Auto"))
-        //        this.implantSets.Remove("Auto");
-
-        //    foreach (SerializableEveAttributeBonus bonus in ci.AttributeBonuses.Bonuses)
-        //    {
-        //        int slot = UserImplant.AttribToSlot(bonus.EveAttribute);
-        //        if (!bonus.Manual)
-        //        {
-        //            if (slot != 0)
-        //            {
-        //                if (!this.implantSets.ContainsKey("Auto"))
-        //                {
-        //                    this.implantSets.Add("Auto", new ImplantSet());
-        //                }
-        //                this.implantSets["Auto"][slot - 1] = new UserImplant(slot, Implants[slot - 1][bonus.Name], bonus.Manual);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (slot != 0 && getcurrent)
-        //            {
-        //                if (!this.implantSets.ContainsKey("Current"))
-        //                {
-        //                    this.implantSets.Add("Current", new ImplantSet());
-        //                }
-        //                Implant x = Implants[slot - 1][bonus.Name];
-        //                if (x == null)
-        //                {
-        //                    x = new Implant();
-        //                    x.Name = bonus.Name;
-        //                    x.Bonus = bonus.Amount;
-        //                }
-        //                this.implantSets["Current"][slot - 1] = new UserImplant(slot, x, bonus.Manual);
-        //            }
-        //        }
-        //    }
-        //    foreach (UserImplant tb in manualBonuses)
-        //    {
-        //        if (tb.Manual)
-        //        {
-        //            if (tb.Slot != 0)
-        //            {
-        //                if (!this.implantSets.ContainsKey("Current"))
-        //                {
-        //                    this.implantSets.Add("Current", new ImplantSet());
-        //                }
-        //                Implant x = Implants[tb.Slot - 1][tb.Name];
-        //                if (x == null)
-        //                {
-        //                    x = new Implant();
-        //                    x.Name = tb.Name;
-        //                    x.Bonus = tb.Bonus;
-        //                }
-        //                this.implantSets["Current"][tb.Slot - 1] = new UserImplant(tb.Slot, x, tb.Manual);
-        //            }
-        //        }
-        //    }
-        //    if (this.implantSets.ContainsKey("Auto"))
-        //    {
-        //        if (!this.implantSets.ContainsKey("Current"))
-        //        {
-        //            for (int i = 0; i < this.implantSets["Auto"].Array.GetLength(0); i++)
-        //            {
-        //                UserImplant x = this.implantSets["Auto"].Array[i];
-        //                if (x != null)
-        //                    this.ImplantBonuses.Add(x);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            for (int i = 0; i < Math.Max(this.implantSets["Auto"].Array.GetLength(0), this.implantSets["Current"].Array.GetLength(0)); i++)
-        //            {
-        //                UserImplant x = null;
-        //                if (i < this.implantSets["Auto"].Array.GetLength(0))
-        //                    x = this.implantSets["Auto"].Array[i];
-        //                UserImplant y = null;
-        //                if (i < this.implantSets["Current"].Array.GetLength(0))
-        //                    y = this.implantSets["Current"].Array[i];
-        //                if (y != null)
-        //                    this.ImplantBonuses.Add(y);
-        //                else if (x != null)
-        //                    this.ImplantBonuses.Add(x);
-        //            }
-        //        }
-        //    }
-        //    else if (this.implantSets.ContainsKey("Current"))
-        //    {
-        //        for (int i = 0; i < this.implantSets["Current"].Array.GetLength(0); i++)
-        //        {
-        //            UserImplant x = this.implantSets["Current"].Array[i];
-        //            if (x != null)
-        //                this.ImplantBonuses.Add(x);
-        //        }
-        //    }
-
-        //    foreach (SerializableSkillGroup sg in ci.SkillGroups)
-        //    {
-        //        SkillGroup gsg = m_skillGroups[sg.Name];
-        //        foreach (SerializableSkill s in sg.Skills)
-        //        {
-        //            Skill gs = gsg[s.Name];
-        //            if (gs == null)
-        //            {
-        //                MessageBox.Show("The character cache contains the unknown skill " + s.Name + ", which will be removed.",
-        //                            "Unknown skill", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-        //            }
-        //            else
-        //            {
-        //                gs.CurrentSkillPoints = s.SkillPoints;
-        //                gs.Known = true;
-        //                if (ci.TimeLeftInCache != -1)
-        //                    gs.LastConfirmedLvl = s.Level;
-        //                else
-        //                    gs.LastConfirmedLvl = s.LastConfirmedLevel;
-        //            }
-        //        }
-        //    }
-        //    checkTrainingSkills(ci.TrainingSkillInfo);
-        //    this.ResumeEvents();
-        //}
-
-  
         /// <summary>
         /// Called from CharcterMonitor.start() to load from settings cache for both online and file based
         /// Called from CharcterMonitor.RelaodFromFile() (when file is updated)
@@ -967,7 +768,7 @@ namespace EVEMon.Common
         public void AssignFromSerializableCharacterSheet(SerializableCharacterSheet ci)
         {
             this.SuppressEvents();
-            
+
             this.Name = ci.CharacterSheet.Name;
             this.CharacterId = ci.CharacterSheet.CharacterId;
             this.IsCached = ci.XMLExpires < DateTime.Now.ToUniversalTime();
@@ -984,14 +785,18 @@ namespace EVEMon.Common
             if (this.implantSets.Count == 0)
             {
                 if (ci.ImplantSets.Count == 0)
+                {
                     getcurrent = true;
+                }
                 foreach (SerializableImplantSet x in ci.ImplantSets)
                 {
                     UserImplant[] z = new UserImplant[10];
                     foreach (UserImplant y in x.Implants)
                     {
                         if (y != null)
+                        {
                             z[y.Slot - 1] = y;
+                        }
                     }
                     string key = string.Empty;
 
@@ -1031,7 +836,9 @@ namespace EVEMon.Common
             foreach (UserImplant x in this.ImplantBonuses)
             {
                 if (x.Manual && getcurrent)
+                {
                     manualBonuses.Add(x);
+                }
             }
 
             this.ImplantBonuses.Clear();
@@ -1039,7 +846,9 @@ namespace EVEMon.Common
             Slot[] Implants = Slot.GetImplants();
 
             if (this.implantSets.ContainsKey("Auto"))
+            {
                 this.implantSets.Remove("Auto");
+            }
 
             foreach (SerializableEveAttributeBonus bonus in ci.CharacterSheet.AttributeBonuses.Bonuses)
             {
@@ -1103,7 +912,9 @@ namespace EVEMon.Common
                     {
                         UserImplant x = this.implantSets["Auto"].Array[i];
                         if (x != null)
+                        {
                             this.ImplantBonuses.Add(x);
+                        }
                     }
                 }
                 else
@@ -1112,14 +923,22 @@ namespace EVEMon.Common
                     {
                         UserImplant x = null;
                         if (i < this.implantSets["Auto"].Array.GetLength(0))
+                        {
                             x = this.implantSets["Auto"].Array[i];
+                        }
                         UserImplant y = null;
                         if (i < this.implantSets["Current"].Array.GetLength(0))
+                        {
                             y = this.implantSets["Current"].Array[i];
+                        }
                         if (y != null)
+                        {
                             this.ImplantBonuses.Add(y);
+                        }
                         else if (x != null)
+                        {
                             this.ImplantBonuses.Add(x);
+                        }
                     }
                 }
             }
@@ -1129,7 +948,9 @@ namespace EVEMon.Common
                 {
                     UserImplant x = this.implantSets["Current"].Array[i];
                     if (x != null)
+                    {
                         this.ImplantBonuses.Add(x);
+                    }
                 }
             }
 
@@ -1149,9 +970,13 @@ namespace EVEMon.Common
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
                         if (ci.FromCCP)
+                        {
                             gs.LastConfirmedLvl = s.Level;
+                        }
                         else
+                        {
                             gs.LastConfirmedLvl = s.LastConfirmedLevel;
+                        }
                     }
                 }
             }
@@ -1165,17 +990,19 @@ namespace EVEMon.Common
             {
                 _OSITLocalCompleteTime = m_OldSkillInTraining.getTrainingEndTime.ToLocalTime();
             }
-			if (m_SkillInTraining != null && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining &&
-						(m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
-						m_OldSkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))
+            if (m_SkillInTraining != null && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining &&
+                (m_OldSkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
+                 m_OldSkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))
             {
-				this.CancelCurrentSkillTraining();
+                this.CancelCurrentSkillTraining();
             }
             if (!firstRun && m_OldSkillInTraining != null && m_OldSkillInTraining.isSkillInTraining)
             {
                 Skill _OSIT = null;
-				if (m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))
-					_OSIT = m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
+                if (m_AllSkillsByID.ContainsKey(m_OldSkillInTraining.TrainingSkillWithTypeID))
+                {
+                    _OSIT = m_AllSkillsByID[m_OldSkillInTraining.TrainingSkillWithTypeID];
+                }
                 if (_OSIT != null)
                 {
                     bool add = false;
@@ -1185,7 +1012,9 @@ namespace EVEMon.Common
                     if (m_OldSkillInTraining.AlertRaisedAlready)
                     {
                         if (_OSIT.UnadjustedCurrentSkillPoints < _OSIT.GetPointsRequiredForLevel(level))
+                        {
                             check = true;
+                        }
                     }
                     else
                     {
@@ -1238,8 +1067,8 @@ namespace EVEMon.Common
                             // To make doubly sure we have no old training skills lurking ...out with the old...
                             this.CancelCurrentSkillTraining();
                             // ...and in with the new
-							m_SkillInTraining = (SerializableSkillTrainingInfo)m_OldSkillInTraining.Clone();
-							_OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime,m_SkillInTraining);
+                            m_SkillInTraining = (SerializableSkillTrainingInfo)m_OldSkillInTraining.Clone();
+                            _OSIT.SetTrainingInfo(level, _OSITLocalCompleteTime, m_SkillInTraining);
                         }
                     }
                 }
@@ -1273,41 +1102,41 @@ namespace EVEMon.Common
             set { m_OldSkillInTraining = value; }
         }
 
-		/// <summary>  
-        /// Recursively check that a skill has all it's prereqs changed.  
-        /// </summary>  
-		private void MarkPrereqsTrained(Skill s)
-		{
-			foreach (Skill.Prereq pReq in s.Prereqs)
-			{
-				if (pReq != null)
-				{
-					if (pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
-					{
-						if (pReq.Skill.UnadjustedCurrentSkillPoints == 0)
-							MarkPrereqsTrained(pReq.Skill);
-						pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
-						pReq.Skill.Known = true;
-						OnSkillChanged(pReq.Skill);
-					}
-				}
-			}
-		}  
+        /// <summary>
+        /// Recursively check that a skill has all it's prereqs changed.
+        /// </summary>
+        private void MarkPrereqsTrained(Skill s)
+        {
+            foreach (Skill.Prereq pReq in s.Prereqs)
+            {
+                if (pReq != null)
+                {
+                    if (pReq.Skill.UnadjustedCurrentSkillPoints < pReq.Skill.GetPointsRequiredForLevel(pReq.Level))
+                    {
+                        if (pReq.Skill.UnadjustedCurrentSkillPoints == 0)
+                        {
+                            MarkPrereqsTrained(pReq.Skill);
+                        }
+                        pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
+                        pReq.Skill.Known = true;
+                        OnSkillChanged(pReq.Skill);
+                    }
+                }
+            }
+        }
 
         public void checkTrainingSkills(SerializableSkillTrainingInfo SkillInTraining)
         {
-            // This is called from AssignFromSerializableCharacterInfo(SerializableCharacterInfo ci)
             // This is where normal running takes you in the standard run of the mill operation of EVEMon
-            
+
             // First one thing we can do no matter what
             Skill _SkillInTraining = null;
             DateTime _SITLocalCompleteTime = DateTime.MinValue;
             DateTime _SITLocalStartTime = DateTime.MinValue;
-			DateTime _SITLocalUpdateTime = DateTime.MinValue;
-
+            DateTime _SITLocalUpdateTime = DateTime.MinValue;
 
             if (SkillInTraining != null)
-			{
+            {
                 // See if this is the same skill as the old one
                 if (m_OldSkillInTraining != null && m_OldSkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID && m_OldSkillInTraining.getTrainingEndTime == SkillInTraining.getTrainingEndTime)
                 {
@@ -1316,80 +1145,86 @@ namespace EVEMon.Common
                     SkillInTraining.AlertRaisedAlready = m_OldSkillInTraining.AlertRaisedAlready;
                 }
 
-				_SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
-				if (SkillInTraining.isSkillInTraining)
-				{
-					_SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
-					_SITLocalCompleteTime = SkillInTraining.getTrainingEndTime.ToLocalTime();
-					_SITLocalStartTime = SkillInTraining.getTrainingStartTime.ToLocalTime();
-					// This would be a good place to change the prereqs too so they are also trained up fully.
-					// This just does one level of prereqs... we really need recursive updating...
-					if (_SkillInTraining != null)
-					{
-						// All PreReqs must have been trained for this to be training.
-						MarkPrereqsTrained(_SkillInTraining);
+                _SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
+                if (SkillInTraining.isSkillInTraining)
+                {
+                    _SkillInTraining = this.AllSkillsByTypeID[SkillInTraining.TrainingSkillWithTypeID];
+                    _SITLocalCompleteTime = SkillInTraining.getTrainingEndTime.ToLocalTime();
+                    _SITLocalStartTime = SkillInTraining.getTrainingStartTime.ToLocalTime();
+                    // This would be a good place to change the prereqs too so they are also trained up fully.
+                    // This just does one level of prereqs... we really need recursive updating...
+                    if (_SkillInTraining != null)
+                    {
+                        // All PreReqs must have been trained for this to be training.
+                        MarkPrereqsTrained(_SkillInTraining);
 
-						// Once we have done the pre-reqs, we can set this skill's current skill points
-						if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
-						{
-							_SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
-							_SkillInTraining.Known = true;
-							OnSkillChanged(_SkillInTraining);
-						}
-					}
-					else
-					{
-						// unknown skill in training...
-					}
-					// Now look at the previous skill we were training and set accordingly.
-					// We haven't changed the current and old skills yet, so...
-					if (m_SkillInTraining != null && m_SkillInTraining.TrainingSkillWithTypeID != SkillInTraining.TrainingSkillWithTypeID)
-					{
-						if (m_SkillInTraining.isSkillInTraining)
-						{
-							if (SkillInTraining.getTrainingStartTime < m_SkillInTraining.getTrainingEndTime)
-							{
-								// We need to adjust the SP of the previously training skill as it was changed before completion
-								// I'm assuming here that you haven't changed implants (actually, that wouldn't matter) or something and it's not a prereq of the current skill in training
-								// You could stick some extra checks in here to make sure.
-								Skill theOneImInterestedIn = null;
-								if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
-									theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-								if (theOneImInterestedIn != null)
-								{
-									theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
-									OnSkillChanged(theOneImInterestedIn);
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					// No currently training skill
-					// Did we have a previous one?
-					if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
-					{
-						Skill theOneImInterestedIn = null;
-						if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
-							theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-						if (theOneImInterestedIn != null)
-						{
-							if (SkillInTraining.GetDateTimeAtUpdate < m_SkillInTraining.getTrainingEndTime)
-								theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
-							OnSkillChanged(theOneImInterestedIn);
-						}
-					}
-				}
-			}
+                        // Once we have done the pre-reqs, we can set this skill's current skill points
+                        if (_SkillInTraining.UnadjustedCurrentSkillPoints < SkillInTraining.EstimatedPointsAtUpdate)
+                        {
+                            _SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
+                            _SkillInTraining.Known = true;
+                            OnSkillChanged(_SkillInTraining);
+                        }
+                    }
+                    else
+                    {
+                        // unknown skill in training...
+                    }
+                    // Now look at the previous skill we were training and set accordingly.
+                    // We haven't changed the current and old skills yet, so...
+                    if (m_SkillInTraining != null && m_SkillInTraining.TrainingSkillWithTypeID != SkillInTraining.TrainingSkillWithTypeID)
+                    {
+                        if (m_SkillInTraining.isSkillInTraining)
+                        {
+                            if (SkillInTraining.getTrainingStartTime < m_SkillInTraining.getTrainingEndTime)
+                            {
+                                // We need to adjust the SP of the previously training skill as it was changed before completion
+                                // I'm assuming here that you haven't changed implants (actually, that wouldn't matter) or something and it's not a prereq of the current skill in training
+                                // You could stick some extra checks in here to make sure.
+                                Skill theOneImInterestedIn = null;
+                                if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+                                {
+                                    theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                                }
+                                if (theOneImInterestedIn != null)
+                                {
+                                    theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
+                                    OnSkillChanged(theOneImInterestedIn);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // No currently training skill
+                    // Did we have a previous one?
+                    if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
+                    {
+                        Skill theOneImInterestedIn = null;
+                        if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+                        {
+                            theOneImInterestedIn = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                        }
+                        if (theOneImInterestedIn != null)
+                        {
+                            if (SkillInTraining.GetDateTimeAtUpdate < m_SkillInTraining.getTrainingEndTime)
+                            {
+                                theOneImInterestedIn.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
+                            }
+                            OnSkillChanged(theOneImInterestedIn);
+                        }
+                    }
+                }
+            }
 
             // check if old skill is complete in the current character data and if not, set to currenttrainingskill
-			if (m_SkillInTraining != null &&
-                    (SkillInTraining == null || 
-                    (SkillInTraining != null &&
-						(!SkillInTraining.isSkillInTraining ||
-						SkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
-						SkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))))
+            if (m_SkillInTraining != null &&
+                (SkillInTraining == null ||
+                 (SkillInTraining != null &&
+                  (!SkillInTraining.isSkillInTraining ||
+                   SkillInTraining.TrainingSkillWithTypeID != m_SkillInTraining.TrainingSkillWithTypeID ||
+                   SkillInTraining.getTrainingEndTime != m_SkillInTraining.getTrainingEndTime))))
             {
                 // Skill or current expected completion time changed since previous update.
                 this.CancelCurrentSkillTraining();
@@ -1421,7 +1256,7 @@ namespace EVEMon.Common
                         // if a skill completed when evemon was shutdown and there is currently no new skill is training
                         // then _SITlocalTime is 0 (because skillInTraining is null) and this next block of code results in a large negative skillpoint.
                         // if (_OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
-                        if (SkillInTraining != null  && _OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
+                        if (SkillInTraining != null && _OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
                         {
                             check = true;
                             oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
@@ -1454,80 +1289,86 @@ namespace EVEMon.Common
                 }
 
                 // Now for the real meaty bit.
-                if (SkillInTraining != null && this.CurrentlyTrainingSkill == null )
+                if (SkillInTraining != null && this.CurrentlyTrainingSkill == null)
                 {
                     // Now we depart even more from the version above.
                     // We have to deal with making this character actually show that he is learning the
                     // skill the XML file says he's learning. But we do this carefully as it may be complete
-					Skill newTrainingSkill = null;
-					if (m_AllSkillsByID.ContainsKey(SkillInTraining.TrainingSkillWithTypeID))
-						newTrainingSkill = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID];
-					if (newTrainingSkill == null)
-					{
-						// no recorgnised skill in training
-						if (SkillInTraining.APIError.ErrorCode  == 0)
-						{
-							// Actually had a report that no skill is training
-							if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
-							{
-								Skill oldskill = null;
-								if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
-								{
-									oldskill = m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
-									if (m_SkillInTraining.getTrainingEndTime < SkillInTraining.GetDateTimeAtUpdate)
-									{
-										oldskill.CurrentSkillPoints = m_SkillInTraining.TrainingSkillDestinationSP;
-										OnSkillChanged(oldskill);
-										m_SkillInTraining.AlertRaisedAlready = true;
-										OnDownloadAttemptComplete(this.Name, oldskill.Name, true);
-									}
-									else
-									{
-										oldskill.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
-										OnSkillChanged(oldskill);
-									}
-								}
-							}
-							if (m_SkillInTraining != null)
-								m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
-							if (SkillInTraining != null)
-								m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-						}
-						else
-						{
-							// there was an error getting the info about the currently training skill
-						}
-					}
-					else if (newTrainingSkill != null)
-					{
-						int level = SkillInTraining.TrainingSkillToLevel;
-						int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
-						bool SkillComplete = (_SITLocalCompleteTime < DateTime.Now);
-						DateTime _OSITLocalCompleteTime = DateTime.MinValue;
-						if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
-						{
-							if (m_SkillInTraining != null && m_SkillInTraining.AlertRaisedAlready && newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && level == m_SkillInTraining.TrainingSkillToLevel)
-							{
-								newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
-								OnSkillChanged(newTrainingSkill);
-							}
-							if (m_SkillInTraining == null || (m_SkillInTraining != null && (!m_SkillInTraining.AlertRaisedAlready || newTrainingSkill.Id != m_SkillInTraining.TrainingSkillWithTypeID || (newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && SkillInTraining.TrainingSkillToLevel != m_SkillInTraining.TrainingSkillToLevel))))
-							{
-								newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
-								OnSkillChanged(newTrainingSkill);
-								m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-								m_OldSkillInTraining.AlertRaisedAlready = true;
-								m_SkillInTraining = null;
+                    Skill newTrainingSkill = null;
+                    if (m_AllSkillsByID.ContainsKey(SkillInTraining.TrainingSkillWithTypeID))
+                    {
+                        newTrainingSkill = m_AllSkillsByID[SkillInTraining.TrainingSkillWithTypeID];
+                    }
+                    if (newTrainingSkill == null)
+                    {
+                        // no recorgnised skill in training
+                        if (SkillInTraining.APIError.ErrorCode == 0)
+                        {
+                            // Actually had a report that no skill is training
+                            if (m_SkillInTraining != null && m_SkillInTraining.isSkillInTraining)
+                            {
+                                Skill oldskill = null;
+                                if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+                                {
+                                    oldskill = m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                                    if (m_SkillInTraining.getTrainingEndTime < SkillInTraining.GetDateTimeAtUpdate)
+                                    {
+                                        oldskill.CurrentSkillPoints = m_SkillInTraining.TrainingSkillDestinationSP;
+                                        OnSkillChanged(oldskill);
+                                        m_SkillInTraining.AlertRaisedAlready = true;
+                                        OnDownloadAttemptComplete(this.Name, oldskill.Name, true);
+                                    }
+                                    else
+                                    {
+                                        oldskill.CurrentSkillPoints = m_SkillInTraining.EstimatedPointsAtTime(_SITLocalUpdateTime);
+                                        OnSkillChanged(oldskill);
+                                    }
+                                }
+                            }
+                            if (m_SkillInTraining != null)
+                            {
+                                m_OldSkillInTraining = (SerializableSkillTrainingInfo)m_SkillInTraining.Clone();
+                            }
+                            if (SkillInTraining != null)
+                            {
+                                m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+                            }
+                        }
+                        else
+                        {
+                            // there was an error getting the info about the currently training skill
+                        }
+                    }
+                    else if (newTrainingSkill != null)
+                    {
+                        int level = SkillInTraining.TrainingSkillToLevel;
+                        int EstCurrentSP = SkillInTraining.EstimatedCurrentPoints;
+                        bool SkillComplete = (_SITLocalCompleteTime < DateTime.Now);
+                        DateTime _OSITLocalCompleteTime = DateTime.MinValue;
+                        if (SkillInTraining.TrainingSkillDestinationSP <= EstCurrentSP)
+                        {
+                            if (m_SkillInTraining != null && m_SkillInTraining.AlertRaisedAlready && newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && level == m_SkillInTraining.TrainingSkillToLevel)
+                            {
+                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
+                                OnSkillChanged(newTrainingSkill);
+                            }
+                            if (m_SkillInTraining == null || (m_SkillInTraining != null && (!m_SkillInTraining.AlertRaisedAlready || newTrainingSkill.Id != m_SkillInTraining.TrainingSkillWithTypeID || (newTrainingSkill.Id == m_SkillInTraining.TrainingSkillWithTypeID && SkillInTraining.TrainingSkillToLevel != m_SkillInTraining.TrainingSkillToLevel))))
+                            {
+                                newTrainingSkill.CurrentSkillPoints = SkillInTraining.TrainingSkillDestinationSP;
+                                OnSkillChanged(newTrainingSkill);
+                                m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+                                m_OldSkillInTraining.AlertRaisedAlready = true;
+                                m_SkillInTraining = null;
                                 if (!SkillInTraining.AlertRaisedAlready)
-								    OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
-							}
-						}
-						else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
-						{
-							m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
-							newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime,m_SkillInTraining);
-						}
-					}
+                                    OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
+                            }
+                        }
+                        else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
+                        {
+                            m_SkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
+                            newTrainingSkill.SetTrainingInfo(level, _SITLocalCompleteTime, m_SkillInTraining);
+                        }
+                    }
                 }
                 // Now to activate normal runtime skill completion monitoring
                 m_attemptedDLComplete = true;
@@ -1595,7 +1436,9 @@ namespace EVEMon.Common
             {
                 Skill newlyCompletedSkill = null;
                 if (m_AllSkillsByID.ContainsKey(m_SkillInTraining.TrainingSkillWithTypeID))
+                {
                     newlyCompletedSkill = this.m_AllSkillsByID[m_SkillInTraining.TrainingSkillWithTypeID];
+                }
                 string name = null;
                 if (newlyCompletedSkill != null)
                 {
@@ -1616,7 +1459,7 @@ namespace EVEMon.Common
                 return;
             }
             Skill temp = this.GetSkill(skillName);
-            if (DownloadAttemptCompleted != null && temp != null )
+            if (DownloadAttemptCompleted != null && temp != null)
             {
                 DownloadAttemptCompletedEventArgs e = new DownloadAttemptCompletedEventArgs(CharacterName, skillName, Complete);
                 DownloadAttemptCompleted(this, e);
@@ -1729,9 +1572,13 @@ namespace EVEMon.Common
                 }
             }
             if (this.m_SkillInTraining != null)
+            {
                 ci.TrainingSkillInfo = (SerializableSkillTrainingInfo)this.m_SkillInTraining.Clone();
+            }
             else
+            {
                 ci.TrainingSkillInfo = null;
+            }
             return ci;
         }
 
@@ -1747,9 +1594,7 @@ namespace EVEMon.Common
                 {
                     int pointsReq = ts.A.GetPointsRequiredForLevel(i);
                     bool needTrain = true;
-                    if ((trainedAlready.ContainsKey(ts.A) &&
-                         trainedAlready[ts.A] >= pointsReq) ||
-                        ts.A.Level >= ts.B)
+                    if ((trainedAlready.ContainsKey(ts.A) && trainedAlready[ts.A] >= pointsReq) || ts.A.Level >= ts.B)
                     {
                         needTrain = false;
                     }
@@ -1770,7 +1615,6 @@ namespace EVEMon.Common
             get { return m_downloadError; }
             set { m_downloadError = value; }
         }
-
 
         public int DownloadFailed
         {
