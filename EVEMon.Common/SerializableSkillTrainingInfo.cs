@@ -184,7 +184,8 @@ namespace EVEMon.Common
             get
             {
                 TimeSpan timeSoFar = DateTime.Now - m_results.TrainingStartTime.ToLocalTime();
-                return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
+                int points = m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute);
+                return (points < m_results.TrainingSkillDestinationSP) ? points : m_results.TrainingSkillDestinationSP; return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
             }
         }
 
@@ -216,9 +217,11 @@ namespace EVEMon.Common
         [XmlIgnore]
         public bool isSkillInTraining
         {
+            // Be careful with this - skill finish time could be in the past!
             get
             {
-                return (APIError.ErrorCode == 0 && m_results.TrainingEndTime.ToUniversalTime() > DateTime.Now.ToUniversalTime());
+                if (APIError.ErrorCode != 0) return false;
+                return (m_results.SkillInTraining == 1);
             }
         }
 

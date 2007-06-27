@@ -1305,14 +1305,17 @@ namespace EVEMon.Common
             DateTime _SITLocalStartTime = DateTime.MinValue;
 			DateTime _SITLocalUpdateTime = DateTime.MinValue;
 
-            if (SkillInTraining != null && !SkillInTraining.isSkillInTraining)
-            {
-                SkillInTraining = null;
 
-            }
-
-			if (SkillInTraining != null && SkillInTraining.isSkillInTraining)
+            if (SkillInTraining != null)
 			{
+                // See if this is the same skill as the old one
+                if (m_OldSkillInTraining != null && m_OldSkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID && m_OldSkillInTraining.getTrainingEndTime == SkillInTraining.getTrainingEndTime)
+                {
+                    // yes it is - copy over the alert flags
+                    SkillInTraining.PreWarningGiven = m_OldSkillInTraining.PreWarningGiven;
+                    SkillInTraining.AlertRaisedAlready = m_OldSkillInTraining.AlertRaisedAlready;
+                }
+
 				_SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
 				if (SkillInTraining.isSkillInTraining)
 				{
@@ -1418,26 +1421,13 @@ namespace EVEMon.Common
                         // if a skill completed when evemon was shutdown and there is currently no new skill is training
                         // then _SITlocalTime is 0 (because skillInTraining is null) and this next block of code results in a large negative skillpoint.
                         // if (_OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
-                        if (SkillInTraining != null && _OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
+                        if (SkillInTraining != null  && _OSITLocalCompleteTime <= DateTime.Now && _OSITLocalCompleteTime > _SITLocalStartTime)
                         {
                             check = true;
                             oldskill.CurrentSkillPoints = m_OldSkillInTraining.EstimatedPointsAtTime(_SITLocalStartTime);
                             OnSkillChanged(oldskill);
                             m_OldSkillInTraining.AlertRaisedAlready = false;
                         }
-
-
-                        // Skill has ppreviously completed but character sheet may not have caught up
-                        // we've already done the notifications so just set the skill points to
-                        // what they were at completion.
-                        if (SkillInTraining == null && _OSITLocalCompleteTime <= DateTime.Now)
-                        {
-                            check = false;
-                            oldskill.CurrentSkillPoints = m_OldSkillInTraining.TrainingSkillDestinationSP;
-                            OnSkillChanged(oldskill);
-                        }
-                        
-
                     }
                     else
                     {
@@ -1464,7 +1454,7 @@ namespace EVEMon.Common
                 }
 
                 // Now for the real meaty bit.
-                if (SkillInTraining != null && this.CurrentlyTrainingSkill == null)
+                if (SkillInTraining != null && this.CurrentlyTrainingSkill == null )
                 {
                     // Now we depart even more from the version above.
                     // We have to deal with making this character actually show that he is learning the
@@ -1528,7 +1518,8 @@ namespace EVEMon.Common
 								m_OldSkillInTraining = (SerializableSkillTrainingInfo)SkillInTraining.Clone();
 								m_OldSkillInTraining.AlertRaisedAlready = true;
 								m_SkillInTraining = null;
-								OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
+                                if (!SkillInTraining.AlertRaisedAlready)
+								    OnDownloadAttemptComplete(this.Name, newTrainingSkill.Name, true);
 							}
 						}
 						else if (SkillInTraining.TrainingSkillDestinationSP > EstCurrentSP)
@@ -1625,7 +1616,7 @@ namespace EVEMon.Common
                 return;
             }
             Skill temp = this.GetSkill(skillName);
-            if (DownloadAttemptCompleted != null && temp != null)
+            if (DownloadAttemptCompleted != null && temp != null )
             {
                 DownloadAttemptCompletedEventArgs e = new DownloadAttemptCompletedEventArgs(CharacterName, skillName, Complete);
                 DownloadAttemptCompleted(this, e);

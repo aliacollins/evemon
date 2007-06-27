@@ -82,7 +82,6 @@ namespace EVEMon
             this.tlpInfo.SuspendLayout();
             this.flpThrobber.SuspendLayout();
             this.cmsThrobberMenu.SuspendLayout();
-            this.flpAttributes.SuspendLayout();
             this.flpButtons.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
             this.cmsPictureOptions.SuspendLayout();
@@ -148,7 +147,7 @@ namespace EVEMon
             this.lblWillpower.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblWillpower.AutoSize = true;
-            this.lblWillpower.Location = new System.Drawing.Point(0, 52);
+            this.lblWillpower.Location = new System.Drawing.Point(0, 112);
             this.lblWillpower.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblWillpower.Name = "lblWillpower";
             this.lblWillpower.Size = new System.Drawing.Size(62, 13);
@@ -161,7 +160,7 @@ namespace EVEMon
             this.lblMemory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblMemory.AutoSize = true;
-            this.lblMemory.Location = new System.Drawing.Point(0, 39);
+            this.lblMemory.Location = new System.Drawing.Point(0, 99);
             this.lblMemory.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblMemory.Name = "lblMemory";
             this.lblMemory.Size = new System.Drawing.Size(54, 13);
@@ -174,7 +173,7 @@ namespace EVEMon
             this.lblPerception.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblPerception.AutoSize = true;
-            this.lblPerception.Location = new System.Drawing.Point(0, 26);
+            this.lblPerception.Location = new System.Drawing.Point(0, 86);
             this.lblPerception.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblPerception.Name = "lblPerception";
             this.lblPerception.Size = new System.Drawing.Size(67, 13);
@@ -187,7 +186,7 @@ namespace EVEMon
             this.lblCharisma.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblCharisma.AutoSize = true;
-            this.lblCharisma.Location = new System.Drawing.Point(0, 13);
+            this.lblCharisma.Location = new System.Drawing.Point(0, 60);
             this.lblCharisma.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCharisma.Name = "lblCharisma";
             this.lblCharisma.Size = new System.Drawing.Size(60, 13);
@@ -200,7 +199,7 @@ namespace EVEMon
             this.lblIntelligence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblIntelligence.AutoSize = true;
-            this.lblIntelligence.Location = new System.Drawing.Point(0, 0);
+            this.lblIntelligence.Location = new System.Drawing.Point(0, 73);
             this.lblIntelligence.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblIntelligence.Name = "lblIntelligence";
             this.lblIntelligence.Size = new System.Drawing.Size(71, 13);
@@ -349,7 +348,7 @@ namespace EVEMon
             this.pnlCharData.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCharData.Location = new System.Drawing.Point(0, 0);
             this.pnlCharData.Name = "pnlCharData";
-            this.pnlCharData.Size = new System.Drawing.Size(392, 244);
+            this.pnlCharData.Size = new System.Drawing.Size(392, 184);
             this.pnlCharData.TabIndex = 14;
             // 
             // tlpInfo
@@ -374,7 +373,7 @@ namespace EVEMon
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpInfo.Size = new System.Drawing.Size(392, 241);
+            this.tlpInfo.Size = new System.Drawing.Size(392, 181);
             this.tlpInfo.TabIndex = 19;
             // 
             // flpThrobber
@@ -443,16 +442,11 @@ namespace EVEMon
             this.flpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.flpAttributes.AutoSize = true;
             this.flpAttributes.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flpAttributes.Controls.Add(this.lblWillpower);
-            this.flpAttributes.Controls.Add(this.lblMemory);
-            this.flpAttributes.Controls.Add(this.lblPerception);
-            this.flpAttributes.Controls.Add(this.lblCharisma);
-            this.flpAttributes.Controls.Add(this.lblIntelligence);
             this.flpAttributes.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flpAttributes.Location = new System.Drawing.Point(131, 131);
+            this.flpAttributes.Location = new System.Drawing.Point(131, 132);
             this.flpAttributes.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.flpAttributes.Name = "flpAttributes";
-            this.flpAttributes.Size = new System.Drawing.Size(74, 65);
+            this.flpAttributes.Size = new System.Drawing.Size(0, 0);
             this.flpAttributes.TabIndex = 19;
             this.flpAttributes.WrapContents = false;
             // 
@@ -463,7 +457,7 @@ namespace EVEMon
             this.flpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpButtons.Controls.Add(this.llToggleAll);
             this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flpButtons.Location = new System.Drawing.Point(336, 222);
+            this.flpButtons.Location = new System.Drawing.Point(336, 162);
             this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flpButtons.Name = "flpButtons";
             this.flpButtons.Size = new System.Drawing.Size(56, 16);
@@ -492,6 +486,11 @@ namespace EVEMon
             this.flpCharacterInfo.Controls.Add(this.lblBioInfo);
             this.flpCharacterInfo.Controls.Add(this.lblCorpInfo);
             this.flpCharacterInfo.Controls.Add(this.lblBalance);
+            this.flpCharacterInfo.Controls.Add(this.lblCharisma);
+            this.flpCharacterInfo.Controls.Add(this.lblIntelligence);
+            this.flpCharacterInfo.Controls.Add(this.lblPerception);
+            this.flpCharacterInfo.Controls.Add(this.lblMemory);
+            this.flpCharacterInfo.Controls.Add(this.lblWillpower);
             this.flpCharacterInfo.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpCharacterInfo.Location = new System.Drawing.Point(131, 0);
             this.flpCharacterInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
@@ -505,7 +504,7 @@ namespace EVEMon
             this.lblSkillHeader.AutoSize = true;
             this.tlpInfo.SetColumnSpan(this.lblSkillHeader, 2);
             this.lblSkillHeader.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSkillHeader.Location = new System.Drawing.Point(0, 199);
+            this.lblSkillHeader.Location = new System.Drawing.Point(0, 134);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblSkillHeader.Name = "lblSkillHeader";
             this.lblSkillHeader.Size = new System.Drawing.Size(104, 39);
@@ -538,7 +537,7 @@ namespace EVEMon
             this.updatePictureFromEVECache,
             this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(241, 92);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(241, 70);
             // 
             // updatePicture
             // 
@@ -573,9 +572,9 @@ namespace EVEMon
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
             this.lbSkills.ItemHeight = 15;
-            this.lbSkills.Location = new System.Drawing.Point(0, 244);
+            this.lbSkills.Location = new System.Drawing.Point(0, 184);
             this.lbSkills.Name = "lbSkills";
-            this.lbSkills.Size = new System.Drawing.Size(392, 213);
+            this.lbSkills.Size = new System.Drawing.Size(392, 273);
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
             this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
@@ -628,8 +627,6 @@ namespace EVEMon
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
             this.cmsThrobberMenu.ResumeLayout(false);
-            this.flpAttributes.ResumeLayout(false);
-            this.flpAttributes.PerformLayout();
             this.flpButtons.ResumeLayout(false);
             this.flpButtons.PerformLayout();
             this.flpCharacterInfo.ResumeLayout(false);

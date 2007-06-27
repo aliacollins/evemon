@@ -1,4 +1,5 @@
 //#define DEBUG_SINGLETHREAD
+//#define USE_LOCALHOST
 // (If setting DEBUG_SINGLE THREAD, also set it in CharacterMonitor.cs)
 using System;
 using System.Collections.Generic;
@@ -64,12 +65,18 @@ namespace EVEMon.Common
         }
 
         #region API stuff
+#if USE_LOCALHOST
+        private static string APIBASE = "http://localhost/eveapi";
+        private static string m_ApiCharListUrl = "/account/Characters.xml";
+        private static string m_ApiTrainingSkill = "/char/SkillIntraining.xml";
+        private static string m_ApiCharacterSheet = "/char/CharacterSheet.xml";
 
+#else
         private static string APIBASE = "http://api.eve-online.com";
         private static string m_ApiCharListUrl = "/account/Characters.xml.aspx";
         private static string m_ApiTrainingSkill = "/char/SkillIntraining.xml.aspx";
         private static string m_ApiCharacterSheet = "/char/CharacterSheet.xml.aspx";
-
+#endif
         private string m_apiErrorMessage;
         private int m_apiErrorCode;
 

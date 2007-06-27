@@ -1,3 +1,4 @@
+//#define DEBUG_SINGLETHREAD
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -50,7 +51,10 @@ namespace EVEMon
 
             Plan.PlannerWindowFactory = new PlannerWindowFactory();
             EveSession.MainThread = Thread.CurrentThread;
+#if DEBUG_SINGLETHREAD
+#else
             InstallerDeleter.Schedule();
+#endif
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
