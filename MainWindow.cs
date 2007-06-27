@@ -132,9 +132,13 @@ namespace EVEMon
         {
             EveServer server = EveServer.GetInstance();
             if (m_settings.ShowTQBalloon)
+            {
                 server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+            }
             else
+            {
                 server.ServerStatusChanged -= new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+            }
         }
 
         void m_settings_CheckTranquilityStatusChanged(object sender, EventArgs e)
@@ -182,11 +186,17 @@ namespace EVEMon
             }
 
             if (!this.Visible)
+            {
                 niMinimizeIcon_Click(this, new EventArgs());
+            }
             else if (this.WindowState == FormWindowState.Minimized)
+            {
                 this.WindowState = FormWindowState.Normal;
+            }
             else
+            {
                 this.BringToFront();
+            }
 
             FlashWindow(this.Handle, true);
         }
@@ -199,7 +209,9 @@ namespace EVEMon
         private void um_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             if (e.NewestVersion <= new Version(m_settings.IgnoreUpdateVersion))
+            {
                 return;
+            }
 
             this.Invoke(new MethodInvoker(delegate
             {
@@ -338,11 +350,15 @@ namespace EVEMon
                         {
                             case 1: // single Char - finishing skill next
                                 if (tsb.Length == 0)
+                                {
                                     tsb.Append(gciTimeSpanText);
+                                }
                                 break;
                             case 2: // single Char - selected char
                                 if (selectedCharId == gci.CharacterId)
+                                {
                                     tsb.Append(gciTimeSpanText);
+                                }
                                 break;
                             case 0: //this is the default
                             case 3: // multi Char - finishing skill next first
@@ -350,9 +366,13 @@ namespace EVEMon
                                 break;
                             case 4: // multi Char - selected char first
                                 if (selectedCharId == gci.CharacterId)
+                                {
                                     tsb.Insert(0, gciTimeSpanText + (tsb.Length > 0 ? " | " : String.Empty));
+                                }
                                 else
+                                {
                                     tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
+                                }
                                 break;
                         }
                     }
@@ -371,7 +391,9 @@ namespace EVEMon
             if (String.IsNullOrEmpty(fmt) || gcis == null)
             {
                 if (String.Empty.Equals(fmt))
+                {
                     sb.Append("You can configure this tooltip in the options/general panel");
+                }
                 return sb.ToString();
             }
 
@@ -384,31 +406,49 @@ namespace EVEMon
                     char capture = m.Groups[1].Value[0];
 
                     if (capture == 'n')
+                    {
                         value = gci.Name;
+                    }
                     else if (capture == 'b')
+                    {
                         value = gci.Balance.ToString("#,##0.00");
+                    }
                     else if (capture == 's')
+                    {
                         value = gci.CurrentlyTrainingSkill.Name;
+                    }
                     else if (capture == 'd')
+                    {
                         value = gci.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g");
+                    }
                     else if (capture == 'r')
+                    {
                         value = '%' + gci.CharacterId.ToString() + 'r';
+                    }
                     else
                     {
                         int level = -1;
                         if (capture == 'c')
+                        {
                             level = gci.CurrentlyTrainingSkill.Level;
+                        }
                         else if (capture == 't')
+                        {
                             level = gci.CurrentlyTrainingSkill.TrainingToLevel;
+                        }
 
                         if (m.Groups[1].Value.Length > 1 && level >= 0)
                         {
                             capture = m.Groups[1].Value[1];
 
                             if (capture == 'i')
+                            {
                                 value = level.ToString();
+                            }
                             else if (capture == 'r')
+                            {
                                 value = Skill.GetRomanForInt(level);
+                            }
                         }
                     }
 
@@ -438,7 +478,9 @@ namespace EVEMon
                     if (ts > TimeSpan.Zero)
                     {
                         while (gcis.ContainsKey(ts))
+                        {
                             ts = ts + TimeSpan.FromMilliseconds(1);
+                        }
                         gcis.Add(ts, gci);
                     }
 
@@ -485,7 +527,9 @@ namespace EVEMon
                     CharacterInfo ci = GetCharacterInfo(e.CharacterName);
                     // if the scheduler says be quiet, how much should be suppressed?
                     if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
+                    {
                         MP3Player.Play("SkillTrained.mp3", true);
+                    }
 
                     int skillLevel = ci.GetSkill(e.SkillName).Level;
 
@@ -496,7 +540,9 @@ namespace EVEMon
 
                         m_completedSkills.Add(sa);
                         if (m_completedSkills.Count > 1)
+                        {
                             sa = m_completedSkills.Count.ToString() + " skills completed. Click for more info.";
+                        }
                         ShowBalloonTip("EVEMon - Skill Training Completed", "Skill Training Completed", sa);
 
                         tmrAlertRefresh.Enabled = false;
@@ -505,7 +551,9 @@ namespace EVEMon
                     }
 
                     if (m_settings.EnableEmailAlert)
-                        Emailer.SendAlertMail(m_settings, skillLevel, e.SkillName,ci);
+                    {
+                        Emailer.SendAlertMail(m_settings, skillLevel, e.SkillName, ci);
+                    }
                 }
                 else
                 {
@@ -539,16 +587,22 @@ namespace EVEMon
         {
             G15Handler.CharListUpdate();
             if (tcCharacterTabs.TabPages.Count > 0)
+            {
                 removeCharacterToolStripMenuItem.Enabled = true;
+            }
             else
+            {
                 removeCharacterToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void RemoveTab(TabPage tp)
         {
             CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
             if (cm != null)
+            {
                 cm.Stop();
+            }
             string name = string.Empty;
             cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
             tcCharacterTabs.TabPages.Remove(tp);
@@ -813,7 +867,9 @@ namespace EVEMon
                 CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
                 CharacterInfo gci = cm.GrandCharacterInfo;
                 if (gci != null && gci.Name == charName)
+                {
                     return gci;
+                }
             }
             return null;
         }
@@ -825,7 +881,9 @@ namespace EVEMon
                 CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
                 CharacterInfo gci = cm.GrandCharacterInfo;
                 if (gci != null && gci.Name == charName)
+                {
                     return cm;
+                }
             }
             return null;
         }
