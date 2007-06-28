@@ -22,17 +22,14 @@ namespace EVEMon.Common
 {
     public class EveSession
     {
-
-       
         private static Dictionary<string, WeakReference<EveSession>> m_sessions =
             new Dictionary<string, WeakReference<EveSession>>();
 
         public static EveSession GetSession(int userId, string apiKey)
         {
             string junk;
-            return GetSession(userId, apiKey , out junk);
+            return GetSession(userId, apiKey, out junk);
         }
-
 
         public static EveSession GetSession(int userId, string apiKey, out string errMessage)
         {
@@ -82,7 +79,7 @@ namespace EVEMon.Common
 
         public static string ApiKeyUrl
         {
-            get { return "http://myeve.eve-online.com/api/Default.asp"; }
+            get { return "http://myeve.eve-online.com/api/default.asp"; }
         }
 
         private static XmlDocument GetCharList(string userId, string apiKey, out string errorMessage)
@@ -104,14 +101,16 @@ namespace EVEMon.Common
         {
             WebRequestState wrs = new WebRequestState();
             wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
-            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharacterSheet , wrs);
+            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharacterSheet, wrs);
         }
-
 
         private void SetAPIError(XmlElement errorNode)
         {
             string text = errorNode.GetAttribute("code");
-            if (text != null) m_apiErrorCode = Int32.Parse(text);
+            if (text != null)
+            {
+                m_apiErrorCode = Int32.Parse(text);
+            }
             m_apiErrorMessage = errorNode.InnerText;
         }
 
@@ -123,15 +122,15 @@ namespace EVEMon.Common
 
         public string ApiErrorMessage
         {
-            get 
+            get
             {
                 if (m_apiErrorCode > 0)
+                {
                     return String.Format("{0}: {1}", m_apiErrorCode, m_apiErrorMessage);
+                }
                 else return null;
             }
         }
- 
-
         #endregion
 
         #region Images
@@ -144,10 +143,7 @@ namespace EVEMon.Common
         {
             get
             {
-                string cacheDir = String.Format(
-                    "{1}{0}cache{0}images",
-                    Path.DirectorySeparatorChar,
-                    Settings.EveMonDataDir);
+                string cacheDir = String.Format("{1}{0}cache{0}images", Path.DirectorySeparatorChar, Settings.EveMonDataDir);
                 if (!Directory.Exists(cacheDir))
                 {
                     Directory.CreateDirectory(cacheDir);
@@ -180,17 +176,16 @@ namespace EVEMon.Common
                 }
                 GetImageCallback origCallback = callback;
                 callback = new GetImageCallback(delegate(EveSession s, Image i)
-                                                    {
-                                                        if (i != null)
-                                                        {
-                                                            AddImageToCache(url, i);
-                                                        }
-                                                        origCallback(s, i);
-                                                    });
+                {
+                    if (i != null)
+                    {
+                        AddImageToCache(url, i);
+                    }
+                    origCallback(s, i);
+                });
             }
             HttpWebRequest wr = EVEMonWebRequest.GetWebRequest(url);
-            Pair<HttpWebRequest, GetImageCallback> p =
-                new Pair<HttpWebRequest, GetImageCallback>(wr, callback);
+            Pair<HttpWebRequest, GetImageCallback> p = new Pair<HttpWebRequest, GetImageCallback>(wr, callback);
             wr.BeginGetResponse(new AsyncCallback(GotImage), p);
         }
 
@@ -201,7 +196,7 @@ namespace EVEMon.Common
             GetImageCallback callback = p.B;
             try
             {
-                HttpWebResponse resp = (HttpWebResponse) wr.EndGetResponse(ar);
+                HttpWebResponse resp = (HttpWebResponse)wr.EndGetResponse(ar);
                 int contentLength = Convert.ToInt32(resp.ContentLength);
                 int bytesToGo = contentLength;
                 byte[] data = new byte[bytesToGo];
@@ -231,7 +226,6 @@ namespace EVEMon.Common
             {
                 sw.WriteLine(String.Format("{0} {1}", cacheName, url));
                 sw.Close();
-                //sw.Dispose();
             }
             string fn = Path.Combine(ImageCacheDirectory, cacheName);
             try
@@ -239,7 +233,6 @@ namespace EVEMon.Common
                 FileStream fs = new FileStream(fn, FileMode.Create);
                 i.Save(fs, ImageFormat.Png);
                 fs.Close();
-                //fs.Dispose();
             }
             catch (Exception e)
             {
@@ -255,8 +248,7 @@ namespace EVEMon.Common
             {
                 ext = "." + extensionMatch.Groups[1];
             }
-            byte[] hash = MD5.Create().ComputeHash(
-                Encoding.UTF8.GetBytes(url));
+            byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)
             {
@@ -266,7 +258,6 @@ namespace EVEMon.Common
             return sb.ToString();
         }
         #endregion
-
 
         #region Nonstatic Members
         private int m_userId;
@@ -313,7 +304,6 @@ namespace EVEMon.Common
             }
             else
             {
-
                 XmlNodeList characters = xdoc.DocumentElement.SelectNodes("descendant::rowset/row");
                 foreach (XmlNode charNode in characters)
                 {
@@ -326,8 +316,6 @@ namespace EVEMon.Common
             m_storedCharacterList = charList;
             return m_storedCharacterList;
         }
-
-
 
         public int GetCharacterId(string charName)
         {
@@ -368,7 +356,7 @@ namespace EVEMon.Common
                     ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
                     // This set must only be done at deserialisation when we can compare current time agaisnt machine time
                     // TQ is now synched with NNTP but the webserver isn't (checked with Garthagk at ccp)
-                    double  CCPOffset = ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(requestTime).TotalMilliseconds;
+                    double CCPOffset = ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(requestTime).TotalMilliseconds;
                     ssti.FixServerTimes(CCPOffset);
                 }
             }
@@ -384,7 +372,7 @@ namespace EVEMon.Common
         {
             m_apiErrorMessage = string.Empty;
             m_apiErrorCode = 0;
-                            
+
             XmlDocument xdoc = null;
             try
             {
@@ -401,7 +389,7 @@ namespace EVEMon.Common
             {
                 // Check for an API Error...
                 XmlElement errorNode = null;
-                 errorNode = xdoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
+                errorNode = xdoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
                 if (errorNode != null)
                 {
                     SetAPIError(errorNode);
@@ -425,7 +413,7 @@ namespace EVEMon.Common
 
         public void UpdateIneveAsync(CharacterInfo info)
         {
-            
+
             if (info != null)
             {
                 ThreadPool.QueueUserWorkItem(UpdateIneve, info.Name);
@@ -445,45 +433,16 @@ namespace EVEMon.Common
                 byte[] bytes = null;
                 try
                 {
-                    bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);
-
+                    //bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);
+                    bytes = client.UploadString("http://ineve.net/skills/evemon_upload.php", "");
                 }
                 catch (WebException)
                 {
                     //just fail and trust that we'll try again next time.
                     return;
                 }
-                    string response = Encoding.UTF8.GetString(bytes);
-            }            
-            
-            /*string encoded = string.Empty;
-            lock (LocalXmlCache.Instance)
-            {
-                FileInfo charFile = LocalXmlCache.Instance[charName as string];
-                FileStream fs = new FileStream(charFile.FullName, FileMode.Open);
-                StreamReader reader = new StreamReader(fs);
-                string charXml = reader.ReadToEnd();
-                reader.Dispose();
-                fs.Dispose();
-                encoded = HttpUtility.UrlEncode(charXml);
+                string response = Encoding.UTF8.GetString(bytes);
             }
-
-
-            string postData = "charxml=\"" + encoded;// +HttpUtility.UrlEncode("\"&login=\"Anders Chydenius&password=\"password\"");
-
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ineve.net/skills/evemon_upload.php");
-            request.Method = "POST";
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.UserAgent = "EVEMon/" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            request.ContentLength = byteArray.Length;
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-            
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();*/
-            
         }
 
         private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc, int charId)
@@ -495,45 +454,6 @@ namespace EVEMon.Common
                 return (SerializableCharacterSheet)xs.Deserialize(xnr);
             }
         }
-
-
-
-        /// <summary>
-        /// Use this function at your peril!!
-        /// If we do things this way CCP WILL block that version of EVEMon!
-        /// Not Only that but it uses obsolete code, so Ner!
-        /// </summary>
-        /// <param name="htmld"></param>
-        /// <returns></returns>
-        /*private SerializableSkillInTraining ProcessSkilltreeHtml(string htmld)
-        {
-            SerializableSkillInTraining sit = null;
-            int cti = htmld.IndexOf("Currently training to: ");
-            if (cti != -1)
-            {
-                sit = new SerializableSkillInTraining();
-                string bsubstr = ReverseString(htmld.Substring(cti - 400, 400));
-                string s1 = Regex.Match(bsubstr, @"knaR>i< / (.+?)>""xp11:ezis-tnof").Groups[1].Value;
-                sit.SkillName = ReverseString(s1);
-                string fsubstr = htmld.Substring(cti, 800);
-                sit.TrainingToLevel =
-                    Convert.ToInt32(
-                        Regex.Match(fsubstr, @"Currently training to: <\/font><strong>level (\d) </st").Groups[1].Value);
-                string timeLeft = Regex.Match(fsubstr, @"Time left: <\/font><strong>(.+?)<\/strong>").Groups[1].Value;
-                sit.EstimatedCompletion = DateTime.Now + ConvertTimeStringToTimeSpan(timeLeft);
-                sit.CurrentPoints =
-                    Convert.ToInt32(
-                        Regex.Match(fsubstr, @"SP done: </font><strong>(\d+) of \d+</strong>").Groups[1].Value);
-                sit.NeededPoints =
-                    Convert.ToInt32(
-                        Regex.Match(fsubstr, @"SP done: </font><strong>\d+ of (\d+)</strong>").Groups[1].Value);
-            }
-            else
-            {
-                sit = null;
-            }
-            return sit;
-        }*/
 
         private TimeSpan ConvertTimeStringToTimeSpan(string timeLeft)
         {
@@ -602,7 +522,7 @@ namespace EVEMon.Common
 
         private void UpdateGrandCharacterInfoAsyncCaller(object state)
         {
-            UpdateGCIArgs args = (UpdateGCIArgs) state;
+            UpdateGCIArgs args = (UpdateGCIArgs)state;
             GC.Collect();
             int timeLeftInCache = this.UpdateGrandCharacterInfo(args.GrandCharacterInfo, args.InvokeControl);
             args.UpdateGrandCharacterInfoCallback(null, timeLeftInCache);
@@ -639,7 +559,7 @@ namespace EVEMon.Common
 
         // Now default is set to 30 minutes instead of 5 minutes for the retry interval
         // to be more polite to the server.
-        private const int DEFAULT_RETRY_INTERVAL = 30*60*1000;
+        private const int DEFAULT_RETRY_INTERVAL = 30 * 60 * 1000;
         private Random autoRand;
         private Object mutexLock = new Object();
 
@@ -661,32 +581,16 @@ namespace EVEMon.Common
                 {
                     grandCharacterInfo.DownloadFailed = 0;
                     sci.TrainingSkillInfo = temp;
-                    // CCP currently alwasy set the CcachedUntil to be one hour from the time of the fetch
-                    // so lets fix that by checking of the cach has expired, if not - override the 
-                    // cachedUntil time  from ccp
+                }
 
-                    // OK ccp want us to obey the cache time they send back - always :(
-                    // code removed atthe behest of garthagk...
-                    //if (grandCharacterInfo.XMLExpires.ToUniversalTime() > DateTime.Now.ToUniversalTime())
-                    //{
-                     //   // cache hasnt expired yet so leave it at the old time
-                      //   sci.XMLExpires = grandCharacterInfo.XMLExpires.ToUniversalTime();
-                    //}
-
-               }
- 
-                // not sure why we don't load it if theres 3.5 minutes left in cache oir cahce is 3.5 minutes old...
-//                if (((TimeSpan)(sci.XMLExpires.Subtract(grandCharacterInfo.XMLExpires))).Duration() > new TimeSpan(0, 3, 30))
-//                {
-                    #if DEBUG_SINGLETHREAD
-                        grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
-                    #else
-                        invokeControl.Invoke(new MethodInvoker(delegate
-                        {
-                            grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
-                        }));
-                    #endif
-//                }
+#if DEBUG_SINGLETHREAD
+                grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+#else
+                invokeControl.Invoke(new MethodInvoker(delegate
+                {
+                    grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                }));
+#endif
                 return sci.TimeLeftInCache;
             }
         }
@@ -708,15 +612,16 @@ namespace EVEMon.Common
                 }
 
                 invokeControl.Invoke(new MethodInvoker(delegate
-                                                           {
-                                                               grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
-                                                           }));
+                {
+                    grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
+                }));
                 return (1000 * ssti.TimerToNextUpdate);
             }
         }
 
         #endregion
     }
+
     [XmlRoot("pair")]
     public class Pair<TypeA, TypeB>
     {
@@ -764,14 +669,6 @@ namespace EVEMon.Common
         {
             m_owner = cs;
         }
-
-//        private SerializableCharacterSheet m_ApiOwner;
-
-//        internal void SetApiOwner(SerializableCharacterSheet cs)
-//        {
-//            m_ApiOwner = cs;
-//        }
-
 
         private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
 
