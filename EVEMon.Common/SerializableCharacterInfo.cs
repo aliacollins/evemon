@@ -121,6 +121,9 @@ namespace EVEMon.Common
 
         private int m_timeLeftInCache = -1;
 
+        [XmlAttribute("timeInCache")]
+        public int timeInCache = 0;
+
         [XmlIgnore]
         public int TimeLeftInCache
         {
