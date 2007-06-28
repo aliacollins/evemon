@@ -333,13 +333,13 @@ namespace EVEMon
             {
                 bool toremove = false;
                 bool add = true;
-                if (m_settings.OldSkillsDict.ContainsKey(m_charName))
+                if (m_settings.OldSAPIkillsDict.ContainsKey(m_charName))
                 {
-                    SerializableSkillTrainingInfo x = m_settings.OldSkillsDict[m_charName];
+                    SerializableSkillTrainingInfo x = m_settings.OldSAPIkillsDict[m_charName];
                     if (x.TrainingSkillWithTypeID == m_grandCharacterInfo.OldSerialSIT.TrainingSkillWithTypeID && x.TrainingSkillToLevel == m_grandCharacterInfo.OldSerialSIT.TrainingSkillToLevel)
                     {
                         add = false;
-                        m_settings.OldSkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
+                        m_settings.OldSAPIkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
                         if (!x.AlertRaisedAlready)
                         {
                             toremove = true;
@@ -351,12 +351,12 @@ namespace EVEMon
                     }
                     if (toremove)
                     {
-                        m_settings.OldSkillsDict.Remove(m_charName);
+                        m_settings.OldSAPIkillsDict.Remove(m_charName);
                     }
                 }
                 if (add && m_grandCharacterInfo.OldSerialSIT.AlertRaisedAlready)
                 {
-                    m_settings.OldSkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
+                    m_settings.OldSAPIkillsDict[m_charName] = (SerializableSkillTrainingInfo)m_grandCharacterInfo.OldSerialSIT.Clone();
                 }
             }
             m_settings.Save();
@@ -401,9 +401,9 @@ namespace EVEMon
             //actually perform the update.  This is then happening asynchronously, is this a problem?
             UpdateGrandCharacterInfo();
 
-            if (m_settings.OldSkillsDict.ContainsKey(m_charName))
+            if (m_settings.OldSAPIkillsDict.ContainsKey(m_charName))
             {
-                m_grandCharacterInfo.OldSerialSIT = (SerializableSkillTrainingInfo)m_settings.OldSkillsDict[m_charName].Clone();
+                m_grandCharacterInfo.OldSerialSIT = (SerializableSkillTrainingInfo)m_settings.OldSAPIkillsDict[m_charName].Clone();
             }
 
             UpdateTrainingSkillInfo();

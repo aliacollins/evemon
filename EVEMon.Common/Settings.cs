@@ -61,6 +61,7 @@ namespace EVEMon.Common
                 }
             }
         }
+
         #endregion
 
         #region Character Cache
@@ -111,7 +112,7 @@ namespace EVEMon.Common
         #region old skills
         private SerializableDictionary<string, SerializableSkillTrainingInfo> m_oldSkillsDict = new SerializableDictionary<string, SerializableSkillTrainingInfo>();
 
-        public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSkillsDict
+        public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSAPIkillsDict
         {
             get { return m_oldSkillsDict; }
             set
@@ -1563,7 +1564,7 @@ namespace EVEMon.Common
             {
                 // We're copnverting from non-api settings
                 result.m_oldSettings = ConvertToApi(fileName, result);
-                result.CopyOldImplants();
+                result.CopyOldSettings();
             }
             if (result != null) result.m_useAPI = true;
             m_instance = result;
@@ -1583,7 +1584,7 @@ namespace EVEMon.Common
         }
 
 
-        public void CopyOldImplants()
+        public void CopyOldSettings()
         {
             // go through the old cache and pull out implants
             foreach (SerializableCharacterInfo sci in m_oldSettings.CachedCharacterInfo)

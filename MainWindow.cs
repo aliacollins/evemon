@@ -266,7 +266,9 @@ namespace EVEMon
             if (cli.ApiKey == string.Empty || cli.UserId == 0)
             {
                 // No API info found - ask user - must be first run.
-                
+
+                // see if we can find an api key from an already added character
+           
                 using (ChangeLoginWindow f = new ChangeLoginWindow())
                 {
                     f.ShowInvalidKey = true;
@@ -279,6 +281,19 @@ namespace EVEMon
                         EveSession.GetSession(f.UserId, f.ApiKey);
                     }
                 }
+
+                // now patch this API key into any other characters on the same account
+                foreach (CharLoginInfo li in m_settings.CharacterList)
+                {
+                    if (li.Username == cli.Username && li.CharacterName != cli.CharacterName)
+                    {
+                        li.ApiKey = cli.ApiKey;
+                        li.UserId = cli.UserId;
+                        li.Username = String.Empty;
+                    }
+                }
+                cli.Username = string.Empty;
+                
             }
             CharacterMonitor cm = new CharacterMonitor(cli);
             AddTab(cli, cli.CharacterName, cm);

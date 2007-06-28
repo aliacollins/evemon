@@ -185,7 +185,7 @@ namespace EVEMon.Common
             {
                 TimeSpan timeSoFar = DateTime.Now - m_results.TrainingStartTime.ToLocalTime();
                 int points = m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute);
-                return (points < m_results.TrainingSkillDestinationSP) ? points : m_results.TrainingSkillDestinationSP; return (m_results.TrainingSkillStartSP + (int)(timeSoFar.TotalMinutes * SpPerMinute));
+                return (points < m_results.TrainingSkillDestinationSP) ? points : m_results.TrainingSkillDestinationSP;
             }
         }
 

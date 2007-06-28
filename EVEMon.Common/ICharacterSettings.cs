@@ -22,7 +22,6 @@ namespace EVEMon.Common
 
     }
 
-    //now with encryption.  Not bulletproof by any means, but better than plaintext
     public class CharLoginInfo : ICharacterSettings
     {
         private bool m_ineveSync;
@@ -40,6 +39,14 @@ namespace EVEMon.Common
         {
             get { return m_apiKey; }
             set { m_apiKey = value; }
+        }
+
+        // this can be removed in next release, only needed for conversion.
+        private string m_username = string.Empty;
+        public string Username
+        {
+            get { return m_username; }
+            set { m_username = value; }
         }
 
 
