@@ -434,7 +434,6 @@ namespace EVEMon.Common
                 try
                 {
                     bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);
-                    //bytes = client.UploadString( ("http://ineve.net/skills/evemon_upload.php", "");
                 }
                 catch (WebException)
                 {
