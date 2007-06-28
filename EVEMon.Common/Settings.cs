@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using EVEMon.Common;
 using EVEMon.Common.Schedule;
 using System.Windows.Forms;
+using System.Security.Cryptography;
 
 namespace EVEMon.Common
 {
@@ -35,6 +36,7 @@ namespace EVEMon.Common
             get { return m_useAPI; }
             set { m_useAPI = value; }
         }
+
 
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
         public List<CharLoginInfo> CharacterList
@@ -1500,6 +1502,7 @@ namespace EVEMon.Common
             // copy and ask if that is to be used.
             // If the settings file is ok, then back it up.
 
+            Settings s = null;
             try
             {
                 if (File.Exists(SettingsFileName))
@@ -1514,18 +1517,19 @@ namespace EVEMon.Common
                             DialogResult dr = MessageBox.Show("Your settings file is corrupt. There is a backup available, do you want to use the backup file?", "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                             if (dr == DialogResult.No)
                             {
-                                Settings s = new Settings();
-                                m_instance = s;
-                                return s;
+                                s = new Settings();
+                                fileName = null;
                             }
-                            fileName += ".bak";
+                            else
+                            {
+                                fileName += ".bak";
+                            }
                         }
                         else
                         {
                             MessageBox.Show("Your settings file is corrupt. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            Settings s = new Settings();
-                            m_instance = s;
-                            return s;
+                            s = new Settings();
+                            fileName = null;
                         }
                     }
                     else
@@ -1533,23 +1537,54 @@ namespace EVEMon.Common
                         // We have a non-zero length settings file - so make a copy.
                         File.Copy(SettingsFileName, SettingsFileName + ".bak", true);
                     }
-                    Settings result = LoadFromFile(fileName);
-                    return result;
+                    if (fileName != null)
+                    {
+                        s = LoadFromFile(fileName);
+                    }
                 }
                 else
                 {
-                    Settings s = new Settings();
-                    m_instance = s;
-                    return s;
+                    s = new Settings();
                 }
             }
             catch (Exception e)
             {
                 ExceptionHandler.LogException(e, true);
-                Settings s = new Settings();
-                m_instance = s;
-                return s;
+                s = new Settings();
             }
+
+            m_instance = s;
+
+            try
+            {
+                m_instance.m_checksums.Clear();
+                m_instance.m_checksums.Add(GenerateMD5("eve-implants2.xml.gz"));
+                m_instance.m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
+                m_instance.m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
+                m_instance.m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
+            }
+            // don't worry if we cant create MD5  maybe they have FIPS enforced.
+            catch (Exception) { }
+            return s;
+        }
+
+        private static Pair<string,string> GenerateMD5(string datafile)
+        {
+            StringBuilder sb = new StringBuilder();
+            string filename = String.Format("{1}Resources{0}{2}",
+                              Path.DirectorySeparatorChar,
+                              System.AppDomain.CurrentDomain.BaseDirectory,
+                              datafile);
+            if (File.Exists(filename))
+            {
+                MD5 md5 = MD5.Create();
+                using (FileStream fs = File.Open(filename, FileMode.Open))
+                {
+                    foreach (byte b in md5.ComputeHash(fs))
+                        sb.Append(b.ToString("x2").ToLower());
+                }
+            }
+            return new Pair<string,string>(datafile,sb.ToString());
         }
 
         private static Settings LoadFromFile(string fileName)
@@ -1709,6 +1744,16 @@ namespace EVEMon.Common
             s.Save();
         }
 
+        #endregion
+
+        #region Datafile checksums
+
+        private List<Pair<string, string>> m_checksums = new List<Pair<string, string>>();
+
+        public List<Pair<string, string>> DatafileChecksums
+        {
+            get { return m_checksums; }
+        }
         #endregion
 
         #region character methods

@@ -2,7 +2,10 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
+using System.Xml.Serialization;
 using EVEMon.Common;
+using System.Collections.Generic;
+
 
 namespace EVEMon
 {
@@ -121,6 +124,26 @@ namespace EVEMon
                                                                                                     installUrl);
                                                                               }));
                         }
+                        // Code is up to date. Lets try the data.
+                        else
+                        {
+                            XmlElement datafilesEl = xdoc.DocumentElement as XmlElement;
+                            XmlSerializer xs = new XmlSerializer(typeof(DatafileVersions));
+                            DatafileVersions dfv = null;
+                            using (XmlNodeReader xnr = new XmlNodeReader(datafilesEl))
+                            {
+                                dfv = (DatafileVersions)xs.Deserialize(xnr);
+                            }
+                            if (dfv.FilesHaveChanged)
+                            {
+                                // Use ThreadPool to avoid deadlock if the callback tries to
+                                // call Stop() on the UpdateManager.
+                                ThreadPool.QueueUserWorkItem(new WaitCallback(delegate
+                                                                                  {
+                                                                                      OnDataUpdateAvailable(updateUrl, dfv.ChangedDatafiles);
+                                                                                  }));
+                            }
+                        }
                     }
                 }
                 finally
@@ -149,7 +172,74 @@ namespace EVEMon
                 UpdateAvailable(this, e);
             }
         }
+
+        public event DataUpdateAvailableHandler DataUpdateAvailable;
+
+        private void OnDataUpdateAvailable(string updateUrl, List<DatafileVersion> changedFiles) 
+        {
+            if (DataUpdateAvailable != null)
+            {
+                DataUpdateAvailableEventArgs e = new DataUpdateAvailableEventArgs();
+                e.UpdateUrl = updateUrl;
+                e.ChangedFiles = changedFiles;
+                DataUpdateAvailable(this, e);
+            }
+        }
     }
+
+
+    [XmlRoot("evemon")]
+    public class DatafileVersions
+    {
+        [XmlArray("datafiles"),XmlArrayItem("datafile", typeof(DatafileVersion))]
+        public System.Collections.ArrayList Datafiles =
+           new System.Collections.ArrayList();
+
+        private  List<DatafileVersion> m_changedList=new List<DatafileVersion>();
+        public List<DatafileVersion> ChangedDatafiles
+        {
+            get { return m_changedList; }
+        }
+
+        [XmlIgnore]
+        public bool FilesHaveChanged
+        {
+            get 
+            {
+                List<Pair<string, string>> expectedMD5List = Settings.GetInstance().DatafileChecksums;
+                foreach (Object o in Datafiles)
+                {
+                    DatafileVersion dfv = o as DatafileVersion;
+                    foreach(Pair<string,string> expectedMD5 in expectedMD5List)
+                    {
+                        if (expectedMD5.A == dfv.Name)
+                        {
+                            if (expectedMD5.B != dfv.Md5)
+                            {
+                                m_changedList.Add(dfv);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return m_changedList.Count > 0;
+            }
+
+        }
+    }
+
+    public class DatafileVersion
+    {
+        [XmlElement("name")]
+        public string Name;
+        [XmlElement("md5")]
+        public string Md5;
+        [XmlElement("message")]
+        public string Message;
+
+    }
+
 
     public delegate void UpdateAvailableHandler(object sender, UpdateAvailableEventArgs e);
 
@@ -211,4 +301,27 @@ namespace EVEMon
             set { m_autoInstallArguments = value; }
         }
     }
+
+    public delegate void DataUpdateAvailableHandler(object sender, DataUpdateAvailableEventArgs e);
+
+    public class DataUpdateAvailableEventArgs
+    {
+        private string m_updateUrl;
+
+        public string UpdateUrl
+        {
+            get { return m_updateUrl; }
+            set { m_updateUrl = value; }
+        }
+
+        private List<DatafileVersion> m_changedFiles;
+
+        public List<DatafileVersion> ChangedFiles
+        {
+            get { return m_changedFiles; }
+            set { m_changedFiles = value; }
+        }
+
+    }
+
 }
