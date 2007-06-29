@@ -297,6 +297,11 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level), tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level));
+                            if (gs.PartiallyTrained)
+                            {
+                                stn.ForeColor = System.Drawing.Color.Blue;                                
+                            }
+
                         }
                         stn.Tag = gs;
                         gtn.Nodes.Add(stn);
