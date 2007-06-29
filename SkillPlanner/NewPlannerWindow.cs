@@ -465,12 +465,19 @@ namespace EVEMon.SkillPlanner
                 m_plan.SaveAsText(sw, pto);
                 sw.Flush();
                 string s = Encoding.Default.GetString(ms.ToArray());
-                Clipboard.SetText(s);
+                try
+                {
+                    Clipboard.SetText(s);
+                    MessageBox.Show("The skill plan has been copied to the clipboard in a " +
+                                    "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+                }
+                catch(System.Runtime.InteropServices.ExternalException)
+                {
+                    MessageBox.Show("The copy to clipboard has failed.", "Plan Copy Failure", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                }
             }
-
-            MessageBox.Show("The skill plan has been copied to the clipboard in a " +
-                            "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
         }
 
         private enum PlanSaveType
