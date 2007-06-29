@@ -14,6 +14,7 @@ namespace EVEMon.SkillPlanner
         public SkillBrowser()
         {
             InitializeComponent();
+            this.splitContainer1.RememberDistanceKey = "SkillBrowserInfo";
             this.splitContainer2.RememberDistanceKey = "SkillBrowser";
         }
 
