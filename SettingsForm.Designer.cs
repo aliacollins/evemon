@@ -103,9 +103,9 @@ namespace EVEMon
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel15 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbWorksafeMode = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel21 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel22 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbWorksafeMode = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel25 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbTitleToTime = new System.Windows.Forms.CheckBox();
@@ -193,6 +193,7 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
+            this.cbHighlightPartialSkills = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -938,17 +939,6 @@ namespace EVEMon
             this.flowLayoutPanel15.Size = new System.Drawing.Size(367, 46);
             this.flowLayoutPanel15.TabIndex = 3;
             // 
-            // cbWorksafeMode
-            // 
-            this.cbWorksafeMode.AutoSize = true;
-            this.cbWorksafeMode.Location = new System.Drawing.Point(12, 3);
-            this.cbWorksafeMode.Name = "cbWorksafeMode";
-            this.cbWorksafeMode.Size = new System.Drawing.Size(271, 17);
-            this.cbWorksafeMode.TabIndex = 6;
-            this.cbWorksafeMode.Text = "Run in \"safe for work\" mode (no portraits or colors)";
-            this.cbWorksafeMode.UseVisualStyleBackColor = true;
-            this.cbWorksafeMode.CheckedChanged += new System.EventHandler(this.cbWorksafeMode_CheckedChanged);
-            // 
             // flowLayoutPanel21
             // 
             this.flowLayoutPanel21.AutoSize = true;
@@ -971,6 +961,17 @@ namespace EVEMon
             this.flowLayoutPanel22.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel22.TabIndex = 2;
             this.flowLayoutPanel22.WrapContents = false;
+            // 
+            // cbWorksafeMode
+            // 
+            this.cbWorksafeMode.AutoSize = true;
+            this.cbWorksafeMode.Location = new System.Drawing.Point(12, 3);
+            this.cbWorksafeMode.Name = "cbWorksafeMode";
+            this.cbWorksafeMode.Size = new System.Drawing.Size(271, 17);
+            this.cbWorksafeMode.TabIndex = 6;
+            this.cbWorksafeMode.Text = "Run in \"safe for work\" mode (no portraits or colors)";
+            this.cbWorksafeMode.UseVisualStyleBackColor = true;
+            this.cbWorksafeMode.CheckedChanged += new System.EventHandler(this.cbWorksafeMode_CheckedChanged);
             // 
             // groupBox7
             // 
@@ -1105,6 +1106,7 @@ namespace EVEMon
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightPlannedSkills);
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightPrerequisites);
             this.flowLayoutPanel13.Controls.Add(this.cbHighlightConflicts);
+            this.flowLayoutPanel13.Controls.Add(this.cbHighlightPartialSkills);
             this.flowLayoutPanel13.Controls.Add(this.flowLayoutPanel14);
             this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel13.Location = new System.Drawing.Point(3, 17);
@@ -1148,7 +1150,7 @@ namespace EVEMon
             this.flowLayoutPanel14.AutoSize = true;
             this.flowLayoutPanel14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel14.Enabled = false;
-            this.flowLayoutPanel14.Location = new System.Drawing.Point(182, 23);
+            this.flowLayoutPanel14.Location = new System.Drawing.Point(34, 46);
             this.flowLayoutPanel14.Margin = new System.Windows.Forms.Padding(25, 0, 25, 0);
             this.flowLayoutPanel14.Name = "flowLayoutPanel14";
             this.flowLayoutPanel14.Size = new System.Drawing.Size(0, 0);
@@ -2006,6 +2008,16 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // cbHighlightPartialSkills
+            // 
+            this.cbHighlightPartialSkills.AutoSize = true;
+            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(160, 26);
+            this.cbHighlightPartialSkills.Name = "cbHighlightPartialSkills";
+            this.cbHighlightPartialSkills.Size = new System.Drawing.Size(172, 17);
+            this.cbHighlightPartialSkills.TabIndex = 10;
+            this.cbHighlightPartialSkills.Text = "Highlight Partially Trained Skills";
+            this.cbHighlightPartialSkills.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2280,5 +2292,6 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel26;
         private System.Windows.Forms.CheckBox cbSkillInTitle;
         private System.Windows.Forms.CheckBox cbHighlightConflicts;
+        private System.Windows.Forms.CheckBox cbHighlightPartialSkills;
     }
 }

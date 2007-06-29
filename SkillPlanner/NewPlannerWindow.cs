@@ -167,31 +167,6 @@ namespace EVEMon.SkillPlanner
         private CharFileInfo m_cfi = null;
         private String m_planKey;
 
-        public Settings Settings
-        {
-            get { return m_settings; }
-            set
-            {
-                if (m_settings != null)
-                {
-                    m_settings.WorksafeChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightPlannedSkillsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightPrerequisitesChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.DimUntrainableChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightConflictsChanged -= new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                }
-                m_settings = value;
-                if (m_settings != null)
-                {
-                    m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightPlannedSkillsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightPrerequisitesChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.DimUntrainableChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                    m_settings.HighlightConflictsChanged += new EventHandler<EventArgs>(m_settings_SkillHighlightingChanged);
-                }
-            }
-        }
-
         private void m_settings_WorksafeChanged(object sender, EventArgs e)
         {
             skillBrowser.WorksafeMode = m_settings.WorksafeMode;

@@ -423,6 +423,20 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_HighlightPartialSkills = false;
+        public bool SkillPlannerHighlightPartialSkills
+        {
+            get { return m_HighlightPartialSkills; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_HighlightPartialSkills = value; OnHighlightPartialSkillsChanged();
+                }
+            }
+        }
+
+
         private int m_skillIconGroup = 0;
         public int SkillIconGroup
         {
@@ -863,6 +877,7 @@ namespace EVEMon.Common
         public event EventHandler<EventArgs> HighlightPrerequisitesChanged;
         public event EventHandler<EventArgs> DimUntrainableChanged;
         public event EventHandler<EventArgs> HighlightConflictsChanged;
+        public event EventHandler<EventArgs> HighlightPartialSkillsChanged;
         public event EventHandler<EventArgs> WorksafeChanged;
         public event EventHandler<EventArgs> RunIGBServerChanged;
         public event EventHandler<EventArgs> RelocateEveWindowChanged;
@@ -909,6 +924,13 @@ namespace EVEMon.Common
             }
         }
 
+        private void OnHighlightPartialSkillsChanged()
+        {
+            if (HighlightPartialSkillsChanged != null)
+            {
+                HighlightPartialSkillsChanged(this, new EventArgs());
+            }
+        }
         private void OnWorksafeChanged()
         {
             if (WorksafeChanged != null)

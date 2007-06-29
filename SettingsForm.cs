@@ -36,6 +36,7 @@ namespace EVEMon
             s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
             s.SkillPlannerHighlightConflicts = cbHighlightConflicts.Checked;
+            s.SkillPlannerHighlightPartialSkills = cbHighlightPartialSkills.Checked;
 
             if (rbSystemTrayOptionsNever.Checked)
             {
@@ -304,6 +305,7 @@ namespace EVEMon
             cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;
             cbHighlightPrerequisites.Checked = m_settings.SkillPlannerHighlightPrerequisites;
             cbHighlightConflicts.Checked = m_settings.SkillPlannerHighlightConflicts;
+            cbHighlightPartialSkills.Checked = m_settings.SkillPlannerHighlightPartialSkills;
 
             cbTooltipDisplay.Items.Clear();
             for (int i = 0; i < tooltipCodes.Length; i++)

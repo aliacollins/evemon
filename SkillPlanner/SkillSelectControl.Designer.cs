@@ -143,41 +143,41 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1,
             this.cmiPlanTo});
             this.cmSkills.Name = "contextMenuStrip1";
-            this.cmSkills.Size = new System.Drawing.Size(159, 120);
+            this.cmSkills.Size = new System.Drawing.Size(170, 120);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
             // 
             // cmiExpandSelected
             // 
             this.cmiExpandSelected.Name = "cmiExpandSelected";
-            this.cmiExpandSelected.Size = new System.Drawing.Size(158, 22);
+            this.cmiExpandSelected.Size = new System.Drawing.Size(169, 22);
             this.cmiExpandSelected.Text = "Expand Selected";
             this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
             // 
             // cmiCollapseSelected
             // 
             this.cmiCollapseSelected.Name = "cmiCollapseSelected";
-            this.cmiCollapseSelected.Size = new System.Drawing.Size(158, 22);
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(169, 22);
             this.cmiCollapseSelected.Text = "Collapse Selected";
             this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
             // 
             // cmiExpandAll
             // 
             this.cmiExpandAll.Name = "cmiExpandAll";
-            this.cmiExpandAll.Size = new System.Drawing.Size(158, 22);
+            this.cmiExpandAll.Size = new System.Drawing.Size(169, 22);
             this.cmiExpandAll.Text = "Expand All";
             this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
             // 
             // cmiCollapseAll
             // 
             this.cmiCollapseAll.Name = "cmiCollapseAll";
-            this.cmiCollapseAll.Size = new System.Drawing.Size(158, 22);
+            this.cmiCollapseAll.Size = new System.Drawing.Size(169, 22);
             this.cmiCollapseAll.Text = "Collapse All";
             this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
             // 
             // cmiPlanTo
             // 
@@ -188,41 +188,41 @@ namespace EVEMon.SkillPlanner
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
             this.cmiPlanTo.Name = "cmiPlanTo";
-            this.cmiPlanTo.Size = new System.Drawing.Size(158, 22);
+            this.cmiPlanTo.Size = new System.Drawing.Size(169, 22);
             this.cmiPlanTo.Text = "&Plan to...";
             // 
             // level1ToolStripMenuItem
             // 
             this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
-            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level1ToolStripMenuItem.Text = "Level &1";
             this.level1ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level2ToolStripMenuItem
             // 
             this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
-            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level2ToolStripMenuItem.Text = "Level &2";
             this.level2ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level3ToolStripMenuItem
             // 
             this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
-            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level3ToolStripMenuItem.Text = "Level &3";
             this.level3ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level4ToolStripMenuItem
             // 
             this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
-            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level4ToolStripMenuItem.Text = "Level &4";
             this.level4ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level5ToolStripMenuItem
             // 
             this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
-            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
@@ -379,9 +379,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.pnlResults.AutoSize = true;
             this.pnlResults.Controls.Add(this.lbNoMatches);
-            this.pnlResults.Controls.Add(this.lbSearchList);
             this.pnlResults.Controls.Add(this.tvItems);
             this.pnlResults.Controls.Add(this.lvSortedSkillList);
+            this.pnlResults.Controls.Add(this.lbSearchList);
             this.pnlResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlResults.Location = new System.Drawing.Point(0, 78);
             this.pnlResults.Margin = new System.Windows.Forms.Padding(0);

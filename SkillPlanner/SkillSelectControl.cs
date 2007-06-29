@@ -297,7 +297,7 @@ namespace EVEMon.SkillPlanner
                         else
                         {
                             stn = new TreeNode(gs.Name + " (" + gs.Rank + ")", tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level), tvItems.ImageList.Images.IndexOfKey("lvl" + gs.Level));
-                            if (gs.PartiallyTrained)
+                            if (gs.PartiallyTrained && m_settings.SkillPlannerHighlightPartialSkills)
                             {
                                 stn.ForeColor = System.Drawing.Color.Blue;                                
                             }
@@ -560,6 +560,7 @@ namespace EVEMon.SkillPlanner
                 cbSkillFilter.SelectedIndex = m_settings.SkillBrowserFilter;
                 cbSorting.SelectedIndex = m_settings.SkillBrowserSort;
                 cbShowNonPublic.Checked = m_settings.ShowPrivateSkills;
+                m_settings.HighlightPartialSkillsChanged +=new EventHandler<EventArgs>(m_settings_HighlightPartialSkillsChanged);
                 if (m_settings.StoreBrowserFilters)
                 {
                     tbSearchText.Text = m_settings.SkillBrowserSearch;
@@ -576,6 +577,34 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        private void m_settings_HighlightPartialSkillsChanged(object sender, EventArgs e)
+        {
+            foreach(TreeNode tn in   tvItems.Nodes)
+            {
+                PartialSkillsHighlightChanged(tn);
+            }
+        }
+
+        private void PartialSkillsHighlightChanged(TreeNode tn)
+        {
+            if (tn.GetNodeCount(false) == 0)
+            {
+                Skill s = tn.Tag as Skill;
+                if (s != null && s.PartiallyTrained)
+                {
+                    tn.ForeColor = (m_settings.SkillPlannerHighlightPartialSkills) ? System.Drawing.Color.Blue : System.Drawing.SystemColors.WindowText;
+                }
+
+            }
+            else
+            {
+                foreach (TreeNode stn in tn.Nodes)
+                {
+                    PartialSkillsHighlightChanged(stn);
+                }
+            }
+        }
+
         private void cbShowNonPublic_CheckedChanged(object sender, EventArgs e)
         {
             m_settings.ShowPrivateSkills = cbShowNonPublic.Checked;
@@ -588,7 +617,7 @@ namespace EVEMon.SkillPlanner
             UpdateSkillDisplay();
         }
 
-        private void UpdateSkillDisplay()
+        public void UpdateSkillDisplay()
         {
             UpdateSkillFilter();
             SearchTextChanged();
