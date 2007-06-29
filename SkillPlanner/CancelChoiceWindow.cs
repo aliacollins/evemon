@@ -12,6 +12,16 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
         }
 
+        public bool CancelMultipleSkills
+        {
+            set
+            {
+                string skillWording = (value) ? "these skills" : "this skill";
+                lbQuestion.Text = String.Format(lbQuestion.Text,skillWording);
+                btnThisOnly.Text = "Just " + skillWording;
+            }
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

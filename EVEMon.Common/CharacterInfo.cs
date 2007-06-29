@@ -960,12 +960,14 @@ namespace EVEMon.Common
                 foreach (SerializableSkill s in sg.Skills)
                 {
                     Skill gs = gsg[s.Name];
-                    if (gs == null)
-                    {
-                        MessageBox.Show("The character cache contains the unknown skill " + s.Name + ", which will be removed.",
-                                    "Unknown skill", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    }
-                    else
+
+                    // remove the unknown skill thing - it's kinda pointless... what's the user gonna do?!
+                    //if (gs == null)
+                    //{
+                    //   MessageBox.Show("The character cache contains the unknown skill " + s.Name + ", which will be removed.",
+                    //               "Unknown skill", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    //}
+                    if (gs != null)
                     {
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;

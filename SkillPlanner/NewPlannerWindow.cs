@@ -716,7 +716,14 @@ namespace EVEMon.SkillPlanner
             printBrowser.Update();
             printDocument1.DocumentName = this.Text;
             printPreviewDialog1.Document = printDocument1;
-            printPreviewDialog1.ShowDialog(this);
+            try
+            {
+                printPreviewDialog1.ShowDialog(this);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Print preview failed. Check your printer driver!", "Print Preview failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
             printBrowser.Dispose();
         }
 

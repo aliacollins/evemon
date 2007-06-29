@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbQuestion = new System.Windows.Forms.Label();
             this.btnThisOnly = new System.Windows.Forms.Button();
             this.btnAll = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -36,14 +36,13 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // lbQuestion
             // 
-            this.label1.Location = new System.Drawing.Point(50, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(259, 29);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Do you want to cancel just this skill, or all prerequisites for this skill as wel" +
-                "l?";
+            this.lbQuestion.Location = new System.Drawing.Point(50, 13);
+            this.lbQuestion.Name = "lbQuestion";
+            this.lbQuestion.Size = new System.Drawing.Size(259, 29);
+            this.lbQuestion.TabIndex = 0;
+            this.lbQuestion.Text = "Do you want to cancel just {0}, or all prerequisites for {0} as well?";
             // 
             // btnThisOnly
             // 
@@ -95,7 +94,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAll);
             this.Controls.Add(this.btnThisOnly);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbQuestion);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "CancelChoiceWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -108,7 +107,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbQuestion;
         private System.Windows.Forms.Button btnThisOnly;
         private System.Windows.Forms.Button btnAll;
         private System.Windows.Forms.Button btnCancel;

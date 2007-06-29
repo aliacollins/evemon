@@ -587,7 +587,8 @@ namespace EVEMon.SkillPlanner
 
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
+            //miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
+            miRemoveFromPlan.Enabled = true;
             miChangeNote.Enabled = (lvSkills.SelectedItems.Count > 0);
             miChangePriority.Enabled = miChangeNote.Enabled;
             if (lvSkills.SelectedItems.Count == 1)
@@ -684,7 +685,12 @@ namespace EVEMon.SkillPlanner
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
             //Abstracted logic to function RemoveEntry for issue #369: Add use of Delete key
-            RemoveEntry();
+            if (lvSkills.SelectedItems.Count == 1)
+                RemoveSelectedEntry();
+            else
+            {
+                RemoveSelectedEntries();
+            }
         }
 
         private void miChangePriority_Click(object sender, EventArgs e)
@@ -737,7 +743,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void RemoveEntry()
+        private void RemoveSelectedEntry()
         {
             if (lvSkills.SelectedItems.Count != 1)
             {
@@ -746,6 +752,7 @@ namespace EVEMon.SkillPlanner
 
             using (CancelChoiceWindow f = new CancelChoiceWindow())
             {
+                f.CancelMultipleSkills = false;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
                 {
@@ -761,6 +768,44 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        // Get the dialog
+        // Get the list of selected plan entries
+        // while entries not removed
+        // remove last entry
+        private void RemoveSelectedEntries()
+        {
+            Stack<ListViewItem> selectedItems = new Stack<ListViewItem>();
+            foreach (ListViewItem lvi in lvSkills.SelectedItems)
+            {
+                selectedItems.Push(lvi);
+            }
+
+            bool removePrereqs;
+
+            using (CancelChoiceWindow f = new CancelChoiceWindow())
+            {
+                f.CancelMultipleSkills = true;
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+                removePrereqs = (dr == DialogResult.Yes);
+            }
+            while (selectedItems.Count > 0)
+            {
+                ListViewItem lvi = selectedItems.Pop();
+                // see if the plan entry still exists
+                Plan.Entry pe = GetPlanEntryForListViewItem(lvi);
+                if (m_plan.GetEntry(pe.SkillName,pe.Level) != null)
+                {
+                    // we still have the entry - remove it.
+                     RemoveFromPlan(pe, removePrereqs);
+                }
+            }
+        }
+
 
         private void miChangeNote_Click(object sender, EventArgs e)
         {
@@ -1081,7 +1126,7 @@ namespace EVEMon.SkillPlanner
         {
             if (e.KeyCode == Keys.Delete)
             {
-                RemoveEntry();
+                RemoveSelectedEntry();
             }
         }
 
