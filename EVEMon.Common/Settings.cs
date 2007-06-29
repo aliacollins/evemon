@@ -1553,19 +1553,23 @@ namespace EVEMon.Common
                 s = new Settings();
             }
 
+            s.CalculateChecksums();
             m_instance = s;
+            return s;
+        }
 
+        public void CalculateChecksums()
+        {
             try
             {
-                m_instance.m_checksums.Clear();
-                m_instance.m_checksums.Add(GenerateMD5("eve-implants2.xml.gz"));
-                m_instance.m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
-                m_instance.m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
-                m_instance.m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
+                m_checksums.Clear();
+                m_checksums.Add(GenerateMD5("eve-implants2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
             }
             // don't worry if we cant create MD5  maybe they have FIPS enforced.
             catch (Exception) { }
-            return s;
         }
 
         private static Pair<string,string> GenerateMD5(string datafile)

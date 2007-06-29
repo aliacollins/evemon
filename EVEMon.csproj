@@ -75,6 +75,12 @@
     <Compile Include="CharSelect.Designer.cs">
       <DependentUpon>CharSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataUpdateNotifyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataUpdateNotifyForm.Designer.cs">
+      <DependentUpon>DataUpdateNotifyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DraggableTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -411,6 +417,10 @@
     <EmbeddedResource Include="ChangeLoginWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ChangeLoginWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataUpdateNotifyForm.resx">
+      <DependentUpon>DataUpdateNotifyForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EVEFolderWindow.resx">
       <SubType>Designer</SubType>

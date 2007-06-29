@@ -28,6 +28,7 @@ namespace EVEMon
         private Settings m_settings;
         private bool startMinimized;
         private bool updateFlag;
+        private bool dataUpdateFlag;
 
         public MainWindow(Settings s, bool startMinimized)
             : this()
@@ -105,6 +106,7 @@ namespace EVEMon
             {
                 UpdateManager um = UpdateManager.GetInstance();
                 um.UpdateAvailable += new UpdateAvailableHandler(um_UpdateAvailable);
+                um.DataUpdateAvailable += new DataUpdateAvailableHandler(um_DataUpdateAvailable);
                 um.Start();
             }
 
@@ -231,6 +233,35 @@ namespace EVEMon
                 }
             }));
         }
+
+        
+        private bool m_dataUpdateShowing = false;
+        /// <summary>
+        /// Event Handler for Data updates
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void um_DataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
+        {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                if (!m_dataUpdateShowing)
+                {
+                    m_dataUpdateShowing = true;
+                    using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(m_settings, e))
+                    {
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
+                        {
+                            this.dataUpdateFlag = true;
+                            this.Close();
+                        }
+                    }
+                    m_dataUpdateShowing = false;
+                }
+            }));
+        }
+
 
         /// <summary>
         /// Add a tab to the form for a file based character
@@ -842,7 +873,8 @@ namespace EVEMon
             if (!m_settings.SystemTrayOptionsIsNever &&                 // if system tray icon is always or display when minimised
                 m_settings.CloseToTray &&                               // and EVEMon is configured to close to system tray
                 this.Visible &&                                         // and main form is visable
-                !this.updateFlag &&                                     // and auto-update not currently in process
+                !this.updateFlag &&                                     // and code auto-update not currently in process   
+                !this.dataUpdateFlag &&                                 // and data auto-update not currently in process
                 !(e.CloseReason == CloseReason.ApplicationExitCall) &&  // and Application.Exit() was not called
                 !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
                 !(e.CloseReason == CloseReason.WindowsShutDown)  // and Windows is not shutting down
@@ -861,6 +893,7 @@ namespace EVEMon
             {
                 um.Stop();
                 um.UpdateAvailable -= new UpdateAvailableHandler(um_UpdateAvailable);
+                um.DataUpdateAvailable -= new DataUpdateAvailableHandler(um_DataUpdateAvailable);
             }
 
             m_settings.RunIGBServerChanged -= new EventHandler<EventArgs>(m_settings_RunIGBServerChanged);

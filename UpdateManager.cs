@@ -233,10 +233,14 @@ namespace EVEMon
     {
         [XmlElement("name")]
         public string Name;
+        [XmlElement("date")]
+        public string DateChanged;
         [XmlElement("md5")]
         public string Md5;
         [XmlElement("message")]
         public string Message;
+        [XmlElement("url")]
+        public string Url;
 
     }
 
