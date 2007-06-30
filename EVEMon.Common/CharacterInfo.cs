@@ -777,9 +777,9 @@ namespace EVEMon.Common
             this.Bloodline = ci.CharacterSheet.BloodLine;
             this.CorporationName = ci.CharacterSheet.CorpName;
             this.XMLExpires = ci.XMLExpires;
-            this.PortraitFolder = ci.PortraitFolder;
             this.Balance = ci.CharacterSheet.Balance;
-            this.PortraitFolder = ci.PortraitFolder;
+            if (ci.PortraitFolder != string.Empty)
+                this.PortraitFolder = ci.PortraitFolder;
 
             bool getcurrent = false;
 
