@@ -57,6 +57,8 @@ Var MUI_TEMP
 !include "NETFrameworkCheck.nsh"
 
 Function .onInit
+  # fix it so it only computes the space needed for evemon itself
+  SectionSetSize 0 0
   StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
   StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
   Goto noCheckForExeInDir
@@ -188,7 +190,8 @@ function .onInstSuccess
   lbl_skipRun:
 FunctionEnd
 
-Section "Installer Section"
+Section "Installer Section" 
+
   Call EnsureNotRunning
 
   ClearErrors
@@ -211,6 +214,7 @@ Section "Installer Section"
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
   !insertmacro MUI_STARTMENU_WRITE_BEGIN EVEMon
+	 SetShellVarContext all
      CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
      CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk" "$INSTDIR\EVEMon.exe"
      CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk" "$INSTDIR\uninstall.exe"
@@ -239,14 +243,20 @@ SectionEnd
 
 Section "un.Uninstaller Section"
   Call un.EnsureNotRunning
-
+  SetShellVarContext all
   Delete "$INSTDIR\Debugging Tools\EVEMon (with network logging).lnk"
   RMDir "$INSTDIR\Debugging Tools"
 ## INSTALLBUILDER: INSERT DELETES HERE ##
   Delete "$INSTDIR\eve.exe_I006b_040f.ico"
   Delete "$INSTDIR\EVEMon-all.ico"
   Delete "$INSTDIR\uninstall.exe"
-
+  SetShellVarContext all
+  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk"
+  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
+  RmDir "$SMPROGRAMS\$STARTMENU_FOLDER"
+  RmDir /R "$INSTDIR\Resources"
+  RmDir /R "$INSTDIR\Microsoft.VC80.CRT"
+  
   ; Just to be sure it gets cleaned up if it was locked...
   Delete /REBOOTOK "$INSTDIR\EVEMon.WinHook.dll"
   IfRebootFlag rmDirWithReboot rmDirWithoutReboot

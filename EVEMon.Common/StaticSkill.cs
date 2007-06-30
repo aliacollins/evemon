@@ -47,7 +47,10 @@ namespace EVEMon.Common
             {
                 LoadStaticSkills();
             }
-            return m_skillsByName[name];
+            if (m_skillsByName.ContainsKey(name))
+                return m_skillsByName[name];
+            else
+                return null;
         }
 
         public static StaticSkill GetStaticSkillById(int id)
@@ -56,7 +59,10 @@ namespace EVEMon.Common
             {
                 LoadStaticSkills();
             }
-            return m_skillsById[id];
+            if (m_skillsById.ContainsKey(id))
+                return m_skillsById[id];
+            else
+                return null;
         }
 
         public static void ReloadStaticSkills()

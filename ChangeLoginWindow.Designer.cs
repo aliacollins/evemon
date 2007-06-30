@@ -218,7 +218,6 @@ namespace EVEMon
             this.Controls.Add(this.verticalFlowPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(334, 32);
             this.Name = "ChangeLoginWindow";
             this.ShowInTaskbar = false;
