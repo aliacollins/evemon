@@ -779,6 +779,7 @@ namespace EVEMon.Common
             this.XMLExpires = ci.XMLExpires;
             this.PortraitFolder = ci.PortraitFolder;
             this.Balance = ci.CharacterSheet.Balance;
+            this.PortraitFolder = ci.PortraitFolder;
 
             bool getcurrent = false;
 
