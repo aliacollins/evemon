@@ -214,7 +214,7 @@ Section "Installer Section"
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
   !insertmacro MUI_STARTMENU_WRITE_BEGIN EVEMon
-	 SetShellVarContext all
+	 SetShellVarContext current
      CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
      CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk" "$INSTDIR\EVEMon.exe"
      CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk" "$INSTDIR\uninstall.exe"
@@ -243,7 +243,7 @@ SectionEnd
 
 Section "un.Uninstaller Section"
   Call un.EnsureNotRunning
-  SetShellVarContext all
+  SetShellVarContext current
   Delete "$INSTDIR\Debugging Tools\EVEMon (with network logging).lnk"
   RMDir "$INSTDIR\Debugging Tools"
 ## INSTALLBUILDER: INSERT DELETES HERE ##
