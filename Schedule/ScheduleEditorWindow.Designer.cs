@@ -37,6 +37,7 @@ namespace EVEMon.Schedule
             this.lbEntries = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblEntryDescription = new System.Windows.Forms.Label();
+            this.calControl = new EVEMon.Schedule.CalendarControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.nudMonth = new System.Windows.Forms.DomainUpDown();
             this.nudDay = new System.Windows.Forms.NumericUpDown();
@@ -45,7 +46,7 @@ namespace EVEMon.Schedule
             this.cbViewType = new System.Windows.Forms.ComboBox();
             this.ssStatusBar = new System.Windows.Forms.StatusStrip();
             this.tsslStatusBarText = new System.Windows.Forms.ToolStripStatusLabel();
-            this.calControl = new EVEMon.Schedule.CalendarControl();
+            this.tsbClearExpired = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -63,7 +64,8 @@ namespace EVEMon.Schedule
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbAddEntry,
-            this.tsbDeleteEntry});
+            this.tsbDeleteEntry,
+            this.tsbClearExpired});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(712, 25);
@@ -160,6 +162,16 @@ namespace EVEMon.Schedule
             this.lblEntryDescription.Name = "lblEntryDescription";
             this.lblEntryDescription.Size = new System.Drawing.Size(171, 207);
             this.lblEntryDescription.TabIndex = 2;
+            // 
+            // calControl
+            // 
+            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
+            this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
+            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.calControl.Location = new System.Drawing.Point(0, 27);
+            this.calControl.Name = "calControl";
+            this.calControl.Size = new System.Drawing.Size(533, 414);
+            this.calControl.TabIndex = 0;
             // 
             // panel1
             // 
@@ -265,15 +277,15 @@ namespace EVEMon.Schedule
             this.tsslStatusBarText.Size = new System.Drawing.Size(42, 17);
             this.tsslStatusBarText.Text = "Ready.";
             // 
-            // calControl
+            // tsbClearExpired
             // 
-            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
-            this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
-            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.calControl.Location = new System.Drawing.Point(0, 27);
-            this.calControl.Name = "calControl";
-            this.calControl.Size = new System.Drawing.Size(533, 414);
-            this.calControl.TabIndex = 0;
+            this.tsbClearExpired.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbClearExpired.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearExpired.Image")));
+            this.tsbClearExpired.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbClearExpired.Name = "tsbClearExpired";
+            this.tsbClearExpired.Size = new System.Drawing.Size(111, 22);
+            this.tsbClearExpired.Text = "Clear Expired Entries";
+            this.tsbClearExpired.Click += new System.EventHandler(this.tsbClearExpired_Click);
             // 
             // ScheduleEditorWindow
             // 
@@ -326,5 +338,6 @@ namespace EVEMon.Schedule
         private System.Windows.Forms.StatusStrip ssStatusBar;
         private System.Windows.Forms.ToolStripStatusLabel tsslStatusBarText;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.ToolStripButton tsbClearExpired;
     }
 }

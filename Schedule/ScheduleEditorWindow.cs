@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -166,6 +167,22 @@ namespace EVEMon.Schedule
             }
         }
 
+        private void tsbClearExpired_Click(object sender, EventArgs e)
+        {
+            List<ScheduleEntry> unexpiredEntries = new List<ScheduleEntry>();
+            lbEntries.Items.Clear();
+            foreach (ScheduleEntry se in m_settings.Schedule)
+            {
+                if (!se.Expired)
+                {
+                    lbEntries.Items.Add(se.Title);
+                    unexpiredEntries.Add(se);
+                }
+            }
+            m_settings.Schedule = unexpiredEntries;
+            m_settings.Save();
+        }
+
         private void lbEntries_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbEntries.SelectedIndex != -1)
@@ -245,5 +262,6 @@ namespace EVEMon.Schedule
                 }
             }
         }
+
     }
 }
