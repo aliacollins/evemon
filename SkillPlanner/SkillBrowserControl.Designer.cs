@@ -191,6 +191,7 @@ namespace EVEMon.SkillPlanner
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.skillTreeDisplay);
+            this.splitContainer1.RememberDistanceKey = null;
             this.splitContainer1.Size = new System.Drawing.Size(674, 513);
             this.splitContainer1.SplitterDistance = 108;
             this.splitContainer1.TabIndex = 4;
@@ -226,6 +227,7 @@ namespace EVEMon.SkillPlanner
             this.btnEnables.TabIndex = 5;
             this.btnEnables.Text = "Show me what this skill enables...";
             this.btnEnables.UseVisualStyleBackColor = true;
+            this.btnEnables.Click += new System.EventHandler(this.btnEnables_Click);
             // 
             // cbOwned
             // 
