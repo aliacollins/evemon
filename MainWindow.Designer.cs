@@ -41,6 +41,7 @@ namespace EVEMon
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.tmrTranquilityClock = new System.Windows.Forms.Timer(this.components);
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -75,6 +76,7 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcCharacterTabs = new EVEMon.DraggableTabControl();
+            this.ttMainWindow = new System.Windows.Forms.ToolTip(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -139,7 +141,8 @@ namespace EVEMon
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus,
-            this.lblServerStatus});
+            this.lblServerStatus,
+            this.lblTraining});
             this.statusStrip.Location = new System.Drawing.Point(0, 414);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(417, 22);
@@ -156,6 +159,13 @@ namespace EVEMon
             this.lblServerStatus.Name = "lblServerStatus";
             this.lblServerStatus.Size = new System.Drawing.Size(131, 17);
             this.lblServerStatus.Text = "// Server Status Unknown";
+            // 
+            // lblTraining
+            // 
+            this.lblTraining.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.lblTraining.Name = "lblTraining";
+            this.lblTraining.Size = new System.Drawing.Size(0, 17);
+            this.lblTraining.Text = "toolStripStatusLabel1";
             // 
             // tmrTranquilityClock
             // 
@@ -515,5 +525,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem showOwnedSkillbooksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sendToInEveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel lblTraining;
+        private System.Windows.Forms.ToolTip ttMainWindow;
     }
 }

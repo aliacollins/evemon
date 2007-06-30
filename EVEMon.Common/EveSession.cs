@@ -1,5 +1,5 @@
 //#define DEBUG_SINGLETHREAD
-//#define USE_LOCALHOST
+//define USE_LOCALHOST
 // (If setting DEBUG_SINGLE THREAD, also set it in CharacterMonitor.cs)
 using System;
 using System.Collections.Generic;

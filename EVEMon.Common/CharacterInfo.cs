@@ -46,6 +46,14 @@ namespace EVEMon.Common
             m_CurrentImplants.Changed += new EventHandler<ChangedEventArgs<UserImplant>>(m_implantSet_Changed);
         }
 
+        public bool IsTraining
+        {
+            get 
+            {
+                return (SerialSIT != null && SerialSIT.isSkillInTraining && SerialSIT.getTrainingEndTime.ToUniversalTime() > DateTime.Now.ToUniversalTime());
+            }
+        }
+
         private void BuildSkillTree()
         {
             bool bookOwned = false;

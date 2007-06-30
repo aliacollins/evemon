@@ -131,35 +131,43 @@ namespace EVEMon.Common
             if (ar.IsCompleted && conn.Connected)
             {
                 m_status = Status.Online;
-                NetworkStream stream = conn.GetStream();
-                byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
+                try
+                {
+                    NetworkStream stream = conn.GetStream();
+                    byte[] data = {0x23, 0x00, 0x00, 0x00, 0x7E, 0x00, 0x00, 0x00,
                         0x00, 0x14, 0x06, 0x04, 0xE8, 0x99, 0x02, 0x00,
                         0x05, 0x8B, 0x00, 0x08, 0x0A, 0xCD, 0xCC, 0xCC,
                         0xCC, 0xCC, 0xCC, 0x00, 0x40, 0x05, 0x49, 0x0F,
                         0x10, 0x05, 0x42, 0x6C, 0x6F, 0x6F, 0x64};
-                stream.Write(data, 0, data.Length);
-                byte[] response = new byte[256];
-                int bytes = stream.Read(response, 0, 256);
-                if (bytes > 21)
-                {
-                    m_users = response[21] * 256 + response[20];
+                    stream.Write(data, 0, data.Length);
+                    byte[] response = new byte[256];
+                    int bytes = stream.Read(response, 0, 256);
+                    if (bytes > 21)
+                    {
+                        m_users = response[21] * 256 + response[20];
 
+                    }
+                    else
+                    {
+                        m_users = 0;
+                    }
+
+                    string str = new System.Text.ASCIIEncoding().GetString(response);
+
+                    Match m = m_re.Match(str);
+                    if (m.Success)
+                    {
+                        m_status = Status.Starting;
+                        m_countdown = Convert.ToInt32(m.Groups[1].Value) - 1;
+                        m_tmrCountdown.Enabled = true;
+                    }
+                    conn.EndConnect(ar);
                 }
-                else
+                catch (Exception)
                 {
+                    m_status = Status.Offline;
                     m_users = 0;
                 }
-
-                string str = new System.Text.ASCIIEncoding().GetString(response);
-
-                Match m = m_re.Match(str);
-                if (m.Success)
-                {
-                    m_status = Status.Starting;
-                    m_countdown = Convert.ToInt32(m.Groups[1].Value) - 1;
-                    m_tmrCountdown.Enabled = true;
-                }
-                conn.EndConnect(ar);
             }
             else
             {

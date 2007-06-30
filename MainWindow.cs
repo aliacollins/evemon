@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Sockets;
@@ -10,6 +11,7 @@ using EVEMon.Sales;
 using EVEMon.Common.Schedule;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Drawing;
 
 // TODO fixup up EVEMon/cache and /EVEMon/cache/xml from release 778
 // (check if amy xmls are there that are less that a week old and if so, nove them to the right place
@@ -64,6 +66,65 @@ namespace EVEMon
                 this.WindowState = FormWindowState.Minimized;
                 this.Visible = true;
             }
+           
+        }
+
+        public void CheckAccountTraining()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(CheckAccountTraining));
+            }
+            Dictionary<int,int> accountsInTraining = new Dictionary<int,int>();
+            foreach (CharLoginInfo cli in m_settings.CharacterList)
+            {
+                CharacterInfo ci = GetCharacterInfo(cli.CharacterName);
+                if (ci.IsTraining)
+                {
+                    if (accountsInTraining.ContainsKey(cli.UserId))
+                    {
+                        accountsInTraining[cli.UserId]++;
+                    }
+                    else
+                    {
+                        accountsInTraining.Add(cli.UserId, 1);
+                    }
+                }
+                else
+                {
+                    if (!accountsInTraining.ContainsKey(cli.UserId))
+                    {
+                        accountsInTraining.Add(cli.UserId, 0);
+                    }
+                }
+            }
+            bool notTraining=false;
+            string notTrainingString = string.Empty;
+            foreach(int key in accountsInTraining.Keys)
+            {
+                if (accountsInTraining[key] == 0)
+                {
+                    if (notTraining) 
+                    {
+                        notTrainingString += ", ";
+                    }
+                    notTraining = true;
+                    notTrainingString = notTrainingString + key.ToString();
+                }
+            }
+            if (notTraining)
+            {
+                lblTraining.Image = SystemIcons.Warning.ToBitmap();
+                ttMainWindow.SetToolTip(statusStrip, "Accounts " + notTrainingString + " do not have any characters in training");
+                ttMainWindow.IsBalloon = false;
+                ttMainWindow.Active = true;
+            }
+            else
+            {
+                lblTraining.Image = null;
+                ttMainWindow.SetToolTip(statusStrip, null);
+                ttMainWindow.Active = false;
+            }
         }
 
         private void AddCharacters()
@@ -104,6 +165,7 @@ namespace EVEMon
         {
             if (m_settings.DisableEVEMonVersionCheck == false)
             {
+                CheckAccountTraining();
                 UpdateManager um = UpdateManager.GetInstance();
                 um.UpdateAvailable += new UpdateAvailableHandler(um_UpdateAvailable);
                 um.DataUpdateAvailable += new DataUpdateAvailableHandler(um_DataUpdateAvailable);
@@ -351,6 +413,7 @@ namespace EVEMon
             cm.Start();
             tcCharacterTabs.TabPages.Add(tp);
             cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            cm.GrandCharacterInfo.TrainingSkillChanged += new EventHandler(GrandCharacterInfo_TrainingSkillChanged);
             SetRemoveEnable();
         }
 
@@ -538,10 +601,14 @@ namespace EVEMon
         }
 
         private List<string> m_completedSkills = new List<string>();
-
+        private void GrandCharacterInfo_TrainingSkillChanged(object sender, EventArgs e)
+        {
+            CheckAccountTraining();
+        }
 
         private void cm_DownloadAttemptCompleted(object sender, CharacterInfo.DownloadAttemptCompletedEventArgs e)
         {
+            CheckAccountTraining();
             this.Invoke(new MethodInvoker(delegate
             {
                 bool ShouldbeSilent = false;
@@ -1452,6 +1519,7 @@ namespace EVEMon
                 cm.Session.UpdateIneveAsync(cm.GrandCharacterInfo);
             }
         }
+
     }
 }
 
