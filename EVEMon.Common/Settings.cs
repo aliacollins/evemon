@@ -51,6 +51,17 @@ namespace EVEMon.Common
             }
         }
 
+        public List<string> GetCharacterNamesForAccount(int userID)
+        {
+            List<string> charList = new List<string>();
+            foreach (CharLoginInfo cli in CharacterList)
+            {
+                if (cli.UserId == userID)
+                    charList.Add(cli.CharacterName);
+            }
+            return charList;
+        }
+
         private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
         public List<CharFileInfo> CharFileList
         {

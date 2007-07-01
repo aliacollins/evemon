@@ -109,7 +109,14 @@ namespace EVEMon
                         notTrainingString += ", ";
                     }
                     notTraining = true;
-                    notTrainingString = notTrainingString + key.ToString();
+                    notTrainingString = notTrainingString + key.ToString() + " (";
+                    string sep = " ";
+                    foreach (string charName in m_settings.GetCharacterNamesForAccount(key))
+                    {
+                        notTrainingString += String.Format("{0}{1}", charName, sep);
+                        sep = ", ";
+                    }
+                    notTrainingString += ")";
                 }
             }
             if (notTraining)
