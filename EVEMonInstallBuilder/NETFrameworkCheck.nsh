@@ -137,7 +137,6 @@ Section "Microsoft .NET Framework v2.0"
   Abort "Microsoft .NET Framework 2.0 is required."
 
   lbl_Confirmed:
-  AddSize 153600
   nsisdl::download \
          /TIMEOUT=30000 "http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe" "$PLUGINSDIR\dotnetfx.exe"
   Pop $0

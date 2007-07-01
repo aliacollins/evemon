@@ -57,8 +57,14 @@ Var MUI_TEMP
 !include "NETFrameworkCheck.nsh"
 
 Function .onInit
-  # fix it so it only computes the space needed for evemon itself
+  # fix it so it only computes the space needed for evemon itself if >net is not installed
   SectionSetSize 0 0
+  Call GetDotNETVersion
+  Pop $0
+  StrCmp $0 "not found" 0 isInstalled
+		SectionSetSize 0 153600
+
+  isInstalled:     
   StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
   StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
   Goto noCheckForExeInDir
