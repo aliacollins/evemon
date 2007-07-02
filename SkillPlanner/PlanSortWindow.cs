@@ -102,7 +102,10 @@ namespace EVEMon.SkillPlanner
                 "Skills with the shortest remaining training time will be ordered first.")] FastestFirst,
         [
             PlanSortDescription("Fastest Group First",
-                "Skill groups with the shortest remaining training time will be ordered first.")] FastestGroupFirst
+                "Skill groups with the shortest remaining training time will be ordered first.")] FastestGroupFirst,
+        [PlanSortDescription("Slowest Skills First",
+                "Skills with the longest remaining training time will be ordered first. "
+                + "This minimizes user interaction during the beginning of the plan.")] SlowestFirst
     }
 
     public class PlanSortDescriptionAttribute : Attribute
@@ -128,6 +131,8 @@ namespace EVEMon.SkillPlanner
             m_description = description;
         }
     }
+
+    public delegate bool CompareDelegate<T>(T arg1, T arg2);
 
 
     public class PlanSorter
@@ -303,22 +308,30 @@ namespace EVEMon.SkillPlanner
                     }
                     break;
                 case PlanSortType.FastestFirst:
-                    ArrangeFastestFirst();
+                    ArrangeFastestFirst(
+                        delegate(TimeSpan arg1, TimeSpan arg2) { return arg1 < arg2; },
+                        TimeSpan.MaxValue);
                     break;
                 case PlanSortType.FastestGroupFirst:
                     ArrangeFastestGroupFirst();
+                    break;
+                case PlanSortType.SlowestFirst:
+                    ArrangeFastestFirst(
+                        delegate(TimeSpan arg1, TimeSpan arg2) { return arg1 > arg2; },
+                        TimeSpan.MinValue);
                     break;
             }
         }
 
         Dictionary<string, int> m_trainedLevels = new Dictionary<string, int>();
 
-        private void ArrangeFastestFirst()
+        private void ArrangeFastestFirst(
+            CompareDelegate<TimeSpan> comparer,
+            TimeSpan initialValue)
         {
-
             while (m_skillsToInsert.Count > 0)
             {
-                TimeSpan fastestSpan = TimeSpan.MaxValue;
+                TimeSpan fastestSpan = initialValue;
                 Plan.Entry fastestPe = null;
                 // find the fastest skill that already has it's prereqs added to the plan
                 for (int i = 0; i < m_skillsToInsert.Count; i++)
@@ -326,10 +339,17 @@ namespace EVEMon.SkillPlanner
                     Plan.Entry thisPe = m_skillsToInsert[i];
                     Skill thisSkill = m_plan.GrandCharacterInfo.GetSkill(thisPe.SkillName);
                     TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, true);
-                    if (thisSpan < fastestSpan)
+                    if (comparer(thisSpan, fastestSpan))
                     {
                         // this is potentially the fastest skill...
-                        bool canInsert = true;
+                        bool canInsert =
+                            thisPe.Level == 1 // this is a new skill
+                            || thisPe.Level <= thisSkill.Level + 1 // previous level is trained
+                            || m_trainedLevels.ContainsKey(thisPe.SkillName) // previous level is already planned
+                                && thisPe.Level <= m_trainedLevels[thisPe.SkillName] + 1;
+
+                        if (!canInsert)
+                            continue; //sanity check failed - try the next one
 
                         // but do we have the prereqs already added to the sorted plan?
                         foreach (Skill.Prereq pp in thisSkill.Prereqs)

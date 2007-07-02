@@ -1677,6 +1677,15 @@ namespace EVEMon.Common
                 }
             }
 
+            /// <summary>
+            /// Returns a string representation of entry - eases debugging.
+            /// </summary>
+            /// <returns>SkillName[Level]</returns>
+            public override string ToString()
+            {
+                return String.Format("{0}[{1}]", SkillName, Level);
+            }
+
             #region ICloneable Members
             public object Clone()
             {
