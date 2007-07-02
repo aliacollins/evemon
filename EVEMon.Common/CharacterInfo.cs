@@ -963,6 +963,21 @@ namespace EVEMon.Common
                 }
             }
 
+            // If this is an update from CCP{, set all skills to 0 - deals with the problem
+            // of ccp removing skills or changing prereqs
+            if (ci.FromCCP)
+            {
+                foreach (Skill s in AllSkillsByTypeID.Values)
+                {
+                    if (!s.InTraining)
+                    {
+                        s.LastConfirmedLvl = 0;
+                        s.Known = false;
+                        s.CurrentSkillPoints = 0;
+                    }
+                }
+            }
+
             foreach (SerializableSkillGroup sg in ci.SkillGroups)
             {
                 SkillGroup gsg = m_skillGroups[sg.Name];
