@@ -1368,6 +1368,9 @@ namespace EVEMon
                 pie.active_character = cfi.CharacterName;
             }
 
+            CharacterMonitor cm = GetCharacterMonitor(pie.active_character);
+            pie.character_info = cm.GrandCharacterInfo;
+            pie.plan_key = cm.GetPlanKey();
             pie.Text = "Skillgroup chart for " + pie.active_character;
             pie.Show();
         }
@@ -1529,6 +1532,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 

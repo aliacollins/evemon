@@ -14,6 +14,8 @@ namespace EVEMon
     {
         private Settings m_settings;
         public string active_character;
+        public string plan_key;
+        public CharacterInfo character_info = null;
 
         public SkillsPieChart()
         {
@@ -64,9 +66,18 @@ namespace EVEMon
             }
         }
 
-        private void SkillsPieChart_Load(object sender, EventArgs e)
+        private void UpdatePieChart()
         {
             SerializableCharacterSheet c_info = m_settings.GetCharacterSheet(active_character);
+
+            // Retrieve the selected Plan
+            Plan plan = null;
+            if (planSelector.SelectedIndex != 0)
+            {
+                plan = m_settings.GetPlanByName(plan_key, character_info, planSelector.Items[planSelector.SelectedIndex].ToString());
+            }
+
+            // Init Pie Chart
             decimal[] newValues = new decimal[c_info.SkillGroups.Count];
             string[] newTexts = new string[c_info.SkillGroups.Count];
             string[] newToolTips = new string[c_info.SkillGroups.Count];
@@ -84,8 +95,49 @@ namespace EVEMon
                 newValues[i] = 0;
                 newValues[i] += sg.GetTotalPoints();
                 newTexts[i] = sg.Name;
-                newSliceRelativeDisplacements[i] = (newValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
-                newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
+
+                long partialSkillPoints = 0;
+                long plannedSkillPoints = 0;
+
+                if (plan != null)
+                {
+                    // Check all Plan Entries
+                    foreach (Plan.Entry entry in plan.Entries)
+                    {
+                        // Does this plan entry match the current skill group?
+                        if (entry.Skill.SkillGroup.ID == sg.Id)
+                        {
+                            Skill skill = entry.Skill;
+
+                            // Add Partially Trained Points
+                            partialSkillPoints += skill.CurrentSkillPoints;
+
+                            // Add Points at Planed Level
+                            plannedSkillPoints += skill.GetPointsRequiredForLevel(entry.Level);
+                        }
+                    }
+
+                    // Check if we have to add the planned skill points to the tooltip
+                    if (plannedSkillPoints > 0)
+                    {
+                        newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints / " + String.Format("{0:#,###}", newValues[i] + plannedSkillPoints - partialSkillPoints) + " after plan completion)";
+                    }
+                    else
+                    {
+                        newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
+                    }
+
+                    // Update newValues with the skill point changes
+                    newValues[i] -= partialSkillPoints;
+                    newValues[i] += plannedSkillPoints;
+                }
+                else
+                {
+                    // Normal Tooltip when no Plan is selected
+                    newToolTips[i] = sg.Name + " (" + sg.Skills.Count + " skills, " + String.Format("{0:#,###}", newValues[i]) + " skillpoints)";
+                }
+
+                newSliceRelativeDisplacements[i] = (newValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;                
             }
 
             skillPieChartControl.Values = newValues;
@@ -97,6 +149,17 @@ namespace EVEMon
             skillPieChartControl.OrderSlices(m_settings.SkillPieChartSortBySize);
         }
 
+        private void SkillsPieChart_Load(object sender, EventArgs e)
+        {
+            // Init Plans Combox Box                        
+            foreach (string plan in m_settings.GetPlansForCharacter(plan_key))
+            {
+                planSelector.Items.Add(plan);
+            }
+            planSelector.SelectedIndex = 0;
+
+            UpdatePieChart();
+        }
         private void SkillsPieChart_FormClosing(object sender, FormClosingEventArgs e)
         {
             m_settings.SkillPieChartColors.Clear();
@@ -160,6 +223,11 @@ namespace EVEMon
             m_settings.SkillPieChartSortBySize = sortBySizeCheck.Checked;
             // skillPieChartControl.CopyDataToDrawVars();
             skillPieChartControl.OrderSlices(sortBySizeCheck.Checked);
+        }
+
+        private void planSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdatePieChart();
         }
     }
 }

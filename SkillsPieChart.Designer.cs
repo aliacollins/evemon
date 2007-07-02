@@ -40,6 +40,8 @@ namespace EVEMon
             this.sortBySizeCheck = new System.Windows.Forms.CheckBox();
             this.m_colorDialog = new System.Windows.Forms.ColorDialog();
             this.savePieDialog = new System.Windows.Forms.SaveFileDialog();
+            this.planSelector = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.pieControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieHeight)).BeginInit();
@@ -55,7 +57,7 @@ namespace EVEMon
             this.skillPieChartControl.Colors = null;
             this.skillPieChartControl.Location = new System.Drawing.Point(12, 12);
             this.skillPieChartControl.Name = "skillPieChartControl";
-            this.skillPieChartControl.Size = new System.Drawing.Size(642, 403);
+            this.skillPieChartControl.Size = new System.Drawing.Size(642, 377);
             this.skillPieChartControl.TabIndex = 0;
             this.skillPieChartControl.ToolTips = null;
             this.skillPieChartControl.DoubleClick += new System.EventHandler(this.skillPieChartControl_DoubleClick);
@@ -71,7 +73,7 @@ namespace EVEMon
             this.pieControlPanel.Controls.Add(this.pieAngleLabel);
             this.pieControlPanel.Controls.Add(this.pieHeightLabel);
             this.pieControlPanel.Controls.Add(this.sortBySizeCheck);
-            this.pieControlPanel.Location = new System.Drawing.Point(12, 421);
+            this.pieControlPanel.Location = new System.Drawing.Point(12, 418);
             this.pieControlPanel.Name = "pieControlPanel";
             this.pieControlPanel.Size = new System.Drawing.Size(642, 26);
             this.pieControlPanel.TabIndex = 1;
@@ -183,11 +185,34 @@ namespace EVEMon
             this.savePieDialog.DefaultExt = "png";
             this.savePieDialog.Filter = "PNG Image|*.png";
             // 
+            // planSelector
+            // 
+            this.planSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.planSelector.FormattingEnabled = true;
+            this.planSelector.Items.AddRange(new object[] {
+            "<Current Skillpoints>"});
+            this.planSelector.Location = new System.Drawing.Point(175, 391);
+            this.planSelector.Name = "planSelector";
+            this.planSelector.Size = new System.Drawing.Size(183, 21);
+            this.planSelector.TabIndex = 2;
+            this.planSelector.SelectedIndexChanged += new System.EventHandler(this.planSelector_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 394);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(157, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Projected Skillpoints using Plan:";
+            // 
             // SkillsPieChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 459);
+            this.ClientSize = new System.Drawing.Size(666, 456);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.planSelector);
             this.Controls.Add(this.pieControlPanel);
             this.Controls.Add(this.skillPieChartControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -201,6 +226,7 @@ namespace EVEMon
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieHeight)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -217,5 +243,7 @@ namespace EVEMon
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.SaveFileDialog savePieDialog;
         private System.Windows.Forms.CheckBox sortBySizeCheck;
+        private System.Windows.Forms.ComboBox planSelector;
+        private System.Windows.Forms.Label label1;
     }
 }
