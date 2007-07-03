@@ -239,6 +239,7 @@ namespace EVEMon.SkillPlanner
             this.cbOwned.TabIndex = 19;
             this.cbOwned.Text = "Book Owned";
             this.cbOwned.UseVisualStyleBackColor = true;
+            this.cbOwned.CheckedChanged += new System.EventHandler(this.cbOwned_CheckedChanged);
             // 
             // lblSkillClass
             // 
