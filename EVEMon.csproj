@@ -404,6 +404,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="omg.jpg" />
     <EmbeddedResource Include="bee.jpg" />
     <Resource Include="eve.exe_I006b_040f.ico" />
     <Resource Include="EVEMon-all.ico" />
@@ -596,6 +597,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="constr.gif" />
     <Content Include="gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

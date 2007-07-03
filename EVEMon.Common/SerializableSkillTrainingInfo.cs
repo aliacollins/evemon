@@ -231,8 +231,7 @@ namespace EVEMon.Common
         #region public methods
 
         /// <summary>
-        /// Now TQ is synched with nntp (confirmed by Garthagk) but the web server isnt
-        /// so lets fixup the currentTime and cachedUntil time
+        /// Fixup the currentTime and cachedUntil time to match the user's clock.
         /// This should ONLY be called when the xml is first recieved from CCP
         /// </summary>
         /// <param name="millisecondsDrift"></param>
@@ -240,8 +239,8 @@ namespace EVEMon.Common
         {
             TimeSpan drift = new TimeSpan(0,0,0,0,Convert.ToInt32(millisecondsDrift));
             m_curTime.Subtract(drift);
-            m_cachedUntilTime.Subtract(drift);
-
+            // and do the same for TQ
+            m_results.FixTQTimes(millisecondsDrift,m_curTime);
         }
 
         public int EstimatedPointsAtTime(DateTime checkTime)
@@ -280,6 +279,34 @@ namespace EVEMon.Common
         [XmlRoot("result")]
         public class ApiResults : ICloneable
         {
+            private DateTime m_curTQTime = DateTime.MinValue;
+
+            [XmlElement("currentTQTime")]
+            public string CurrentTQTime
+            {
+                get { return ConvertDateTimeToTimeString(m_curTQTime); }
+                set
+                {
+                    m_curTQTime = ConvertTimeStringToDateTime(value);
+                }
+            }
+
+            /// <summary>
+            /// Bring the times into the current PC's clock timeframe
+            /// Should ONLY be called at the time we get XML from CCP
+            /// </summary>
+            /// <param name="offset">Difference between CCP "Current time" and PC clock at the time the xml was received</param>
+            /// <param name="currentTime">CCP Webserver time at the time the xml was received</param>
+            public void FixTQTimes(double millisecondsDrift, DateTime currentTime)
+            {
+                TimeSpan TQdrift = currentTime - m_curTQTime;
+                TimeSpan drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
+                m_startTime.Subtract(drift);
+                m_startTime.Add(TQdrift);
+                m_endTime.Subtract(drift);
+                m_endTime.Add(TQdrift);
+            }
+
             private  DateTime m_endTime = DateTime.MinValue;
 
             [XmlElement("trainingEndTime")]

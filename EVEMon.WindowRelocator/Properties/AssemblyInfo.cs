@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly : AssemblyTitle("EVEMon.WindowRelocator")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 778 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowRelocator")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 841 Local Changes: Yes Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowRelocator")] 
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("EVEMon Development Team")]
 [assembly : AssemblyProduct("EVEMon")]
@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.2.1.778")]
+[assembly : AssemblyVersion("1.2.4.841")]

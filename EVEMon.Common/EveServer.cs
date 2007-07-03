@@ -142,14 +142,23 @@ namespace EVEMon.Common
                     stream.Write(data, 0, data.Length);
                     byte[] response = new byte[256];
                     int bytes = stream.Read(response, 0, 256);
+
+                    m_users = 0;
                     if (bytes > 21)
                     {
-                        m_users = response[21] * 256 + response[20];
-
-                    }
-                    else
-                    {
-                        m_users = 0;
+                        // Amended usercount checks, info from clef on iRC
+                        // [16:01] <clef> BradStone: for the moment, take that byte[19] ... if it is 1, 8 or 9, the usercount is 0.
+                        // [16:01] <clef> BradStone: if it is 4, the next 32bit are the usercount. 5 -> 16bit. 6 -> 8bit.
+                        int usersBytes = 4 - (response[19]-3);
+                        if (usersBytes > 0 && usersBytes < 5)
+                        {
+                            int multiplyer = 1;
+                            for (int i=0;i<usersBytes;i++)
+                            {
+                                m_users = response[20+i] * multiplyer;
+                                multiplyer *= 256;
+                            }
+                        }
                     }
 
                     string str = new System.Text.ASCIIEncoding().GetString(response);
