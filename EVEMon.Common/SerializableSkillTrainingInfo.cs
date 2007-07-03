@@ -301,10 +301,16 @@ namespace EVEMon.Common
             {
                 TimeSpan TQdrift = currentTime - m_curTQTime;
                 TimeSpan drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
-                m_startTime.Subtract(drift);
-                m_startTime.Add(TQdrift);
-                m_endTime.Subtract(drift);
-                m_endTime.Add(TQdrift);
+                if (m_startTime != DateTime.MinValue)
+                {
+                    m_startTime.Subtract(drift);
+                    m_startTime.Add(TQdrift);
+                }
+                if (m_endTime != DateTime.MinValue)
+                {
+                    m_endTime.Subtract(drift);
+                    m_endTime.Add(TQdrift);
+                }
             }
 
             private  DateTime m_endTime = DateTime.MinValue;
