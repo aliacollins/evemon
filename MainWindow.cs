@@ -31,6 +31,7 @@ namespace EVEMon
         private bool startMinimized;
         private bool updateFlag;
         private bool dataUpdateFlag;
+        private bool firstAPIRun;
 
         public MainWindow(Settings s, bool startMinimized)
             : this()
@@ -38,6 +39,20 @@ namespace EVEMon
             m_settings = s;
             this.startMinimized = startMinimized;
             this.updateFlag = false;
+            this.firstAPIRun = CheckForFirstAPIRun();
+        }
+
+        private bool CheckForFirstAPIRun()
+        {
+            if (m_settings.CharacterList.Count > 0)
+            {
+                foreach (CharLoginInfo cli in m_settings.CharacterList)
+                {
+                    if (cli.ApiKey == string.Empty)
+                        return true;
+                }
+            }
+            return false;
         }
 
         private IGBService.IGBServer m_igbServer;
@@ -51,8 +66,10 @@ namespace EVEMon
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
             StaticSkill.LoadStaticSkills();
             G15Handler.Init();
-
-            AddCharacters();
+            if (!firstAPIRun)
+            {
+                AddCharacters();
+            }
             if (m_settings.CheckTranquilityStatus)
             {
                 EveServer server = EveServer.GetInstance();
@@ -170,9 +187,13 @@ namespace EVEMon
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
+            if (firstAPIRun)
+            {
+                AddCharacters();
+            }
+            CheckAccountTraining();
             if (m_settings.DisableEVEMonVersionCheck == false)
             {
-                CheckAccountTraining();
                 UpdateManager um = UpdateManager.GetInstance();
                 um.UpdateAvailable += new UpdateAvailableHandler(um_UpdateAvailable);
                 um.DataUpdateAvailable += new DataUpdateAvailableHandler(um_DataUpdateAvailable);
@@ -196,7 +217,7 @@ namespace EVEMon
                 "Getting Started",
                 "To begin using EVEMon, click the File|Add Character... menu option, " +
                 "enter your CCP API information " +
-                "and choose a character to monitor.");
+                "and choose a character to monitor. Please ensure your PC clock is accurate!");
         }
 
         void m_settings_ShowTQBalloonChanged(object sender, EventArgs e)
@@ -365,6 +386,15 @@ namespace EVEMon
         {
             if (cli.ApiKey == string.Empty || cli.UserId == 0)
             {
+                if (firstAPIRun)
+                {
+                    firstAPIRun = false;
+                    TipWindow.ShowTip("First run with API interface",
+                        "First Run",
+                        "EVEMon has dected a pre-API version of a settings file. This has been backed up as settings.xml.preapi. You will now be prompted for the API keys for each of your accounts.");
+                    m_settings.BackupOldSettingsFile();
+
+                }
                 // No API info found - ask user - must be first run.
 
                 // see if we can find an api key from an already added character

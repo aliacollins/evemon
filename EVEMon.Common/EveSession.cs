@@ -609,11 +609,14 @@ namespace EVEMon.Common
                     if (error == "characterID does not belong to you.")
                         throw new Exception(error); // really should throw an exception here... so now we do!
                 }
-
-                invokeControl.Invoke(new MethodInvoker(delegate
+                try
                 {
-                    grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
-                }));
+                    invokeControl.Invoke(new MethodInvoker(delegate
+                    {
+                        grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
+                    }));
+                }
+                catch (Exception) { }
                 return (1000 * ssti.TimerToNextUpdate);
             }
         }

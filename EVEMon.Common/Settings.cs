@@ -1591,6 +1591,27 @@ namespace EVEMon.Common
             return s;
         }
 
+
+        public void BackupOldSettingsFile()
+        {
+            // This tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
+            // copy and ask if that is to be used.
+            // If the settings file is ok, then back it up.
+
+            try
+            {
+                if (File.Exists(SettingsFileName))
+                {
+                    File.Copy(SettingsFileName, SettingsFileName + ".preapi", true);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+            }
+        }
+
+
         public void CalculateChecksums()
         {
             try
