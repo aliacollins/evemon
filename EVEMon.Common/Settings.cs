@@ -1602,7 +1602,8 @@ namespace EVEMon.Common
             {
                 if (File.Exists(SettingsFileName))
                 {
-                    File.Copy(SettingsFileName, SettingsFileName + ".preapi", true);
+                    // save the preapi settings file, but only the very very first time.
+                    File.Copy(SettingsFileName, SettingsFileName + ".preapi", false);
                 }
             }
             catch (Exception e)

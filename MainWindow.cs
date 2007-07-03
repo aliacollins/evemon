@@ -96,6 +96,7 @@ namespace EVEMon
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 CharacterInfo ci = GetCharacterInfo(cli.CharacterName);
+                if (ci == null) continue;
                 if (ci.IsTraining)
                 {
                     if (accountsInTraining.ContainsKey(cli.UserId))
@@ -391,7 +392,7 @@ namespace EVEMon
                     firstAPIRun = false;
                     TipWindow.ShowTip("First run with API interface",
                         "First Run",
-                        "EVEMon has dected a pre-API version of a settings file. This has been backed up as settings.xml.preapi. You will now be prompted for the API keys for each of your accounts.");
+                        "EVEMon has detected a pre-API version of a settings file. At least one of your characters does not have an API key yet. Your original pre-api settings file is backed up as settings.xml.preapi. You will now be prompted for the API keys for each of your accounts.");
                     m_settings.BackupOldSettingsFile();
 
                 }
@@ -408,22 +409,22 @@ namespace EVEMon
                     {
                         cli.UserId = f.UserId;
                         cli.ApiKey = f.ApiKey;
+                        // now patch this API key into any other characters on the same account
+                        foreach (CharLoginInfo li in m_settings.CharacterList)
+                        {
+                            if (cli.Username != string.Empty && li.Username == cli.Username && li.CharacterName != cli.CharacterName)
+                            {
+                                li.ApiKey = cli.ApiKey;
+                                li.UserId = cli.UserId;
+                                li.Username = String.Empty;
+                            }
+                        }
+                        cli.Username = string.Empty;
+                        m_settings.Save();
+
                         EveSession.GetSession(f.UserId, f.ApiKey);
                     }
                 }
-
-                // now patch this API key into any other characters on the same account
-                foreach (CharLoginInfo li in m_settings.CharacterList)
-                {
-                    if (li.Username == cli.Username && li.CharacterName != cli.CharacterName)
-                    {
-                        li.ApiKey = cli.ApiKey;
-                        li.UserId = cli.UserId;
-                        li.Username = String.Empty;
-                    }
-                }
-                cli.Username = string.Empty;
-                
             }
             CharacterMonitor cm = new CharacterMonitor(cli);
             AddTab(cli, cli.CharacterName, cm);
