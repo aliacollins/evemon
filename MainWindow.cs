@@ -75,7 +75,9 @@ namespace EVEMon
                 EveServer server = EveServer.GetInstance();
                 server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
                 if (m_settings.ShowTQBalloon)
+                {
                     server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+                }
             }
             if (startMinimized)
             {
@@ -83,7 +85,8 @@ namespace EVEMon
                 this.WindowState = FormWindowState.Minimized;
                 this.Visible = true;
             }
-           
+            menubarToolStripMenuItem.Checked = mainMenuBar.Visible = m_settings.MainWindowMenuBarVisible;
+            standardToolStripMenuItem.Checked = standardToolbar.Visible = m_settings.MainWindowToolBarVisible;
         }
 
         public void CheckAccountTraining()
@@ -92,7 +95,7 @@ namespace EVEMon
             {
                 Invoke(new MethodInvoker(CheckAccountTraining));
             }
-            Dictionary<int,int> accountsInTraining = new Dictionary<int,int>();
+            Dictionary<int, int> accountsInTraining = new Dictionary<int, int>();
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 CharacterInfo ci = GetCharacterInfo(cli.CharacterName);
@@ -116,13 +119,13 @@ namespace EVEMon
                     }
                 }
             }
-            bool notTraining=false;
+            bool notTraining = false;
             string notTrainingString = string.Empty;
-            foreach(int key in accountsInTraining.Keys)
+            foreach (int key in accountsInTraining.Keys)
             {
                 if (accountsInTraining[key] == 0)
                 {
-                    if (notTraining) 
+                    if (notTraining)
                     {
                         notTrainingString += ", ";
                     }
@@ -131,7 +134,7 @@ namespace EVEMon
                     foreach (string charName in m_settings.GetCharacterNamesForAccount(key))
                     {
                         notTrainingString += sep;
-                        notTrainingString +=  charName;
+                        notTrainingString += charName;
                         sep = ", ";
                     }
                     notTrainingString += ")";
@@ -155,7 +158,7 @@ namespace EVEMon
         private void AddCharacters()
         {
             List<Object> tabOrder = m_settings.TabOrder;
-   
+
             List<CharFileInfo> invalidFiles = new List<CharFileInfo>();
             foreach (Object o in tabOrder)
             {
@@ -325,7 +328,7 @@ namespace EVEMon
             }));
         }
 
-        
+
         private bool m_dataUpdateShowing = false;
         /// <summary>
         /// Event Handler for Data updates
@@ -399,7 +402,7 @@ namespace EVEMon
                 // No API info found - ask user - must be first run.
 
                 // see if we can find an api key from an already added character
-           
+
                 using (ChangeLoginWindow f = new ChangeLoginWindow())
                 {
                     f.ShowInvalidKey = true;
@@ -737,14 +740,9 @@ namespace EVEMon
         private void SetRemoveEnable()
         {
             G15Handler.CharListUpdate();
-            if (tcCharacterTabs.TabPages.Count > 0)
-            {
-                removeCharacterToolStripMenuItem.Enabled = true;
-            }
-            else
-            {
-                removeCharacterToolStripMenuItem.Enabled = false;
-            }
+            removeCharacterToolStripMenuItem.Enabled =
+                tsbRemoveChar.Enabled =
+                    tsdbPlans.Enabled = (tcCharacterTabs.TabPages.Count > 0);
         }
 
         private void RemoveTab(TabPage tp)
@@ -1346,7 +1344,7 @@ namespace EVEMon
         void planItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Plan plan = m_settings.GetPlanByName((string)planItem.OwnerItem.Tag, GetCharacterInfo(planItem.OwnerItem.Text),planItem.Text);
+            Plan plan = m_settings.GetPlanByName((string)planItem.OwnerItem.Tag, GetCharacterInfo(planItem.OwnerItem.Text), planItem.Text);
             plan.ShowEditor(m_settings, GetCharacterInfo(planItem.OwnerItem.Text));
         }
 
@@ -1478,20 +1476,21 @@ namespace EVEMon
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm == null)
             {
-                plansToolStripMenuItem.DropDownItems[0].Enabled = false;
-                plansToolStripMenuItem.DropDownItems[1].Visible = false;
+                plansToolStripMenuItem.DropDownItems[0].Enabled =
+                    plansToolStripMenuItem.DropDownItems[1].Enabled =
+                        plansToolStripMenuItem.DropDownItems[2].Visible = false;
             }
             else
             {
-                plansToolStripMenuItem.DropDownItems[0].Enabled = true;
-                plansToolStripMenuItem.DropDownItems[1].Visible = true;
+                plansToolStripMenuItem.DropDownItems[0].Enabled =
+                    plansToolStripMenuItem.DropDownItems[1].Enabled =
+                        plansToolStripMenuItem.DropDownItems[2].Visible = true;
                 String planKey = cm.GetPlanKey();
                 foreach (string plan in m_settings.GetPlansForCharacter(planKey))
                 {
                     ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
                     menuPlanItem.Click += delegate(object o, EventArgs ev)
                     {
-                        //CharacterMonitor cm = tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
                         ToolStripMenuItem item = o as ToolStripMenuItem;
                         cm.ShowPlanEditor(item.Text);
                     };
@@ -1559,6 +1558,41 @@ namespace EVEMon
             {
                 cm.Session.UpdateIneveAsync(cm.GrandCharacterInfo);
             }
+        }
+
+        private void menubarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainMenuBar.Visible = !mainMenuBar.Visible;
+            m_settings.MainWindowMenuBarVisible = mainMenuBar.Visible;
+        }
+
+        private void standardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            standardToolbar.Visible = !standardToolbar.Visible;
+            m_settings.MainWindowToolBarVisible = standardToolbar.Visible;
+        }
+
+        private void tsdbPlans_DropDownOpening(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            String planKey = cm.GetPlanKey();
+            foreach (string plan in m_settings.GetPlansForCharacter(planKey))
+            {
+                ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
+                menuPlanItem.Click += delegate(object o, EventArgs ev)
+                {
+                    //CharacterMonitor cm = tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
+                    ToolStripMenuItem item = o as ToolStripMenuItem;
+                    cm.ShowPlanEditor(item.Text);
+                };
+                tsdbPlans.DropDownItems.Add(menuPlanItem);
+            }
+        }
+
+        private void toolbarContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
+            standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
         }
 
     }

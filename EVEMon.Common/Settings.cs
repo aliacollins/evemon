@@ -122,7 +122,7 @@ namespace EVEMon.Common
         }
         #endregion
 
-        #region old skills
+        #region Old Skills
         private SerializableDictionary<string, SerializableSkillTrainingInfo> m_oldSkillsDict = new SerializableDictionary<string, SerializableSkillTrainingInfo>();
 
         public SerializableDictionary<string, SerializableSkillTrainingInfo> OldSAPIkillsDict
@@ -1815,7 +1815,7 @@ namespace EVEMon.Common
         }
         #endregion
 
-        #region character methods
+        #region Character Methods
 
         public bool AddFileCharacter(CharFileInfo cfi)
         {
@@ -2198,7 +2198,23 @@ namespace EVEMon.Common
 
         #endregion
 
-        #region display states
+        #region Display States
+
+        private bool m_mainWindowMenuBarVisible = true;
+
+        public bool MainWindowMenuBarVisible
+        {
+            get { return m_mainWindowMenuBarVisible; }
+            set { m_mainWindowMenuBarVisible = value; }
+        }
+
+        private bool m_mainWindowToolBarVisible = false;
+
+        public bool MainWindowToolBarVisible
+        {
+            get { return m_mainWindowToolBarVisible; }
+            set { m_mainWindowToolBarVisible = value; }
+        }
 
         private List<string> m_tabOrderName = new List<string>();
 
