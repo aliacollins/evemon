@@ -1352,7 +1352,7 @@ namespace EVEMon.SkillPlanner
         private ListViewItem BuildPlanItemForSkill(Skill gs)
         {
             int newLevel = m_plan.PlannedLevel(gs) + 1;
-            if (gs.Level > newLevel)
+            if (gs.Level >= newLevel)
             {
                 newLevel = gs.Level + 1;
             }
