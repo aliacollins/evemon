@@ -520,6 +520,7 @@ namespace EVEMon.LogitechG15
 
         private void reorderList(bool nextchar)
         {
+            if (_charlist == null) return;
             string[] nlist = new string[_charlist.Length];
             int nlisti = 0;
             bool enlist = false;

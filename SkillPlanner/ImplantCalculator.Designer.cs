@@ -28,7 +28,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImplantCalculator));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblEffectiveWillpower = new System.Windows.Forms.Label();
@@ -53,10 +52,6 @@ namespace EVEMon.SkillPlanner
             this.label5 = new System.Windows.Forms.Label();
             this.lblAdjustIntelligence = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblBaseDate = new System.Windows.Forms.Label();
             this.lblBaseSpan = new System.Windows.Forms.Label();
@@ -84,7 +79,6 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMemory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWillpower)).BeginInit();
-            this.toolStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -94,7 +88,7 @@ namespace EVEMon.SkillPlanner
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.panel1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 28);
+            this.groupBox1.Location = new System.Drawing.Point(0, 25);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(249, 188);
             this.groupBox1.TabIndex = 0;
@@ -400,47 +394,11 @@ namespace EVEMon.SkillPlanner
             this.label6.TabIndex = 10;
             this.label6.Text = "Base";
             // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.toolStripButton1,
-            this.toolStripButton2});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(558, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(125, 22);
-            this.toolStripLabel1.Text = "Load Current Attributes:";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(109, 22);
-            this.toolStripButton1.Text = "Without Implants";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(93, 22);
-            this.toolStripButton2.Text = "With Implants";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lblBaseDate);
             this.groupBox2.Controls.Add(this.lblBaseSpan);
-            this.groupBox2.Location = new System.Drawing.Point(267, 28);
+            this.groupBox2.Location = new System.Drawing.Point(255, 25);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(279, 50);
             this.groupBox2.TabIndex = 2;
@@ -469,7 +427,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.groupBox3.Controls.Add(this.lblCurrentDate);
             this.groupBox3.Controls.Add(this.lblCurrentSpan);
-            this.groupBox3.Location = new System.Drawing.Point(267, 84);
+            this.groupBox3.Location = new System.Drawing.Point(255, 81);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(279, 50);
             this.groupBox3.TabIndex = 3;
@@ -500,7 +458,7 @@ namespace EVEMon.SkillPlanner
             this.groupBox4.Controls.Add(this.lblComparedToBase);
             this.groupBox4.Controls.Add(this.lblThisDate);
             this.groupBox4.Controls.Add(this.lblThisSpan);
-            this.groupBox4.Location = new System.Drawing.Point(267, 140);
+            this.groupBox4.Location = new System.Drawing.Point(255, 137);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(279, 76);
             this.groupBox4.TabIndex = 4;
@@ -549,7 +507,7 @@ namespace EVEMon.SkillPlanner
             this.mnLoadAtts});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(558, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(553, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -620,12 +578,11 @@ namespace EVEMon.SkillPlanner
             // ImplantCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(558, 227);
+            this.ClientSize = new System.Drawing.Size(553, 234);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
@@ -642,8 +599,6 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMemory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWillpower)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -660,12 +615,8 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.NumericUpDown nudIntelligence;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;

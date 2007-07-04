@@ -131,6 +131,7 @@ namespace EVEMon
                     }
                     notTraining = true;
                     string sep = "(";
+                    notTrainingString = notTrainingString + key.ToString(); 
                     foreach (string charName in m_settings.GetCharacterNamesForAccount(key))
                     {
                         notTrainingString += sep;
@@ -146,6 +147,7 @@ namespace EVEMon
                 ttMainWindow.SetToolTip(statusStrip, "Accounts " + notTrainingString + " do not have any characters in training");
                 ttMainWindow.IsBalloon = false;
                 ttMainWindow.Active = true;
+                ttMainWindow.ReshowDelay = 1000;
             }
             else
             {
