@@ -684,7 +684,8 @@ namespace EVEMon
                     // if the scheduler says be quiet, how much should be suppressed?
                     if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
                     {
-                        MP3Player.Play("SkillTrained.mp3", true);
+                        string skilltrained = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "SkillTrained.mp3";
+                        MP3Player.Play(skilltrained, true);
                     }
 
                     int skillLevel = ci.GetSkill(e.SkillName).Level;
@@ -1599,6 +1600,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 
