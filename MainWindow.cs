@@ -1578,17 +1578,21 @@ namespace EVEMon
         private void tsdbPlans_DropDownOpening(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
-            String planKey = cm.GetPlanKey();
-            foreach (string plan in m_settings.GetPlansForCharacter(planKey))
+            if (cm != null)
             {
-                ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
-                menuPlanItem.Click += delegate(object o, EventArgs ev)
+                tsdbPlans.DropDownItems.Clear();
+                String planKey = cm.GetPlanKey();
+                foreach (string plan in m_settings.GetPlansForCharacter(planKey))
                 {
-                    //CharacterMonitor cm = tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
-                    ToolStripMenuItem item = o as ToolStripMenuItem;
-                    cm.ShowPlanEditor(item.Text);
-                };
-                tsdbPlans.DropDownItems.Add(menuPlanItem);
+                    ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
+                    menuPlanItem.Click += delegate(object o, EventArgs ev)
+                    {
+                        //CharacterMonitor cm = tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
+                        ToolStripMenuItem item = o as ToolStripMenuItem;
+                        cm.ShowPlanEditor(item.Text);
+                    };
+                    tsdbPlans.DropDownItems.Add(menuPlanItem);
+                }
             }
         }
 
