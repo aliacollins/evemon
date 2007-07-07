@@ -1145,6 +1145,7 @@ namespace EVEMon.Common
                         }
                         pReq.Skill.CurrentSkillPoints = pReq.Skill.GetPointsRequiredForLevel(pReq.Level);
                         pReq.Skill.Known = true;
+                        pReq.Skill.LastConfirmedLvl = pReq.Skill.Level;
                         OnSkillChanged(pReq.Skill);
                     }
                 }
