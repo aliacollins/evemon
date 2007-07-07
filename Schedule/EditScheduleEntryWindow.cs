@@ -10,6 +10,20 @@ namespace EVEMon.Schedule
         public EditScheduleEntryWindow()
         {
             InitializeComponent();
+
+            InitialEntry();
+        }
+
+        public EditScheduleEntryWindow(DateTime defaultTime) : this()
+        {
+            DateTime start = new DateTime(defaultTime.Year, defaultTime.Month, defaultTime.Day, 0, 0,0);
+            DateTime end = new DateTime(defaultTime.Year, defaultTime.Month, defaultTime.Day, 23, 59, 59);
+
+            SetOneTimeStartDate(start);
+            SetOneTimeEndDate(end);
+
+            SetRecurringDateFrom(start);
+            SetRecurringDateTo(end);
         }
 
         private ScheduleEntry m_scheduleEntry = null;
@@ -24,7 +38,7 @@ namespace EVEMon.Schedule
             }
         }
 
-        private void UpdateFromEntry()
+        private void InitialEntry()
         {
             tbTitle.Text = String.Empty;
             SetTypeFlags(ScheduleEntryOptions.None);
@@ -43,6 +57,10 @@ namespace EVEMon.Schedule
             cbRecurOnOverflow.SelectedIndex = 0;
             tbRecurringTimeFrom.Text = DateTime.Today.ToShortTimeString();
             tbRecurringTimeTo.Text = dtto.ToShortTimeString();
+        }
+
+        private void UpdateFromEntry()
+        {
             if (m_scheduleEntry == null)
             {
                 return;
@@ -478,7 +496,6 @@ namespace EVEMon.Schedule
 
         private void EditScheduleEntryWindow_Load(object sender, EventArgs e)
         {
-            UpdateFromEntry();
         }
 
         private bool GetDate(ref DateTime res)

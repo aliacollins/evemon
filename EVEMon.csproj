@@ -196,6 +196,9 @@
     <Compile Include="Schedule\EditScheduleEntryWindow.Designer.cs">
       <DependentUpon>EditScheduleEntryWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Schedule\ScheduleCalendar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Schedule\ScheduleEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -3,11 +3,16 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using EVEMon.Common.Schedule;
 
 namespace EVEMon.Schedule
 {
+
     public partial class CalendarControl : UserControl
     {
+        private DateTime m_date;
+        
         public CalendarControl()
         {
             InitializeComponent();
@@ -34,8 +39,6 @@ namespace EVEMon.Schedule
                 }
             }
         }
-
-        private DateTime m_date;
 
         public DateTime Date
         {
@@ -68,8 +71,8 @@ namespace EVEMon.Schedule
                 default:
                 case CalendarType.Month:
                     PaintMonthCalendar(e);
-                    HighlightDay(e);
                     HighlightToday(e);
+                    HighlightDay(e);
                     break;
             }
         }
@@ -214,6 +217,9 @@ namespace EVEMon.Schedule
                                                       new Point(cellRect.Left + 2, cellRect.Top + 2), Color.Black,
                                                       Color.Transparent,
                                                       TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+
+                                DateTime datetime = new DateTime(m_date.Year, m_date.Month, dayNum);
+                                PaintMonthEntriesForDay(g, datetime, cellRect);
                             }
 
                             cDow = (DayOfWeek) (((int) cDow + 1)%7);
@@ -221,6 +227,11 @@ namespace EVEMon.Schedule
                     }
                 }
             }
+        }
+
+        protected virtual void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
+        {
+            // No Implementation
         }
 
         private void HighlightDay(PaintEventArgs e)
@@ -257,6 +268,128 @@ namespace EVEMon.Schedule
                                                    (m_cellSize.Height*y_co), m_cellSize.Width, m_cellSize.Height);
                 g.DrawRectangle(Pens.Violet, cellRect);
             }
+        }
+
+        protected override void OnClick(System.EventArgs e)
+        {
+            MouseEventArgs mouse = (MouseEventArgs)e;
+
+            Point p = mouse.Location;
+            DateTime newDate = GetDateFromPoint(p);
+            DateTime oldDate = m_date;
+            if (newDate != new DateTime(0))
+            {
+                m_date = newDate;
+                this.Invalidate();   
+
+                // Only send out the events if we clicked on a day this month
+                if (newDate.Month == oldDate.Month)
+                {
+                    if (mouse.Clicks == 1)
+                    {
+                        DayClicked(m_date, mouse, p);
+                    }
+                }
+            }
+        }
+
+        protected override void OnDoubleClick(EventArgs e)
+        {
+            MouseEventArgs mouse = (MouseEventArgs)e;
+
+            Point p = mouse.Location;
+            DateTime newDate = GetDateFromPoint(p);
+            DateTime oldDate = m_date;
+            if (newDate != new DateTime(0))
+            {
+                if (newDate.Month == oldDate.Month)
+                {
+                    if (mouse.Clicks == 2)
+                    {
+                        DayDoubleClicked(m_date, mouse, p);
+                    }
+                }
+            }
+        }
+
+        public delegate void DaySelectedEvent(DateTime datetime, MouseEventArgs mouse, Point loc);
+
+        public event DaySelectedEvent DayClicked;
+        public event DaySelectedEvent DayDoubleClicked;
+
+        // return the date under a specific point (used for hover tips etc)
+        public DateTime GetDateFromPoint(Point p)
+        {
+            // initialise the return variable with something useful as a default value
+            int nStartDay;
+            int day, week;
+
+            // we need an int value for the first day of the month
+            DayOfWeek nFirstDayOfMonth = (new DateTime(m_date.Year, m_date.Month, 1)).DayOfWeek;
+            switch (nFirstDayOfMonth)
+            {
+                case DayOfWeek.Friday: nStartDay = 4; break;
+                case DayOfWeek.Monday: nStartDay = 0; break;
+                case DayOfWeek.Saturday: nStartDay = 5; break;
+                case DayOfWeek.Sunday: nStartDay = 6; break;
+                case DayOfWeek.Thursday: nStartDay = 3; break;
+                case DayOfWeek.Tuesday: nStartDay = 1; break;
+                case DayOfWeek.Wednesday: nStartDay = 2; break;
+                default: nStartDay = 0; break;//???
+            }
+            
+
+            // make sure the member values are set up
+            CalculateCellMetrics();
+
+            // Make sure we clicked on the scheduler
+            if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y || 
+                (p.X > m_calTopLeft.X + m_cellSize.Width * 7) ||
+                (p.Y > m_calTopLeft.Y + (m_cellSize.Height * MAX_ROWS) + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) 
+            {
+                return new DateTime(0);
+            }
+
+            // calculate the x/y position over the grid, and hence the day/week number the user is clicking on
+            day = (p.X -= m_calTopLeft.X) / m_cellSize.Width ;
+            week = (p.Y -= (m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) / m_cellSize.Height ;
+
+            day -= nStartDay;
+
+            day += (week * 7) + 1;
+
+            DateTime dt = m_date;
+            int month = m_date.Month;
+            int year = m_date.Year;
+            if(day > DateTime.DaysInMonth(dt.Year, dt.Month))
+            {
+                if (dt.Month + 1 > 12)
+                {
+                    year++;
+                    month = 1;
+                }
+                else
+                {
+                    month++;
+                }
+                day -= DateTime.DaysInMonth(dt.Year, dt.Month);
+            } 
+            else if(day <= 0) 
+            {
+                if (dt.Month - 1 <= 0)
+                {
+                    year--;
+                    month = 12;
+                }
+                else
+                {
+                    month--;
+                }
+                day += DateTime.DaysInMonth(year, month);
+            }
+            dt = new DateTime(year, month, day);
+
+            return dt;
         }
     }
 

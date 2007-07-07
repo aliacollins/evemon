@@ -44,6 +44,15 @@ namespace EVEMon.Common.Schedule
         public abstract string Title { set; get; }
         public abstract bool Silent(DateTime timeToTest);
         public abstract bool Blocking(DateTime timeToTest);
+        public abstract bool IsToday(DateTime timeToTest);
+    }
+
+    public class ScheduleEntryComparisonTitle : Comparer<ScheduleEntry>
+    {
+        public override int Compare(ScheduleEntry e1, ScheduleEntry e2)
+        {
+            return e1.Title.CompareTo(e2.Title);
+        }
     }
 
     public class SimpleScheduleEntry : ScheduleEntry
@@ -130,6 +139,19 @@ namespace EVEMon.Common.Schedule
                 return Clash(timeToTest);
             }
             return false;
+        }
+        public override bool IsToday(DateTime timeToTest)
+        {
+            if (m_start.DayOfYear <= timeToTest.DayOfYear && m_end.DayOfYear >= timeToTest.DayOfYear &&
+                m_start.Year <= timeToTest.Year && m_end.Year >= timeToTest.Year
+                )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion
@@ -480,6 +502,29 @@ namespace EVEMon.Common.Schedule
                 return Clash(timeToTest);
             }
             return false;
+        }
+
+        public override bool IsToday(DateTime timeToTest)
+        {
+            List<ScheduleDateTimeRange> ranges = new List<ScheduleDateTimeRange>();
+            this.GetRangeForDay(timeToTest, ranges);
+
+            if (ranges.Count == 0)
+            {
+                return false;
+            }
+
+            // Check if this date is within the reoccurance time span
+            if (m_recurStart.DayOfYear <= timeToTest.DayOfYear && m_recurEnd.DayOfYear >= timeToTest.DayOfYear &&
+                m_recurStart.Year <= timeToTest.Year && m_recurEnd.Year >= timeToTest.Year
+                )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion

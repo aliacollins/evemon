@@ -4,21 +4,193 @@ using System.Globalization;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Schedule;
+using System.Drawing;
 
 namespace EVEMon.Schedule
 {
     public partial class ScheduleEditorWindow : EVEMonForm
     {
+        private ToolTip ttToolTip = null;
+        private List<ScheduleEntry> lbEntriesData = null;
+
         public ScheduleEditorWindow()
         {
             InitializeComponent();
+
+            ttToolTip = new ToolTip();
+            ttToolTip.IsBalloon = true;
+            ttToolTip.UseAnimation = true;
+            ttToolTip.UseFading = true;
+            ttToolTip.AutoPopDelay = 10000;
+            ttToolTip.ReshowDelay = 100;
+            ttToolTip.InitialDelay = 500;
+            ttToolTip.ToolTipIcon = ToolTipIcon.Info;
+        }
+
+        void calControl_DayClicked(DateTime datetime, MouseEventArgs mouse, Point location)
+        {
+            // Show Bubble with all Events on left click, context menu on right click
+            if (mouse.Button == MouseButtons.Left)
+            {
+                // How can you only localize the date?
+                string title = "Entries for " + datetime.ToString("d");
+
+                string content = String.Empty;
+                foreach (ScheduleEntry entry in m_settings.Schedule)
+                {
+                    if (entry.IsToday(datetime))
+                    {
+                        if (entry is SimpleScheduleEntry)
+                        {
+                            SimpleScheduleEntry simple = (SimpleScheduleEntry)entry;
+                            content += entry.Title
+                                + " [ " + simple.StartDateTime.ToString("HH:mm")
+                                + " - "
+                                + simple.EndDateTime.ToString("HH:mm")
+                                + " ]\n";
+                        }
+                        else
+                        {
+                            content += entry.Title + "\n";
+                        }
+
+                    }
+                }
+
+                ttToolTip.ToolTipTitle = title;
+                ttToolTip.SetToolTip(calControl, content);
+                ttToolTip.Active = true;
+            }
+            else if (mouse.Button == MouseButtons.Right)
+            {
+                // Remove old Entries
+                while(calContext.Items.Count > 2) {
+                    calContext.Items.RemoveAt(2);
+                }
+
+                // Set Date Tag to new entry
+                calContext.Items[0].Tag = datetime;
+
+                foreach (ScheduleEntry entry in m_settings.Schedule)
+                {
+                    if (entry.IsToday(datetime))
+                    {
+                        ToolStripItem item = new ToolStripMenuItem();
+                        item.Text = "Edit \"" + entry.Title + "\"...";
+                        item.Tag = entry;
+                        item.Click += new EventHandler(contextItem_Click);
+
+                        calContext.Items.Add(item);
+                    }
+                }
+
+                calContext.Show(calControl, location);
+            }
+        }
+
+        private void contextItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                object tag = ((ToolStripMenuItem)sender).Tag;
+
+                if(tag is DateTime) {
+
+                    DateTime datetime = (DateTime)tag;
+
+                    using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
+                    {
+                        DialogResult dr = f.ShowDialog();
+                        if (dr == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                        m_settings.ScheduleAdd(f.ScheduleEntry);
+                        lbEntries.Items.Add(f.ScheduleEntry.Title);
+                        m_settings.Save();
+
+                        UpdateEntries();
+                    }
+                }
+                else if (tag is ScheduleEntry)
+                {
+                    ScheduleEntry temp = (ScheduleEntry)tag;
+                    using (EditScheduleEntryWindow f = new EditScheduleEntryWindow())
+                    {
+                        f.ScheduleEntry = temp;
+                        DialogResult dr = f.ShowDialog();
+                        if (dr == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                        // need to put something in here to test to see if the item has actually been changed, and if not, simply return
+                        int i = -1;
+                        for (int x = 0; x < m_settings.Schedule.Count && i == -1; x++)
+                        {
+                            if (m_settings.Schedule[x].Equals(temp))
+                            {
+                                i = x;
+                            }
+                        }
+                        m_settings.Schedule.RemoveAt(i);
+                        m_settings.ScheduleAdd(f.ScheduleEntry);
+                        m_settings.Save();
+
+                        UpdateEntries();
+                    }
+                }
+            }
+        }
+
+        private void calControl_DayDoubleClicked(DateTime datetime, MouseEventArgs mouse, Point loc)
+        {
+            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
+            {
+                DialogResult dr = f.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+                m_settings.ScheduleAdd(f.ScheduleEntry);
+                lbEntries.Items.Add(f.ScheduleEntry.Title);
+                m_settings.Save();
+
+                UpdateEntries();
+            }
         }
 
         public ScheduleEditorWindow(Settings s)
             : this()
         {
             m_settings = s;
+            UpdateEntries();
+        }
+
+        private void UpdateEntries()
+        {
+            UpdateListBoxEntries();
+            UpdateCalendarEntries();
+        }
+
+        private void UpdateCalendarEntries()
+        {
+            calControl.Entries.Clear();
             foreach (ScheduleEntry temp in m_settings.Schedule)
+            {
+                calControl.Entries.Add(temp);
+            }
+            calControl.Invalidate();
+        }
+
+        private void UpdateListBoxEntries()
+        {
+            lbEntriesData = null;
+            lbEntriesData = new List<ScheduleEntry>(m_settings.Schedule);
+
+            lbEntriesData.Sort(new ScheduleEntryComparisonTitle());
+
+            lbEntries.Items.Clear();
+            foreach (ScheduleEntry temp in lbEntriesData)
             {
                 lbEntries.Items.Add(temp.Title);
             }
@@ -38,6 +210,8 @@ namespace EVEMon.Schedule
                 m_settings.ScheduleAdd(f.ScheduleEntry);
                 lbEntries.Items.Add(f.ScheduleEntry.Title);
                 m_settings.Save();
+
+                UpdateEntries();
             }
         }
 
@@ -164,6 +338,8 @@ namespace EVEMon.Schedule
                 lbEntries.Items.RemoveAt(lbEntries.SelectedIndex);
                 m_settings.ScheduleRemoveAt(i);
                 m_settings.Save();
+
+                UpdateEntries(); 
             }
         }
 
@@ -181,13 +357,15 @@ namespace EVEMon.Schedule
             }
             m_settings.Schedule = unexpiredEntries;
             m_settings.Save();
+
+            UpdateEntries();   
         }
 
         private void lbEntries_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbEntries.SelectedIndex != -1)
             {
-                ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+                ScheduleEntry temp = lbEntriesData[lbEntries.SelectedIndex];
                 string label_text = "Title: " + temp.Title;
                 if (temp.GetType() == typeof(SimpleScheduleEntry))
                 {
@@ -236,7 +414,7 @@ namespace EVEMon.Schedule
         {
             if (lbEntries.SelectedIndex != -1)
             {
-                ScheduleEntry temp = m_settings.Schedule[lbEntries.SelectedIndex];
+                ScheduleEntry temp = lbEntriesData[lbEntries.SelectedIndex];
                 using (EditScheduleEntryWindow f = new EditScheduleEntryWindow())
                 {
                     f.ScheduleEntry = temp;
@@ -259,9 +437,20 @@ namespace EVEMon.Schedule
                     m_settings.ScheduleAdd(f.ScheduleEntry);
                     lbEntries.Items.Add(f.ScheduleEntry.Title);
                     m_settings.Save();
+
+                    UpdateEntries();
                 }
             }
         }
 
+        private void calControl_MouseLeave(object sender, EventArgs e)
+        {
+            ttToolTip.Active = false;
+        }
+
+        private void calControl_MouseEnter(object sender, EventArgs e)
+        {
+            ttToolTip.Active = false;
+        }
     }
 }
