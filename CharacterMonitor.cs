@@ -485,7 +485,7 @@ namespace EVEMon
                 miHitTrainingSkill.Enabled = false;
                 if (timeToNextUpdate != -1) // Only reason the timer would = -1 would be if the Character login details were correct, but didn't have this char on that account.
                 {
-                    tmrMinTrainingSkillRetry.Interval = timeToNextUpdate == 0 ? 900000 : timeToNextUpdate;
+                    tmrMinTrainingSkillRetry.Interval = timeToNextUpdate <= 0 ? 900000 : timeToNextUpdate;
                     tmrMinTrainingSkillRetry.Enabled = true;
                     DateTime nextUpdate = DateTime.Now + new TimeSpan(0, 0, (timeToNextUpdate / 1000));
                     miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToLongTimeString() + ")";

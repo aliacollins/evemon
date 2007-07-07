@@ -237,10 +237,16 @@ namespace EVEMon.Common
         /// <param name="millisecondsDrift"></param>
         public void FixServerTimes(double millisecondsDrift)
         {
-            TimeSpan drift = new TimeSpan(0,0,0,0,Convert.ToInt32(millisecondsDrift));
-            m_curTime.Subtract(drift);
-            // and do the same for TQ
-            m_results.FixTQTimes(millisecondsDrift,m_curTime);
+            // convert the drift between webserver time and local time to a timespan
+            TimeSpan drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
+            
+            // Fix the TQ start/end times first
+            m_results.FixTQTimes(millisecondsDrift, m_curTime);
+            
+            // Now fix the server time to align with local time
+            m_curTime = m_curTime.Subtract(drift);
+            m_cachedUntilTime = m_cachedUntilTime.Subtract(drift);
+
         }
 
         public int EstimatedPointsAtTime(DateTime checkTime)
@@ -303,13 +309,14 @@ namespace EVEMon.Common
                 TimeSpan drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
                 if (m_startTime != DateTime.MinValue)
                 {
-                    m_startTime.Subtract(drift);
-                    m_startTime.Add(TQdrift);
+                    m_startTime = m_startTime.Add(TQdrift);
+                    m_startTime = m_startTime.Subtract(drift);
                 }
                 if (m_endTime != DateTime.MinValue)
                 {
-                    m_endTime.Subtract(drift);
-                    m_endTime.Add(TQdrift);
+                    m_endTime = m_endTime.Add(TQdrift);
+                    m_endTime = m_endTime.Subtract(drift);
+
                 }
             }
 
