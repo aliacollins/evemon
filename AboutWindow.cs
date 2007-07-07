@@ -127,7 +127,7 @@ namespace EVEMon
 
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://evemon.battleclinic.com/");
+            EveSession.BrowserLinkClicked("http://evemon.battleclinic.com/");
         }
 
         private void lstDevelopers_DrawItem(object sender,

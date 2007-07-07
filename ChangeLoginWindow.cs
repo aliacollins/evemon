@@ -131,7 +131,7 @@ namespace EVEMon
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(EveSession.ApiKeyUrl);
+            EveSession.BrowserLinkClicked(EveSession.ApiKeyUrl);
         }
     }
 }
