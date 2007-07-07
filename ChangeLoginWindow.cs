@@ -38,16 +38,19 @@ namespace EVEMon
 
         public bool ShowInvalidKey
         {
-            set 
-            { this.Text = (value) ? "Invalid Or Empty API Key" : "Change API Key"; }
+            set
+            {
+            	this.Text = (value ? "Invalid Or Empty API Key" : "Change API Key");
+            }
         }
 
         private void ChangeLoginWindow_Load(object sender, EventArgs e)
         {
             label1.Text = String.Format("Enter EVE Online API Credentials for {0}:", m_charName);
             if (m_userId >  0)
+            {
                 tbUserId.Text = Convert.ToString(m_userId);
-            
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -130,6 +133,5 @@ namespace EVEMon
         {
             Process.Start(EveSession.ApiKeyUrl);
         }
-
     }
 }
