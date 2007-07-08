@@ -280,6 +280,7 @@ namespace EVEMon
             // 
             // removeCharacterToolStripMenuItem
             // 
+            this.removeCharacterToolStripMenuItem.Enabled = false;
             this.removeCharacterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeCharacterToolStripMenuItem.Image")));
             this.removeCharacterToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.removeCharacterToolStripMenuItem.Name = "removeCharacterToolStripMenuItem";
