@@ -365,8 +365,9 @@ namespace EVEMon.SkillPlanner
                     try
                     {
                         Plan otherPlan = m_settings.GetPlanByName(charKey, m_characterInfo, planName);
-                        m_settings.AddPlanFor(m_charKey, otherPlan, newPlanName);
-
+                        Plan newPlan = otherPlan.CopyTo(m_characterInfo);
+                        newPlan.Name = newPlanName;
+                        m_settings.AddPlanFor(m_charKey, newPlan, newPlanName);
                     }
                     catch (ApplicationException err)
                     {

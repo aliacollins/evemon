@@ -1187,6 +1187,24 @@ namespace EVEMon.Common
             }
         }
 
+
+        public Plan CopyTo(CharacterInfo planOwner)
+        {
+            Plan p = new Plan();
+            p.m_grandCharacterInfo = planOwner;
+            p.m_planName = m_planName;
+            p.m_plannerWindow = null;
+            p.m_uniqueSkillCount = m_uniqueSkillCount;
+      
+            foreach (Plan.Entry pe in m_entries)
+            {
+                Plan.Entry entry = (Plan.Entry)pe.Clone();
+                entry.Plan = p;
+                p.m_entries.Add(entry);
+            }
+            return p;
+        }
+
         private bool ExistInPlannedEntries(List<Plan.Entry> planEntries, string eSkillName, int eSkillLevel)
         {
             foreach (Plan.Entry pe in planEntries)
@@ -1696,6 +1714,7 @@ namespace EVEMon.Common
                 pe.PlanGroups = (System.Collections.ArrayList)this.PlanGroups.Clone();
                 pe.EntryType = this.EntryType;
                 pe.Notes = this.Notes;
+                pe.m_owner = this.m_owner;
                 return pe;
             }
             #endregion
