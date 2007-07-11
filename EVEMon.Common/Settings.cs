@@ -1285,12 +1285,6 @@ namespace EVEMon.Common
                         m_plans.RemoveAt(index);
                     }
                 }
-                // sanity check - keep any plans that didn't match (this shouldn't happen though)
-    //            for (int i = 0; i < m_plans.Count; i++)
-      //          {
-        //            plans.Add(m_plans[i]);
-          //          m_plans.RemoveAt(i);
-            //    }
                 m_plans.AddRange(plans);
             }
             this.Save();
