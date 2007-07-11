@@ -40,20 +40,50 @@ namespace EVEMon.Schedule
                 {
                     if (entry.IsToday(datetime))
                     {
+                        DateTime from = datetime;
+                        DateTime to = datetime;
+
                         if (entry is SimpleScheduleEntry)
                         {
                             SimpleScheduleEntry simple = (SimpleScheduleEntry)entry;
-                            content += entry.Title
-                                + " [ " + simple.StartDateTime.ToString("HH:mm")
-                                + " - "
-                                + simple.EndDateTime.ToString("HH:mm")
-                                + " ]\n";
+
+                            from = simple.StartDateTime;
+                            to = simple.EndDateTime;
                         }
                         else
-                        {
-                            content += entry.Title + "\n";
+                        {                          
+                            RecurringScheduleEntry recurring = (RecurringScheduleEntry)entry;
+
+                            // Does this always have one entry?
+                            IEnumerable<ScheduleDateTimeRange> ranges = recurring.GetRangesInPeriod(new DateTime(datetime.Year, datetime.Month, datetime.Day, 0, 0, 0), new DateTime(datetime.Year, datetime.Month, datetime.Day, 23, 59, 59));                            
+                            IEnumerator<ScheduleDateTimeRange> enumranges = ranges.GetEnumerator();
+                            while (enumranges.MoveNext())
+                            {
+                                ScheduleDateTimeRange r = enumranges.Current;
+                                from = r.From;
+                                to = r.To;
+                            }
                         }
 
+                        // If the "from" date is before the selected date
+                        if (!(from.Year == datetime.Year && from.Month == datetime.Month && from.Day == datetime.Day))
+                        {
+                            // Set date to midnight today
+                            from = new DateTime(datetime.Year, datetime.Month, datetime.Day, 0, 0, 0);
+                        }
+
+                        // If the "to" date is after the selected date
+                        if (!(to.Year == datetime.Year && to.Month == datetime.Month && to.Day == datetime.Day))
+                        {
+                            // Set date to last second before tomorrows midnight
+                            to = new DateTime(datetime.Year, datetime.Month, datetime.Day, 23, 59, 59);
+                        }
+
+                        content += entry.Title;
+                        content += " [ ";
+                        content += from.ToString("HH:mm") + " - " + to.ToString("HH:mm");
+                        content += " ] ";
+                        content += "\n";
                     }
                 }
 

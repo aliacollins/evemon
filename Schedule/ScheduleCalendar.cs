@@ -216,5 +216,59 @@ namespace EVEMon.Schedule
                 }
             }
         }
+
+        private const int LEGEND_X = 5;
+        private const int LEGEND_Y = 5;
+        private const int LEGEND_WIDTH = 200;
+        private const int LEGEND_HEIGHT = 40;
+        private const int LEGEND_PADDING = 5;
+        private const int LEGEND_BOX = 10;
+        private const int LEGEND_SPACING_X = 110;
+        private const int LEGEND_SPACING_Y = 18;
+
+        protected override void OnPaint(PaintEventArgs args)
+        {
+            // Paint the Calendar
+            base.OnPaint(args);
+
+            // Paint some kind of Legend
+            Graphics g = args.Graphics;
+
+            Rectangle r = new Rectangle();
+            r.X = LEGEND_X;
+            r.Y = LEGEND_Y;
+            r.Height = LEGEND_HEIGHT;
+            r.Width = LEGEND_WIDTH;
+            g.FillRectangle(Brushes.White, r);
+            g.DrawRectangle(Pens.Black, r);
+
+            r.X = LEGEND_X + LEGEND_PADDING;
+            r.Y = LEGEND_Y + LEGEND_PADDING;
+            r.Width = LEGEND_BOX * 2;
+            r.Height = LEGEND_BOX;
+            using (Brush b = new LinearGradientBrush(new Point(r.X, r.Y), new Point(r.X + r.Width, r.Y), single_color, single_color2)) 
+            {
+                g.FillRectangle(b, r);
+                g.DrawRectangle(Pens.Black, r);
+                TextRenderer.DrawText(g, "Single Entry", this.Font, new Point(r.X + r.Width + 2, r.Y), Color.Black);
+            }
+
+            r.Y += LEGEND_SPACING_Y;
+            using (Brush b = new LinearGradientBrush(new Point(r.X, r.Y), new Point(r.X + r.Width, r.Y), recurring_color, recurring_color2))
+            {
+                g.FillRectangle(b, r);
+                g.DrawRectangle(Pens.Black, r);
+                TextRenderer.DrawText(g, "Recurring Entry", this.Font, new Point(r.X + r.Width + 2, r.Y), Color.Black);
+            }
+
+            r.Y = LEGEND_Y + LEGEND_PADDING;
+            r.X += LEGEND_SPACING_X;
+            using (Brush b = new SolidBrush(blocking_color))
+            {
+                g.FillRectangle(b, r);
+                g.DrawRectangle(Pens.Black, r);
+                TextRenderer.DrawText(g, "Blocked", this.Font, new Point(r.X + r.Width + 2, r.Y), Color.Black);
+            }
+        }
     }
 }
