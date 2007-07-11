@@ -214,18 +214,6 @@ namespace EVEMon.Common
                 return;
             }
 
-            // check that we have a network connection
-            if (!InternetCS.IsConnectedToInternet())
-            {
-                // oops, we've lost the network - reset timer to 30 seconds
-                m_tmrCheck.Interval = 30000;
-                m_statusText = "// Server Status Unknown";
-                if (ServerStatusUpdated != null)
-                {
-                    ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
-                }
-                return;
-            }
 
             // check to see if we are recovering from loss of connection (timer was set to 30 seconds)
             if (m_tmrCheck.Interval == 30000)
@@ -239,6 +227,21 @@ namespace EVEMon.Common
 
             if (m_settings.CheckTranquilityStatus)
             {
+                // check that we have a network connection
+                if (!InternetCS.IsConnectedToInternet())
+                {
+                    // oops, we've lost the network - reset timer to 30 seconds
+                    m_tmrCheck.Interval = 30000;
+                    m_statusText = "// Server Status Unknown";
+                    if (ServerStatusUpdated != null)
+                    {
+                        ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+                    }
+                    // switch off the semaphore
+                    m_checkingServer = false;
+                    return;
+                }
+
                 TcpClient conn = new TcpClient();
                 try
                 {
