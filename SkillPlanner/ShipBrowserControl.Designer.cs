@@ -32,19 +32,15 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
-            this.lblHelp = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pnlShipDescription = new System.Windows.Forms.Panel();
             this.lblShipDescription = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblShipSkillC = new System.Windows.Forms.LinkLabel();
-            this.lblShipSkillB = new System.Windows.Forms.LinkLabel();
-            this.lblShipSkillA = new System.Windows.Forms.LinkLabel();
-            this.btnShipSkillsAdd = new System.Windows.Forms.Button();
-            this.lblShipTimeRequired = new System.Windows.Forms.Label();
+            this.requiredSkillsControl = new EVEMon.SkillPlanner.RequiredSkillsControl();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.lblHelp = new System.Windows.Forms.Label();
             this.pbShipImage = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblShipName = new System.Windows.Forms.Label();
@@ -79,7 +75,6 @@ namespace EVEMon.SkillPlanner
             // 
             // scShipSelect.Panel2
             // 
-            this.scShipSelect.Panel2.Controls.Add(this.lblHelp);
             this.scShipSelect.Panel2.Controls.Add(this.panel2);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
@@ -105,16 +100,6 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
             // 
-            // lblHelp
-            // 
-            this.lblHelp.AutoSize = true;
-            this.lblHelp.Location = new System.Drawing.Point(3, 128);
-            this.lblHelp.Name = "lblHelp";
-            this.lblHelp.Size = new System.Drawing.Size(378, 65);
-            this.lblHelp.TabIndex = 2;
-            this.lblHelp.Text = resources.GetString("lblHelp.Text");
-            this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.panel5);
@@ -133,10 +118,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel5.Controls.Add(this.pnlShipDescription);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(3, 278);
+            this.panel5.Location = new System.Drawing.Point(3, 256);
             this.panel5.Margin = new System.Windows.Forms.Padding(2);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(253, 18);
+            this.panel5.Size = new System.Drawing.Size(253, 40);
             this.panel5.TabIndex = 13;
             // 
             // pnlShipDescription
@@ -147,7 +132,7 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.Location = new System.Drawing.Point(0, 0);
             this.pnlShipDescription.Name = "pnlShipDescription";
             this.pnlShipDescription.Padding = new System.Windows.Forms.Padding(2);
-            this.pnlShipDescription.Size = new System.Drawing.Size(253, 18);
+            this.pnlShipDescription.Size = new System.Drawing.Size(253, 40);
             this.pnlShipDescription.TabIndex = 8;
             this.pnlShipDescription.ClientSizeChanged += new System.EventHandler(this.pnlShipDescription_Changed);
             // 
@@ -172,11 +157,7 @@ namespace EVEMon.SkillPlanner
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.lblShipSkillC);
-            this.groupBox1.Controls.Add(this.lblShipSkillB);
-            this.groupBox1.Controls.Add(this.lblShipSkillA);
-            this.groupBox1.Controls.Add(this.btnShipSkillsAdd);
-            this.groupBox1.Controls.Add(this.lblShipTimeRequired);
+            this.groupBox1.Controls.Add(this.requiredSkillsControl);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
@@ -186,77 +167,43 @@ namespace EVEMon.SkillPlanner
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Required Skills";
             // 
-            // lblShipSkillC
+            // requiredSkillsControl
             // 
-            this.lblShipSkillC.AutoSize = true;
-            this.lblShipSkillC.Location = new System.Drawing.Point(6, 43);
-            this.lblShipSkillC.Name = "lblShipSkillC";
-            this.lblShipSkillC.Size = new System.Drawing.Size(55, 13);
-            this.lblShipSkillC.TabIndex = 7;
-            this.lblShipSkillC.TabStop = true;
-            this.lblShipSkillC.Text = "linkLabel2";
-            this.lblShipSkillC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
-            this.lblShipSkillC.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
-            // 
-            // lblShipSkillB
-            // 
-            this.lblShipSkillB.AutoSize = true;
-            this.lblShipSkillB.Location = new System.Drawing.Point(6, 30);
-            this.lblShipSkillB.Name = "lblShipSkillB";
-            this.lblShipSkillB.Size = new System.Drawing.Size(55, 13);
-            this.lblShipSkillB.TabIndex = 6;
-            this.lblShipSkillB.TabStop = true;
-            this.lblShipSkillB.Text = "linkLabel1";
-            this.lblShipSkillB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
-            this.lblShipSkillB.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
-            // 
-            // lblShipSkillA
-            // 
-            this.lblShipSkillA.AutoSize = true;
-            this.lblShipSkillA.Location = new System.Drawing.Point(6, 16);
-            this.lblShipSkillA.Name = "lblShipSkillA";
-            this.lblShipSkillA.Size = new System.Drawing.Size(55, 13);
-            this.lblShipSkillA.TabIndex = 5;
-            this.lblShipSkillA.TabStop = true;
-            this.lblShipSkillA.Text = "linkLabel1";
-            this.lblShipSkillA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblShipSkill_LinkClicked);
-            this.lblShipSkillA.MouseHover += new System.EventHandler(this.lblShipSkill_MouseHover);
-            // 
-            // btnShipSkillsAdd
-            // 
-            this.btnShipSkillsAdd.Location = new System.Drawing.Point(124, 84);
-            this.btnShipSkillsAdd.Name = "btnShipSkillsAdd";
-            this.btnShipSkillsAdd.Size = new System.Drawing.Size(129, 23);
-            this.btnShipSkillsAdd.TabIndex = 4;
-            this.btnShipSkillsAdd.Text = "Add Skills to Plan";
-            this.btnShipSkillsAdd.UseVisualStyleBackColor = true;
-            this.btnShipSkillsAdd.Click += new System.EventHandler(this.btnShipSkillsAdd_Click);
-            // 
-            // lblShipTimeRequired
-            // 
-            this.lblShipTimeRequired.AutoSize = true;
-            this.lblShipTimeRequired.Location = new System.Drawing.Point(6, 65);
-            this.lblShipTimeRequired.Name = "lblShipTimeRequired";
-            this.lblShipTimeRequired.Size = new System.Drawing.Size(79, 13);
-            this.lblShipTimeRequired.TabIndex = 3;
-            this.lblShipTimeRequired.Text = "Time Required:";
+            this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.requiredSkillsControl.EveItem = null;
+            this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
+            this.requiredSkillsControl.Name = "requiredSkillsControl";
+            this.requiredSkillsControl.Plan = null;
+            this.requiredSkillsControl.Size = new System.Drawing.Size(247, 95);
+            this.requiredSkillsControl.TabIndex = 0;
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.lblHelp);
             this.panel3.Controls.Add(this.pbShipImage);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Margin = new System.Windows.Forms.Padding(2);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(253, 275);
+            this.panel3.Size = new System.Drawing.Size(253, 253);
             this.panel3.TabIndex = 11;
+            // 
+            // lblHelp
+            // 
+            this.lblHelp.AutoSize = true;
+            this.lblHelp.Location = new System.Drawing.Point(-223, 143);
+            this.lblHelp.Name = "lblHelp";
+            this.lblHelp.Size = new System.Drawing.Size(378, 65);
+            this.lblHelp.TabIndex = 2;
+            this.lblHelp.Text = resources.GetString("lblHelp.Text");
+            this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pbShipImage
             // 
             this.pbShipImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbShipImage.Location = new System.Drawing.Point(0, 0);
             this.pbShipImage.Name = "pbShipImage";
-            this.pbShipImage.Size = new System.Drawing.Size(253, 275);
+            this.pbShipImage.Size = new System.Drawing.Size(253, 253);
             this.pbShipImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbShipImage.TabIndex = 0;
             this.pbShipImage.TabStop = false;
@@ -334,8 +281,8 @@ namespace EVEMon.SkillPlanner
             this.pnlShipDescription.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbShipImage)).EndInit();
             this.ResumeLayout(false);
 
@@ -345,8 +292,6 @@ namespace EVEMon.SkillPlanner
 
         private EVEMon.SkillPlanner.PersistentSplitContainer scShipSelect;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnShipSkillsAdd;
-        private System.Windows.Forms.Label lblShipTimeRequired;
         private System.Windows.Forms.Label lblShipName;
         private System.Windows.Forms.Label lblShipClass;
         private System.Windows.Forms.PictureBox pbShipImage;
@@ -361,11 +306,9 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private ShipSelectControl shipSelectControl;
-        private System.Windows.Forms.LinkLabel lblShipSkillA;
-        private System.Windows.Forms.LinkLabel lblShipSkillC;
-        private System.Windows.Forms.LinkLabel lblShipSkillB;
         private System.Windows.Forms.ToolTip ttShip;
         private System.Windows.Forms.Label lblHelp;
+        private RequiredSkillsControl requiredSkillsControl;
 
 
     }

@@ -227,6 +227,12 @@
     <Compile Include="SkillPlanner\ItemSelectControl.Designer.cs">
       <DependentUpon>ItemSelectControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
+      <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\ShipSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -500,6 +506,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ItemSelectControl.resx">
       <DependentUpon>ItemSelectControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\RequiredSkillsControl.resx">
+      <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">

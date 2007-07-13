@@ -20,11 +20,9 @@ namespace EVEMon.SkillPlanner
             set { 
                 m_plan = value;
                 shipSelectControl.Plan = value;
+                requiredSkillsControl.Plan = value;
             }
         }
-
-        private bool m_allSkillsKnown;
-        private bool m_skillsUnplanned;
 
         private bool m_showImages;
 
@@ -144,6 +142,9 @@ namespace EVEMon.SkillPlanner
                     c.Visible = false;
             }
 
+            // Update required skills
+            requiredSkillsControl.EveItem = shipSelectControl.SelectedObject as EveObject;
+
             if (shipSelectControl.SelectedObject != null)
             {
                 lblHelp.Visible = false;
@@ -196,43 +197,6 @@ namespace EVEMon.SkillPlanner
                 lblShipDescription.Text = Regex.Replace(s.Description, "<.+?>", String.Empty, RegexOptions.Singleline);
                 // force the label to fit the panel
                 pnlShipDescription_Changed(null, null);
-
-                m_allSkillsKnown = true;
-                m_skillsUnplanned = false;
-
-                SetShipSkillLabel(0, lblShipSkillA, s.RequiredSkills);
-                SetShipSkillLabel(1, lblShipSkillB, s.RequiredSkills);
-                SetShipSkillLabel(2, lblShipSkillC, s.RequiredSkills);
-
-                if (!m_allSkillsKnown)
-                {
-                    List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
-                    foreach (EntityRequiredSkill srs in s.RequiredSkills)
-                    {
-                        Pair<Skill, int> p = new Pair<Skill, int>();
-                        p.A = m_plan.GrandCharacterInfo.GetSkill(srs.Name);
-                        p.B = srs.Level;
-                        reqSkills.Add(p);
-                    }
-                    TimeSpan trainTime = m_plan.GrandCharacterInfo.GetTrainingTimeToMultipleSkills(reqSkills);
-                    lblShipTimeRequired.Text = "Training Time: " +
-                                               Skill.TimeSpanToDescriptiveText(trainTime,
-                                                                                    DescriptiveTextOptions.IncludeCommas |
-                                                                                    DescriptiveTextOptions.SpaceText);
-
-                }
-                else
-                {
-                    lblShipTimeRequired.Text = String.Empty;
-                }
-                if (m_skillsUnplanned)
-                {
-                    btnShipSkillsAdd.Enabled = true;
-                }
-                else
-                {
-                    btnShipSkillsAdd.Enabled = false;
-                }
 
                 lvShipProperties.BeginUpdate();
                 try
@@ -438,38 +402,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void SetShipSkillLabel(int rnum, LinkLabel skillLabel, List<EntityRequiredSkill> list)
-        {
-            if (list.Count > rnum)
-            {
-                Skill gs = m_plan.GrandCharacterInfo.GetSkill(list[rnum].Name);
-                skillLabel.Tag = gs;
-
-                string addText = String.Empty;
-                if (gs.Level >= list[rnum].Level)
-                {
-                    addText = " (Known)";
-                }
-                else if (Plan.IsPlanned(gs, list[rnum].Level))
-                {
-                    addText = " (Planned)";
-                    m_allSkillsKnown = false;
-                }
-                else
-                {
-                    m_allSkillsKnown = false;
-                    m_skillsUnplanned = true;
-                }
-                skillLabel.Text = list[rnum].Name + " " +
-                                  Skill.GetRomanForInt(list[rnum].Level) + addText;
-            }
-            else
-            {
-                skillLabel.Text = String.Empty;
-                skillLabel.Tag = null;
-            }
-        }
-
         private void GotShipImage(int shipId, Image i)
         {
             if (i == null)
@@ -488,24 +420,6 @@ namespace EVEMon.SkillPlanner
         }
 
         
-        private void btnShipSkillsAdd_Click(object sender, EventArgs e)
-        {
-            Ship s = shipSelectControl.SelectedObject as Ship;
-            if (s == null)
-            {
-                return;
-            }
-
-            string m_note = s.Name;
-            List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
-            foreach (EntityRequiredSkill srs in s.RequiredSkills)
-            {
-                skillsToAdd.Add(new Pair<string, int>(srs.Name, srs.Level));
-            }
-            m_plan.PlanSetTo(skillsToAdd, m_note, true);
-            shipSelectControl_SelectedShipChanged(new Object(), new EventArgs());
-        }
-
         private void pnlShipDescription_Changed(object sender, EventArgs e)
         {
             int w = pnlShipDescription.ClientSize.Width;
@@ -532,50 +446,9 @@ namespace EVEMon.SkillPlanner
             }
             return -1;
         }
-
-        private void lblShipSkill_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            LinkLabel lbl = sender as LinkLabel;
-            if (lbl.Tag == null) return;
-            NewPlannerWindow pw = m_plan.PlannerWindow.Target as NewPlannerWindow;
-            pw.ShowSkillInTree(lbl.Tag as Skill);
-
-        }
-
-        private void lblShipSkill_MouseHover(object sender, EventArgs e)
-        {
-            LinkLabel lbl = sender as LinkLabel;
-            if (lbl.Tag == null) return;
-            Skill s = lbl.Tag as Skill;
-            StringBuilder prereqs = new StringBuilder(lbl.Text + "\n");
-            prereqs.Append(buildPrereqs(s));
-            ttShip.SetToolTip(lbl, prereqs.ToString());
-            ttShip.IsBalloon = false;
-            ttShip.Active = true;
-        }
-
-        private StringBuilder buildPrereqs(Skill s)
-        {
-            StringBuilder msg = new StringBuilder();
-            foreach (Skill.Prereq p in s.Prereqs)
-            {
-                msg.Append(p.Name + " " + Skill.GetRomanForInt(p.Level));
-                Skill gs = m_plan.GrandCharacterInfo.GetSkill(p.Name);
-                if (gs.Level >= p.Level)
-                {
-                    msg.Append(" (Known)");
-                }
-                else if (Plan.IsPlanned(gs, p.Level))
-                {
-                    msg.Append(" (Planned)");
-                }
-                msg.Append("\n");
-                msg.Append(buildPrereqs(gs));
-            }
-            return msg;
-        }
     }
 }
+
 
 
 
