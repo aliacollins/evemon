@@ -363,15 +363,23 @@ namespace EVEMon.Common
             SerializableSkillTrainingInfo ssti = null;
             if (sdoc != null)
             {
-                XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
-                XmlElement charRoot = sdoc.DocumentElement;
-                using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+                try
                 {
-                    ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
-                    // This set must only be done at deserialisation when we can compare current time agaisnt machine time
-                    // TQ is now synched with NNTP but the webserver isn't (checked with Garthagk at ccp)
-                    double CCPOffset = ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(requestTime).TotalMilliseconds;
-                    ssti.FixServerTimes(CCPOffset);
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableSkillTrainingInfo));
+                    XmlElement charRoot = sdoc.DocumentElement;
+                    using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
+                    {
+                        ssti = (SerializableSkillTrainingInfo)xs.Deserialize(xnr);
+                        // This set must only be done at deserialisation when we can compare current time agaisnt machine time
+                        // TQ is now synched with NNTP but the webserver isn't (checked with Garthagk at ccp)
+                        double CCPOffset = ssti.GetDateTimeAtUpdate.ToLocalTime().Subtract(requestTime).TotalMilliseconds;
+                        ssti.FixServerTimes(CCPOffset);
+                    }
+                }
+                catch (Exception xmlException)
+                {
+                    ExceptionHandler.LogException(xmlException, true);
+                    return null;
                 }
             }
             return ssti;
