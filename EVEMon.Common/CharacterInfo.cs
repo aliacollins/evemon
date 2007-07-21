@@ -1009,6 +1009,10 @@ namespace EVEMon.Common
             checkTrainingSkills(ci.TrainingSkillInfo);
             this.ResumeEvents();
         }
+
+        /// <summary>
+        /// Used when we're not able to get an update from CCP
+        /// </summary>
         public void checkOldSkill()
         {
             DateTime _OSITLocalCompleteTime = DateTime.MinValue;
@@ -1164,14 +1168,16 @@ namespace EVEMon.Common
 
             if (SkillInTraining != null)
             {
-                // See if this is the same skill as the old one
-                if (m_OldSkillInTraining != null && m_OldSkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID && m_OldSkillInTraining.getTrainingEndTime == SkillInTraining.getTrainingEndTime)
+                // See if this is the same skill as the old one and has the same completion time to within 2 seconds
+                // we can''t compare the datetimes directly as the number of milliseconds varies for some reason
+                if (m_OldSkillInTraining != null && 
+                    m_OldSkillInTraining.TrainingSkillWithTypeID == SkillInTraining.TrainingSkillWithTypeID &&
+                    (Math.Abs(m_OldSkillInTraining.getTrainingEndTime.ToUniversalTime().TimeOfDay.TotalSeconds - SkillInTraining.getTrainingEndTime.ToUniversalTime().TimeOfDay.TotalSeconds) < 2))
                 {
                     // yes it is - copy over the alert flags
                     SkillInTraining.PreWarningGiven = m_OldSkillInTraining.PreWarningGiven;
                     SkillInTraining.AlertRaisedAlready = m_OldSkillInTraining.AlertRaisedAlready;
                 }
-
                 _SITLocalUpdateTime = SkillInTraining.GetDateTimeAtUpdate.ToLocalTime();
                 if (SkillInTraining.isSkillInTraining)
                 {
@@ -1190,6 +1196,13 @@ namespace EVEMon.Common
                         {
                             _SkillInTraining.CurrentSkillPoints = SkillInTraining.EstimatedPointsAtUpdate;
                             _SkillInTraining.Known = true;
+                            // If skill end date is in the past then we are in the situation where the user
+                            // has not started the client yet, so it's showing the skill at the old level so 
+                            // let's fix that
+                            if (SkillInTraining.getTrainingEndTime  < SkillInTraining.GetDateTimeAtUpdate)
+                            {
+                                _SkillInTraining.LastConfirmedLvl = SkillInTraining.TrainingSkillToLevel;
+                            }
                             OnSkillChanged(_SkillInTraining);
                         }
                     }
@@ -1290,6 +1303,7 @@ namespace EVEMon.Common
                             OnSkillChanged(oldskill);
                             m_OldSkillInTraining.AlertRaisedAlready = false;
                         }
+
                     }
                     else
                     {
