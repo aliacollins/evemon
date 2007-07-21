@@ -1550,6 +1550,15 @@ namespace EVEMon
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
             {
+                if (!m_settings.GetCharacterSettings(cm.CharacterName).IneveSync)
+                {
+                    DialogResult dr =  MessageBox.Show("Warning! You are about to enable the sharing of your skill data with an external website.\nWe cannot take responsibility for what happens to that data - other people may be able to access your skill data.\nAre you sure you want to do this?", "Skill Data Sharing!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dr == DialogResult.No)
+                    {
+                        inEvenetToolStripMenuItem.Checked = false;
+                        return;
+                    }
+                }
                 m_settings.GetCharacterSettings(cm.CharacterName).IneveSync = !m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
             }
         }

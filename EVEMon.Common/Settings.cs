@@ -2148,7 +2148,7 @@ namespace EVEMon.Common
             }
         }
 
-        private bool m_showPrivateSkills = true;
+        private bool m_showPrivateSkills = false;
 
         public bool ShowPrivateSkills
         {
