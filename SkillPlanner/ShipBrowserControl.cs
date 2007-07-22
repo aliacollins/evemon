@@ -446,6 +446,15 @@ namespace EVEMon.SkillPlanner
             }
             return -1;
         }
+
+        private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadoutSelect ls = new LoadoutSelect(shipSelectControl.SelectedObject.Name,shipSelectControl.SelectedObject.Id);
+            DialogResult dr =  ls.ShowDialog();
+            if (dr == DialogResult.Cancel) return;
+            LoadoutViewer lv = new LoadoutViewer(ls.SelectedLoadout);
+            lv.Show();
+        }
     }
 }
 

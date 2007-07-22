@@ -32,6 +32,7 @@ namespace EVEMon.SkillPlanner
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
+            this.lblBattleclinic = new System.Windows.Forms.LinkLabel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pnlShipDescription = new System.Windows.Forms.Panel();
@@ -75,6 +76,7 @@ namespace EVEMon.SkillPlanner
             // 
             // scShipSelect.Panel2
             // 
+            this.scShipSelect.Panel2.Controls.Add(this.lblBattleclinic);
             this.scShipSelect.Panel2.Controls.Add(this.panel2);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipName);
             this.scShipSelect.Panel2.Controls.Add(this.lblShipClass);
@@ -99,6 +101,18 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             this.shipSelectControl.SelectedObjectChanged += new System.EventHandler<System.EventArgs>(this.shipSelectControl_SelectedShipChanged);
+            // 
+            // lblBattleclinic
+            // 
+            this.lblBattleclinic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblBattleclinic.AutoSize = true;
+            this.lblBattleclinic.Location = new System.Drawing.Point(116, 3);
+            this.lblBattleclinic.Name = "lblBattleclinic";
+            this.lblBattleclinic.Size = new System.Drawing.Size(101, 13);
+            this.lblBattleclinic.TabIndex = 11;
+            this.lblBattleclinic.TabStop = true;
+            this.lblBattleclinic.Text = "Battleclinic loadouts";
+            this.lblBattleclinic.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblBattleclinic_LinkClicked);
             // 
             // panel2
             // 
@@ -309,6 +323,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolTip ttShip;
         private System.Windows.Forms.Label lblHelp;
         private RequiredSkillsControl requiredSkillsControl;
+        private System.Windows.Forms.LinkLabel lblBattleclinic;
 
 
     }

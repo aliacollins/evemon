@@ -164,5 +164,28 @@ namespace EVEMon.Common
         {
             get { return m_items; }
         }
+
+        public static Item findItem(int itemId)
+        {
+            ItemCategory ic = ItemCategory.GetRootCategory();
+            return searchCategory(ic, itemId);
+        }
+
+        private static Item searchCategory(ItemCategory ic, int itemId)
+        {
+            foreach (Item i in ic.Items)
+            {
+                if (i.Id == itemId) return i;
+            }
+
+            foreach (ItemCategory subCat in ic.Subcategories)
+            {
+                Item si = searchCategory(subCat, itemId);
+                if (si != null) return si;
+            }
+
+            return null;
+        }
+
     }
 }
