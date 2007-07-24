@@ -587,10 +587,7 @@ namespace EVEMon.SkillPlanner
             Cursor = Cursors.WaitCursor;
             lbPlanList.Sort();
             Cursor = Cursors.Default;
-            // Now Disable the sort so users can still drag items manually
-            lbPlanList.ListViewItemSorter = null;
-
-        }
+         }
 
         #endregion
 

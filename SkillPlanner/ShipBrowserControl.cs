@@ -449,10 +449,10 @@ namespace EVEMon.SkillPlanner
 
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LoadoutSelect ls = new LoadoutSelect(shipSelectControl.SelectedObject.Name,shipSelectControl.SelectedObject.Id);
+            LoadoutSelect ls = new LoadoutSelect(shipSelectControl.SelectedObject as Ship);
             DialogResult dr =  ls.ShowDialog();
             if (dr == DialogResult.Cancel) return;
-            LoadoutViewer lv = new LoadoutViewer(ls.SelectedLoadout);
+            LoadoutViewer lv = new LoadoutViewer(ls.SelectedLoadout, m_plan);
             lv.Show();
         }
     }

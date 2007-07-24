@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,29 +16,27 @@ namespace EVEMon.SkillPlanner
 {
     public partial class LoadoutSelect : Form
     {
-        private string m_shipName;
-        private int m_shipID;
+        private Ship m_ship;
 
         public LoadoutSelect()
         {
             InitializeComponent();
         }
 
-        public LoadoutSelect(string shipName, int shipID)
+        public LoadoutSelect(Ship s)
         {
-            m_shipName = shipName;
-            m_shipID = shipID;
+            m_ship = s;
             InitializeComponent();
         }
 
         private void LoadoutSelect_Load(object sender, EventArgs e)
         {
-            lblShip.Text = "Fetching Loadouts for " + m_shipName;
+            lblShip.Text = "Fetching Loadouts for " + m_ship.Name;
             try
             {
                 // fetch loadouts from battleclinic
                 XmlSerializer xs = new XmlSerializer(typeof(ShipLoadout));
-                XmlDocument doc = EVEMonWebRequest.LoadXml("http://www.battleclinic.com/eve_online/ship_loadout_feed.php?typeID=" + m_shipID);
+                XmlDocument doc = EVEMonWebRequest.LoadXml("http://www.battleclinic.com/eve_online/ship_loadout_feed.php?typeID=" + m_ship.Id);
                 XmlElement shipNode = doc.DocumentElement.SelectSingleNode("//ship") as XmlElement;
                 if (shipNode != null)
                 {
@@ -47,29 +46,32 @@ namespace EVEMon.SkillPlanner
 
                         foreach (SerializableLoadout loadout in sl.Loadouts)
                         {
-                            loadout.TypeID = m_shipID;
-                            loadout.ShipClass = m_shipName;
+                            loadout.ShipObject = m_ship; 
                             ListViewItem lvi = new ListViewItem(loadout.LoadoutName);
                             lvi.Text = loadout.LoadoutName;
                             lvi.SubItems.Add(loadout.Author);
                             lvi.SubItems.Add(loadout.rating.ToString());
+                            lvi.SubItems.Add(loadout.SubmissionDate.ToShortDateString());
                             lvi.Tag = loadout;
                             lvLoadouts.Items.Add(lvi);
                         }
                     }
-                    lblShip.Text = "Found " + lvLoadouts.Items.Count.ToString() + " Loadouts for " + m_shipName;
+                    lblShip.Text = "Found " + lvLoadouts.Items.Count.ToString() + " Loadouts for " + m_ship.Name + " - Click column headings to sort";
                 }
                 else
                 {
-                    lblShip.Text = "There are no loadouts for " + m_shipName + ", why not submit one to Battleclinic?";
+                    lblShip.Text = "There are no loadouts for " + m_ship.Name + ", why not submit one to Battleclinic?";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lblShip.Text = "There was a problem connecting to Battleclinic, it may be down for maintainance.";
             }
 
             btnOpen.Enabled = (lvLoadouts.SelectedItems.Count != 0);
+            m_columnSorter = new LoadoutListSorter(this);
+            lvLoadouts.ListViewItemSorter = m_columnSorter;
+            lvLoadouts.Sort();
         }
 
         private SerializableLoadout m_selectedLoadout = null;
@@ -100,6 +102,110 @@ namespace EVEMon.SkillPlanner
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private void lvLoadouts_DoubleClick(object sender, EventArgs e)
+        {
+            if (lvLoadouts.SelectedItems.Count == 1)
+            {
+                btnOpen_Click(this, e);
+            }
+
+        }
+
+        #region Column Sorting
+
+        private LoadoutListSorter m_columnSorter;
+
+        public class LoadoutListSorter : IComparer
+        {
+            private ListView m_loadouts;
+            public LoadoutListSorter(LoadoutSelect ls)
+            {
+                m_loadouts = ls.lvLoadouts;
+                OrderOfSort = SortOrder.Descending;
+                SortColumn = 3;
+            }
+
+            private int m_sortColumn;
+            public int SortColumn
+            {
+                get { return m_sortColumn; }
+                set { m_sortColumn = value; }
+            }
+
+            public int Compare(object x, object y)
+            {
+                int compareResult = 0;
+                ListViewItem a = (ListViewItem)x;
+                ListViewItem b = (ListViewItem)y;
+
+                if (m_sortOrder == SortOrder.Descending)
+                {
+                    ListViewItem tmp = b;
+                    b = a;
+                    a = tmp;
+                }
+
+                SerializableLoadout sla = a.Tag as SerializableLoadout;
+                SerializableLoadout slb = b.Tag as SerializableLoadout;
+
+                switch (m_sortColumn)
+                {
+                    case 0: // sort by name
+                        compareResult = String.Compare(a.Text, b.Text);
+                        break;
+                    case 1: // Author
+                        compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text);
+                        break;
+                    case 2:  // Rating
+                        if (sla.rating < slb.rating) compareResult = -1;
+                        else if (sla.rating > slb.rating) compareResult = 1;
+                        else compareResult = 0;
+                        break;
+                    case 3:  // Date
+                        compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
+                        break;
+                }
+
+                return compareResult;
+            }
+
+
+            private SortOrder m_sortOrder = SortOrder.None;
+
+            public SortOrder OrderOfSort
+            {
+                get { return m_sortOrder; }
+                set { m_sortOrder = value; }
+            }
+        }
+
+        private void lvLoadouts_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == m_columnSorter.SortColumn)
+            {
+                // already sorting on this column so swap sort order
+                if (m_columnSorter.OrderOfSort == SortOrder.Ascending)
+                {
+                    m_columnSorter.OrderOfSort = SortOrder.Descending;
+                }
+                else
+                {
+                    m_columnSorter.OrderOfSort = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                m_columnSorter.SortColumn = e.Column;
+                m_columnSorter.OrderOfSort = SortOrder.Ascending;
+            }
+            lvLoadouts.ListViewItemSorter = m_columnSorter;
+            Cursor = Cursors.WaitCursor;
+            lvLoadouts.Sort();
+            Cursor = Cursors.Default;
+        }
+
+    #endregion
 
     }
 
@@ -153,6 +259,37 @@ namespace EVEMon.SkillPlanner
             set { m_loadoutID = value; }
         }
 
+        private string m_submissionDateString = null;
+        private DateTime m_submissionDate;
+
+        [XmlAttribute("date")]
+        public string SubmissionDateString
+        {
+            get { return m_submissionDateString; }
+            set 
+            {
+                m_submissionDateString = value;
+               m_submissionDate=DateTime.Parse(value);
+            }
+        }
+
+        private int m_topic;
+
+        [XmlAttribute("topic")]
+        public int Topic
+        {
+            get { return m_topic; }
+            set { m_topic = value; }
+        }
+	
+
+        [XmlIgnore]
+        public DateTime SubmissionDate
+        {
+            get { return m_submissionDate; }
+            set { m_submissionDate = value; }
+        }
+
         private List<SerializableLoadoutSlot> m_slots = new List<SerializableLoadoutSlot>();
         [XmlElement("slot")]
         public List<SerializableLoadoutSlot> Slots
@@ -161,24 +298,16 @@ namespace EVEMon.SkillPlanner
             set { m_slots = value; }
         }
 
-        private string m_shipClass;
-        
+
+        private Ship m_ship;
         [XmlIgnore]
-        public string ShipClass
+        public Ship ShipObject
         {
-            get { return m_shipClass; }
-            set { m_shipClass = value; }
+            get { return m_ship; }
+            set { m_ship = value; }
         }
 
-        private int m_typeID;
 
-        [XmlIgnore]
-        public int TypeID
-        {
-            get { return m_typeID; }
-            set { m_typeID = value; }
-        }
-	
     }
 
     [XmlRoot("slot")]

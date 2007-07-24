@@ -906,7 +906,34 @@ namespace EVEMon.Common
             }
         }
 
-        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd, string Note, bool withConfirm)
+        /// <summary>
+        /// Check if a skill set is already planned
+        /// </summary>
+        /// <param name="skillsToAdd"></param>
+        /// <returns></returns>
+        public bool SkillsetPlanned(IEnumerable<Pair<string, int>> skillsToAdd)
+        {
+            List<Plan.Entry> planEntries = CheckSkillsToAdd(skillsToAdd, "Test");
+            if (planEntries.Count > 0)
+            {
+                foreach (Plan.Entry pe in planEntries)
+                {
+                    if (pe.AddNoteonly == false)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Build a list of plan entries to add from a list of skill names and levels
+        /// </summary>
+        /// <param name="skillsToAdd"></param>
+        /// <param name="Note"></param>
+        /// <returns></returns>
+        private List<Plan.Entry> CheckSkillsToAdd(IEnumerable<Pair<string, int>> skillsToAdd,string Note)
         {
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             m_lowestPrereqPriority = Int32.MinValue;
@@ -952,6 +979,12 @@ namespace EVEMon.Common
                     }
                 }
             }
+            return planEntries;
+        }
+
+        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd, string Note, bool withConfirm)
+        {
+            List<Plan.Entry> planEntries = CheckSkillsToAdd(skillsToAdd, Note);
             bool result = false;
             if (planEntries.Count > 0)
             {

@@ -70,7 +70,7 @@ namespace EVEMon.Common
             }
             catch (Exception)
             {
-                MessageBox.Show("You do not have a default browser configured. Please configure a default browser or visit " + url + " directly in your browser", "No Default Browser", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+//                MessageBox.Show("You do not have a default browser configured. Please configure a default browser or visit " + url + " directly in your browser", "No Default Browser", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
         }

@@ -41,13 +41,17 @@ namespace EVEMon.SkillPlanner
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.lblForum = new System.Windows.Forms.LinkLabel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lbDate = new System.Windows.Forms.Label();
+            this.lblPlanned = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbShip)).BeginInit();
             this.SuspendLayout();
             // 
             // lblShip
             // 
             this.lblShip.AutoSize = true;
-            this.lblShip.Location = new System.Drawing.Point(198, 17);
+            this.lblShip.Location = new System.Drawing.Point(198, 13);
             this.lblShip.Name = "lblShip";
             this.lblShip.Size = new System.Drawing.Size(35, 13);
             this.lblShip.TabIndex = 1;
@@ -60,14 +64,15 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvLoadout.Location = new System.Drawing.Point(11, 112);
             this.tvLoadout.Name = "tvLoadout";
-            this.tvLoadout.Size = new System.Drawing.Size(321, 354);
+            this.tvLoadout.Size = new System.Drawing.Size(324, 401);
             this.tvLoadout.TabIndex = 2;
+            this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(257, 510);
+            this.btnCancel.Location = new System.Drawing.Point(260, 557);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -79,7 +84,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.btnPlan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPlan.Enabled = false;
-            this.btnPlan.Location = new System.Drawing.Point(176, 510);
+            this.btnPlan.Location = new System.Drawing.Point(179, 557);
             this.btnPlan.Name = "btnPlan";
             this.btnPlan.Size = new System.Drawing.Size(75, 23);
             this.btnPlan.TabIndex = 4;
@@ -90,7 +95,7 @@ namespace EVEMon.SkillPlanner
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(198, 40);
+            this.lblName.Location = new System.Drawing.Point(198, 26);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(35, 13);
             this.lblName.TabIndex = 5;
@@ -99,7 +104,7 @@ namespace EVEMon.SkillPlanner
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Location = new System.Drawing.Point(198, 64);
+            this.lblAuthor.Location = new System.Drawing.Point(198, 39);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(35, 13);
             this.lblAuthor.TabIndex = 7;
@@ -115,8 +120,9 @@ namespace EVEMon.SkillPlanner
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 478);
+            this.label1.Location = new System.Drawing.Point(12, 524);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(149, 13);
             this.label1.TabIndex = 8;
@@ -124,8 +130,9 @@ namespace EVEMon.SkillPlanner
             // 
             // lbTrainTime
             // 
+            this.lbTrainTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbTrainTime.AutoSize = true;
-            this.lbTrainTime.Location = new System.Drawing.Point(162, 478);
+            this.lbTrainTime.Location = new System.Drawing.Point(162, 524);
             this.lbTrainTime.Name = "lbTrainTime";
             this.lbTrainTime.Size = new System.Drawing.Size(35, 13);
             this.lbTrainTime.TabIndex = 9;
@@ -134,7 +141,7 @@ namespace EVEMon.SkillPlanner
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(108, 17);
+            this.label2.Location = new System.Drawing.Point(108, 13);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 10;
@@ -143,7 +150,7 @@ namespace EVEMon.SkillPlanner
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(108, 40);
+            this.label3.Location = new System.Drawing.Point(108, 26);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 13);
             this.label3.TabIndex = 11;
@@ -152,18 +159,60 @@ namespace EVEMon.SkillPlanner
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(108, 64);
+            this.label4.Location = new System.Drawing.Point(108, 39);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 12;
             this.label4.Text = "Author:";
+            // 
+            // lblForum
+            // 
+            this.lblForum.AutoSize = true;
+            this.lblForum.Location = new System.Drawing.Point(108, 83);
+            this.lblForum.Name = "lblForum";
+            this.lblForum.Size = new System.Drawing.Size(101, 13);
+            this.lblForum.TabIndex = 13;
+            this.lblForum.TabStop = true;
+            this.lblForum.Text = "Discuss this loadout";
+            this.lblForum.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblForum_LinkClicked);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(108, 52);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Submission Date:";
+            // 
+            // lbDate
+            // 
+            this.lbDate.AutoSize = true;
+            this.lbDate.Location = new System.Drawing.Point(198, 52);
+            this.lbDate.Name = "lbDate";
+            this.lbDate.Size = new System.Drawing.Size(35, 13);
+            this.lbDate.TabIndex = 15;
+            this.lbDate.Text = "label6";
+            // 
+            // lblPlanned
+            // 
+            this.lblPlanned.AutoSize = true;
+            this.lblPlanned.Location = new System.Drawing.Point(12, 537);
+            this.lblPlanned.Name = "lblPlanned";
+            this.lblPlanned.Size = new System.Drawing.Size(10, 13);
+            this.lblPlanned.TabIndex = 16;
+            this.lblPlanned.Text = " ";
             // 
             // LoadoutViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(361, 545);
+            this.ClientSize = new System.Drawing.Size(364, 592);
+            this.Controls.Add(this.lblPlanned);
+            this.Controls.Add(this.lbDate);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblForum);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -177,6 +226,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.lblShip);
             this.Controls.Add(this.pbShip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(305, 514);
             this.Name = "LoadoutViewer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoadoutViewer";
@@ -201,5 +251,9 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel lblForum;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbDate;
+        private System.Windows.Forms.Label lblPlanned;
     }
 }
