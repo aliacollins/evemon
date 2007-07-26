@@ -87,7 +87,8 @@ namespace EVEMon.SkillPlanner
 
         private void lbPlan_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnLoad.Enabled = true;
+
+            btnLoad.Enabled = lbPlan.SelectedItems.Count == 1;
         }
 
         private void btnLoad_Click(object sender, EventArgs e)

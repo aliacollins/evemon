@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -180,5 +181,35 @@ namespace EVEMon.SkillPlanner
         {
             EveSession.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_loadout.Topic + ".0.html");
         }
+
+        private TreeNode m_OldSelectNode;
+        private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // Show menu only if the right mouse button is clicked.
+            if (e.Button == MouseButtons.Right)
+            {
+
+                // Point where the mouse is clicked.
+                Point p = new Point(e.X, e.Y);
+
+                // Get the node that the user has clicked.
+                TreeNode node = tvLoadout.GetNodeAt(p);
+                if (node != null && node.Tag != null)
+                {
+
+                    // Select the node the user has clicked.
+                    // The node appears selected until the menu is displayed on the screen.
+                    m_OldSelectNode = tvLoadout.SelectedNode;
+                    tvLoadout.SelectedNode = node;
+                    cmNode.Show(tvLoadout,p);
+                    // Highlight the selected node.
+       //             tvLoadout.SelectedNode = m_OldSelectNode;
+                    m_OldSelectNode = null;
+                }
+            }
+        }
+
+
+ 
     }
 }

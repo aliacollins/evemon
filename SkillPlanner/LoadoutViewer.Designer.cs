@@ -28,9 +28,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoadoutViewer));
             this.lblShip = new System.Windows.Forms.Label();
             this.tvLoadout = new System.Windows.Forms.TreeView();
+            this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnPlan = new System.Windows.Forms.Button();
             this.lblName = new System.Windows.Forms.Label();
@@ -45,6 +48,7 @@ namespace EVEMon.SkillPlanner
             this.label5 = new System.Windows.Forms.Label();
             this.lbDate = new System.Windows.Forms.Label();
             this.lblPlanned = new System.Windows.Forms.Label();
+            this.cmNode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbShip)).BeginInit();
             this.SuspendLayout();
             // 
@@ -67,6 +71,21 @@ namespace EVEMon.SkillPlanner
             this.tvLoadout.Size = new System.Drawing.Size(324, 401);
             this.tvLoadout.TabIndex = 2;
             this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
+            this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
+            // 
+            // cmNode
+            // 
+            this.cmNode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miShowInBrowser});
+            this.cmNode.Name = "cmNode";
+            this.cmNode.Size = new System.Drawing.Size(204, 48);
+            // 
+            // miShowInBrowser
+            // 
+            this.miShowInBrowser.Name = "miShowInBrowser";
+            this.miShowInBrowser.Size = new System.Drawing.Size(203, 22);
+            this.miShowInBrowser.Text = "Show Item In Browser...";
+            this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // btnCancel
             // 
@@ -231,6 +250,7 @@ namespace EVEMon.SkillPlanner
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoadoutViewer";
             this.Load += new System.EventHandler(this.LoadoutViewer_Load);
+            this.cmNode.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbShip)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -255,5 +275,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lbDate;
         private System.Windows.Forms.Label lblPlanned;
+        private System.Windows.Forms.ContextMenuStrip cmNode;
+        private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
     }
 }
