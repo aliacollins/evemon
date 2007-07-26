@@ -32,6 +32,12 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.RememberDistanceKey = "ShipBrowser";
             shipSelectControl_SelectedShipChanged(null, null);
             m_showImages = !Settings.GetInstance().WorksafeMode;
+            if (!m_showImages)
+            {
+                eveImage.ImageSize = EveImage.EveImageSize._0_0;
+                lblShipName.Location = new Point(3, lblShipName.Location.Y);
+                lblShipClass.Location = new Point(3, lblShipClass.Location.Y);
+            }
             InitializeDisplayControl();
 
         }
@@ -112,11 +118,6 @@ namespace EVEMon.SkillPlanner
             {
                 return;
             }
- 
-            if (!m_showImages)
-            {
-                panel3.Size = new Size(0, this.Size.Height - lvShipProperties.Size.Height);
-            }
         }
 
         private static string m_propName;
@@ -142,61 +143,22 @@ namespace EVEMon.SkillPlanner
                     c.Visible = false;
             }
 
-            // Update required skills
-            requiredSkillsControl.EveItem = shipSelectControl.SelectedObject as EveObject;
-
             if (shipSelectControl.SelectedObject != null)
             {
                 lblHelp.Visible = false;
-                if (m_showImages)
-                {
-                    Bitmap b = new Bitmap(256, 256);
-                    using (Graphics g = Graphics.FromImage(b))
-                    {
-                        g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 256, 256));
-                    }
-                    pbShipImage.Image = b;
-                }
+                // Update required skills
+                requiredSkillsControl.EveItem = shipSelectControl.SelectedObject as EveObject;
+
+                // Update image
+                eveImage.EveItem = shipSelectControl.SelectedObject;
 
                 Ship s = shipSelectControl.SelectedObject as Ship;
                 int shipId = s.Id;
 
-
-                if (m_showImages)
-                {
-                    string ship_resources = String.Format(
-                        "{1}Resources{0}Optional{0}Ships256_256.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory);
-                    if (System.IO.File.Exists(ship_resources))
-                    {
-                        System.Resources.IResourceReader basic;
-                        basic = new System.Resources.ResourceReader(ship_resources);
-                        System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
-                        while (basicx.MoveNext())
-                        {
-                            if (basicx.Key.ToString() == "_" + s.Id)
-                            {
-                                pbShipImage.Image = (System.Drawing.Image)basicx.Value;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        EveSession.GetImageAsync(
-                            "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
-                            shipId.ToString() + ".png", true, delegate(EveSession ss, Image i)
-                                                                  {
-                                                                      GotShipImage(shipId, i);
-                                                                  });
-                    }
-                }
-
                 lblShipClass.Text = s.Type + " > " + s.Race;
                 lblShipName.Text = s.Name;
-                lblShipDescription.Text = Regex.Replace(s.Description, "<.+?>", String.Empty, RegexOptions.Singleline);
-                // force the label to fit the panel
-                pnlShipDescription_Changed(null, null);
+                tbDescription.Text = Regex.Replace(s.Description, "<.+?>", String.Empty, RegexOptions.Singleline);
+                tbDescription.Text = Regex.Replace(tbDescription.Text, "\n", Environment.NewLine, RegexOptions.Singleline);
 
                 lvShipProperties.BeginUpdate();
                 try
@@ -402,38 +364,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private void GotShipImage(int shipId, Image i)
-        {
-            if (i == null)
-            {
-                return;
-            }
-            if (shipSelectControl.SelectedObject == null)
-            {
-                return;
-            }
-            if (shipId != shipSelectControl.SelectedObject.Id)
-            {
-                return;
-            }
-            pbShipImage.Image = i;
-        }
-
-        
-        private void pnlShipDescription_Changed(object sender, EventArgs e)
-        {
-            int w = pnlShipDescription.ClientSize.Width;
-            lblShipDescription.MaximumSize = new Size(w, Int32.MaxValue);
-            if (lblShipDescription.PreferredHeight > pnlShipDescription.ClientSize.Height)
-            {
-                pnlShipDescription.Visible = false;
-                pnlShipDescription.PerformLayout();
-                int xw = pnlShipDescription.ClientSize.Width;
-                lblShipDescription.MaximumSize = new Size(xw, Int32.MaxValue);
-                pnlShipDescription.Visible = true;
-            }
-        }
-
         private int AddAnotherValue(string name, string value)
         {
             ListViewItem[] items = lvShipProperties.Items.Find(name, false);
@@ -446,7 +376,6 @@ namespace EVEMon.SkillPlanner
             }
             return -1;
         }
-
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             LoadoutSelect ls = new LoadoutSelect(shipSelectControl.SelectedObject as Ship);
@@ -455,16 +384,16 @@ namespace EVEMon.SkillPlanner
             LoadoutViewer lv = new LoadoutViewer(ls.SelectedLoadout, m_plan);
             lv.Show();
         }
+
+        private void ShipBrowserControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                requiredSkillsControl.UpdateDisplay();
+            }
+
+        }
+
     }
 }
-
-
-
-
-
-
-
-
-
-
 

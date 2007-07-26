@@ -10,37 +10,56 @@ using System.Globalization;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// User control to display required skills for a given eveobject and update a plan object for requirements not met
+    /// </summary>
     public partial class RequiredSkillsControl : UserControl
     {
+        #region Private Properties
+        private EveObject   m_EveItem;
+        private Plan        m_Plan;
+        private bool        m_allSkillsKnown;
+        private bool        m_skillsUnplanned;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public RequiredSkillsControl()
         {
             InitializeComponent();
         }
+        #endregion
 
-        private EveObject m_EveItem;
-
+        #region Public Properties
+        /// <summary>
+        /// An EveObject for which we want to show required skills
+        /// </summary>
         public EveObject EveItem
         {
             get { return m_EveItem; }
             set
             {
                 m_EveItem = value;
-                updateDisplay();
+                UpdateDisplay();
             }
         }
-
-        private Plan m_Plan;
-
+        /// <summary>
+        /// The target Plan object to add any required skills
+        /// </summary>
         public Plan Plan
         {
             get { return m_Plan; }
             set { m_Plan = value; }
         }
+        #endregion
 
-        private bool m_allSkillsKnown;
-        private bool m_skillsUnplanned;
-
-        private void updateDisplay()
+        #region Public Methods
+        /// <summary>
+        /// Updates control contents
+        /// </summary>
+        public void UpdateDisplay()
         {
             // List of skills for which to calculate training time
             List<Pair<Skill, int>> reqSkills = new List<Pair<Skill, int>>();
@@ -59,7 +78,7 @@ namespace EVEMon.SkillPlanner
                 foreach (EntityRequiredSkill requiredSkill in m_EveItem.RequiredSkills)
                 {
                     // Add required skill to treeview root
-                    tvSkillList.Nodes.Add(getSkillNode(requiredSkill));
+                    tvSkillList.Nodes.Add(GetSkillNode(requiredSkill));
 
                     // Add required skill to reqSkills list to calculate training time
                     Pair<Skill, int> p = new Pair<Skill, int>();
@@ -84,20 +103,34 @@ namespace EVEMon.SkillPlanner
             // Enable / disable button
             btnAddSkills.Enabled = m_skillsUnplanned;
         }
+        #endregion
 
-        private TreeNode getSkillNode(EntityRequiredSkill requiredSkill)
+        #region Private Methods
+        /// <summary>
+        /// Recursive method to generate treenodes for tvSkillList
+        /// </summary>
+        /// <param name="requiredSkill">An EntityRequiredSkill object</param>
+        /// <returns></returns>
+        private TreeNode GetSkillNode(EntityRequiredSkill requiredSkill)
         {
-            TreeNode skillNode = new TreeNode(requiredSkill.Name + " " + Skill.GetRomanForInt(requiredSkill.Level));
+            // Get Skill for requiredSkill
             Skill thisSkill = m_Plan.GrandCharacterInfo.GetSkill(requiredSkill.Name);
+
+            // Create new node
+            TreeNode skillNode = new TreeNode(requiredSkill.Name + " " + Skill.GetRomanForInt(requiredSkill.Level));
+
+            // Store skill for use by double click event
             skillNode.Tag = thisSkill;
+
+            #region Check requirements and apply node icons
             // Skill requirement met
-            if (thisSkill.Level >= requiredSkill.Level) 
+            if (thisSkill.Level >= requiredSkill.Level)
             {
                 skillNode.ImageIndex = 1;
                 skillNode.SelectedImageIndex = 1;
             }
             // Requirement not met, but planned
-            else if (m_Plan.IsPlanned(thisSkill, requiredSkill.Level)) 
+            else if (m_Plan.IsPlanned(thisSkill, requiredSkill.Level))
             {
                 skillNode.ImageIndex = 2;
                 skillNode.SelectedImageIndex = 2;
@@ -111,43 +144,68 @@ namespace EVEMon.SkillPlanner
                 m_allSkillsKnown = false;
                 m_skillsUnplanned = true;
             }
+            #endregion
+
+            // Generate child nodes if required
             foreach (Skill.Prereq prerequisite in thisSkill.Prereqs)
             {
-                skillNode.Nodes.Add(getSkillNode(prerequisite as EntityRequiredSkill));
+                skillNode.Nodes.Add(GetSkillNode(prerequisite as EntityRequiredSkill));
             }
+
             return skillNode;
         }
-
+        /// <summary>
+        /// Event handler method for Add Skills button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddSkills_Click(object sender, EventArgs e)
         {
+            // List to hold required skills and level
             List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
+
+            // Populate list
             foreach (EntityRequiredSkill requiredSkill in m_EveItem.RequiredSkills)
             {
                 skillsToAdd.Add(new Pair<string, int>(requiredSkill.Name, requiredSkill.Level));
             }
-            m_Plan.PlanSetTo(skillsToAdd, m_EveItem.Name, true);
-            updateDisplay();
-        }
 
+            // Update plan
+            m_Plan.PlanSetTo(skillsToAdd, m_EveItem.Name, true);
+
+            // Refresh display to reflect plan changes
+            UpdateDisplay();
+        }
+        /// <summary>
+        /// Event handler for treenode double click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tvSkillList_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            // Get selected node
             TreeNode thisNode = e.Node as TreeNode;
-            if (thisNode.Tag == null) return;
-            NewPlannerWindow pw = m_Plan.PlannerWindow.Target as NewPlannerWindow;
-            pw.ShowSkillInTree(thisNode.Tag as Skill);
+
+            // Make sure we have a skill to use
+            if (thisNode.Tag != null)
+            {
+                // Open skill browser tab for this skill
+                NewPlannerWindow pw = m_Plan.PlannerWindow.Target as NewPlannerWindow;
+                pw.ShowSkillInTree(thisNode.Tag as Skill);
+            }
         }
+        #endregion
 
     }
 
     /// <summary>
-    /// ReqSkillsTreeView class
-    /// Derived from TreeView
-    /// Overrides standard node double click behaviour to prevent node expand / collapse actions
+    /// Derived from TreeView class
+    /// <para>Overrides standard node double click behaviour to prevent node expand / collapse actions</para>
     /// </summary>
     class ReqSkillsTreeView : TreeView
     {
         private const int WM_LBUTTONDBLCLK = 0x203;
-        
+
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WM_LBUTTONDBLCLK)
@@ -174,5 +232,5 @@ namespace EVEMon.SkillPlanner
             }
         }
     }
-    
+
 }

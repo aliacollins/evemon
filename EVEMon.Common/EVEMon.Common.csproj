@@ -63,6 +63,18 @@
       <DependentUpon>BusyDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CCPApiError.cs" />
+    <Compile Include="EveImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EveImage.Designer.cs">
+      <DependentUpon>EveImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EveImagePopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EveImagePopUp.Designer.cs">
+      <DependentUpon>EveImagePopUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="SerializableCharacterSheet.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -101,6 +113,9 @@
     </Compile>
     <Compile Include="SplitButton.designer.cs">
       <DependentUpon>SplitButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SplitContainerMinFixed.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="StaticSkill.cs" />
     <Compile Include="StaticSkillGroup.cs" />
@@ -150,6 +165,14 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Collapse_large.png" />
+    <EmbeddedResource Include="EveImage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EveImagePopUp.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveImagePopUp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TreeView.resx">
       <DependentUpon>TreeView.cs</DependentUpon>
       <SubType>Designer</SubType>

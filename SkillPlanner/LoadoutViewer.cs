@@ -183,6 +183,7 @@ namespace EVEMon.SkillPlanner
         }
 
         private TreeNode m_OldSelectNode;
+        // Thankyou MSDN for the following!
         private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             // Show menu only if the right mouse button is clicked.

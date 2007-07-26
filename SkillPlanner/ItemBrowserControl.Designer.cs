@@ -33,26 +33,36 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.itemSelectControl1 = new EVEMon.SkillPlanner.ItemSelectControl();
             this.lblHelp = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.splDetails = new EVEMon.Common.SplitContainerMinFixed();
+            this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.lvItemProperties = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblItemSkillC = new System.Windows.Forms.LinkLabel();
-            this.lblItemSkillB = new System.Windows.Forms.LinkLabel();
-            this.lblItemSkillA = new System.Windows.Forms.LinkLabel();
-            this.btnItemSkillsAdd = new System.Windows.Forms.Button();
-            this.lblItemTimeRequired = new System.Windows.Forms.Label();
-            this.lblItemName = new System.Windows.Forms.Label();
+            this.splDetailsRight = new EVEMon.Common.SplitContainerMinFixed();
+            this.gbDescription = new System.Windows.Forms.GroupBox();
+            this.tbDescription = new System.Windows.Forms.TextBox();
+            this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
+            this.requiredSkillsControl = new EVEMon.SkillPlanner.RequiredSkillsControl();
+            this.pnlHeader = new System.Windows.Forms.Panel();
+            this.eveImage = new EVEMon.Common.EveImage();
             this.lblItemCategory = new System.Windows.Forms.Label();
-            this.pbItemIcon = new System.Windows.Forms.PictureBox();
-            this.lblItemDescription = new System.Windows.Forms.Label();
+            this.lblItemName = new System.Windows.Forms.Label();
             this.ttItem = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbItemIcon)).BeginInit();
+            this.panel3.SuspendLayout();
+            this.splDetails.Panel1.SuspendLayout();
+            this.splDetails.Panel2.SuspendLayout();
+            this.splDetails.SuspendLayout();
+            this.gbAttributes.SuspendLayout();
+            this.splDetailsRight.Panel1.SuspendLayout();
+            this.splDetailsRight.Panel2.SuspendLayout();
+            this.splDetailsRight.SuspendLayout();
+            this.gbDescription.SuspendLayout();
+            this.gbRequiredSkills.SuspendLayout();
+            this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -70,13 +80,7 @@ namespace EVEMon.SkillPlanner
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.lblHelp);
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Panel2.Controls.Add(this.lvItemProperties);
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Panel2.Controls.Add(this.lblItemName);
-            this.splitContainer1.Panel2.Controls.Add(this.lblItemCategory);
-            this.splitContainer1.Panel2.Controls.Add(this.pbItemIcon);
-            this.splitContainer1.Panel2.Controls.Add(this.lblItemDescription);
+            this.splitContainer1.Panel2.Controls.Add(this.panel3);
             this.splitContainer1.RememberDistanceKey = null;
             this.splitContainer1.Size = new System.Drawing.Size(650, 413);
             this.splitContainer1.SplitterDistance = 163;
@@ -108,26 +112,57 @@ namespace EVEMon.SkillPlanner
             this.lblHelp.Text = resources.GetString("lblHelp.Text");
             this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel1
+            // panel3
             // 
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(387, 86);
-            this.panel1.TabIndex = 11;
+            this.panel3.Controls.Add(this.splDetails);
+            this.panel3.Controls.Add(this.pnlHeader);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(482, 413);
+            this.panel3.TabIndex = 14;
+            // 
+            // splDetails
+            // 
+            this.splDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splDetails.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splDetails.Location = new System.Drawing.Point(0, 70);
+            this.splDetails.Name = "splDetails";
+            // 
+            // splDetails.Panel1
+            // 
+            this.splDetails.Panel1.Controls.Add(this.gbAttributes);
+            // 
+            // splDetails.Panel2
+            // 
+            this.splDetails.Panel2.Controls.Add(this.splDetailsRight);
+            this.splDetails.Panel2MinSize = 240;
+            this.splDetails.Size = new System.Drawing.Size(482, 343);
+            this.splDetails.SplitterDistance = 238;
+            this.splDetails.TabIndex = 12;
+            // 
+            // gbAttributes
+            // 
+            this.gbAttributes.Controls.Add(this.lvItemProperties);
+            this.gbAttributes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbAttributes.Location = new System.Drawing.Point(0, 0);
+            this.gbAttributes.Name = "gbAttributes";
+            this.gbAttributes.Size = new System.Drawing.Size(238, 343);
+            this.gbAttributes.TabIndex = 15;
+            this.gbAttributes.TabStop = false;
+            this.gbAttributes.Text = "Attributes";
             // 
             // lvItemProperties
             // 
-            this.lvItemProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lvItemProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.lvItemProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvItemProperties.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lvItemProperties.FullRowSelect = true;
-            this.lvItemProperties.Location = new System.Drawing.Point(3, 73);
+            this.lvItemProperties.Location = new System.Drawing.Point(3, 16);
             this.lvItemProperties.Name = "lvItemProperties";
-            this.lvItemProperties.Size = new System.Drawing.Size(202, 337);
+            this.lvItemProperties.Size = new System.Drawing.Size(232, 324);
             this.lvItemProperties.TabIndex = 8;
             this.lvItemProperties.UseCompatibleStateImageBehavior = false;
             this.lvItemProperties.View = System.Windows.Forms.View.Details;
@@ -142,75 +177,102 @@ namespace EVEMon.SkillPlanner
             this.columnHeader2.Text = "Value";
             this.columnHeader2.Width = 140;
             // 
-            // groupBox2
+            // splDetailsRight
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.lblItemSkillC);
-            this.groupBox2.Controls.Add(this.lblItemSkillB);
-            this.groupBox2.Controls.Add(this.lblItemSkillA);
-            this.groupBox2.Controls.Add(this.btnItemSkillsAdd);
-            this.groupBox2.Controls.Add(this.lblItemTimeRequired);
-            this.groupBox2.Location = new System.Drawing.Point(212, 291);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(268, 119);
-            this.groupBox2.TabIndex = 9;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Required Skills";
+            this.splDetailsRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splDetailsRight.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splDetailsRight.Location = new System.Drawing.Point(0, 0);
+            this.splDetailsRight.Name = "splDetailsRight";
+            this.splDetailsRight.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // lblItemSkillC
+            // splDetailsRight.Panel1
             // 
-            this.lblItemSkillC.AutoSize = true;
-            this.lblItemSkillC.Location = new System.Drawing.Point(15, 48);
-            this.lblItemSkillC.Name = "lblItemSkillC";
-            this.lblItemSkillC.Size = new System.Drawing.Size(55, 13);
-            this.lblItemSkillC.TabIndex = 12;
-            this.lblItemSkillC.TabStop = true;
-            this.lblItemSkillC.Text = "linkLabel1";
-            this.lblItemSkillC.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
-            this.lblItemSkillC.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
+            this.splDetailsRight.Panel1.Controls.Add(this.gbDescription);
             // 
-            // lblItemSkillB
+            // splDetailsRight.Panel2
             // 
-            this.lblItemSkillB.AutoSize = true;
-            this.lblItemSkillB.Location = new System.Drawing.Point(15, 35);
-            this.lblItemSkillB.Name = "lblItemSkillB";
-            this.lblItemSkillB.Size = new System.Drawing.Size(55, 13);
-            this.lblItemSkillB.TabIndex = 11;
-            this.lblItemSkillB.TabStop = true;
-            this.lblItemSkillB.Text = "linkLabel1";
-            this.lblItemSkillB.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
-            this.lblItemSkillB.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
+            this.splDetailsRight.Panel2.Controls.Add(this.gbRequiredSkills);
+            this.splDetailsRight.Panel2MinSize = 120;
+            this.splDetailsRight.Size = new System.Drawing.Size(240, 343);
+            this.splDetailsRight.SplitterDistance = 218;
+            this.splDetailsRight.TabIndex = 0;
             // 
-            // lblItemSkillA
+            // gbDescription
             // 
-            this.lblItemSkillA.AutoSize = true;
-            this.lblItemSkillA.Location = new System.Drawing.Point(15, 22);
-            this.lblItemSkillA.Name = "lblItemSkillA";
-            this.lblItemSkillA.Size = new System.Drawing.Size(55, 13);
-            this.lblItemSkillA.TabIndex = 10;
-            this.lblItemSkillA.TabStop = true;
-            this.lblItemSkillA.Text = "linkLabel1";
-            this.lblItemSkillA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblItemSkillA_LinkClicked);
-            this.lblItemSkillA.MouseHover += new System.EventHandler(this.lblItemSkill_MouseHover);
+            this.gbDescription.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbDescription.Controls.Add(this.tbDescription);
+            this.gbDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbDescription.Location = new System.Drawing.Point(0, 0);
+            this.gbDescription.Name = "gbDescription";
+            this.gbDescription.Size = new System.Drawing.Size(240, 218);
+            this.gbDescription.TabIndex = 14;
+            this.gbDescription.TabStop = false;
+            this.gbDescription.Text = "Description";
             // 
-            // btnItemSkillsAdd
+            // tbDescription
             // 
-            this.btnItemSkillsAdd.Location = new System.Drawing.Point(130, 87);
-            this.btnItemSkillsAdd.Name = "btnItemSkillsAdd";
-            this.btnItemSkillsAdd.Size = new System.Drawing.Size(129, 23);
-            this.btnItemSkillsAdd.TabIndex = 9;
-            this.btnItemSkillsAdd.Text = "Add Skills to Plan";
-            this.btnItemSkillsAdd.UseVisualStyleBackColor = true;
-            this.btnItemSkillsAdd.Click += new System.EventHandler(this.btnItemSkillsAdd_Click);
+            this.tbDescription.BackColor = System.Drawing.SystemColors.Window;
+            this.tbDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbDescription.Location = new System.Drawing.Point(3, 16);
+            this.tbDescription.Multiline = true;
+            this.tbDescription.Name = "tbDescription";
+            this.tbDescription.ReadOnly = true;
+            this.tbDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbDescription.Size = new System.Drawing.Size(234, 199);
+            this.tbDescription.TabIndex = 0;
             // 
-            // lblItemTimeRequired
+            // gbRequiredSkills
             // 
-            this.lblItemTimeRequired.AutoSize = true;
-            this.lblItemTimeRequired.Location = new System.Drawing.Point(15, 70);
-            this.lblItemTimeRequired.Name = "lblItemTimeRequired";
-            this.lblItemTimeRequired.Size = new System.Drawing.Size(79, 13);
-            this.lblItemTimeRequired.TabIndex = 8;
-            this.lblItemTimeRequired.Text = "Time Required:";
+            this.gbRequiredSkills.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbRequiredSkills.Controls.Add(this.requiredSkillsControl);
+            this.gbRequiredSkills.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbRequiredSkills.Location = new System.Drawing.Point(0, 0);
+            this.gbRequiredSkills.Name = "gbRequiredSkills";
+            this.gbRequiredSkills.Size = new System.Drawing.Size(240, 121);
+            this.gbRequiredSkills.TabIndex = 13;
+            this.gbRequiredSkills.TabStop = false;
+            this.gbRequiredSkills.Text = "Required Skills";
+            // 
+            // requiredSkillsControl
+            // 
+            this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.requiredSkillsControl.EveItem = null;
+            this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
+            this.requiredSkillsControl.Name = "requiredSkillsControl";
+            this.requiredSkillsControl.Plan = null;
+            this.requiredSkillsControl.Size = new System.Drawing.Size(234, 102);
+            this.requiredSkillsControl.TabIndex = 12;
+            // 
+            // pnlHeader
+            // 
+            this.pnlHeader.Controls.Add(this.eveImage);
+            this.pnlHeader.Controls.Add(this.lblItemCategory);
+            this.pnlHeader.Controls.Add(this.lblItemName);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Size = new System.Drawing.Size(482, 70);
+            this.pnlHeader.TabIndex = 11;
+            // 
+            // eveImage
+            // 
+            this.eveImage.EveItem = null;
+            this.eveImage.ImageSize = EVEMon.Common.EveImage.EveImageSize._64_64;
+            this.eveImage.Location = new System.Drawing.Point(3, 3);
+            this.eveImage.Name = "eveImage";
+            this.eveImage.PopUpEnabled = true;
+            this.eveImage.Size = new System.Drawing.Size(64, 64);
+            this.eveImage.TabIndex = 8;
+            // 
+            // lblItemCategory
+            // 
+            this.lblItemCategory.AutoSize = true;
+            this.lblItemCategory.Location = new System.Drawing.Point(70, 3);
+            this.lblItemCategory.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.lblItemCategory.Name = "lblItemCategory";
+            this.lblItemCategory.Size = new System.Drawing.Size(35, 13);
+            this.lblItemCategory.TabIndex = 6;
+            this.lblItemCategory.Text = "label2";
             // 
             // lblItemName
             // 
@@ -223,34 +285,6 @@ namespace EVEMon.SkillPlanner
             this.lblItemName.TabIndex = 7;
             this.lblItemName.Text = "label3";
             // 
-            // lblItemCategory
-            // 
-            this.lblItemCategory.AutoSize = true;
-            this.lblItemCategory.Location = new System.Drawing.Point(70, 3);
-            this.lblItemCategory.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.lblItemCategory.Name = "lblItemCategory";
-            this.lblItemCategory.Size = new System.Drawing.Size(35, 13);
-            this.lblItemCategory.TabIndex = 6;
-            this.lblItemCategory.Text = "label2";
-            // 
-            // pbItemIcon
-            // 
-            this.pbItemIcon.Location = new System.Drawing.Point(3, 3);
-            this.pbItemIcon.Name = "pbItemIcon";
-            this.pbItemIcon.Size = new System.Drawing.Size(64, 64);
-            this.pbItemIcon.TabIndex = 5;
-            this.pbItemIcon.TabStop = false;
-            // 
-            // lblItemDescription
-            // 
-            this.lblItemDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblItemDescription.Location = new System.Drawing.Point(212, 73);
-            this.lblItemDescription.Name = "lblItemDescription";
-            this.lblItemDescription.Size = new System.Drawing.Size(268, 215);
-            this.lblItemDescription.TabIndex = 10;
-            this.lblItemDescription.Text = "label1";
-            // 
             // ItemBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,14 +292,25 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.splitContainer1);
             this.Name = "ItemBrowserControl";
             this.Size = new System.Drawing.Size(650, 413);
+            this.VisibleChanged += new System.EventHandler(this.ItemBrowserControl_VisibleChanged);
             this.Load += new System.EventHandler(this.ItemBrowserControl_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbItemIcon)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.splDetails.Panel1.ResumeLayout(false);
+            this.splDetails.Panel2.ResumeLayout(false);
+            this.splDetails.ResumeLayout(false);
+            this.gbAttributes.ResumeLayout(false);
+            this.splDetailsRight.Panel1.ResumeLayout(false);
+            this.splDetailsRight.Panel2.ResumeLayout(false);
+            this.splDetailsRight.ResumeLayout(false);
+            this.gbDescription.ResumeLayout(false);
+            this.gbDescription.PerformLayout();
+            this.gbRequiredSkills.ResumeLayout(false);
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -273,22 +318,23 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private EVEMon.SkillPlanner.PersistentSplitContainer splitContainer1;
-        private System.Windows.Forms.Label lblItemDescription;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblItemName;
         private System.Windows.Forms.Label lblItemCategory;
-        private System.Windows.Forms.PictureBox pbItemIcon;
-        private System.Windows.Forms.Button btnItemSkillsAdd;
-        private System.Windows.Forms.Label lblItemTimeRequired;
         private System.Windows.Forms.ListView lvItemProperties;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private ItemSelectControl itemSelectControl1;
-        private System.Windows.Forms.LinkLabel lblItemSkillA;
-        private System.Windows.Forms.LinkLabel lblItemSkillC;
-        private System.Windows.Forms.LinkLabel lblItemSkillB;
         private System.Windows.Forms.ToolTip ttItem;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblHelp;
+        private RequiredSkillsControl requiredSkillsControl;
+        private System.Windows.Forms.GroupBox gbRequiredSkills;
+        private System.Windows.Forms.GroupBox gbDescription;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.GroupBox gbAttributes;
+        private System.Windows.Forms.TextBox tbDescription;
+        private EVEMon.Common.SplitContainerMinFixed splDetails;
+        private EVEMon.Common.SplitContainerMinFixed splDetailsRight;
+        private EVEMon.Common.EveImage eveImage;
     }
 }
