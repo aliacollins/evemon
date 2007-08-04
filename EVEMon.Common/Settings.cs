@@ -1003,6 +1003,219 @@ namespace EVEMon.Common
 
         #endregion
 
+        #region Settings Form - Calendar
+
+        public enum ColorFormat
+        {
+            NamedColor,
+            ARGBColor
+        }
+
+        public string SerializeColor(Color color)
+        {
+            if (color.IsNamedColor)
+                return string.Format("{0}:{1}",
+                    ColorFormat.NamedColor, color.Name);
+            else
+                return string.Format("{0}:{1}:{2}:{3}:{4}",
+                    ColorFormat.ARGBColor,
+                    color.A, color.R, color.G, color.B);
+        }
+
+        public Color DeserializeColor(string color)
+        {
+            byte a, r, g, b;
+
+            string[] pieces = color.Split(new char[] { ':' });
+
+            ColorFormat colorType = (ColorFormat)Enum.Parse(typeof(ColorFormat), pieces[0], true);
+
+            switch (colorType)
+            {
+                case ColorFormat.NamedColor:
+                    return Color.FromName(pieces[1]);
+
+                case ColorFormat.ARGBColor:
+                    a = byte.Parse(pieces[1]);
+                    r = byte.Parse(pieces[2]);
+                    g = byte.Parse(pieces[3]);
+                    b = byte.Parse(pieces[4]);
+
+                    return Color.FromArgb(a, r, g, b);
+            }
+            return Color.Empty;
+        }
+
+        private Color m_calendar_text = Color.White;
+
+        [XmlIgnore]
+        public Color CalendarTextColor
+        {
+            get { return m_calendar_text; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_text = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarTextColor")]
+        public string XmlCalendarTextColor
+        {
+            get
+            {
+                return SerializeColor(m_calendar_text);
+            }
+            set
+            {
+                m_calendar_text = DeserializeColor(value);
+            }
+        }
+
+        private Color m_calendar_blocking = Color.Red;
+
+        [XmlIgnore]
+        public Color CalendarBlockingColor
+        {
+            get { return m_calendar_blocking; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_blocking = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarBlockingColor")]
+        public string XmlCalendarBlockingColor
+        {
+            get
+            {
+                return SerializeColor(m_calendar_blocking);
+            }
+            set
+            {
+                m_calendar_blocking = DeserializeColor(value);
+            }
+        }
+
+        private Color m_calendar_single1 = Color.Blue;
+
+        [XmlIgnore]
+        public Color CalendarSingle1
+        {
+            get { return m_calendar_single1; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_single1 = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarSingle1")]
+        public string XmlCalendarSingle1
+        {
+            get
+            {
+                return SerializeColor(m_calendar_single1);
+            }
+            set
+            {
+                m_calendar_single1 = DeserializeColor(value);
+            }
+        }
+
+        private Color m_calendar_single2 = Color.LightBlue;
+
+        [XmlIgnore]
+        public Color CalendarSingle2
+        {
+            get { return m_calendar_single2; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_single2 = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarCalendarSingle2")]
+        public string XmlCalendarSingle2
+        {
+            get
+            {
+                return SerializeColor(m_calendar_single2);
+            }
+            set
+            {
+                m_calendar_single2 = DeserializeColor(value);
+            }
+        }
+
+        private Color m_calendar_recurring1 = Color.Green;
+
+        [XmlIgnore]
+        public Color CalendarRecurring1
+        {
+            get { return m_calendar_recurring1; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_recurring1 = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarRecurring1")]
+        public string XmlCalendarRecurring1
+        {
+            get
+            {
+                return SerializeColor(m_calendar_recurring1);
+            }
+            set
+            {
+                m_calendar_recurring1 = DeserializeColor(value);
+            }
+        }
+
+        private Color m_calendar_recurring2 = Color.LightGreen;
+
+        [XmlIgnore]
+        public Color CalendarRecurring2
+        {
+            get { return m_calendar_recurring2; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendar_recurring2 = value;
+                }
+            }
+        }
+
+        [XmlElement("CalendarRecurring2")]
+        public string XmlCalendarRecurring2
+        {
+            get
+            {
+                return SerializeColor(m_calendar_recurring2);
+            }
+            set
+            {
+                m_calendar_recurring2 = DeserializeColor(value);
+            }
+        }
+
+        #endregion
+
         #region Plans
 
         // needs to be before plans.

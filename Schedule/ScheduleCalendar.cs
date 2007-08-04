@@ -18,6 +18,13 @@ namespace EVEMon.Schedule
             set { smallFont = value; }
         }
 
+        protected Color text_color = Color.White;
+        public Color TextColor
+        {
+            get { return text_color; }
+            set { text_color = value; }
+        }
+
         protected Color blocking_color = Color.Red;
         public Color BlockingColor
         {
@@ -124,7 +131,7 @@ namespace EVEMon.Schedule
                             if (textsize.Width <= rect.Width)
                             {
                                 g.FillRectangle(fillBrush, rect);
-                                TextRenderer.DrawText(g, entry.Title, smallFont, new Point(rect.X + 1, rect.Y), Color.White);
+                                TextRenderer.DrawText(g, entry.Title, smallFont, new Point(rect.X + 1, rect.Y), text_color);
                             }
                             else
                             {
@@ -140,7 +147,7 @@ namespace EVEMon.Schedule
                                     }
                                 }
                                 g.FillRectangle(fillBrush, rect);
-                                TextRenderer.DrawText(g, shorttext, smallFont, new Point(rect.X + 1, rect.Y), Color.White);
+                                TextRenderer.DrawText(g, shorttext, smallFont, new Point(rect.X + 1, rect.Y), text_color);
                             }
                         }
                     }
@@ -164,7 +171,7 @@ namespace EVEMon.Schedule
                             if (textsize.Width <= rect.Width)
                             {
                                 g.FillRectangle(fillBrush, rect);
-                                TextRenderer.DrawText(g, entry.Title, smallFont, new Point(rect.X + 1, rect.Y), Color.White);
+                                TextRenderer.DrawText(g, entry.Title, smallFont, new Point(rect.X + 1, rect.Y), text_color);
                             }
                             else
                             {
@@ -180,7 +187,7 @@ namespace EVEMon.Schedule
                                     }
                                 }
                                 g.FillRectangle(fillBrush, rect);
-                                TextRenderer.DrawText(g, shorttext, smallFont, new Point(rect.X + 1, rect.Y), Color.White);
+                                TextRenderer.DrawText(g, shorttext, smallFont, new Point(rect.X + 1, rect.Y), text_color);
                             }
                         }
                     }

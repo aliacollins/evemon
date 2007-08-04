@@ -30,23 +30,23 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode28,
+            treeNode29,
+            treeNode30,
+            treeNode31,
+            treeNode32,
+            treeNode33,
+            treeNode34,
+            treeNode35});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -187,6 +187,18 @@ namespace EVEMon
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.numericStatusInterval = new System.Windows.Forms.NumericUpDown();
+            this.tabCalendar = new System.Windows.Forms.TabPage();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.panelColorText = new System.Windows.Forms.Panel();
+            this.label24 = new System.Windows.Forms.Label();
+            this.panelColorRecurring2 = new System.Windows.Forms.Panel();
+            this.panelColorRecurring1 = new System.Windows.Forms.Panel();
+            this.panelColorSingle2 = new System.Windows.Forms.Panel();
+            this.panelColorSingle1 = new System.Windows.Forms.Panel();
+            this.panelColorBlocking = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -194,8 +206,9 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.label20 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.tbConnectivityURL = new System.Windows.Forms.TextBox();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -254,6 +267,8 @@ namespace EVEMon
             this.gbTQSettings.SuspendLayout();
             this.tlpCustomTQSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).BeginInit();
+            this.tabCalendar.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -571,6 +586,7 @@ namespace EVEMon
             this.tabControl1.Controls.Add(this.tabNetwork);
             this.tabControl1.Controls.Add(this.tabAlerts);
             this.tabControl1.Controls.Add(this.tabUpdates);
+            this.tabControl1.Controls.Add(this.tabCalendar);
             this.tabControl1.Location = new System.Drawing.Point(6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1212,26 +1228,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode28.Name = "Node1";
+            treeNode28.Text = "Node1";
+            treeNode29.Name = "Node2";
+            treeNode29.Text = "Node2";
+            treeNode30.Name = "Node3";
+            treeNode30.Text = "Node3";
+            treeNode31.Name = "Node4";
+            treeNode31.Text = "Node4";
+            treeNode32.Name = "Node5";
+            treeNode32.Text = "Node5";
+            treeNode33.Name = "Node6";
+            treeNode33.Text = "Node6";
+            treeNode34.Name = "Node7";
+            treeNode34.Text = "Node7";
+            treeNode35.Name = "Node8";
+            treeNode35.Text = "Node8";
+            treeNode36.Name = "Node0";
+            treeNode36.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode36});
             this.tvlist.Size = new System.Drawing.Size(361, 90);
             this.tvlist.TabIndex = 9;
             // 
@@ -1820,7 +1836,7 @@ namespace EVEMon
             this.gbTQSettings.AutoSize = true;
             this.gbTQSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbTQSettings.Controls.Add(this.tbConnectivityURL);
-            this.gbTQSettings.Controls.Add(this.label20);
+            this.gbTQSettings.Controls.Add(this.label25);
             this.gbTQSettings.Controls.Add(this.cbShowTQBalloon);
             this.gbTQSettings.Controls.Add(this.tlpCustomTQSettings);
             this.gbTQSettings.Controls.Add(this.cbCustomTQSettings);
@@ -1962,6 +1978,137 @@ namespace EVEMon
             0,
             0});
             // 
+            // tabCalendar
+            // 
+            this.tabCalendar.Controls.Add(this.groupBox14);
+            this.tabCalendar.Location = new System.Drawing.Point(4, 22);
+            this.tabCalendar.Name = "tabCalendar";
+            this.tabCalendar.Size = new System.Drawing.Size(384, 506);
+            this.tabCalendar.TabIndex = 5;
+            this.tabCalendar.Text = "Calendar";
+            this.tabCalendar.UseVisualStyleBackColor = true;
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.panelColorText);
+            this.groupBox14.Controls.Add(this.label24);
+            this.groupBox14.Controls.Add(this.panelColorRecurring2);
+            this.groupBox14.Controls.Add(this.panelColorRecurring1);
+            this.groupBox14.Controls.Add(this.panelColorSingle2);
+            this.groupBox14.Controls.Add(this.panelColorSingle1);
+            this.groupBox14.Controls.Add(this.panelColorBlocking);
+            this.groupBox14.Controls.Add(this.label22);
+            this.groupBox14.Controls.Add(this.label21);
+            this.groupBox14.Controls.Add(this.label20);
+            this.groupBox14.Location = new System.Drawing.Point(3, 3);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(378, 113);
+            this.groupBox14.TabIndex = 1;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Scheduler Entry Colors:";
+            // 
+            // panelColorText
+            // 
+            this.panelColorText.BackColor = System.Drawing.Color.White;
+            this.panelColorText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorText.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorText.Location = new System.Drawing.Point(107, 15);
+            this.panelColorText.Name = "panelColorText";
+            this.panelColorText.Size = new System.Drawing.Size(43, 17);
+            this.panelColorText.TabIndex = 4;
+            this.panelColorText.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 19);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(33, 13);
+            this.label24.TabIndex = 5;
+            this.label24.Text = "Text:";
+            // 
+            // panelColorRecurring2
+            // 
+            this.panelColorRecurring2.BackColor = System.Drawing.Color.LightGreen;
+            this.panelColorRecurring2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorRecurring2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorRecurring2.Location = new System.Drawing.Point(156, 86);
+            this.panelColorRecurring2.Name = "panelColorRecurring2";
+            this.panelColorRecurring2.Size = new System.Drawing.Size(43, 17);
+            this.panelColorRecurring2.TabIndex = 4;
+            this.panelColorRecurring2.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorRecurring1
+            // 
+            this.panelColorRecurring1.BackColor = System.Drawing.Color.Green;
+            this.panelColorRecurring1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorRecurring1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorRecurring1.Location = new System.Drawing.Point(107, 86);
+            this.panelColorRecurring1.Name = "panelColorRecurring1";
+            this.panelColorRecurring1.Size = new System.Drawing.Size(43, 17);
+            this.panelColorRecurring1.TabIndex = 4;
+            this.panelColorRecurring1.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorSingle2
+            // 
+            this.panelColorSingle2.BackColor = System.Drawing.Color.LightBlue;
+            this.panelColorSingle2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorSingle2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorSingle2.Location = new System.Drawing.Point(156, 63);
+            this.panelColorSingle2.Name = "panelColorSingle2";
+            this.panelColorSingle2.Size = new System.Drawing.Size(43, 17);
+            this.panelColorSingle2.TabIndex = 4;
+            this.panelColorSingle2.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorSingle1
+            // 
+            this.panelColorSingle1.BackColor = System.Drawing.Color.Blue;
+            this.panelColorSingle1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorSingle1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorSingle1.Location = new System.Drawing.Point(107, 63);
+            this.panelColorSingle1.Name = "panelColorSingle1";
+            this.panelColorSingle1.Size = new System.Drawing.Size(43, 17);
+            this.panelColorSingle1.TabIndex = 4;
+            this.panelColorSingle1.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorBlocking
+            // 
+            this.panelColorBlocking.BackColor = System.Drawing.Color.Red;
+            this.panelColorBlocking.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorBlocking.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorBlocking.Location = new System.Drawing.Point(107, 38);
+            this.panelColorBlocking.Name = "panelColorBlocking";
+            this.panelColorBlocking.Size = new System.Drawing.Size(43, 17);
+            this.panelColorBlocking.TabIndex = 3;
+            this.panelColorBlocking.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 67);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(77, 13);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Simple Events:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 90);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(93, 13);
+            this.label21.TabIndex = 1;
+            this.label21.Text = "Recurring Events:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 42);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(85, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Blocking Events:";
+            // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -2022,14 +2169,14 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // label20
+            // label25
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 182);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(186, 13);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "URL to check for internet connection:";
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 182);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(186, 13);
+            this.label25.TabIndex = 7;
+            this.label25.Text = "URL to check for internet connection:";
             // 
             // tbConnectivityURL
             // 
@@ -2159,6 +2306,9 @@ namespace EVEMon
             this.tlpCustomTQSettings.ResumeLayout(false);
             this.tlpCustomTQSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).EndInit();
+            this.tabCalendar.ResumeLayout(false);
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
             this.ResumeLayout(false);
@@ -2316,5 +2466,18 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbHighlightPartialSkills;
         private System.Windows.Forms.TextBox tbConnectivityURL;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TabPage tabCalendar;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.Panel panelColorBlocking;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Panel panelColorRecurring2;
+        private System.Windows.Forms.Panel panelColorRecurring1;
+        private System.Windows.Forms.Panel panelColorSingle2;
+        private System.Windows.Forms.Panel panelColorSingle1;
+        private System.Windows.Forms.Panel panelColorText;
+        private System.Windows.Forms.Label label24;
     }
 }

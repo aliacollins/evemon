@@ -131,6 +131,15 @@ namespace EVEMon
             s.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
 
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
+
+            // Save Calendar Colors
+            m_settings.CalendarBlockingColor = panelColorBlocking.BackColor;
+            m_settings.CalendarRecurring1 = panelColorRecurring1.BackColor;
+            m_settings.CalendarRecurring2 = panelColorRecurring2.BackColor;
+            m_settings.CalendarSingle1 = panelColorSingle1.BackColor;
+            m_settings.CalendarSingle2 = panelColorSingle2.BackColor;
+            m_settings.CalendarTextColor = panelColorText.BackColor;
+
         }
 
         private void ShowErrorMessage(string caption, string message)
@@ -316,6 +325,14 @@ namespace EVEMon
             cbTooltipDisplay.Items.Add(" -- Custom -- ");
 
             tbTooltipString.Text = m_settings.TooltipString;
+
+            // Load Calendar Settings
+            panelColorBlocking.BackColor = m_settings.CalendarBlockingColor;
+            panelColorRecurring1.BackColor = m_settings.CalendarRecurring1;
+            panelColorRecurring2.BackColor = m_settings.CalendarRecurring2;
+            panelColorSingle1.BackColor = m_settings.CalendarSingle1;
+            panelColorSingle2.BackColor = m_settings.CalendarSingle2;
+            panelColorText.BackColor = m_settings.CalendarTextColor;
 
             // New bits to allow custom server/port options when checking the server status
             tbTQServerAddress.Text = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
@@ -730,6 +747,16 @@ namespace EVEMon
         private void cbTitleToTime_CheckedChanged(object sender, EventArgs e)
         {
             UpdateDisables();
+        }
+
+        private void colorPanel_Click(object sender, EventArgs e)
+        {
+            Panel color = (Panel)sender;
+            colorDialog.Color = color.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                color.BackColor = colorDialog.Color;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ namespace EVEMon.Schedule
         {
             InitializeComponent();
 
+            // Setup Balloon Tooltip for later use
             ttToolTip = new ToolTip();
             ttToolTip.IsBalloon = true;
             ttToolTip.UseAnimation = true;
@@ -193,6 +194,15 @@ namespace EVEMon.Schedule
             : this()
         {
             m_settings = s;
+
+            // Load Calendar Colors
+            calControl.BlockingColor = m_settings.CalendarBlockingColor;
+            calControl.RecurringColor = m_settings.CalendarRecurring1;
+            calControl.RecurringColor2 = m_settings.CalendarRecurring2;
+            calControl.SingleColor = m_settings.CalendarSingle1;
+            calControl.SingleColor2 = m_settings.CalendarSingle2;
+            calControl.TextColor = m_settings.CalendarTextColor;
+
             UpdateEntries();
         }
 
