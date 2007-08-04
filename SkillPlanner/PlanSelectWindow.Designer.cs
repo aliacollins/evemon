@@ -88,7 +88,7 @@ namespace EVEMon.SkillPlanner
             // 
             // ofdOpenDialog
             // 
-            this.ofdOpenDialog.Filter = "Plan Files (*.emp, *.xml)|*.xml;*.emp|All Files (*.*)|*.*";
+            this.ofdOpenDialog.Filter = "Plan Files (*.emp)|*.emp|Plan Files (*.xml)|*.xml|All Files (*.*)|*.*";
             this.ofdOpenDialog.Title = "Open Plan File";
             // 
             // panel1
@@ -322,7 +322,7 @@ namespace EVEMon.SkillPlanner
             this.miRename.Image = ((System.Drawing.Image)(resources.GetObject("miRename.Image")));
             this.miRename.Name = "miRename";
             this.miRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.miRename.Size = new System.Drawing.Size(152, 22);
+            this.miRename.Size = new System.Drawing.Size(143, 22);
             this.miRename.Text = "&Rename";
             this.miRename.Click += new System.EventHandler(this.miRename_Click);
             // 
@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
             this.miDelete.Image = ((System.Drawing.Image)(resources.GetObject("miDelete.Image")));
             this.miDelete.Name = "miDelete";
             this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.miDelete.Size = new System.Drawing.Size(152, 22);
+            this.miDelete.Size = new System.Drawing.Size(143, 22);
             this.miDelete.Text = "&Delete";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
