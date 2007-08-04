@@ -234,6 +234,19 @@ namespace EVEMon.SkillPlanner
             return Convert.ToDouble(value) * learningAdjust;
         }
 
+
+        public double EffectiveAttr(int value, EveAttributeScratchpad scratchpad)
+        {
+            int learningLevel = m_grandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
+            if (scratchpad != null)
+            {
+                learningLevel += scratchpad.LearningLevelBonus;
+            }
+
+            double learningAdjust = 1.0 + (0.02 * Convert.ToDouble(learningLevel));
+            return Convert.ToDouble(value) * learningAdjust;
+        }
+
         private void CalculatePlanTimes()
         {
             if (m_disablePlanCalc)
