@@ -679,6 +679,7 @@ namespace EVEMon.SkillPlanner
 
         private void cmSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+
             cmiCollapseSelected.Enabled = cmiExpandSelected.Enabled = (tvItems.SelectedNode.GetNodeCount(true) > 0);
             cmiPlanTo.Enabled = !cmiCollapseSelected.Enabled;
             if (tvItems.SelectedNode.GetNodeCount(true) == 0)
@@ -700,6 +701,20 @@ namespace EVEMon.SkillPlanner
 
             cmiExpandSelected.Text = "Expand " + aString;
             cmiCollapseSelected.Text = "Collapse " + aString;
+        }
+
+        private void cmListSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (this.SelectedSkill == null)
+            {
+                e.Cancel = true;
+                return;
+            }
+            for (int i = 1; i <= cmiLvPlanTo.DropDownItems.Count; i++)
+            {
+                cmiLvPlanTo.DropDownItems[String.Format("tsmLevel{0}", i)].Enabled = m_plan.PlannedLevel(this.SelectedSkill) != i && this.SelectedSkill.Level < i;
+            }
+
         }
 
         private void levelToolStripMenuItem_Click(object sender, EventArgs e)
