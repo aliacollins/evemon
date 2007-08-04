@@ -863,7 +863,13 @@ namespace EVEMon.Common
         public bool ShowTQBalloon
         {
             get { return m_showTQBalloon; }
-            set { m_showTQBalloon = value; }
+            set 
+            {
+                lock (mutexLock)
+                {
+                    m_showTQBalloon = value;
+                }
+            }
         }
         
         private int m_statusUpdateInterval = 5;
@@ -878,7 +884,20 @@ namespace EVEMon.Common
                 }
             }
         }
+        private string m_connectivityURL = "http://www.google.com";
 
+        public string ConnectivityURL
+        {
+            get { return m_connectivityURL; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_connectivityURL = value;
+                }
+            }
+        }
+	
         #endregion
 
         #region Settings Form - Events and Event Handlers

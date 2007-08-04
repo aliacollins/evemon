@@ -119,17 +119,18 @@ namespace EVEMon
             s.UseCustomTQCheckSettings = cbCustomTQSettings.Checked;
             s.ShowTQBalloon = cbShowTQBalloon.Checked;
 
-            m_settings.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
-            m_settings.StatusUpdateInterval = (int)numericStatusInterval.Value;
+            s.CheckTranquilityStatus = cbCheckTranquilityStatus.Checked;
+            s.StatusUpdateInterval = (int)numericStatusInterval.Value;
+            s.ConnectivityURL = tbConnectivityURL.Text;
 
-            m_settings.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
+            s.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
 
-            m_settings.DeleteCharacterSilently = cbDeleteCharactersSilently.Checked;
-            m_settings.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
+            s.DeleteCharacterSilently = cbDeleteCharactersSilently.Checked;
+            s.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
 
-            m_settings.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
+            s.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
 
-            m_settings.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
+            s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
         }
 
         private void ShowErrorMessage(string caption, string message)
@@ -324,6 +325,7 @@ namespace EVEMon
             // If we're using custom TQ settings enable the groupbox and hence the options
             tlpCustomTQSettings.Enabled = cbCustomTQSettings.Checked;
             cbShowTQBalloon.Checked = m_settings.ShowTQBalloon;
+            tbConnectivityURL.Text  = m_settings.ConnectivityURL;
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
             if (rk != null && rk.GetValue("EVEMon") == null)
@@ -389,6 +391,7 @@ namespace EVEMon
             numericStatusInterval.Enabled = cbCheckTranquilityStatus.Checked;
             cbShowTQBalloon.Enabled = cbCheckTranquilityStatus.Checked;
             cbCustomTQSettings.Enabled = cbCheckTranquilityStatus.Checked;
+            tbConnectivityURL.Enabled = cbCheckTranquilityStatus.Checked;
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
         }

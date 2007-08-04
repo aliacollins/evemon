@@ -121,6 +121,7 @@ namespace EVEMon
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
             this.cbHighlightPrerequisites = new System.Windows.Forms.CheckBox();
             this.cbHighlightConflicts = new System.Windows.Forms.CheckBox();
+            this.cbHighlightPartialSkills = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel14 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -193,7 +194,8 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.cbHighlightPartialSkills = new System.Windows.Forms.CheckBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tbConnectivityURL = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -1145,6 +1147,16 @@ namespace EVEMon
             this.cbHighlightConflicts.Text = "Show Schedule Conflicts";
             this.cbHighlightConflicts.UseVisualStyleBackColor = true;
             // 
+            // cbHighlightPartialSkills
+            // 
+            this.cbHighlightPartialSkills.AutoSize = true;
+            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(160, 26);
+            this.cbHighlightPartialSkills.Name = "cbHighlightPartialSkills";
+            this.cbHighlightPartialSkills.Size = new System.Drawing.Size(172, 17);
+            this.cbHighlightPartialSkills.TabIndex = 10;
+            this.cbHighlightPartialSkills.Text = "Highlight Partially Trained Skills";
+            this.cbHighlightPartialSkills.UseVisualStyleBackColor = true;
+            // 
             // flowLayoutPanel14
             // 
             this.flowLayoutPanel14.AutoSize = true;
@@ -1645,14 +1657,14 @@ namespace EVEMon
             // 
             // flowLayoutPanel11
             // 
+            this.flowLayoutPanel11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel11.Controls.Add(this.groupBox8);
             this.flowLayoutPanel11.Controls.Add(this.groupBox9);
             this.flowLayoutPanel11.Controls.Add(this.gbTQSettings);
-            this.flowLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel11.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel11.Name = "flowLayoutPanel11";
-            this.flowLayoutPanel11.Size = new System.Drawing.Size(378, 500);
+            this.flowLayoutPanel11.Size = new System.Drawing.Size(378, 481);
             this.flowLayoutPanel11.TabIndex = 9;
             // 
             // groupBox8
@@ -1807,6 +1819,8 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTQSettings.AutoSize = true;
             this.gbTQSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbTQSettings.Controls.Add(this.tbConnectivityURL);
+            this.gbTQSettings.Controls.Add(this.label20);
             this.gbTQSettings.Controls.Add(this.cbShowTQBalloon);
             this.gbTQSettings.Controls.Add(this.tlpCustomTQSettings);
             this.gbTQSettings.Controls.Add(this.cbCustomTQSettings);
@@ -1816,7 +1830,7 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
             this.gbTQSettings.Location = new System.Drawing.Point(3, 193);
             this.gbTQSettings.Name = "gbTQSettings";
-            this.gbTQSettings.Size = new System.Drawing.Size(373, 187);
+            this.gbTQSettings.Size = new System.Drawing.Size(373, 220);
             this.gbTQSettings.TabIndex = 8;
             this.gbTQSettings.TabStop = false;
             this.gbTQSettings.Text = "Tranquility Status";
@@ -2008,15 +2022,22 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // cbHighlightPartialSkills
+            // label20
             // 
-            this.cbHighlightPartialSkills.AutoSize = true;
-            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(160, 26);
-            this.cbHighlightPartialSkills.Name = "cbHighlightPartialSkills";
-            this.cbHighlightPartialSkills.Size = new System.Drawing.Size(172, 17);
-            this.cbHighlightPartialSkills.TabIndex = 10;
-            this.cbHighlightPartialSkills.Text = "Highlight Partially Trained Skills";
-            this.cbHighlightPartialSkills.UseVisualStyleBackColor = true;
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 182);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(186, 13);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "URL to check for internet connection:";
+            // 
+            // tbConnectivityURL
+            // 
+            this.tbConnectivityURL.Location = new System.Drawing.Point(195, 179);
+            this.tbConnectivityURL.Name = "tbConnectivityURL";
+            this.tbConnectivityURL.Size = new System.Drawing.Size(172, 21);
+            this.tbConnectivityURL.TabIndex = 8;
+            this.tbConnectivityURL.Text = "http://www.google.com";
             // 
             // SettingsForm
             // 
@@ -2293,5 +2314,7 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbSkillInTitle;
         private System.Windows.Forms.CheckBox cbHighlightConflicts;
         private System.Windows.Forms.CheckBox cbHighlightPartialSkills;
+        private System.Windows.Forms.TextBox tbConnectivityURL;
+        private System.Windows.Forms.Label label20;
     }
 }

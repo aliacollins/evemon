@@ -78,6 +78,7 @@ namespace EVEMon
                 {
                     server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
                 }
+                server.StartTQChecks();
             }
             if (startMinimized)
             {
@@ -229,7 +230,7 @@ namespace EVEMon
         void m_settings_ShowTQBalloonChanged(object sender, EventArgs e)
         {
             EveServer server = EveServer.GetInstance();
-            if (m_settings.ShowTQBalloon)
+            if (m_settings.CheckTranquilityStatus && m_settings.ShowTQBalloon)
             {
                 server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
             }
@@ -241,14 +242,21 @@ namespace EVEMon
 
         void m_settings_CheckTranquilityStatusChanged(object sender, EventArgs e)
         {
+            EveServer server = EveServer.GetInstance();
             if (m_settings.CheckTranquilityStatus)
             {
-                tmrTranquilityClock.Interval = 1;
-                UpdateStatusLabel();
+                server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
+                if (m_settings.ShowTQBalloon)
+                {
+                    server.ServerStatusChanged += new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
+                }
+                server.StartTQChecks();
             }
             else
             {
-                UpdateStatusLabel();
+                server.StopTQChecks();
+                server.ServerStatusUpdated -= new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
+                server.ServerStatusChanged -= new EventHandler<EveServerEventArgs>(ShowServerStatusBalloon);
             }
         }
 
@@ -897,7 +905,10 @@ namespace EVEMon
 
         public void ShowBalloonTip(string iconTitle, string title, string message, ToolTipIcon icon)
         {
-            EveServer.GetInstance().PendingAlerts = true;
+            if (m_settings.CheckTranquilityStatus)
+            {
+                EveServer.GetInstance().PendingAlerts = true;
+            }
             niAlertIcon.Text = iconTitle;
             niAlertIcon.BalloonTipTitle = title;
             niAlertIcon.BalloonTipText = message;
@@ -963,7 +974,7 @@ namespace EVEMon
                 tmrAlertRefresh.Enabled = false;
                 //  always show the completed skils box if multiple skills have completed
                 // otherwise user sees a "multiple skills completed, click for more info" message and the click does nothing!
-                if (EveServer.GetInstance().PendingAlerts && (m_settings.EnableSkillCompleteDialog || (m_completedSkills.Count > 1)))
+                if ((m_completedSkills.Count > 0  && m_settings.EnableSkillCompleteDialog) || m_completedSkills.Count > 1)
                 {
                     SkillCompleteDialog f = new SkillCompleteDialog(m_completedSkills);
                     f.FormClosed += delegate { f.Dispose(); };

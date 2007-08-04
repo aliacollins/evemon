@@ -46,7 +46,16 @@ namespace EVEMon.Common
         private Timer m_tmrCheck;
         private Timer m_tmrCountdown;
         private Settings m_settings;
+
+        /// <summary>
+        /// Fired whenever the TQ server changes state (e.g. goes offline, starting up, online etc.
+        /// </summary>
         public event EventHandler<EveServerEventArgs> ServerStatusChanged;
+        
+
+        /// <summary>
+        /// Fired every time we ping the TQ server status (update pilots online count etc)
+        /// </summary>
         public event EventHandler<EveServerEventArgs> ServerStatusUpdated;
 
         /*
@@ -55,41 +64,100 @@ namespace EVEMon.Common
         public static bool Starting { get { return (m_status == Status.Starting); } }
          */
 
+        /// <summary>
+        /// Gets the TQ Message (not currently used)
+        /// </summary>
         public string Motd { get { return m_motd; } }
 
+        /// <summary>
+        /// Gets the number of users online at the last update
+        /// </summary>
         public int Users { get { return m_users; } }
 
+
+        /// <summary>
+        /// Gets the number of seconds till TQ comes up (when server is in "Startup" state)
+        /// </summary>
         public int Countdown { get { return m_countdown; } }
 
+        /// <summary>
+        /// Is the balloon tip active?
+        /// </summary>
         public bool PendingAlerts
         {
             get { return m_pendingAlerts; }
             set { m_pendingAlerts = value; }
         }
 
+        /// <summary>
+        /// Gets the singleton instance of the TQ Server class.
+        /// ALSO STARTS THE TIMER IF THE REQUIRED
+        /// </summary>
+        /// <returns></returns>
         public static EveServer GetInstance()
         {
             if (m_instance == null)
             {
                 m_instance = new EveServer();
-                m_instance.Init();
+                m_instance.m_settings = Settings.GetInstance();
+                if (m_instance.m_settings.CheckTranquilityStatus)
+                {
+                    m_instance.StartTQChecks();
+                }
             }
             return m_instance;
         }
 
-        public void Init()
+        /// <summary>
+        /// Kick off the TQ status check timer - should be called at startup
+        /// and whenever user  enables Settings.CheckTranquilityStatus
+        /// </summary>
+        public void StartTQChecks()
         {
-            m_settings = Settings.GetInstance();
-            m_tmrCheck = new System.Timers.Timer(m_settings.StatusUpdateInterval * 60000);
+            if (m_tmrCheck == null)
+            {
+                m_tmrCheck = new System.Timers.Timer(m_settings.StatusUpdateInterval * 60000);
+            }
             m_tmrCheck.Elapsed += new ElapsedEventHandler(checkServerStatus);
             m_tmrCheck.Enabled = true;
-            m_tmrCountdown = new System.Timers.Timer(1000);
+            if (m_tmrCountdown == null)
+            {
+                m_tmrCountdown = new System.Timers.Timer(1000);
+            }
             m_tmrCountdown.Elapsed += new ElapsedEventHandler(tmrCountdown);
             m_tmrCountdown.Enabled = false;
-            checkServerStatus(m_instance, new EventArgs());
-            //            fetchMotd();
+            checkServerStatus(this, new EventArgs());
         }
 
+        /// <summary>
+        /// Stops the TQ status check - should be called whenever user disables
+        /// Settings.CheckTranquilityStatus
+        /// </summary>
+        public void StopTQChecks()
+        {
+            if (m_tmrCheck != null)
+            {
+                m_tmrCheck.Enabled = false;
+            }
+            if (m_tmrCountdown != null)
+            {
+                m_tmrCountdown.Enabled = false;
+            }
+
+            m_status = Status.Offline;
+            m_users = 0;
+
+            m_statusText = "// TQ Server Status Check Disabled";
+            if (ServerStatusUpdated != null)
+            {
+                ServerStatusUpdated(this, new EveServerEventArgs(m_statusText));
+            }
+
+        }
+
+        /// <summary>
+        /// Gets the TQ Message of the day (currently unused)
+        /// </summary>
         private void fetchMotd()
         {
             try
@@ -102,12 +170,18 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// When TQ is in "Start up" state, track the countdown
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tmrCountdown(object sender, EventArgs e)
         {
             m_tmrCountdown.Enabled = false;
 
             if (m_status == Status.Starting)
             {
+                // is countdown finished?
                 if (m_countdown == -1)
                 {
                     m_countdown = 0;
@@ -115,9 +189,12 @@ namespace EVEMon.Common
                     checkServerStatus(m_instance, new EventArgs());
                     return;
                 }
-                // counting down ...
+                // no - still counting down ...
                 setInformationText();
-                ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+                if (ServerStatusUpdated != null)
+                {
+                    ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
+                }
                 m_countdown -= 1;
             }
             m_tmrCountdown.Enabled = true;
@@ -125,6 +202,11 @@ namespace EVEMon.Common
 
         // Semaphore to flag whether we are in the middle of an async server test
         bool m_checkingServer = false;
+
+        /// <summary>
+        /// Called when we have data from TQ 
+        /// </summary>
+        /// <param name="ar"></param>
         private void ConnectCallback(IAsyncResult ar)
         {
             TcpClient conn = (TcpClient)ar.AsyncState;
@@ -214,7 +296,6 @@ namespace EVEMon.Common
                 return;
             }
 
-
             // check to see if we are recovering from loss of connection (timer was set to 30 seconds)
             if (m_tmrCheck.Interval == 30000)
             {
@@ -222,63 +303,58 @@ namespace EVEMon.Common
                 m_tmrCheck.Interval = m_settings.StatusUpdateInterval * 60000;
             }
 
-            // switch on the semaphore
-            m_checkingServer = true;
-
-            if (m_settings.CheckTranquilityStatus)
+            // check that we have a network connection
+            if (!InternetCS.IsConnectedToInternet(m_settings.ConnectivityURL))
             {
-                // check that we have a network connection
-                if (!InternetCS.IsConnectedToInternet())
-                {
-                    // oops, we've lost the network - reset timer to 30 seconds
-                    m_tmrCheck.Interval = 30000;
-                    m_statusText = "// Server Status Unknown";
-                    if (ServerStatusUpdated != null)
-                    {
-                        ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
-                    }
-                    // switch off the semaphore
-                    m_checkingServer = false;
-                    return;
-                }
+               // switch on the semaphore
+               m_checkingServer = true;
 
-                TcpClient conn = new TcpClient();
-                try
+                // oops, we've lost the network - reset timer to 30 seconds
+                m_tmrCheck.Interval = 30000;
+                m_statusText = "// TQ Server Status Unknown";
+                if (ServerStatusUpdated != null)
                 {
-                    // Set default port and ip - also perform final validation
-                    int serverPort = 26000;
-                    System.Net.IPAddress serverAddress = System.Net.IPAddress.Parse("87.237.38.200");
-
-                    // If the user selected port is valid use that one, maybe they hand edited the xml file and bypassed input validation
-                    if (int.TryParse(m_settings.CustomTQPort, out serverPort) && System.Net.IPAddress.TryParse(m_settings.CustomTQAddress, out serverAddress))
-                    {
-                        if (System.Diagnostics.Debugger.IsAttached)
-                        {
-                            System.Diagnostics.Debug.WriteLine("DEBUG: TQ check connecting to [" + serverAddress.ToString() + ":" + serverPort.ToString() + "]");
-                        }
-
-                        conn.BeginConnect(serverAddress.ToString(), serverPort, ConnectCallback, conn);
-                    }
-                    else
-                        throw new Exception("Invalid TQ server IP or port"); // Shouldn't ever get here
+                    ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
                 }
-                catch (Exception)
-                {
-                    conn.Close();
-                    m_status = Status.Offline;
-                    m_users = 0;
-                    // switch off the semaphore - the check failed
-                    m_checkingServer = false;
-                }
+                // switch off the semaphore
+                m_checkingServer = false;
+                return;
             }
-            else
+
+            TcpClient conn = new TcpClient();
+            try
             {
+                // Set default port and ip - also perform final validation
+                int serverPort = 26000;
+                System.Net.IPAddress serverAddress = System.Net.IPAddress.Parse("87.237.38.200");
+
+                // If the user selected port is valid use that one, maybe they hand edited the xml file and bypassed input validation
+                if (int.TryParse(m_settings.CustomTQPort, out serverPort) && System.Net.IPAddress.TryParse(m_settings.CustomTQAddress, out serverAddress))
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debug.WriteLine("DEBUG: TQ check connecting to [" + serverAddress.ToString() + ":" + serverPort.ToString() + "]");
+                    }
+
+                    conn.BeginConnect(serverAddress.ToString(), serverPort, ConnectCallback, conn);
+                }
+                else
+                    throw new Exception("Invalid TQ server IP or port"); // Shouldn't ever get here
+            }
+            catch (Exception)
+            {
+                conn.Close();
                 m_status = Status.Offline;
                 m_users = 0;
+                // switch off the semaphore - the check failed
+                m_checkingServer = false;
             }
         }
 
-        public void setInformationText()
+        /// <summary>
+        /// Set the message for TQ status
+        /// </summary>
+        private void setInformationText()
         {
             if (m_status == Status.Online)
             {
@@ -301,17 +377,22 @@ namespace EVEMon.Common
         }
     }
 
+    /// <summary>
+    /// Class to determine if we have an internet connection
+    /// We use a different URL to eve-online in case eve-online is down
+    /// The server needs to be a big public server that is up 24/7/365 such as google.com
+    /// </summary>
     public class InternetCS
     {
         /// <summary>
-        /// Performs a HTTP request to http://google.com
+        /// Performs a HTTP request to a url (default is http://google.com)
         /// </summary>
         /// <returns>true if internet connection is working properly</returns>
-        public static bool IsConnectedToInternet()
+        public static bool IsConnectedToInternet(string url)
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://google.com");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
