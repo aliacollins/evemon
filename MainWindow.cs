@@ -788,6 +788,7 @@ namespace EVEMon
             }
             cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
             SetRemoveEnable();
+            CheckAccountTraining();
         }
 
         private void RemoveCharFileInfo(CharFileInfo cfi)
