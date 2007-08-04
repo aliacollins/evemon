@@ -61,6 +61,7 @@ namespace EVEMon
             slDevelopers.Add("Galideeth", "05");
             slDevelopers.Add("gareth", "05");
             slDevelopers.Add("gavinl", "05");
+            slDevelopers.Add("GoneWacko", "05");
             slDevelopers.Add("happyslinky", "05");
             slDevelopers.Add("justinian", "05");
             slDevelopers.Add("jdread", "05");

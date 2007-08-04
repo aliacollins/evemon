@@ -303,6 +303,9 @@ namespace EVEMon
                 LCD.cycle = Program.Settings.G15ACycle;
                 LCD.cycleint = Program.Settings.G15ACycleint;
 
+                // load the show time setting
+                LCD.showtime = Program.Settings.G15ShowTime;
+
                 // update our internal list
                 CharListUpdate();
             }

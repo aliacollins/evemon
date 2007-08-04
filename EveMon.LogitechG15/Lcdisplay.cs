@@ -54,6 +54,7 @@ namespace EVEMon.LogitechG15
             _btnstatehld = DateTime.Now;
             _cycletime = DateTime.Now.AddSeconds(10);
             _cycle = false;
+            _showtime = false;
             _COMPLETESTR = "Hotaru Nakayoshi\nhas finished learning skill\nHull Upgrades V";
             _leasttime = TimeSpan.FromTicks(DateTime.Now.Ticks);
         }
@@ -100,7 +101,7 @@ namespace EVEMon.LogitechG15
         /// Format for Character / Skill / Time mode. 
         /// Use [c] for character, [s] for skill name, and [t] for Time String
         /// </summary>
-        const string FORMAT_CHAR_SKILL_TIME_STRING = "[c] Training Status:\n[s]\n[t]";     
+        const string FORMAT_CHAR_SKILL_TIME_STRING = "[c]:\n[s]\n[t]";     
    
         private static Lcdisplay _singleInstance;
         private LCDInterface _LCD;
@@ -132,6 +133,7 @@ namespace EVEMon.LogitechG15
         private bool _cycle;
         private int _cycleint;
         private DateTime _cycletime;
+        private bool _showtime;
         private string _refreshchar;
         private bool _skillcchg;
         private ButtonDelegate _buttonDelegate;
@@ -145,6 +147,11 @@ namespace EVEMon.LogitechG15
         {
             get { return _cycleint; }
             set { _cycleint = value; }
+        }
+        public bool showtime
+        {
+            get { return _showtime; }
+            set { _showtime = value; }
         }
         public string refreshchar
         {
@@ -330,6 +337,15 @@ namespace EVEMon.LogitechG15
             _lcdGraphics.DrawString(_lines[1], _defaultFont, _defBrush, recLine2);
             _lcdGraphics.DrawString(_lines[2], _defaultFont, _defBrush, recLine3);
             _lcdGraphicsX.DrawString(perc, _defaultFont, _defBrush, recLine4);
+
+            if (showtime)
+            {
+                string curTime = DateTime.Now.ToString("T");
+                SizeF size = _lcdGraphics.MeasureString(curTime, _defaultFont);
+                RectangleF timeLine = new RectangleF(new PointF(160f - size.Width, 0f), size);
+                timeLine.Offset(0f, -1f);
+                _lcdGraphics.DrawString(curTime, _defaultFont, _defBrush, timeLine);
+            }
 
             //Pen test = ;
             //_lcdGraphics.DrawRectangle(test, 0, 0, 159, 10);

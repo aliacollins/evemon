@@ -67,10 +67,12 @@ namespace EVEMon
             s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
             s.G15ACycle = cbG15ACycle.Checked;
             s.G15ACycleint = (int)ACycleInterval.Value;
+            s.G15ShowTime = cbG15ShowTime.Checked;
             if (G15Handler.LCD != null)
             {
                 G15Handler.LCD.cycle = cbG15ACycle.Checked;
                 G15Handler.LCD.cycleint = (int)ACycleInterval.Value;
+                G15Handler.LCD.showtime = cbG15ShowTime.Checked;
             }
 
             // Email Options
@@ -255,6 +257,7 @@ namespace EVEMon
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             cbG15ACycle.Checked = m_settings.G15ACycle;
             cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
+            cbG15ShowTime.Checked = m_settings.G15ShowTime;
             ACycleInterval.Value = m_settings.G15ACycleint;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
             {

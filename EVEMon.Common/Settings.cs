@@ -311,6 +311,19 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_g15showtime = false;
+        public bool G15ShowTime
+        {
+            get { return m_g15showtime; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15showtime = value;
+                }
+            }
+        }
+
         #endregion
 
         #region Settings Form - Look and Feel

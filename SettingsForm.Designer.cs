@@ -97,6 +97,7 @@ namespace EVEMon
             this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
             this.cbG15ACycle = new System.Windows.Forms.CheckBox();
+            this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.tabLookAndFeel = new System.Windows.Forms.TabPage();
@@ -840,7 +841,7 @@ namespace EVEMon
             this.groupBox12.Controls.Add(this.ACycleInterval);
             this.groupBox12.Location = new System.Drawing.Point(3, 182);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(373, 84);
+            this.groupBox12.Size = new System.Drawing.Size(373, 104);
             this.groupBox12.TabIndex = 5;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "G15 Display";
@@ -851,11 +852,12 @@ namespace EVEMon
             this.flowLayoutPanel23.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel23.Controls.Add(this.cbUseLogitechG15Display);
             this.flowLayoutPanel23.Controls.Add(this.cbG15ACycle);
+            this.flowLayoutPanel23.Controls.Add(this.cbG15ShowTime);
             this.flowLayoutPanel23.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel23.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel23.Name = "flowLayoutPanel23";
             this.flowLayoutPanel23.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel23.Size = new System.Drawing.Size(138, 46);
+            this.flowLayoutPanel23.Size = new System.Drawing.Size(139, 69);
             this.flowLayoutPanel23.TabIndex = 4;
             // 
             // cbUseLogitechG15Display
@@ -878,10 +880,20 @@ namespace EVEMon
             this.cbG15ACycle.Text = "Cycle Chars every";
             this.cbG15ACycle.UseVisualStyleBackColor = true;
             // 
+            // cbG15ShowTime
+            // 
+            this.cbG15ShowTime.AutoSize = true;
+            this.cbG15ShowTime.Location = new System.Drawing.Point(12, 49);
+            this.cbG15ShowTime.Name = "cbG15ShowTime";
+            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
+            this.cbG15ShowTime.TabIndex = 4;
+            this.cbG15ShowTime.Text = "Show System Time";
+            this.cbG15ShowTime.UseVisualStyleBackColor = true;
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(200, 47);
+            this.label17.Location = new System.Drawing.Point(200, 44);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(46, 13);
             this.label17.TabIndex = 10;
@@ -889,7 +901,7 @@ namespace EVEMon
             // 
             // ACycleInterval
             // 
-            this.ACycleInterval.Location = new System.Drawing.Point(147, 43);
+            this.ACycleInterval.Location = new System.Drawing.Point(147, 40);
             this.ACycleInterval.Maximum = new decimal(new int[] {
             120,
             0,
@@ -2479,5 +2491,6 @@ namespace EVEMon
         private System.Windows.Forms.Panel panelColorSingle1;
         private System.Windows.Forms.Panel panelColorText;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.CheckBox cbG15ShowTime;
     }
 }
