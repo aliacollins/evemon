@@ -53,6 +53,7 @@ namespace EVEMon
             slDevelopers.Add("Adam Butt", "05");
             slDevelopers.Add("bugusnot", "05");
             slDevelopers.Add("cybertech", "05");
+            slDevelopers.Add("Dariana", "05");
             slDevelopers.Add("exi", "05");
             slDevelopers.Add("FangVV", "05");
             slDevelopers.Add("Femaref", "05");

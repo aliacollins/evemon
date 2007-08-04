@@ -1623,8 +1623,16 @@ namespace EVEMon
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
         }
 
+         private void copySkillsToClipboardBBFormatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            cm.CopyBBCodeToClipBoard();
+        }
+
+
     }
 }
+
 
 
 

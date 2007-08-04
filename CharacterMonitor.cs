@@ -2306,6 +2306,53 @@ namespace EVEMon
             }
         }
 
+        private String getSkillLevelImageURL(int aSkillLevel)
+        {
+            String result = @"[img]http://myeve.eve-online.com/bitmaps/character/level" + aSkillLevel.ToString() + ".gif[/img]";
+            return result;
+        }
+
+        public void CopyBBCodeToClipBoard()
+        {
+            SerializableCharacterSheet ci = m_grandCharacterInfo.ExportSerializableCharacterSheet();
+
+            StringBuilder result = new StringBuilder();
+
+            result.AppendLine("[b]" + ci.CharacterSheet.Name + "[/b]");
+            result.AppendLine("");
+            result.AppendLine("[b]Attributes[/b]");
+            result.AppendLine("Intelligence: " + ci.CharacterSheet.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
+            result.AppendLine("Perception: " + ci.CharacterSheet.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
+            result.AppendLine("Charisma: " + ci.CharacterSheet.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
+            result.AppendLine("Willpower: " + ci.CharacterSheet.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
+            result.AppendLine("Memory: " + ci.CharacterSheet.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
+
+            foreach (SerializableSkillGroup sg in ci.SkillGroups)
+            {
+                result.AppendLine("");
+                result.AppendLine("[b]" + sg.Name + "[/b]");
+
+                foreach (SerializableSkill s in sg.Skills)
+                {
+                    result.AppendLine(getSkillLevelImageURL(s.LastConfirmedLevel) + " " + s.Name);
+                }
+
+                result.AppendLine("Total Skillpoints in Group: " + sg.GetTotalPoints().ToString("#,##0"));
+            }
+
+            result.AppendLine("");
+            result.AppendLine("Total Skillpoints: " + m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"));
+            result.AppendLine("Total Number of Skills: " + m_grandCharacterInfo.KnownSkillCount.ToString());
+            result.AppendLine("");
+            result.AppendLine("Skills at Level 1: " + m_grandCharacterInfo.SkillCountAtLevel(1).ToString());
+            result.AppendLine("Skills at Level 2: " + m_grandCharacterInfo.SkillCountAtLevel(2).ToString());
+            result.AppendLine("Skills at Level 3: " + m_grandCharacterInfo.SkillCountAtLevel(3).ToString());
+            result.AppendLine("Skills at Level 4: " + m_grandCharacterInfo.SkillCountAtLevel(4).ToString());
+            result.AppendLine("Skills at Level 5: " + m_grandCharacterInfo.SkillCountAtLevel(5).ToString());
+
+            Clipboard.SetText(result.ToString());
+        }
+
         /// <summary>
         /// Saves character data as a HTML file
         /// </summary>
