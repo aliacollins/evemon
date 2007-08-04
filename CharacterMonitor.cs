@@ -2307,6 +2307,112 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Saves character data as a HTML file
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        private void SaveHTMLFile(string fileName)
+        {
+            SerializableCharacterSheet scs = m_grandCharacterInfo.ExportSerializableCharacterSheet();
+            SerializableCharacterInfo sci = scs.CreateSerializableCharacterInfo();
+
+            try
+            {
+                // Part one - Generate XML
+                Stream xmlStream = new MemoryStream(32767);
+                XPathDocument xpdoc;
+                try
+                {
+                    using (XmlTextWriter xtw = new XmlTextWriter(xmlStream, Encoding.UTF8))
+                    {
+                        XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterInfo));
+                        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                        ns.Add("", "");
+                        xs.Serialize(xtw, sci, ns);
+                        xtw.Flush();
+
+                        // Part Two - Add Adjusted Attributes to XML with some stream magic
+                        MemoryStream ms = (MemoryStream)xmlStream;
+                        ms.Position = 0;
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(new StreamReader(ms));
+
+                        XmlNode n = doc.SelectSingleNode("/character/attributes");
+                        if (n == null)
+                        {
+                            throw new Exception("Unable to insert adjusted attributes. Node not found.");
+                        }
+
+                        XmlElement childnode = doc.CreateElement("adjustedIntelligence");
+                        childnode.InnerText = sci.Attributes.AdjustedIntelligence.ToString();
+                        n.AppendChild(childnode);
+
+                        childnode = doc.CreateElement("adjustedCharisma");
+                        childnode.InnerText = sci.Attributes.AdjustedCharisma.ToString();
+                        n.AppendChild(childnode);
+
+                        childnode = doc.CreateElement("adjustedMemory");
+                        childnode.InnerText = sci.Attributes.AdjustedMemory.ToString();
+                        n.AppendChild(childnode);
+
+                        childnode = doc.CreateElement("adjustedPerception");
+                        childnode.InnerText = sci.Attributes.AdjustedPerception.ToString();
+                        n.AppendChild(childnode);
+
+                        childnode = doc.CreateElement("adjustedWillpower");
+                        childnode.InnerText = sci.Attributes.AdjustedWillpower.ToString();
+                        n.AppendChild(childnode);
+
+                        // Reset Memory Stream Position and Save XmlDocument
+                        ms.Position = 0;
+                        doc.Save(ms);
+
+                        // Reset Memory Stream Position again for XPathDocument
+                        ms.Position = 0;
+                        using (StreamReader tr = new StreamReader(ms))
+                        {
+                            xpdoc = new XPathDocument(tr);
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    string s = e.ToString();
+                    return;
+                }
+                finally
+                {
+                    xmlStream.Dispose();
+                }
+
+                // Part Three - Transform to HTML
+
+                XslCompiledTransform xstDoc2 = new XslCompiledTransform();
+                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.output-html.xsl"))
+                {
+                    using (XmlTextReader xtr = new XmlTextReader(s))
+                    {
+                        xstDoc2.Load(xtr);
+                    }
+                }
+
+                using (StreamWriter sw = new StreamWriter(fileName, false))
+                using (XmlTextWriter xtw = new XmlTextWriter(sw))
+                {
+                    xtw.Indentation = 1;
+                    xtw.IndentChar = '\t';
+                    xtw.Formatting = Formatting.Indented;
+                    xstDoc2.Transform(xpdoc, null, xtw);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show("Failed to save:\n" + ex.Message, "Could not save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
         /// Saves character to a file in one of a variety of formats.  Does clever things with xsl to avoid having a seperate xml and html method.
         /// </summary>
         /// <param name="saveFormat">The save format.</param>
@@ -2347,8 +2453,13 @@ namespace EVEMon
                     outerStream.Dispose();
                 }
             }
+            else if (saveFormat == SaveFormat.Html)
+            {
+                SaveHTMLFile(fileName);
+                return;
+            }
 
-            // we're here - must be old style xml or html
+            // we're here - must be old style xml
             try
             {
                 Stream xmlStream;
