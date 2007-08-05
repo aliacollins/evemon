@@ -202,40 +202,41 @@ namespace EVEMon.SkillPlanner
             // level1ToolStripMenuItem
             // 
             this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
-            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level1ToolStripMenuItem.Text = "Level &1";
             this.level1ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level2ToolStripMenuItem
             // 
             this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
-            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level2ToolStripMenuItem.Text = "Level &2";
             this.level2ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level3ToolStripMenuItem
             // 
             this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
-            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level3ToolStripMenuItem.Text = "Level &3";
             this.level3ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level4ToolStripMenuItem
             // 
             this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
-            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level4ToolStripMenuItem.Text = "Level &4";
             this.level4ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level5ToolStripMenuItem
             // 
             this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
-            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // lbSearchList
             // 
+            this.lbSearchList.ContextMenuStrip = this.cmListSkills;
             this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbSearchList.FormattingEnabled = true;
             this.lbSearchList.IntegralHeight = false;
@@ -377,35 +378,35 @@ namespace EVEMon.SkillPlanner
             // tsmLevel1
             // 
             this.tsmLevel1.Name = "tsmLevel1";
-            this.tsmLevel1.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel1.Size = new System.Drawing.Size(119, 22);
             this.tsmLevel1.Text = "Level &1";
             this.tsmLevel1.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // tsmLevel2
             // 
             this.tsmLevel2.Name = "tsmLevel2";
-            this.tsmLevel2.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel2.Size = new System.Drawing.Size(119, 22);
             this.tsmLevel2.Text = "Level &2";
             this.tsmLevel2.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // tsmLevel3
             // 
             this.tsmLevel3.Name = "tsmLevel3";
-            this.tsmLevel3.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel3.Size = new System.Drawing.Size(119, 22);
             this.tsmLevel3.Text = "Level &3";
             this.tsmLevel3.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // tsmLevel4
             // 
             this.tsmLevel4.Name = "tsmLevel4";
-            this.tsmLevel4.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel4.Size = new System.Drawing.Size(119, 22);
             this.tsmLevel4.Text = "Level &4";
             this.tsmLevel4.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // tsmLevel5
             // 
             this.tsmLevel5.Name = "tsmLevel5";
-            this.tsmLevel5.Size = new System.Drawing.Size(152, 22);
+            this.tsmLevel5.Size = new System.Drawing.Size(119, 22);
             this.tsmLevel5.Text = "Level &5";
             this.tsmLevel5.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
@@ -443,9 +444,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.pnlResults.AutoSize = true;
             this.pnlResults.Controls.Add(this.lbNoMatches);
-            this.pnlResults.Controls.Add(this.lvSortedSkillList);
             this.pnlResults.Controls.Add(this.lbSearchList);
             this.pnlResults.Controls.Add(this.tvItems);
+            this.pnlResults.Controls.Add(this.lvSortedSkillList);
             this.pnlResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlResults.Location = new System.Drawing.Point(0, 78);
             this.pnlResults.Margin = new System.Windows.Forms.Padding(0);

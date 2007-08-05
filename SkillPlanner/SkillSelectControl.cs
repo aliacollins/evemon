@@ -714,7 +714,6 @@ namespace EVEMon.SkillPlanner
             {
                 cmiLvPlanTo.DropDownItems[String.Format("tsmLevel{0}", i)].Enabled = m_plan.PlannedLevel(this.SelectedSkill) != i && this.SelectedSkill.Level < i;
             }
-
         }
 
         private void levelToolStripMenuItem_Click(object sender, EventArgs e)
