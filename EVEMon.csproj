@@ -240,7 +240,7 @@
       <DependentUpon>LoadoutViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>

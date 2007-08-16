@@ -474,7 +474,10 @@ namespace EVEMon.SkillPlanner
         private void tsbSaveAs_Click(object sender, EventArgs e)
         {
             sfdSave.Title = "Save to File";
-            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + m_plan.Name;
+            string planSaveName = m_plan.Name;
+            planSaveName = planSaveName.Replace("\\","-");
+            planSaveName = planSaveName.Replace("/","-");
+            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + planSaveName;
             sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
             sfdSave.FilterIndex = (int)PlanSaveType.Emp;
             DialogResult dr = sfdSave.ShowDialog();
