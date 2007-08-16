@@ -201,14 +201,14 @@ namespace EVEMon.Common
 
         #region Image Retrieval and Pop Up
         /// <summary>
-        /// Renders a black square as a placeholder for the image
+        /// Renders a BackColor square as a placeholder for the image
         /// </summary>
         private void ShowBlankImage()
         {
             Bitmap b = new Bitmap(pbImage.ClientSize.Width, pbImage.ClientSize.Height);
             using (Graphics g = Graphics.FromImage(b))
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
+                g.FillRectangle(new SolidBrush(BackColor), new Rectangle(0, 0, b.Width, b.Height));
             }
             pbImage.Image = b;
         }
