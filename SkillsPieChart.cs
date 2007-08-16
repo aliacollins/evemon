@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.PieChart;
+using System.Collections;
 
 namespace EVEMon
 {
@@ -82,11 +83,7 @@ namespace EVEMon
             string[] newTexts = new string[c_info.SkillGroups.Count];
             string[] newToolTips = new string[c_info.SkillGroups.Count];
             float[] newSliceRelativeDisplacements = new float[c_info.SkillGroups.Count];
-
-            decimal[] n_newValues = new decimal[c_info.SkillGroups.Count];
-            string[] n_newTexts = new string[c_info.SkillGroups.Count];
-            string[] n_newToolTips = new string[c_info.SkillGroups.Count];
-            float[] n_newSliceRelativeDisplacements = new float[c_info.SkillGroups.Count];
+            int[] skillGroupIds = new int[c_info.SkillGroups.Count];
 
             int tinyGroups = 1;
             for (int i = 0; i < c_info.SkillGroups.Count; i++)
@@ -95,6 +92,7 @@ namespace EVEMon
                 newValues[i] = 0;
                 newValues[i] += sg.GetTotalPoints();
                 newTexts[i] = sg.Name;
+                skillGroupIds[i] = sg.Id;
 
                 long partialSkillPoints = 0;
                 long plannedSkillPoints = 0;
@@ -114,6 +112,7 @@ namespace EVEMon
 
                             // Add Points at Planed Level
                             plannedSkillPoints += skill.GetPointsRequiredForLevel(entry.Level);
+
                         }
                     }
 
@@ -139,6 +138,98 @@ namespace EVEMon
 
                 newSliceRelativeDisplacements[i] = (newValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;                
             }
+
+            ArrayList skillGroupsToCheck = new ArrayList();
+            if (plan != null)
+            {
+                // Check all Plan Entries
+                foreach (Plan.Entry entry in plan.Entries)
+                {
+                    bool found = false;
+                    foreach (int id in skillGroupIds)
+                    {
+                        if (entry.Skill.SkillGroup.ID == id)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // We don't have this skill in the character sheet yet. Add it!
+                    if (!found && !skillGroupsToCheck.Contains(entry.Skill.SkillGroup.ID))
+                    {
+                        skillGroupsToCheck.Add(entry.Skill.SkillGroup.ID);
+                    }
+                }
+
+                decimal[] newAddValues = new decimal[skillGroupsToCheck.Count];
+                string[] newAddTexts = new string[skillGroupsToCheck.Count];
+                string[] newAddToolTips = new string[skillGroupsToCheck.Count];
+                float[] newAddSliceRelativeDisplacements = new float[skillGroupsToCheck.Count];
+
+                for (int i = 0; i < skillGroupsToCheck.Count; i++ )
+                {
+                    newAddValues[i] = 0;
+
+                    // Stores all skill ids so we know the unique number of skills
+                    ArrayList skills = new ArrayList();
+
+                    foreach (Plan.Entry entry in plan.Entries)
+                    {
+                         if (entry.Skill.SkillGroup.ID == (int)skillGroupsToCheck[i])
+                         {
+                             Skill skill = entry.Skill;
+
+                             newAddValues[i] += skill.GetPointsForLevelOnly(entry.Level, false);
+
+                             if (newAddTexts[i] == null)
+                             {
+                                 newAddTexts[i] = skill.SkillGroup.Name;
+                             }
+
+                             if (!skills.Contains(entry.Skill.Id))
+                             {
+                                 skills.Add(entry.Skill.Id);
+                             }
+                         }
+                        
+                    }
+
+                    //newToolTips[i] = sg.Name + " (0 skills / " + String.Format("{0:#,###}", newValues[i]) + " skillpoints after plan completion)";
+
+                    newAddToolTips[i] = newAddTexts[i] + " (" + skills.Count + " skills with " + String.Format("{0:#,###}", newAddValues[i]) + " skillpoints after plan completion)";
+                    newAddSliceRelativeDisplacements[i] = (newAddValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;                
+                }
+
+                // Merge Both Arrays
+                int mergedCount = newValues.Length + newAddValues.Length;
+                decimal[] final_newValues = new decimal[mergedCount];
+                string[] final_newTexts = new string[mergedCount];
+                string[] final_newToolTips = new string[mergedCount];
+                float[] final_newSliceRelativeDisplacements = new float[mergedCount];
+
+                for (int i = 0; i < newValues.Length; i++)
+                {
+                    final_newValues[i] = newValues[i];
+                    final_newTexts[i] = newTexts[i];
+                    final_newToolTips[i] = newToolTips[i];
+                    final_newSliceRelativeDisplacements[i] = newSliceRelativeDisplacements[i];
+                }
+
+                for (int i = newValues.Length; i < mergedCount; i++)
+                {
+                    final_newValues[i] = newAddValues[i - newValues.Length];
+                    final_newTexts[i] = newAddTexts[i - newValues.Length];
+                    final_newToolTips[i] = newAddToolTips[i - newValues.Length];
+                    final_newSliceRelativeDisplacements[i] = newAddSliceRelativeDisplacements[i - newValues.Length];
+                }
+
+                newValues = final_newValues;
+                newTexts = final_newTexts;
+                newToolTips = final_newToolTips;
+                newSliceRelativeDisplacements = final_newSliceRelativeDisplacements;
+            }
+
 
             skillPieChartControl.Values = newValues;
             skillPieChartControl.Texts = newTexts;
