@@ -175,50 +175,58 @@ namespace EVEMon
                 }
                 catch (Exception) { }
                 s = EveSession.GetSession(userId, tbAuthKey.Text, out errm);
-
-                if (s == null)
+                if (s != null)
                 {
-                    SetNoCharacter();
-                    MessageBox.Show(errm, "Invalid API Credentials",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-                List<Pair<string, int>> chars = s.GetCharacterListUncached();
-                if (chars.Count == 0)
-                {
-                    SetNoCharacter();
-                    MessageBox.Show("No characters were found on with those API Credentials. This may be because CCP have disabled the API.",
-                                    "No Characters Found.",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-
-                // now see if there aer any new characters to add
-                Settings settings = Settings.GetInstance();
-                List<string> onlineChars = new List<string>();
-                foreach (CharLoginInfo cli in settings.CharacterList)
-                {
-                    onlineChars.Add(cli.CharacterName);
-                }
-
-                m_charsToAdd.Clear();
-                foreach (Pair<string, int> chr in chars)
-                {
-                    if (!onlineChars.Contains(chr.A))
+                    List<Pair<string, int>> chars = s.GetCharacterListUncached();
+                    if (chars.Count == 0)
                     {
-                        m_charsToAdd.Add(chr.A);
+                        SetNoCharacter();
+                        MessageBox.Show("No characters were found on with those API Credentials. This may be because CCP have disabled the API.",
+                                        "No Characters Found.",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        return;
+                    }
+
+                    // now see if there aer any new characters to add
+                    Settings settings = Settings.GetInstance();
+                    List<string> onlineChars = new List<string>();
+                    foreach (CharLoginInfo cli in settings.CharacterList)
+                    {
+                        onlineChars.Add(cli.CharacterName);
+                    }
+
+                    m_charsToAdd.Clear();
+                    foreach (Pair<string, int> chr in chars)
+                    {
+                        if (!onlineChars.Contains(chr.A))
+                        {
+                            m_charsToAdd.Add(chr.A);
+                        }
                     }
                 }
-                if (m_charsToAdd.Count == 0)
-                {
-                    SetNoCharacter();
-                    MessageBox.Show("No new characters were found on the account with those API Credentials.",
-                                    "No New Characters Found.",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-
-                }
             }
+
+            if (s == null)
+            {
+                if (EVEMonWebRequest.LastException != null)
+                {
+                    errm += " (" + EVEMonWebRequest.LastException.Message + ")";
+                }
+                SetNoCharacter();
+                MessageBox.Show(errm, "Invalid API Credentials",
+                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            if (m_charsToAdd.Count == 0)
+            {
+                SetNoCharacter();
+                MessageBox.Show("No new characters were found on the account with those API Credentials.",
+                                "No New Characters Found.",
+                                MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
 
             using (CharSelect f = new CharSelect(m_charsToAdd))
             {

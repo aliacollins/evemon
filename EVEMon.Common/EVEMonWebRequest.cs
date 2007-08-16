@@ -33,6 +33,12 @@ namespace EVEMon.Common
     
     public static class EVEMonWebRequest
     {
+        private static Exception m_lastException;
+        public static Exception LastException
+        {
+            get { return m_lastException; }
+            set { m_lastException = value; }
+        }
         
         public static XmlDocument LoadXml(string url)
         {
@@ -154,6 +160,7 @@ namespace EVEMon.Common
                 }
                 catch (WebException ex)
                 {
+                    m_lastException = ex;   
                     // The request failed. If this has failed because of a custom proxy misconfiguration,
                     // then let's give the user the opportunity to block requests so they don't potentially lock
                     // their whole internet account! (see trac ticket 503)
