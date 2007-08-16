@@ -300,6 +300,7 @@ namespace EVEMon.SkillPlanner
             // printDocument1
             // 
             this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
+            this.printDocument1.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.printDocument1_BeginPrint);
             // 
             // printPreviewDialog1
             // 

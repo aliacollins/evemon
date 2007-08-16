@@ -696,11 +696,14 @@ namespace EVEMon.SkillPlanner
         #region Print Plan
 
         WebBrowser printBrowser;
+        Bitmap printBmp;
+        int curPage = 0;
+
         private void tsbPrintPlan_Click(object sender, EventArgs e)
         {
             printBrowser = new WebBrowser();
             printBrowser.Width = 800;
-            printBrowser.Height = 600;
+            printBrowser.Height = m_plan.Entries.Count*19+79;
             printBrowser.ScrollBarsEnabled = false;
 
             PlanTextOptions pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
@@ -715,6 +718,7 @@ namespace EVEMon.SkillPlanner
             }
             printBrowser.Update();
             printDocument1.DocumentName = this.Text;
+
             printPreviewDialog1.Document = printDocument1;
             try
             {
@@ -725,16 +729,39 @@ namespace EVEMon.SkillPlanner
                 MessageBox.Show("Print preview failed. Check your printer driver!", "Print Preview failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             printBrowser.Dispose();
+            printBmp.Dispose();
+            printBmp = null;
         }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
-            Bitmap bmp = new Bitmap(printBrowser.ClientRectangle.Width, printBrowser.ClientRectangle.Height);
-            printBrowser.DrawToBitmap(bmp, printBrowser.ClientRectangle);
-            e.Graphics.DrawImage(bmp, 0, 0);
+            const int firstPage = 1002;
+            const int restPages = 992;
+            int bmWidth = printBrowser.ClientRectangle.Width;
+            int bmHeight = printBrowser.ClientRectangle.Height;
+            int startY = (curPage == 1) ? printBrowser.ClientRectangle.Y : (curPage-2)*restPages+firstPage;
+            if (bmHeight > firstPage + restPages*(curPage-1))
+            {
+                e.HasMorePages = true;
+                bmHeight = (curPage == 1) ? firstPage : restPages; // title needs more room
+            }
 
+            if (printBmp == null)
+            {
+                printBmp = new Bitmap(printBrowser.ClientRectangle.Width, printBrowser.ClientRectangle.Height);
+                printBrowser.DrawToBitmap(printBmp, printBrowser.ClientRectangle);
+            }
+
+            e.Graphics.DrawImage(printBmp, new Rectangle(50, 50, bmWidth, bmHeight), new Rectangle(0, startY, bmWidth, bmHeight), GraphicsUnit.Pixel);
+
+            ++curPage;
         }
         #endregion
+
+        private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            curPage = 1;
+        }
     }
 
     public class PlannerWindowFactory : IPlannerWindowFactory
