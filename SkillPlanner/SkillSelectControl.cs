@@ -202,6 +202,12 @@ namespace EVEMon.SkillPlanner
                              return !m_plan.IsPlanned(gs) && gs.PrerequisitesMet && gs.Level < 5;
                          };
                     break;
+                case "Hide Level V Skills": // only show skills that are not at level 5
+                    sf = delegate(Skill gs)
+                        {
+                            return gs.Level < 5;
+                        };
+                    break;
             }
             int index = Settings.GetInstance().SkillIconGroup;
             if (index == 0)
