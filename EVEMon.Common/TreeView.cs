@@ -953,12 +953,15 @@ namespace CodersLab.Windows.Controls
 
 		private bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e)
 		{
+/*
 			int intNodeLevel = GetNodeLevel(tn);
 			bool blnPlusMinusClicked = false;
 			if (e.X < 20 + (intNodeLevel * 20))
 				blnPlusMinusClicked = true;
 
 			return blnPlusMinusClicked;
+ */
+            return e.X < tn.Bounds.X;
 		}
 
 		/// <summary>
