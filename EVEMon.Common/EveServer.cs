@@ -228,10 +228,22 @@ namespace EVEMon.Common
                     m_users = 0;
                     if (bytes > 21)
                     {
+                        int usersBytes = 0;
                         // Amended usercount checks, info from clef on iRC
                         // [16:01] <clef> BradStone: for the moment, take that byte[19] ... if it is 1, 8 or 9, the usercount is 0.
                         // [16:01] <clef> BradStone: if it is 4, the next 32bit are the usercount. 5 -> 16bit. 6 -> 8bit.
-                        int usersBytes = 4 - (response[19]-3);
+                        switch (response[19])
+                        {
+                            case 4:
+                                usersBytes = 4;
+                                break;
+                            case 5:
+                                usersBytes = 2;
+                                break;
+                            case 6:
+                                usersBytes= 1;
+                                break;
+                        }
                         if (usersBytes > 0 && usersBytes < 5)
                         {
                             int multiplyer = 1;
