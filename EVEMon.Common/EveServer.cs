@@ -249,7 +249,7 @@ namespace EVEMon.Common
                             int multiplyer = 1;
                             for (int i=0;i<usersBytes;i++)
                             {
-                                m_users = response[20+i] * multiplyer;
+                                m_users += response[20+i] * multiplyer;
                                 multiplyer *= 256;
                             }
                         }
