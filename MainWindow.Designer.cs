@@ -165,9 +165,9 @@ namespace EVEMon
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblTraining,
             this.lblStatus,
-            this.lblServerStatus,
-            this.lblTraining});
+            this.lblServerStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 414);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(417, 22);
