@@ -200,6 +200,7 @@ namespace EVEMon.SkillPlanner
             // gbDescription
             // 
             this.gbDescription.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbDescription.BackColor = System.Drawing.SystemColors.Window;
             this.gbDescription.Controls.Add(this.tbDescription);
             this.gbDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbDescription.Location = new System.Drawing.Point(0, 0);

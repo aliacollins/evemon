@@ -187,6 +187,7 @@ namespace EVEMon.SkillPlanner
             // 
             // gbDesription
             // 
+            this.gbDesription.BackColor = System.Drawing.SystemColors.Window;
             this.gbDesription.Controls.Add(this.tbDescription);
             this.gbDesription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbDesription.Location = new System.Drawing.Point(0, 0);
