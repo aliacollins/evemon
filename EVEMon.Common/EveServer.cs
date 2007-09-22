@@ -117,14 +117,14 @@ namespace EVEMon.Common
             if (m_tmrCheck == null)
             {
                 m_tmrCheck = new System.Timers.Timer(m_settings.StatusUpdateInterval * 60000);
+                m_tmrCheck.Elapsed += new ElapsedEventHandler(checkServerStatus);
             }
-            m_tmrCheck.Elapsed += new ElapsedEventHandler(checkServerStatus);
             m_tmrCheck.Enabled = true;
             if (m_tmrCountdown == null)
             {
                 m_tmrCountdown = new System.Timers.Timer(1000);
+                m_tmrCountdown.Elapsed += new ElapsedEventHandler(tmrCountdown);
             }
-            m_tmrCountdown.Elapsed += new ElapsedEventHandler(tmrCountdown);
             m_tmrCountdown.Enabled = false;
             checkServerStatus(this, new EventArgs());
         }

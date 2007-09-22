@@ -59,6 +59,8 @@ namespace EVEMon
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copySkillsToClipboardBBFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,8 +100,6 @@ namespace EVEMon
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copySkillsToClipboardBBFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -337,6 +337,21 @@ namespace EVEMon
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySkillsToClipboardBBFormatToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.editToolStripMenuItem.Text = "&Edit";
+            // 
+            // copySkillsToClipboardBBFormatToolStripMenuItem
+            // 
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Name = "copySkillsToClipboardBBFormatToolStripMenuItem";
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Text = "&Copy Skills to Clipboard (BB Format)";
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Click += new System.EventHandler(this.copySkillsToClipboardBBFormatToolStripMenuItem_Click);
+            // 
             // plansToolStripMenuItem
             // 
             this.plansToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -351,21 +366,21 @@ namespace EVEMon
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.newToolStripMenuItem.Text = "&New…";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // manageToolStripMenuItem
             // 
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.manageToolStripMenuItem.Text = "&Manage...";
             this.manageToolStripMenuItem.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(132, 6);
             // 
             // toolsToolStripMenuItem
             // 
@@ -486,7 +501,7 @@ namespace EVEMon
             // 
             this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -658,6 +673,7 @@ namespace EVEMon
             this.tcCharacterTabs.AllowDrop = true;
             this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcCharacterTabs.Location = new System.Drawing.Point(0, 24);
+            this.tcCharacterTabs.Multiline = true;
             this.tcCharacterTabs.Name = "tcCharacterTabs";
             this.tcCharacterTabs.SelectedIndex = 0;
             this.tcCharacterTabs.ShowToolTips = true;
@@ -672,21 +688,6 @@ namespace EVEMon
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(256, 6);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copySkillsToClipboardBBFormatToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.editToolStripMenuItem.Text = "&Edit";
-            // 
-            // copySkillsToClipboardBBFormatToolStripMenuItem
-            // 
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Name = "copySkillsToClipboardBBFormatToolStripMenuItem";
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Text = "&Copy Skills to Clipboard (BB Format)";
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Click += new System.EventHandler(this.copySkillsToClipboardBBFormatToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
