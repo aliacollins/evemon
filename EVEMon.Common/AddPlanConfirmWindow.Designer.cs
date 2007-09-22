@@ -91,6 +91,16 @@ namespace EVEMon.Common
             this.nudPriority.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.nudPriority.Location = new System.Drawing.Point(108, 251);
+            this.nudPriority.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.nudPriority.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.nudPriority.Name = "nudPriority";
             this.nudPriority.Size = new System.Drawing.Size(38, 21);
             this.nudPriority.TabIndex = 4;

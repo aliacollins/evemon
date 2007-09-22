@@ -40,6 +40,11 @@ namespace EVEMon.SkillPlanner
             // nudPriority
             // 
             this.nudPriority.Location = new System.Drawing.Point(56, 95);
+            this.nudPriority.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
             this.nudPriority.Minimum = new decimal(new int[] {
             1,
             0,
