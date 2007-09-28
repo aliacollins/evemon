@@ -9,85 +9,21 @@ using System.Text.RegularExpressions;
 
 namespace EVEMon.SkillPlanner
 {
-    public partial class ItemBrowserControl : EveObjectBrowserControl
+    public partial class ItemBrowserControl : EveObjectBrowserSimple
     {
         public ItemBrowserControl()
         {
             InitializeComponent();
-            this.splitContainer1.RememberDistanceKey = "ItemBrowser";
-            m_showImages = !Settings.GetInstance().WorksafeMode;
-            if (this.DesignMode)
-            {
-                return;
-            }
-
-            if (!m_showImages)
-            {
-                eveImage.ImageSize = EveImage.EveImageSize._0_0;
-                lblItemCategory.Location = new Point(3,lblItemCategory.Location.Y);
-                lblItemName.Location = new Point(3, lblItemName.Location.Y);
-            }
- 
+            this.scObjectBrowser.RememberDistanceKey = "ItemBrowser";
+            this.ObjectSelectControl = this.itemSelectControl;
         }
 
-        private bool m_showImages;
-
-        private Plan m_plan = null;
-
-        public Plan Plan
+        protected override void DisplayItemDetails(EveObject eveitem)
         {
-            get { return m_plan; }
-            set 
-            { 
-                m_plan = value;
-                itemSelectControl1.Plan = value;
-                requiredSkillsControl.Plan = value;
-            }
-        }
-
-        public Item SelectedItem
-        {
-            set
-            {
-                itemSelectControl1.SelectedObject  = value;
-                itemSelectControl1_SelectedItemChanged(this, null);
-            }
-        }
-
-        private void itemSelectControl1_SelectedItemChanged(object sender, EventArgs e)
-        {
-            Item item = itemSelectControl1.SelectedObject  as Item;
-            foreach (Control c in splitContainer1.Panel2.Controls)
-            {
-                if ( c == pnlHeader || c == lblHelp)
-                    c.Visible = (item == null);
-                else
-                    c.Visible = (item != null);
-            }
-
-
+            base.DisplayItemDetails(eveitem);
+            Item item = (Item)eveitem;
             if (item != null)
             {
-                // Update required Skills
-                requiredSkillsControl.EveItem = item as EveObject;
-                // Update Eveimage
-                eveImage.EveItem = item;
-                StringBuilder sb = new StringBuilder();
-                ItemCategory cat = item.ParentCategory;
-                while (cat.Name != "Ship Items")
-                {
-                    sb.Insert(0, cat.Name);
-                    cat = cat.ParentCategory;
-                    if (cat.Name != "Ship Items")
-                    {
-                        sb.Insert(0, " > ");
-                    }
-                }
-                lblItemCategory.Text = sb.ToString();
-                lblItemName.Text = item.Name;
-                tbDescription.Text = Regex.Replace(item.Description, "\n", Environment.NewLine, RegexOptions.Singleline);
-
-
                 lvItemProperties.BeginUpdate();
                 try
                 {
@@ -110,11 +46,11 @@ namespace EVEMon.SkillPlanner
 
 
                     // Add compare with columns (if additional selections)
-                    for (int i_item = 0; i_item < itemSelectControl1.SelectedObjects.Count; i_item++)
+                    for (int i_item = 0; i_item < itemSelectControl.SelectedObjects.Count; i_item++)
                     {
-                        Item selectedItem = itemSelectControl1.SelectedObjects[i_item] as Item;
+                        Item selectedItem = itemSelectControl.SelectedObjects[i_item] as Item;
                         // Skip if it's the base item or not an item
-                        if (selectedItem == itemSelectControl1.SelectedObject || selectedItem == null)
+                        if (selectedItem == itemSelectControl.SelectedObject || selectedItem == null)
                             continue;
 
                         // add new column header and values
@@ -159,19 +95,7 @@ namespace EVEMon.SkillPlanner
                     lvItemProperties.EndUpdate();
                 }
             }
-        }
 
-        private void ItemBrowserControl_Load(object sender, EventArgs e)
-        {
-            itemSelectControl1_SelectedItemChanged(null, null);
-        }
-
-        private void ItemBrowserControl_VisibleChanged(object sender, EventArgs e)
-        {
-            if (this.Visible)
-            {
-                requiredSkillsControl.UpdateDisplay();
-            }
         }
 
     }

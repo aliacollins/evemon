@@ -163,11 +163,6 @@ namespace EVEMon.SkillPlanner
                 {
                     BuildSubtree(m_rootCategory, tvItems.Nodes);
                 }
-                // expand the top level nodes so we see Ship Equipment/Ship Upgrades etc.
-                foreach (TreeNode n in tvItems.Nodes)
-                {
-                    n.Expand();
-                }
                 
             }
             finally

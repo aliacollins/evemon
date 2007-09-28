@@ -41,6 +41,10 @@ namespace EVEMon.Common
             return sm_ships;
         }
 
+        public override string GetCategoryPath()
+        {
+            return this.Type + " > " + this.Race;
+        }
 
         private string m_race = String.Empty;
 

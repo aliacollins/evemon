@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace EVEMon.Common
 {
@@ -60,6 +61,22 @@ namespace EVEMon.Common
                 m_slotIndex = 0; // No slot
                 return m_slotIndex;
             }
+        }
+
+        public override string GetCategoryPath()
+        {
+            StringBuilder sb = new StringBuilder();
+            ItemCategory cat = this.ParentCategory;
+            while (cat.Name != "Ship Items")
+            {
+                sb.Insert(0, cat.Name);
+                cat = cat.ParentCategory;
+                if (cat.Name != "Ship Items")
+                {
+                    sb.Insert(0, " > ");
+                }
+            }
+            return sb.ToString();
         }
     }
 

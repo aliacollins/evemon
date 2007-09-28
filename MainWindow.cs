@@ -1196,10 +1196,10 @@ namespace EVEMon
             if (m_settings.ShowTQBalloon)
             {
                 ShowBalloonTip("EVEMon - Server Status Information", "Server Status Information", e.info, e.icon);
-                tmrAlertRefresh.Enabled = false;
-                tmrAlertRefresh.Interval = 60000;
-                tmrAlertRefresh.Enabled = true;
             }
+            tmrAlertRefresh.Enabled = false;
+            tmrAlertRefresh.Interval = 60000;
+            tmrAlertRefresh.Enabled = true;
         }
 
         private void UpdateStatusLabel()

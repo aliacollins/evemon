@@ -221,6 +221,15 @@
     <Compile Include="SkillPlanner\EveObjectBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="SkillPlanner\EveObjectBrowserControl.Designer.cs">
+      <DependentUpon>EveObjectBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\EveObjectBrowserSimple.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\EveObjectBrowserSimple.Designer.cs">
+      <DependentUpon>EveObjectBrowserSimple.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\ItemSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -240,7 +249,7 @@
       <DependentUpon>LoadoutViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
@@ -512,6 +521,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>CrossPlanSelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\EveObjectBrowserControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveObjectBrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\EveObjectBrowserSimple.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveObjectBrowserSimple.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\EveObjectSelectControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
@@ -644,6 +661,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="SkillPlanner\BrowserClasses.cd" />
     <Content Include="SkillTrained.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

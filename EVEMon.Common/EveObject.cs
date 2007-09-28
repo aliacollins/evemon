@@ -71,6 +71,10 @@ namespace EVEMon.Common
             return _name;
         }
 
+        public virtual string GetCategoryPath()
+        {
+            return "Undefined Category Path";
+        }
     }
     #region Optimize the use of these
     // common classes used by ship and items - we can probably refactor code that

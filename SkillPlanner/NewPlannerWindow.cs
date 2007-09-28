@@ -69,6 +69,7 @@ namespace EVEMon.SkillPlanner
 
             // Watch for changes to worksafe settings and plan changes
             m_plan.Changed += new EventHandler<EventArgs>(m_plan_Changed);
+            m_settings.WorksafeChanged += new EventHandler<EventArgs>(m_settings_WorksafeChanged);
 
             // Force an update
             m_settings_WorksafeChanged(null, null);
@@ -112,13 +113,13 @@ namespace EVEMon.SkillPlanner
 
         public void ShowShipInBrowser(Ship s)
         {
-            shipBrowser.SelectedShip = s;
+            shipBrowser.SelectedObject = s;
             tabControl.SelectedTab = tpShipBrowser;
         }
 
         public void ShowItemInBrowser(Item i)
         {
-            itemBrowser.SelectedItem = i;
+            itemBrowser.SelectedObject = i;
             tabControl.SelectedTab = tpItemBrowser;
         }
 
