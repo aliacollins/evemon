@@ -248,6 +248,14 @@ namespace EVEMon.SkillPlanner
             set { m_skillExplorer = value; }
         }
 
+
+        private LoadoutSelect m_loadoutForm = null;
+        public LoadoutSelect LoadoutForm
+        {
+            get { return m_loadoutForm; }
+            set { m_loadoutForm = value; }
+        }
+        
         private void ChangePlan(Plan p)
         {
             p.GrandCharacterInfo = m_plan.GrandCharacterInfo;
@@ -694,6 +702,12 @@ namespace EVEMon.SkillPlanner
             {
                 m_implantCalcWindow.Close();
                 m_implantCalcWindow = null;
+            }
+
+            if (m_loadoutForm != null)
+            {
+                m_loadoutForm.Close();
+                m_loadoutForm = null;
             }
         }
 

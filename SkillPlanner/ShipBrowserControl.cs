@@ -19,6 +19,7 @@ namespace EVEMon.SkillPlanner
             this.scObjectBrowser.RememberDistanceKey = "ShipBrowser";
             this.ObjectSelectControl = this.shipSelectControl;
             InitializeDisplayControl();
+            PlanChanged += new EventHandler(ShipBrowserControl_PlanChanged);
         }
 
         protected override void DisplayItemDetails(EveObject item)
@@ -312,14 +313,38 @@ namespace EVEMon.SkillPlanner
             }
             return -1;
         }
+
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LoadoutSelect ls = new LoadoutSelect(shipSelectControl.SelectedObject as Ship);
-            DialogResult dr =  ls.ShowDialog();
-            if (dr == DialogResult.Cancel) return;
-            LoadoutViewer lv = new LoadoutViewer(ls.SelectedLoadout, this.Plan);
-            lv.Show();
+            NewPlannerWindow npw = Plan.PlannerWindow.Target as NewPlannerWindow;
+            if (npw == null) return;
+            if (npw.LoadoutForm == null)
+            {
+                npw.LoadoutForm = new LoadoutSelect(shipSelectControl.SelectedObject as Ship, this.Plan);
+            }
+            else
+            {
+                npw.LoadoutForm.SetShip(shipSelectControl.SelectedObject as Ship);
+            }
+            npw.LoadoutForm.Show();
         }
+
+        void ShipBrowserControl_PlanChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                NewPlannerWindow npw = Plan.PlannerWindow.Target as NewPlannerWindow;
+                if (npw == null) return;
+                if (npw.LoadoutForm != null)
+                {
+                    npw.LoadoutForm.SetPlan(Plan);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
 
     }
 }

@@ -242,14 +242,8 @@
     <Compile Include="SkillPlanner\LoadoutSelect.Designer.cs">
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\LoadoutViewer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\LoadoutViewer.Designer.cs">
-      <DependentUpon>LoadoutViewer.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
@@ -540,10 +534,6 @@
     <EmbeddedResource Include="SkillPlanner\LoadoutSelect.resx">
       <SubType>Designer</SubType>
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\LoadoutViewer.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>LoadoutViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\RequiredSkillsControl.resx">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
