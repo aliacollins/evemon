@@ -194,6 +194,10 @@ namespace EVEMon.SkillPlanner
                 lblSkillClass.Text = m_selectedSkill.SkillGroup.Name;
                 lblSkillName.Text = m_selectedSkill.Name + " (" + m_selectedSkill.Rank + ")  " + m_selectedSkill.FormattedCost + " ISK";
                 textboxDescription.Text = m_selectedSkill.Description;
+                if (!m_selectedSkill.Public)
+                {
+                    textboxDescription.Text += " ** THIS IS A NON-PUBLIC SKILL **";
+                }
                 lblAttributes.Text = String.Format("Primary: {0}, Secondary: {1}", m_selectedSkill.PrimaryAttribute.ToString(),
                                                                                    m_selectedSkill.SecondaryAttribute.ToString());
 
@@ -238,6 +242,21 @@ namespace EVEMon.SkillPlanner
                 pnlPlanControl.Visible = true;
                 skillTreeDisplay.Visible = true;
                 btnEnables.Visible = true;
+
+                // Hide certain controls for non-public skills
+                if (m_selectedSkill.Public)
+                {
+                    btnEnables.Enabled = true;
+                    cbOwned.Enabled = true;
+                    cbPlanSelect.Enabled = true;
+                }
+                else
+                {
+                    btnEnables.Enabled = false;
+                    cbOwned.Enabled = false;
+                    cbPlanSelect.Enabled = false;
+                }
+
             }
 
             /// TODO fix the update of the entire control
