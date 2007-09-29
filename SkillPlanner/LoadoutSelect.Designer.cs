@@ -351,6 +351,7 @@ namespace EVEMon.SkillPlanner
             this.Name = "LoadoutSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Battleclinic Loadout Selection";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.panel1.ResumeLayout(false);
             this.persistentSplitContainer1.Panel1.ResumeLayout(false);

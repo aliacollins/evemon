@@ -167,6 +167,7 @@ namespace EVEMon.SkillPlanner
             lblName.Text = m_selectedLoadout.LoadoutName;
             lblAuthor.Text = m_selectedLoadout.Author;
             lbDate.Text = m_selectedLoadout.SubmissionDate.ToShortDateString();
+            tvLoadout.Nodes.Clear();
 
 
             // Add ship skills to requirements
@@ -419,6 +420,15 @@ namespace EVEMon.SkillPlanner
 
     #endregion
 
+        private void LoadoutSelect_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            NewPlannerWindow w = m_plan.PlannerWindow.Target as NewPlannerWindow;
+            try
+            {
+                w.LoadoutForm = null;
+            }
+            catch { }
+        }
     }
 
     #region XML Loadout
