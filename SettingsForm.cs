@@ -573,7 +573,11 @@ namespace EVEMon
             }
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(System.AppDomain.CurrentDomain.BaseDirectory + "Resources\\icons\\Skill_Select\\Group0\\Default.resources");
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(
+                    String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory));
                 System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                 while (basicx.MoveNext())
                 {
