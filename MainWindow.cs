@@ -12,6 +12,7 @@ using EVEMon.Common.Schedule;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing;
+using System.Media;
 
 // TODO fixup up EVEMon/cache and /EVEMon/cache/xml from release 778
 // (check if amy xmls are there that are less that a week old and if so, nove them to the right place
@@ -689,11 +690,13 @@ namespace EVEMon
                 if (e.Complete)
                 {
                     CharacterInfo ci = GetCharacterInfo(e.CharacterName);
-                    // if the scheduler says be quiet, how much should be suppressed?
+                    
                     if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
                     {
-                        string skilltrained = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "SkillTrained.mp3";
-                        MP3Player.Play(skilltrained, true);
+
+                        string skilltrained = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "SkillTrained.wav";
+                        using (SoundPlayer sp = new SoundPlayer(skilltrained))
+                            sp.Play();
                     }
 
                     int skillLevel = ci.GetSkill(e.SkillName).Level;
@@ -747,6 +750,7 @@ namespace EVEMon
                 }
             }));
         }
+
 
         private void SetRemoveEnable()
         {
@@ -1635,6 +1639,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 

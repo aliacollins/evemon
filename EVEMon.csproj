@@ -119,7 +119,6 @@
     <Compile Include="ImpGroups\ManualImplantDetailWindow.Designer.cs">
       <DependentUpon>ManualImplantDetailWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MP3Player.cs" />
     <Compile Include="NoFlickerListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -243,7 +242,7 @@
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
@@ -652,9 +651,6 @@
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="SkillPlanner\BrowserClasses.cd" />
-    <Content Include="SkillTrained.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Microsoft.VC80.CRT\msvcm80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -662,6 +658,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Microsoft.VC80.CRT\msvcr80.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
