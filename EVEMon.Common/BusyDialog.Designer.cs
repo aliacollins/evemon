@@ -28,11 +28,8 @@ namespace EVEMon.Common
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BusyDialog));
             this.label1 = new System.Windows.Forms.Label();
             this.pbDisplay = new System.Windows.Forms.ProgressBar();
-            this.tmrProgressBarUpdate = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -40,7 +37,7 @@ namespace EVEMon.Common
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(209, 13);
+            this.label1.Size = new System.Drawing.Size(212, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Please wait while EVEMon retrieves data...";
             // 
@@ -76,6 +73,5 @@ namespace EVEMon.Common
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar pbDisplay;
-        private System.Windows.Forms.Timer tmrProgressBarUpdate;
     }
 }
