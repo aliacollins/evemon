@@ -620,7 +620,7 @@ namespace EVEMon.Common
                     neededLevel = Math.Max(pp.Level, neededLevel);
                 }
 
-                if (recurse)
+                if (recurse && neededLevel < 5 && pp.Skill.Id != this.Id) // check for neededLevel fixes recursuve akill bug (e.g polaris )
                 {
                     pp.Skill.HasAsPrerequisite(gs, ref neededLevel, true);
                 }

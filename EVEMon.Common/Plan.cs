@@ -497,7 +497,15 @@ namespace EVEMon.Common
                     foreach (Skill.Prereq pp in gs.Prereqs)
                     {
                         Skill pgs = pp.Skill;
+
+                        // ignore recursive skills (e.g Polaris)
+                        if (pgs.Id == gs.Id)
+                        {
+                            continue;
+                        }
+
                         int prIndex = GetIndexOf(pgs.Name, pp.Level);
+                        
                         if (prIndex == -1 && pgs.Level < pp.Level)
                         {
                             // Not in the plan, and needs to be trained...
@@ -811,6 +819,10 @@ namespace EVEMon.Common
             foreach (Skill.Prereq pp in gs.Prereqs)
             {
                 Skill pgs = pp.Skill;
+                if (pgs.Id == gs.Id)
+                {
+                    continue;
+                }
                 AddPrerequisiteEntries(pgs, planEntries, Note);
                 for (int i = 1; i <= pp.Level; i++)
                 {
@@ -1121,7 +1133,7 @@ namespace EVEMon.Common
                 {
                     Skill tSkill = pe.Skill;
                     int thisMaxNeeded;
-                    if (tSkill.HasAsPrerequisite(gs, out thisMaxNeeded))
+                    if (tSkill.HasAsPrerequisite(gs, out thisMaxNeeded) && tSkill.Id != gs.Id)
                     {
                         if (thisMaxNeeded == 5) // All are needed, fail now
                             return false;
@@ -1716,6 +1728,7 @@ namespace EVEMon.Common
                 }
                 foreach (Skill.Prereq pp in gs.Prereqs)
                 {
+                    if (pp.Skill.Id == gs.Id) continue;
                     string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.Level);
                     if (!contains.ContainsKey(tSkill))
                     {
