@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
 using System.Threading;
+using System.IO;
 
 namespace EVEMon
 {
@@ -178,9 +179,17 @@ namespace EVEMon
                 }
                 catch (Exception) { }
                 s = EveSession.GetSession(userId, tbAuthKey.Text, out errm);
+                List<Pair<string, int>> chars = new List<Pair<string, int>>();
                 if (s != null)
                 {
-                    List<Pair<string, int>> chars = s.GetCharacterListUncached();
+                    try
+                    {
+                        chars = s.GetCharacterListUncached();
+                    }
+                    catch (InvalidDataException)
+                    {
+                        //this should get handled by the next block
+                    }
                     if (chars.Count == 0)
                     {
                         SetNoCharacter();
@@ -215,7 +224,7 @@ namespace EVEMon
             }));
 
             worker.Start();
-            if(b != null && !b.IsDisposed)
+            if (b != null && !b.IsDisposed)
                 b.ShowDialog();
             worker.Join();
 
