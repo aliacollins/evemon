@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
+using System.Threading;
 
 namespace EVEMon
 {
@@ -166,10 +167,12 @@ namespace EVEMon
 
             string errm = string.Empty;
             EveSession s = null;
-            using (BusyDialog.GetScope())
+
+            BusyDialog b = new BusyDialog();
+            Thread worker = new Thread(new ThreadStart(delegate
             {
                 int userId = 0;
-                try 
+                try
                 {
                     userId = Int32.Parse(tbUserId.Text);
                 }
@@ -184,6 +187,9 @@ namespace EVEMon
                         MessageBox.Show("No characters were found on with those API Credentials. This may be because CCP have disabled the API.",
                                         "No Characters Found.",
                                         MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        m_charsToAdd.Clear();
+                        b.Invoke(new MethodInvoker(b.Dispose));
+                        b = null;
                         return;
                     }
 
@@ -204,7 +210,15 @@ namespace EVEMon
                         }
                     }
                 }
-            }
+                b.Invoke(new MethodInvoker(b.Dispose));
+                b = null;
+            }));
+
+            worker.Start();
+            if(b != null && !b.IsDisposed)
+                b.ShowDialog();
+            worker.Join();
+
 
             if (s == null)
             {

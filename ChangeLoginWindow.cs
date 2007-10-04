@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace EVEMon
 {
@@ -63,14 +64,15 @@ namespace EVEMon
         {
             bool isOk = false;
             bool isLoginOk = false;
-            using (BusyDialog.GetScope())
+            BusyDialog b = new BusyDialog();
+            Thread worker = new Thread(new ThreadStart(delegate
             {
                 int uid = 0;
                 try
                 {
                     uid = Int32.Parse(tbUserId.Text);
                 }
-                catch (Exception) {}
+                catch (Exception) { }
                 try
                 {
                     EveSession s = EveSession.GetSession(uid, tbAuthKey.Text);
@@ -85,7 +87,14 @@ namespace EVEMon
                     ExceptionHandler.LogException(ex, true);
                     isLoginOk = false;
                 }
-            }
+                b.Invoke(new MethodInvoker(b.Dispose));
+                b = null;
+            }));
+
+            worker.Start();
+            if (b != null && !b.IsDisposed)
+                b.ShowDialog();
+            worker.Join();
             if (isOk)
             {
                 m_userId = 0;

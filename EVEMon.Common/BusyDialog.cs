@@ -20,7 +20,7 @@ namespace EVEMon.Common
             InitializeComponent();
         }
 
-        internal void Complete()
+        /*internal void Complete()
         {
             this.Invoke(new MethodInvoker(this.Close));
         }
@@ -83,6 +83,6 @@ namespace EVEMon.Common
                 EndProgress();
             }
             #endregion
-        }
+        }*/
     }
 }
