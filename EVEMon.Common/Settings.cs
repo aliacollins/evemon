@@ -2036,6 +2036,16 @@ namespace EVEMon.Common
             }
         }
 
+        public static void CopySettings(string copyFileName)
+        {
+            lock (mutexLock)
+            {
+                // ensure we have the latest settings saved
+                SaveCallback(new Object());
+                File.Copy(Settings.SettingsFileName, copyFileName, true);
+            }
+        }
+
         public static void Reset()
         {
             Settings s = new Settings();

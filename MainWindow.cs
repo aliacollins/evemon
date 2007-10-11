@@ -1436,7 +1436,7 @@ namespace EVEMon
 
         private void saveFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            File.Copy(Settings.SettingsFileName, saveFileDialog.FileName, true);
+            Settings.CopySettings(saveFileDialog.FileName);
             // restore the working directory to orginal startup directory
             Directory.SetCurrentDirectory(m_currntDirectory);
         }
