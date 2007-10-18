@@ -331,6 +331,7 @@ namespace EVEMon
                         if (f.DialogResult == DialogResult.OK)
                         {
                             this.updateFlag = true;
+                            m_settings.SaveImmediate();
                             this.Close();
                         }
                     }
@@ -359,6 +360,7 @@ namespace EVEMon
                         if (f.DialogResult == DialogResult.OK)
                         {
                             this.dataUpdateFlag = true;
+                            m_settings.SaveImmediate();
                             this.Close();
                         }
                     }
