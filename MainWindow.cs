@@ -14,10 +14,6 @@ using System.IO;
 using System.Drawing;
 using System.Media;
 
-// TODO fixup up EVEMon/cache and /EVEMon/cache/xml from release 778
-// (check if amy xmls are there that are less that a week old and if so, nove them to the right place
-// then remove the folder.
-
 
 namespace EVEMon
 {
@@ -225,7 +221,7 @@ namespace EVEMon
                 "Getting Started",
                 "To begin using EVEMon, click the File|Add Character... menu option, " +
                 "enter your CCP API information " +
-                "and choose a character to monitor. Please ensure your PC clock is accurate!");
+                "and choose a character to monitor.");
         }
 
         void m_settings_ShowTQBalloonChanged(object sender, EventArgs e)
