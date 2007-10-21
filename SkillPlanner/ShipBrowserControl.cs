@@ -318,7 +318,7 @@ namespace EVEMon.SkillPlanner
         {
             NewPlannerWindow npw = Plan.PlannerWindow.Target as NewPlannerWindow;
             if (npw == null) return;
-            if (npw.LoadoutForm == null)
+            if (npw.LoadoutForm == null || npw.LoadoutForm.IsDisposed)
             {
                 npw.LoadoutForm = new LoadoutSelect(shipSelectControl.SelectedObject as Ship, this.Plan);
             }
