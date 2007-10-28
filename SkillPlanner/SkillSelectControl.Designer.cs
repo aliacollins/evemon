@@ -99,7 +99,7 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.Name = "cbSkillFilter";
             this.cbSkillFilter.Size = new System.Drawing.Size(169, 21);
             this.cbSkillFilter.Sorted = true;
-            this.cbSkillFilter.TabIndex = 0;
+            this.cbSkillFilter.TabIndex = 1;
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // tbSearchText
@@ -110,7 +110,7 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tbSearchText.Name = "tbSearchText";
             this.tbSearchText.Size = new System.Drawing.Size(169, 21);
-            this.tbSearchText.TabIndex = 1;
+            this.tbSearchText.TabIndex = 36;
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearch_Leave);
             this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
@@ -245,7 +245,7 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
             this.lbSearchList.Name = "lbSearchList";
             this.lbSearchList.Size = new System.Drawing.Size(200, 313);
-            this.lbSearchList.TabIndex = 21;
+            this.lbSearchList.TabIndex = 46;
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
@@ -342,7 +342,7 @@ namespace EVEMon.SkillPlanner
             this.cbShowNonPublic.Name = "cbShowNonPublic";
             this.cbShowNonPublic.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
             this.cbShowNonPublic.Size = new System.Drawing.Size(200, 22);
-            this.cbShowNonPublic.TabIndex = 24;
+            this.cbShowNonPublic.TabIndex = 50;
             this.cbShowNonPublic.Text = "Show Non-Public Skills";
             this.cbShowNonPublic.UseVisualStyleBackColor = true;
             this.cbShowNonPublic.CheckedChanged += new System.EventHandler(this.cbShowNonPublic_CheckedChanged);

@@ -1460,56 +1460,58 @@ namespace CodersLab.Windows.Controls
 			int intNumber = 0;
 
 			TreeNode tnNewlySelectedNodeWithKeys = null;
-			switch (e.KeyCode)
-			{
-				case Keys.Down:
-					tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.NextVisibleNode;
-					break;
+            if (tnMostRecentSelectedNode != null)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Down:
+                        tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.NextVisibleNode;
+                        break;
 
-				case Keys.Up:
-					tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.PrevVisibleNode;
-					break;
+                    case Keys.Up:
+                        tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.PrevVisibleNode;
+                        break;
 
-				case Keys.Left:
-                    if (tnMostRecentSelectedNode.IsExpanded)
-                        tnMostRecentSelectedNode.Collapse();
-                    else
-                        tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Parent;
-					break;
+                    case Keys.Left:
+                        if (tnMostRecentSelectedNode.IsExpanded)
+                            tnMostRecentSelectedNode.Collapse();
+                        else
+                            tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Parent;
+                        break;
 
-				case Keys.Right:
-                    if (!tnMostRecentSelectedNode.IsExpanded)
-                        tnMostRecentSelectedNode.Expand();
-                    else
-                        if (tnMostRecentSelectedNode.Nodes != null)
-                            tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Nodes[0];
-					break;
+                    case Keys.Right:
+                        if (!tnMostRecentSelectedNode.IsExpanded)
+                            tnMostRecentSelectedNode.Expand();
+                        else
+                            if (tnMostRecentSelectedNode.Nodes != null)
+                                tnNewlySelectedNodeWithKeys = tnMostRecentSelectedNode.Nodes[0];
+                        break;
 
-				case Keys.Home:
-					tnNewlySelectedNodeWithKeys = this.Nodes[0];
-					break;
+                    case Keys.Home:
+                        tnNewlySelectedNodeWithKeys = this.Nodes[0];
+                        break;
 
-				case Keys.End:
-					tnNewlySelectedNodeWithKeys = GetLastVisibleNode();
-					break;
+                    case Keys.End:
+                        tnNewlySelectedNodeWithKeys = GetLastVisibleNode();
+                        break;
 
-				case Keys.PageDown:
+                    case Keys.PageDown:
 
-					intNumber = GetNumberOfVisibleNodes();
-					tnNewlySelectedNodeWithKeys = GetNextTreeNode(tnMostRecentSelectedNode, true, intNumber);
-					break;
+                        intNumber = GetNumberOfVisibleNodes();
+                        tnNewlySelectedNodeWithKeys = GetNextTreeNode(tnMostRecentSelectedNode, true, intNumber);
+                        break;
 
-				case Keys.PageUp:
+                    case Keys.PageUp:
 
-					intNumber = GetNumberOfVisibleNodes();
-					tnNewlySelectedNodeWithKeys = GetNextTreeNode(tnMostRecentSelectedNode, false, intNumber);
-					break;
+                        intNumber = GetNumberOfVisibleNodes();
+                        tnNewlySelectedNodeWithKeys = GetNextTreeNode(tnMostRecentSelectedNode, false, intNumber);
+                        break;
 
-				default:
-					base.OnKeyDown(e); // GKM
-					return;
-			}
-
+                    default:
+                        base.OnKeyDown(e); // GKM
+                        return;
+                }
+            }
 			if ((tnNewlySelectedNodeWithKeys != null))
 			{
 				SetFocusToNode(tnMostRecentSelectedNode, false);

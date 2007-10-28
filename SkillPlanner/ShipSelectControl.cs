@@ -244,32 +244,33 @@ namespace EVEMon.SkillPlanner
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // cbSkillFilter
-            //
+            // 
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
-            //
+            // 
             // tbSearchText
-            //
+            // 
             this.tbSearchText.Location = new System.Drawing.Point(33, 99);
             this.tbSearchText.Size = new System.Drawing.Size(152, 21);
-            //
+            this.tbSearchText.TabIndex = 35;
+            // 
             // tvItems
-            //
+            // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
             this.tvItems.Size = new System.Drawing.Size(185, 285);
-            //
+            // 
             // lbNoMatches
-            //
+            // 
             this.lbNoMatches.Location = new System.Drawing.Point(2, 2);
             this.lbNoMatches.Size = new System.Drawing.Size(168, 22);
-            //
+            // 
             // lbSearchList
-            //
+            // 
             this.lbSearchList.Size = new System.Drawing.Size(185, 285);
-            //
+            // 
             // panel1
-            //
+            // 
             this.panel1.Controls.Add(this.cbFaction);
             this.panel1.Controls.Add(this.cbORE);
             this.panel1.Controls.Add(this.cbAmarr);
@@ -288,24 +289,24 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.SetChildIndex(this.cbFaction, 0);
             this.panel1.Controls.SetChildIndex(this.label1, 0);
             this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
-            //
+            // 
             // panel2
-            //
+            // 
             this.panel2.Location = new System.Drawing.Point(0, 125);
             this.panel2.Size = new System.Drawing.Size(185, 285);
-            //
+            // 
             // lbSearchTextHint
-            //
+            // 
             this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.lbSearchTextHint.Location = new System.Drawing.Point(34, 100);
             this.lbSearchTextHint.Size = new System.Drawing.Size(68, 18);
-            //
+            // 
             // pbSearchImage
-            //
+            // 
             this.pbSearchImage.Location = new System.Drawing.Point(9, 99);
-            //
+            // 
             // cbCaldari
-            //
+            // 
             this.cbCaldari.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.cbCaldari.AutoSize = true;
             this.cbCaldari.Cursor = System.Windows.Forms.Cursors.Default;
@@ -316,9 +317,9 @@ namespace EVEMon.SkillPlanner
             this.cbCaldari.Text = "Caldari";
             this.cbCaldari.UseVisualStyleBackColor = true;
             this.cbCaldari.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // cbFaction
-            //
+            // 
             this.cbFaction.AutoSize = true;
             this.cbFaction.Location = new System.Drawing.Point(90, 53);
             this.cbFaction.Name = "cbFaction";
@@ -327,9 +328,9 @@ namespace EVEMon.SkillPlanner
             this.cbFaction.Text = "Faction";
             this.cbFaction.UseVisualStyleBackColor = true;
             this.cbFaction.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // cbGallente
-            //
+            // 
             this.cbGallente.AutoSize = true;
             this.cbGallente.Location = new System.Drawing.Point(9, 76);
             this.cbGallente.Name = "cbGallente";
@@ -338,9 +339,9 @@ namespace EVEMon.SkillPlanner
             this.cbGallente.Text = "Gallente";
             this.cbGallente.UseVisualStyleBackColor = true;
             this.cbGallente.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // cbMinmatar
-            //
+            // 
             this.cbMinmatar.AutoSize = true;
             this.cbMinmatar.Location = new System.Drawing.Point(90, 30);
             this.cbMinmatar.Name = "cbMinmatar";
@@ -349,9 +350,9 @@ namespace EVEMon.SkillPlanner
             this.cbMinmatar.Text = "Minmatar";
             this.cbMinmatar.UseVisualStyleBackColor = true;
             this.cbMinmatar.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // cbORE
-            //
+            // 
             this.cbORE.AutoSize = true;
             this.cbORE.Location = new System.Drawing.Point(90, 76);
             this.cbORE.Name = "cbORE";
@@ -360,9 +361,9 @@ namespace EVEMon.SkillPlanner
             this.cbORE.Text = "ORE";
             this.cbORE.UseVisualStyleBackColor = true;
             this.cbORE.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // cbAmarr
-            //
+            // 
             this.cbAmarr.AutoSize = true;
             this.cbAmarr.Location = new System.Drawing.Point(9, 30);
             this.cbAmarr.Name = "cbAmarr";
@@ -371,9 +372,9 @@ namespace EVEMon.SkillPlanner
             this.cbAmarr.Text = "Amarr";
             this.cbAmarr.UseVisualStyleBackColor = true;
             this.cbAmarr.CheckedChanged += new System.EventHandler(this.cbRace_SelectedChanged);
-            //
+            // 
             // ShipSelectControl
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.Name = "ShipSelectControl";
             this.Size = new System.Drawing.Size(185, 410);
