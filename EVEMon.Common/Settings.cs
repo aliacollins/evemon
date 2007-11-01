@@ -1770,61 +1770,80 @@ namespace EVEMon.Common
             if (m_instance != null)
                 return m_instance;
 
-            // This tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
+            // This tries to be resilient - if the settings file is 0 length or fails to load, then look for a backup
             // copy and ask if that is to be used.
-            // If the settings file is ok, then back it up.
+            // Once a settings file is loaded, a backup is taken as a 'last good settings file'
 
             Settings s = null;
-            try
+            String settingsFile = SettingsFileName;
+            String backupFile = settingsFile + ".bak";
+
+            // Check that a settings file or backup exists
+            if (File.Exists(settingsFile) || File.Exists(backupFile))
             {
-                if (File.Exists(SettingsFileName))
+                // Check settings file length
+                FileInfo settingsInfo = new FileInfo(settingsFile);
+                if (File.Exists(settingsFile) && settingsInfo.Length > 0)
                 {
-                    String fileName = SettingsFileName;
-                    FileInfo fa = new FileInfo(SettingsFileName);
-                    if (fa.Length == 0)
+                    // Try to load from this file
+                    try
                     {
-                        bool backupExists = File.Exists(SettingsFileName + ".bak");
-                        if (backupExists)
+                        s = LoadFromFile(settingsFile);
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHandler.LogException(e, true);
+                    }
+                    // If the settings loaded OK, make a backup as 'last good settings'
+                    if (s != null)
+                    {
+                        File.Copy(settingsFile, backupFile, true);
+                    }
+                }
+                if (s == null)
+                {
+                    // Load failed, so check for backup
+                    FileInfo backupInfo = new FileInfo(backupFile);
+                    if (File.Exists(backupFile) && backupInfo.Length > 0)
+                    {
+                        String fileDate = backupInfo.LastWriteTime.ToLocalTime().ToShortDateString() + " at " + backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString();
+                        DialogResult dr = MessageBox.Show(String.Format("Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        if (dr == DialogResult.Yes)
                         {
-                            DialogResult dr = MessageBox.Show("Your settings file is corrupt. There is a backup available, do you want to use the backup file?", "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                            if (dr == DialogResult.No)
+                            // Try to load from backup file
+                            try
                             {
-                                s = new Settings();
-                                fileName = null;
+                                s = LoadFromFile(backupFile);
+                            }
+                            catch (Exception e)
+                            {
+                                ExceptionHandler.LogException(e, true);
+                            }
+                            // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
+                            if (s != null)
+                            {
+                                File.Copy(backupFile, settingsFile, true);
+                                File.Copy(settingsFile, backupFile, true);
                             }
                             else
+                            // Notify user we have a problem
                             {
-                                fileName += ".bak";
+                                MessageBox.Show("Load from backup failed. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Your settings file is corrupt. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            s = new Settings();
-                            fileName = null;
                         }
                     }
                     else
+                    // Notify user we have a problem
                     {
-                        // We have a non-zero length settings file - so make a copy.
-                        File.Copy(SettingsFileName, SettingsFileName + ".bak", true);
+                        MessageBox.Show("Your settings file is corrupt, and no backup is available. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
-                    if (fileName != null)
-                    {
-                        s = LoadFromFile(fileName);
-                    }
-                }
-                else
-                {
-                    s = new Settings();
                 }
             }
-            catch (Exception e)
+            // If we don't have a settings by now, either its a fresh install or all file copies are corrupt, so create new settings
+            if (s == null)
             {
-                ExceptionHandler.LogException(e, true);
                 s = new Settings();
             }
-
             s.CalculateChecksums();
             m_instance = s;
             return s;

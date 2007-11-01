@@ -1548,7 +1548,7 @@ namespace EVEMon.Common
                 writeLine();
                 if (pto.FooterCost || pto.EntryCost)
                 {
-                    sw.Write("N.B. Skill costs are based on CCP's database and are indicitave only");
+                    sw.Write("N.B. Skill costs are based on CCP's database and are indicative only");
                     writeLine();
                 }
             }

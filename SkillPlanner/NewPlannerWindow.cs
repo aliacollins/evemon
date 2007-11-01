@@ -484,8 +484,15 @@ namespace EVEMon.SkillPlanner
         {
             sfdSave.Title = "Save to File";
             string planSaveName = m_plan.Name;
-            planSaveName = planSaveName.Replace("\\","-");
-            planSaveName = planSaveName.Replace("/","-");
+            char[] invalidFileChars = Path.GetInvalidFileNameChars();
+            int fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            while (fileInd != -1)
+            {
+                planSaveName = planSaveName.Replace(planSaveName[fileInd], '-');
+                fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            }
+//            planSaveName = planSaveName.Replace("\\","-");
+//            planSaveName = planSaveName.Replace("/","-");
             sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + planSaveName;
             sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
             sfdSave.FilterIndex = (int)PlanSaveType.Emp;
