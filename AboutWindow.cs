@@ -85,6 +85,7 @@ namespace EVEMon
             slDevelopers.Add("skolima", "05");
             slDevelopers.Add("Spiff Nutter", "05");
             slDevelopers.Add("vardoj", "05");
+            slDevelopers.Add("xNomeda", "05");
 
             slOutput = new SortedList();
         }

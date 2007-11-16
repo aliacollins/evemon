@@ -94,8 +94,13 @@ namespace EVEMon
                         messageText.Append("\r\n");
                     }
                 }
+                return SendMail(settings, charName + " has finished training " + skillName + " " + skillLevelString, messageText.ToString());
             }
-            return SendMail(settings, charName + " has finished training " + skillName + " " + skillLevelString, messageText.ToString());
+            else
+            {
+                // Shorter subject also for SMS Format
+                return SendMail(settings, "[STC] " + charName + " :: " + skillName + " " + skillLevelString, messageText.ToString());
+            }
             //return SendMail(settings, charName + " skill " + skillName + " " + skillLevelString + " complete", messageText.ToString());
         }
 
