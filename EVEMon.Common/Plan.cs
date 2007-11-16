@@ -4,6 +4,9 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
+using System.Drawing;
+using System.Drawing.Printing;
+
 namespace EVEMon.Common
 {
     [XmlRoot("plan")]
@@ -19,6 +22,16 @@ namespace EVEMon.Common
         #region Members
         // Plan Name
         private string m_planName;
+        Settings m_settings;
+
+        private int entryToPrint;
+        private Font printFont = new Font("Aerial", 10);
+        private Font printFontBold = new Font("Aerial", 10, FontStyle.Bold | FontStyle.Underline);
+        private SolidBrush printBrush = new SolidBrush(Color.Black);
+        private Point printPoint = new Point();
+        private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
+        private DateTime printCurDt = DateTime.Now;
+        PlanTextOptions m_pto;
 
         [XmlIgnore]
         public string Name
@@ -1764,6 +1777,209 @@ namespace EVEMon.Common
                 return pe;
             }
             #endregion
+        }
+
+        public void PrintPlan()
+        {
+            PrintDocument doc = new PrintDocument();
+            doc.DocumentName = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")";
+            doc.PrintPage += new PrintPageEventHandler(doc_PrintPage);
+            PrintPreviewDialog pd = new PrintPreviewDialog();
+
+            m_settings = Settings.GetInstance();
+
+            m_pto = (PlanTextOptions)m_settings.DefaultCopyOptions;
+
+            Printing.PrintOptionsDlg prdlg = new EVEMon.Printing.PrintOptionsDlg(m_settings,m_pto,doc);
+
+            if (prdlg.ShowDialog() == DialogResult.OK)
+            {
+                doc.PrinterSettings.PrinterName = prdlg.PrinterName;
+
+                
+
+                entryToPrint = 0;
+                printPoint = new Point();
+                printTotalTrainingTime = TimeSpan.Zero;
+                printCurDt = DateTime.Now;
+
+                pd.Document = doc;
+                pd.ShowDialog();
+            }
+        }
+
+        SizeF printBold(Graphics g, string s, Point p)
+        {
+            SizeF f = g.MeasureString(s, printFontBold);
+            g.DrawString(s, printFontBold, printBrush, printPoint);
+            return f;
+        }
+        SizeF print(Graphics g, string s, Point p)
+        {
+            SizeF f = g.MeasureString(s, printFont);
+            g.DrawString(s, printFont, printBrush, printPoint);
+            return f;
+        }
+
+        void doc_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+            SizeF f = new SizeF(0, 0);
+            string s = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")"; 
+            int num = 0;
+
+            printPoint.X = 5;
+            printPoint.Y = 5;
+
+            if (m_pto.IncludeHeader)
+            {
+                f = e.Graphics.MeasureString(s, printFontBold);
+                printPoint.X = (int)((e.MarginBounds.Width - f.Width) / 2);
+                f = printBold(e.Graphics, s, printPoint);
+                printPoint.Y += (int)(2 * f.Height);
+                printPoint.X = 5;
+            }
+
+            foreach (Plan.Entry pe in this.Entries)
+            {
+                num++;
+
+                if (entryToPrint >= num)
+                    continue;
+
+                if (m_pto.EntryNumber)
+                {
+                    f = print(e.Graphics, num.ToString() + ": ", printPoint);
+                    printPoint.X += (int)f.Width;
+                }
+
+                f = printBold(e.Graphics, pe.SkillName, printPoint);
+                printPoint.X += (int)f.Width;
+                f = printBold(e.Graphics, Skill.GetRomanForInt(pe.Level), printPoint);
+                printPoint.X += (int)f.Width;
+
+                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                scratchpad.ApplyALevelOf(pe.Skill);
+                DateTime startDate = printCurDt;
+                printCurDt += trainingTime;
+                DateTime finishDate = printCurDt;
+                printTotalTrainingTime += trainingTime;
+
+                if (m_pto.EntryTrainingTimes || m_pto.EntryStartDate || m_pto.EntryFinishDate)
+                {
+                    printPoint.Y += (int)f.Height;
+                    printPoint.X = 20;
+
+                    f = print(e.Graphics, " (", printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    bool needComma = false;
+                    if (m_pto.EntryTrainingTimes)
+                    {
+                        f = print(e.Graphics, Skill.TimeSpanToDescriptiveText(trainingTime,
+                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), printPoint);
+                        printPoint.X += (int)f.Width;
+                        needComma = true;
+                    }
+                    if (m_pto.EntryStartDate)
+                    {
+                        if (needComma)
+                        {
+                            f = print(e.Graphics, "; ", printPoint);
+                            printPoint.X += (int)f.Width;
+                        }
+                        f = print(e.Graphics, "Start: ", printPoint);
+                        printPoint.X += (int)f.Width;
+
+                        f = print(e.Graphics, startDate.ToString(), printPoint);
+                        printPoint.X += (int)f.Width;
+
+                        needComma = true;
+                    }
+                    if (m_pto.EntryFinishDate)
+                    {
+                        if (needComma)
+                        {
+                            f = print(e.Graphics, "; ", printPoint);
+                            printPoint.X += (int)f.Width;
+                        }
+                        f = print(e.Graphics, "Finish: ", printPoint);
+                        printPoint.X += (int)f.Width;
+                        f = print(e.Graphics, finishDate.ToString(), printPoint);
+                        printPoint.X += (int)f.Width;
+                        needComma = true;
+                    }
+                    f = print(e.Graphics, ")", printPoint);
+                    printPoint.X += (int)f.Width;
+                }
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+
+                if (printPoint.Y > e.MarginBounds.Bottom)
+                {
+                    entryToPrint = num;
+                    e.HasMorePages = true;
+                    return;
+                }
+            }
+
+            e.HasMorePages = false;
+
+            if (m_pto.FooterCount || m_pto.FooterTotalTime || m_pto.FooterDate)
+            {
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+
+                bool needComma = false;
+
+                if (m_pto.FooterCount)
+                {
+                    f = print(e.Graphics, num.ToString(), printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    if (num != 1)
+                        f = print(e.Graphics, " skills", printPoint);
+                    else
+                        f = print(e.Graphics, " skill", printPoint);
+
+                    printPoint.X += (int)f.Width;
+                    needComma = true;
+                }
+                if (m_pto.FooterTotalTime)
+                {
+                    if (needComma)
+                    {
+                        f = print(e.Graphics, "; ", printPoint);
+                        printPoint.X += (int)f.Width;
+                    }
+                    f = print(e.Graphics, "Total time: ", printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    f = print(e.Graphics, Skill.TimeSpanToDescriptiveText(printTotalTrainingTime,
+                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), printPoint);
+
+                    printPoint.X += (int)f.Width;
+
+                    needComma = true;
+                }
+                if (m_pto.FooterDate)
+                {
+                    if (needComma)
+                    {
+                        f = print(e.Graphics, "; ", printPoint);
+                        printPoint.X += (int)f.Width;
+                    }
+                    f = print(e.Graphics, "Completion: ", printPoint);
+                    printPoint.X += (int)f.Width;
+                    f = print(e.Graphics, printCurDt.ToString(), printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    needComma = true;
+                }
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+            }
+
         }
     }
 

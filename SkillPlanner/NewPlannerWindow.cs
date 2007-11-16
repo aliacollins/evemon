@@ -720,12 +720,15 @@ namespace EVEMon.SkillPlanner
 
         #region Print Plan
 
-        WebBrowser printBrowser;
+        WebBrowser printBrowser = null;
         Bitmap printBmp;
         int curPage = 0;
 
         private void tsbPrintPlan_Click(object sender, EventArgs e)
         {
+            m_plan.PrintPlan();
+
+            /*
             printBrowser = new WebBrowser();
             printBrowser.Width = 800;
             printBrowser.Height = m_plan.Entries.Count*19+79;
@@ -756,6 +759,8 @@ namespace EVEMon.SkillPlanner
             printBrowser.Dispose();
             printBmp.Dispose();
             printBmp = null;
+             * 
+             * */
         }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
