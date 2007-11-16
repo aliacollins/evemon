@@ -18,17 +18,18 @@ namespace EVEMon.SkillPlanner
     {
         private Ship m_ship;
         private Plan m_plan;
+        private Settings m_settings;
 
         public LoadoutSelect()
         {
             InitializeComponent();
+            m_settings = Settings.GetInstance();
         }
 
-        public LoadoutSelect(Ship s, Plan p)
+        public LoadoutSelect(Ship s, Plan p) : this()
         {
             m_plan = p;
             m_ship = s;
-            InitializeComponent();
         }
 
         private void LoadoutSelect_Load(object sender, EventArgs e)
@@ -281,12 +282,23 @@ namespace EVEMon.SkillPlanner
 
         public class LoadoutListSorter : IComparer
         {
+
+            private Settings m_settings;
+
             private ListView m_loadouts;
             public LoadoutListSorter(LoadoutSelect ls)
             {
+                m_settings = Settings.GetInstance();
                 m_loadouts = ls.lvLoadouts;
-                OrderOfSort = SortOrder.Descending;
-                SortColumn = 3;
+                SortColumn = m_settings.LoadoutSortColumn;
+                if (m_settings.LoadoutSortAscending)
+                {
+                    OrderOfSort = SortOrder.Ascending;
+                }
+                else
+                {
+                    OrderOfSort = SortOrder.Descending;
+                }
             }
 
             private int m_sortColumn;
@@ -348,6 +360,7 @@ namespace EVEMon.SkillPlanner
             if (e.Column == m_columnSorter.SortColumn)
             {
                 // already sorting on this column so swap sort order
+                m_settings.LoadoutSortAscending = !m_settings.LoadoutSortAscending;
                 if (m_columnSorter.OrderOfSort == SortOrder.Ascending)
                 {
                     m_columnSorter.OrderOfSort = SortOrder.Descending;
@@ -356,11 +369,14 @@ namespace EVEMon.SkillPlanner
                 {
                     m_columnSorter.OrderOfSort = SortOrder.Ascending;
                 }
+                
             }
             else
             {
                 m_columnSorter.SortColumn = e.Column;
                 m_columnSorter.OrderOfSort = SortOrder.Ascending;
+                m_settings.LoadoutSortAscending = true;
+                m_settings.LoadoutSortColumn = e.Column;
             }
             lvLoadouts.ListViewItemSorter = m_columnSorter;
             Cursor = Cursors.WaitCursor;

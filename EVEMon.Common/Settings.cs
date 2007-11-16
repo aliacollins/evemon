@@ -2621,6 +2621,24 @@ namespace EVEMon.Common
             }
         }
 
+        private int m_loadoutSortColumn = 3;
+
+        public int LoadoutSortColumn
+        {
+            get { return m_loadoutSortColumn; }
+            set { m_loadoutSortColumn = value; }
+        }
+
+        private bool m_loadSortAscending = false;
+
+        public bool LoadoutSortAscending
+        {
+            get { return m_loadSortAscending; }
+            set { m_loadSortAscending = value; }
+        }
+	
+
+	
         #endregion
 
         #region EVEMon Tips settings
