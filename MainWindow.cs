@@ -773,7 +773,10 @@ namespace EVEMon
                 CharLoginInfo cli = tp.Tag as CharLoginInfo;
                 name = cli.CharacterName;
                 m_settings.CharacterList.Remove(cli);
-                m_settings.RemoveAllPlansFor(cli.CharacterName);
+                if (!m_settings.KeepCharacterPlans)
+                {
+                    m_settings.RemoveAllPlansFor(cli.CharacterName);
+                }
                 m_settings.RemoveCharacterCache(cli.CharacterName);
                 UpdateTabOrder();
             }
@@ -858,8 +861,18 @@ namespace EVEMon
         private void removeCharacterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TabPage activeTab = tcCharacterTabs.SelectedTab;
+            string confirmMsg = "Are you sure you want to remove \"" + activeTab.Text + "\"?\n";
+            if (m_settings.KeepCharacterPlans)
+            {
+                confirmMsg += "Your plans will be kept. If you want plans to be deleted, ";
+            }
+            else
+            {
+                confirmMsg += "Your plans will also be deleted. If you want plans to be kept, ";
+            }
+            confirmMsg += "\nthen please change the \"Keep Character Plans\" setting on the \"Updates\" settings panel.";
             DialogResult dr =
-                MessageBox.Show("Are you sure you want to remove \"" + activeTab.Text + "\"?\nKeep Plan Options will apply!",
+                MessageBox.Show(confirmMsg,
                 "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.Yes)
             {
