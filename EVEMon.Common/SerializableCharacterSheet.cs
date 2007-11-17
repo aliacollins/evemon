@@ -53,6 +53,11 @@ namespace EVEMon.Common
             }
         }
 
+        public DateTime UpdatedAt
+        {
+            get { return m_curTime; }
+        }
+
         public DateTime XMLExpires
         {
             get { return m_cachedUntilTime.ToUniversalTime(); }

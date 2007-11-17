@@ -326,6 +326,14 @@ namespace EVEMon.Common
             set { m_xmlExpires = value; }
         }
 
+        private DateTime m_UpdatedAt = DateTime.MinValue;
+        public DateTime UpdatedAt
+        {
+            get { return m_UpdatedAt; }
+            set { m_UpdatedAt = value; }
+
+        }
+
         private void OnBalanceChanged()
         {
             FireEvent(delegate
@@ -785,6 +793,7 @@ namespace EVEMon.Common
             this.Bloodline = ci.CharacterSheet.BloodLine;
             this.CorporationName = ci.CharacterSheet.CorpName;
             this.XMLExpires = ci.XMLExpires;
+            this.UpdatedAt = ci.UpdatedAt;
             this.Balance = ci.CharacterSheet.Balance;
             if (ci.PortraitFolder != string.Empty)
                 this.PortraitFolder = ci.PortraitFolder;
@@ -1168,6 +1177,28 @@ namespace EVEMon.Common
 
             if (SkillInTraining != null)
             {
+                // Check that we're not checking a skill that evemon thinks has completed but actually hasn't yet...
+                // Ths happens when evemon is shutdown, then user switches skill in game without telling EVEVMon
+                // then when EVEMon starts, it thinks the original skill is done.
+                // When evemon starts, it gets character info, then training info from cache, then gets character sheet from ccp
+                // but this method is called with actual character sheet but cached training skills, and then called again for the
+                // actual training skill. This next check detetcs the case when we have got a new character sheet (isCached  is false) 
+                // but the cahced training skill finished before the current time stamp of the new character sheet
+                // We also need to check that the timestamp for when the training xml was recioeved is before the timestamp of
+                // the current character sheet to differentiate between the case where the skill really has completed but the
+                // user has not logged into game yet (in which case the character sheet DOES NOT reflect the completed skill) - check if the timestamps of the two xml message are more than 5 minutes apart
+
+                TimeSpan ts = (UpdatedAt > SkillInTraining.GetDateTimeAtUpdate) ? UpdatedAt - SkillInTraining.GetDateTimeAtUpdate : SkillInTraining.GetDateTimeAtUpdate - UpdatedAt;
+                if (!firstRun && !IsCached && SkillInTraining.getTrainingEndTime < UpdatedAt && ts.TotalMinutes > 5)
+                {
+                    
+                    //ok we know that we got a fresh character sheet, but we're using the cached training skill, so ignore this
+                    // and wait for the real training skill to come along in a second...
+
+  //                  MessageBox.Show("is cached " + (IsCached ? "true " : "false ") + " train end " + SkillInTraining.getTrainingEndTime + " Updated at " + UpdatedAt + " train timestamp " + SkillInTraining.GetDateTimeAtUpdate);
+                    return;
+                }
+
                 // See if this is the same skill as the old one and has the same completion time to within 2 seconds
                 // we can''t compare the datetimes directly as the number of milliseconds varies for some reason
                 if (m_OldSkillInTraining != null && 
