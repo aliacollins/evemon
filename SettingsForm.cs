@@ -127,7 +127,6 @@ namespace EVEMon
 
             s.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
 
-            s.DeleteCharacterSilently = cbDeleteCharactersSilently.Checked;
             s.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
 
             s.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
@@ -312,7 +311,6 @@ namespace EVEMon
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
 
-            cbDeleteCharactersSilently.Checked = m_settings.DeleteCharacterSilently;
             cbKeepCharacterPlans.Checked = m_settings.KeepCharacterPlans;
 
             cbHighlightPlannedSkills.Checked = m_settings.SkillPlannerHighlightPlannedSkills;

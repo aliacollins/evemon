@@ -30,23 +30,23 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode28,
-            treeNode29,
-            treeNode30,
-            treeNode31,
-            treeNode32,
-            treeNode33,
-            treeNode34,
-            treeNode35});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14,
+            treeNode15,
+            treeNode16,
+            treeNode17});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -172,11 +172,12 @@ namespace EVEMon
             this.cbKeepCharacterPlans = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel18 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbDeleteCharactersSilently = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel17 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbAutomaticEOSkillUpdate = new System.Windows.Forms.CheckBox();
             this.gbTQSettings = new System.Windows.Forms.GroupBox();
+            this.tbConnectivityURL = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.cbShowTQBalloon = new System.Windows.Forms.CheckBox();
             this.tlpCustomTQSettings = new System.Windows.Forms.TableLayoutPanel();
             this.tbTQServerPort = new System.Windows.Forms.TextBox();
@@ -207,8 +208,6 @@ namespace EVEMon
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.label25 = new System.Windows.Forms.Label();
-            this.tbConnectivityURL = new System.Windows.Forms.TextBox();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
@@ -262,9 +261,6 @@ namespace EVEMon
             this.groupBox8.SuspendLayout();
             this.flowLayoutPanel10.SuspendLayout();
             this.groupBox9.SuspendLayout();
-            this.flowLayoutPanel20.SuspendLayout();
-            this.flowLayoutPanel18.SuspendLayout();
-            this.flowLayoutPanel12.SuspendLayout();
             this.gbTQSettings.SuspendLayout();
             this.tlpCustomTQSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).BeginInit();
@@ -1240,26 +1236,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode28.Name = "Node1";
-            treeNode28.Text = "Node1";
-            treeNode29.Name = "Node2";
-            treeNode29.Text = "Node2";
-            treeNode30.Name = "Node3";
-            treeNode30.Text = "Node3";
-            treeNode31.Name = "Node4";
-            treeNode31.Text = "Node4";
-            treeNode32.Name = "Node5";
-            treeNode32.Text = "Node5";
-            treeNode33.Name = "Node6";
-            treeNode33.Text = "Node6";
-            treeNode34.Name = "Node7";
-            treeNode34.Text = "Node7";
-            treeNode35.Name = "Node8";
-            treeNode35.Text = "Node8";
-            treeNode36.Name = "Node0";
-            treeNode36.Text = "Node0";
+            treeNode10.Name = "Node1";
+            treeNode10.Text = "Node1";
+            treeNode11.Name = "Node2";
+            treeNode11.Text = "Node2";
+            treeNode12.Name = "Node3";
+            treeNode12.Text = "Node3";
+            treeNode13.Name = "Node4";
+            treeNode13.Text = "Node4";
+            treeNode14.Name = "Node5";
+            treeNode14.Text = "Node5";
+            treeNode15.Name = "Node6";
+            treeNode15.Text = "Node6";
+            treeNode16.Name = "Node7";
+            treeNode16.Text = "Node7";
+            treeNode17.Name = "Node8";
+            treeNode17.Text = "Node8";
+            treeNode18.Name = "Node0";
+            treeNode18.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode36});
+            treeNode18});
             this.tvlist.Size = new System.Drawing.Size(361, 90);
             this.tvlist.TabIndex = 9;
             // 
@@ -1736,6 +1732,8 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox9.AutoSize = true;
             this.groupBox9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox9.Controls.Add(this.cbAutomaticEOSkillUpdate);
+            this.groupBox9.Controls.Add(this.cbKeepCharacterPlans);
             this.groupBox9.Controls.Add(this.flowLayoutPanel20);
             this.groupBox9.Controls.Add(this.flowLayoutPanel19);
             this.groupBox9.Controls.Add(this.flowLayoutPanel18);
@@ -1743,7 +1741,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
             this.groupBox9.Location = new System.Drawing.Point(3, 69);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(373, 118);
+            this.groupBox9.Size = new System.Drawing.Size(373, 95);
             this.groupBox9.TabIndex = 9;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "XML Update";
@@ -1754,21 +1752,20 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel20.AutoSize = true;
             this.flowLayoutPanel20.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel20.Controls.Add(this.cbKeepCharacterPlans);
             this.flowLayoutPanel20.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel20.Location = new System.Drawing.Point(3, 75);
             this.flowLayoutPanel20.Name = "flowLayoutPanel20";
-            this.flowLayoutPanel20.Size = new System.Drawing.Size(133, 23);
+            this.flowLayoutPanel20.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel20.TabIndex = 4;
             // 
             // cbKeepCharacterPlans
             // 
             this.cbKeepCharacterPlans.AutoSize = true;
-            this.cbKeepCharacterPlans.Location = new System.Drawing.Point(3, 3);
+            this.cbKeepCharacterPlans.Location = new System.Drawing.Point(6, 58);
             this.cbKeepCharacterPlans.Name = "cbKeepCharacterPlans";
-            this.cbKeepCharacterPlans.Size = new System.Drawing.Size(127, 17);
+            this.cbKeepCharacterPlans.Size = new System.Drawing.Size(205, 17);
             this.cbKeepCharacterPlans.TabIndex = 1;
-            this.cbKeepCharacterPlans.Text = "Keep character plans";
+            this.cbKeepCharacterPlans.Text = "Keep plans when character is deleted";
             this.cbKeepCharacterPlans.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel19
@@ -1789,22 +1786,11 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel18.AutoSize = true;
             this.flowLayoutPanel18.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel18.Controls.Add(this.cbDeleteCharactersSilently);
             this.flowLayoutPanel18.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel18.Location = new System.Drawing.Point(3, 46);
             this.flowLayoutPanel18.Name = "flowLayoutPanel18";
-            this.flowLayoutPanel18.Size = new System.Drawing.Size(153, 23);
+            this.flowLayoutPanel18.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel18.TabIndex = 2;
-            // 
-            // cbDeleteCharactersSilently
-            // 
-            this.cbDeleteCharactersSilently.AutoSize = true;
-            this.cbDeleteCharactersSilently.Location = new System.Drawing.Point(3, 3);
-            this.cbDeleteCharactersSilently.Name = "cbDeleteCharactersSilently";
-            this.cbDeleteCharactersSilently.Size = new System.Drawing.Size(147, 17);
-            this.cbDeleteCharactersSilently.TabIndex = 1;
-            this.cbDeleteCharactersSilently.Text = "Delete characters silently";
-            this.cbDeleteCharactersSilently.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel17
             // 
@@ -1824,17 +1810,16 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel12.AutoSize = true;
             this.flowLayoutPanel12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel12.Controls.Add(this.cbAutomaticEOSkillUpdate);
             this.flowLayoutPanel12.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel12.Name = "flowLayoutPanel12";
-            this.flowLayoutPanel12.Size = new System.Drawing.Size(194, 23);
+            this.flowLayoutPanel12.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel12.TabIndex = 0;
             // 
             // cbAutomaticEOSkillUpdate
             // 
             this.cbAutomaticEOSkillUpdate.AutoSize = true;
-            this.cbAutomaticEOSkillUpdate.Location = new System.Drawing.Point(3, 3);
+            this.cbAutomaticEOSkillUpdate.Location = new System.Drawing.Point(6, 25);
             this.cbAutomaticEOSkillUpdate.Name = "cbAutomaticEOSkillUpdate";
             this.cbAutomaticEOSkillUpdate.Size = new System.Drawing.Size(188, 17);
             this.cbAutomaticEOSkillUpdate.TabIndex = 1;
@@ -1856,12 +1841,29 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.label14);
             this.gbTQSettings.Controls.Add(this.label15);
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
-            this.gbTQSettings.Location = new System.Drawing.Point(3, 193);
+            this.gbTQSettings.Location = new System.Drawing.Point(3, 170);
             this.gbTQSettings.Name = "gbTQSettings";
             this.gbTQSettings.Size = new System.Drawing.Size(373, 220);
             this.gbTQSettings.TabIndex = 8;
             this.gbTQSettings.TabStop = false;
             this.gbTQSettings.Text = "Tranquility Status";
+            // 
+            // tbConnectivityURL
+            // 
+            this.tbConnectivityURL.Location = new System.Drawing.Point(195, 179);
+            this.tbConnectivityURL.Name = "tbConnectivityURL";
+            this.tbConnectivityURL.Size = new System.Drawing.Size(172, 21);
+            this.tbConnectivityURL.TabIndex = 8;
+            this.tbConnectivityURL.Text = "http://www.google.com";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 182);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(186, 13);
+            this.label25.TabIndex = 7;
+            this.label25.Text = "URL to check for internet connection:";
             // 
             // cbShowTQBalloon
             // 
@@ -2181,23 +2183,6 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 182);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(186, 13);
-            this.label25.TabIndex = 7;
-            this.label25.Text = "URL to check for internet connection:";
-            // 
-            // tbConnectivityURL
-            // 
-            this.tbConnectivityURL.Location = new System.Drawing.Point(195, 179);
-            this.tbConnectivityURL.Name = "tbConnectivityURL";
-            this.tbConnectivityURL.Size = new System.Drawing.Size(172, 21);
-            this.tbConnectivityURL.TabIndex = 8;
-            this.tbConnectivityURL.Text = "http://www.google.com";
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2307,12 +2292,6 @@ namespace EVEMon
             this.flowLayoutPanel10.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
-            this.flowLayoutPanel20.ResumeLayout(false);
-            this.flowLayoutPanel20.PerformLayout();
-            this.flowLayoutPanel18.ResumeLayout(false);
-            this.flowLayoutPanel18.PerformLayout();
-            this.flowLayoutPanel12.ResumeLayout(false);
-            this.flowLayoutPanel12.PerformLayout();
             this.gbTQSettings.ResumeLayout(false);
             this.gbTQSettings.PerformLayout();
             this.tlpCustomTQSettings.ResumeLayout(false);
@@ -2420,7 +2399,6 @@ namespace EVEMon
         private System.Windows.Forms.ComboBox cbSkillIconSet;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel17;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel18;
-        private System.Windows.Forms.CheckBox cbDeleteCharactersSilently;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel20;
         private System.Windows.Forms.CheckBox cbKeepCharacterPlans;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;

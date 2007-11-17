@@ -171,7 +171,7 @@ namespace EVEMon
                 else if (o.GetType() == typeof(CharFileInfo))
                 {
                     CharFileInfo cfi = (CharFileInfo)o;
-                    if (!AddTab(cfi, m_settings.DeleteCharacterSilently))
+                    if (!AddTab(cfi))
                     {
                         invalidFiles.Add(cfi);
                     }
@@ -372,16 +372,13 @@ namespace EVEMon
         /// <param name="cfi">The object containing the character info</param>
         /// <param name="silent">if true, prompt if the file is missing, else remove the character silently</param>
         /// <returns>true if the character was added</returns>
-        private bool AddTab(CharFileInfo cfi, bool silent)
+        private bool AddTab(CharFileInfo cfi)
         {
             SerializableCharacterSheet sci = SerializableCharacterSheet.CreateFromFile(cfi.Filename);
             if (sci == null)
             {
-                if (!silent)
-                {
-                    MessageBox.Show("Unable to get character info from file.",
+                MessageBox.Show("Unable to get character info from file.",
                         "Unable To Get Character Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
                 return false;
             }
             cfi.CharacterName = sci.CharacterSheet.Name;
@@ -850,7 +847,7 @@ namespace EVEMon
                         cfi.MonitorFile = f.MonitorFile;
                         if (m_settings.AddFileCharacter(cfi))
                         {
-                            AddTab(cfi, false);
+                            AddTab(cfi);
                             UpdateTabOrder();
                         }
                     }
@@ -868,9 +865,9 @@ namespace EVEMon
             }
             else
             {
-                confirmMsg += "Your plans will also be deleted. If you want plans to be kept, ";
+                confirmMsg += "Your plans will be deleted. If you want plans to be kept, ";
             }
-            confirmMsg += "\nthen please change the \"Keep Character Plans\" setting on the \"Updates\" settings panel.";
+            confirmMsg += "\nthen please change the \"Keep plans when character is deleted\" setting on the \"Updates\" settings panel.";
             DialogResult dr =
                 MessageBox.Show(confirmMsg,
                 "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);

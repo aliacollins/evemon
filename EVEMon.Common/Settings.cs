@@ -756,19 +756,6 @@ namespace EVEMon.Common
             }
         }
 
-        private bool m_DeleteCharacterSilently;
-        public bool DeleteCharacterSilently
-        {
-            get { return m_DeleteCharacterSilently; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_DeleteCharacterSilently = value;
-                }
-            }
-        }
-
         private bool m_KeepCharacterPlans;
         public bool KeepCharacterPlans
         {
