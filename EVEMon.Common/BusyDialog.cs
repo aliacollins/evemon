@@ -10,11 +10,6 @@ namespace EVEMon.Common
 
         private static object m_lockObj = new object();
 
-        //for multiple thread entries, turn this back into an int.
-        private static bool _onDisplay = false;
-        private static Thread m_runThread;
-        private static BusyDialog m_instance;
-
         public BusyDialog()
         {
             InitializeComponent();
