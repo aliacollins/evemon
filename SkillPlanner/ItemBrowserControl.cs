@@ -57,23 +57,26 @@ namespace EVEMon.SkillPlanner
                         lvItemProperties.Columns.Add(selectedItem.Name);
                         foreach (EntityProperty prop in selectedItem.Properties)
                         {
-                            ListViewItem[] items = lvItemProperties.Items.Find(prop.Name, false);
-                            if (items.Length != 0)
+                            ListViewItem propItem = null;
+                            // Try and find a matching listview item. Note we require a case sensitive search.
+                            foreach (ListViewItem existingItem in lvItemProperties.Items)
                             {
-                                // existing property
-                                ListViewItem oldItem = items[0];
-                                oldItem.SubItems.Add(prop.Value);
+                                if (String.Compare(existingItem.Name, prop.Name, false) == 0)
+                                {
+                                    propItem = existingItem;
+                                    break;
+                                }
                             }
-                            else
+                            if (propItem == null)
                             {
                                 // new property
                                 int skipColumns = lvItemProperties.Columns.Count - 2;
-                                ListViewItem newItem = lvItemProperties.Items.Add(prop.Name);
-                                newItem.Name = prop.Name;
+                                propItem = lvItemProperties.Items.Add(prop.Name);
+                                propItem.Name = prop.Name;
                                 while (skipColumns-- > 0)
-                                    newItem.SubItems.Add("");
-                                newItem.SubItems.Add(prop.Value);
+                                    propItem.SubItems.Add("");
                             }
+                            propItem.SubItems.Add(prop.Value);
                         }
                         // mark items with changed value in blue
                         foreach (ListViewItem li in lvItemProperties.Items)

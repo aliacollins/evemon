@@ -124,8 +124,8 @@ namespace EVEMon.SkillPlanner
                 // Hide help message
                 lblHelp.Visible = false;
                 // View details and header
-                pnlBrowserHeader.Visible = true;
                 pnlDetails.Visible = true;
+                pnlBrowserHeader.Visible = true;
                 // Display details
                 DisplayItemDetails(this._selectedObject);
             }
