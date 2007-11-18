@@ -107,6 +107,8 @@ namespace EVEMon.SkillPlanner
                 }
                 // Watch for the form being closed so we can clean up after ourselves
                 this.ParentForm.FormClosing += new FormClosingEventHandler(ParentForm_FormClosing);
+                // Set current workSafeMode
+                SetWorksafe(Settings.GetInstance().WorksafeMode);
                 // Force a refresh
                 objectSelectControl_SelectedObjectChanged(null, null);
             }
@@ -186,6 +188,10 @@ namespace EVEMon.SkillPlanner
             else
             {
                 eoImage.ImageSize = EveImage.EveImageSize._64_64;
+                if (this._selectedObject != null)
+                {
+                    eoImage.EveItem = this._selectedObject;
+                }
                 lblEveObjCategory.Location = new Point(70, lblEveObjCategory.Location.Y);
                 lblEveObjName.Location = new Point(70, lblEveObjName.Location.Y);
             }
