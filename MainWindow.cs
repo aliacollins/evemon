@@ -402,7 +402,7 @@ namespace EVEMon
                     TipWindow.ShowTip("First run with API interface",
                         "First Run",
                         "EVEMon has detected a pre-API version of a settings file. At least one of your characters does not have an API key yet. Your original pre-api settings file is backed up as settings.xml.preapi. You will now be prompted for the API keys for each of your accounts.");
-                    m_settings.BackupOldSettingsFile();
+                    m_settings.BackupPreAPISettingsFile();
 
                 }
                 // No API info found - ask user - must be first run.

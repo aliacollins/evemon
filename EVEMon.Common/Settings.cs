@@ -1732,34 +1732,239 @@ namespace EVEMon.Common
 
         #endregion
 
-        #region Settings File Save / Load
-
+        #region Settings File Management
+        #region Properties and Fields
+        /// <summary>
+        /// Private member to hold currently loaded Settings instance
+        /// </summary>
+        /// <remarks>
+        /// m_instance is only set by either Load() or Restore() and should not be set elsewhere
+        /// </remarks>
         private static Settings m_instance = null;
 
+        /// <summary>
+        /// Field to hold data directory. Value is initialised by the first read of EveMonDataDir property
+        /// </summary>
+        private static string m_DataDir = String.Empty;
+
+        /// <summary>
+        /// Field to hold the name of the settings file in use. Value initialised by the first read of EveMonDataDir property.
+        /// </summary>
+        private static string m_SettingsFile = null;
+
+        /// <summary>
+        /// Returns the current data storage directory and initialises m_SettingsFile.
+        /// </summary>
+        public static string EveMonDataDir
+        {
+            get
+            {
+                lock (mutexLock)
+                {
+                    if (m_DataDir == String.Empty)
+                    {
+                        m_SettingsFile = Path.DirectorySeparatorChar + "settings.xml";
+#if DEBUG
+                        m_SettingsFile = Path.DirectorySeparatorChar + "settings-debug.xml";
+#endif
+
+                        m_DataDir = Directory.GetCurrentDirectory();
+
+                        string fn = m_DataDir + m_SettingsFile;
+
+                        if (!File.Exists(fn))
+                        {
+                            m_DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
+                        }
+                        if (!Directory.Exists(m_DataDir))
+                        {
+                            Directory.CreateDirectory(m_DataDir);
+                        }
+                        if (!Directory.Exists(Path.Combine(m_DataDir, "cache")))
+                        {
+                            Directory.CreateDirectory(Path.Combine(m_DataDir, "cache"));
+                        }
+                    }
+                    return m_DataDir;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the fully qualified path to the current settings file
+        /// </summary>
+        public static string SettingsFileName
+        {
+            get
+            {
+                return EveMonDataDir + m_SettingsFile;
+            }
+        }
+
+        /// <summary>
+        /// Boolean to prevent temporary Settings objects being saved.
+        /// </summary>
+        private bool m_neverSave = false;
+
+        /// <summary>
+        /// Flag to indicate if a save is pending but not comitted
+        /// </summary>
+        private bool m_savePending = false;
+
+        /// <summary>
+        /// Thread timer used to cache saves for
+        /// </summary>
+        private System.Threading.Timer m_saveTimer = null;
+
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Helper method to return current settings instance. If no instance exists, one is loaded
+        /// </summary>
+        /// <returns>A Settings object for the currently loaded instance</returns>
         public static Settings GetInstance()
         {
             lock (mutexLock)
             {
-                return Load();
+                if (m_instance == null)
+                    m_instance = Load();
+                return m_instance;
             }
         }
 
+        /// <summary>
+        /// Loads a settings file from a specified filepath and sets m_instance
+        /// </summary>
+        /// <param name="filename">The fully qualified filename of the settings file to load</param>
+        /// <returns>The Settings object loaded</returns>
         public static Settings Restore(string filename)
         {
             lock (mutexLock)
             {
-                return LoadFromFile(filename);
+                m_instance = LoadFromFile(filename);
+                return m_instance;
             }
         }
 
-        public static Settings Load()
+        /// <summary>
+        /// Copies the current Settings file to the specified location
+        /// </summary>
+        /// <param name="copyFileName">The fully qualified filename of the destination file</param>
+        public static void CopySettings(string copyFileName)
         {
-            if (m_instance != null)
-                return m_instance;
+            lock (mutexLock)
+            {
+                // ensure we have the latest settings saved
+                Settings.GetInstance().SaveImmediate();
+                File.Copy(Settings.SettingsFileName, copyFileName, true);
+            }
+        }
 
-            // This tries to be resilient - if the settings file is 0 length or fails to load, then look for a backup
-            // copy and ask if that is to be used.
-            // Once a settings file is loaded, a backup is taken as a 'last good settings file'
+        /// <summary>
+        /// Saves settings to disk
+        /// </summary>
+        /// <remarks>
+        /// Saves will be cached for 10 seconds to avoid thrashing the disk when this method is called very rapidly
+        /// such as at startup. If a save is currently pending, no action is needed. 
+        /// </remarks>
+        public void Save()
+        {
+            lock (mutexLock)
+            {
+                if (!m_savePending)
+                {
+                    // Set savePending flag
+                    m_savePending = true;
+                    // Initialise a run-once timer to delay the save by 10 sec
+                    m_saveTimer = new System.Threading.Timer(new System.Threading.TimerCallback(SaveCallback), null, 10000, System.Threading.Timeout.Infinite);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves settings without the 10 second cache delay
+        /// </summary>
+        public void SaveImmediate()
+        {
+            lock (mutexLock)
+            {
+                // Set save pending flag
+                m_savePending = true;
+                // Now save to disk
+                SaveCallback(null);
+            }
+        }
+
+        /// <summary>
+        /// Creates a backup of a pre-API settings file
+        /// </summary>
+        public void BackupPreAPISettingsFile()
+        {
+            try
+            {
+                if (File.Exists(SettingsFileName))
+                {
+                    // save the preapi settings file, but only the very very first time.
+                    File.Copy(SettingsFileName, SettingsFileName + ".preapi", false);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+            }
+        }
+
+        /// <summary>
+        /// Sets m_neverSave to true to prevent a file save when using a temporary Settings object
+        /// </summary>
+        public void NeverSave()
+        {
+            lock (mutexLock)
+            {
+                m_neverSave = true;
+            }
+        }
+
+        /// <summary>
+        /// Helper method for LoadFromFile()
+        /// </summary>
+        public void CopyOldSettings()
+        {
+            // go through the old cache and pull out implants
+            foreach (SerializableCharacterInfo sci in m_oldSettings.CachedCharacterInfo)
+            {
+                SerializableCharacterSheet scs = new SerializableCharacterSheet();
+                scs.CharacterSheet.Name = sci.Name;
+                scs.CharacterSheet.CharacterId = sci.CharacterId;
+                scs.ImplantSets = sci.ImplantSets;
+                SetCharacterCache(scs);
+            }
+            return;
+        }
+
+        /// <summary>
+        /// Creates new empty Settings file, overwriting the existing file
+        /// </summary>
+        public static void Reset()
+        {
+            Settings s = new Settings();
+            s.Save();
+        }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Loads settings from file.
+        /// </summary>
+        /// <remarks>
+        /// This tries to be resilient - if the settings file is 0 length or fails to load, then look for a backup
+        /// copy and ask if that is to be used.
+        /// Once a settings file is loaded, a backup is taken as a 'last good settings file'
+        /// </remarks>
+        /// <returns>A Settings object loaded from file</returns>
+        private static Settings Load()
+        {
 
             Settings s = null;
             String settingsFile = SettingsFileName;
@@ -1832,65 +2037,14 @@ namespace EVEMon.Common
                 s = new Settings();
             }
             s.CalculateChecksums();
-            m_instance = s;
             return s;
         }
 
-
-        public void BackupOldSettingsFile()
-        {
-            // This tries to be resilient - if the settings file is 0 length (i.e. it's corrupt) look for a backup
-            // copy and ask if that is to be used.
-            // If the settings file is ok, then back it up.
-
-            try
-            {
-                if (File.Exists(SettingsFileName))
-                {
-                    // save the preapi settings file, but only the very very first time.
-                    File.Copy(SettingsFileName, SettingsFileName + ".preapi", false);
-                }
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, true);
-            }
-        }
-
-
-        public void CalculateChecksums()
-        {
-            try
-            {
-                m_checksums.Clear();
-                m_checksums.Add(GenerateMD5("eve-implants2.xml.gz"));
-                m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
-                m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
-                m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
-            }
-            // don't worry if we cant create MD5  maybe they have FIPS enforced.
-            catch (Exception) { }
-        }
-
-        private static Pair<string,string> GenerateMD5(string datafile)
-        {
-            StringBuilder sb = new StringBuilder();
-            string filename = String.Format("{1}Resources{0}{2}",
-                              Path.DirectorySeparatorChar,
-                              System.AppDomain.CurrentDomain.BaseDirectory,
-                              datafile);
-            if (File.Exists(filename))
-            {
-                MD5 md5 = MD5.Create();
-                using (FileStream fs = File.Open(filename, FileMode.Open))
-                {
-                    foreach (byte b in md5.ComputeHash(fs))
-                        sb.Append(b.ToString("x2").ToLower());
-                }
-            }
-            return new Pair<string,string>(datafile,sb.ToString());
-        }
-
+        /// <summary>
+        /// Loads settings from the specified filepath
+        /// </summary>
+        /// <param name="fileName">The fully qualified filename of the settings file to load</param>
+        /// <returns>The Settings object loaded</returns>
         private static Settings LoadFromFile(string fileName)
         {
             Settings result = null;
@@ -1906,11 +2060,15 @@ namespace EVEMon.Common
                 result.CopyOldSettings();
             }
             if (result != null) result.m_useAPI = true;
-            m_instance = result;
             return result;
-
         }
 
+        /// <summary>
+        /// Help method for LoadFromFile() when loadsing a non-API settings file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         private static OldSettings ConvertToApi(string fileName, Settings s)
         {
             OldSettings result = null;
@@ -1922,98 +2080,43 @@ namespace EVEMon.Common
             return result;
         }
 
-
-        public void CopyOldSettings()
-        {
-            // go through the old cache and pull out implants
-            foreach (SerializableCharacterInfo sci in m_oldSettings.CachedCharacterInfo)
-            {
-                SerializableCharacterSheet scs = new SerializableCharacterSheet();
-                scs.CharacterSheet.Name = sci.Name;
-                scs.CharacterSheet.CharacterId = sci.CharacterId;
-                scs.ImplantSets = sci.ImplantSets;
-                SetCharacterCache(scs);
-            }
-            return;
-        }
-
-        private static bool m_neverSave = false;
-
-        public void NeverSave()
+        /// <summary>
+        /// Performs that actual save process
+        /// </summary>
+        /// <remarks>
+        /// Saves are only comitted if m_neverSave is false and m_savePending is tru
+        /// </remarks>
+        /// <param name="state">Ignored. Required by the timer callback</param>
+        private void SaveCallback(Object state)
         {
             lock (mutexLock)
             {
-                m_neverSave = true;
-            }
-        }
-
-        [XmlIgnore]
-        private static string m_DataDir = String.Empty;
-        private static string m_SettingsFile = null;
-
-        public static string EveMonDataDir
-        {
-            get
-            {
-                lock (mutexLock)
+                if (!m_neverSave && m_savePending)
                 {
-                    if (m_DataDir == String.Empty)
+                    // If the cache timer is running, dispose and reset as its no longer needed
+                    if (m_saveTimer != null)
                     {
-                        m_SettingsFile = Path.DirectorySeparatorChar + "settings.xml";
-#if DEBUG
-                        m_SettingsFile = Path.DirectorySeparatorChar + "settings-debug.xml";
-#endif
-
-                        m_DataDir = Directory.GetCurrentDirectory();
-
-                        string fn = m_DataDir + m_SettingsFile;
-
-                        if (!File.Exists(fn))
-                        {
-                            m_DataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
-                        }
-                        if (!Directory.Exists(m_DataDir))
-                        {
-                            Directory.CreateDirectory(m_DataDir);
-                        }
-                        if (!Directory.Exists(Path.Combine(m_DataDir, "cache")))
-                        {
-                            Directory.CreateDirectory(Path.Combine(m_DataDir, "cache"));
-                        }
+                        m_saveTimer.Dispose();
+                        m_saveTimer = null;
                     }
-                    return m_DataDir;
+                    string fn = SettingsFileName;
+                    //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
+                    //using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(m_key), FileMode.Create, store))
+                    using (FileStream s = new FileStream(fn, FileMode.Create, FileAccess.Write))
+                    {
+                        SaveTo(s);
+                    }
+                    // Reset savePending flag
+                    m_savePending = false;
                 }
             }
         }
 
-        public static string SettingsFileName
-        {
-            get
-            {
-                return EveMonDataDir + m_SettingsFile;
-            }
-        }
-
-        public void Save()
-        {
-            // Saves will be cached for 10 seconds to avoid thrashing the disk when this method is called very rapidly
-            // such as at startup. 
-            // note that this is a Thread timer, not 
-            // a Windows.Forms timer - the timer will trigger 30 seconds after it's first set to 
-            // trigger, irresepctive of how many times this method is called.
-
-            // This should also massively reduce the possiblilty of creating a blank settings file when
-            // Save() is called simultaniously from multiple threads.
-
-            m_saveTimer.Change(10000, System.Threading.Timeout.Infinite);
-        }
-
-        public void SaveImmediate()
-        {
-            SaveCallback(this);
-        }
-
-        public static void SaveTo(Stream s)
+        /// <summary>
+        /// Saves settings to the specified stream
+        /// </summary>
+        /// <param name="s"></param>
+        private void SaveTo(Stream s)
         {
             lock (mutexLock)
             {
@@ -2022,41 +2125,8 @@ namespace EVEMon.Common
             }
         }
 
-        private static System.Threading.Timer m_saveTimer = new System.Threading.Timer(SaveCallback);
+        #endregion
 
-        private static void SaveCallback(Object state)
-        {
-            lock (mutexLock)
-            {
-                if (!m_neverSave)
-                {
-                    string fn = SettingsFileName;
-
-                    //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
-                    //using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(m_key), FileMode.Create, store))
-                    using (FileStream s = new FileStream(fn, FileMode.Create, FileAccess.Write))
-                    {
-                        SaveTo(s);
-                    }
-                }
-            }
-        }
-
-        public static void CopySettings(string copyFileName)
-        {
-            lock (mutexLock)
-            {
-                // ensure we have the latest settings saved
-                SaveCallback(new Object());
-                File.Copy(Settings.SettingsFileName, copyFileName, true);
-            }
-        }
-
-        public static void Reset()
-        {
-            Settings s = new Settings();
-            s.Save();
-        }
 
         #endregion
 
@@ -2068,6 +2138,40 @@ namespace EVEMon.Common
         {
             get { return m_checksums; }
         }
+
+        public void CalculateChecksums()
+        {
+            try
+            {
+                m_checksums.Clear();
+                m_checksums.Add(GenerateMD5("eve-implants2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
+            }
+            // don't worry if we cant create MD5  maybe they have FIPS enforced.
+            catch (Exception) { }
+        }
+
+        private static Pair<string, string> GenerateMD5(string datafile)
+        {
+            StringBuilder sb = new StringBuilder();
+            string filename = String.Format("{1}Resources{0}{2}",
+                              Path.DirectorySeparatorChar,
+                              System.AppDomain.CurrentDomain.BaseDirectory,
+                              datafile);
+            if (File.Exists(filename))
+            {
+                MD5 md5 = MD5.Create();
+                using (FileStream fs = File.Open(filename, FileMode.Open))
+                {
+                    foreach (byte b in md5.ComputeHash(fs))
+                        sb.Append(b.ToString("x2").ToLower());
+                }
+            }
+            return new Pair<string, string>(datafile, sb.ToString());
+        }
+
         #endregion
 
         #region Character Methods
