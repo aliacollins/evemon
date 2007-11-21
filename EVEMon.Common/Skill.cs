@@ -799,7 +799,7 @@ namespace EVEMon.Common
                 string spText = "SP: " + this.CurrentSkillPoints.ToString("#,##0") + "/" +
                                 this.GetPointsRequiredForLevel(Math.Min(this.Level + 1, 5)).ToString("#,##0");
                 string levelText = "Level " + this.Level.ToString();
-                string pctText = percentComplete.ToString("0%") + " Done";
+                string pctText = Math.Floor(percentComplete * 100).ToString("0") + "% Done";
 
                 // Text
 
