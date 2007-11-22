@@ -1012,7 +1012,8 @@ namespace EVEMon
             {
                 e.Cancel = true; // Cancel the close operation
                 niMinimizeIcon.Visible = true; // Display the minimize icon
-                this.Visible = false; // hide the main form
+                //this.Visible = false; // hide the main form
+                this.WindowState = FormWindowState.Minimized;
             }
         }
 
