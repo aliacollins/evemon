@@ -2139,6 +2139,47 @@ namespace EVEMon.Common
             get { return m_checksums; }
         }
 
+        /// <summary>
+        /// Attempts to find a datafile  - firstly, look in current folder (in case user is roaming on a usb device)
+        /// then look in the Application data folder
+        /// // If not there, this could be a first run so copy from resources folder in installation directory
+        /// </summary>
+        public static string FindDatafile(string datafile)
+        {
+            string filepath = String.Format(
+                "{0}{1}{2}",
+                Settings.EveMonDataDir,
+                Path.DirectorySeparatorChar,
+                datafile);
+
+            if (!File.Exists(filepath))
+            {
+                // file isn;t in current folder, maybe this is a first run so copy from resources folder
+                string baseFile = String.Format(
+                    "{1}Resources{0}{2}",
+                    Path.DirectorySeparatorChar,
+                    System.AppDomain.CurrentDomain.BaseDirectory,
+                    datafile);
+
+                if (!File.Exists(baseFile))
+                {
+                    throw new ApplicationException(baseFile + " not found!");
+                }
+
+                try
+                {
+                    File.Copy(baseFile, filepath);
+                }
+                catch (Exception)
+                {
+                    throw new ApplicationException("Unable to copy " + baseFile);
+                }
+
+            }
+            return filepath;
+        }
+
+
         public void CalculateChecksums()
         {
             try
@@ -2155,11 +2196,15 @@ namespace EVEMon.Common
 
         private static Pair<string, string> GenerateMD5(string datafile)
         {
+            // datafiles will either be in the current folder (if "roaming" from a USB device)
+            // or in the same folder as Settings.xml.
+            // If they are not there, then this is a first run and they need copying from the installation folder
+            // (to allow Vista to update the files)
+            
+
+            string filename =  Settings.FindDatafile(datafile);
+            
             StringBuilder sb = new StringBuilder();
-            string filename = String.Format("{1}Resources{0}{2}",
-                              Path.DirectorySeparatorChar,
-                              System.AppDomain.CurrentDomain.BaseDirectory,
-                              datafile);
             if (File.Exists(filename))
             {
                 MD5 md5 = MD5.Create();

@@ -78,10 +78,8 @@ namespace EVEMon.Common
         {
             if (m_skillsByName.Count > 0) return;
 
-            string skillfile = String.Format(
-                "{1}Resources{0}eve-skills2.xml.gz",
-                Path.DirectorySeparatorChar,
-                System.AppDomain.CurrentDomain.BaseDirectory);
+            string skillfile = Settings.FindDatafile("eve-skills2.xml.gz");
+                
             if (!File.Exists(skillfile))
             {
                 throw new ApplicationException(skillfile + " not found!");

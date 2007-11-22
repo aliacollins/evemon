@@ -283,14 +283,13 @@ namespace EVEMon.Common
         {
             if (sm_implants == null)
             {
-                string implantfile = String.Format(
-                    "{1}Resources{0}eve-implants2.xml.gz",
-                    Path.DirectorySeparatorChar,
-                    System.AppDomain.CurrentDomain.BaseDirectory);
+                
+                string implantfile = Settings.FindDatafile("eve-implants2.xml.gz");
                 if (!File.Exists(implantfile))
                 {
-                    throw new ApplicationException(implantfile + " not found!");
+                    throw new ApplicationException("Unable to find  " + implantfile);
                 }
+
                 using (FileStream s = new FileStream(implantfile, FileMode.Open, FileAccess.Read))
                 using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                 {

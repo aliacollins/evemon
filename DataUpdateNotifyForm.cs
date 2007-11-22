@@ -44,10 +44,15 @@ namespace EVEMon
             {
                 string urn = String.Format("{0}/{1}",dfv.Url,dfv.Name);
                 Uri i = new Uri(urn);
-                string oldFilename = String.Format("{1}Resources{0}{2}",
+//                string oldFilename =  String.Format("{1}Resources{0}{2}",
+//                              Path.DirectorySeparatorChar,
+//                              System.AppDomain.CurrentDomain.BaseDirectory,
+//                              dfv.Name);
+                string oldFilename = String.Format("{0}{1}{2}",
+                              Settings.EveMonDataDir,
                               Path.DirectorySeparatorChar,
-                              System.AppDomain.CurrentDomain.BaseDirectory,
                               dfv.Name);
+
                 string newFilename = oldFilename + ".tmp";
                 File.Delete(newFilename);
                 string fn = Path.GetFileName(i.AbsolutePath);
