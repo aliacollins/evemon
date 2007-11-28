@@ -145,7 +145,87 @@ namespace EVEMon.Common
                 else return null;
             }
         }
-        #endregion
+
+        /// <summary>
+        /// Compute the "cached until" time for the user's machine from the currentTime and cachedUntil nodes 
+        /// in a CCP API message.
+        /// </summary>
+        /// <param name="xdoc">The xml message after validating that there is actual content!</param>
+        /// <returns>a DateTime object in UTC time for when the message can be retrieved again - adjusted to compensate for the user's clock</returns>
+        private static DateTime GetCacheExpiryUTC(XmlDocument xdoc)
+        {
+            // Firstly, extract the currentTime form the message - in case things go wrong, assume currentTine is "now"
+            DateTime CCPCurrent = DateTime.Now.ToUniversalTime();
+            try
+            {
+                XmlNode currentTimeNode = xdoc.SelectSingleNode("/eveapi/currentTime");
+                CCPCurrent = EveSession.ConvertCCPTimeStringToDateTime(currentTimeNode.InnerText);
+            }
+            catch (Exception)
+            {
+                // do  nothing - default to "now";
+            }
+
+            // Now suck out the cachedUntil time - assume 1 hour from now in case the parse fails
+            DateTime cacheExpires = DateTime.Now + new TimeSpan(1, 0, 0);
+            try
+            {
+                XmlNode cachedTimeNode = xdoc.SelectSingleNode("/eveapi/cachedUntil");
+                cacheExpires = EveSession.ConvertCCPTimeStringToDateTime(cachedTimeNode.InnerText);
+            }
+            catch (Exception)
+            {
+                // do  nothing - default to "now";
+            }
+
+
+            // Work out teh cache period from the message and calculate the expiry time according to user's pc clock...
+            return  DateTime.Now.ToUniversalTime() + (cacheExpires - CCPCurrent);
+        }
+
+        /// <summary>
+        /// Converts a UTC DateTime to the CCP API date/time string
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <returns></returns>
+        public static string ConvertDateTimeToCCPTimeString(DateTime timeUTC)
+        {
+            // timeUTC  = yyyy-mm-dd hh:mm:ss
+            string result = string.Format("{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
+                        timeUTC.Year,
+                        timeUTC.Month,
+                        timeUTC.Day,
+                        timeUTC.Hour,
+                        timeUTC.Minute,
+                        timeUTC.Second);
+            return result;
+        }
+
+        /// <summary>
+        /// Converts a CCP API date/time string to a UTC DateTime
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <returns></returns>
+        public static DateTime ConvertCCPTimeStringToDateTime(string timeUTC)
+        {
+            // timeUTC  = yyyy-mm-dd hh:mm:ss
+            if (timeUTC == null || timeUTC == "")
+                return DateTime.MinValue;
+            DateTime dt = new DateTime(
+                            Int32.Parse(timeUTC.Substring(0, 4)),
+                            Int32.Parse(timeUTC.Substring(5, 2)),
+                            Int32.Parse(timeUTC.Substring(8, 2)),
+                            Int32.Parse(timeUTC.Substring(11, 2)),
+                            Int32.Parse(timeUTC.Substring(14, 2)),
+                            Int32.Parse(timeUTC.Substring(17, 2)),
+                            0,
+                            DateTimeKind.Utc);
+            return dt;
+        }
+
+
+
+#endregion
 
         #region Images
         public static void GetCharacterImageAsync(int charId, GetImageCallback callback)
@@ -282,9 +362,16 @@ namespace EVEMon.Common
         {
             m_userId = userId;
             m_apiKey = apiKey;
+            Settings m_settings = Settings.GetInstance();
+            AccountDetails acc = m_settings.FindAccount(m_userId);
+            if (acc != null)
+            {
+                m_storedCharacterList = acc.StoredCharacterList;
+                m_characterListCachedUntil = acc.CachedUntil;
+            }
             try
             {
-                GetCharacterList();
+                GetCharacterListUncached();
             }
             catch (Exception ex)
             {
@@ -294,14 +381,18 @@ namespace EVEMon.Common
 
         private string m_characterListError = string.Empty;
         private List<Pair<string, int>> m_storedCharacterList = null;
+        private DateTime m_characterListCachedUntil = DateTime.MinValue;
 
         public List<Pair<string, int>> GetCharacterListUncached()
         {
-            m_storedCharacterList = null;
+            if (m_characterListCachedUntil < DateTime.Now)
+            {
+                m_storedCharacterList = null;
+            }
             return GetCharacterList();
         }
 
-        public List<Pair<string, int>> GetCharacterList()
+        private List<Pair<string, int>> GetCharacterList()
         {
             if (m_storedCharacterList != null)
             {
@@ -318,6 +409,7 @@ namespace EVEMon.Common
             }
             else
             {
+                m_characterListCachedUntil = EveSession.GetCacheExpiryUTC(xdoc);
                 XmlNodeList characters = xdoc.DocumentElement.SelectNodes("descendant::rowset/row");
                 foreach (XmlNode charNode in characters)
                 {
@@ -328,6 +420,23 @@ namespace EVEMon.Common
                 }
             }
             m_storedCharacterList = charList;
+
+            Settings m_settings = Settings.GetInstance();
+            AccountDetails account = m_settings.FindAccount(m_userId);
+            bool newAccount = false;
+            if (account == null)
+            {
+                account = new AccountDetails();
+                account.ApiKey = m_apiKey;
+                account.UserId = m_userId;
+                newAccount = true;
+            }
+            account.StoredCharacterList = m_storedCharacterList;
+            account.CachedUntil = m_characterListCachedUntil;
+            if (newAccount)
+            {
+                Settings.GetInstance().Accounts.Add(account);
+            }
             return m_storedCharacterList;
         }
 

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="AccountDetails.cs" />
     <Compile Include="AddPlanConfirmWindow.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -24,6 +24,10 @@ namespace EVEMon
 
         private Settings m_settings;
 
+        // APIDelay strings are     
+        //    1 Minute 5 Minutes 10 Minutes 15 Minutes 30 Minutes 1 Hour 2 Hours 3 Hours 6 Hours
+        private int[] m_apiUpdateLookup = {60,5*60,10*60,15*60,30*60,60*60,2*60*60,3*60*60,6*60*60};
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -126,6 +130,7 @@ namespace EVEMon
             s.ConnectivityURL = tbConnectivityURL.Text;
 
             s.DisableXMLAutoUpdate = cbAutomaticEOSkillUpdate.Checked;
+            s.APIUpdateDelay = m_apiUpdateLookup[cmbAPIUpdateDelay.SelectedIndex];
 
             s.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
 
@@ -134,12 +139,12 @@ namespace EVEMon
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
 
             // Save Calendar Colors
-            m_settings.CalendarBlockingColor = panelColorBlocking.BackColor;
-            m_settings.CalendarRecurring1 = panelColorRecurring1.BackColor;
-            m_settings.CalendarRecurring2 = panelColorRecurring2.BackColor;
-            m_settings.CalendarSingle1 = panelColorSingle1.BackColor;
-            m_settings.CalendarSingle2 = panelColorSingle2.BackColor;
-            m_settings.CalendarTextColor = panelColorText.BackColor;
+            s.CalendarBlockingColor = panelColorBlocking.BackColor;
+            s.CalendarRecurring1 = panelColorRecurring1.BackColor;
+            s.CalendarRecurring2 = panelColorRecurring2.BackColor;
+            s.CalendarSingle1 = panelColorSingle1.BackColor;
+            s.CalendarSingle2 = panelColorSingle2.BackColor;
+            s.CalendarTextColor = panelColorText.BackColor;
 
         }
 
@@ -310,6 +315,15 @@ namespace EVEMon
 
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
+
+            int j;
+            for (j = 0; j < m_apiUpdateLookup.Length; j++)
+            {
+                if (m_apiUpdateLookup[j] == m_settings.APIUpdateDelay) break;
+            }
+            if (j == m_apiUpdateLookup.Length) j = 2;
+
+            cmbAPIUpdateDelay.SelectedIndex = j;
 
             cbKeepCharacterPlans.Checked = m_settings.KeepCharacterPlans;
 

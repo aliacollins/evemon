@@ -27,16 +27,52 @@ namespace EVEMon.Common
 
         #region Character Lists
         
-        // Flag to aid in conversion from pre-api use to post-api use.
-
-        private OldSettings m_oldSettings = null;
-        private bool m_useAPI = false;
-        public bool UseApi
+        private List<AccountDetails> m_accountList = new List<AccountDetails>();
+        public List<AccountDetails> Accounts
         {
-            get { return m_useAPI; }
-            set { m_useAPI = value; }
+            get { return m_accountList; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_accountList = value;
+                }
+            }
         }
 
+        public AccountDetails FindAccount(int userID)
+        {
+            AccountDetails acc = null;
+            if (m_accountList != null)
+            {
+                foreach (AccountDetails acd in m_accountList)
+                {
+                    if (acd.UserId == userID)
+                    {
+                        acc = acd;
+                        break;
+                    }
+                }
+            }
+            return acc;
+        }
+
+        public AccountDetails FindAccount(string charName)
+        {
+            AccountDetails acc = null;
+            if (m_accountList != null)
+            {
+                foreach (AccountDetails acd in m_accountList)
+                {
+                    if (acd.HasCharacter(charName))
+                    {
+                        acc = acd;
+                        break;
+                    }
+                }
+            }
+            return acc;
+        }
 
         private List<CharLoginInfo> m_characterList = new List<CharLoginInfo>();
         public List<CharLoginInfo> CharacterList
@@ -51,15 +87,13 @@ namespace EVEMon.Common
             }
         }
 
-        public List<string> GetCharacterNamesForAccount(int userID)
+        public bool LogonCharExists(string charName)
         {
-            List<string> charList = new List<string>();
             foreach (CharLoginInfo cli in CharacterList)
             {
-                if (cli.UserId == userID)
-                    charList.Add(cli.CharacterName);
+                if (cli.CharacterName == charName) return true;
             }
-            return charList;
+            return false;
         }
 
         private List<CharFileInfo> m_charFileList = new List<CharFileInfo>();
@@ -789,6 +823,18 @@ namespace EVEMon.Common
             return resetOK;
         }
 
+        /// <summary>
+        /// The number of seconds to wait before retrying the download of new API data 
+        /// when no character is training
+        /// </summary>
+        private int m_apiUpdateDelay = 600;
+
+        public int APIUpdateDelay
+        {
+            get { return m_apiUpdateDelay; }
+            set { m_apiUpdateDelay = value; }
+        }
+	
         private bool m_EnableSkillCompleteDialog;
 
         public bool EnableSkillCompleteDialog
@@ -1927,23 +1973,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Helper method for LoadFromFile()
-        /// </summary>
-        public void CopyOldSettings()
-        {
-            // go through the old cache and pull out implants
-            foreach (SerializableCharacterInfo sci in m_oldSettings.CachedCharacterInfo)
-            {
-                SerializableCharacterSheet scs = new SerializableCharacterSheet();
-                scs.CharacterSheet.Name = sci.Name;
-                scs.CharacterSheet.CharacterId = sci.CharacterId;
-                scs.ImplantSets = sci.ImplantSets;
-                SetCharacterCache(scs);
-            }
-            return;
-        }
-
-        /// <summary>
         /// Creates new empty Settings file, overwriting the existing file
         /// </summary>
         public static void Reset()
@@ -2053,32 +2082,9 @@ namespace EVEMon.Common
                 XmlSerializer xs = new XmlSerializer(typeof(Settings));
                 result = (Settings)xs.Deserialize(fs);
             }
-            if ((result != null) && !result.UseApi)
-            {
-                // We're copnverting from non-api settings
-                result.m_oldSettings = ConvertToApi(fileName, result);
-                result.CopyOldSettings();
-            }
-            if (result != null) result.m_useAPI = true;
             return result;
         }
 
-        /// <summary>
-        /// Help method for LoadFromFile() when loadsing a non-API settings file
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        private static OldSettings ConvertToApi(string fileName, Settings s)
-        {
-            OldSettings result = null;
-            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                XmlSerializer xs = new XmlSerializer(typeof(OldSettings));
-                result = (OldSettings)xs.Deserialize(fs);
-            }
-            return result;
-        }
 
         /// <summary>
         /// Performs that actual save process

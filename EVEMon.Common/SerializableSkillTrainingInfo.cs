@@ -12,35 +12,6 @@ namespace EVEMon.Common
     {
 
         #region public static
-        public static string ConvertDateTimeToTimeString(DateTime timeUTC)
-        {
-            // timeUTC  = yyyy-mm-dd hh:mm:ss
-            string result = string.Format("{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
-                        timeUTC.Year,
-                        timeUTC.Month,
-                        timeUTC.Day,
-                        timeUTC.Hour,
-                        timeUTC.Minute,
-                        timeUTC.Second);
-            return result;
-        }
-
-        public static DateTime ConvertTimeStringToDateTime(string timeUTC)
-        {
-            // timeUTC  = yyyy-mm-dd hh:mm:ss
-            if (timeUTC == null || timeUTC == "")
-                return DateTime.MinValue;
-            DateTime dt = new DateTime(
-                            Int32.Parse(timeUTC.Substring(0, 4)),
-                            Int32.Parse(timeUTC.Substring(5, 2)),
-                            Int32.Parse(timeUTC.Substring(8, 2)),
-                            Int32.Parse(timeUTC.Substring(11, 2)),
-                            Int32.Parse(timeUTC.Substring(14, 2)),
-                            Int32.Parse(timeUTC.Substring(17, 2)),
-                            0,
-                            DateTimeKind.Utc);
-            return dt;
-        }
 
         #endregion
 
@@ -68,10 +39,10 @@ namespace EVEMon.Common
         [XmlElement("currentTime")]
         public string CurrentTime
         {
-            get { return ConvertDateTimeToTimeString(m_curTime); }
+            get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTime); }
             set 
             { 
-                m_curTime = ConvertTimeStringToDateTime(value);
+                m_curTime = EveSession.ConvertCCPTimeStringToDateTime(value);
             }
         }
 
@@ -88,8 +59,8 @@ namespace EVEMon.Common
         [XmlElement("cachedUntil")]
         public string CachedUntilTime
         {
-            get { return ConvertDateTimeToTimeString(m_cachedUntilTime); }
-            set { m_cachedUntilTime = ConvertTimeStringToDateTime(value); }
+            get { return EveSession.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
+            set { m_cachedUntilTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
         }
         #endregion
 
@@ -290,10 +261,10 @@ namespace EVEMon.Common
             [XmlElement("currentTQTime")]
             public string CurrentTQTime
             {
-                get { return ConvertDateTimeToTimeString(m_curTQTime); }
+                get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTQTime); }
                 set
                 {
-                    m_curTQTime = ConvertTimeStringToDateTime(value);
+                    m_curTQTime = EveSession.ConvertCCPTimeStringToDateTime(value);
                 }
             }
 
@@ -325,8 +296,8 @@ namespace EVEMon.Common
             [XmlElement("trainingEndTime")]
             public string TrainingEndTimeString
             {
-                get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_endTime); }
-                set { m_endTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value); }
+                get { return EveSession.ConvertDateTimeToCCPTimeString(m_endTime); }
+                set { m_endTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
             }
 
             [XmlIgnore]
@@ -340,8 +311,8 @@ namespace EVEMon.Common
             [XmlElement("trainingStartTime")]
             public string TrainingStartTimeString
             {
-                get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_startTime); }
-                set { m_startTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value); }
+                get { return EveSession.ConvertDateTimeToCCPTimeString(m_startTime); }
+                set { m_startTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
             }
 
             [XmlIgnore]

@@ -44,6 +44,8 @@ namespace EVEMon
             this.lbAddCharacter = new System.Windows.Forms.Label();
             this.cbCharacterType = new System.Windows.Forms.ComboBox();
             this.gbEveLogin = new System.Windows.Forms.GroupBox();
+            this.btnAddExisting = new System.Windows.Forms.Button();
+            this.lbUnmonitored = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblAPILink = new System.Windows.Forms.Label();
             this.lnkAPI = new System.Windows.Forms.LinkLabel();
@@ -58,7 +60,7 @@ namespace EVEMon
             // 
             // btnCharSelect
             // 
-            this.btnCharSelect.Location = new System.Drawing.Point(177, 131);
+            this.btnCharSelect.Location = new System.Drawing.Point(199, 131);
             this.btnCharSelect.Name = "btnCharSelect";
             this.btnCharSelect.Size = new System.Drawing.Size(30, 23);
             this.btnCharSelect.TabIndex = 2;
@@ -71,7 +73,7 @@ namespace EVEMon
             this.tbCharName.Location = new System.Drawing.Point(71, 132);
             this.tbCharName.Name = "tbCharName";
             this.tbCharName.ReadOnly = true;
-            this.tbCharName.Size = new System.Drawing.Size(100, 21);
+            this.tbCharName.Size = new System.Drawing.Size(122, 21);
             this.tbCharName.TabIndex = 3;
             this.tbCharName.TabStop = false;
             this.tbCharName.Text = "(None)";
@@ -141,7 +143,7 @@ namespace EVEMon
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Enabled = false;
-            this.btnOk.Location = new System.Drawing.Point(276, 234);
+            this.btnOk.Location = new System.Drawing.Point(276, 265);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -153,7 +155,7 @@ namespace EVEMon
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(357, 234);
+            this.btnCancel.Location = new System.Drawing.Point(357, 265);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -212,6 +214,8 @@ namespace EVEMon
             // 
             // gbEveLogin
             // 
+            this.gbEveLogin.Controls.Add(this.btnAddExisting);
+            this.gbEveLogin.Controls.Add(this.lbUnmonitored);
             this.gbEveLogin.Controls.Add(this.label1);
             this.gbEveLogin.Controls.Add(this.lblAPILink);
             this.gbEveLogin.Controls.Add(this.lnkAPI);
@@ -225,10 +229,29 @@ namespace EVEMon
             this.gbEveLogin.Controls.Add(this.lbAuthKey);
             this.gbEveLogin.Location = new System.Drawing.Point(12, 39);
             this.gbEveLogin.Name = "gbEveLogin";
-            this.gbEveLogin.Size = new System.Drawing.Size(395, 181);
+            this.gbEveLogin.Size = new System.Drawing.Size(395, 205);
             this.gbEveLogin.TabIndex = 7;
             this.gbEveLogin.TabStop = false;
             this.gbEveLogin.Text = "EVE Online API Parameters";
+            // 
+            // btnAddExisting
+            // 
+            this.btnAddExisting.Location = new System.Drawing.Point(199, 169);
+            this.btnAddExisting.Name = "btnAddExisting";
+            this.btnAddExisting.Size = new System.Drawing.Size(30, 23);
+            this.btnAddExisting.TabIndex = 8;
+            this.btnAddExisting.Text = "...";
+            this.btnAddExisting.UseVisualStyleBackColor = true;
+            this.btnAddExisting.Click += new System.EventHandler(this.btnAddExisting_Click);
+            // 
+            // lbUnmonitored
+            // 
+            this.lbUnmonitored.AutoSize = true;
+            this.lbUnmonitored.Location = new System.Drawing.Point(7, 166);
+            this.lbUnmonitored.Name = "lbUnmonitored";
+            this.lbUnmonitored.Size = new System.Drawing.Size(186, 26);
+            this.lbUnmonitored.TabIndex = 7;
+            this.lbUnmonitored.Text = "Add Existing Unmonitored Characters\r\n(No API key needed)";
             // 
             // label1
             // 
@@ -313,11 +336,9 @@ namespace EVEMon
             // 
             // LoginCharSelect
             // 
-            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(444, 269);
+            this.ClientSize = new System.Drawing.Size(444, 300);
             this.ControlBox = false;
             this.Controls.Add(this.gbEveLogin);
             this.Controls.Add(this.cbCharacterType);
@@ -368,5 +389,7 @@ namespace EVEMon
         private System.Windows.Forms.LinkLabel lnkAPI;
         private System.Windows.Forms.Label lblAPILink;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbUnmonitored;
+        private System.Windows.Forms.Button btnAddExisting;
     }
 }

@@ -26,14 +26,17 @@ namespace EVEMon.Common
     {
         private bool m_ineveSync;
 
+        // Deprecated - use the details in the AccountDetails class instead
+        // keeping for backwards compatability
         private int m_userId = 0;
-
         public int UserId
         {
             get { return m_userId; }
             set { m_userId = value; }
         }
 
+        // Deprecated - use the details in the AccountDetails class instead
+       // keeping for backwards compatability
         private string m_apiKey = string.Empty;
         public string ApiKey
         {
@@ -41,69 +44,16 @@ namespace EVEMon.Common
             set { m_apiKey = value; }
         }
 
-        // this can be removed in next release, only needed for conversion.
-        private string m_username = string.Empty;
-        public string Username
-        {
-            get { return m_username; }
-            set { m_username = value; }
-        }
+        private AccountDetails m_account;
 
-
-        /// <summary>
-        /// Ensures that the api details are accurate and that the character belongs to this
-        /// api key.
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        /*
-        public bool Validate()
+        [XmlIgnore]
+        public AccountDetails Account
         {
-            // check that we have an user id, character id and api key
-            bool invalid = (m_userId == 0 || m_apiKey == string.Empty);
-            if (!invalid)
-            {
-                // yes, now see if the are valid
-                string errMessage;
-                List<Pair<string,int>> m_characterList = EveSession.GetCharacterList(Convert.ToString(m_userId),m_apiKey, out errMessage);
-                invalid = (m_characterList.Count == 0);
-                if (!invalid)
-                {
-                    // we have at least one character - see any of them belong to this api Key
-                    invalid = true;
-                    foreach (Pair<string,int> pair in m_characterList)
-                    {
-                        if (pair.A == m_characterName)
-                        {
-                            // found the guy!
-                            invalid = false;
-                            break;
-                        }
-                    }
-                }
-                /*
-                if (invalid)
-                {
-                    // userid/apikey/char id is blank or char name cannot be found on this account
-                    // pop up the change logon box
-                    using (ChangeLoginWindow f = new ChangeLoginWindow())
-                    {
-                        f.ShowInvalidKey = true;
-                        f.CharacterName = m_characterName;
-                        DialogResult dr = f.ShowDialog();
-                        if (dr == DialogResult.OK)
-                        {
-                            m_userId = f.UserId;
-                            m_apiKey = f.ApiKey;
-                        }
-                    }
-                    return Validate();
-                }
-                 
-             }
-             return !invalid;
+            get { return m_account; }
+            set { m_account = value; }
         }
-*/
+	
+
         #region ICharacterSettings Members
 
         public bool IneveSync

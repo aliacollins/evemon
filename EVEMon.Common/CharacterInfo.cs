@@ -1555,8 +1555,8 @@ namespace EVEMon.Common
             ci.CharacterSheet.CorpName = this.CorporationName;
             ci.PortraitFolder = this.PortraitFolder; // to CI
             ci.CharacterSheet.Balance = this.Balance;
-            ci.currentTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(DateTime.Now.ToUniversalTime());
-            ci.CachedUntilTime = SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_xmlExpires.ToUniversalTime());
+            ci.currentTime = EveSession.ConvertDateTimeToCCPTimeString(DateTime.Now.ToUniversalTime());
+            ci.CachedUntilTime = EveSession.ConvertDateTimeToCCPTimeString(m_xmlExpires.ToUniversalTime());
 
             ci.ImplantSets.Clear();
             foreach (string x in this.implantSets.Keys)

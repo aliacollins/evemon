@@ -25,10 +25,10 @@ namespace EVEMon.Common
         [XmlElement("currentTime")]
         public string currentTime
         {
-            get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_curTime); }
+            get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTime); }
             set
             {
-                m_curTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value);
+                m_curTime = EveSession.ConvertCCPTimeStringToDateTime(value);
             }
 
         }
@@ -46,10 +46,10 @@ namespace EVEMon.Common
         [XmlElement("cachedUntil")]
         public string CachedUntilTime
         {
-            get { return SerializableSkillTrainingInfo.ConvertDateTimeToTimeString(m_cachedUntilTime); }
+            get { return EveSession.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
             set
             {
-                m_cachedUntilTime = SerializableSkillTrainingInfo.ConvertTimeStringToDateTime(value);
+                m_cachedUntilTime = EveSession.ConvertCCPTimeStringToDateTime(value);
             }
         }
 

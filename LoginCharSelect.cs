@@ -156,6 +156,20 @@ namespace EVEMon
             get { return m_monitorFile; }
         }
 
+        private void btnAddExisting_Click(object sender, EventArgs e)
+        {
+            using (CharSelect f = new CharSelect(m_unmonitoredChars))
+            {
+                f.ShowDialog();
+                if (f.DialogResult == DialogResult.OK)
+                {
+                    tbCharName.Text = f.Result;
+                    m_charsToAdd = m_unmonitoredChars; // to make the "all characters" work
+                    CharOk = true;
+                }
+            }
+        }
+
         private void btnCharSelect_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(tbUserId.Text) || String.IsNullOrEmpty(tbAuthKey.Text))
@@ -262,9 +276,30 @@ namespace EVEMon
             }
         }
 
+        private List<string> m_unmonitoredChars;
+
         private void LoginCharSelect_Load(object sender, EventArgs e)
         {
             cbCharacterType.SelectedIndex = 0;
+            FindUnmonitoredAccounts();
+            lbUnmonitored.Enabled = btnAddExisting.Enabled = m_unmonitoredChars.Count > 0;
+        }
+
+        private void FindUnmonitoredAccounts()
+        {
+            // find any unmonitored accounts
+            Settings m_settings = Settings.GetInstance();
+            m_unmonitoredChars = new List<string>();
+            foreach (AccountDetails acc in m_settings.Accounts)
+            {
+                foreach (string charname in acc.GetCharacterNames())
+                {
+                    if (!m_settings.LogonCharExists(charname))
+                    {
+                        m_unmonitoredChars.Add(charname);
+                    }
+                }
+            }
         }
 
         private void cbCharacterType_SelectedIndexChanged(object sender, EventArgs e)
@@ -311,5 +346,6 @@ namespace EVEMon
         {
             EveSession.BrowserLinkClicked(EveSession.ApiKeyUrl);
         }
+
     }
 }

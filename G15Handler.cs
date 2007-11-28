@@ -25,6 +25,7 @@ namespace EVEMon
         private static bool m_shouldTerminate = false;
         private static string m_activeCharacter = null;
         private static Dictionary<string, CharacterInfo> m_Chars = new Dictionary<string, CharacterInfo>();
+        private static Object _mutexlock = new Object();
 
         /// <summary>
         /// Initialises the G15 event handles
@@ -50,76 +51,79 @@ namespace EVEMon
         /// </summary>
         public static void CharListUpdate()
         {
-            if (Program.Settings.CharacterList.Count == 0)
+            lock (_mutexlock)
             {
-                return;
-            }
-
-            if (LCD == null)
-            {
-                return;
-            }
-
-            List<string> names = new List<string>();
-            foreach (CharLoginInfo info in Program.Settings.CharacterList)
-            {
-                if (m_activeCharacter == null)
+                if (Program.Settings.CharacterList.Count == 0)
                 {
-                    m_activeCharacter = info.CharacterName;
+                    return;
                 }
-                if (m_Chars.ContainsKey(info.CharacterName))
+
+                if (LCD == null)
                 {
-                    CharacterInfo i = m_Chars[info.CharacterName];
+                    return;
                 }
-                else
+
+                List<string> names = new List<string>();
+                foreach (CharLoginInfo info in Program.Settings.CharacterList)
                 {
-                    CharacterInfo i = Program.MainWindow.GetCharacterInfo(info.CharacterName);
-                    if (i == null)
+                    if (m_activeCharacter == null)
                     {
-                        return;
+                        m_activeCharacter = info.CharacterName;
                     }
-                    m_Chars.Add(info.CharacterName, i);
-                    i.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);
-                    i.SkillChanged += new SkillChangedHandler(SkillChangedHandler);
+                    if (m_Chars.ContainsKey(info.CharacterName))
+                    {
+                        CharacterInfo i = m_Chars[info.CharacterName];
+                    }
+                    else
+                    {
+                        CharacterInfo i = Program.MainWindow.GetCharacterInfo(info.CharacterName);
+                        if (i == null)
+                        {
+                            return;
+                        }
+                        m_Chars.Add(info.CharacterName, i);
+                        i.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);
+                        i.SkillChanged += new SkillChangedHandler(SkillChangedHandler);
+                    }
+                    names.Add(info.CharacterName);
                 }
-                names.Add(info.CharacterName);
-            }
-            List<string> rem = new List<string>();
-            foreach (string n in m_Chars.Keys)
-            {
-                if (!names.Contains(n))
+                List<string> rem = new List<string>();
+                foreach (string n in m_Chars.Keys)
                 {
-                    rem.Add(n);
+                    if (!names.Contains(n))
+                    {
+                        rem.Add(n);
+                    }
                 }
-            }
-            foreach (string r in rem)
-            {
-                if (m_activeCharacter == r)
+                foreach (string r in rem)
                 {
-                    m_activeCharacter = null;
+                    if (m_activeCharacter == r)
+                    {
+                        m_activeCharacter = null;
+                    }
+                    m_Chars[r].DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);
+                    m_Chars[r].SkillChanged -= new SkillChangedHandler(SkillChangedHandler);
+                    m_Chars.Remove(r);
                 }
-                m_Chars[r].DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(DownloadAttemptCompleted);
-                m_Chars[r].SkillChanged -= new SkillChangedHandler(SkillChangedHandler);
-                m_Chars.Remove(r);
-            }
 
-            // we got our advanced list, update the simple in the g15 object
-            List<CharacterInfo> mlist = new List<CharacterInfo>(m_Chars.Values);
-            string[] temp = new string[mlist.Count];
-            int i_n = 0;
-            foreach (CharacterInfo sci in mlist)
-            {
-                if (m_activeCharacter == null)
+                // we got our advanced list, update the simple in the g15 object
+                List<CharacterInfo> mlist = new List<CharacterInfo>(m_Chars.Values);
+                string[] temp = new string[mlist.Count];
+                int i_n = 0;
+                foreach (CharacterInfo sci in mlist)
                 {
-                    m_activeCharacter = sci.Name;
+                    if (m_activeCharacter == null)
+                    {
+                        m_activeCharacter = sci.Name;
+                    }
+                    temp[i_n] = sci.Name;
+                    i_n++;
                 }
-                temp[i_n] = sci.Name;
-                i_n++;
-            }
-            LCD.charlist = temp;
+                LCD.charlist = temp;
 
-            // list updated, get the skilltime
-            GetLeastTrainingSkill();
+                // list updated, get the skilltime
+                GetLeastTrainingSkill();
+            }
         }
 
         /// <summary>

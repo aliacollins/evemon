@@ -28,7 +28,6 @@ namespace EVEMon
         private bool startMinimized;
         private bool updateFlag;
         private bool dataUpdateFlag;
-        private bool firstAPIRun;
 
         public MainWindow(Settings s, bool startMinimized)
             : this()
@@ -36,20 +35,6 @@ namespace EVEMon
             m_settings = s;
             this.startMinimized = startMinimized;
             this.updateFlag = false;
-            this.firstAPIRun = CheckForFirstAPIRun();
-        }
-
-        private bool CheckForFirstAPIRun()
-        {
-            if (m_settings.CharacterList.Count > 0)
-            {
-                foreach (CharLoginInfo cli in m_settings.CharacterList)
-                {
-                    if (cli.ApiKey == string.Empty)
-                        return true;
-                }
-            }
-            return false;
         }
 
         private IGBService.IGBServer m_igbServer;
@@ -63,10 +48,27 @@ namespace EVEMon
             niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
             StaticSkill.LoadStaticSkills();
             G15Handler.Init();
-            if (!firstAPIRun)
+
+            // Is this the first run with the Accounts object ?
+            if (m_settings.Accounts.Count == 0)
             {
-                AddCharacters();
+                foreach (CharLoginInfo cli in m_settings.CharacterList)
+                {
+                    AccountDetails acc = m_settings.FindAccount(cli.UserId);
+                    if (acc == null)
+                    {
+                        acc = new AccountDetails();
+                        acc.ApiKey = cli.ApiKey;
+                        acc.UserId = cli.UserId;
+                        acc.CachedUntil = DateTime.MinValue;
+                        acc.StoredCharacterList = new List<Pair<string, int>>();
+                        m_settings.Accounts.Add(acc);
+                    }
+                    acc.StoredCharacterList.Add(new Pair<string,int>(cli.CharacterName,cli.UserId));
+                }
             }
+
+            AddCharacters();
             if (m_settings.CheckTranquilityStatus)
             {
                 EveServer server = EveServer.GetInstance();
@@ -87,57 +89,59 @@ namespace EVEMon
             standardToolStripMenuItem.Checked = standardToolbar.Visible = m_settings.MainWindowToolBarVisible;
         }
 
+        /// <summary>
+        /// Checks to see if any of the accounts do not have a character that is training a skill at the moment.
+        /// If an account does nopt have a character training, show a warning on the status bar and invoke the
+        /// API checks (which will then check for a training skill every x minutes as specified by the user)
+        /// 
+        /// This method is called:
+        ///     - At startup when all characters have been added and main window is shown
+        ///     - When a training skill changes
+        ///     - When a download completes
+        ///     - When a character is removed
+        /// </summary>
         public void CheckAccountTraining()
         {
             if (InvokeRequired)
             {
                 Invoke(new MethodInvoker(CheckAccountTraining));
             }
-            Dictionary<int, int> accountsInTraining = new Dictionary<int, int>();
+            List<AccountDetails> accountsNotTraining = new List<AccountDetails>();
+            foreach (AccountDetails acc in m_settings.Accounts)
+            {
+                accountsNotTraining.Add(acc);
+            }
             foreach (CharLoginInfo cli in m_settings.CharacterList)
             {
                 CharacterInfo ci = GetCharacterInfo(cli.CharacterName);
                 if (ci == null) continue;
+
                 if (ci.IsTraining)
                 {
-                    if (accountsInTraining.ContainsKey(cli.UserId))
+                    if (accountsNotTraining.Contains(cli.Account))
                     {
-                        accountsInTraining[cli.UserId]++;
-                    }
-                    else
-                    {
-                        accountsInTraining.Add(cli.UserId, 1);
-                    }
-                }
-                else
-                {
-                    if (!accountsInTraining.ContainsKey(cli.UserId))
-                    {
-                        accountsInTraining.Add(cli.UserId, 0);
+                        accountsNotTraining.Remove(cli.Account);
                     }
                 }
             }
             bool notTraining = false;
             string notTrainingString = string.Empty;
-            foreach (int key in accountsInTraining.Keys)
+            foreach (AccountDetails acc in accountsNotTraining)
             {
-                if (accountsInTraining[key] == 0)
+                if (notTraining)
                 {
-                    if (notTraining)
-                    {
-                        notTrainingString += ", ";
-                    }
-                    notTraining = true;
-                    string sep = "(";
-                    notTrainingString = notTrainingString + key.ToString(); 
-                    foreach (string charName in m_settings.GetCharacterNamesForAccount(key))
-                    {
-                        notTrainingString += sep;
-                        notTrainingString += charName;
-                        sep = ", ";
-                    }
-                    notTrainingString += ")";
+                    notTrainingString += ", ";
                 }
+                notTraining = true;
+                string sep = "(";
+                notTrainingString = notTrainingString + acc.UserId; 
+                foreach (string charName in acc.GetCharacterNames())
+                {
+                    notTrainingString += sep;
+                    notTrainingString += charName;
+                    sep = ", ";
+                }
+                notTrainingString += ")";
             }
             if (notTraining)
             {
@@ -166,6 +170,8 @@ namespace EVEMon
                 if (o.GetType() == typeof(CharLoginInfo))
                 {
                     CharLoginInfo cli = (CharLoginInfo)o;
+                    // Populate the cli's api details if an account object is present
+                    cli.Account  = m_settings.FindAccount(cli.CharacterName);
                     AddTab(cli);
                 }
                 else if (o.GetType() == typeof(CharFileInfo))
@@ -191,10 +197,6 @@ namespace EVEMon
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
-            if (firstAPIRun)
-            {
-                AddCharacters();
-            }
             CheckAccountTraining();
             if (m_settings.DisableEVEMonVersionCheck == false)
             {
@@ -394,47 +396,6 @@ namespace EVEMon
         /// <returns>true if the tab was added ok</returns>
         private bool AddTab(CharLoginInfo cli)
         {
-            if (cli.ApiKey == string.Empty || cli.UserId == 0)
-            {
-                if (firstAPIRun)
-                {
-                    firstAPIRun = false;
-                    TipWindow.ShowTip("First run with API interface",
-                        "First Run",
-                        "EVEMon has detected a pre-API version of a settings file. At least one of your characters does not have an API key yet. Your original pre-api settings file is backed up as settings.xml.preapi. You will now be prompted for the API keys for each of your accounts.");
-                    m_settings.BackupPreAPISettingsFile();
-
-                }
-                // No API info found - ask user - must be first run.
-
-                // see if we can find an api key from an already added character
-
-                using (ChangeLoginWindow f = new ChangeLoginWindow())
-                {
-                    f.ShowInvalidKey = true;
-                    f.CharacterName = cli.CharacterName;
-                    DialogResult dr = f.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        cli.UserId = f.UserId;
-                        cli.ApiKey = f.ApiKey;
-                        // now patch this API key into any other characters on the same account
-                        foreach (CharLoginInfo li in m_settings.CharacterList)
-                        {
-                            if (cli.Username != string.Empty && li.Username == cli.Username && li.CharacterName != cli.CharacterName)
-                            {
-                                li.ApiKey = cli.ApiKey;
-                                li.UserId = cli.UserId;
-                                li.Username = String.Empty;
-                            }
-                        }
-                        cli.Username = string.Empty;
-                        m_settings.Save();
-
-                        EveSession.GetSession(f.UserId, f.ApiKey);
-                    }
-                }
-            }
             CharacterMonitor cm = new CharacterMonitor(cli);
             AddTab(cli, cli.CharacterName, cm);
             return true;
@@ -830,8 +791,7 @@ namespace EVEMon
                         foreach (string charName in f.CharsToAdd)
                         {
                             CharLoginInfo cli = new CharLoginInfo();
-                            cli.UserId = uid;
-                            cli.ApiKey = f.ApiKey;
+                            cli.Account = m_settings.FindAccount(charName);
                             cli.CharacterName = charName;
                             if (m_settings.AddCharacter(cli))
                             {

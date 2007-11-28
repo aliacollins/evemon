@@ -381,7 +381,7 @@ namespace EVEMon
             int charId = -1;
             try
             {
-                m_session = EveSession.GetSession(m_cli.UserId, m_cli.ApiKey);
+                m_session = EveSession.GetSession(m_cli.Account.UserId, m_cli.Account.ApiKey);
                 charId = m_session.GetCharacterId(m_cli.CharacterName);
             }
             catch (Exception e)
@@ -1470,26 +1470,24 @@ namespace EVEMon
         {
             using (ChangeLoginWindow f = new ChangeLoginWindow())
             {
-                f.UserId = m_cli.UserId;
+                if (m_cli.Account != null)
+                {
+                    f.UserId = m_cli.Account.UserId;
+                }
                 f.ShowInvalidKey = false;
                 f.CharacterName = m_grandCharacterInfo.Name;
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    if (m_cli.UserId == f.UserId && m_cli.ApiKey != f.ApiKey)
+                    if (m_cli.Account == null)
                     {
-                        // userId is same but api key has changed - fix all the api keys for this user id
-                        foreach (CharLoginInfo cli in m_settings.CharacterList)
-                        {
-                            if (cli.UserId == f.UserId)
-                            {
-                                cli.ApiKey = f.ApiKey;
-                            }
-                        }
+                        // find teh account from the accounts list, we didn't have it at start up but now we do
+                        m_cli.Account = m_settings.FindAccount(m_cli.UserId);
                     }
-                    m_cli.UserId = f.UserId;
-                    m_cli.ApiKey = f.ApiKey;
                     m_session = EveSession.GetSession(f.UserId, f.ApiKey);
+                    m_cli.Account.UserId = f.UserId;
+                    m_cli.Account.ApiKey = f.ApiKey;
+
                     m_charId = -1;
                     tmrUpdate_Tick(this, new EventArgs());
                     m_settings.Save();

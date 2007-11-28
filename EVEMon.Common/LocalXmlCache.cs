@@ -83,17 +83,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Adds the specified file to the cache
-        /// </summary>
-        /// <param name="filename">The file to add as "cached".</param>
-        public void Save(string filename)
-        {
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(filename);
-            Save(xDoc);
-        }
-
-        /// <summary>
         /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument"/> straight from CCP
         /// </summary>
         /// <param name="xdoc">The character xml to save.</param>
