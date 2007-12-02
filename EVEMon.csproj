@@ -400,6 +400,18 @@
     <Compile Include="TipWindow.Designer.cs">
       <DependentUpon>TipWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="TrayStatusPopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrayStatusPopUp.Designer.cs">
+      <DependentUpon>TrayStatusPopUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrayStatusPopUpChar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TrayStatusPopUpChar.Designer.cs">
+      <DependentUpon>TrayStatusPopUpChar.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrayTooltipWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -622,9 +634,17 @@
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrayTooltipWindow.resx">
+    <EmbeddedResource Include="TrayStatusPopUp.resx">
       <SubType>Designer</SubType>
+      <DependentUpon>TrayStatusPopUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrayStatusPopUpChar.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TrayStatusPopUpChar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrayTooltipWindow.resx">
       <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UnhandledExceptionWindow.resx">
       <SubType>Designer</SubType>

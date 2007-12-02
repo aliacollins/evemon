@@ -81,6 +81,12 @@ namespace EVEMon.Common
         public int Countdown { get { return m_countdown; } }
 
         /// <summary>
+        /// Gets the server status message
+        /// </summary>
+        public string StatusText { get { return m_statusText; } }
+
+
+        /// <summary>
         /// Is the balloon tip active?
         /// </summary>
         public bool PendingAlerts

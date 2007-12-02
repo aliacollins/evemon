@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing;
 using System.Media;
-
+using System.Diagnostics;
 
 namespace EVEMon
 {
@@ -898,11 +898,8 @@ namespace EVEMon
                 this.ShowInTaskbar = true;
                 this.Activate();
                 this.niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
-            }
-
-            if (this.m_tooltipWindow != null && (this.m_tooltipWindow.IsAlive && this.m_tooltipWindow.Target != null))
-            {
-                this.m_tooltipWindow.Target.Visible = false;
+                // Hide the tray icon popup if its in use
+                if (m_trayPopUp != null) { m_trayPopUp.Close(); }
             }
         }
 
@@ -1027,83 +1024,41 @@ namespace EVEMon
             return null;
         }
 
-        private WeakReference<TrayTooltipWindow> m_tooltipWindow = null;
+        // Holds the tray icon popup when its in use
+        private TrayStatusPopUp m_trayPopUp = null;
 
-        private bool m_inMinIconMouseMove = false;
-
+        /// <summary>
+        /// Instantiates a popup window when the mouse moves over the tray icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void niMinimizeIcon_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!m_inMinIconMouseMove && trayIconToolStrip.Visible == false)
+            // Only display the pop up window if an instance doesn't exist, and the context menu isn't showing
+            if (m_trayPopUp == null && trayIconToolStrip.Visible == false)
             {
-                m_inMinIconMouseMove = true;
-                try
+                // Remove the default tooltip
+                niMinimizeIcon.Text = "";
+                // Construct a list of characters to pass to the popup
+                List<CharacterMonitor> characterList = new List<CharacterMonitor>();
+                foreach (TabPage tp in tcCharacterTabs.TabPages)
                 {
-                    TrayTooltipWindow ttw = null;
-                    if (m_tooltipWindow != null)
-                    {
-                        ttw = m_tooltipWindow.Target;
-                    }
-
-                    if (ttw == null)
-                    {
-                        // Prevent the icon's text property from showing in a default tooltip
-                        niMinimizeIcon.Text = "";
-
-                        ttw = new TrayTooltipWindow();
-                        m_tooltipWindow = new WeakReference<TrayTooltipWindow>(ttw);
-                        ttw.FormClosed += delegate
-                        {
-                            // Restore the icon's text since we need it there normally in order to allow the icon to
-                            // be shown or hidden via the "Customize Notifications..." Windows setting
-                            niMinimizeIcon.Text = Application.ProductName;
-
-                            m_tooltipText = Application.ProductName;
-                            m_tooltipWindow = null;
-                            ttw.Dispose();
-                        };
-
-                        //Mostly format the tooltip text, using the current contents of m_tooltipText as the first line.
-                        SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
-                        m_tooltipText = FormatTooltipText(m_settings.TooltipString, gcis);
-
-                        //Splice in the estimated time till completion.
-                        string tooltipText = m_tooltipText;
-                        foreach (TimeSpan ts in gcis.Keys)
-                        {
-                            tooltipText = Regex.Replace(tooltipText, '%' + gcis[ts].CharacterId.ToString() + 'r',
-                                Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
-                        }
-
-                        ttw.Text = tooltipText;
-                        ttw.Show();
-                    }
-                    else
-                    {
-                        ttw.RefreshAlive();
-                    }
+                    CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
+                    characterList.Add(cm);
                 }
-                finally
+                // Create the popup
+                m_trayPopUp = new TrayStatusPopUp(niMinimizeIcon, characterList);
+                // Handle the PopUpClosed event
+                m_trayPopUp.PopUpClosed += delegate(object o, EventArgs evtargs)
                 {
-                    m_inMinIconMouseMove = false;
-                }
+                    // Get rid of the instance
+                    m_trayPopUp = null;
+                    // Restore the default tooltip
+                    niMinimizeIcon.Text = Application.ProductName;
+                };
+                // Now show the popup
+                m_trayPopUp.Show();
             }
-        }
-
-        private string m_tooltipText = Application.ProductName;
-
-        private void SetMinimizedIconTooltipText(string txt)
-        {
-            TrayTooltipWindow ttw = null;
-            if (m_tooltipWindow != null)
-            {
-                ttw = m_tooltipWindow.Target;
-            }
-
-            if (ttw != null)
-            {
-                ttw.Text = txt;
-            }
-            //m_tooltipText = txt;
         }
 
         private WeakReference<Schedule.ScheduleEditorWindow> m_scheduler;
@@ -1287,7 +1242,6 @@ namespace EVEMon
                 {
                     MessageBox.Show("EVEMon cache reset successfully", "Cache Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Text = "EVEMon";
-                    SetMinimizedIconTooltipText(this.Text);
                 }
                 else
                 {
@@ -1298,6 +1252,9 @@ namespace EVEMon
 
         private void trayIconToolStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // Hide the Tray PopUp if its showing
+            if (m_trayPopUp != null) { m_trayPopUp.Close(); }
+
             planToolStripMenuItem.DropDownItems.Clear();
             List<string> characters = new List<string>();
             foreach (CharLoginInfo cli in m_settings.CharacterList)
@@ -1608,6 +1565,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 

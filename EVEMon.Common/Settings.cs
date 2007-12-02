@@ -414,21 +414,85 @@ namespace EVEMon.Common
                 }
             }
         }
-  
 
-        private string m_tooltipString = "%n - %s %tr - %r";
-        public string TooltipString
+        private bool m_trayPopupShowSkill = true;
+        public bool TrayPopupShowSkill
         {
-            get { return m_tooltipString; }
+            get { return m_trayPopupShowSkill; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_tooltipString = value;
+                    m_trayPopupShowSkill = value;
                 }
             }
         }
 
+        private bool m_trayPopupShowSkillTime = true;
+        public bool TrayPopupShowSkillTime
+        {
+            get { return m_trayPopupShowSkillTime; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_trayPopupShowSkillTime = value;
+                }
+            }
+        }
+
+        private bool m_trayPopupShowSkillEnd = false;
+        public bool TrayPopupShowSkillEnd
+        {
+            get { return m_trayPopupShowSkillEnd; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_trayPopupShowSkillEnd = value;
+                }
+            }
+        }
+
+        private bool m_trayPopupShowPortrait = true;
+        public bool TrayPopupShowPortrait
+        {
+            get { return m_trayPopupShowPortrait; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_trayPopupShowPortrait = value;
+                }
+            }
+        }
+
+        private bool m_trayPopupShowBalance = false;
+        public bool TrayPopupShowBalance
+        {
+            get { return m_trayPopupShowBalance; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_trayPopupShowBalance = value;
+                }
+            }
+        }
+
+        private bool m_trayPopupShowTQStatus = true;
+        public bool TrayPopupShowTQStatus
+        {
+            get { return m_trayPopupShowTQStatus; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_trayPopupShowTQStatus = value;
+                }
+            }
+        }
+        
         private bool m_HighlightPlannedSkills;
         public bool SkillPlannerHighlightPlannedSkills
         {

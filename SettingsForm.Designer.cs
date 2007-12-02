@@ -29,7 +29,6 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
@@ -113,10 +112,7 @@ namespace EVEMon
             this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
-            this.gboxTooltipOptions = new System.Windows.Forms.GroupBox();
-            this.tbTooltipTestDisplay = new System.Windows.Forms.TextBox();
-            this.tbTooltipString = new System.Windows.Forms.TextBox();
-            this.cbTooltipDisplay = new System.Windows.Forms.ComboBox();
+            this.gboxTrayIconPopUpOptions = new System.Windows.Forms.GroupBox();
             this.gbSkillPlannerHighlighting = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
@@ -211,6 +207,12 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.cbTrayPopupShowPortrait = new System.Windows.Forms.CheckBox();
+            this.cbTrayPopupShowBalance = new System.Windows.Forms.CheckBox();
+            this.cbTrayPopupShowSkill = new System.Windows.Forms.CheckBox();
+            this.cbTrayPopupShowSkillTime = new System.Windows.Forms.CheckBox();
+            this.cbTrayPopupShowSkillEnd = new System.Windows.Forms.CheckBox();
+            this.cbTrayPopUpShowTQStatus = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -236,7 +238,7 @@ namespace EVEMon
             this.groupBox7.SuspendLayout();
             this.flowLayoutPanel25.SuspendLayout();
             this.flowLayoutPanel26.SuspendLayout();
-            this.gboxTooltipOptions.SuspendLayout();
+            this.gboxTrayIconPopUpOptions.SuspendLayout();
             this.gbSkillPlannerHighlighting.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -934,7 +936,7 @@ namespace EVEMon
             // 
             this.flowLayoutPanel16.Controls.Add(this.groupBox11);
             this.flowLayoutPanel16.Controls.Add(this.groupBox7);
-            this.flowLayoutPanel16.Controls.Add(this.gboxTooltipOptions);
+            this.flowLayoutPanel16.Controls.Add(this.gboxTrayIconPopUpOptions);
             this.flowLayoutPanel16.Controls.Add(this.gbSkillPlannerHighlighting);
             this.flowLayoutPanel16.Controls.Add(this.groupBox10);
             this.flowLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1075,49 +1077,20 @@ namespace EVEMon
             this.cbSkillInTitle.Text = "Show skill in training";
             this.cbSkillInTitle.UseVisualStyleBackColor = true;
             // 
-            // gboxTooltipOptions
+            // gboxTrayIconPopUpOptions
             // 
-            this.gboxTooltipOptions.Controls.Add(this.tbTooltipTestDisplay);
-            this.gboxTooltipOptions.Controls.Add(this.tbTooltipString);
-            this.gboxTooltipOptions.Controls.Add(this.cbTooltipDisplay);
-            this.gboxTooltipOptions.Location = new System.Drawing.Point(3, 164);
-            this.gboxTooltipOptions.Name = "gboxTooltipOptions";
-            this.gboxTooltipOptions.Size = new System.Drawing.Size(373, 101);
-            this.gboxTooltipOptions.TabIndex = 7;
-            this.gboxTooltipOptions.TabStop = false;
-            this.gboxTooltipOptions.Text = "Tray Icon Tooltip";
-            // 
-            // tbTooltipTestDisplay
-            // 
-            this.tbTooltipTestDisplay.BackColor = System.Drawing.SystemColors.Info;
-            this.tbTooltipTestDisplay.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tbTooltipTestDisplay.Location = new System.Drawing.Point(15, 74);
-            this.tbTooltipTestDisplay.Name = "tbTooltipTestDisplay";
-            this.tbTooltipTestDisplay.ReadOnly = true;
-            this.tbTooltipTestDisplay.Size = new System.Drawing.Size(346, 21);
-            this.tbTooltipTestDisplay.TabIndex = 8;
-            this.ttToolTipCodes.SetToolTip(this.tbTooltipTestDisplay, resources.GetString("tbTooltipTestDisplay.ToolTip"));
-            this.tbTooltipTestDisplay.Visible = false;
-            // 
-            // tbTooltipString
-            // 
-            this.tbTooltipString.BackColor = System.Drawing.SystemColors.Window;
-            this.tbTooltipString.Location = new System.Drawing.Point(15, 47);
-            this.tbTooltipString.Name = "tbTooltipString";
-            this.tbTooltipString.ReadOnly = true;
-            this.tbTooltipString.Size = new System.Drawing.Size(346, 21);
-            this.tbTooltipString.TabIndex = 6;
-            this.tbTooltipString.TextChanged += new System.EventHandler(this.tbTooltipString_TextChanged);
-            // 
-            // cbTooltipDisplay
-            // 
-            this.cbTooltipDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTooltipDisplay.FormattingEnabled = true;
-            this.cbTooltipDisplay.Location = new System.Drawing.Point(15, 20);
-            this.cbTooltipDisplay.Name = "cbTooltipDisplay";
-            this.cbTooltipDisplay.Size = new System.Drawing.Size(346, 21);
-            this.cbTooltipDisplay.TabIndex = 8;
-            this.cbTooltipDisplay.SelectionChangeCommitted += new System.EventHandler(this.cbTooltipDisplay_SelectionChangeCommitted);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopUpShowTQStatus);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkillEnd);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkillTime);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkill);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowBalance);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowPortrait);
+            this.gboxTrayIconPopUpOptions.Location = new System.Drawing.Point(3, 164);
+            this.gboxTrayIconPopUpOptions.Name = "gboxTrayIconPopUpOptions";
+            this.gboxTrayIconPopUpOptions.Size = new System.Drawing.Size(373, 101);
+            this.gboxTrayIconPopUpOptions.TabIndex = 7;
+            this.gboxTrayIconPopUpOptions.TabStop = false;
+            this.gboxTrayIconPopUpOptions.Text = "Tray Icon Pop Up";
             // 
             // gbSkillPlannerHighlighting
             // 
@@ -2215,6 +2188,67 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // cbTrayPopupShowPortrait
+            // 
+            this.cbTrayPopupShowPortrait.AutoSize = true;
+            this.cbTrayPopupShowPortrait.Location = new System.Drawing.Point(225, 20);
+            this.cbTrayPopupShowPortrait.Name = "cbTrayPopupShowPortrait";
+            this.cbTrayPopupShowPortrait.Size = new System.Drawing.Size(142, 17);
+            this.cbTrayPopupShowPortrait.TabIndex = 0;
+            this.cbTrayPopupShowPortrait.Text = "Show Character Portrait";
+            this.cbTrayPopupShowPortrait.UseVisualStyleBackColor = true;
+            // 
+            // cbTrayPopupShowBalance
+            // 
+            this.cbTrayPopupShowBalance.AutoSize = true;
+            this.cbTrayPopupShowBalance.Location = new System.Drawing.Point(225, 43);
+            this.cbTrayPopupShowBalance.Name = "cbTrayPopupShowBalance";
+            this.cbTrayPopupShowBalance.Size = new System.Drawing.Size(125, 17);
+            this.cbTrayPopupShowBalance.TabIndex = 1;
+            this.cbTrayPopupShowBalance.Text = "Show Wallet Balance";
+            this.cbTrayPopupShowBalance.UseVisualStyleBackColor = true;
+            // 
+            // cbTrayPopupShowSkill
+            // 
+            this.cbTrayPopupShowSkill.AutoSize = true;
+            this.cbTrayPopupShowSkill.Location = new System.Drawing.Point(15, 20);
+            this.cbTrayPopupShowSkill.Name = "cbTrayPopupShowSkill";
+            this.cbTrayPopupShowSkill.Size = new System.Drawing.Size(124, 17);
+            this.cbTrayPopupShowSkill.TabIndex = 2;
+            this.cbTrayPopupShowSkill.Text = "Show Skill in Training";
+            this.cbTrayPopupShowSkill.UseVisualStyleBackColor = true;
+            this.cbTrayPopupShowSkill.CheckedChanged += new System.EventHandler(this.cbTrayPopupShowSkill_CheckedChanged);
+            // 
+            // cbTrayPopupShowSkillTime
+            // 
+            this.cbTrayPopupShowSkillTime.AutoSize = true;
+            this.cbTrayPopupShowSkillTime.Location = new System.Drawing.Point(37, 43);
+            this.cbTrayPopupShowSkillTime.Name = "cbTrayPopupShowSkillTime";
+            this.cbTrayPopupShowSkillTime.Size = new System.Drawing.Size(146, 17);
+            this.cbTrayPopupShowSkillTime.TabIndex = 3;
+            this.cbTrayPopupShowSkillTime.Text = "Show Time to Completion";
+            this.cbTrayPopupShowSkillTime.UseVisualStyleBackColor = true;
+            // 
+            // cbTrayPopupShowSkillEnd
+            // 
+            this.cbTrayPopupShowSkillEnd.AutoSize = true;
+            this.cbTrayPopupShowSkillEnd.Location = new System.Drawing.Point(37, 66);
+            this.cbTrayPopupShowSkillEnd.Name = "cbTrayPopupShowSkillEnd";
+            this.cbTrayPopupShowSkillEnd.Size = new System.Drawing.Size(133, 17);
+            this.cbTrayPopupShowSkillEnd.TabIndex = 4;
+            this.cbTrayPopupShowSkillEnd.Text = "Show Completion Time";
+            this.cbTrayPopupShowSkillEnd.UseVisualStyleBackColor = true;
+            // 
+            // cbTrayPopUpShowTQStatus
+            // 
+            this.cbTrayPopUpShowTQStatus.AutoSize = true;
+            this.cbTrayPopUpShowTQStatus.Location = new System.Drawing.Point(225, 66);
+            this.cbTrayPopUpShowTQStatus.Name = "cbTrayPopUpShowTQStatus";
+            this.cbTrayPopUpShowTQStatus.Size = new System.Drawing.Size(103, 17);
+            this.cbTrayPopUpShowTQStatus.TabIndex = 5;
+            this.cbTrayPopUpShowTQStatus.Text = "Show TQ Status";
+            this.cbTrayPopUpShowTQStatus.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2276,8 +2310,8 @@ namespace EVEMon
             this.flowLayoutPanel25.PerformLayout();
             this.flowLayoutPanel26.ResumeLayout(false);
             this.flowLayoutPanel26.PerformLayout();
-            this.gboxTooltipOptions.ResumeLayout(false);
-            this.gboxTooltipOptions.PerformLayout();
+            this.gboxTrayIconPopUpOptions.ResumeLayout(false);
+            this.gboxTrayIconPopUpOptions.PerformLayout();
             this.gbSkillPlannerHighlighting.ResumeLayout(false);
             this.flowLayoutPanel13.ResumeLayout(false);
             this.flowLayoutPanel13.PerformLayout();
@@ -2424,7 +2458,7 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbHighlightPlannedSkills;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel14;
         private System.Windows.Forms.CheckBox cbHighlightPrerequisites;
-        private System.Windows.Forms.GroupBox gboxTooltipOptions;
+        private System.Windows.Forms.GroupBox gboxTrayIconPopUpOptions;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TreeView tvlist;
@@ -2465,9 +2499,6 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel27;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox tb_IgbPort;
-        private System.Windows.Forms.TextBox tbTooltipString;
-        private System.Windows.Forms.TextBox tbTooltipTestDisplay;
-        private System.Windows.Forms.ComboBox cbTooltipDisplay;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.GroupBox groupBox13;
@@ -2504,5 +2535,11 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbG15ShowTime;
         private System.Windows.Forms.ComboBox cmbAPIUpdateDelay;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.CheckBox cbTrayPopupShowSkillTime;
+        private System.Windows.Forms.CheckBox cbTrayPopupShowSkill;
+        private System.Windows.Forms.CheckBox cbTrayPopupShowBalance;
+        private System.Windows.Forms.CheckBox cbTrayPopupShowPortrait;
+        private System.Windows.Forms.CheckBox cbTrayPopUpShowTQStatus;
+        private System.Windows.Forms.CheckBox cbTrayPopupShowSkillEnd;
     }
 }

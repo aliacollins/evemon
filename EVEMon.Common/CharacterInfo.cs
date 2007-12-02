@@ -16,6 +16,7 @@ namespace EVEMon.Common
     // WARNING!!! This should ONLY be constructed from CharacterMonitor. If you need to construct one elsewhere, you;re doing something wrong. - Brad
     public class CharacterInfo
     {
+        private int m_userId;
         private string m_name;
         private int m_characterId;
         private string m_race;
@@ -38,7 +39,13 @@ namespace EVEMon.Common
         private Dictionary<string, Skill> m_AllSkillsByName = new Dictionary<string, Skill>();
 
         public CharacterInfo(int characterId, string name)
+            : this(0, characterId, name)
         {
+        }
+
+        public CharacterInfo(int userId, int characterId, string name)
+        {
+            m_userId = userId;
             m_characterId = characterId;
             m_name = name;
 
@@ -191,6 +198,11 @@ namespace EVEMon.Common
             }
 
             OnSkillChanged(gs);
+        }
+
+        public int UserId
+        {
+            get { return m_userId; }
         }
 
         public string Name

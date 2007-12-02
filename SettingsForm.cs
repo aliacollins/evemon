@@ -105,7 +105,13 @@ namespace EVEMon
             s.IGBServerPublic = cbIGBPublic.Checked;
             s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
 
-            s.TooltipString = tbTooltipString.Text;
+            // Tray Icon Popup
+            s.TrayPopupShowSkill = cbTrayPopupShowSkill.Checked;
+            s.TrayPopupShowSkillTime = cbTrayPopupShowSkillTime.Checked;
+            s.TrayPopupShowSkillEnd = cbTrayPopupShowSkillEnd.Checked;
+            s.TrayPopupShowPortrait = cbTrayPopupShowPortrait.Checked;
+            s.TrayPopupShowBalance = cbTrayPopupShowBalance.Checked;
+            s.TrayPopupShowTQStatus = cbTrayPopUpShowTQStatus.Checked;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
             ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
@@ -332,15 +338,12 @@ namespace EVEMon
             cbHighlightConflicts.Checked = m_settings.SkillPlannerHighlightConflicts;
             cbHighlightPartialSkills.Checked = m_settings.SkillPlannerHighlightPartialSkills;
 
-            cbTooltipDisplay.Items.Clear();
-            for (int i = 0; i < tooltipCodes.Length; i++)
-            {
-                cbTooltipDisplay.Items.Add(FormatExampleTooltipText(tooltipCodes[i]));
-            }
-            cbTooltipDisplay.Items.Add(" -- Custom -- ");
-
-            tbTooltipString.Text = m_settings.TooltipString;
-
+            cbTrayPopupShowSkill.Checked = m_settings.TrayPopupShowSkill;
+            cbTrayPopupShowSkillTime.Checked = m_settings.TrayPopupShowSkillTime;
+            cbTrayPopupShowSkillEnd.Checked = m_settings.TrayPopupShowSkillEnd;
+            cbTrayPopupShowPortrait.Checked = m_settings.TrayPopupShowPortrait;
+            cbTrayPopupShowBalance.Checked = m_settings.TrayPopupShowBalance;
+            cbTrayPopUpShowTQStatus.Checked = m_settings.TrayPopupShowTQStatus;
             // Load Calendar Settings
             panelColorBlocking.BackColor = m_settings.CalendarBlockingColor;
             panelColorRecurring1.BackColor = m_settings.CalendarRecurring1;
@@ -402,7 +405,7 @@ namespace EVEMon
 
         private void cbWorksafeMode_CheckedChanged(object sender, EventArgs e)
         {
-            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
+            UpdateDisables();
         }
 
         private void cbSendEmail_CheckedChanged(object sender, EventArgs e)
@@ -426,6 +429,11 @@ namespace EVEMon
             tbConnectivityURL.Enabled = cbCheckTranquilityStatus.Checked;
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
+            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
+            // Tray Popup Options
+            cbTrayPopupShowSkillTime.Enabled = cbTrayPopupShowSkill.Checked;
+            cbTrayPopupShowSkillEnd.Enabled = cbTrayPopupShowSkill.Checked;
+            cbTrayPopupShowPortrait.Enabled = !cbWorksafeMode.Checked;
         }
 
         private bool ValidateProxySetting(string host, string port)
@@ -628,122 +636,10 @@ namespace EVEMon
             tvlist.Nodes.Add(gtn);
         }
 
-        // Array containing the example tooltip formats that are populated into the dropdown box.
-        static string[] tooltipCodes = {
-            "%n - %s %tr - %r",
-            "%n - %s [%cr->%tr]: %r",
-            "%n : %s - %d : %b isk",
-            "%s %ci to %ti, %r left"
-        };
-
-        private void tbTooltipString_TextChanged(object sender, EventArgs e)
-        {
-            tbTooltipTestDisplay.Text = FormatExampleTooltipText(tbTooltipString.Text);
-
-            if (cbTooltipDisplay.SelectedIndex == -1)
-            {
-                int index = tooltipCodes.Length;
-
-                for (int i = 0; i < tooltipCodes.Length; i++)
-                {
-                    if (tooltipCodes[i].Equals(tbTooltipString.Text))
-                    {
-                        index = i;
-                    }
-                }
-
-                cbTooltipDisplay.SelectedIndex = index;
-                DisplayCustomControls(index == tooltipCodes.Length);
-            }
-        }
-
-        // Formats the argument format string with hardcoded exampe values.  Works basically the
-        // same as MainWindow.FormatTooltipText(...), with the exception of the exampe values.
-        private string FormatExampleTooltipText(string fmt)
-        {
-            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
-                {
-                    string value = String.Empty;
-                    char capture = m.Groups[1].Value[0];
-
-                    switch (capture)
-                    {
-                        case 'n':
-                            value = "John Doe";
-                            break;
-                        case 'b':
-                            value = "183,415,254.05";
-                            break;
-                        case 's':
-                            value = "Gunnery";
-                            break;
-                        case 'd':
-                            value = "9/15/2006 6:36 PM";
-                            break;
-                        case 'r':
-                            value = "2h, 53m, 28s";
-                            break;
-                        default:
-                            int level = -1;
-                            if (capture == 'c')
-                            {
-                                level = 3;
-                            }
-                            else if (capture == 't')
-                            {
-                                level = 4;
-                            }
-
-                            if (m.Groups[1].Value.Length > 1 && level >= 0)
-                            {
-                                capture = m.Groups[1].Value[1];
-
-                                if (capture == 'i')
-                                {
-                                    value = level.ToString();
-                                }
-                                else if (capture == 'r')
-                                {
-                                    value = Skill.GetRomanForInt(level);
-                                }
-                            }
-                            break;
-                    }
-
-                    return value;
-                }), RegexOptions.Compiled);
-        }
-
-        private void cbTooltipDisplay_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            int index = cbTooltipDisplay.SelectedIndex;
-
-            if (index == tooltipCodes.Length)
-            {
-                tbTooltipString.Text = m_settings.TooltipString;
-                DisplayCustomControls(true);
-            }
-            else
-            {
-                tbTooltipString.Text = tooltipCodes[index];
-                DisplayCustomControls(false);
-            }
-        }
-
-        /// <summary>
-        /// Toggles the visibility of the tooltip example display and code label, as well as the readonly status of the tooltip string itself.
-        /// </summary>
-        /// <param name="custom">Show tbTooltipTestDisplay?</param>
-        private void DisplayCustomControls(bool custom)
-        {
-            tbTooltipTestDisplay.Visible = custom;
-            tbTooltipString.ReadOnly = !custom;
-        }
-
         private void rbSystemTrayOptionsNever_CheckedChanged(object sender, EventArgs e)
         {
             cbCloseToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
-            gboxTooltipOptions.Enabled = !rbSystemTrayOptionsNever.Checked;
+            gboxTrayIconPopUpOptions.Enabled = !rbSystemTrayOptionsNever.Checked;
         }
 
         private void tbNotificationOffset_ValueChanged(object sender, EventArgs e)
@@ -776,6 +672,11 @@ namespace EVEMon
             {
                 color.BackColor = colorDialog.Color;
             }
+        }
+
+        private void cbTrayPopupShowSkill_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateDisables();
         }
     }
 }

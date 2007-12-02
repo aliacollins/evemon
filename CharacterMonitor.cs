@@ -125,7 +125,7 @@ namespace EVEMon
 
             if (m_cli != null)
             {
-                m_grandCharacterInfo = new CharacterInfo(m_charId, m_cli.CharacterName);
+                m_grandCharacterInfo = new CharacterInfo(m_cli.UserId, m_charId, m_cli.CharacterName);
             }
             else
             {
@@ -676,7 +676,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="t">The time (in the future) for which you want a span</param>
         /// <returns>Format: X day(x), X hour(s), X minute(s), X second(s)</returns>
-        private string TimeSpanDescriptive(DateTime t)
+        public static string TimeSpanDescriptive(DateTime t)
         {
             StringBuilder sb = new StringBuilder();
             if (t > DateTime.Now)
@@ -2210,6 +2210,8 @@ namespace EVEMon
         }
 
         public TimeSpan ShortTimeSpan { get { return m_lcdTimeSpan; } }
+
+        public Image CharacterPortrait { get { return pbCharImage.Image; } }
         #endregion
 
         #region Saving the Character
