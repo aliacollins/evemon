@@ -26,16 +26,31 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private Plan m_plan;
+        private Plan m_plan = null;
         public Plan Plan
         {
             get { return m_plan; }
             set
             {
+                if (m_plan != null)
+                {
+                    // Unsubscribe to existing Plan.Changed event
+                    m_plan.Changed -= new EventHandler<EventArgs>(PlanChanged);
+                }
                 m_plan = value;
+                if (m_plan != null)
+                {
+                    // Subscribe to new plan's changed event
+                    m_plan.Changed += new EventHandler<EventArgs>(PlanChanged);
+                }
                 skillTreeDisplay.Plan = value;
                 skillSelectControl.Plan = value;
             }
+        }
+
+        private void PlanChanged(object sender, EventArgs e)
+        {
+            UpdatePlanSelect();
         }
 
         public bool WorksafeMode
@@ -58,120 +73,71 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        [Flags]
-        private enum PlanSelectShowing
+        /// <summary>
+        /// Internal helper class for the PlanTo combo box
+        /// </summary>
+        private class PlanToComboBoxItem
         {
-            None = 1,
-            One = 2,
-            Two = 4,
-            Three = 8,
-            Four = 16,
-            Five = 32
+            public int Level;
+            public PlanToComboBoxItem(int _level)
+            {
+                Level = _level;
+            }
+            public override string ToString()
+            {
+                if (Level == 0) { return "Not planned"; }
+                else { return "Level " + Skill.GetRomanForInt(Level); }
+            }
         }
 
-        private PlanSelectShowing m_planSelectShowing;
-        private int m_planSelectSelected;
-
-        // Update the items in the 'Plan To' Combobox
+        /// <summary>
+        /// Updates the Plan To combo box
+        /// </summary>
         private void UpdatePlanSelect()
         {
-            PlanSelectShowing thisPss = PlanSelectShowing.None;
-            int plannedTo = 0;
-            for (int i = 1; i <= 5; i++)
+            if (m_selectedSkill != null)
             {
-                if (m_selectedSkill.Level < i)
-                {
-                    int x = 1 << i;
-                    thisPss = (PlanSelectShowing)((int)thisPss + x);
-                }
-                if (m_plan.IsPlanned(m_selectedSkill, i))
-                {
-                    plannedTo = i;
-                }
-            }
-            if (thisPss != m_planSelectShowing || plannedTo != m_planSelectSelected)
-            {
+                // Remove the event handler while the control is updated
                 cbPlanSelect.SelectedIndexChanged -= new EventHandler(cbPlanSelect_SelectedIndexChanged);
-
+                // Start the update
+                cbPlanSelect.BeginUpdate();
                 cbPlanSelect.Items.Clear();
-                if ((thisPss & PlanSelectShowing.None) != 0)
+                // Is the skill plannable (ie level < 5)
+                if (m_selectedSkill.Level < 5)
                 {
-                    cbPlanSelect.Items.Add("Not Planned");
-                    if (plannedTo == 0)
+                    // Get current level
+                    int currentLevel = m_selectedSkill.Level;
+                    // Get planned level
+                    int plannedTo = m_plan.PlannedLevel(m_selectedSkill);
+                    int selectedIndex = 0;
+                    // Add plannable items
+                    cbPlanSelect.Items.Add(new PlanToComboBoxItem(0));
+                    for (int i = currentLevel + 1; i <= 5; i++)
                     {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
+                        cbPlanSelect.Items.Add(new PlanToComboBoxItem(i));
+                        if (i == plannedTo) { selectedIndex = i - currentLevel; }
                     }
-                }
-                if ((thisPss & PlanSelectShowing.One) != 0)
-                {
-                    cbPlanSelect.Items.Add("Level I");
-                    if (plannedTo == 1)
-                    {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
-                    }
-                }
-                if ((thisPss & PlanSelectShowing.Two) != 0)
-                {
-                    cbPlanSelect.Items.Add("Level II");
-                    if (plannedTo == 2)
-                    {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
-                    }
-                }
-                if ((thisPss & PlanSelectShowing.Three) != 0)
-                {
-                    cbPlanSelect.Items.Add("Level III");
-                    if (plannedTo == 3)
-                    {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
-                    }
-                }
-                if ((thisPss & PlanSelectShowing.Four) != 0)
-                {
-                    cbPlanSelect.Items.Add("Level IV");
-                    if (plannedTo == 4)
-                    {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
-                    }
-                }
-                if ((thisPss & PlanSelectShowing.Five) != 0)
-                {
-                    cbPlanSelect.Items.Add("Level V");
-                    if (plannedTo == 5)
-                    {
-                        cbPlanSelect.SelectedIndex = cbPlanSelect.Items.Count - 1;
-                    }
-                }
-
-
-                m_planSelectShowing = thisPss;
-                m_planSelectSelected = plannedTo;
-                cbPlanSelect.SelectedIndexChanged += new EventHandler(cbPlanSelect_SelectedIndexChanged);
-                if (m_selectedSkill.Known)
-                {
-                    cbOwned.Checked = false;
-                    cbOwned.Enabled = false;
+                    cbPlanSelect.SelectedIndex = selectedIndex;
+                    cbPlanSelect.Enabled = true;
                 }
                 else
                 {
-                    cbOwned.Checked = m_selectedSkill.Owned;
-                    cbOwned.Enabled = true;
+                    // Skill is already level 5
+                    cbPlanSelect.Items.Add("Not trainable");
+                    cbPlanSelect.SelectedIndex = 0;
+                    cbPlanSelect.Enabled = false;
                 }
+                // Complete the update
+                cbPlanSelect.EndUpdate();
+                // Apply the event handler
+                cbPlanSelect.SelectedIndexChanged += new EventHandler(cbPlanSelect_SelectedIndexChanged);
             }
         }
 
         // react to changes in the 'Plan To' Combobox
         private void cbPlanSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string s = (string)cbPlanSelect.Items[cbPlanSelect.SelectedIndex];
-            int setLevel = 0;
-            if (s.StartsWith("Level "))
-            {
-                string r = s.Substring(6);
-                setLevel = Skill.GetIntForRoman(r);
-            }
-            m_planSelectSelected = setLevel;
-            PlanTo(setLevel);
+            PlanTo(((PlanToComboBoxItem)cbPlanSelect.SelectedItem).Level);
         }
 
         public void UpdatePlanControl()
@@ -226,7 +192,16 @@ namespace EVEMon.SkillPlanner
                 anyPlan = anyPlan || tPlan;
                 //btnCancelPlan.Enabled = anyPlan;
 
-                cbOwned.Checked = m_selectedSkill.Owned;
+                if (m_selectedSkill.Known)
+                {
+                    cbOwned.Checked = false;
+                    cbOwned.Enabled = false;
+                }
+                else
+                {
+                    cbOwned.Checked = m_selectedSkill.Owned;
+                    cbOwned.Enabled = true;
+                }
 
                 UpdatePlanSelect();
 

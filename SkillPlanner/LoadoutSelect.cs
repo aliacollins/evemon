@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
 
         public LoadoutSelect(Ship s, Plan p) : this()
         {
-            m_plan = p;
+            SetPlan(p);
             m_ship = s;
         }
 
@@ -45,7 +45,23 @@ namespace EVEMon.SkillPlanner
 
         public void SetPlan(Plan p)
         {
+            if (m_plan != null)
+            {
+                // Unsubscribe to PlanChanged
+                m_plan.Changed -= new EventHandler<EventArgs>(PlanChanged);
+
+            }
             m_plan = p;
+            if (m_plan != null)
+            {
+                // Subscribe to PlanChanged
+                m_plan.Changed += new EventHandler<EventArgs>(PlanChanged);
+            }
+        }
+
+        private void PlanChanged(object sender, EventArgs e)
+        {
+            SetPlanStatus();
         }
 
         private void LoadShip()
@@ -438,6 +454,8 @@ namespace EVEMon.SkillPlanner
 
         private void LoadoutSelect_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Unsubscribe to events
+            if (m_plan != null) { m_plan.Changed -= new EventHandler<EventArgs>(PlanChanged); }
             NewPlannerWindow w = m_plan.PlannerWindow.Target as NewPlannerWindow;
             try
             {
