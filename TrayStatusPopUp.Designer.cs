@@ -92,7 +92,6 @@ namespace EVEMon
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "EveMon Status";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.SystemColors.Info;
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

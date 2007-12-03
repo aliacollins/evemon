@@ -130,10 +130,19 @@ namespace EVEMon
                     flowPanel.Height = pnlHeight;
                 }
             }
-            // Set the server status message, trimming the leading slashes
+            // Set the server status message
             if (s.TrayPopupShowTQStatus)
             {
-                lblTQStatus.Text = Regex.Replace(EveServer.GetInstance().StatusText, @"^// ", String.Empty, RegexOptions.Singleline);
+                EveServer server = EveServer.GetInstance();
+                if (server != null)
+                {
+                    SetTQStatusLabel(server.StatusText);
+                    server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(ServerStatusUpdated);
+                }
+                else
+                {
+                    SetTQStatusLabel("Tranquility Status not available");
+                }
             }
             else
             {
@@ -186,13 +195,15 @@ namespace EVEMon
             displayTimer.Stop();
             // Unsubscribe to tray icon events
             m_trayIcon.MouseMove -= new MouseEventHandler(trayIcon_MouseMove);
+            EveServer server = EveServer.GetInstance();
+            if (server != null) { server.ServerStatusUpdated -= new EventHandler<EveServerEventArgs>(ServerStatusUpdated); }
             // Call default behaviour in case its needed
             base.Close();
             // Now fire the proper closed event
             OnPopUpClosed();
         }
 
-        protected override bool ShowWithoutActivation { get { return true; } }
+        //protected override bool ShowWithoutActivation { get { return true; } }
 
         #endregion
 
@@ -236,6 +247,12 @@ namespace EVEMon
                 {
                     // No it hasn't so we can display the form
                     base.Show();
+                    // Equivalent to setting TopMost = true, except don't activate the window.
+                    NativeMethods.SetWindowPos(this.Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
+                        NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+                    // Show the window without activating it.
+                    NativeMethods.ShowWindow(this.Handle, NativeMethods.SW_SHOWNOACTIVATE);
+
                     m_displayStatus = DisplayStatus.Visible;
                     // Set the timer interval to 500ms to track status
                     // This should allow time for any MouseMove events due to the mouse moving
@@ -262,6 +279,17 @@ namespace EVEMon
                 Close();
             }
         }
+
+        /// <summary>
+        /// Updates the TQ status message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ServerStatusUpdated(object sender, EveServerEventArgs e)
+        {
+            SetTQStatusLabel(e.info);
+        }
+
         #endregion
 
         #region Events
@@ -284,6 +312,26 @@ namespace EVEMon
 
         #region Helper Methods
         /// <summary>
+        /// Displays the TQ status message
+        /// </summary>
+        /// <param name="statusText"></param>
+        private void SetTQStatusLabel(String statusText)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate
+                {
+                    SetTQStatusLabel(statusText);
+                }
+                ));
+            }
+            else
+            {
+                lblTQStatus.Text = Regex.Replace(statusText, @"^// ", String.Empty, RegexOptions.Singleline);
+            }
+        }
+
+        /// <summary>
         /// Draws the rounded rectangle border
         /// </summary>
         /// <param name="e"></param>
@@ -293,7 +341,7 @@ namespace EVEMon
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             // Define the size of the rectangle used for each of the 4 corner arcs.
-            int radius = 5;
+            int radius = 10;
             Size cornerSize = new Size(radius * 2, radius * 2);
             // Create 4 rectangles for the arcs to fit in. tl=topleft, br=bottomright
             Rectangle tl = new Rectangle(0, 0, cornerSize.Width, cornerSize.Height);
@@ -422,5 +470,22 @@ namespace EVEMon
 
         #endregion
 
+        #region Native Stuff
+        internal class NativeMethods
+        {
+            public const Int32 HWND_TOPMOST = -1;
+            public const Int32 SWP_NOACTIVATE = 0x0010;
+            public const Int32 SWP_NOSIZE = 0x0001;
+            public const Int32 SWP_NOMOVE = 0x0002;
+            public const Int32 SW_SHOWNOACTIVATE = 4;
+
+            [DllImport ("user32.dll")]
+            public static extern bool ShowWindow (IntPtr hWnd, Int32 flags);
+            [DllImport ("user32.dll")]
+            public static extern bool SetWindowPos (IntPtr hWnd, 
+                Int32 hWndInsertAfter, Int32 X, Int32 Y, Int32 cx, Int32 cy, uint uFlags);
+
+        }
+        #endregion
     }
 }

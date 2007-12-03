@@ -71,25 +71,34 @@ namespace EVEMon
                 if (s.TrayPopupShowSkill && charInfo.IsTraining)
                 {
                     Skill trainingSkill = charInfo.CurrentlyTrainingSkill;
-                    m_estimatedCompletion = trainingSkill.EstimatedCompletion;
-                    lblSkillInTraining.Text = trainingSkill.Name + " " + Skill.GetRomanForInt(trainingSkill.TrainingToLevel);
-                    // Time to completion
-                    if (s.TrayPopupShowSkillTime)
+                    if (trainingSkill != null)
                     {
-                        UpdateTimeRemainingLabel();
-                        updateTimer.Start();
+                        m_estimatedCompletion = trainingSkill.EstimatedCompletion;
+                        lblSkillInTraining.Text = trainingSkill.Name + " " + Skill.GetRomanForInt(trainingSkill.TrainingToLevel);
+                        // Time to completion
+                        if (s.TrayPopupShowSkillTime)
+                        {
+                            UpdateTimeRemainingLabel();
+                            updateTimer.Start();
+                        }
+                        else
+                        {
+                            lblTimeToCompletion.Hide();
+                        }
+                        // Completion time
+                        if (s.TrayPopupShowSkillEnd && m_estimatedCompletion != DateTime.MaxValue)
+                        {
+                            lblCompletionTime.Text = m_estimatedCompletion.ToString("ddd ") + m_estimatedCompletion.ToString();
+                        }
+                        else
+                        {
+                            lblCompletionTime.Hide();
+                        }
                     }
                     else
                     {
+                        lblSkillInTraining.Text = "Skill training info not available";
                         lblTimeToCompletion.Hide();
-                    }
-                    // Completion time
-                    if (s.TrayPopupShowSkillEnd && m_estimatedCompletion != DateTime.MaxValue)
-                    {
-                        lblCompletionTime.Text = m_estimatedCompletion.ToString("ddd ") + m_estimatedCompletion.ToString();
-                    }
-                    else
-                    {
                         lblCompletionTime.Hide();
                     }
                 }
