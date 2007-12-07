@@ -108,7 +108,11 @@ namespace EVEMon.Common
                 m_instance.m_settings = Settings.GetInstance();
                 if (m_instance.m_settings.CheckTranquilityStatus)
                 {
-                    m_instance.StartTQChecks();
+                    m_instance.m_statusText = "Tranquility Server Status Unknown";
+                }
+                else
+                {
+                    m_instance.m_statusText = "Tranquility Server Status Check Disabled";
                 }
             }
             return m_instance;
@@ -153,7 +157,7 @@ namespace EVEMon.Common
             m_status = Status.Offline;
             m_users = 0;
 
-            m_statusText = "// TQ Server Status Check Disabled";
+            m_statusText = "Tranquility Server Status Check Disabled";
             if (ServerStatusUpdated != null)
             {
                 ServerStatusUpdated(this, new EveServerEventArgs(m_statusText));
@@ -329,7 +333,7 @@ namespace EVEMon.Common
 
                 // oops, we've lost the network - reset timer to 30 seconds
                 m_tmrCheck.Interval = 30000;
-                m_statusText = "// TQ Server Status Unknown";
+                m_statusText = "Tranquility Server Status Unknown";
                 if (ServerStatusUpdated != null)
                 {
                     ServerStatusUpdated(m_instance, new EveServerEventArgs(m_statusText));
@@ -376,19 +380,19 @@ namespace EVEMon.Common
         {
             if (m_status == Status.Online)
             {
-                m_statusText = "// Tranquility Server Online (" + m_users.ToString() + " Pilots)";
+                m_statusText = "Tranquility Server Online (" + m_users.ToString() + " Pilots)";
                 m_balloonText = "The Tranquility Server is now online!";
                 m_balloonIcon = System.Windows.Forms.ToolTipIcon.Info;
             }
             else if (m_status == Status.Starting)
             {
-                m_statusText = "// Tranquility Server Starting (" + m_countdown.ToString() + " Seconds)";
+                m_statusText = "Tranquility Server Starting (" + m_countdown.ToString() + " Seconds)";
                 m_balloonText = "The Tranquility Server is starting up!";
                 m_balloonIcon = System.Windows.Forms.ToolTipIcon.Warning;
             }
             else if (m_status == Status.Offline)
             {
-                m_statusText = "// Tranquility Server Offline";
+                m_statusText = "Tranquility Server Offline";
                 m_balloonText = "The Tranquility Server is offline!";
                 m_balloonIcon = System.Windows.Forms.ToolTipIcon.Error;
             }

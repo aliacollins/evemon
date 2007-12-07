@@ -69,9 +69,10 @@ namespace EVEMon
             }
 
             AddCharacters();
+            EveServer server = EveServer.GetInstance();
+            lblServerStatus.Text = "// " + server.StatusText;
             if (m_settings.CheckTranquilityStatus)
             {
-                EveServer server = EveServer.GetInstance();
                 server.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(UpdateServerStatusLabel);
                 if (m_settings.ShowTQBalloon)
                 {
@@ -1033,7 +1034,7 @@ namespace EVEMon
 
         private void UpdateServerStatusLabel(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = e.info;
+            lblServerStatus.Text = "// " + e.info;
         }
 
         private void ShowServerStatusBalloon(object sender, EveServerEventArgs e)

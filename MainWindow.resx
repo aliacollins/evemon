@@ -284,8 +284,8 @@
   <data name="saveSettingsToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAA
-        CxMBAJqcGAAAAPZJREFUOE9j/P//P8OHD+8YcAErR9//x/ZvZnSKqPkPU7NvRQsjXD3IgPfv3+LEmgZW
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEgAA
+        CxIB0t1+/AAAAPZJREFUOE9j/P//P8OHD+8YcAErR9//x/ZvZnSKqPkPU7NvRQsjXD3IgPfv3+LEmgZW
         /w3dM/8jq0HmM8AMODPT+D8yhmkAGQDD2AwBGwDS+O/fPxR8ZoYxiq24XAnW/P/XA6wYZAg6XlmOajDY
         gN9v1xCNsRrw5UrpfxDGZiNOMaDFIG9BvHAmDaz53/fDRONjk7EYAPHKKhwYVe5ALxYDfjyc8J9YvKMN
         iwGwsADRny4Vg8MFnQ3jb6rHYsC7Q/7/icWrKrAY8GqT9n9i8ZIiqAGgqAAnYWAsvFyvSjSem41kAMiQ
@@ -295,8 +295,8 @@
   <data name="loadSettingsToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAA
-        CxMBAJqcGAAAAQhJREFUOE9j/P//PwMxwMgjC67w3I5pjFqG1v+vnT/KyAAyAB9+//4tg6F7JlAJQh2I
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEgAA
+        CxIB0t1+/AAAAQhJREFUOE9j/P//PwMxwMgjC67w3I5pjFqG1v+vnT/KyAAyAB9+//4tg6F7JlAJQh2I
         r2lgBRYDawYpOjPT+D8yhmlA1wzSCMNwA0Aa//37h4LPzDD+DzIYHaO7Fmzzn/fHsGKQIeh4Zbkx2Okw
         g8EG/H67hmgMMwDmErABPx5OAGNsNuIVA+oFG/DlSikYgxT/+36YaAzSCzbg3SF/sObfb1chYZC3kPmY
         7B1tUANerlcFGwDzCjE0SDMoICHxD9QM8waI/nSpGCcfJreqAs0AkDeIxSDNKLEAcgHIGyD8apM2Qbyk
@@ -439,8 +439,8 @@
   <data name="tsSaveSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAA
-        CxMBAJqcGAAAAPZJREFUOE9j/P//P8OHD+8YcAErR9//x/ZvZnSKqPkPU7NvRQsjXD3IgPfv3+LEmgZW
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEgAA
+        CxIB0t1+/AAAAPZJREFUOE9j/P//P8OHD+8YcAErR9//x/ZvZnSKqPkPU7NvRQsjXD3IgPfv3+LEmgZW
         /w3dM/8jq0HmM8AMODPT+D8yhmkAGQDD2AwBGwDS+O/fPxR8ZoYxiq24XAnW/P/XA6wYZAg6XlmOajDY
         gN9v1xCNsRrw5UrpfxDGZiNOMaDFIG9BvHAmDaz53/fDRONjk7EYAPHKKhwYVe5ALxYDfjyc8J9YvKMN
         iwGwsADRny4Vg8MFnQ3jb6rHYsC7Q/7/icWrKrAY8GqT9n9i8ZIiqAGgqAAnYWAsvFyvSjSem41kAMiQ
@@ -450,8 +450,8 @@
   <data name="tsLoadSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAA
-        CxMBAJqcGAAAAQhJREFUOE9j/P//PwMxwMgjC67w3I5pjFqG1v+vnT/KyAAyAB9+//4tg6F7JlAJQh2I
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEgAA
+        CxIB0t1+/AAAAQhJREFUOE9j/P//PwMxwMgjC67w3I5pjFqG1v+vnT/KyAAyAB9+//4tg6F7JlAJQh2I
         r2lgBRYDawYpOjPT+D8yhmlA1wzSCMNwA0Aa//37h4LPzDD+DzIYHaO7Fmzzn/fHsGKQIeh4Zbkx2Okw
         g8EG/H67hmgMMwDmErABPx5OAGNsNuIVA+oFG/DlSikYgxT/+36YaAzSCzbg3SF/sObfb1chYZC3kPmY
         7B1tUANerlcFGwDzCjE0SDMoICHxD9QM8waI/nSpGCcfJreqAs0AkDeIxSDNKLEAcgHIGyD8apM2Qbyk

@@ -327,7 +327,7 @@ namespace EVEMon
             }
             else
             {
-                lblTQStatus.Text = Regex.Replace(statusText, @"^// ", String.Empty, RegexOptions.Singleline);
+                lblTQStatus.Text = statusText;
             }
         }
 

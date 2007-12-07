@@ -39,9 +39,9 @@ namespace EVEMon
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.tmrAlertRefresh = new System.Windows.Forms.Timer(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.tmrTranquilityClock = new System.Windows.Forms.Timer(this.components);
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -122,31 +122,31 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(124, 76);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(114, 76);
             this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.planToolStripMenuItem.Text = "Plans";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(120, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(110, 6);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -173,24 +173,24 @@ namespace EVEMon
             this.statusStrip.Size = new System.Drawing.Size(417, 22);
             this.statusStrip.TabIndex = 1;
             // 
-            // lblStatus
-            // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(94, 17);
-            this.lblStatus.Text = "Current EVE Time:";
-            // 
-            // lblServerStatus
-            // 
-            this.lblServerStatus.Name = "lblServerStatus";
-            this.lblServerStatus.Size = new System.Drawing.Size(176, 17);
-            this.lblServerStatus.Text = "// TQ Server Status Check Disabled";
-            // 
             // lblTraining
             // 
             this.lblTraining.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.lblTraining.Name = "lblTraining";
             this.lblTraining.Size = new System.Drawing.Size(0, 17);
             this.lblTraining.Text = "toolStripStatusLabel1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(102, 17);
+            this.lblStatus.Text = "Current EVE Time:";
+            // 
+            // lblServerStatus
+            // 
+            this.lblServerStatus.Name = "lblServerStatus";
+            this.lblServerStatus.Size = new System.Drawing.Size(201, 17);
+            this.lblServerStatus.Text = "// Tranquility Server Status Unknown";
             // 
             // tmrTranquilityClock
             // 
@@ -237,7 +237,7 @@ namespace EVEMon
             this.menubarToolStripMenuItem,
             this.standardToolStripMenuItem});
             this.toolbarContext.Name = "toolbarContext";
-            this.toolbarContext.Size = new System.Drawing.Size(130, 48);
+            this.toolbarContext.Size = new System.Drawing.Size(123, 48);
             this.toolbarContext.Opening += new System.ComponentModel.CancelEventHandler(this.toolbarContext_Opening);
             // 
             // menubarToolStripMenuItem
@@ -246,7 +246,7 @@ namespace EVEMon
             this.menubarToolStripMenuItem.CheckOnClick = true;
             this.menubarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.menubarToolStripMenuItem.Name = "menubarToolStripMenuItem";
-            this.menubarToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.menubarToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.menubarToolStripMenuItem.Text = "&Menubar";
             this.menubarToolStripMenuItem.Click += new System.EventHandler(this.menubarToolStripMenuItem_Click);
             // 
@@ -254,7 +254,7 @@ namespace EVEMon
             // 
             this.standardToolStripMenuItem.CheckOnClick = true;
             this.standardToolStripMenuItem.Name = "standardToolStripMenuItem";
-            this.standardToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.standardToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.standardToolStripMenuItem.Text = "&Standard";
             this.standardToolStripMenuItem.Click += new System.EventHandler(this.standardToolStripMenuItem_Click);
             // 
@@ -271,14 +271,14 @@ namespace EVEMon
             this.toolStripSeparator6,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // addCharacterToolStripMenuItem
             // 
             this.addCharacterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addCharacterToolStripMenuItem.Image")));
             this.addCharacterToolStripMenuItem.Name = "addCharacterToolStripMenuItem";
-            this.addCharacterToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.addCharacterToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.addCharacterToolStripMenuItem.Text = "&Add Character...";
             this.addCharacterToolStripMenuItem.Click += new System.EventHandler(this.addCharacterToolStripMenuItem_Click);
             // 
@@ -288,32 +288,32 @@ namespace EVEMon
             this.removeCharacterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeCharacterToolStripMenuItem.Image")));
             this.removeCharacterToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.removeCharacterToolStripMenuItem.Name = "removeCharacterToolStripMenuItem";
-            this.removeCharacterToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.removeCharacterToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.removeCharacterToolStripMenuItem.Text = "&Remove Character...";
             this.removeCharacterToolStripMenuItem.Click += new System.EventHandler(this.removeCharacterToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(182, 6);
             // 
             // saveXMLToolStripMenuItem
             // 
             this.saveXMLToolStripMenuItem.Name = "saveXMLToolStripMenuItem";
-            this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.saveXMLToolStripMenuItem.Text = "&Save Character Info...";
             this.saveXMLToolStripMenuItem.Click += new System.EventHandler(this.saveXMLToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
             // 
             // saveSettingsToolStripMenuItem
             // 
             this.saveSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSettingsToolStripMenuItem.Image")));
             this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.saveSettingsToolStripMenuItem.Text = "Sa&ve Settings...";
             this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
@@ -321,19 +321,19 @@ namespace EVEMon
             // 
             this.loadSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadSettingsToolStripMenuItem.Image")));
             this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
-            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.loadSettingsToolStripMenuItem.Text = "R&estore Settings...";
             this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(182, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -342,13 +342,13 @@ namespace EVEMon
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copySkillsToClipboardBBFormatToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
             // 
             // copySkillsToClipboardBBFormatToolStripMenuItem
             // 
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Name = "copySkillsToClipboardBBFormatToolStripMenuItem";
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Text = "&Copy Skills to Clipboard (BB Format)";
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Click += new System.EventHandler(this.copySkillsToClipboardBBFormatToolStripMenuItem_Click);
             // 
@@ -359,28 +359,28 @@ namespace EVEMon
             this.manageToolStripMenuItem,
             this.toolStripSeparator7});
             this.plansToolStripMenuItem.Name = "plansToolStripMenuItem";
-            this.plansToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.plansToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.plansToolStripMenuItem.Text = "&Plans";
             this.plansToolStripMenuItem.DropDownOpening += new System.EventHandler(this.plansToolStripMenuItem_DropDownOpening);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.newToolStripMenuItem.Text = "&New…";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // manageToolStripMenuItem
             // 
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.manageToolStripMenuItem.Text = "&Manage...";
             this.manageToolStripMenuItem.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(132, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(123, 6);
             // 
             // toolsToolStripMenuItem
             // 
@@ -398,7 +398,7 @@ namespace EVEMon
             this.toolStripSeparator2,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             this.toolsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.toolsToolStripMenuItem_DropDownOpening);
             // 
@@ -494,14 +494,14 @@ namespace EVEMon
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -572,7 +572,7 @@ namespace EVEMon
             // 
             this.tsSaveSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsSaveSettings.Image")));
             this.tsSaveSettings.Name = "tsSaveSettings";
-            this.tsSaveSettings.Size = new System.Drawing.Size(177, 22);
+            this.tsSaveSettings.Size = new System.Drawing.Size(167, 22);
             this.tsSaveSettings.Text = "Save Settings...";
             this.tsSaveSettings.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
@@ -580,7 +580,7 @@ namespace EVEMon
             // 
             this.tsLoadSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsLoadSettings.Image")));
             this.tsLoadSettings.Name = "tsLoadSettings";
-            this.tsLoadSettings.Size = new System.Drawing.Size(177, 22);
+            this.tsLoadSettings.Size = new System.Drawing.Size(167, 22);
             this.tsLoadSettings.Text = "Restore Settings...";
             this.tsLoadSettings.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
             // 
@@ -654,7 +654,7 @@ namespace EVEMon
             this.tsbOptions.Image = ((System.Drawing.Image)(resources.GetObject("tsbOptions.Image")));
             this.tsbOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOptions.Name = "tsbOptions";
-            this.tsbOptions.Size = new System.Drawing.Size(76, 22);
+            this.tsbOptions.Size = new System.Drawing.Size(78, 22);
             this.tsbOptions.Text = "Options...";
             this.tsbOptions.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
