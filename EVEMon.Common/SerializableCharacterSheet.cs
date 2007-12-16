@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -262,6 +264,73 @@ namespace EVEMon.Common
             sci.Race = m_charSheet.Race;
             sci.SkillGroups = m_charSheet.SkillGroups;
             return sci;
+        }
+
+        /// <summary>
+        /// Saves character data as a text file
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void SaveTextFile(string fileName)
+        {
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                MethodInvoker writeSep = new MethodInvoker(delegate
+                {
+                    sw.WriteLine("=======================================================================");
+                });
+                MethodInvoker writeSubSep = new MethodInvoker(delegate
+                {
+                    sw.WriteLine("-----------------------------------------------------------------------");
+                });
+                sw.WriteLine("BASIC INFO");
+                writeSep();
+                sw.WriteLine("     Name: {0}", this.CharacterSheet.Name);
+                sw.WriteLine("   Gender: {0}", this.CharacterSheet.Gender);
+                sw.WriteLine("     Race: {0}", this.CharacterSheet.Race);
+                sw.WriteLine("Bloodline: {0}", this.CharacterSheet.BloodLine);
+                sw.WriteLine("  Balance: {0} ISK", this.CharacterSheet.Balance.ToString("#,##0.00"));
+                sw.WriteLine();
+                sw.WriteLine("Intelligence: {0}", this.CharacterSheet.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("    Charisma: {0}", this.CharacterSheet.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("  Perception: {0}", this.CharacterSheet.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("      Memory: {0}", this.CharacterSheet.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
+                sw.WriteLine("   Willpower: {0}", this.CharacterSheet.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
+                sw.WriteLine();
+                if (this.CharacterSheet.AttributeBonuses.Bonuses.Count > 0)
+                {
+                    sw.WriteLine("IMPLANTS");
+                    writeSep();
+                    foreach (SerializableEveAttributeBonus tb in this.CharacterSheet.AttributeBonuses.Bonuses)
+                    {
+                        sw.WriteLine("+{0} {1} : {2}", tb.Amount, tb.EveAttribute.ToString().PadRight(13), tb.Name);
+                    }
+                    sw.WriteLine();
+                }
+                sw.WriteLine("SKILLS");
+                writeSep();
+                foreach (SerializableSkillGroup sg in this.SkillGroups)
+                {
+                    sw.WriteLine("{0}, {1} Skill{2}, {3} Points",
+                                 sg.Name, sg.Skills.Count, sg.Skills.Count > 1 ? "s" : "",
+                                 sg.GetTotalPoints().ToString("#,##0"));
+                    foreach (SerializableSkill s in sg.Skills)
+                    {
+                        StaticSkill ss = StaticSkill.GetStaticSkillById(s.Id);
+                        string skillDesc = ss.Name + " " + Skill.GetRomanForInt(s.Level) + " (" + ss.Rank.ToString() + ")";
+                        sw.WriteLine(": {0} {1}/{2} Points",
+                                     skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
+                                     ss.GetPointsRequiredForLevel(5).ToString("#,##0"));
+                        if (this.TrainingSkillInfo != null && this.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
+                        {
+                            DateTime adjustedEndTime = this.TrainingSkillInfo.getTrainingEndTime.ToLocalTime();
+                            sw.WriteLine(":  (Currently training to level {0}, completes {1})",
+                                         Skill.GetRomanForInt(this.TrainingSkillInfo.TrainingSkillToLevel),
+                                         adjustedEndTime);
+                        }
+                    }
+                    writeSubSep();
+                }
+            }
         }
     }
 

@@ -161,7 +161,7 @@
         DU0EGpv70CQmj3bpal3rvxf2SYpRJjdPAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="tsbSaveAs.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="tsddbSave.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAixJREFUOE+tk91L
@@ -220,21 +220,6 @@
         6auUqlU/KwBZJV4skWUuvMmYV8b+Ls6jQQ81DfryO3KtfUoA/p3810G37T3VJ3TlARdvukhldjANeemx
         z2B8MS0mq80GyySHj98rD2jQOpXbtgrVNprRnO2h5lQX1Sc7leYODh27W3nN9/WZDnroDx0A5wwhdtmt
         AAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="tsbExportToXml.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAgFJREFUOE+tks1L
-        G1EUxf1nuhEK7UIX7aLQVevGTbeFUktd6qoVERdSutDS1kpKKzGUmFQ0EjWVNElDakaMMUTTfIzGaJoa
-        ktiMNZpMPmaSOMf3BmYgDFoEHxzewLvnN/fc99rarmPZmDguk9UTw6wzBNO3DVmaf1Lz/5ZECvSWFXQ8
-        7MHgmLEVsvCTvdQvEXejKUFncsK1FtNCLD/CFwLOqLkhQRDPMGH8js6uZ6rUKDP2oAYQKW1jLPAZQwvz
-        yBVPwFebOCk3kExzYPeyMkQFTNv8KuBGt1n+fmrvwZR/FXfGjRj16VEoNUDPcv9EBCMpOYYKMFhXIZGg
-        tIDuTdL33ZFh3J94j9sv+9E78wL5Qh3ZI1Gu8W7stgImZz3ykKhoAc077rDg5sAjPOgfhWFpCxlOkM8S
-        6SocK5FWwEezC1ViUiTn5Zs4Oq3j8LiOg7yAZLaGODFHUxVYHcFWAJ0uNSl68o5D9ysO9wZy6OxL4dbz
-        CNofexH9XcZmgod5aV0LOCZDUkTzZjgRfw4FJDI1sAdVhPcrCMbLWGd5GOYYLeBvQYSiizrwsSUw4SJ0
-        024tIJ0XoSiZE0jeGmm5gq29MgI7PNZiJXh/FeHePMVbvV0L2CdD8oeS5IricDJR2NwhzNkDMC36YLAw
-        +PTVgw9fXHgzuYzXukUtgD6Mq4o+pHMwZJL93Q+wXQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="tsbImplantCalculator.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

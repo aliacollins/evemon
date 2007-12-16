@@ -2238,74 +2238,6 @@ namespace EVEMon
             this.Invalidate();
         }
 
-        /// <summary>
-        /// Saves character data as a text file
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        private void SaveTextFile(string fileName)
-        {
-            SerializableCharacterSheet ci = m_grandCharacterInfo.ExportSerializableCharacterSheet();
-            using (StreamWriter sw = new StreamWriter(fileName, false))
-            {
-                MethodInvoker writeSep = new MethodInvoker(delegate
-                {
-                    sw.WriteLine("=======================================================================");
-                });
-                MethodInvoker writeSubSep = new MethodInvoker(delegate
-                {
-                    sw.WriteLine("-----------------------------------------------------------------------");
-                });
-                sw.WriteLine("BASIC INFO");
-                writeSep();
-                sw.WriteLine("     Name: {0}", ci.CharacterSheet.Name);
-                sw.WriteLine("   Gender: {0}", ci.CharacterSheet.Gender);
-                sw.WriteLine("     Race: {0}", ci.CharacterSheet.Race);
-                sw.WriteLine("Bloodline: {0}", ci.CharacterSheet.BloodLine);
-                sw.WriteLine("  Balance: {0} ISK", ci.CharacterSheet.Balance.ToString("#,##0.00"));
-                sw.WriteLine();
-                sw.WriteLine("Intelligence: {0}", ci.CharacterSheet.Attributes.AdjustedIntelligence.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("    Charisma: {0}", ci.CharacterSheet.Attributes.AdjustedCharisma.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("  Perception: {0}", ci.CharacterSheet.Attributes.AdjustedPerception.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("      Memory: {0}", ci.CharacterSheet.Attributes.AdjustedMemory.ToString("#0.00").PadLeft(5));
-                sw.WriteLine("   Willpower: {0}", ci.CharacterSheet.Attributes.AdjustedWillpower.ToString("#0.00").PadLeft(5));
-                sw.WriteLine();
-                if (ci.CharacterSheet.AttributeBonuses.Bonuses.Count > 0)
-                {
-                    sw.WriteLine("IMPLANTS");
-                    writeSep();
-                    foreach (SerializableEveAttributeBonus tb in ci.CharacterSheet.AttributeBonuses.Bonuses)
-                    {
-                        sw.WriteLine("+{0} {1} : {2}", tb.Amount, tb.EveAttribute.ToString().PadRight(13), tb.Name);
-                    }
-                    sw.WriteLine();
-                }
-                sw.WriteLine("SKILLS");
-                writeSep();
-                foreach (SerializableSkillGroup sg in ci.SkillGroups)
-                {
-                    sw.WriteLine("{0}, {1} Skill{2}, {3} Points",
-                                 sg.Name, sg.Skills.Count, sg.Skills.Count > 1 ? "s" : "",
-                                 sg.GetTotalPoints().ToString("#,##0"));
-                    foreach (SerializableSkill s in sg.Skills)
-                    {
-                        StaticSkill ss = StaticSkill.GetStaticSkillById(s.Id);
-                        string skillDesc = ss.Name + " " + Skill.GetRomanForInt(s.Level) + " (" + ss.Rank.ToString() + ")";
-                        sw.WriteLine(": {0} {1}/{2} Points",
-                                     skillDesc.PadRight(40), s.SkillPoints.ToString("#,##0"),
-                                     ss.GetPointsRequiredForLevel(5).ToString("#,##0"));
-                        if (ci.TrainingSkillInfo != null && ci.TrainingSkillInfo.TrainingSkillWithTypeID == s.Id)
-                        {
-                            DateTime adjustedEndTime = ci.TrainingSkillInfo.getTrainingEndTime.ToLocalTime();
-                            sw.WriteLine(":  (Currently training to level {0}, completes {1})",
-                                         Skill.GetRomanForInt(ci.TrainingSkillInfo.TrainingSkillToLevel),
-                                         adjustedEndTime);
-                        }
-                    }
-                    writeSubSep();
-                }
-            }
-        }
-
         private String getSkillLevelImageURL(int aSkillLevel)
         {
             String result = @"[img]http://myeve.eve-online.com/bitmaps/character/level" + aSkillLevel.ToString() + ".gif[/img]";
@@ -2468,7 +2400,8 @@ namespace EVEMon
         {
             if (saveFormat == SaveFormat.Text)
             {
-                SaveTextFile(fileName);
+                SerializableCharacterSheet ci = m_grandCharacterInfo.ExportSerializableCharacterSheet();
+                ci.SaveTextFile(fileName);
                 return;
             }
             else if (saveFormat == SaveFormat.Png)

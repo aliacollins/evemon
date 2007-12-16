@@ -35,11 +35,12 @@ namespace EVEMon.SkillPlanner
             this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsbSaveAs = new System.Windows.Forms.ToolStripButton();
+            this.tsddbSave = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tsmiCharacter = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbDeletePlan = new System.Windows.Forms.ToolStripButton();
             this.tsbPrintPlan = new System.Windows.Forms.ToolStripButton();
             this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
-            this.tsbExportToXml = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -83,7 +84,7 @@ namespace EVEMon.SkillPlanner
             this.tslSuggestion.IsLink = true;
             this.tslSuggestion.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
             this.tslSuggestion.Name = "tslSuggestion";
-            this.tslSuggestion.Size = new System.Drawing.Size(86, 17);
+            this.tslSuggestion.Size = new System.Drawing.Size(88, 17);
             this.tslSuggestion.Text = "Suggestion...";
             this.tslSuggestion.Visible = false;
             this.tslSuggestion.Click += new System.EventHandler(this.tslSuggestion_Click);
@@ -91,18 +92,17 @@ namespace EVEMon.SkillPlanner
             // slblStatusText
             // 
             this.slblStatusText.Name = "slblStatusText";
-            this.slblStatusText.Size = new System.Drawing.Size(81, 17);
+            this.slblStatusText.Size = new System.Drawing.Size(79, 17);
             this.slblStatusText.Text = "0 Skills Planned";
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsddbPlans,
-            this.tsbSaveAs,
+            this.tsddbSave,
             this.tsbDeletePlan,
             this.tsbPrintPlan,
             this.tsbCopyForum,
-            this.tsbExportToXml,
             this.toolStripSeparator2,
             this.tsbImplantCalculator});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -116,26 +116,42 @@ namespace EVEMon.SkillPlanner
             this.tsddbPlans.Image = ((System.Drawing.Image)(resources.GetObject("tsddbPlans.Image")));
             this.tsddbPlans.ImageTransparentColor = System.Drawing.Color.Black;
             this.tsddbPlans.Name = "tsddbPlans";
-            this.tsddbPlans.Size = new System.Drawing.Size(89, 22);
+            this.tsddbPlans.Size = new System.Drawing.Size(88, 22);
             this.tsddbPlans.Text = "Select Plan";
             this.tsddbPlans.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tsddbPlans_MouseDown);
             this.tsddbPlans.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tsddbPlans_DropDownItemClicked);
             // 
-            // tsbSaveAs
+            // tsddbSave
             // 
-            this.tsbSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveAs.Image")));
-            this.tsbSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSaveAs.Name = "tsbSaveAs";
-            this.tsbSaveAs.Size = new System.Drawing.Size(61, 22);
-            this.tsbSaveAs.Text = "Save...";
-            this.tsbSaveAs.Click += new System.EventHandler(this.tsbSaveAs_Click);
+            this.tsddbSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiCharacter,
+            this.tsmiPlan});
+            this.tsddbSave.Image = ((System.Drawing.Image)(resources.GetObject("tsddbSave.Image")));
+            this.tsddbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsddbSave.Name = "tsddbSave";
+            this.tsddbSave.Size = new System.Drawing.Size(68, 22);
+            this.tsddbSave.Text = "Export";
+            // 
+            // tsmiCharacter
+            // 
+            this.tsmiCharacter.Name = "tsmiCharacter";
+            this.tsmiCharacter.Size = new System.Drawing.Size(152, 22);
+            this.tsmiCharacter.Text = "Character";
+            this.tsmiCharacter.Click += new System.EventHandler(this.tsmiCharacter_Click);
+            // 
+            // tsmiPlan
+            // 
+            this.tsmiPlan.Name = "tsmiPlan";
+            this.tsmiPlan.Size = new System.Drawing.Size(152, 22);
+            this.tsmiPlan.Text = "Plan";
+            this.tsmiPlan.Click += new System.EventHandler(this.tsmiPlan_Click);
             // 
             // tsbDeletePlan
             // 
             this.tsbDeletePlan.Image = ((System.Drawing.Image)(resources.GetObject("tsbDeletePlan.Image")));
             this.tsbDeletePlan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeletePlan.Name = "tsbDeletePlan";
-            this.tsbDeletePlan.Size = new System.Drawing.Size(66, 22);
+            this.tsbDeletePlan.Size = new System.Drawing.Size(70, 22);
             this.tsbDeletePlan.Text = "Delete...";
             this.tsbDeletePlan.Click += new System.EventHandler(this.tsbDeletePlan_Click);
             // 
@@ -144,7 +160,7 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsbPrintPlan.Image")));
             this.tsbPrintPlan.ImageTransparentColor = System.Drawing.Color.Black;
             this.tsbPrintPlan.Name = "tsbPrintPlan";
-            this.tsbPrintPlan.Size = new System.Drawing.Size(57, 22);
+            this.tsbPrintPlan.Size = new System.Drawing.Size(61, 22);
             this.tsbPrintPlan.Text = "Print...";
             this.tsbPrintPlan.ToolTipText = "Print this plan.";
             this.tsbPrintPlan.Click += new System.EventHandler(this.tsbPrintPlan_Click);
@@ -154,19 +170,9 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum.Image = ((System.Drawing.Image)(resources.GetObject("tsbCopyForum.Image")));
             this.tsbCopyForum.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopyForum.Name = "tsbCopyForum";
-            this.tsbCopyForum.Size = new System.Drawing.Size(112, 22);
+            this.tsbCopyForum.Size = new System.Drawing.Size(113, 22);
             this.tsbCopyForum.Text = "Copy to Clipboard";
             this.tsbCopyForum.Click += new System.EventHandler(this.tsbCopyForum_Click);
-            // 
-            // tsbExportToXml
-            // 
-            this.tsbExportToXml.Image = ((System.Drawing.Image)(resources.GetObject("tsbExportToXml.Image")));
-            this.tsbExportToXml.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbExportToXml.Name = "tsbExportToXml";
-            this.tsbExportToXml.Size = new System.Drawing.Size(91, 22);
-            this.tsbExportToXml.Text = "Export XML...";
-            this.tsbExportToXml.ToolTipText = "Export planned character to XML...";
-            this.tsbExportToXml.Click += new System.EventHandler(this.tsbExportToXml_Click);
             // 
             // toolStripSeparator2
             // 
@@ -178,7 +184,7 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator.Image = ((System.Drawing.Image)(resources.GetObject("tsbImplantCalculator.Image")));
             this.tsbImplantCalculator.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbImplantCalculator.Name = "tsbImplantCalculator";
-            this.tsbImplantCalculator.Size = new System.Drawing.Size(93, 22);
+            this.tsbImplantCalculator.Size = new System.Drawing.Size(98, 22);
             this.tsbImplantCalculator.Text = "Implant Calc...";
             this.tsbImplantCalculator.Click += new System.EventHandler(this.tsbImplantCalculator_Click);
             // 
@@ -326,10 +332,10 @@ namespace EVEMon.SkillPlanner
             this.Name = "NewPlannerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EVEMon Skill Planner";
-            this.Load += new System.EventHandler(this.NewPlannerWindow_Load);
-            this.Shown += new System.EventHandler(this.NewPlannerWindow_Shown);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewPlannerWindow_FormClosed);
+            this.Shown += new System.EventHandler(this.NewPlannerWindow_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewPlannerWindow_FormClosing);
+            this.Load += new System.EventHandler(this.NewPlannerWindow_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -352,7 +358,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbDeletePlan;
         private System.Windows.Forms.ToolStripStatusLabel tslSuggestion;
         private System.Windows.Forms.ToolTip ttToolTip;
-        private System.Windows.Forms.ToolStripButton tsbSaveAs;
         private System.Windows.Forms.ToolStripButton tsbCopyForum;
         private System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.TabControl tabControl;
@@ -367,10 +372,12 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabPage tpSkillBrowser;
         private SkillBrowser skillBrowser;
         private System.Windows.Forms.ToolStripDropDownButton tsddbPlans;
-        private System.Windows.Forms.ToolStripButton tsbExportToXml;
         private System.Windows.Forms.ToolStripButton tsbPrintPlan;
         private System.Windows.Forms.PrintDialog printDialog1;
         private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
+        private System.Windows.Forms.ToolStripDropDownButton tsddbSave;
+        private System.Windows.Forms.ToolStripMenuItem tsmiCharacter;
+        private System.Windows.Forms.ToolStripMenuItem tsmiPlan;
     }
 }

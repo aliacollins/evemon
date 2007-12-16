@@ -599,12 +599,14 @@ namespace EVEMon.SkillPlanner
             {
                 cmiDelete.Enabled = true;
                 cmiRename.Enabled = false;
+                cmiExport.Enabled = false;
                 cmiOpen.Text = "Merge";
             }
             else if (lbPlanList.SelectedItems.Count == 1)
             {
                 cmiDelete.Enabled = true;
                 cmiRename.Enabled = true;
+                cmiExport.Enabled = true;
                 cmiOpen.Enabled = true;
                 cmiOpen.Text = "Open";
             }
@@ -631,7 +633,44 @@ namespace EVEMon.SkillPlanner
         private void mEdit_DropDownOpening(object sender, EventArgs e)
         {
             miRename.Enabled = lbPlanList.SelectedItems.Count == 1;
+            miExport.Enabled = lbPlanList.SelectedItems.Count == 1;
             miDelete.Enabled = lbPlanList.SelectedItems.Count >= 1;
+        }
+
+        private enum ExportType
+        {
+            Plan,
+            Character
+        }
+
+        private void export(ExportType exportType)
+        {
+            if (lbPlanList.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            string planName = (string)lbPlanList.SelectedItems[0].Text;
+            Plan planToExport = m_settings.GetPlanByName(m_charKey, m_characterInfo, planName);
+
+            if (exportType == ExportType.Character)
+            {
+                planToExport.Export_Character();
+            }
+            else if (exportType == ExportType.Plan)
+            {
+                planToExport.Export_Plan();
+            }
+        }
+
+        private void tsmiExportCharacter_Click(object sender, EventArgs e)
+        {
+            export(ExportType.Character);
+        }
+
+        private void tsmiExportPlan_Click(object sender, EventArgs e)
+        {
+            export(ExportType.Plan);
         }
 
     }

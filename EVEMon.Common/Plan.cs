@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -1981,6 +1982,149 @@ namespace EVEMon.Common
             }
 
         }
+
+        public void SerializePlanTo(Stream s)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Plan));
+            xs.Serialize(s, this);
+        }
+
+        public void Export_Plan()
+        {
+            m_settings = Settings.GetInstance();
+            SaveFileDialog sfdSave = new SaveFileDialog();
+            sfdSave.Title = "Save to File";
+            string planSaveName = this.Name;
+            char[] invalidFileChars = Path.GetInvalidFileNameChars();
+            int fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            while (fileInd != -1)
+            {
+                planSaveName = planSaveName.Replace(planSaveName[fileInd], '-');
+                fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            }
+
+            sfdSave.FileName = this.GrandCharacterInfo.Name + " - " + planSaveName;
+            sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+            sfdSave.FilterIndex = (int)PlanSaveType.Emp;
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            string fileName = sfdSave.FileName;
+            try
+            {
+                PlanTextOptions pto = null;
+                if ((PlanSaveType)sfdSave.FilterIndex == PlanSaveType.Text)
+                {
+                    pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
+                    using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, this, false))
+                    {
+                        if (pto.Markup == MarkupType.Undefined)
+                        {
+                            pto.Markup = MarkupType.None;
+                        }
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                        if (f.SetAsDefault)
+                        {
+                            m_settings.DefaultSaveOptions = pto;
+                            m_settings.Save();
+                        }
+                    }
+                }
+
+                using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                {
+                    switch ((PlanSaveType)sfdSave.FilterIndex)
+                    {
+                        case PlanSaveType.Emp:
+                            using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
+                            {
+                                SerializePlanTo(gzs);
+                            }
+                            break;
+                        case PlanSaveType.Xml:
+                            SerializePlanTo(fs);
+                            break;
+                        case PlanSaveType.Text:
+                            using (StreamWriter sw = new StreamWriter(fs))
+                            {
+                                SaveAsText(sw, pto);
+                            }
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void Export_Character()
+        {
+            SaveFileDialog sfdSave = new SaveFileDialog();
+            sfdSave.Title = "Export to XML";
+            sfdSave.FileName = this.GrandCharacterInfo.Name + " Planned Character Export";
+            sfdSave.Filter = "XML Short Format (*.xml)|*.xml|XML Long Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+            sfdSave.FilterIndex = (int)ExportSaveType.ShortXml;
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            string fileName = sfdSave.FileName;
+            ExportSaveType saveType = (ExportSaveType)sfdSave.FilterIndex;
+            try
+            {
+                
+                SerializableCharacterSheet ci = this.GrandCharacterInfo.ExportSerializableCharacterSheet();
+                this.Merge(ci);
+                switch (saveType)
+                {
+                    case ExportSaveType.Text:
+                        ci.SaveTextFile(fileName);
+                        break;
+                    case ExportSaveType.ShortXml:
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        {
+                            XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterSheet));
+                            ser.Serialize(fs, ci);
+                        }
+                        break;
+                    case ExportSaveType.LongXml:
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        {
+                            SerializableCharacterInfo cfi = ci.CreateSerializableCharacterInfo();
+                            XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
+                            ser.Serialize(fs, cfi);
+                        }
+                        break;
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                ExceptionHandler.LogException(ioe, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + ioe.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 
     public enum MarkupType
@@ -1989,6 +2133,22 @@ namespace EVEMon.Common
         None,
         Forum,
         Html
+    }
+
+    public enum PlanSaveType
+    {
+        None = 0,
+        Emp = 1,
+        Xml = 2,
+        Text = 3
+    }
+
+    public enum ExportSaveType
+    {
+        None = 0,
+        ShortXml = 1,
+        LongXml = 2,
+        Text = 3
     }
 
     public interface IPlannerWindowFactory

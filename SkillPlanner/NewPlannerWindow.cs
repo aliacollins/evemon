@@ -464,107 +464,8 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        private enum PlanSaveType
-        {
-            None = 0,
-            Emp = 1,
-            Xml = 2,
-            Text = 3
-        }
+        
 
-        private enum ExportSaveType
-        {
-            None = 0,
-            ShortXml = 1,
-            LongXml = 2
-        }
-
-
-        private void tsbSaveAs_Click(object sender, EventArgs e)
-        {
-            sfdSave.Title = "Save to File";
-            string planSaveName = m_plan.Name;
-            char[] invalidFileChars = Path.GetInvalidFileNameChars();
-            int fileInd = planSaveName.IndexOfAny(invalidFileChars);
-            while (fileInd != -1)
-            {
-                planSaveName = planSaveName.Replace(planSaveName[fileInd], '-');
-                fileInd = planSaveName.IndexOfAny(invalidFileChars);
-            }
-//            planSaveName = planSaveName.Replace("\\","-");
-//            planSaveName = planSaveName.Replace("/","-");
-            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " - " + planSaveName;
-            sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
-            sfdSave.FilterIndex = (int)PlanSaveType.Emp;
-            DialogResult dr = sfdSave.ShowDialog();
-            if (dr == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            string fileName = sfdSave.FileName;
-            try
-            {
-                PlanTextOptions pto = null;
-                if ((PlanSaveType)sfdSave.FilterIndex == PlanSaveType.Text)
-                {
-                    pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
-                    using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, m_plan, false))
-                    {
-                        if (pto.Markup == MarkupType.Undefined)
-                        {
-                            pto.Markup = MarkupType.None;
-                        }
-                        f.ShowDialog();
-                        if (f.DialogResult == DialogResult.Cancel)
-                        {
-                            return;
-                        }
-                        if (f.SetAsDefault)
-                        {
-                            m_settings.DefaultSaveOptions = pto;
-                            m_settings.Save();
-                        }
-                    }
-                }
-
-                using (FileStream fs = new FileStream(fileName, FileMode.Create))
-                {
-                    switch ((PlanSaveType)sfdSave.FilterIndex)
-                    {
-                        case PlanSaveType.Emp:
-                            using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
-                            {
-                                SerializePlanTo(gzs);
-                            }
-                            break;
-                        case PlanSaveType.Xml:
-                            SerializePlanTo(fs);
-                            break;
-                        case PlanSaveType.Text:
-                            using (StreamWriter sw = new StreamWriter(fs))
-                            {
-                                m_plan.SaveAsText(sw, pto);
-                            }
-                            break;
-                        default:
-                            return;
-                    }
-                }
-            }
-            catch (IOException err)
-            {
-                ExceptionHandler.LogException(err, true);
-                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void SerializePlanTo(Stream s)
-        {
-            XmlSerializer xs = new XmlSerializer(typeof(Plan));
-            xs.Serialize(s, m_plan);
-        }
         #endregion Plan serialization
 
         #region Implant Calculator
@@ -640,55 +541,6 @@ namespace EVEMon.SkillPlanner
         private void tsddbPlans_MouseDown(object sender, MouseEventArgs e)
         {
             PopulateTsPlans();
-        }
-
-        private void tsbExportToXml_Click(object sender, EventArgs e)
-        {
-            sfdSave.Title = "Export to XML";
-            sfdSave.FileName = m_plan.GrandCharacterInfo.Name + " Planned Character Export";
-            sfdSave.Filter = "XML Short Format (*.xml)|*.xml|XML Long Format (*.xml)|*.xml";
-            sfdSave.FilterIndex = (int)ExportSaveType.ShortXml;
-            DialogResult dr = sfdSave.ShowDialog();
-            if (dr == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            string fileName = sfdSave.FileName;
-            ExportSaveType saveType =  (ExportSaveType)sfdSave.FilterIndex;
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                SerializableCharacterSheet ci = m_plan.GrandCharacterInfo.ExportSerializableCharacterSheet();
-                m_plan.Merge(ci);
-                using (FileStream fs = new FileStream(fileName, FileMode.Create))
-                {
-                    if (saveType == ExportSaveType.ShortXml)
-                    {
-                        XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterSheet));
-                        ser.Serialize(fs, ci);
-                    }
-                    else
-                    {
-                        SerializableCharacterInfo cfi = ci.CreateSerializableCharacterInfo();
-                        XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
-                        ser.Serialize(fs, cfi);
-                    }
-                }
-                this.Cursor = Cursors.Default;
-            }
-            catch (InvalidOperationException ioe)
-            {
-                ExceptionHandler.LogException(ioe, true);
-                MessageBox.Show("There was an error writing out the file:\n\n" + ioe.Message,
-                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (IOException err)
-            {
-                ExceptionHandler.LogException(err, true);
-                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void NewPlannerWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -791,6 +643,16 @@ namespace EVEMon.SkillPlanner
         private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
         {
             curPage = 1;
+        }
+
+        private void tsmiPlan_Click(object sender, EventArgs e)
+        {
+            m_plan.Export_Plan();
+        }
+
+        private void tsmiCharacter_Click(object sender, EventArgs e)
+        {
+            m_plan.Export_Character();
         }
     }
 
