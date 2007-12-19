@@ -77,7 +77,7 @@ namespace EVEMon
         public Icon Icon
         {
             get { return notifyIcon.Icon; }
-            set { notifyIcon.Icon = value; }
+            set { notifyIcon.Icon = new Icon(value, new Size(16,16)); }
         }
 
         /// <summary>
