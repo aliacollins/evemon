@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace EVEMon
 {
@@ -19,6 +20,7 @@ namespace EVEMon
         /// Holds the current mouse position state. The initial state is <see cref="TrayIcon.MouseOut"/> See <see cref="TrayIcon.MouseState"/> for more info.
         /// </summary>
         private MouseState mouseState;
+        private string iconText;
 
         #region Constructors
         /// <summary>
@@ -335,6 +337,9 @@ namespace EVEMon
             public MouseStateOver(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
+                // Store the existing icon text, then reset it
+                trayIcon.iconText = trayIcon.notifyIcon.Text;
+                trayIcon.notifyIcon.Text = "";
                 // Start the hover timer
                 this.timer = new System.Threading.Timer(new System.Threading.TimerCallback(HoverTimeout), null, this.trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
             }
@@ -446,118 +451,179 @@ namespace EVEMon
                     ChangeState(States.MouseOut);
                     // Dispose of the timer since we're done with it
                     this.timer.Dispose();
+                    // Restore the default icon text
+                    trayIcon.notifyIcon.Text = trayIcon.iconText;
                 }
             }
         }
         #endregion
 
         #region Static Popup management methods
-        /// <summary>
-        /// Set the form location
-        /// </summary>
-        /// <remarks>
-        /// This is derived by working out where the taskbar is, and setting the position accordingly.
-        /// </remarks>
         public static void SetToolTipLocation(Form tooltipForm)
         {
-            int xPos = 0;
-            int yPos = 0;
-            switch (TaskBarEdge)
+            Point mp = Control.MousePosition;
+            NativeMethods.APPBARDATA appBarData = NativeMethods.APPBARDATA.Create();
+            NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
+            NativeMethods.RECT taskBarLocation = appBarData.rc;
+
+            Point winPoint = mp;
+            Screen curScreen = Screen.FromPoint(mp);
+            bool slideLeftRight = true;
+            switch (appBarData.uEdge)
             {
-                case TaskBarEdges.Bottom:
-                    xPos = ScreenMouseLocation.X < (TaskBarScreen.Bounds.Width - tooltipForm.Width) ? ScreenMouseLocation.X : TaskBarScreen.Bounds.Width - tooltipForm.Width;
-                    yPos = TaskBarScreen.WorkingArea.Height - tooltipForm.Height;
+                default:
+                case NativeMethods.ABE_BOTTOM:
+                    winPoint = new Point(mp.X, taskBarLocation.Top - tooltipForm.Height);
+                    slideLeftRight = true;
                     break;
-                case TaskBarEdges.Top:
-                    xPos = ScreenMouseLocation.X < (TaskBarScreen.Bounds.Width - tooltipForm.Width) ? ScreenMouseLocation.X : TaskBarScreen.Bounds.Width - tooltipForm.Width;
-                    yPos = TaskBarScreen.Bounds.Height - TaskBarScreen.WorkingArea.Height;
+                case NativeMethods.ABE_TOP:
+                    winPoint = new Point(mp.X, taskBarLocation.Bottom);
+                    slideLeftRight = true;
                     break;
-                case TaskBarEdges.Left:
-                    xPos = TaskBarScreen.Bounds.Width - TaskBarScreen.WorkingArea.Width;
-                    yPos = ScreenMouseLocation.Y < (TaskBarScreen.Bounds.Height - tooltipForm.Height) ? ScreenMouseLocation.Y : TaskBarScreen.Bounds.Height - tooltipForm.Height;
+                case NativeMethods.ABE_LEFT:
+                    winPoint = new Point(taskBarLocation.Right, mp.Y);
+                    slideLeftRight = false;
                     break;
-                case TaskBarEdges.Right:
-                    xPos = TaskBarScreen.WorkingArea.Width - tooltipForm.Width;
-                    yPos = ScreenMouseLocation.Y < (TaskBarScreen.Bounds.Height - tooltipForm.Height) ? ScreenMouseLocation.Y : TaskBarScreen.Bounds.Height - tooltipForm.Height;
+                case NativeMethods.ABE_RIGHT:
+                    winPoint = new Point(taskBarLocation.Left - tooltipForm.Width, mp.Y);
+                    slideLeftRight = false;
                     break;
             }
-            tooltipForm.Location = new Point(TaskBarScreen.Bounds.X + xPos, TaskBarScreen.Bounds.Y + yPos);
-        }
-
-        /// <summary>
-        /// Returns the location of the mouse relative to the task bar screen origin
-        /// </summary>
-        private static Point ScreenMouseLocation
-        {
-            get
+            if (slideLeftRight)
             {
-                Point mousePosition = Control.MousePosition;
-                return new Point(mousePosition.X - TaskBarScreen.Bounds.X, mousePosition.Y - TaskBarScreen.Bounds.Y);
-            }
-        }
-
-        /// <summary>
-        /// Returns the screen where the taskbar is displayed
-        /// </summary>
-        /// <remarks>
-        /// This is derived from the current mouse location, since the mouse must be over the system tray
-        /// </remarks>
-        private static Screen TaskBarScreen
-        {
-            get
-            {
-                return Screen.FromPoint(Control.MousePosition);
-            }
-        }
-
-        private enum TaskBarEdges { Top, Bottom, Left, Right }
-
-        /// <summary>
-        /// Derive the screen edge where the taskbar is located
-        /// </summary>
-        /// <remarks>
-        /// This makes two assumptions:
-        /// 1. We use the difference between Screen.WorkingArea and Screen.Bounds to establish
-        /// whether the taskbar is Left/Right or Top/Bottom
-        /// 2. We then use the mouse location to determine which edge it is closest to since
-        /// the mouse must be over the system tray
-        /// </remarks>
-        private static TaskBarEdges TaskBarEdge
-        {
-            get
-            {
-                if (TaskBarScreen.WorkingArea.Height < TaskBarScreen.Bounds.Height)
+                if (winPoint.X + tooltipForm.Width > curScreen.Bounds.Right)
                 {
-                    // TaskBar is either top or bottom
-                    int yPosBottom = TaskBarScreen.Bounds.Height - ScreenMouseLocation.Y;
-                    // If the mouse location is closer to the bottom than the top, the taskbar must be at the bottom
-                    if (yPosBottom < ScreenMouseLocation.Y)
-                    {
-                        return TaskBarEdges.Bottom;
-                    }
-                    else
-                    {
-                        return TaskBarEdges.Top;
-                    }
+                    winPoint = new Point(curScreen.Bounds.Right - tooltipForm.Width - 1, winPoint.Y);
                 }
-                else
+                if (winPoint.X < curScreen.Bounds.Left)
                 {
-                    // TaskBar must be left or right
-                    int xPosRight = TaskBarScreen.Bounds.Width - ScreenMouseLocation.X;
-                    // If the mouse location is closer to the right than then left, the taskbar must be at the right
-                    if (xPosRight < ScreenMouseLocation.X)
-                    {
-                        return TaskBarEdges.Right;
-                    }
-                    else
-                    {
-                        return TaskBarEdges.Left;
-                    }
+                    winPoint = new Point(curScreen.Bounds.Left + 2, winPoint.Y);
                 }
             }
+            else
+            {
+                if (winPoint.Y + tooltipForm.Height > curScreen.Bounds.Bottom)
+                {
+                    winPoint = new Point(winPoint.X, curScreen.Bounds.Bottom - tooltipForm.Height - 1);
+                }
+                if (winPoint.Y < curScreen.Bounds.Top)
+                {
+                    winPoint = new Point(winPoint.X, curScreen.Bounds.Top + 2);
+                }
+            }
+            tooltipForm.Location = winPoint;
         }
 
         #endregion
+
+        internal class NativeMethods
+        {
+            // All definitions taken from http://pinvoke.net
+
+            [DllImport("shell32.dll")]
+            public static extern IntPtr SHAppBarMessage(uint dwMessage, ref APPBARDATA pData);
+
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+            public const string TaskbarClass = "Shell_TrayWnd";
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct APPBARDATA
+            {
+                public static APPBARDATA Create()
+                {
+                    APPBARDATA appBarData = new APPBARDATA();
+                    appBarData.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
+                    return appBarData;
+                }
+
+                public int cbSize;
+                public IntPtr hWnd;
+                public uint uCallbackMessage;
+                public uint uEdge;
+                public RECT rc;
+                public int lParam;
+            }
+
+            public const int ABM_QUERYPOS = 0x00000002,
+                             ABM_GETTASKBARPOS = 5;
+
+            public const int ABE_LEFT = 0;
+            public const int ABE_TOP = 1;
+            public const int ABE_RIGHT = 2;
+            public const int ABE_BOTTOM = 3;
+
+
+            [Serializable, StructLayout(LayoutKind.Sequential)]
+            public struct RECT
+            {
+                public int Left;
+                public int Top;
+                public int Right;
+                public int Bottom;
+
+                public RECT(int left_, int top_, int right_, int bottom_)
+                {
+                    Left = left_;
+                    Top = top_;
+                    Right = right_;
+                    Bottom = bottom_;
+                }
+
+                public int Height
+                {
+                    get { return Bottom - Top + 1; }
+                }
+
+                public int Width
+                {
+                    get { return Right - Left + 1; }
+                }
+
+                public Size Size
+                {
+                    get { return new Size(Width, Height); }
+                }
+
+                public Point Location
+                {
+                    get { return new Point(Left, Top); }
+                }
+
+                // Handy method for converting to a System.Drawing.Rectangle
+                public Rectangle ToRectangle()
+                {
+                    return Rectangle.FromLTRB(Left, Top, Right, Bottom);
+                }
+
+                public static RECT FromRectangle(Rectangle rectangle)
+                {
+                    return new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
+                }
+
+                public override int GetHashCode()
+                {
+                    return Left ^ ((Top << 13) | (Top >> 0x13))
+                           ^ ((Width << 0x1a) | (Width >> 6))
+                           ^ ((Height << 7) | (Height >> 0x19));
+                }
+
+                #region Operator overloads
+                public static implicit operator Rectangle(RECT rect)
+                {
+                    return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                }
+
+                public static implicit operator RECT(Rectangle rect)
+                {
+                    return new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                }
+                #endregion
+            }
+        }
+
 
     }
 }

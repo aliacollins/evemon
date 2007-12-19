@@ -1475,8 +1475,6 @@ namespace EVEMon
             // Only display the pop up window if the context menu isn't showing
             if (trayIconToolStrip.Visible == false)
             {
-                // Remove the default tooltip
-                trayIcon.Text = "";
                 // Construct a list of characters to pass to the popup
                 List<CharacterMonitor> characterList = new List<CharacterMonitor>();
                 foreach (TabPage tp in tcCharacterTabs.TabPages)
@@ -1506,8 +1504,6 @@ namespace EVEMon
             {
                 m_trayPopup.Close();
                 m_trayPopup = null;
-                // Restore the default tooltip
-                trayIcon.Text = Application.ProductName;
             }
         }
 
