@@ -344,8 +344,17 @@ namespace EVEMon
             /// </summary>
             protected override void OnMouseMove()
             {
-                // Mouse has moved, so reset the hover timer
-                this.timer.Change(this.trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                try
+                {
+                    // Mouse has moved, so reset the hover timer
+                    this.timer.Change(this.trayIcon.MouseHoverTime, System.Threading.Timeout.Infinite);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Swallow any dispoed exceptions
+                    // Can only occur if timings cause a MouseMove after we've disposed of the timer
+                    // Shouldn't happen, but catch it just in case
+                }
             }
 
             /// <summary>
@@ -358,8 +367,6 @@ namespace EVEMon
             /// <param name="state"></param>
             private void HoverTimeout(object state)
             {
-                // Dispose of the timer since we're done with it
-                this.timer.Dispose();
                 // Check if the mouse is still in the same place
                 // Since we update mousePosition and reset the timer on MouseMove events, if it has moved
                 // when HoverTimeout is called it means its no longer over the icon
@@ -376,6 +383,8 @@ namespace EVEMon
                 {
                     ChangeState(States.MouseOut);
                 }
+                // Dispose of the timer since we're done with it
+                this.timer.Dispose();
             }
         }
 
@@ -431,11 +440,12 @@ namespace EVEMon
                 {
                     // Mouse has moved, and since we're tracking it over the icon
                     // this means its moved away
-                    this.timer.Dispose();
                     // Fire the MouseLeave event
                     this.trayIcon.OnMouseLeave(new EventArgs());
                     // Change to MouseOut state
                     ChangeState(States.MouseOut);
+                    // Dispose of the timer since we're done with it
+                    this.timer.Dispose();
                 }
             }
         }
