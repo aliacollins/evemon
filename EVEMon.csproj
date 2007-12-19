@@ -394,17 +394,35 @@
     <Compile Include="TipWindow.Designer.cs">
       <DependentUpon>TipWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrayStatusPopUp.cs">
-      <SubType>Form</SubType>
+    <Compile Include="TrayIcon.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TrayStatusPopUp.Designer.cs">
-      <DependentUpon>TrayStatusPopUp.cs</DependentUpon>
+    <Compile Include="TrayIcon.Designer.cs">
+      <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrayStatusPopUpChar.cs">
+    <Compile Include="TrayPopUpChar.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TrayStatusPopUpChar.Designer.cs">
-      <DependentUpon>TrayStatusPopUpChar.cs</DependentUpon>
+    <Compile Include="TrayPopUpChar.Designer.cs">
+      <DependentUpon>TrayPopUpChar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrayPopUpWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrayPopUpWindow.Designer.cs">
+      <DependentUpon>TrayPopUpWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrayPopUpConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrayPopUpConfigForm.Designer.cs">
+      <DependentUpon>TrayPopUpConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrayTooltipConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrayTooltipConfigForm.Designer.cs">
+      <DependentUpon>TrayTooltipConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TrayTooltipWindow.cs">
       <SubType>Form</SubType>
@@ -624,13 +642,25 @@
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrayStatusPopUp.resx">
+    <EmbeddedResource Include="TrayIcon.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>TrayStatusPopUp.cs</DependentUpon>
+      <DependentUpon>TrayIcon.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrayStatusPopUpChar.resx">
+    <EmbeddedResource Include="TrayPopUpChar.resx">
+      <DependentUpon>TrayPopUpChar.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>TrayStatusPopUpChar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrayPopUpWindow.resx">
+      <DependentUpon>TrayPopUpWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrayPopUpConfigForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TrayPopUpConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrayTooltipConfigForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TrayTooltipConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrayTooltipWindow.resx">
       <DependentUpon>TrayTooltipWindow.cs</DependentUpon>

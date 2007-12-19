@@ -28,6 +28,12 @@ namespace EVEMon
         //    1 Minute 5 Minutes 10 Minutes 15 Minutes 30 Minutes 1 Hour 2 Hours 3 Hours 6 Hours
         private int[] m_apiUpdateLookup = {60,5*60,10*60,15*60,30*60,60*60,2*60*60,3*60*60,6*60*60};
 
+        private string[] m_trayPopupStyle = { "Popup Form", "Windows Tooltip" };
+
+        private TrayPopupConfig m_trayPopupConfig;
+
+        private String m_tooltipString;
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -106,12 +112,9 @@ namespace EVEMon
             s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
 
             // Tray Icon Popup
-            s.TrayPopupShowSkill = cbTrayPopupShowSkill.Checked;
-            s.TrayPopupShowSkillTime = cbTrayPopupShowSkillTime.Checked;
-            s.TrayPopupShowSkillEnd = cbTrayPopupShowSkillEnd.Checked;
-            s.TrayPopupShowPortrait = cbTrayPopupShowPortrait.Checked;
-            s.TrayPopupShowBalance = cbTrayPopupShowBalance.Checked;
-            s.TrayPopupShowTQStatus = cbTrayPopUpShowTQStatus.Checked;
+            s.TrayPopupConfig = m_trayPopupConfig;
+            s.TrayPopupStyle = (TrayPopupStyles)cbTrayPopupStyle.SelectedIndex;
+            s.TooltipString = m_tooltipString;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
             ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
@@ -338,12 +341,12 @@ namespace EVEMon
             cbHighlightConflicts.Checked = m_settings.SkillPlannerHighlightConflicts;
             cbHighlightPartialSkills.Checked = m_settings.SkillPlannerHighlightPartialSkills;
 
-            cbTrayPopupShowSkill.Checked = m_settings.TrayPopupShowSkill;
-            cbTrayPopupShowSkillTime.Checked = m_settings.TrayPopupShowSkillTime;
-            cbTrayPopupShowSkillEnd.Checked = m_settings.TrayPopupShowSkillEnd;
-            cbTrayPopupShowPortrait.Checked = m_settings.TrayPopupShowPortrait;
-            cbTrayPopupShowBalance.Checked = m_settings.TrayPopupShowBalance;
-            cbTrayPopUpShowTQStatus.Checked = m_settings.TrayPopupShowTQStatus;
+            // Copy the current popup settings so we don't change m_settings in the config dialogs
+            m_tooltipString = m_settings.TooltipString;
+            m_trayPopupConfig = m_settings.TrayPopupConfig.Copy();
+            cbTrayPopupStyle.Items.AddRange(m_trayPopupStyle);
+            cbTrayPopupStyle.SelectedIndex = (int)m_settings.TrayPopupStyle;
+
             // Load Calendar Settings
             panelColorBlocking.BackColor = m_settings.CalendarBlockingColor;
             panelColorRecurring1.BackColor = m_settings.CalendarRecurring1;
@@ -430,10 +433,6 @@ namespace EVEMon
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
-            // Tray Popup Options
-            cbTrayPopupShowSkillTime.Enabled = cbTrayPopupShowSkill.Checked;
-            cbTrayPopupShowSkillEnd.Enabled = cbTrayPopupShowSkill.Checked;
-            cbTrayPopupShowPortrait.Enabled = !cbWorksafeMode.Checked;
         }
 
         private bool ValidateProxySetting(string host, string port)
@@ -674,9 +673,44 @@ namespace EVEMon
             }
         }
 
-        private void cbTrayPopupShowSkill_CheckedChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Instantiates the appropriate configuration dialog for the Tray Tooltip & Popup
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnConfigureTrayPopUp_Click(object sender, EventArgs e)
         {
-            UpdateDisables();
+            // Get the selected display style
+            TrayPopupStyles selectedStyle = (TrayPopupStyles)cbTrayPopupStyle.SelectedIndex;
+            switch (selectedStyle)
+            {
+                case TrayPopupStyles.PopupForm:
+                    using (TrayPopupConfigForm f = new TrayPopupConfigForm())
+                    {
+                        // Edit a copy of the current settings
+                        f.Config = m_trayPopupConfig.Copy();
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
+                        {
+                            // Save changes in local copy
+                            m_trayPopupConfig = f.Config;
+                        }
+                    }
+                    break;
+                case TrayPopupStyles.WindowsTooltip:
+                    using (TrayTooltipConfigForm f = new TrayTooltipConfigForm())
+                    {
+                        // Set current tooltip string
+                        f.TooltipString = m_tooltipString;
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
+                        {
+                            // Save changes in local copy
+                            m_tooltipString = f.TooltipString;
+                        }
+                    }
+                    break;
+            }
         }
     }
 }

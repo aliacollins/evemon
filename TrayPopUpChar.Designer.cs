@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class TrayStatusPopUpChar
+    partial class TrayPopUpChar
     {
         /// <summary> 
         /// Required designer variable.
@@ -35,8 +35,8 @@ namespace EVEMon
             this.lblCharName = new System.Windows.Forms.Label();
             this.lblSkillInTraining = new System.Windows.Forms.Label();
             this.lblTimeToCompletion = new System.Windows.Forms.Label();
-            this.lblBalance = new System.Windows.Forms.Label();
             this.lblCompletionTime = new System.Windows.Forms.Label();
+            this.lblBalance = new System.Windows.Forms.Label();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.containerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharacterPortrait)).BeginInit();
@@ -49,14 +49,16 @@ namespace EVEMon
             this.containerPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.containerPanel.Controls.Add(this.pbCharacterPortrait);
             this.containerPanel.Controls.Add(this.charDetailsPanel);
-            this.containerPanel.Location = new System.Drawing.Point(3, 3);
+            this.containerPanel.Location = new System.Drawing.Point(0, 0);
+            this.containerPanel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.containerPanel.Name = "containerPanel";
-            this.containerPanel.Size = new System.Drawing.Size(195, 76);
+            this.containerPanel.Size = new System.Drawing.Size(159, 69);
             this.containerPanel.TabIndex = 0;
             // 
             // pbCharacterPortrait
             // 
-            this.pbCharacterPortrait.Location = new System.Drawing.Point(3, 3);
+            this.pbCharacterPortrait.Location = new System.Drawing.Point(2, 2);
+            this.pbCharacterPortrait.Margin = new System.Windows.Forms.Padding(2);
             this.pbCharacterPortrait.Name = "pbCharacterPortrait";
             this.pbCharacterPortrait.Size = new System.Drawing.Size(48, 48);
             this.pbCharacterPortrait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -73,72 +75,72 @@ namespace EVEMon
             this.charDetailsPanel.Controls.Add(this.lblCompletionTime);
             this.charDetailsPanel.Controls.Add(this.lblBalance);
             this.charDetailsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.charDetailsPanel.Location = new System.Drawing.Point(57, 3);
+            this.charDetailsPanel.Location = new System.Drawing.Point(54, 2);
+            this.charDetailsPanel.Margin = new System.Windows.Forms.Padding(2);
             this.charDetailsPanel.Name = "charDetailsPanel";
-            this.charDetailsPanel.Size = new System.Drawing.Size(135, 70);
+            this.charDetailsPanel.Size = new System.Drawing.Size(103, 65);
             this.charDetailsPanel.TabIndex = 1;
             // 
             // lblCharName
             // 
             this.lblCharName.AutoSize = true;
-            this.lblCharName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCharName.Location = new System.Drawing.Point(3, 0);
             this.lblCharName.Name = "lblCharName";
-            this.lblCharName.Size = new System.Drawing.Size(129, 18);
+            this.lblCharName.Size = new System.Drawing.Size(84, 13);
             this.lblCharName.TabIndex = 1;
             this.lblCharName.Text = "Character Name";
             // 
             // lblSkillInTraining
             // 
             this.lblSkillInTraining.AutoSize = true;
-            this.lblSkillInTraining.Location = new System.Drawing.Point(3, 18);
+            this.lblSkillInTraining.Location = new System.Drawing.Point(3, 13);
             this.lblSkillInTraining.Name = "lblSkillInTraining";
-            this.lblSkillInTraining.Size = new System.Drawing.Size(72, 13);
+            this.lblSkillInTraining.Size = new System.Drawing.Size(73, 13);
             this.lblSkillInTraining.TabIndex = 2;
             this.lblSkillInTraining.Text = "SkillInTraining";
             // 
             // lblTimeToCompletion
             // 
             this.lblTimeToCompletion.AutoSize = true;
-            this.lblTimeToCompletion.Location = new System.Drawing.Point(3, 31);
+            this.lblTimeToCompletion.Location = new System.Drawing.Point(3, 26);
             this.lblTimeToCompletion.Name = "lblTimeToCompletion";
-            this.lblTimeToCompletion.Size = new System.Drawing.Size(98, 13);
+            this.lblTimeToCompletion.Size = new System.Drawing.Size(97, 13);
             this.lblTimeToCompletion.TabIndex = 2;
             this.lblTimeToCompletion.Text = "Time to Completion";
-            // 
-            // lblBalance
-            // 
-            this.lblBalance.AutoSize = true;
-            this.lblBalance.Location = new System.Drawing.Point(3, 57);
-            this.lblBalance.Name = "lblBalance";
-            this.lblBalance.Size = new System.Drawing.Size(44, 13);
-            this.lblBalance.TabIndex = 4;
-            this.lblBalance.Text = "Balance";
             // 
             // lblCompletionTime
             // 
             this.lblCompletionTime.AutoSize = true;
-            this.lblCompletionTime.Location = new System.Drawing.Point(3, 44);
+            this.lblCompletionTime.Location = new System.Drawing.Point(3, 39);
             this.lblCompletionTime.Name = "lblCompletionTime";
             this.lblCompletionTime.Size = new System.Drawing.Size(82, 13);
             this.lblCompletionTime.TabIndex = 5;
             this.lblCompletionTime.Text = "CompletionTime";
+            // 
+            // lblBalance
+            // 
+            this.lblBalance.AutoSize = true;
+            this.lblBalance.Location = new System.Drawing.Point(3, 52);
+            this.lblBalance.Name = "lblBalance";
+            this.lblBalance.Size = new System.Drawing.Size(46, 13);
+            this.lblBalance.TabIndex = 4;
+            this.lblBalance.Text = "Balance";
             // 
             // updateTimer
             // 
             this.updateTimer.Interval = 1000;
             this.updateTimer.Tick += new System.EventHandler(this.updateTimer_Tick);
             // 
-            // TrayStatusPopUpChar
+            // TrayPopUpChar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.containerPanel);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "TrayStatusPopUpChar";
-            this.Size = new System.Drawing.Size(201, 82);
+            this.Margin = new System.Windows.Forms.Padding(0);
+            this.Name = "TrayPopUpChar";
+            this.Size = new System.Drawing.Size(159, 71);
             this.containerPanel.ResumeLayout(false);
             this.containerPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharacterPortrait)).EndInit();

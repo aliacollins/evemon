@@ -44,8 +44,8 @@ namespace EVEMon
             this.Visible = false;
             this.RememberPositionKey = "MainWindow";
             Program.MainWindow = this;
-            niMinimizeIcon.Text = Application.ProductName;
-            niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
+            trayIcon.Text = Application.ProductName;
+            trayIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
             StaticSkill.LoadStaticSkills();
             G15Handler.Init();
 
@@ -293,7 +293,7 @@ namespace EVEMon
 
             if (!this.Visible)
             {
-                niMinimizeIcon_Click(this, new EventArgs());
+                trayIcon_Click(this, new EventArgs());
             }
             else if (this.WindowState == FormWindowState.Minimized)
             {
@@ -769,14 +769,14 @@ namespace EVEMon
             {
                 sf.ShowDialog();
             }
-            niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
+            trayIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
         }
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized && !m_settings.SystemTrayOptionsIsNever)
             {
-                niMinimizeIcon.Visible = true;
+                trayIcon.Visible = true;
                 this.Visible = false;
             }
             else
@@ -813,20 +813,6 @@ namespace EVEMon
             niAlertIcon.BalloonTipIcon = icon;
             niAlertIcon.Visible = true;
             niAlertIcon.ShowBalloonTip(30000);
-        }
-
-        private void niMinimizeIcon_Click(object sender, EventArgs e)
-        {
-            if (((e as MouseEventArgs) == null) || ((e as MouseEventArgs) != null && (e as MouseEventArgs).Button != MouseButtons.Right))
-            {
-                this.Visible = true;
-                this.WindowState = FormWindowState.Normal;
-                this.ShowInTaskbar = true;
-                this.Activate();
-                this.niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
-                // Hide the tray icon popup if its in use
-                if (m_trayPopUp != null) { m_trayPopUp.Close(); }
-            }
         }
 
         private void tmrAlertRefresh_Tick(object sender, EventArgs e)
@@ -894,7 +880,7 @@ namespace EVEMon
                )
             {
                 e.Cancel = true; // Cancel the close operation
-                niMinimizeIcon.Visible = true; // Display the minimize icon
+                trayIcon.Visible = true;
                 //this.Visible = false; // hide the main form
                 this.WindowState = FormWindowState.Minimized;
             }
@@ -948,43 +934,6 @@ namespace EVEMon
                 }
             }
             return null;
-        }
-
-        // Holds the tray icon popup when its in use
-        private TrayStatusPopUp m_trayPopUp = null;
-
-        /// <summary>
-        /// Instantiates a popup window when the mouse moves over the tray icon
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void niMinimizeIcon_MouseMove(object sender, MouseEventArgs e)
-        {
-            // Only display the pop up window if an instance doesn't exist, and the context menu isn't showing
-            if (m_trayPopUp == null && trayIconToolStrip.Visible == false)
-            {
-                // Remove the default tooltip
-                niMinimizeIcon.Text = "";
-                // Construct a list of characters to pass to the popup
-                List<CharacterMonitor> characterList = new List<CharacterMonitor>();
-                foreach (TabPage tp in tcCharacterTabs.TabPages)
-                {
-                    CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                    characterList.Add(cm);
-                }
-                // Create the popup
-                m_trayPopUp = new TrayStatusPopUp(niMinimizeIcon, characterList);
-                // Handle the PopUpClosed event
-                m_trayPopUp.PopUpClosed += delegate(object o, EventArgs evtargs)
-                {
-                    // Get rid of the instance
-                    m_trayPopUp = null;
-                    // Restore the default tooltip
-                    niMinimizeIcon.Text = Application.ProductName;
-                };
-                // Now show the popup
-                m_trayPopUp.Show();
-            }
         }
 
         private WeakReference<Schedule.ScheduleEditorWindow> m_scheduler;
@@ -1092,7 +1041,7 @@ namespace EVEMon
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
             this.Activate();
-            this.niMinimizeIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
+            this.trayIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1179,7 +1128,11 @@ namespace EVEMon
         private void trayIconToolStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Hide the Tray PopUp if its showing
-            if (m_trayPopUp != null) { m_trayPopUp.Close(); }
+            if (m_trayPopup != null)
+            {
+                m_trayPopup.Close();
+                m_trayPopup = null;
+            }
 
             planToolStripMenuItem.DropDownItems.Clear();
             List<string> characters = new List<string>();
@@ -1486,6 +1439,76 @@ namespace EVEMon
         {
             CharacterMonitor cm = GetCurrentCharacter();
             cm.CopyBBCodeToClipBoard();
+        }
+
+        /// <summary>
+        /// Event handler for mouse click on the tray icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trayIcon_Click(object sender, EventArgs e)
+        {
+            if (((e as MouseEventArgs) == null) || ((e as MouseEventArgs) != null && (e as MouseEventArgs).Button != MouseButtons.Right))
+            {
+                this.Visible = true;
+                this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
+                this.Activate();
+                this.trayIcon.Visible = m_settings.SystemTrayOptionsIsAlways;
+                if (m_trayPopup != null)
+                {
+                    m_trayPopup.Close();
+                    m_trayPopup = null;
+                }
+            }
+        }
+
+        private Form m_trayPopup = null;
+
+        /// <summary>
+        /// Event handler for mouse hover events on the tray icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trayIcon_MouseHover(object sender, EventArgs e)
+        {
+            // Only display the pop up window if the context menu isn't showing
+            if (trayIconToolStrip.Visible == false)
+            {
+                // Remove the default tooltip
+                trayIcon.Text = "";
+                // Construct a list of characters to pass to the popup
+                List<CharacterMonitor> characterList = new List<CharacterMonitor>();
+                foreach (TabPage tp in tcCharacterTabs.TabPages)
+                {
+                    CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
+                    characterList.Add(cm);
+                }
+                // Create the popup
+                if (m_settings.TrayPopupStyle == TrayPopupStyles.PopupForm)
+                    m_trayPopup = new TrayPopUpWindow(characterList);
+                else
+                    m_trayPopup = new TrayTooltipWindow(characterList);
+                // Now show the popup
+                m_trayPopup.Show();
+            }
+        }
+
+        /// <summary>
+        /// Event handler for mouse leave events in the tray icon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trayIcon_MouseLeave(object sender, EventArgs e)
+        {
+            // Remove the popup if its showing
+            if (m_trayPopup != null)
+            {
+                m_trayPopup.Close();
+                m_trayPopup = null;
+                // Restore the default tooltip
+                trayIcon.Text = Application.ProductName;
+            }
         }
 
 

@@ -415,84 +415,45 @@ namespace EVEMon.Common
             }
         }
 
-        private bool m_trayPopupShowSkill = true;
-        public bool TrayPopupShowSkill
+        private TrayPopupStyles m_trayPopupStyle = TrayPopupStyles.PopupForm;
+        public TrayPopupStyles TrayPopupStyle
         {
-            get { return m_trayPopupShowSkill; }
+            get { return m_trayPopupStyle; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_trayPopupShowSkill = value;
+                    m_trayPopupStyle = value;
                 }
             }
         }
 
-        private bool m_trayPopupShowSkillTime = true;
-        public bool TrayPopupShowSkillTime
+        private TrayPopupConfig m_trayPopupConfig = new TrayPopupConfig();
+        public TrayPopupConfig TrayPopupConfig
         {
-            get { return m_trayPopupShowSkillTime; }
+            get { return m_trayPopupConfig; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_trayPopupShowSkillTime = value;
+                    m_trayPopupConfig = value;
                 }
             }
         }
 
-        private bool m_trayPopupShowSkillEnd = false;
-        public bool TrayPopupShowSkillEnd
+        private string m_tooltipString = "%n - %s %tr - %r";
+        public string TooltipString
         {
-            get { return m_trayPopupShowSkillEnd; }
+            get { return m_tooltipString; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_trayPopupShowSkillEnd = value;
+                    m_tooltipString = value;
                 }
             }
         }
 
-        private bool m_trayPopupShowPortrait = true;
-        public bool TrayPopupShowPortrait
-        {
-            get { return m_trayPopupShowPortrait; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_trayPopupShowPortrait = value;
-                }
-            }
-        }
-
-        private bool m_trayPopupShowBalance = false;
-        public bool TrayPopupShowBalance
-        {
-            get { return m_trayPopupShowBalance; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_trayPopupShowBalance = value;
-                }
-            }
-        }
-
-        private bool m_trayPopupShowTQStatus = true;
-        public bool TrayPopupShowTQStatus
-        {
-            get { return m_trayPopupShowTQStatus; }
-            set
-            {
-                lock (mutexLock)
-                {
-                    m_trayPopupShowTQStatus = value;
-                }
-            }
-        }
-        
         private bool m_HighlightPlannedSkills;
         public bool SkillPlannerHighlightPlannedSkills
         {
@@ -2993,6 +2954,64 @@ namespace EVEMon.Common
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Configuration settings for the tray icon popup window
+    /// </summary>
+    public class TrayPopupConfig
+    {
+        public bool HideCharNotTraining = true;
+        public CharacterGroupings GroupBy = CharacterGroupings.None;
+        public SortOrders SortOrder1 = SortOrders.EarliestAtBottom;
+        public SortOrders SortOrder2 = SortOrders.EarliestAtBottom;
+        public bool ShowSkill = true;
+        public bool ShowTimeToCompletion = true;
+        public bool ShowCompletionTime = false;
+        public bool HighlightConflicts = true;
+        public bool ShowWallet = false;
+        public bool ShowPortrait = true;
+        public PortraitSizes PortraitSize = PortraitSizes.x48;
+        public bool ShowWarning = true;
+        public bool ShowTQStatus = true;
+
+        public enum CharacterGroupings
+        {
+            None = 0,
+            TrainingAtTop = 1,
+            TrainingAtBottom = 2,
+            Account = 3
+        }
+
+        public enum SortOrders
+        {
+            EarliestAtBottom = 0,
+            EarliestAtTop = 1,
+            AlphaFirstAtTop = 2,
+            AlphaFirstAtBottom = 3
+        }
+
+        public enum PortraitSizes
+        {
+            x16 = 0,
+            x24 = 1,
+            x32 = 2,
+            x40 = 3,
+            x48 = 4,
+            x56 = 5,
+            x64 = 6
+        }
+
+        public TrayPopupConfig Copy()
+        {
+            return this.MemberwiseClone() as TrayPopupConfig;
+        }
+    }
+
+    public enum TrayPopupStyles
+    {
+        PopupForm = 0,
+        WindowsTooltip = 1
     }
 
     // A conversion class to pull the implants out of a settings file created in 2.1 or earlier

@@ -12,18 +12,20 @@ namespace EVEMon
     /// <summary>
     /// User control to display a single character's details in the tray icon popup
     /// </summary>
-    public partial class TrayStatusPopUpChar : UserControl
+    public partial class TrayPopUpChar : UserControl
     {
         #region Fields
         private CharacterMonitor m_characterMon;
         private DateTime m_estimatedCompletion;
+        private bool m_highlightConflict;
+        private int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
         #endregion
 
         #region Constructors
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TrayStatusPopUpChar()
+        public TrayPopUpChar()
             : this(null)
         {
         }
@@ -32,7 +34,7 @@ namespace EVEMon
         /// Main constructor
         /// </summary>
         /// <param name="cm">A CharacterMonitor object for the character to be displayed</param>
-        public TrayStatusPopUpChar(CharacterMonitor cm)
+        public TrayPopUpChar(CharacterMonitor cm)
         {
             InitializeComponent();
             m_characterMon = cm;
@@ -51,14 +53,17 @@ namespace EVEMon
                 // Get the character info and settings
                 CharacterInfo charInfo = m_characterMon.GrandCharacterInfo;
                 Settings s = Settings.GetInstance();
-                // Characters not in training use gray text, not black
-                if (!charInfo.IsTraining) { this.ForeColor = SystemColors.GrayText; }
+                TrayPopupConfig config = s.TrayPopupConfig;
+                // Form level look and feel
+                this.ForeColor = charInfo.IsTraining ? SystemColors.ControlText : SystemColors.GrayText;
+                this.Font = new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
                 // Character portrait
-                if (!s.WorksafeMode && s.TrayPopupShowPortrait)
+                if (!s.WorksafeMode && config.ShowPortrait)
                 {
                     if (m_characterMon.CharacterPortrait != null)
                     {
                         pbCharacterPortrait.Image = m_characterMon.CharacterPortrait;
+                        pbCharacterPortrait.Size = new Size(m_portraitSize[(int)config.PortraitSize], m_portraitSize[(int)config.PortraitSize]);
                     }
                 }
                 else
@@ -67,16 +72,29 @@ namespace EVEMon
                 }
                 // Character Name
                 lblCharName.Text = charInfo.Name;
+                lblCharName.Font = new Font(lblCharName.Font.Name, SystemFonts.MessageBoxFont.SizeInPoints*11/9, FontStyle.Regular, GraphicsUnit.Point);
                 // Skill Training Info
-                if (s.TrayPopupShowSkill && charInfo.IsTraining)
+                if (charInfo.IsTraining)
                 {
                     Skill trainingSkill = charInfo.CurrentlyTrainingSkill;
                     if (trainingSkill != null)
                     {
                         m_estimatedCompletion = trainingSkill.EstimatedCompletion;
-                        lblSkillInTraining.Text = trainingSkill.Name + " " + Skill.GetRomanForInt(trainingSkill.TrainingToLevel);
-                        // Time to completion
-                        if (s.TrayPopupShowSkillTime)
+                        // See if the end time conflicts with a schedule entry
+                        string blockingEntry = string.Empty;
+                        bool isBlocked = s.SkillIsBlockedAt(m_estimatedCompletion, out blockingEntry);
+                        m_highlightConflict = isBlocked && config.HighlightConflicts;
+
+                        if (config.ShowSkill)
+                        {
+                            lblSkillInTraining.Text = trainingSkill.Name + " " + Skill.GetRomanForInt(trainingSkill.TrainingToLevel);
+                            if (m_highlightConflict) lblSkillInTraining.ForeColor = Color.Red;
+                        }
+                        else
+                        {
+                            lblSkillInTraining.Hide();
+                        }
+                        if (config.ShowTimeToCompletion)
                         {
                             UpdateTimeRemainingLabel();
                             updateTimer.Start();
@@ -85,10 +103,10 @@ namespace EVEMon
                         {
                             lblTimeToCompletion.Hide();
                         }
-                        // Completion time
-                        if (s.TrayPopupShowSkillEnd && m_estimatedCompletion != DateTime.MaxValue)
+                        if (config.ShowCompletionTime)
                         {
                             lblCompletionTime.Text = m_estimatedCompletion.ToString("ddd ") + m_estimatedCompletion.ToString();
+                            if (m_highlightConflict) lblCompletionTime.ForeColor = Color.Red;
                         }
                         else
                         {
@@ -109,7 +127,7 @@ namespace EVEMon
                     lblCompletionTime.Hide();
                 }
                 // Balance
-                if (s.TrayPopupShowBalance)
+                if (config.ShowWallet)
                 {
                     lblBalance.Text = "Balance: " + charInfo.Balance.ToString("#,##0.00") + " ISK";
                 }
@@ -118,7 +136,7 @@ namespace EVEMon
                     lblBalance.Hide();
                 }
             }
-        }
+       }
 
         /// <summary>
         /// Displays skill training time remaining
@@ -129,6 +147,7 @@ namespace EVEMon
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
                 lblTimeToCompletion.Text = CharacterMonitor.TimeSpanDescriptive(m_estimatedCompletion);
+                if (m_highlightConflict) lblTimeToCompletion.ForeColor = Color.Red;
             }
             else
             {

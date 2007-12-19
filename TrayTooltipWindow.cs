@@ -5,340 +5,216 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace EVEMon
 {
+    /// <summary>
+    /// Displays a Windows-style tooltip
+    /// </summary>
     public partial class TrayTooltipWindow : Form
     {
-        public TrayTooltipWindow()
+        private CharacterCollection m_characters;
+        private String m_tooltip;
+        private bool m_autoRefresh;
+
+        public TrayTooltipWindow() : this(null) {}
+
+        public TrayTooltipWindow(List<CharacterMonitor> characters)
         {
             InitializeComponent();
-            m_initialized = true;
+            m_characters = new CharacterCollection();
+            if (characters != null) m_characters.AddRange(characters);
         }
 
-        private bool m_initialized = false;
-        private Size m_size = new Size(50, 50);
-
-        public override string Text
+        protected override void OnLoad(EventArgs e)
         {
-            get { return base.Text; }
-            set
-            {
-                base.Text = value;
-                if (m_initialized)
-                {
-                    CalculateSize();
-                    PositionWindow();
-                }
-            }
-        }
-
-        private void CalculateSize()
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                m_size = TextRenderer.MeasureText(g, this.Text, this.Font, new Size(0, 0), TextFormatFlags.NoClipping | TextFormatFlags.NoPadding);
-            }
-            m_size = new Size(m_size.Width + 6, m_size.Height + 4);
-            this.ClientSize = m_size;
-            this.Invalidate();
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-
-            g.FillRectangle(SystemBrushes.Info, e.ClipRectangle);
-            g.DrawRectangle(SystemPens.InfoText, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
-            TextRenderer.DrawText(e.Graphics, this.Text, this.Font, new Point(3, 2), SystemColors.InfoText,
-                                    Color.Transparent, TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-        }
-
-        internal class NativeMethods
-        {
-            // All definitions taken from http://pinvoke.net
-
-            [DllImport("shell32.dll")]
-            public static extern IntPtr SHAppBarMessage(uint dwMessage, ref APPBARDATA pData);
-
-
-            [DllImport("user32.dll")]
-            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-            public const string TaskbarClass = "Shell_TrayWnd";
-
-            [StructLayout(LayoutKind.Sequential)]
-            public struct APPBARDATA
-            {
-                public static APPBARDATA Create()
-                {
-                    APPBARDATA appBarData = new APPBARDATA();
-                    appBarData.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
-                    return appBarData;
-                }
-
-                public int cbSize;
-                public IntPtr hWnd;
-                public uint uCallbackMessage;
-                public uint uEdge;
-                public RECT rc;
-                public int lParam;
-            }
-
-            public const int ABM_QUERYPOS = 0x00000002,
-                             ABM_GETTASKBARPOS = 5;
-
-            public const int ABE_LEFT = 0;
-            public const int ABE_TOP = 1;
-            public const int ABE_RIGHT = 2;
-            public const int ABE_BOTTOM = 3;
-
-
-            [Serializable, StructLayout(LayoutKind.Sequential)]
-            public struct RECT
-            {
-                public int Left;
-                public int Top;
-                public int Right;
-                public int Bottom;
-
-                public RECT(int left_, int top_, int right_, int bottom_)
-                {
-                    Left = left_;
-                    Top = top_;
-                    Right = right_;
-                    Bottom = bottom_;
-                }
-
-                public int Height
-                {
-                    get { return Bottom - Top + 1; }
-                }
-
-                public int Width
-                {
-                    get { return Right - Left + 1; }
-                }
-
-                public Size Size
-                {
-                    get { return new Size(Width, Height); }
-                }
-
-                public Point Location
-                {
-                    get { return new Point(Left, Top); }
-                }
-
-                // Handy method for converting to a System.Drawing.Rectangle
-                public Rectangle ToRectangle()
-                {
-                    return Rectangle.FromLTRB(Left, Top, Right, Bottom);
-                }
-
-                public static RECT FromRectangle(Rectangle rectangle)
-                {
-                    return new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
-                }
-
-                public override int GetHashCode()
-                {
-                    return Left ^ ((Top << 13) | (Top >> 0x13))
-                           ^ ((Width << 0x1a) | (Width >> 6))
-                           ^ ((Height << 7) | (Height >> 0x19));
-                }
-
-                #region Operator overloads
-                public static implicit operator Rectangle(RECT rect)
-                {
-                    return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
-                }
-
-                public static implicit operator RECT(Rectangle rect)
-                {
-                    return new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
-                }
-                #endregion
-            }
-        }
-
-        private LowLevelMouseHook m_hook;
-
-        private void TrayTooltipWindow_Shown(object sender, EventArgs e)
-        {
-            m_hook = new LowLevelMouseHook();
-            m_hook.MouseMove += new EventHandler<EventArgs>(m_hook_MouseMove);
-            m_hook.Start();
-            CalculateSize();
-            PositionWindow();
-        }
-
-        private void PositionWindow()
-        {
-            Point mp = MousePosition;
-            NativeMethods.APPBARDATA appBarData = NativeMethods.APPBARDATA.Create();
-            NativeMethods.SHAppBarMessage(NativeMethods.ABM_GETTASKBARPOS, ref appBarData);
-            NativeMethods.RECT taskBarLocation = appBarData.rc;
-
-            Point winPoint = mp;
-            Screen curScreen = Screen.FromPoint(mp);
-            bool slideLeftRight = true;
-            switch (appBarData.uEdge)
-            {
-                default:
-                case NativeMethods.ABE_BOTTOM:
-                    winPoint = new Point(mp.X, taskBarLocation.Top - this.Height);
-                    slideLeftRight = true;
-                    break;
-                case NativeMethods.ABE_TOP:
-                    winPoint = new Point(mp.X, taskBarLocation.Bottom);
-                    slideLeftRight = true;
-                    break;
-                case NativeMethods.ABE_LEFT:
-                    winPoint = new Point(taskBarLocation.Right, mp.Y);
-                    slideLeftRight = false;
-                    break;
-                case NativeMethods.ABE_RIGHT:
-                    winPoint = new Point(taskBarLocation.Left - this.Width, mp.Y);
-                    slideLeftRight = false;
-                    break;
-            }
-            if (slideLeftRight)
-            {
-                if (winPoint.X + this.Width > curScreen.Bounds.Right)
-                {
-                    winPoint = new Point(curScreen.Bounds.Right - this.Width - 1, winPoint.Y);
-                }
-                if (winPoint.X < curScreen.Bounds.Left)
-                {
-                    winPoint = new Point(curScreen.Bounds.Left + 2, winPoint.Y);
-                }
-            }
+            base.OnLoad(e);
+            // Look and Feel
+            this.Font = new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+            string tooltipFormat = Settings.GetInstance().TooltipString;
+            // Construct the initial array of tooltip strings
+            m_autoRefresh = false;
+            StringBuilder sb = new StringBuilder();
+            if (String.IsNullOrEmpty(tooltipFormat))
+                sb.Append("You can configure this tooltip in the options/general panel");
+            else if (m_characters.CharactersTraining.Count == 0)
+                sb.Append("No Characters in training!");
             else
             {
-                if (winPoint.Y + this.Height > curScreen.Bounds.Bottom)
+                m_autoRefresh = true;
+                foreach (CharacterMonitor cm in m_characters.CharactersTraining)
                 {
-                    winPoint = new Point(winPoint.X, curScreen.Bounds.Bottom - this.Height - 1);
-                }
-                if (winPoint.Y < curScreen.Bounds.Top)
-                {
-                    winPoint = new Point(winPoint.X, curScreen.Bounds.Top + 2);
+                    if (sb.Length != 0) sb.Append("\n");
+                    sb.Append(FormatTooltipText(tooltipFormat, cm.GrandCharacterInfo));
                 }
             }
-            this.Location = winPoint;
+            m_tooltip = sb.ToString();
+            UpdateForm();
         }
 
-        private int m_moveCount = 0;
-
-        private void m_hook_MouseMove(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
-            m_moveCount++;
-            if (m_moveCount == 2)
+            base.OnShown(e);
+            if (m_autoRefresh) displayTimer.Start();
+            // Equivalent to setting TopMost = true, except don't activate the window.
+            NativeMethods.SetWindowPos(this.Handle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0,
+                NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+            // Show the window without activating it.
+            NativeMethods.ShowWindow(this.Handle, NativeMethods.SW_SHOWNOACTIVATE);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            displayTimer.Stop();
+            base.OnClosed(e);
+        }
+        private void UpdateForm()
+        {
+            this.SuspendLayout();
+            string toolTip = m_tooltip;
+            foreach (CharacterMonitor cm in m_characters.CharactersTraining)
             {
-                this.Close();
+                Skill trainingSkill = cm.GrandCharacterInfo.CurrentlyTrainingSkill;
+                TimeSpan ts = trainingSkill.EstimatedCompletion - DateTime.Now;
+                toolTip = Regex.Replace(toolTip, '%' + cm.GrandCharacterInfo.CharacterId.ToString() + 'r',
+                    Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas), RegexOptions.Compiled);
             }
+            lblToolTip.Text = toolTip;
+            this.ResumeLayout();
+            TrayIcon.SetToolTipLocation(this);
         }
 
-        public void RefreshAlive()
+        private string FormatTooltipText(string toolTipFormat, CharacterInfo character)
         {
-            m_moveCount = 0;
-        }
+            StringBuilder sb = new StringBuilder();
 
-        private void TrayTooltipWindow_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            m_hook.Dispose();
-            m_hook = null;
-        }
-    }
-
-    public class LowLevelMouseHook : IDisposable
-    {
-        public delegate int LowLevelMouseDelegate(int nCode, IntPtr wParam, IntPtr lParam);
-
-        public const int WH_MOUSE_LL = 14;
-
-        public const int WM_MOUSEMOVE = 0x0200;
-
-        private int hHook = 0;
-
-        [DllImport("user32", SetLastError = true)]
-        private static extern int SetWindowsHookEx(int idHook, LowLevelMouseDelegate lpfn, IntPtr hInstance, int threadId);
-
-        [DllImport("user32")]
-        private static extern bool UnhookWindowsHookEx(int idHook);
-
-        [DllImport("user32")]
-        private static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-        ~LowLevelMouseHook()
-        {
-            Dispose();
-        }
-
-        public event EventHandler<EventArgs> MouseMove;
-
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
-
-        private LowLevelMouseDelegate m_delegate;
-
-        public void Start()
-        {
-            //IntPtr hinst = Marshal.GetHINSTANCE(this.GetType().Module);
-            //IntPtr hinst = Marshal.GetHINSTANCE(System.Diagnostics.Process.GetCurrentProcess().MainModule.M);
-            IntPtr hinst = GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
-            m_delegate = new LowLevelMouseDelegate(OnMouseProc);
-
-            hHook = SetWindowsHookEx(WH_MOUSE_LL,
-                                     m_delegate,
-                //Marshal.GetHINSTANCE(this.GetType().Module),
-                                     hinst,
-                                     0);
-            if (hHook == 0)
+            sb.Append(Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])", new MatchEvaluator(delegate(Match m)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
-        }
+                string value = String.Empty;
+                char capture = m.Groups[1].Value[0];
 
-        public void Dispose()
-        {
-            if (hHook == 0)
-            {
-                return;
-            }
-            UnhookWindowsHookEx(hHook);
-            m_delegate = null;
-            hHook = 0;
-            GC.SuppressFinalize(this);
-        }
-
-        private int OnMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
-        {
-            try
-            {
-                if (nCode <= 0)
+                if (capture == 'n')
                 {
-                    switch ((int)wParam)
+                    value = character.Name;
+                }
+                else if (capture == 'b')
+                {
+                    value = character.Balance.ToString("#,##0.00");
+                }
+                else if (capture == 's')
+                {
+                    value = character.CurrentlyTrainingSkill.Name;
+                }
+                else if (capture == 'd')
+                {
+                    value = character.CurrentlyTrainingSkill.EstimatedCompletion.ToString("g");
+                }
+                else if (capture == 'r')
+                {
+                    value = '%' + character.CharacterId.ToString() + 'r';
+                }
+                else
+                {
+                    int level = -1;
+                    if (capture == 'c')
                     {
-                        case WM_MOUSEMOVE:
-                            OnMouseMove();
-                            break;
+                        level = character.CurrentlyTrainingSkill.Level;
+                    }
+                    else if (capture == 't')
+                    {
+                        level = character.CurrentlyTrainingSkill.TrainingToLevel;
+                    }
+
+                    if (m.Groups[1].Value.Length > 1 && level >= 0)
+                    {
+                        capture = m.Groups[1].Value[1];
+
+                        if (capture == 'i')
+                        {
+                            value = level.ToString();
+                        }
+                        else if (capture == 'r')
+                        {
+                            value = Skill.GetRomanForInt(level);
+                        }
+                    }
+                }
+
+                return value;
+            }), RegexOptions.Compiled));
+            return sb.ToString();
+        }
+
+        private class CharacterCollection : List<CharacterMonitor>
+        {
+            public CharacterCollection CharactersTraining
+            {
+                get
+                {
+                    CharacterCollection selectedChars = new CharacterCollection();
+                    foreach (CharacterMonitor cm in this)
+                    {
+                        if (cm.GrandCharacterInfo.IsTraining)
+                            selectedChars.Add(cm);
+                    }
+                    selectedChars.Sort(new CompletionTimeComparer());
+                    return selectedChars;
+                }
+            }
+            
+            private class CompletionTimeComparer : IComparer<CharacterMonitor>
+            {
+                public int Compare(CharacterMonitor x, CharacterMonitor y)
+                {
+                    Skill skillX = x.GrandCharacterInfo.CurrentlyTrainingSkill;
+                    Skill skillY = y.GrandCharacterInfo.CurrentlyTrainingSkill;
+                    if (skillX == null && skillY == null)
+                    {
+                        return x.CharacterName.CompareTo(y.CharacterName);
+                    }
+                    else if (skillX == null && skillY != null)
+                        return -1;
+                    else if (skillX != null && skillY == null)
+                        return 1;
+                    else
+                    {
+                        if (skillX.EstimatedCompletion < skillY.EstimatedCompletion)
+                            return -1;
+                        else if (skillY.EstimatedCompletion == skillY.EstimatedCompletion)
+                            return 0;
+                        else
+                            return 1;
                     }
                 }
             }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, false);
-            }
-            return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+        }
+        #region Native Stuff
+        internal class NativeMethods
+        {
+            public const Int32 HWND_TOPMOST = -1;
+            public const Int32 SWP_NOACTIVATE = 0x0010;
+            public const Int32 SWP_NOSIZE = 0x0001;
+            public const Int32 SWP_NOMOVE = 0x0002;
+            public const Int32 SW_SHOWNOACTIVATE = 4;
+
+            [DllImport("user32.dll")]
+            public static extern bool ShowWindow(IntPtr hWnd, Int32 flags);
+            [DllImport("user32.dll")]
+            public static extern bool SetWindowPos(IntPtr hWnd,
+                Int32 hWndInsertAfter, Int32 X, Int32 Y, Int32 cx, Int32 cy, uint uFlags);
+
+        }
+        #endregion
+
+        private void displayTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
-        private void OnMouseMove()
-        {
-            if (MouseMove != null)
-            {
-                MouseMove(this, new EventArgs());
-            }
-        }
     }
 }
+

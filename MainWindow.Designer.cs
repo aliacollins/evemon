@@ -30,7 +30,6 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.niMinimizeIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayIconToolStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -98,21 +97,15 @@ namespace EVEMon
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
-            this.tcCharacterTabs = new EVEMon.DraggableTabControl();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.tcCharacterTabs = new EVEMon.DraggableTabControl();
+            this.trayIcon = new EVEMon.TrayIcon(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
             this.toolbarContext.SuspendLayout();
             this.standardToolbar.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // niMinimizeIcon
-            // 
-            this.niMinimizeIcon.ContextMenuStrip = this.trayIconToolStrip;
-            this.niMinimizeIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("niMinimizeIcon.Icon")));
-            this.niMinimizeIcon.Click += new System.EventHandler(this.niMinimizeIcon_Click);
-            this.niMinimizeIcon.MouseMove += new System.Windows.Forms.MouseEventHandler(this.niMinimizeIcon_MouseMove);
             // 
             // trayIconToolStrip
             // 
@@ -668,6 +661,11 @@ namespace EVEMon
             this.tsbAbout.Text = "About...";
             this.tsbAbout.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(256, 6);
+            // 
             // tcCharacterTabs
             // 
             this.tcCharacterTabs.AllowDrop = true;
@@ -684,10 +682,15 @@ namespace EVEMon
             this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
             this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
             // 
-            // toolStripSeparator13
+            // trayIcon
             // 
-            this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(256, 6);
+            this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.MouseHoverTime = 200;
+            this.trayIcon.Text = "";
+            this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
+            this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
+            this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             // 
             // MainWindow
             // 
@@ -723,7 +726,6 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.NotifyIcon niMinimizeIcon;
         private System.Windows.Forms.NotifyIcon niAlertIcon;
         private System.Windows.Forms.Timer tmrAlertRefresh;
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -793,5 +795,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
+        private TrayIcon trayIcon;
     }
 }

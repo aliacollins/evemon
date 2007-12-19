@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class TrayTooltipWindow
+    partial class TrayPopUpWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,41 +28,39 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lblToolTip = new System.Windows.Forms.Label();
-            this.displayTimer = new System.Windows.Forms.Timer(this.components);
+            this.mainPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
-            // lblToolTip
+            // mainPanel
             // 
-            this.lblToolTip.AutoSize = true;
-            this.lblToolTip.Location = new System.Drawing.Point(0, 0);
-            this.lblToolTip.Margin = new System.Windows.Forms.Padding(3);
-            this.lblToolTip.Name = "lblToolTip";
-            this.lblToolTip.Size = new System.Drawing.Size(35, 13);
-            this.lblToolTip.TabIndex = 0;
-            this.lblToolTip.Text = "label1";
+            this.mainPanel.AutoSize = true;
+            this.mainPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mainPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.mainPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.mainPanel.Location = new System.Drawing.Point(4, 4);
+            this.mainPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(0, 0);
+            this.mainPanel.TabIndex = 2;
             // 
-            // displayTimer
-            // 
-            this.displayTimer.Interval = 1000;
-            this.displayTimer.Tick += new System.EventHandler(this.displayTimer_Tick);
-            // 
-            // TrayTooltipWindow
+            // TrayPopUpWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Info;
-            this.ClientSize = new System.Drawing.Size(323, 110);
-            this.Controls.Add(this.lblToolTip);
-            this.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.ClientSize = new System.Drawing.Size(284, 264);
+            this.ControlBox = false;
+            this.Controls.Add(this.mainPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "TrayTooltipWindow";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "TrayPopUpWindow";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "TrayTooltipWindow";
+            this.Text = "EveMon Status";
+            this.TransparencyKey = System.Drawing.SystemColors.Info;
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -70,9 +68,6 @@ namespace EVEMon
 
         #endregion
 
-        private System.Windows.Forms.Label lblToolTip;
-        private System.Windows.Forms.Timer displayTimer;
-
-
+        private System.Windows.Forms.FlowLayoutPanel mainPanel;
     }
 }

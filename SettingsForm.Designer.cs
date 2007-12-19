@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14,
+            treeNode15,
+            treeNode16,
+            treeNode17});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -113,6 +113,9 @@ namespace EVEMon
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
             this.gboxTrayIconPopUpOptions = new System.Windows.Forms.GroupBox();
+            this.btnConfigureTrayPopUp = new System.Windows.Forms.Button();
+            this.cbTrayPopupStyle = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
             this.gbSkillPlannerHighlighting = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
@@ -207,12 +210,6 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.cbTrayPopupShowPortrait = new System.Windows.Forms.CheckBox();
-            this.cbTrayPopupShowBalance = new System.Windows.Forms.CheckBox();
-            this.cbTrayPopupShowSkill = new System.Windows.Forms.CheckBox();
-            this.cbTrayPopupShowSkillTime = new System.Windows.Forms.CheckBox();
-            this.cbTrayPopupShowSkillEnd = new System.Windows.Forms.CheckBox();
-            this.cbTrayPopUpShowTQStatus = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -951,7 +948,7 @@ namespace EVEMon
             this.groupBox11.Controls.Add(this.flowLayoutPanel15);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(373, 66);
+            this.groupBox11.Size = new System.Drawing.Size(373, 46);
             this.groupBox11.TabIndex = 10;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "General";
@@ -966,7 +963,7 @@ namespace EVEMon
             this.flowLayoutPanel15.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel15.Name = "flowLayoutPanel15";
             this.flowLayoutPanel15.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel15.Size = new System.Drawing.Size(367, 46);
+            this.flowLayoutPanel15.Size = new System.Drawing.Size(367, 26);
             this.flowLayoutPanel15.TabIndex = 3;
             // 
             // flowLayoutPanel21
@@ -1007,7 +1004,7 @@ namespace EVEMon
             // 
             this.groupBox7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox7.Controls.Add(this.flowLayoutPanel25);
-            this.groupBox7.Location = new System.Drawing.Point(3, 75);
+            this.groupBox7.Location = new System.Drawing.Point(3, 55);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(373, 83);
             this.groupBox7.TabIndex = 14;
@@ -1079,23 +1076,50 @@ namespace EVEMon
             // 
             // gboxTrayIconPopUpOptions
             // 
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopUpShowTQStatus);
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkillEnd);
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkillTime);
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowSkill);
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowBalance);
-            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupShowPortrait);
-            this.gboxTrayIconPopUpOptions.Location = new System.Drawing.Point(3, 164);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.btnConfigureTrayPopUp);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupStyle);
+            this.gboxTrayIconPopUpOptions.Controls.Add(this.label27);
+            this.gboxTrayIconPopUpOptions.Location = new System.Drawing.Point(3, 144);
             this.gboxTrayIconPopUpOptions.Name = "gboxTrayIconPopUpOptions";
-            this.gboxTrayIconPopUpOptions.Size = new System.Drawing.Size(373, 101);
+            this.gboxTrayIconPopUpOptions.Size = new System.Drawing.Size(373, 56);
             this.gboxTrayIconPopUpOptions.TabIndex = 7;
             this.gboxTrayIconPopUpOptions.TabStop = false;
             this.gboxTrayIconPopUpOptions.Text = "Tray Icon Pop Up";
             // 
+            // btnConfigureTrayPopUp
+            // 
+            this.btnConfigureTrayPopUp.Location = new System.Drawing.Point(292, 22);
+            this.btnConfigureTrayPopUp.Name = "btnConfigureTrayPopUp";
+            this.btnConfigureTrayPopUp.Size = new System.Drawing.Size(75, 23);
+            this.btnConfigureTrayPopUp.TabIndex = 2;
+            this.btnConfigureTrayPopUp.Text = "Configure";
+            this.btnConfigureTrayPopUp.UseVisualStyleBackColor = true;
+            this.btnConfigureTrayPopUp.Click += new System.EventHandler(this.btnConfigureTrayPopUp_Click);
+            // 
+            // cbTrayPopupStyle
+            // 
+            this.cbTrayPopupStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTrayPopupStyle.FormattingEnabled = true;
+            this.cbTrayPopupStyle.Location = new System.Drawing.Point(90, 24);
+            this.cbTrayPopupStyle.Name = "cbTrayPopupStyle";
+            this.cbTrayPopupStyle.Size = new System.Drawing.Size(186, 21);
+            this.cbTrayPopupStyle.TabIndex = 1;
+            this.ttToolTipCodes.SetToolTip(this.cbTrayPopupStyle, "Selects the tray popup style:\r\nPopup Window - displays a detailed popup form\r\nWin" +
+                    "dows Tooltip - displays a normal Windows tooltip");
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(12, 27);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(72, 13);
+            this.label27.TabIndex = 0;
+            this.label27.Text = "Display Style:";
+            // 
             // gbSkillPlannerHighlighting
             // 
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
-            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 271);
+            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 206);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
             this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(373, 67);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
@@ -1171,9 +1195,9 @@ namespace EVEMon
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 344);
+            this.groupBox10.Location = new System.Drawing.Point(3, 279);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(373, 143);
+            this.groupBox10.Size = new System.Drawing.Size(373, 218);
             this.groupBox10.TabIndex = 13;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Skill Browser Icon Set";
@@ -1191,7 +1215,7 @@ namespace EVEMon
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(367, 123);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(367, 198);
             this.tableLayoutPanel4.TabIndex = 15;
             // 
             // cbSkillIconSet
@@ -1211,27 +1235,27 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode10.Name = "Node1";
+            treeNode10.Text = "Node1";
+            treeNode11.Name = "Node2";
+            treeNode11.Text = "Node2";
+            treeNode12.Name = "Node3";
+            treeNode12.Text = "Node3";
+            treeNode13.Name = "Node4";
+            treeNode13.Text = "Node4";
+            treeNode14.Name = "Node5";
+            treeNode14.Text = "Node5";
+            treeNode15.Name = "Node6";
+            treeNode15.Text = "Node6";
+            treeNode16.Name = "Node7";
+            treeNode16.Text = "Node7";
+            treeNode17.Name = "Node8";
+            treeNode17.Text = "Node8";
+            treeNode18.Name = "Node0";
+            treeNode18.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
-            this.tvlist.Size = new System.Drawing.Size(361, 90);
+            treeNode18});
+            this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
             // tabNetwork
@@ -2188,67 +2212,6 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // cbTrayPopupShowPortrait
-            // 
-            this.cbTrayPopupShowPortrait.AutoSize = true;
-            this.cbTrayPopupShowPortrait.Location = new System.Drawing.Point(225, 20);
-            this.cbTrayPopupShowPortrait.Name = "cbTrayPopupShowPortrait";
-            this.cbTrayPopupShowPortrait.Size = new System.Drawing.Size(142, 17);
-            this.cbTrayPopupShowPortrait.TabIndex = 0;
-            this.cbTrayPopupShowPortrait.Text = "Show Character Portrait";
-            this.cbTrayPopupShowPortrait.UseVisualStyleBackColor = true;
-            // 
-            // cbTrayPopupShowBalance
-            // 
-            this.cbTrayPopupShowBalance.AutoSize = true;
-            this.cbTrayPopupShowBalance.Location = new System.Drawing.Point(225, 43);
-            this.cbTrayPopupShowBalance.Name = "cbTrayPopupShowBalance";
-            this.cbTrayPopupShowBalance.Size = new System.Drawing.Size(125, 17);
-            this.cbTrayPopupShowBalance.TabIndex = 1;
-            this.cbTrayPopupShowBalance.Text = "Show Wallet Balance";
-            this.cbTrayPopupShowBalance.UseVisualStyleBackColor = true;
-            // 
-            // cbTrayPopupShowSkill
-            // 
-            this.cbTrayPopupShowSkill.AutoSize = true;
-            this.cbTrayPopupShowSkill.Location = new System.Drawing.Point(15, 20);
-            this.cbTrayPopupShowSkill.Name = "cbTrayPopupShowSkill";
-            this.cbTrayPopupShowSkill.Size = new System.Drawing.Size(124, 17);
-            this.cbTrayPopupShowSkill.TabIndex = 2;
-            this.cbTrayPopupShowSkill.Text = "Show Skill in Training";
-            this.cbTrayPopupShowSkill.UseVisualStyleBackColor = true;
-            this.cbTrayPopupShowSkill.CheckedChanged += new System.EventHandler(this.cbTrayPopupShowSkill_CheckedChanged);
-            // 
-            // cbTrayPopupShowSkillTime
-            // 
-            this.cbTrayPopupShowSkillTime.AutoSize = true;
-            this.cbTrayPopupShowSkillTime.Location = new System.Drawing.Point(37, 43);
-            this.cbTrayPopupShowSkillTime.Name = "cbTrayPopupShowSkillTime";
-            this.cbTrayPopupShowSkillTime.Size = new System.Drawing.Size(146, 17);
-            this.cbTrayPopupShowSkillTime.TabIndex = 3;
-            this.cbTrayPopupShowSkillTime.Text = "Show Time to Completion";
-            this.cbTrayPopupShowSkillTime.UseVisualStyleBackColor = true;
-            // 
-            // cbTrayPopupShowSkillEnd
-            // 
-            this.cbTrayPopupShowSkillEnd.AutoSize = true;
-            this.cbTrayPopupShowSkillEnd.Location = new System.Drawing.Point(37, 66);
-            this.cbTrayPopupShowSkillEnd.Name = "cbTrayPopupShowSkillEnd";
-            this.cbTrayPopupShowSkillEnd.Size = new System.Drawing.Size(133, 17);
-            this.cbTrayPopupShowSkillEnd.TabIndex = 4;
-            this.cbTrayPopupShowSkillEnd.Text = "Show Completion Time";
-            this.cbTrayPopupShowSkillEnd.UseVisualStyleBackColor = true;
-            // 
-            // cbTrayPopUpShowTQStatus
-            // 
-            this.cbTrayPopUpShowTQStatus.AutoSize = true;
-            this.cbTrayPopUpShowTQStatus.Location = new System.Drawing.Point(225, 66);
-            this.cbTrayPopUpShowTQStatus.Name = "cbTrayPopUpShowTQStatus";
-            this.cbTrayPopUpShowTQStatus.Size = new System.Drawing.Size(103, 17);
-            this.cbTrayPopUpShowTQStatus.TabIndex = 5;
-            this.cbTrayPopUpShowTQStatus.Text = "Show TQ Status";
-            this.cbTrayPopUpShowTQStatus.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2535,11 +2498,8 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbG15ShowTime;
         private System.Windows.Forms.ComboBox cmbAPIUpdateDelay;
         private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.CheckBox cbTrayPopupShowSkillTime;
-        private System.Windows.Forms.CheckBox cbTrayPopupShowSkill;
-        private System.Windows.Forms.CheckBox cbTrayPopupShowBalance;
-        private System.Windows.Forms.CheckBox cbTrayPopupShowPortrait;
-        private System.Windows.Forms.CheckBox cbTrayPopUpShowTQStatus;
-        private System.Windows.Forms.CheckBox cbTrayPopupShowSkillEnd;
+        private System.Windows.Forms.Button btnConfigureTrayPopUp;
+        private System.Windows.Forms.ComboBox cbTrayPopupStyle;
+        private System.Windows.Forms.Label label27;
     }
 }
