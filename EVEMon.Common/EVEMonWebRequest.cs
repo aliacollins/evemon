@@ -383,6 +383,11 @@ namespace EVEMon.Common
 
 
             }
+            else
+            {
+                wr.Method = "GET";
+                wr.ContentType = "text/html";
+            }
             if (s.UseCustomProxySettings)
             {
                 WebProxy prox = new WebProxy(s.HttpProxy.Host, s.HttpProxy.Port);
