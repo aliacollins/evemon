@@ -251,6 +251,12 @@ namespace EVEMon.SkillPlanner
                 this.OnNodeMouseDoubleClick(e);
             }
         }
+
+        protected override void CreateHandle()
+       {
+           if (!this.IsDisposed)
+               base.CreateHandle();
+       }
     }
 
 }
