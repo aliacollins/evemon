@@ -312,32 +312,52 @@ namespace EVEMon
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             DialogResult dr = ofdOpenXml.ShowDialog();
+
             if (dr == DialogResult.OK)
             {
-                tbFilename.Text = ofdOpenXml.FileName;
-                FileOk = true;
-
-                //anders - find the real character.  This probably burns too much time to stay here, but I like it
-                XmlDocument xdoc = new XmlDocument();
-                xdoc.Load(ofdOpenXml.FileName);
-                XmlElement cElement = xdoc.DocumentElement.SelectSingleNode("//result/name") as XmlElement;
-                if (cElement != null)
+                try
                 {
+                  //anders - find the real character.  This probably burns too much time to stay here, but I like it
+                  XmlDocument xdoc = new XmlDocument();
+                  xdoc.Load(ofdOpenXml.FileName);
+                  XmlElement cElement = xdoc.DocumentElement.SelectSingleNode("//result/name") as XmlElement;
+                  
+                  if (cElement != null)
+                  {
                     // new style API xml
                     tbFileCharName.Text = cElement.InnerText;
-                }
-                else
-                {
+                  }
+                  else
+                  {
                     cElement = SerializableCharacterInfo.FindCharacterElement(xdoc);
+                    
                     if (cElement != null)
                     {
-                        // old style xml
-                        tbFileCharName.Text = cElement.Attributes["name"].Value;
+                      // old style xml
+                      tbFileCharName.Text = cElement.Attributes["name"].Value;
                     }
                     else
                     {
-                        tbFileCharName.Text = "Invalid XML File";
+                      tbFileCharName.Text = "Invalid XML File";
                     }
+                  }
+
+                  tbFilename.Text = ofdOpenXml.FileName;
+                  FileOk = true;
+                }
+                catch (XmlException)
+                {
+                  // show yes/no dialog asking them to load new file
+                  DialogResult result = MessageBox.Show(this,
+                                                        "The file that you attempted to load is not recognised.\n\nWould you like to try a different file?",
+                                                        "Invalid XML file",
+                                                        MessageBoxButtons.YesNo,
+                                                        MessageBoxIcon.Error);
+
+                  if (result == DialogResult.Yes)
+                  {
+                    btnBrowse_Click(sender, e);
+                  }
                 }
             }
         }

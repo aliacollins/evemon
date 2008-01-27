@@ -84,6 +84,7 @@ namespace EVEMon
             slDevelopers.Add("Shwehan Juanis", "05");
             slDevelopers.Add("skolima", "05");
             slDevelopers.Add("Spiff Nutter", "05");
+            slDevelopers.Add("The_Assimilator", "05");
             slDevelopers.Add("vardoj", "05");
             slDevelopers.Add("xNomeda", "05");
 
