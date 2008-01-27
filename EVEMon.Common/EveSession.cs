@@ -433,6 +433,7 @@ namespace EVEMon.Common
             }
             account.StoredCharacterList = m_storedCharacterList;
             account.CachedUntil = m_characterListCachedUntil;
+            account.CheckForTransfer();
             if (newAccount)
             {
                 Settings.GetInstance().Accounts.Add(account);
