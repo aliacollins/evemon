@@ -1841,12 +1841,24 @@ namespace EVEMon.Common
                 printPoint.X = 5;
             }
 
+            bool resetTotal = true;
             foreach (Plan.Entry pe in this.Entries)
             {
                 num++;
 
                 if (entryToPrint >= num)
+                {
+                    // we're not printing the first entry so no need to reset the total time
+                    resetTotal = false;
                     continue;
+                }
+
+                if (resetTotal)
+                {
+                    printTotalTrainingTime = TimeSpan.Zero;
+                }
+                resetTotal = false;
+
 
                 if (m_pto.EntryNumber)
                 {
