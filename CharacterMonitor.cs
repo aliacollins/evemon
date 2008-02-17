@@ -125,7 +125,7 @@ namespace EVEMon
 
             if (m_cli != null)
             {
-                m_grandCharacterInfo = new CharacterInfo(m_cli.UserId, m_charId, m_cli.CharacterName);
+                m_grandCharacterInfo = new CharacterInfo(m_cli.Account.UserId, m_charId, m_cli.CharacterName);
             }
             else
             {
