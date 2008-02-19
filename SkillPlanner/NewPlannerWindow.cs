@@ -147,7 +147,7 @@ namespace EVEMon.SkillPlanner
                               "view the list of skills you've added to your plan, choose " +
                               "\"View Plan\" from the dropdown in the upper left.");
             UpdateStatusBar();
-
+            UpdateEnables();
             if (tabControl.SelectedIndex == 0)
             {
                 // Force update of column widths in case we've just created a new plan
@@ -184,6 +184,13 @@ namespace EVEMon.SkillPlanner
             }
             m_settings.Save();
             UpdateStatusBar();
+            UpdateEnables();
+        }
+
+        private void UpdateEnables()
+        {
+            tsbCopyForum.Enabled = m_plan.Entries.Count > 0;
+            tsmiPlan.Enabled = m_plan.Entries.Count > 0;
         }
 
         private bool m_suggestionTipUp = false;
