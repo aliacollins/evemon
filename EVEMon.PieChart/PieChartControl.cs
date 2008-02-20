@@ -288,6 +288,27 @@ namespace EVEMon.PieChart
             m_highlightedIndex = -1;
             Refresh();
         }
+        
+        
+      /// <summary>
+      ///   Handles <c>MouseDown</c> event to increase or decrease the
+      ///      inital angle of the pie chart.
+      /// </summary>
+      /// <param name="e"></param>
+      protected override void OnMouseDown(MouseEventArgs e)
+      {
+          base.OnMouseDown(e);
+
+          if (e.Button == MouseButtons.Left)
+          {
+              this.InitialAngle = m_initialAngle - 10;
+          }
+          else if (e.Button == MouseButtons.Right)
+          {
+              this.InitialAngle = m_initialAngle + 10;
+          }
+      }
+
 
         /// <summary>
         ///   Handles <c>MouseMove</c> event to display tooltip for the pie
