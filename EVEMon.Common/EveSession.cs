@@ -373,6 +373,10 @@ namespace EVEMon.Common
             {
                 GetCharacterListUncached();
             }
+            catch (EVEMonNetworkException ex)
+            {
+                throw new ApplicationException("WebException: " + ex.WebException.Message);
+            }
             catch (Exception ex)
             {
                 throw new ApplicationException("GetCharacterList() issue: " + ex.Message);

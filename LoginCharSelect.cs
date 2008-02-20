@@ -245,12 +245,12 @@ namespace EVEMon
 
             if (s == null)
             {
-                if (EVEMonWebRequest.LastException != null)
-                {
-                    errm += " (" + EVEMonWebRequest.LastException.Message + ")";
-                }
+                //if (EVEMonWebRequest.LastException != null)
+                //{
+                //    errm += " (" + EVEMonWebRequest.LastException.Message + ")";
+                //}
                 SetNoCharacter();
-                MessageBox.Show(errm, "Invalid API Credentials",
+                MessageBox.Show(errm, "An error occurred retrieving the character list",
                                 MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }

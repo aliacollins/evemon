@@ -60,7 +60,10 @@ namespace EVEMon.Common
                 }
                 else
                 {
-                    throw new EVEMonNetworkException(wrs.RequestError);
+                    if (wrs.WebException != null)
+                        throw new EVEMonNetworkException(wrs.RequestError, wrs.WebException);
+                    else 
+                        throw new EVEMonNetworkException(wrs.RequestError);
                 }
             }
             finally
