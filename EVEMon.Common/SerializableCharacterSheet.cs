@@ -474,6 +474,11 @@ namespace EVEMon.Common
             {
                 // now get the skill and Skill group
                 StaticSkill skill = StaticSkill.GetStaticSkillById(sks.SkillId);
+                if (skill == null)
+                {
+                    StaticDataErrorForm.ShowError(string.Format("The character info for {0} contains an unknown skill with TypeID {1}.", m_name, sks.SkillId));
+                    continue;
+                }
                 StaticSkillGroup skillGroup = skill.SkillGroup;
                 SerializableSkillGroup ssg = null;
 
