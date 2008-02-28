@@ -545,35 +545,11 @@ namespace EVEMon
             CheckAccountTraining();
             this.Invoke(new MethodInvoker(delegate
             {
-                bool ShouldbeSilent = false;
-                for (int i = 0; i < m_settings.Schedule.Count; i++)
-                {
-                    ScheduleEntry temp = m_settings.Schedule[i];
-                    if (temp.GetType() == typeof(SimpleScheduleEntry))
-                    {
-                        SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                        if (x.Silent(DateTime.Now))
-                        {
-                            ShouldbeSilent = true;
-                            break;
-                        }
-                    }
-                    else if (temp.GetType() == typeof(RecurringScheduleEntry))
-                    {
-                        RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                        if (x.Silent(DateTime.Now))
-                        {
-                            ShouldbeSilent = true;
-                            break;
-                        }
-                    }
-                }
-
                 if (e.Complete)
                 {
                     CharacterInfo ci = GetCharacterInfo(e.CharacterName);
                     
-                    if (m_settings.PlaySoundOnSkillComplete && !ShouldbeSilent)
+                    if (!SkillCompleteShouldBeSilent())
                     {
 
                         string skilltrained = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "SkillTrained.wav";
@@ -631,6 +607,35 @@ namespace EVEMon
                     }
                 }
             }));
+        }
+
+        private bool SkillCompleteShouldBeSilent()
+        {
+            if (!m_settings.PlaySoundOnSkillComplete)
+            {
+                return true;
+            }
+            ScheduleEntry[] schedule = m_settings.Schedule.ToArray();
+            foreach (ScheduleEntry entry in schedule)
+            {
+                if (entry.GetType() == typeof(SimpleScheduleEntry))
+                {
+                    SimpleScheduleEntry x = (SimpleScheduleEntry)entry;
+                    if (x.Silent(DateTime.Now))
+                    {
+                        return true;
+                    }
+                }
+                else if (entry.GetType() == typeof(RecurringScheduleEntry))
+                {
+                    RecurringScheduleEntry x = (RecurringScheduleEntry)entry;
+                    if (x.Silent(DateTime.Now))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
 
