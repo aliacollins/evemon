@@ -1397,7 +1397,7 @@ namespace EVEMon
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
             {
-                cm.Session.UpdateIneveAsync(cm.GrandCharacterInfo);
+                EveSession.UpdateIneveAsync(cm.GrandCharacterInfo);
             }
         }
 

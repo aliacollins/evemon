@@ -1083,7 +1083,7 @@ namespace EVEMon
             }
 
             if (m_session != null && m_settings.GetCharacterSettings(m_charName).IneveSync)
-                m_session.UpdateIneveAsync(m_grandCharacterInfo);
+                EveSession.UpdateIneveAsync(m_grandCharacterInfo);
 
         }
 

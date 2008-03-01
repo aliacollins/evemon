@@ -547,7 +547,7 @@ namespace EVEMon.Common
             return scs;
         }
 
-        public void UpdateIneveAsync(CharacterInfo info)
+        public static void UpdateIneveAsync(CharacterInfo info)
         {
 
             if (info != null)
@@ -560,7 +560,7 @@ namespace EVEMon.Common
         /// Uploads the character to ineve.  Relies on the local xml cache.  Should only be called asynchronously.
         /// </summary>
         /// <param name="charName">Name of the char as an object.</param>
-        public void UpdateIneve(object charName)
+        public static void UpdateIneve(object charName)
         {
             lock (LocalXmlCache.Instance)
             {
