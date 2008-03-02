@@ -244,7 +244,7 @@
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\RequiredSkillsControl.designer.cs">
+    <Compile Include="SkillPlanner\RequiredSkillsControl.Designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipSelectControl.cs">

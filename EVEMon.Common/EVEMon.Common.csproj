@@ -60,7 +60,7 @@
     <Compile Include="BusyDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BusyDialog.designer.cs">
+    <Compile Include="BusyDialog.Designer.cs">
       <DependentUpon>BusyDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CCPApiError.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="EVEMonForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EVEMonForm.designer.cs">
+    <Compile Include="EVEMonForm.Designer.cs">
       <DependentUpon>EVEMonForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EVEMonWebRequest.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SplitButton.designer.cs">
+    <Compile Include="SplitButton.Designer.cs">
       <DependentUpon>SplitButton.cs</DependentUpon>
     </Compile>
     <Compile Include="SplitContainerMinFixed.cs">

@@ -45,7 +45,7 @@
     <Compile Include="MineralTile.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MineralTile.designer.cs">
+    <Compile Include="MineralTile.Designer.cs">
       <DependentUpon>MineralTile.cs</DependentUpon>
     </Compile>
     <Compile Include="MineralWorksheet.cs">
