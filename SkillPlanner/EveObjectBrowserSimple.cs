@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.SkillPlanner;
+using System.Text.RegularExpressions;
 
 namespace EVEMon.SkillPlanner
 {
@@ -50,7 +51,7 @@ namespace EVEMon.SkillPlanner
         {
             base.DisplayItemDetails(item);
             // Description
-            tbDescription.Text = item.Description;
+            tbDescription.Text = Regex.Replace(item.Description, "<.+?>", String.Empty, RegexOptions.Singleline); ;
             // Required Skills
             requiredSkillsControl.EveItem = item;
         }

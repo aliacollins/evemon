@@ -106,6 +106,7 @@ namespace EVEMon.SkillPlanner
             this.tbDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbDescription.Location = new System.Drawing.Point(3, 16);
             this.tbDescription.Name = "tbDescription";
+            this.tbDescription.ReadOnly = true;
             this.tbDescription.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.tbDescription.Size = new System.Drawing.Size(234, 199);
             this.tbDescription.TabIndex = 0;
