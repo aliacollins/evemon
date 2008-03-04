@@ -33,11 +33,12 @@ namespace EVEMon
 
             slDevelopers = new SortedList();
             slDevelopers.Add("Brad Stone", "01");
-            slDevelopers.Add("Eewec Ourbyni", "01");
 
             slDevelopers.Add("Six Anari", "02");
             slDevelopers.Add("Anders Chydenius", "02");
+            slDevelopers.Add("Eewec Ourbyni", "02");
 
+            slDevelopers.Add("Araan Sunn", "03");
             slDevelopers.Add("mrcue", "03");
             slDevelopers.Add("Collin Grady", "03");
             slDevelopers.Add("Grauw", "03");
@@ -52,6 +53,7 @@ namespace EVEMon
 
             slDevelopers.Add("Adam Butt", "05");
             slDevelopers.Add("bugusnot", "05");
+            slDevelopers.Add("Candle","05");
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("Dariana", "05");
             slDevelopers.Add("exi", "05");
@@ -67,12 +69,15 @@ namespace EVEMon
             slDevelopers.Add("jdread", "05");
             slDevelopers.Add("Kw4h", "05");
             slDevelopers.Add("Lexiica", "05");
+            slDevelopers.Add("Maximilian Kernbach", "05");
             slDevelopers.Add("Michayel Lyon", "05");
             slDevelopers.Add("mintoko", "05");
+            slDevelopers.Add("Namistai", "05");
             slDevelopers.Add("Nascent Nimbus", "05");
             slDevelopers.Add("NetMage", "05");
             slDevelopers.Add("Nilyen", "05");
             slDevelopers.Add("Nimrel", "05");
+            slDevelopers.Add("PeteWilson", "05");
             slDevelopers.Add("Phoenix Flames", "05");
             slDevelopers.Add("phorge", "05");
             slDevelopers.Add("Richard Slater", "05");
