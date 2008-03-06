@@ -383,8 +383,7 @@ namespace EVEMon.Common
                 wr.Method = wrs.Method;
                 wr.ContentType = "application/x-www-form-urlencoded";
                 wr.ContentLength = wrs.PostData.Length;
-
-
+                wr.ServicePoint.Expect100Continue = false;
             }
             else
             {
