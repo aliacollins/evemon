@@ -1440,10 +1440,21 @@ namespace EVEMon
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
         }
 
+        private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            CharacterMonitor cm = GetCurrentCharacter();
+            if (cm == null)
+                copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = false;
+            else
+                copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = true;
+                        
+        }
+
          private void copySkillsToClipboardBBFormatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
-            cm.CopyBBCodeToClipBoard();
+            if (cm != null)
+                cm.CopyBBCodeToClipBoard();
         }
 
         /// <summary>
@@ -1515,6 +1526,7 @@ namespace EVEMon
 
     }
 }
+
 
 
 
