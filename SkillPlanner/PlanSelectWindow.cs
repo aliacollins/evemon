@@ -456,6 +456,10 @@ namespace EVEMon.SkillPlanner
                 planName = "the selected plans";
                 title += "s";
             }
+            else if (lbPlanList.SelectedItems.Count == 0)
+            {
+                return;
+            }
             else
             {
                 planName = "\"" + lbPlanList.SelectedItems[0].Text + "\"";
