@@ -11,7 +11,7 @@ using System.Collections;
 
 namespace EVEMon
 {
-    public partial class SkillsPieChart : Form
+    public partial class SkillsPieChart : EVEMonForm
     {
         private Settings m_settings;
         public string active_character;
@@ -242,6 +242,8 @@ namespace EVEMon
 
         private void SkillsPieChart_Load(object sender, EventArgs e)
         {
+            RememberPositionKey = "SkillsPieChart";
+
             // Init Plans Combox Box                        
             foreach (string plan in m_settings.GetPlansForCharacter(plan_key))
             {
