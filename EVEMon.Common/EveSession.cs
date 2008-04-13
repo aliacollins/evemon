@@ -547,39 +547,6 @@ namespace EVEMon.Common
             return scs;
         }
 
-        public static void UpdateIneveAsync(CharacterInfo info)
-        {
-
-            if (info != null)
-            {
-                ThreadPool.QueueUserWorkItem(UpdateIneve, info.Name);
-            }
-        }
-
-        /// <summary>
-        /// Uploads the character to ineve.  Relies on the local xml cache.  Should only be called asynchronously.
-        /// </summary>
-        /// <param name="charName">Name of the char as an object.</param>
-        public static void UpdateIneve(object charName)
-        {
-            lock (LocalXmlCache.Instance)
-            {
-                string character = charName as string;
-                WebClient client = new WebClient();
-                byte[] bytes = null;
-                try
-                {
-                    bytes = client.UploadFile("http://ineve.net/skills/evemon_upload.php", LocalXmlCache.Instance[character].FullName);
-                }
-                catch (WebException)
-                {
-                    //just fail and trust that we'll try again next time.
-                    return;
-                }
-                string response = Encoding.UTF8.GetString(bytes);
-            }
-        }
-
         private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc, int charId)
         {
             XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));

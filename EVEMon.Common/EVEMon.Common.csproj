@@ -82,6 +82,7 @@
     <Compile Include="EveImagePopUp.Designer.cs">
       <DependentUpon>EveImagePopUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="InEveNetUpdater.cs" />
     <Compile Include="Printing\PrintOptionsDlg.cs">
       <SubType>Form</SubType>
     </Compile>
