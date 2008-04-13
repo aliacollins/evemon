@@ -32,6 +32,7 @@ namespace EVEMon.Common
         private Point printPoint = new Point();
         private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
         private DateTime printCurDt = DateTime.Now;
+        private DateTime printStartTime = DateTime.Now;
         PlanTextOptions m_pto;
 
         [XmlIgnore]
@@ -1803,6 +1804,7 @@ namespace EVEMon.Common
                 printPoint = new Point();
                 printTotalTrainingTime = TimeSpan.Zero;
                 printCurDt = DateTime.Now;
+                printStartTime = DateTime.Now;
 
                 pd.Document = doc;
                 pd.ShowDialog();
@@ -1933,6 +1935,11 @@ namespace EVEMon.Common
                     entryToPrint = num;
                     e.HasMorePages = true;
                     return;
+                }
+                else
+                {
+                    entryToPrint = 0;
+                    printCurDt = printStartTime;
                 }
             }
 
