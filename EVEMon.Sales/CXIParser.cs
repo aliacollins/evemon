@@ -9,25 +9,26 @@ namespace EVEMon.Sales
     [DefaultMineralParser("cxi")]
     public class CXIParser : IMineralParser
     {
-
         private static Regex mineralTokenizer =
-            new Regex(@"\|(?<name>.+?)\=(?<price>.+?)\|",
-                      RegexOptions.Compiled);
+            new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
+              RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline
+                | RegexOptions.Multiline
+                | RegexOptions.IgnoreCase);
 
         #region IMineralParser Members
         public string Title
         {
-            get { return "Complexion Industries"; }
+            get { return "CompleXion Industries"; }
         }
 
         public string CourtesyUrl
         {
-            get { return "http://www.fallenreality.net/cxi/"; }
+            get { return "http://www.supreme-eve.com/cxi/wiki/"; }
         }
 
         public string CourtesyText
         {
-            get { return "Complexion Industries"; }
+            get { return "CompleXion Industries"; }
         }
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
@@ -35,7 +36,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://cxi-minerals.fallenreality.net/cxi-eve-mon-prices.txt");
+                content = EVEMonWebRequest.GetUrlString("http://www.c-l-o-t.com/cxi/orecalc/evemon.php");
             }
             catch (EVEMonNetworkException ne)
             {

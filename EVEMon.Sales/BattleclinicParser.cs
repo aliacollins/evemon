@@ -37,7 +37,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://eve.battleclinic.com/eve_online/market.php?feed=xml");
+                content = EVEMonWebRequest.GetUrlString("http://www.battleclinic.com/eve_online/market.php?feed=xml");
             }
             catch (EVEMonNetworkException ne)
             {

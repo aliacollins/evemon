@@ -38,7 +38,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://eve-central.com/home/marketstat_xml.html?evemon=1");
+                content = EVEMonWebRequest.GetUrlString("http://eve-central.com/api/evemon ");
             }
             catch (EVEMonNetworkException ne)
             {
