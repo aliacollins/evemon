@@ -34,13 +34,6 @@ namespace EVEMon.SkillPlanner
             this.lblShip = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.persistentSplitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
-            this.lvLoadouts = new System.Windows.Forms.ListView();
-            this.colName = new System.Windows.Forms.ColumnHeader();
-            this.colAuthor = new System.Windows.Forms.ColumnHeader();
-            this.colRating = new System.Windows.Forms.ColumnHeader();
-            this.colDate = new System.Windows.Forms.ColumnHeader();
-            this.tvLoadout = new System.Windows.Forms.TreeView();
             this.lbDate = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.lblForum = new System.Windows.Forms.LinkLabel();
@@ -58,12 +51,19 @@ namespace EVEMon.SkillPlanner
             this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.persistentSplitContainer1 = new EVEMon.SkillPlanner.PersistentSplitContainer();
+            this.lvLoadouts = new System.Windows.Forms.ListView();
+            this.colName = new System.Windows.Forms.ColumnHeader();
+            this.colAuthor = new System.Windows.Forms.ColumnHeader();
+            this.colRating = new System.Windows.Forms.ColumnHeader();
+            this.colDate = new System.Windows.Forms.ColumnHeader();
+            this.tvLoadout = new System.Windows.Forms.TreeView();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).BeginInit();
+            this.cmNode.SuspendLayout();
             this.persistentSplitContainer1.Panel1.SuspendLayout();
             this.persistentSplitContainer1.Panel2.SuspendLayout();
             this.persistentSplitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).BeginInit();
-            this.cmNode.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblShip
@@ -97,76 +97,6 @@ namespace EVEMon.SkillPlanner
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(716, 342);
             this.panel1.TabIndex = 6;
-            // 
-            // persistentSplitContainer1
-            // 
-            this.persistentSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.persistentSplitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.persistentSplitContainer1.Name = "persistentSplitContainer1";
-            // 
-            // persistentSplitContainer1.Panel1
-            // 
-            this.persistentSplitContainer1.Panel1.Controls.Add(this.lvLoadouts);
-            this.persistentSplitContainer1.Panel1MinSize = 350;
-            // 
-            // persistentSplitContainer1.Panel2
-            // 
-            this.persistentSplitContainer1.Panel2.Controls.Add(this.tvLoadout);
-            this.persistentSplitContainer1.RememberDistanceKey = null;
-            this.persistentSplitContainer1.Size = new System.Drawing.Size(716, 342);
-            this.persistentSplitContainer1.SplitterDistance = 373;
-            this.persistentSplitContainer1.TabIndex = 5;
-            // 
-            // lvLoadouts
-            // 
-            this.lvLoadouts.AllowColumnReorder = true;
-            this.lvLoadouts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colName,
-            this.colAuthor,
-            this.colRating,
-            this.colDate});
-            this.lvLoadouts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvLoadouts.FullRowSelect = true;
-            this.lvLoadouts.Location = new System.Drawing.Point(0, 0);
-            this.lvLoadouts.MinimumSize = new System.Drawing.Size(300, 190);
-            this.lvLoadouts.Name = "lvLoadouts";
-            this.lvLoadouts.Size = new System.Drawing.Size(373, 342);
-            this.lvLoadouts.TabIndex = 0;
-            this.lvLoadouts.UseCompatibleStateImageBehavior = false;
-            this.lvLoadouts.View = System.Windows.Forms.View.Details;
-            this.lvLoadouts.DoubleClick += new System.EventHandler(this.lvLoadouts_DoubleClick);
-            this.lvLoadouts.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvLoadouts_ColumnClick);
-            this.lvLoadouts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvLoadouts_ItemSelectionChanged);
-            // 
-            // colName
-            // 
-            this.colName.Text = "Name";
-            this.colName.Width = 153;
-            // 
-            // colAuthor
-            // 
-            this.colAuthor.Text = "Author";
-            this.colAuthor.Width = 68;
-            // 
-            // colRating
-            // 
-            this.colRating.Text = "Rating";
-            this.colRating.Width = 56;
-            // 
-            // colDate
-            // 
-            this.colDate.Text = "Date";
-            this.colDate.Width = 90;
-            // 
-            // tvLoadout
-            // 
-            this.tvLoadout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvLoadout.Location = new System.Drawing.Point(0, 0);
-            this.tvLoadout.Name = "tvLoadout";
-            this.tvLoadout.Size = new System.Drawing.Size(339, 342);
-            this.tvLoadout.TabIndex = 3;
-            this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
-            this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
             // lbDate
             // 
@@ -262,6 +192,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lblPlanned
             // 
+            this.lblPlanned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPlanned.AutoSize = true;
             this.lblPlanned.Location = new System.Drawing.Point(307, 481);
             this.lblPlanned.Name = "lblPlanned";
@@ -325,6 +256,76 @@ namespace EVEMon.SkillPlanner
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnOpen_Click);
             // 
+            // persistentSplitContainer1
+            // 
+            this.persistentSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.persistentSplitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.persistentSplitContainer1.Name = "persistentSplitContainer1";
+            // 
+            // persistentSplitContainer1.Panel1
+            // 
+            this.persistentSplitContainer1.Panel1.Controls.Add(this.lvLoadouts);
+            this.persistentSplitContainer1.Panel1MinSize = 350;
+            // 
+            // persistentSplitContainer1.Panel2
+            // 
+            this.persistentSplitContainer1.Panel2.Controls.Add(this.tvLoadout);
+            this.persistentSplitContainer1.RememberDistanceKey = null;
+            this.persistentSplitContainer1.Size = new System.Drawing.Size(716, 342);
+            this.persistentSplitContainer1.SplitterDistance = 373;
+            this.persistentSplitContainer1.TabIndex = 5;
+            // 
+            // lvLoadouts
+            // 
+            this.lvLoadouts.AllowColumnReorder = true;
+            this.lvLoadouts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colName,
+            this.colAuthor,
+            this.colRating,
+            this.colDate});
+            this.lvLoadouts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvLoadouts.FullRowSelect = true;
+            this.lvLoadouts.Location = new System.Drawing.Point(0, 0);
+            this.lvLoadouts.MinimumSize = new System.Drawing.Size(300, 190);
+            this.lvLoadouts.Name = "lvLoadouts";
+            this.lvLoadouts.Size = new System.Drawing.Size(373, 342);
+            this.lvLoadouts.TabIndex = 0;
+            this.lvLoadouts.UseCompatibleStateImageBehavior = false;
+            this.lvLoadouts.View = System.Windows.Forms.View.Details;
+            this.lvLoadouts.DoubleClick += new System.EventHandler(this.lvLoadouts_DoubleClick);
+            this.lvLoadouts.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvLoadouts_ColumnClick);
+            this.lvLoadouts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvLoadouts_ItemSelectionChanged);
+            // 
+            // colName
+            // 
+            this.colName.Text = "Name";
+            this.colName.Width = 153;
+            // 
+            // colAuthor
+            // 
+            this.colAuthor.Text = "Author";
+            this.colAuthor.Width = 68;
+            // 
+            // colRating
+            // 
+            this.colRating.Text = "Rating";
+            this.colRating.Width = 56;
+            // 
+            // colDate
+            // 
+            this.colDate.Text = "Date";
+            this.colDate.Width = 90;
+            // 
+            // tvLoadout
+            // 
+            this.tvLoadout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvLoadout.Location = new System.Drawing.Point(0, 0);
+            this.tvLoadout.Name = "tvLoadout";
+            this.tvLoadout.Size = new System.Drawing.Size(339, 342);
+            this.tvLoadout.TabIndex = 3;
+            this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
+            this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
+            // 
             // LoadoutSelect
             // 
             this.ClientSize = new System.Drawing.Size(728, 506);
@@ -351,14 +352,14 @@ namespace EVEMon.SkillPlanner
             this.Name = "LoadoutSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Battleclinic Loadout Selection";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).EndInit();
+            this.cmNode.ResumeLayout(false);
             this.persistentSplitContainer1.Panel1.ResumeLayout(false);
             this.persistentSplitContainer1.Panel2.ResumeLayout(false);
             this.persistentSplitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).EndInit();
-            this.cmNode.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
