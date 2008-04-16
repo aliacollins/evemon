@@ -238,6 +238,13 @@ namespace EVEMon
 
             //skillPieChartControl.CopyDataToDrawVars();
             skillPieChartControl.OrderSlices(m_settings.SkillPieChartSortBySize);
+
+            skillPieChartControl.AngleChange += new EventHandler(skillPieChartControl_AngleChange);
+        }
+
+        void skillPieChartControl_AngleChange(object sender, EventArgs e)
+        {
+            pieAngle.Value = (decimal) (e as AngleChangeEventArgs).NewAngle;
         }
 
         private void SkillsPieChart_Load(object sender, EventArgs e)

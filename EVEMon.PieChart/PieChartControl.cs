@@ -209,10 +209,21 @@ namespace EVEMon.PieChart
         {
             set
             {
-                m_initialAngle = value;
+                float newAngle = value;
+
+                if(newAngle > 360.0f)
+                    newAngle -= 360.0f;
+                if(newAngle < 0.0f)
+                    newAngle += 360.0f;
+
+                OnAngleChange(new AngleChangeEventArgs(m_initialAngle, newAngle));
+
+                m_initialAngle = newAngle;
                 Invalidate();
             }
         }
+
+        protected bool mouseDown = false;
 
         /// <summary>
         ///   Handles <c>OnPaint</c> event.
@@ -288,26 +299,28 @@ namespace EVEMon.PieChart
             m_highlightedIndex = -1;
             Refresh();
         }
-        
-        
-      /// <summary>
-      ///   Handles <c>MouseDown</c> event to increase or decrease the
-      ///      inital angle of the pie chart.
-      /// </summary>
-      /// <param name="e"></param>
-      protected override void OnMouseDown(MouseEventArgs e)
-      {
-          base.OnMouseDown(e);
 
-          if (e.Button == MouseButtons.Left)
-          {
-              this.InitialAngle = m_initialAngle - 10;
-          }
-          else if (e.Button == MouseButtons.Right)
-          {
-              this.InitialAngle = m_initialAngle + 10;
-          }
-      }
+        /// <summary>
+        /// Handles <c>MouseDown</c> event
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            this.mouseDown = true;
+        }
+
+        /// <summary>
+        /// Handles <c>MouseUp</c> event
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            this.mouseDown = false;
+        }
 
 
         /// <summary>
@@ -321,29 +334,39 @@ namespace EVEMon.PieChart
             if (m_pieChart != null && m_values != null && m_values.Length > 0)
             {
                 if (e.X == m_lastX && e.Y == m_lastY) return;
-                m_lastX = e.X;
-                m_lastY = e.Y;
-                int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
-                if (index != m_highlightedIndex)
+
+                if (this.mouseDown)
                 {
-                    m_highlightedIndex = index;
-                    Refresh();
-                }
-                if (m_highlightedIndex != -1)
-                {
-                    if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex || m_drawToolTipTexts[m_highlightedIndex].Length == 0)
-                    {
-                        m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
-                    }
-                    else
-                    {
-                        m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
-                    }
+                    this.InitialAngle = m_initialAngle - (e.X - m_lastX);
                 }
                 else
                 {
-                    m_toolTip.RemoveAll();
+                    int index = m_pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
+
+                    if (index != m_highlightedIndex)
+                    {
+                        m_highlightedIndex = index;
+                        Refresh();
+                    }
+                    if (m_highlightedIndex != -1)
+                    {
+                        if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex || m_drawToolTipTexts[m_highlightedIndex].Length == 0)
+                        {
+                            m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString());
+                        }
+                        else
+                        {
+                            m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
+                        }
+                    }
+                    else
+                    {
+                        m_toolTip.RemoveAll();
+                    }
                 }
+
+                m_lastX = e.X;
+                m_lastY = e.Y;
             }
         }
 
@@ -396,16 +419,31 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
+        /// Event for when the graph angle changes
+        /// </summary>
+        public event EventHandler AngleChange;
+
+        /// <summary>
+        /// Event for when the graph angle changes
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnAngleChange(AngleChangeEventArgs e)
+        {
+            if(AngleChange != null)
+                AngleChange(this, e);
+        }
+
+        /// <summary>
         /// Will copy the original data to the vars used for drawing
         /// The original is needed to use for ordering
         /// </summary>
         public void CopyDataToDrawVars()
         {
-            this.m_drawValues = (decimal[]) this.m_values.Clone();
-            this.m_drawColors = (Color[]) this.m_colors.Clone();
-            this.m_drawRelativeSliceDisplacements = (float[]) this.m_relativeSliceDisplacements.Clone();
-            this.m_drawToolTipTexts = (string[]) this.m_toolTipTexts.Clone();
-            this.m_drawTexts = (string[]) this.m_texts.Clone();
+            this.m_drawValues = (decimal[])this.m_values.Clone();
+            this.m_drawColors = (Color[])this.m_colors.Clone();
+            this.m_drawRelativeSliceDisplacements = (float[])this.m_relativeSliceDisplacements.Clone();
+            this.m_drawToolTipTexts = (string[])this.m_toolTipTexts.Clone();
+            this.m_drawTexts = (string[])this.m_texts.Clone();
 
 
             // fill the sort order to default:
@@ -425,11 +463,11 @@ namespace EVEMon.PieChart
 
                 // take a copy of the original values
                 // then use it to do the calculations
-                decimal[] values = (decimal[]) this.m_values.Clone();
-                Color[] colours = (Color[]) this.m_colors.Clone();
-                float[] displacements = (float[]) this.m_relativeSliceDisplacements.Clone();
-                string[] tooltips = (string[]) this.m_toolTipTexts.Clone();
-                string[] texts = (string[]) this.m_texts.Clone();
+                decimal[] values = (decimal[])this.m_values.Clone();
+                Color[] colours = (Color[])this.m_colors.Clone();
+                float[] displacements = (float[])this.m_relativeSliceDisplacements.Clone();
+                string[] tooltips = (string[])this.m_toolTipTexts.Clone();
+                string[] texts = (string[])this.m_texts.Clone();
 
                 // reordering the slices
                 for (int num = 0; num < values.Length; num++)
@@ -493,7 +531,7 @@ namespace EVEMon.PieChart
 
         private int m_lastX = -1;
         private int m_lastY = -1;
-        
+
         // These are used for the actual drawing. They are modified depending
         // on wether sorting by size is on or off
         private decimal[] m_drawValues = null;
@@ -512,4 +550,26 @@ namespace EVEMon.PieChart
         /// </summary>
         private bool m_disposed = false;
     }
+
+    public class AngleChangeEventArgs : EventArgs
+    {
+        private float oldValue, newValue;
+
+        public AngleChangeEventArgs(float oldValue, float newValue)
+        {
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+
+        public float NewAngle
+        {
+            get { return newValue; }
+        }
+
+        public float OldAngle
+        {
+            get { return oldValue; }
+        }
+    }
 }
+
