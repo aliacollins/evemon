@@ -58,7 +58,8 @@ namespace EVEMon.SkillPlanner
 
         #region Filters
         private delegate bool ItemFilter(Item i);
-        private  ItemFilter slotFilter = delegate { return true; };
+        private ItemFilter slotFilter = delegate { return true; };
+        private ItemFilter shipFittingFilter = delegate { return true; };
 
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -106,7 +107,14 @@ namespace EVEMon.SkillPlanner
 
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            m_settings.ItemSlotFilter=cbSlotFilter.SelectedIndex;
+            if (cbSlotFilter.SelectedIndex > 0)
+            {
+                //If we pick anything other than "all items", reset the ship fitting
+                //filter to prevent interference.
+                this.iffsShipFitting.reset();
+            }
+
+            m_settings.ItemSlotFilter = cbSlotFilter.SelectedIndex;
             UpdateDisplay();
         }
 
@@ -139,6 +147,65 @@ namespace EVEMon.SkillPlanner
             if (sender == cbDeadspace) m_settings.ShowDeadspaceItems = cbDeadspace.Checked;
             UpdateDisplay();
         }
+
+        private void iffsShipFitting_ItemFilterDataChanged(object sender, ItemFilteringChangedEvent e)
+        {
+            ItemFittingFilterData data = e.filterData;
+            if (data.allFilteringDisabled())
+            {
+                this.shipFittingFilter = delegate { return true; };
+            }
+            else 
+            {
+                if (!data.allSlotsSelected())
+                {
+                    //Set the slots combobox to "all items" to prevent interference
+                    this.cbSlotFilter.SelectedIndex = 0; //AllItems
+                    this.UpdateSlotFilter();
+                }
+                this.shipFittingFilter = new ShipFittingFilter(data).evaluateItem;
+            }
+            this.BuildTreeView();
+        }
+
+        /// <summary>
+        /// Wrapper class for <code>ItemFittingFilterData</code> that decorates it
+        /// with a delegate method for the item filtering.
+        /// </summary>
+        private class ShipFittingFilter
+        {
+            ItemFittingFilterData data;
+            public ShipFittingFilter(ItemFittingFilterData mydata)
+            {
+                data = mydata;
+            }
+            public bool evaluateItem(Item i)
+            {
+                bool result;
+                if (data.allSlotsSelected())
+                {
+                    //No slot filtering, so any item is valid.
+                    result = true;
+                }
+                else
+                {
+                    //Item is valid if its slot type is in the selection.
+                    result = data.highSlotSelected && i.SlotIndex == 1;
+                    result = result || (data.medSlotSelected && i.SlotIndex == 2);
+                    result = result || (data.lowSlotSelected && i.SlotIndex == 3);
+                }
+                double? cpuAvailable = null; 
+                double? gridAvailable = null; 
+
+                if (data.cpuAvailable.HasValue) cpuAvailable = Convert.ToDouble(data.cpuAvailable.Value);
+                if (data.gridAvailable.HasValue) gridAvailable = Convert.ToDouble(data.gridAvailable.Value);
+
+                //Now lets see if the item's CPU/Grid needs are within bounds
+                result = result && i.canActivate(cpuAvailable, gridAvailable);
+
+                return result;
+            }
+        }
         
         #endregion
 
@@ -157,22 +224,29 @@ namespace EVEMon.SkillPlanner
         {
             tvItems.Nodes.Clear();
             tvItems.BeginUpdate();
+            int numberOfItems = 0;
             try
             {
                 if (m_rootCategory != null)
                 {
-                    BuildSubtree(m_rootCategory, tvItems.Nodes);
+                    numberOfItems = BuildSubtree(m_rootCategory, tvItems.Nodes);
                 }
                 
             }
             finally
             {
                 tvItems.EndUpdate();
+                //If the filtered set is small enough to fit all nodes on screen, call expandAll()
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                {
+                    tvItems.ExpandAll();
+                }
             }
         }
 
-        private void BuildSubtree(ItemCategory cat, TreeNodeCollection nodeCollection)
+        private int BuildSubtree(ItemCategory cat, TreeNodeCollection nodeCollection)
         {
+            int result = 0;
             SortedDictionary<string, ItemCategory> sortedSubcats = new SortedDictionary<string, ItemCategory>();
             foreach (ItemCategory tcat in cat.Subcategories)
             {
@@ -182,7 +256,7 @@ namespace EVEMon.SkillPlanner
             {
                 TreeNode tn = new TreeNode();
                 tn.Text = tcat.Name;
-                BuildSubtree(tcat, tn.Nodes);
+                result += BuildSubtree(tcat, tn.Nodes);
                 if (tn.GetNodeCount(true) > 0)
                     nodeCollection.Add(tn);
             }
@@ -190,7 +264,10 @@ namespace EVEMon.SkillPlanner
             SortedDictionary<string, Item> sortedItems = new SortedDictionary<string, Item>();
             foreach (Item titem in cat.Items)
             {
-                if (m_filterDelegate(titem) && slotFilter(titem) && ClassFilter(titem))
+                if (m_filterDelegate(titem) 
+                    && slotFilter(titem) 
+                    && shipFittingFilter(titem)
+                    && ClassFilter(titem))
                     sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)
@@ -198,8 +275,10 @@ namespace EVEMon.SkillPlanner
                 TreeNode tn = new TreeNode();
                 tn.Text = titem.Name;
                 tn.Tag = titem;
+                result++;
                 nodeCollection.Add(tn);
             }
+            return result;
         }
         #endregion
 
@@ -215,6 +294,7 @@ namespace EVEMon.SkillPlanner
 
 
         #endregion 
+
 
         #region Events
         #endregion

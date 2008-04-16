@@ -63,6 +63,107 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        ///   Evaluates whether this item can be activated if the given CPU
+        ///   and/or PowerGrid resources are available. Either argument for this
+        ///   method can be null, which is interpreted as "no upper limit".
+        ///   If the CPU and/or Grid requirements for this item are unknown,
+        ///   the method returns false.
+        /// </summary>
+        /// <param name="cpuAvailable">The upper limit for CPU usage, or null for unlimited.</param>
+        /// <param name="gridAvailable">The upper limit for Grid usage or null for unlimited.</param>
+        /// <returns>true if both the CPU and powergrid requirements of this
+        /// item lie between 0.0d and the given bounds.</returns>
+        public bool canActivate(double? cpuAvailable, double? gridAvailable)
+        {
+            if (cpuAvailable == null && gridAvailable == null)
+            {
+                //Shortcut. There are no limits, so anything fits.
+                return true;
+            }
+            if (this.SlotIndex > 0)
+            {
+                //If we have a slot index, we're a fittable item. Now see if we can find
+                //our usage numbers.
+
+                String cpuUsage = findProperty("CPU usage", null);
+                String gridUsage = findProperty("powergrid usage", null);
+
+                double? cpuRequired = tryParseNullable(tryStripTail(cpuUsage, " tf"));
+                double? gridRequired = tryParseNullable(tryStripTail(gridUsage, " MW"));
+
+                if (cpuRequired != null || gridRequired != null)
+                {
+                    //We have information about this item, see if it fits
+                    bool fits = true;
+                    if (cpuAvailable != null)
+                    {
+                        fits = fits && cpuRequired <= cpuAvailable;
+                    }
+                    if (gridAvailable != null)
+                    {
+                        fits = fits && gridRequired <= gridAvailable;
+                    }
+                    return fits;
+                }
+            }
+            //We lack information about this item, or this item isn't fittable. 
+            //Return false as specced in the method docs.
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to strip the given tail from the end of some string.
+        /// </summary>
+        /// <param name="stripMe">The string to evaluate</param>
+        /// <param name="tail">The &quot;tail&quot; to try and remove</param>
+        /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
+        /// end in tail, stripMe-with-tail-removed otherwise.</returns>
+        private static String tryStripTail(String stripMe, String tail)
+        {
+            if (stripMe == null) return null;
+            if (tail == null) return stripMe;
+            if (stripMe.EndsWith(tail)) return stripMe.Remove(stripMe.Length - tail.Length);
+            return stripMe;
+        }
+
+        /// <summary>
+        /// Try to parse a String as a double. Returns null for any kind of
+        /// invalid input.
+        /// </summary>
+        /// <param name="parseMe">The string to try and parse.</param>
+        /// <returns>The string as double, or null if failed to parse.</returns>
+        private static double? tryParseNullable(String parseMe)
+        {
+            double? result = null;
+            double tempValue;
+            if (Double.TryParse(parseMe, out tempValue))
+                result = tempValue;
+            return result;
+        }
+
+        /// <summary>
+        /// Searches _properties for a property with the given property name and
+        /// returns its value. If the property isn't found, it returns the given
+        /// default value. If the property occurs more than once, only the first
+        /// occurance is considered.
+        /// </summary>
+        /// <param name="propertyName">The property name to look for.</param>
+        /// <param name="defaultValue">The value to return if the property isn't found.</param>
+        /// <returns>Either the value of the named property, or the given default value.</returns>
+        private String findProperty(String propertyName, String defaultValue)
+        {
+            String result = defaultValue;
+            foreach (EntityProperty prop in _properties)
+            {
+                if (prop.Name != propertyName)
+                    continue;
+                result = prop.Value;
+                break;
+            }
+            return result;
+        }
+
         public override string GetCategoryPath()
         {
             StringBuilder sb = new StringBuilder();

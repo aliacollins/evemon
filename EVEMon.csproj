@@ -229,6 +229,18 @@
     <Compile Include="SkillPlanner\EveObjectBrowserSimple.Designer.cs">
       <DependentUpon>EveObjectBrowserSimple.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\ItemFittingFilterDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ItemFittingFilterDialog.Designer.cs">
+      <DependentUpon>ItemFittingFilterDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\ItemFittingFilterSummary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\ItemFittingFilterSummary.Designer.cs">
+      <DependentUpon>ItemFittingFilterSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\ItemSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -549,6 +561,14 @@
     <EmbeddedResource Include="SkillPlanner\EveObjectSelectControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ItemFittingFilterDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemFittingFilterDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\ItemFittingFilterSummary.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemFittingFilterSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ItemSelectControl.resx">
       <DependentUpon>ItemSelectControl.cs</DependentUpon>
