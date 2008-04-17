@@ -259,6 +259,63 @@ namespace EVEMon.IGBService
                 sw.WriteLine("<hr><a href=\"/\">Back</a>");
                 sw.WriteLine("</body></html>");
             }
+            else if (requestUrl.StartsWith("/skills/bytime"))
+            {
+                sw.WriteLine("<html><head><title>Skills</title></head><body>");
+                sw.WriteLine("<h1>Skills: By training time</h1>");
+                sw.WriteLine(string.Format("<p>Skills for {0}</p>", HttpUtility.HtmlEncode(headers["eve.charname"])));            
+
+                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve.charname"]);
+                List<Skill> allskills = new List<Skill>();
+                SerializableCharacterSheet charSheet = Program.Settings.GetCharacterSheet(headers["eve.charname"]);
+
+                foreach (SerializableSkillGroup ssg in charSheet.SkillGroups)
+                    foreach (SerializableSkill ss in ssg.Skills)
+                    {
+                        Skill s = ci.SkillGroups[ssg.Name][ss.Name];
+                        if (s.Level < 5)
+                            allskills.Add(s);
+                    }
+
+                allskills.Sort(delegate(Skill x, Skill y)
+                {
+                    return x.GetTrainingTimeToNextLevel().CompareTo(y.GetTrainingTimeToNextLevel());
+                });
+
+                sw.WriteLine("<table>");
+
+                sw.Write("<tr><td colspan=\"2\" width=\"265\"><b>Skill</b></td>" +
+                    "<td width=\"100\"><b>Next Level</b><\td><td><b>Training Time</b></td></tr>");
+
+                foreach (Skill s in allskills)
+                {
+                    sw.Write("<tr>");
+
+                    sw.Write("<td width=\"15\">");
+                    sw.Write(string.Format("<b>{0}.</b>", allskills.IndexOf(s)+1));
+                    sw.Write("</td>");
+
+                    sw.Write("<td width=\"250\">");
+                    sw.Write(string.Format("<b><a href=\"showinfo:{0}\">{1}</a></b>", s.Id, s.Name));
+                    sw.Write("</td>");
+
+                    sw.Write("<td width=\"100\">");
+                    sw.Write(string.Format("<b>{0} -&gt; {1}</b>", s.RomanLevel, Skill.GetRomanForInt(s.Level+1)));
+                    sw.Write("</td>");
+
+                    sw.Write("<td>");
+                    sw.Write(Skill.TimeSpanToDescriptiveText(s.GetTrainingTimeToNextLevel(), 
+                                                        DescriptiveTextOptions.FullText | 
+                                                        DescriptiveTextOptions.IncludeCommas | 
+                                                        DescriptiveTextOptions.SpaceText));
+                    sw.Write("</td>");
+                    sw.Write("</tr>");
+                }
+                sw.WriteLine("</table>");
+
+                sw.WriteLine("<hr><a href=\"/\">Back</a>");
+                sw.WriteLine("</body></html>");
+            }
             else
             {
                 sw.WriteLine(
@@ -273,6 +330,8 @@ namespace EVEMon.IGBService
                                                HttpUtility.HtmlEncode(s)));
                 }
 
+                sw.WriteLine("<br><h2>Your Skills:</h2>");
+                sw.WriteLine("<a href=\"/skills/bytime\">By training time</a>");
                 sw.WriteLine("</body></html>");
             }
         }

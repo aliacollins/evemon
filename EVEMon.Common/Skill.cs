@@ -481,6 +481,28 @@ namespace EVEMon.Common
             return this.GetTimeSpanForPoints(pointsNeeded, scratchpad, includeImplants);
         }
 
+        /// <summary>
+        /// Calculate the time to train this skill to the next level including prerequisites.
+        /// </summary>
+        /// <returns>Time it will take</returns>
+        public TimeSpan GetTrainingTimeToNextLevel()
+        {
+            return GetTrainingTimeToNextLevel(true);
+        }
+
+        /// <summary>
+        /// Calculate the time to train this skill to the next level.
+        /// </summary>
+        /// <param name="includePrerequisites">Include prerequisites</param>
+        /// <returns>Time it will take</returns>
+        public TimeSpan GetTrainingTimeToNextLevel(bool includePrerequisites)
+        {
+            if (Level == 5)
+                return TimeSpan.MaxValue;
+
+            return GetPrerequisiteTime() + GetTrainingTimeToLevel(Level + 1);
+        }
+
         public int GetPointsForLevelOnly(int level, bool includeCurrentSP)
         {
             int startSp = GetPointsRequiredForLevel(level - 1);
