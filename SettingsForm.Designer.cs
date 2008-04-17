@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -210,6 +210,26 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.gbExternalCalendar = new System.Windows.Forms.GroupBox();
+            this.cbUseExternalCalendar = new System.Windows.Forms.CheckBox();
+            this.tbReminder = new System.Windows.Forms.TextBox();
+            this.cbSetReminder = new System.Windows.Forms.CheckBox();
+            this.dtpLateReminder = new System.Windows.Forms.DateTimePicker();
+            this.lblLateReminder = new System.Windows.Forms.Label();
+            this.dtpEarlyReminder = new System.Windows.Forms.DateTimePicker();
+            this.lblEarlyReminder = new System.Windows.Forms.Label();
+            this.cbUseAlterateReminder = new System.Windows.Forms.CheckBox();
+            this.gbGoogle = new System.Windows.Forms.GroupBox();
+            this.cbGoogleReminder = new System.Windows.Forms.ComboBox();
+            this.lblReminder = new System.Windows.Forms.Label();
+            this.lblURI = new System.Windows.Forms.Label();
+            this.tbGoogleURI = new System.Windows.Forms.TextBox();
+            this.tbGooglePassword = new System.Windows.Forms.TextBox();
+            this.tbGoogleEmail = new System.Windows.Forms.TextBox();
+            this.lblPassword = new System.Windows.Forms.Label();
+            this.lblGoogleEmail = new System.Windows.Forms.Label();
+            this.rbGoogle = new System.Windows.Forms.RadioButton();
+            this.rbMSOutlook = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -268,6 +288,8 @@ namespace EVEMon
             this.tabCalendar.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.gbExternalCalendar.SuspendLayout();
+            this.gbGoogle.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -1235,26 +1257,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode10.Name = "Node1";
-            treeNode10.Text = "Node1";
-            treeNode11.Name = "Node2";
-            treeNode11.Text = "Node2";
-            treeNode12.Name = "Node3";
-            treeNode12.Text = "Node3";
-            treeNode13.Name = "Node4";
-            treeNode13.Text = "Node4";
-            treeNode14.Name = "Node5";
-            treeNode14.Text = "Node5";
-            treeNode15.Name = "Node6";
-            treeNode15.Text = "Node6";
-            treeNode16.Name = "Node7";
-            treeNode16.Text = "Node7";
-            treeNode17.Name = "Node8";
-            treeNode17.Text = "Node8";
-            treeNode18.Name = "Node0";
-            treeNode18.Text = "Node0";
+            treeNode19.Name = "Node1";
+            treeNode19.Text = "Node1";
+            treeNode20.Name = "Node2";
+            treeNode20.Text = "Node2";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "Node3";
+            treeNode22.Name = "Node4";
+            treeNode22.Text = "Node4";
+            treeNode23.Name = "Node5";
+            treeNode23.Text = "Node5";
+            treeNode24.Name = "Node6";
+            treeNode24.Text = "Node6";
+            treeNode25.Name = "Node7";
+            treeNode25.Text = "Node7";
+            treeNode26.Name = "Node8";
+            treeNode26.Text = "Node8";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode18});
+            treeNode27});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -2023,6 +2045,7 @@ namespace EVEMon
             // 
             // tabCalendar
             // 
+            this.tabCalendar.Controls.Add(this.gbExternalCalendar);
             this.tabCalendar.Controls.Add(this.groupBox14);
             this.tabCalendar.Location = new System.Drawing.Point(4, 22);
             this.tabCalendar.Name = "tabCalendar";
@@ -2212,6 +2235,223 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // gbExternalCalendar
+            // 
+            this.gbExternalCalendar.Controls.Add(this.cbUseExternalCalendar);
+            this.gbExternalCalendar.Controls.Add(this.tbReminder);
+            this.gbExternalCalendar.Controls.Add(this.cbSetReminder);
+            this.gbExternalCalendar.Controls.Add(this.dtpLateReminder);
+            this.gbExternalCalendar.Controls.Add(this.lblLateReminder);
+            this.gbExternalCalendar.Controls.Add(this.dtpEarlyReminder);
+            this.gbExternalCalendar.Controls.Add(this.lblEarlyReminder);
+            this.gbExternalCalendar.Controls.Add(this.cbUseAlterateReminder);
+            this.gbExternalCalendar.Controls.Add(this.gbGoogle);
+            this.gbExternalCalendar.Controls.Add(this.rbGoogle);
+            this.gbExternalCalendar.Controls.Add(this.rbMSOutlook);
+            this.gbExternalCalendar.Location = new System.Drawing.Point(3, 122);
+            this.gbExternalCalendar.Name = "gbExternalCalendar";
+            this.gbExternalCalendar.Size = new System.Drawing.Size(377, 287);
+            this.gbExternalCalendar.TabIndex = 3;
+            this.gbExternalCalendar.TabStop = false;
+            this.gbExternalCalendar.Text = "External Calendar";
+            // 
+            // cbUseExternalCalendar
+            // 
+            this.cbUseExternalCalendar.AutoSize = true;
+            this.cbUseExternalCalendar.Location = new System.Drawing.Point(6, 20);
+            this.cbUseExternalCalendar.Name = "cbUseExternalCalendar";
+            this.cbUseExternalCalendar.Size = new System.Drawing.Size(133, 17);
+            this.cbUseExternalCalendar.TabIndex = 0;
+            this.cbUseExternalCalendar.Text = "Use External Calendar";
+            this.cbUseExternalCalendar.UseVisualStyleBackColor = true;
+            this.cbUseExternalCalendar.Click += new System.EventHandler(this.cbUseExternalCalendar_CheckedChanged);
+            // 
+            // tbReminder
+            // 
+            this.tbReminder.Location = new System.Drawing.Point(107, 210);
+            this.tbReminder.Name = "tbReminder";
+            this.tbReminder.Size = new System.Drawing.Size(35, 21);
+            this.tbReminder.TabIndex = 7;
+            this.tbReminder.Text = "5";
+            // 
+            // cbSetReminder
+            // 
+            this.cbSetReminder.AutoSize = true;
+            this.cbSetReminder.Checked = true;
+            this.cbSetReminder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSetReminder.Location = new System.Drawing.Point(17, 212);
+            this.cbSetReminder.Name = "cbSetReminder";
+            this.cbSetReminder.Size = new System.Drawing.Size(71, 17);
+            this.cbSetReminder.TabIndex = 6;
+            this.cbSetReminder.Text = "Reminder";
+            this.cbSetReminder.UseVisualStyleBackColor = true;
+            // 
+            // dtpLateReminder
+            // 
+            this.dtpLateReminder.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpLateReminder.Location = new System.Drawing.Point(287, 260);
+            this.dtpLateReminder.Name = "dtpLateReminder";
+            this.dtpLateReminder.ShowUpDown = true;
+            this.dtpLateReminder.Size = new System.Drawing.Size(72, 21);
+            this.dtpLateReminder.TabIndex = 10;
+            this.dtpLateReminder.Value = new System.DateTime(2007, 9, 21, 0, 0, 0, 0);
+            // 
+            // lblLateReminder
+            // 
+            this.lblLateReminder.AutoSize = true;
+            this.lblLateReminder.Location = new System.Drawing.Point(201, 264);
+            this.lblLateReminder.Name = "lblLateReminder";
+            this.lblLateReminder.Size = new System.Drawing.Size(80, 13);
+            this.lblLateReminder.TabIndex = 6;
+            this.lblLateReminder.Text = "Late Reminder:";
+            // 
+            // dtpEarlyReminder
+            // 
+            this.dtpEarlyReminder.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpEarlyReminder.Location = new System.Drawing.Point(107, 260);
+            this.dtpEarlyReminder.Name = "dtpEarlyReminder";
+            this.dtpEarlyReminder.ShowUpDown = true;
+            this.dtpEarlyReminder.Size = new System.Drawing.Size(70, 21);
+            this.dtpEarlyReminder.TabIndex = 9;
+            this.dtpEarlyReminder.Value = new System.DateTime(2007, 9, 21, 0, 0, 0, 0);
+            // 
+            // lblEarlyReminder
+            // 
+            this.lblEarlyReminder.AutoSize = true;
+            this.lblEarlyReminder.Location = new System.Drawing.Point(16, 264);
+            this.lblEarlyReminder.Name = "lblEarlyReminder";
+            this.lblEarlyReminder.Size = new System.Drawing.Size(83, 13);
+            this.lblEarlyReminder.TabIndex = 4;
+            this.lblEarlyReminder.Text = "Early Reminder:";
+            // 
+            // cbUseAlterateReminder
+            // 
+            this.cbUseAlterateReminder.AutoSize = true;
+            this.cbUseAlterateReminder.Checked = true;
+            this.cbUseAlterateReminder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbUseAlterateReminder.Location = new System.Drawing.Point(17, 237);
+            this.cbUseAlterateReminder.Name = "cbUseAlterateReminder";
+            this.cbUseAlterateReminder.Size = new System.Drawing.Size(136, 17);
+            this.cbUseAlterateReminder.TabIndex = 8;
+            this.cbUseAlterateReminder.Text = "Use alternate reminder";
+            this.cbUseAlterateReminder.UseVisualStyleBackColor = true;
+            // 
+            // gbGoogle
+            // 
+            this.gbGoogle.Controls.Add(this.cbGoogleReminder);
+            this.gbGoogle.Controls.Add(this.lblReminder);
+            this.gbGoogle.Controls.Add(this.lblURI);
+            this.gbGoogle.Controls.Add(this.tbGoogleURI);
+            this.gbGoogle.Controls.Add(this.tbGooglePassword);
+            this.gbGoogle.Controls.Add(this.tbGoogleEmail);
+            this.gbGoogle.Controls.Add(this.lblPassword);
+            this.gbGoogle.Controls.Add(this.lblGoogleEmail);
+            this.gbGoogle.Enabled = false;
+            this.gbGoogle.Location = new System.Drawing.Point(8, 67);
+            this.gbGoogle.Name = "gbGoogle";
+            this.gbGoogle.Size = new System.Drawing.Size(359, 137);
+            this.gbGoogle.TabIndex = 3;
+            this.gbGoogle.TabStop = false;
+            this.gbGoogle.Text = "Google Information";
+            // 
+            // cbGoogleReminder
+            // 
+            this.cbGoogleReminder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGoogleReminder.FormattingEnabled = true;
+            this.cbGoogleReminder.Items.AddRange(new object[] {
+            "Alert",
+            "All",
+            "Email",
+            "None",
+            "SMS",
+            "Unspecified"});
+            this.cbGoogleReminder.Location = new System.Drawing.Point(83, 104);
+            this.cbGoogleReminder.Name = "cbGoogleReminder";
+            this.cbGoogleReminder.Size = new System.Drawing.Size(263, 21);
+            this.cbGoogleReminder.TabIndex = 7;
+            // 
+            // lblReminder
+            // 
+            this.lblReminder.AutoSize = true;
+            this.lblReminder.Location = new System.Drawing.Point(6, 107);
+            this.lblReminder.Name = "lblReminder";
+            this.lblReminder.Size = new System.Drawing.Size(56, 13);
+            this.lblReminder.TabIndex = 6;
+            this.lblReminder.Text = "Reminder:";
+            // 
+            // lblURI
+            // 
+            this.lblURI.AutoSize = true;
+            this.lblURI.Location = new System.Drawing.Point(6, 80);
+            this.lblURI.Name = "lblURI";
+            this.lblURI.Size = new System.Drawing.Size(29, 13);
+            this.lblURI.TabIndex = 5;
+            this.lblURI.Text = "URI:";
+            // 
+            // tbGoogleURI
+            // 
+            this.tbGoogleURI.Location = new System.Drawing.Point(83, 76);
+            this.tbGoogleURI.Name = "tbGoogleURI";
+            this.tbGoogleURI.Size = new System.Drawing.Size(263, 21);
+            this.tbGoogleURI.TabIndex = 5;
+            this.tbGoogleURI.Text = "http://www.google.com/calendar/feeds/default/private/full";
+            // 
+            // tbGooglePassword
+            // 
+            this.tbGooglePassword.Location = new System.Drawing.Point(83, 49);
+            this.tbGooglePassword.Name = "tbGooglePassword";
+            this.tbGooglePassword.PasswordChar = '*';
+            this.tbGooglePassword.Size = new System.Drawing.Size(263, 21);
+            this.tbGooglePassword.TabIndex = 4;
+            // 
+            // tbGoogleEmail
+            // 
+            this.tbGoogleEmail.Location = new System.Drawing.Point(83, 21);
+            this.tbGoogleEmail.Name = "tbGoogleEmail";
+            this.tbGoogleEmail.Size = new System.Drawing.Size(263, 21);
+            this.tbGoogleEmail.TabIndex = 3;
+            // 
+            // lblPassword
+            // 
+            this.lblPassword.AutoSize = true;
+            this.lblPassword.Location = new System.Drawing.Point(6, 52);
+            this.lblPassword.Name = "lblPassword";
+            this.lblPassword.Size = new System.Drawing.Size(57, 13);
+            this.lblPassword.TabIndex = 1;
+            this.lblPassword.Text = "Password:";
+            // 
+            // lblGoogleEmail
+            // 
+            this.lblGoogleEmail.AutoSize = true;
+            this.lblGoogleEmail.Location = new System.Drawing.Point(6, 24);
+            this.lblGoogleEmail.Name = "lblGoogleEmail";
+            this.lblGoogleEmail.Size = new System.Drawing.Size(71, 13);
+            this.lblGoogleEmail.TabIndex = 0;
+            this.lblGoogleEmail.Text = "Google Email:";
+            // 
+            // rbGoogle
+            // 
+            this.rbGoogle.AutoSize = true;
+            this.rbGoogle.Location = new System.Drawing.Point(91, 43);
+            this.rbGoogle.Name = "rbGoogle";
+            this.rbGoogle.Size = new System.Drawing.Size(58, 17);
+            this.rbGoogle.TabIndex = 2;
+            this.rbGoogle.Text = "Google";
+            this.rbGoogle.UseVisualStyleBackColor = true;
+            // 
+            // rbMSOutlook
+            // 
+            this.rbMSOutlook.AutoSize = true;
+            this.rbMSOutlook.Checked = true;
+            this.rbMSOutlook.Location = new System.Drawing.Point(6, 43);
+            this.rbMSOutlook.Name = "rbMSOutlook";
+            this.rbMSOutlook.Size = new System.Drawing.Size(79, 17);
+            this.rbMSOutlook.TabIndex = 1;
+            this.rbMSOutlook.TabStop = true;
+            this.rbMSOutlook.Text = "MS Outlook";
+            this.rbMSOutlook.UseVisualStyleBackColor = true;
+            this.rbMSOutlook.Click += new System.EventHandler(this.rbMSOutlook_Click);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2331,6 +2571,10 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.gbExternalCalendar.ResumeLayout(false);
+            this.gbExternalCalendar.PerformLayout();
+            this.gbGoogle.ResumeLayout(false);
+            this.gbGoogle.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2501,5 +2745,25 @@ namespace EVEMon
         private System.Windows.Forms.Button btnConfigureTrayPopUp;
         private System.Windows.Forms.ComboBox cbTrayPopupStyle;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.GroupBox gbExternalCalendar;
+        private System.Windows.Forms.CheckBox cbUseExternalCalendar;
+        private System.Windows.Forms.TextBox tbReminder;
+        private System.Windows.Forms.CheckBox cbSetReminder;
+        private System.Windows.Forms.DateTimePicker dtpLateReminder;
+        private System.Windows.Forms.Label lblLateReminder;
+        private System.Windows.Forms.DateTimePicker dtpEarlyReminder;
+        private System.Windows.Forms.Label lblEarlyReminder;
+        private System.Windows.Forms.CheckBox cbUseAlterateReminder;
+        private System.Windows.Forms.GroupBox gbGoogle;
+        private System.Windows.Forms.ComboBox cbGoogleReminder;
+        private System.Windows.Forms.Label lblReminder;
+        private System.Windows.Forms.Label lblURI;
+        private System.Windows.Forms.TextBox tbGoogleURI;
+        private System.Windows.Forms.TextBox tbGooglePassword;
+        private System.Windows.Forms.TextBox tbGoogleEmail;
+        private System.Windows.Forms.Label lblPassword;
+        private System.Windows.Forms.Label lblGoogleEmail;
+        private System.Windows.Forms.RadioButton rbGoogle;
+        private System.Windows.Forms.RadioButton rbMSOutlook;
     }
 }

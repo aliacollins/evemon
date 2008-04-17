@@ -155,6 +155,31 @@ namespace EVEMon
             s.CalendarSingle2 = panelColorSingle2.BackColor;
             s.CalendarTextColor = panelColorText.BackColor;
 
+// #735 - Start
+            // Save External Calendar Settings
+            s.UseExternalCalendar = cbUseExternalCalendar.Checked;
+            if (rbMSOutlook.Checked)
+                s.CalendarOption = 0;  // MS Outlook
+            else
+                s.CalendarOption = 1;  // Google Calendar
+            s.GoogleEmail = tbGoogleEmail.Text;
+            s.GooglePassword = tbGooglePassword.Text;
+            s.GoogleURI = tbGoogleURI.Text;
+            s.GoogleReminder = cbGoogleReminder.SelectedIndex;
+            s.SetReminder = cbSetReminder.Checked;
+            try
+            {
+                s.ReminderMinutes = Int32.Parse(tbReminder.Text);
+            }
+            catch (Exception)
+            {
+                s.ReminderMinutes = 5;
+                tbReminder.Text = "5";
+            }
+            s.UseAlternateReminder = cbUseAlterateReminder.Checked;
+            s.EarlyReminder = dtpEarlyReminder.Value;
+            s.LateReminder = dtpLateReminder.Value;
+// #735 - End
         }
 
         private void ShowErrorMessage(string caption, string message)
@@ -354,6 +379,29 @@ namespace EVEMon
             panelColorSingle1.BackColor = m_settings.CalendarSingle1;
             panelColorSingle2.BackColor = m_settings.CalendarSingle2;
             panelColorText.BackColor = m_settings.CalendarTextColor;
+
+// #735 - Start
+            // Load External Calendar settings.
+            try
+            {
+                cbUseExternalCalendar.Checked = m_settings.UseExternalCalendar;
+                if (m_settings.CalendarOption == 0)
+                    rbMSOutlook.Checked = true;
+                else
+                    rbGoogle.Checked = true;
+                cbUseExternalCalendar_CheckedChanged(cbUseExternalCalendar, e);
+                tbGoogleEmail.Text = m_settings.GoogleEmail;
+                tbGooglePassword.Text = m_settings.GooglePassword;
+                tbGoogleURI.Text = m_settings.GoogleURI;
+                cbGoogleReminder.SelectedIndex = m_settings.GoogleReminder;
+                cbSetReminder.Checked = m_settings.SetReminder;
+                tbReminder.Text = m_settings.ReminderMinutes.ToString();
+                cbUseAlterateReminder.Checked = m_settings.UseAlternateReminder;
+                dtpEarlyReminder.Value = m_settings.EarlyReminder;
+                dtpLateReminder.Value = m_settings.LateReminder;
+            }
+            catch (Exception) { }
+// #735 - End
 
             // New bits to allow custom server/port options when checking the server status
             tbTQServerAddress.Text = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
@@ -712,5 +760,32 @@ namespace EVEMon
                     break;
             }
         }
+
+        private void rbMSOutlook_Click(object sender, EventArgs e)
+        {
+            gbGoogle.Enabled = rbGoogle.Checked;
+        }
+
+        private void cbUseExternalCalendar_CheckedChanged(object sender, EventArgs e)
+        {
+            // Enable or disable the relevant fields.
+            rbMSOutlook.Enabled = cbUseExternalCalendar.Checked;
+            rbGoogle.Enabled = cbUseExternalCalendar.Checked;
+            if (cbUseExternalCalendar.Checked)
+            {
+                if (rbGoogle.Checked)
+                    gbGoogle.Enabled = true;
+                else
+                    gbGoogle.Enabled = false;
+            }
+            else
+                gbGoogle.Enabled = false;
+            cbSetReminder.Enabled = cbUseExternalCalendar.Checked;
+            tbReminder.Enabled = cbUseExternalCalendar.Checked;
+            cbUseAlterateReminder.Enabled = cbUseExternalCalendar.Checked;
+            dtpEarlyReminder.Enabled = cbUseExternalCalendar.Checked;
+            dtpLateReminder.Enabled = cbUseExternalCalendar.Checked;
+        }
+
     }
 }

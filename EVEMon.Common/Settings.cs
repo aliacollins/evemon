@@ -1285,6 +1285,143 @@ namespace EVEMon.Common
             }
         }
 
+// #735 - Start
+        // External Calendar Options.
+        private bool m_useExternalCalendar = false;
+        public bool UseExternalCalendar
+        {
+            get { return m_useExternalCalendar; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_useExternalCalendar = value;
+                }
+            }
+        }
+        // Future-proof in case other calendar's are added.
+        private int m_calendarOption = 0;
+        public int CalendarOption
+        {
+            get { return m_calendarOption; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_calendarOption = value;
+                }
+            }
+        }
+        private string m_googleEmail = string.Empty;
+        public string GoogleEmail
+        {
+            get { return m_googleEmail; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_googleEmail = value;
+                }
+            }
+        }
+        private string m_googlePassword = string.Empty;
+        public string GooglePassword
+        {
+            get { return m_googlePassword; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_googlePassword = value;
+                }
+            }
+        }
+        private string m_googleURI = "http://www.google.com/calendar/feeds/default/private/full";
+        public string GoogleURI
+        {
+            get { return m_googleURI; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_googleURI = value;
+                }
+            }
+        }
+        private int m_googleReminder = 2;
+        public int GoogleReminder
+        {
+            get { return m_googleReminder; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_googleReminder = value;
+                }
+            }
+        }
+        private bool m_setReminder = true;
+        public bool SetReminder
+        {
+            get { return m_setReminder; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_setReminder = value;
+                }
+            }
+        }
+        private int m_reminderMinutes = 10;
+        public int ReminderMinutes
+        {
+            get { return m_reminderMinutes; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_reminderMinutes = value;
+                }
+            }
+        }
+        private bool m_useAlternateReminder = true;
+        public bool UseAlternateReminder
+        {
+            get { return m_useAlternateReminder; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_useAlternateReminder = value;
+                }
+            }
+        }
+        private DateTime m_earlyReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
+        public DateTime EarlyReminder
+        {
+            get { return m_earlyReminder; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_earlyReminder = value;
+                }
+            }
+        }
+        private DateTime m_lateReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);
+        public DateTime LateReminder
+        {
+            get { return m_lateReminder; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_lateReminder = value;
+                }
+            }
+        }
+// #735 - End
+
         #endregion
 
         #region Plans

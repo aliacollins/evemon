@@ -2660,5 +2660,27 @@ namespace EVEMon
             get { return m_session; }
         }
 
+        // #735 - Start
+        private void btnAddToCalendar_Click(object sender, EventArgs e)
+        {
+            // Ensure that we are trying to use the external calendar.
+            if (!m_settings.UseExternalCalendar)
+            {
+                btnAddToCalendar.Visible = false;
+                return;
+            }
+
+            // Call the confirmation dialog. This will allow you to check the default settings.
+            // Also much easier to change the reminder settings on the fly, because it may not
+            // always be convenient to use the Alternate Reminders.
+            ExternalCalendar.ExternalCalendar externalCalendar = new EVEMon.ExternalCalendar.ExternalCalendar();
+            externalCalendar.GrandCharacterInfo = m_grandCharacterInfo;
+            externalCalendar.ApplicationSettings = m_settings;
+            externalCalendar.SkillTrainingName = m_skillTrainingName;
+            externalCalendar.EstimatedCompletion = m_estimatedCompletion;
+            externalCalendar.DoAppointment();
+        }
+        // #735 - End
+
     }
 }

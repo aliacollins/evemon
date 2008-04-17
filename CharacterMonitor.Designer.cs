@@ -73,6 +73,7 @@ namespace EVEMon
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrMinTrainingSkillRetry = new System.Windows.Forms.Timer(this.components);
             this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.btnAddToCalendar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -224,11 +225,13 @@ namespace EVEMon
             // 
             this.tlpStatus.AutoSize = true;
             this.tlpStatus.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpStatus.ColumnCount = 2;
+            this.tlpStatus.ColumnCount = 3;
+            this.tlpStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpStatus.Controls.Add(this.flpStatusLabels, 0, 0);
             this.tlpStatus.Controls.Add(this.flpStatusValues, 1, 0);
+            this.tlpStatus.Controls.Add(this.btnAddToCalendar, 2, 0);
             this.tlpStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpStatus.Location = new System.Drawing.Point(0, 3);
             this.tlpStatus.Margin = new System.Windows.Forms.Padding(0);
@@ -416,12 +419,12 @@ namespace EVEMon
             this.miHitTrainingSkill,
             this.miChangeInfo});
             this.cmsThrobberMenu.Name = "cmsThrobberMenu";
-            this.cmsThrobberMenu.Size = new System.Drawing.Size(234, 70);
+            this.cmsThrobberMenu.Size = new System.Drawing.Size(233, 70);
             // 
             // miHitEveO
             // 
             this.miHitEveO.Name = "miHitEveO";
-            this.miHitEveO.Size = new System.Drawing.Size(233, 22);
+            this.miHitEveO.Size = new System.Drawing.Size(232, 22);
             this.miHitEveO.Text = "Get data from EVE Online";
             this.miHitEveO.Click += new System.EventHandler(this.miHitEveO_Click);
             // 
@@ -429,7 +432,7 @@ namespace EVEMon
             // 
             this.miHitTrainingSkill.Enabled = false;
             this.miHitTrainingSkill.Name = "miHitTrainingSkill";
-            this.miHitTrainingSkill.Size = new System.Drawing.Size(233, 22);
+            this.miHitTrainingSkill.Size = new System.Drawing.Size(232, 22);
             this.miHitTrainingSkill.Text = "Update Skill Training Info";
             this.miHitTrainingSkill.ToolTipText = "This is activated through a Timer.";
             this.miHitTrainingSkill.Click += new System.EventHandler(this.miHitTrainingSkill_Click);
@@ -437,7 +440,7 @@ namespace EVEMon
             // miChangeInfo
             // 
             this.miChangeInfo.Name = "miChangeInfo";
-            this.miChangeInfo.Size = new System.Drawing.Size(233, 22);
+            this.miChangeInfo.Size = new System.Drawing.Size(232, 22);
             this.miChangeInfo.Text = "Change API Key information...";
             this.miChangeInfo.Click += new System.EventHandler(this.miChangeInfo_Click);
             // 
@@ -554,26 +557,26 @@ namespace EVEMon
             this.updatePictureFromEVECache,
             this.setEVEFolder});
             this.cmsPictureOptions.Name = "contextMenuStrip1";
-            this.cmsPictureOptions.Size = new System.Drawing.Size(244, 70);
+            this.cmsPictureOptions.Size = new System.Drawing.Size(241, 70);
             // 
             // updatePicture
             // 
             this.updatePicture.Name = "updatePicture";
-            this.updatePicture.Size = new System.Drawing.Size(243, 22);
+            this.updatePicture.Size = new System.Drawing.Size(240, 22);
             this.updatePicture.Text = "Update Portrait From The Web";
             this.updatePicture.Click += new System.EventHandler(this.miUpdatePicture_Click);
             // 
             // updatePictureFromEVECache
             // 
             this.updatePictureFromEVECache.Name = "updatePictureFromEVECache";
-            this.updatePictureFromEVECache.Size = new System.Drawing.Size(243, 22);
+            this.updatePictureFromEVECache.Size = new System.Drawing.Size(240, 22);
             this.updatePictureFromEVECache.Text = "Update Portrait From EVE Cache";
             this.updatePictureFromEVECache.Click += new System.EventHandler(this.miUpdatePictureFromEVECache_Click);
             // 
             // setEVEFolder
             // 
             this.setEVEFolder.Name = "setEVEFolder";
-            this.setEVEFolder.Size = new System.Drawing.Size(243, 22);
+            this.setEVEFolder.Size = new System.Drawing.Size(240, 22);
             this.setEVEFolder.Text = "Set Portrait Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.miSetEVEFolder_Click);
             // 
@@ -594,11 +597,22 @@ namespace EVEMon
             this.lbSkills.Size = new System.Drawing.Size(392, 273);
             this.lbSkills.TabIndex = 12;
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
-            this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
+            this.lbSkills.MouseEnter += new System.EventHandler(this.lbSkills_MouseEnter);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
+            // 
+            // btnAddToCalendar
+            // 
+            this.btnAddToCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddToCalendar.Location = new System.Drawing.Point(280, 13);
+            this.btnAddToCalendar.Name = "btnAddToCalendar";
+            this.btnAddToCalendar.Size = new System.Drawing.Size(109, 23);
+            this.btnAddToCalendar.TabIndex = 16;
+            this.btnAddToCalendar.Text = "Update Calendar";
+            this.btnAddToCalendar.UseVisualStyleBackColor = true;
+            this.btnAddToCalendar.Click += new System.EventHandler(this.btnAddToCalendar_Click);
             // 
             // CharacterMonitor
             // 
@@ -684,5 +698,6 @@ namespace EVEMon
         private Throbber throbber;
         private System.Windows.Forms.Timer tmrMinTrainingSkillRetry;
         private System.Windows.Forms.ToolStripMenuItem miHitTrainingSkill;
+        private System.Windows.Forms.Button btnAddToCalendar;
     }
 }
