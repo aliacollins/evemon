@@ -793,7 +793,7 @@ namespace EVEMon.Common
         /// Called from GetPlanByName in settings.cs (!!! Fix that!!!)
         /// </summary>
         /// <param name="ci"></param>
-        public void AssignFromSerializableCharacterSheet(SerializableCharacterSheet ci)
+        public void AssignFromSerializableCharacterSheet(SerializableCharacterSheet ci, bool showAll, bool showNonPublic, bool highlightPartials)
         {
             this.SuppressEvents();
 
@@ -1014,6 +1014,9 @@ namespace EVEMon.Common
                     //}
                     if (gs != null)
                     {
+// 947 - Start
+                        gs.HighlightPartiallyTrained = highlightPartials;
+// 947 - End
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
                         if (ci.FromCCP)
@@ -1027,6 +1030,7 @@ namespace EVEMon.Common
                     }
                 }
             }
+
             checkTrainingSkills(ci.TrainingSkillInfo);
             this.ResumeEvents();
         }

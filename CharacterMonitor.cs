@@ -160,7 +160,7 @@ namespace EVEMon
                 SerializableCharacterSheet sci = m_settings.GetCharacterSheet(m_cli.CharacterName);
                 if (sci != null)
                 {
-                    m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                    m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowNonPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
                 }
                 if (m_settings.DisableXMLAutoUpdate == false)
                 {
@@ -182,7 +182,7 @@ namespace EVEMon
             {
                 tmrUpdateCharacter.Enabled = false;
                 throbber.Visible = false;
-                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(m_sci);
+                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(m_sci, m_settings.ShowAllPublicSkills, m_settings.ShowNonPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
                 m_sci = null;
             }
 
@@ -197,11 +197,19 @@ namespace EVEMon
                             m_groupCollapsed.Add(gsg, true);
                             foreach (Skill gs in gsg)
                             {
-                                if (gs.Known)
+// 947 - Start
+//                                if (gs.Known)
+//                                {
+                                try
                                 {
                                     lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
                                 }
+                                catch
+                                { }
+//                                }
+// 947 - End
                             }
+
                             gsg.isCollapsed = true;
                         }
                     }
@@ -271,7 +279,7 @@ namespace EVEMon
             SerializableCharacterSheet sci = SerializableCharacterSheet.CreateFromFile(m_cfi.Filename);
             if (sci != null)
             {
-                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                m_grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowNonPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
             }
         }
 
@@ -918,10 +926,16 @@ namespace EVEMon
                 // Remove the skills in the group from the list
                 foreach (Skill gs in gsg)
                 {
-                    if (gs.Known)
+// 947 - Start
+                    // Because they may have toggled the ShowAll settings during this session, we have to 
+                    // cater for any invalid indexes when removing the skills.
+                    try
                     {
                         lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
                     }
+                    catch
+                    { }
+// 947 - End
                 }
 
                 Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
@@ -932,6 +946,14 @@ namespace EVEMon
                 List<Skill> skillList = new List<Skill>();
                 foreach (Skill gs in gsg)
                 {
+// 947 - Start
+                    if (m_settings.ShowAllPublicSkills)
+                    {
+                        if (!gs.Public)
+                            if (!m_settings.ShowNonPublicSkills)
+                                continue;
+                    }
+// 947 - End
                     skillList.Add(gs);
                 }
                 SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
@@ -1113,79 +1135,248 @@ namespace EVEMon
             lbSkills.BeginUpdate();
             try
             {
-                foreach (Skill gs in e.SkillList)
                 {
-                    SkillGroup gsg = gs.SkillGroup;
-
-                    if (gs.Known)
+// 947 - Start
+                    // Build the list builder into a loop that runs through all skills to ensure that
+                    // even skill groups that don't have any learned skills in them will be added to
+                    // the list.
+                    if (!m_settings.ShowAllPublicSkills)
                     {
-                        // Find the existing listbox item... if the group isn't collapsed
-                        if (!m_groupCollapsed.ContainsKey(gsg) || m_groupCollapsed[gsg] == false)
+// 947 - End
+                        foreach (Skill gs in e.SkillList)
                         {
-                            int lbIndex = -1;
-                            int shouldInsertAt = -1;
-                            bool shouldInsertSkillGroup = true;
-                            bool inMySkillGroup = false;
-                            bool found = false;
-                            for (int i = 0; i < lbSkills.Items.Count; i++)
-                            {
-                                object o = lbSkills.Items[i];
-                                if (o == gs)
-                                {
-                                    shouldInsertSkillGroup = false;
-                                    lbIndex = i;
-                                    found = true;
-                                    break;
-                                }
-                                else if (o == gsg)
-                                {
-                                    inMySkillGroup = true;
-                                    shouldInsertSkillGroup = false;
-                                }
-                                else if (o is SkillGroup && ((SkillGroup)o).Name.CompareTo(gsg.Name) > 0)
-                                {
-                                    shouldInsertAt = i;
-                                    shouldInsertSkillGroup = (!inMySkillGroup);
-                                    break;
-                                }
-                                else if (inMySkillGroup && o is Skill &&
-                                         ((Skill)o).Name.CompareTo(gs.Name) > 0)
-                                {
-                                    shouldInsertAt = i;
-                                    shouldInsertSkillGroup = false;
-                                    break;
-                                }
-                            }
+                            SkillGroup gsg = gs.SkillGroup;
 
-                            if (shouldInsertSkillGroup)
+                            if (gs.Known)
                             {
-                                if (shouldInsertAt >= 0)
+                                // Find the existing listbox item... if the group isn't collapsed
+                                if (!m_groupCollapsed.ContainsKey(gsg) || m_groupCollapsed[gsg] == false)
                                 {
-                                    lbSkills.Items.Insert(shouldInsertAt, gsg);
-                                    shouldInsertAt++;
-                                }
-                                else
-                                {
-                                    lbSkills.Items.Add(gsg);
-                                    shouldInsertAt = -1;
+                                    int lbIndex = -1;
+                                    int shouldInsertAt = -1;
+                                    bool shouldInsertSkillGroup = true;
+                                    bool inMySkillGroup = false;
+                                    bool found = false;
+                                    for (int i = 0; i < lbSkills.Items.Count; i++)
+                                    {
+                                        object o = lbSkills.Items[i];
+                                        if (o == gs)
+                                        {
+                                            shouldInsertSkillGroup = false;
+                                            lbIndex = i;
+                                            found = true;
+                                            break;
+                                        }
+                                        else if (o == gsg)
+                                        {
+                                            inMySkillGroup = true;
+                                            shouldInsertSkillGroup = false;
+                                        }
+                                        else if (o is SkillGroup && ((SkillGroup)o).Name.CompareTo(gsg.Name) > 0)
+                                        {
+                                            shouldInsertAt = i;
+                                            shouldInsertSkillGroup = (!inMySkillGroup);
+                                            break;
+                                        }
+                                        else if (inMySkillGroup && o is Skill &&
+                                                 ((Skill)o).Name.CompareTo(gs.Name) > 0)
+                                        {
+                                            shouldInsertAt = i;
+                                            shouldInsertSkillGroup = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (shouldInsertSkillGroup)
+                                    {
+                                        if (shouldInsertAt >= 0)
+                                        {
+                                            lbSkills.Items.Insert(shouldInsertAt, gsg);
+                                            shouldInsertAt++;
+                                        }
+                                        else
+                                        {
+                                            lbSkills.Items.Add(gsg);
+                                            shouldInsertAt = -1;
+                                        }
+                                    }
+                                    if (!found)
+                                    {
+                                        if (shouldInsertAt >= 0)
+                                        {
+                                            lbSkills.Items.Insert(shouldInsertAt, gs);
+                                            lbIndex = shouldInsertAt;
+                                        }
+                                        else
+                                        {
+                                            lbSkills.Items.Add(gs);
+                                            lbIndex = lbSkills.Items.Count - 1;
+                                        }
+                                    }
+                                    lbSkills.Invalidate(lbSkills.GetItemRectangle(lbIndex));
                                 }
                             }
-                            if (!found)
+                        }
+// 947 - Start
+                    }
+                    else
+                    {
+                        foreach (SkillGroup skillGroup in m_grandCharacterInfo.SkillGroups.Values)
+                        {
+                            bool skillFound = false;
+                            foreach (Skill skill in skillGroup)
                             {
-                                if (shouldInsertAt >= 0)
+                                foreach (Skill gs in e.SkillList)
                                 {
-                                    lbSkills.Items.Insert(shouldInsertAt, gs);
-                                    lbIndex = shouldInsertAt;
+                                    if (gs.Name == skill.Name)
+                                        skillFound = true;
+                                    SkillGroup gsg = gs.SkillGroup;
+
+                                    // Find the existing listbox item... if the group isn't collapsed
+                                    if (!m_groupCollapsed.ContainsKey(gsg) || m_groupCollapsed[gsg] == false)
+                                    {
+                                        int lbIndex = -1;
+                                        int shouldInsertAt = -1;
+                                        bool shouldInsertSkillGroup = true;
+                                        bool inMySkillGroup = false;
+                                        bool found = false;
+                                        for (int i = 0; i < lbSkills.Items.Count; i++)
+                                        {
+                                            object o = lbSkills.Items[i];
+                                            if (o == gs)
+                                            {
+                                                shouldInsertSkillGroup = false;
+                                                lbIndex = i;
+                                                found = true;
+                                                break;
+                                            }
+                                            else if (o == gsg)
+                                            {
+                                                inMySkillGroup = true;
+                                                shouldInsertSkillGroup = false;
+                                            }
+                                            else if (o is SkillGroup && ((SkillGroup)o).Name.CompareTo(gsg.Name) > 0)
+                                            {
+                                                shouldInsertAt = i;
+                                                shouldInsertSkillGroup = (!inMySkillGroup);
+                                                break;
+                                            }
+                                            else if (inMySkillGroup && o is Skill &&
+                                                     ((Skill)o).Name.CompareTo(gs.Name) > 0)
+                                            {
+                                                shouldInsertAt = i;
+                                                shouldInsertSkillGroup = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (shouldInsertSkillGroup)
+                                        {
+                                            if (shouldInsertAt >= 0)
+                                            {
+                                                lbSkills.Items.Insert(shouldInsertAt, gsg);
+                                                shouldInsertAt++;
+                                            }
+                                            else
+                                            {
+                                                lbSkills.Items.Add(gsg);
+                                                shouldInsertAt = -1;
+                                            }
+                                        }
+                                        if (!found)
+                                        {
+                                            if (shouldInsertAt >= 0)
+                                            {
+                                                lbSkills.Items.Insert(shouldInsertAt, gs);
+                                                lbIndex = shouldInsertAt;
+                                            }
+                                            else
+                                            {
+                                                lbSkills.Items.Add(gs);
+                                                lbIndex = lbSkills.Items.Count - 1;
+                                            }
+                                        }
+                                        lbSkills.Invalidate(lbSkills.GetItemRectangle(lbIndex));
+                                    }
                                 }
-                                else
+                                if (!skillFound)
                                 {
-                                    lbSkills.Items.Add(gs);
-                                    lbIndex = lbSkills.Items.Count - 1;
+                                    if (!skill.Public)
+                                    {
+                                        if (!m_settings.ShowNonPublicSkills)
+                                            continue;
+                                    }
+                                    // Find the existing listbox item... if the group isn't collapsed
+                                    if (!m_groupCollapsed.ContainsKey(skillGroup) || m_groupCollapsed[skillGroup] == false)
+                                    {
+                                        int lbIndex = -1;
+                                        int shouldInsertAt = -1;
+                                        bool shouldInsertSkillGroup = true;
+                                        bool inMySkillGroup = false;
+                                        bool found = false;
+                                        for (int i = 0; i < lbSkills.Items.Count; i++)
+                                        {
+                                            object o = lbSkills.Items[i];
+                                            if (o == skill)
+                                            {
+                                                shouldInsertSkillGroup = false;
+                                                lbIndex = i;
+                                                found = true;
+                                                break;
+                                            }
+                                            else if (o == skillGroup)
+                                            {
+                                                inMySkillGroup = true;
+                                                shouldInsertSkillGroup = false;
+                                            }
+                                            else if (o is SkillGroup && ((SkillGroup)o).Name.CompareTo(skillGroup.Name) > 0)
+                                            {
+                                                shouldInsertAt = i;
+                                                shouldInsertSkillGroup = (!inMySkillGroup);
+                                                break;
+                                            }
+                                            else if (inMySkillGroup && o is Skill &&
+                                                     ((Skill)o).Name.CompareTo(skill.Name) > 0)
+                                            {
+                                                shouldInsertAt = i;
+                                                shouldInsertSkillGroup = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (shouldInsertSkillGroup)
+                                        {
+                                            if (shouldInsertAt >= 0)
+                                            {
+                                                lbSkills.Items.Insert(shouldInsertAt, skillGroup);
+                                                shouldInsertAt++;
+                                            }
+                                            else
+                                            {
+                                                lbSkills.Items.Add(skillGroup);
+                                                shouldInsertAt = -1;
+                                            }
+                                        }
+                                        if (!found)
+                                        {
+                                            if (shouldInsertAt >= 0)
+                                            {
+                                                lbSkills.Items.Insert(shouldInsertAt, skill);
+                                                lbIndex = shouldInsertAt;
+                                            }
+                                            else
+                                            {
+                                                lbSkills.Items.Add(skill);
+                                                lbIndex = lbSkills.Items.Count - 1;
+                                            }
+                                        }
+                                        lbSkills.Invalidate(lbSkills.GetItemRectangle(lbIndex));
+                                    }
                                 }
                             }
-                            lbSkills.Invalidate(lbSkills.GetItemRectangle(lbIndex));
                         }
                     }
+// 947 - End
                 }
             }
             finally

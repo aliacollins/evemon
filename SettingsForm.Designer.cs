@@ -99,6 +99,9 @@ namespace EVEMon
             this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
+            this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
             this.tabLookAndFeel = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -230,6 +233,8 @@ namespace EVEMon
             this.lblGoogleEmail = new System.Windows.Forms.Label();
             this.rbGoogle = new System.Windows.Forms.RadioButton();
             this.rbMSOutlook = new System.Windows.Forms.RadioButton();
+            this.labelRestartWarning1 = new System.Windows.Forms.Label();
+            this.labelRestartWarning2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -248,6 +253,7 @@ namespace EVEMon
             this.groupBox12.SuspendLayout();
             this.flowLayoutPanel23.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
+            this.groupBox15.SuspendLayout();
             this.tabLookAndFeel.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -296,7 +302,7 @@ namespace EVEMon
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(317, 544);
+            this.btnCancel.Location = new System.Drawing.Point(317, 554);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -610,7 +616,7 @@ namespace EVEMon
             this.tabControl1.Location = new System.Drawing.Point(6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(392, 532);
+            this.tabControl1.Size = new System.Drawing.Size(392, 542);
             this.tabControl1.TabIndex = 5;
             // 
             // tabGeneral
@@ -619,7 +625,7 @@ namespace EVEMon
             this.tabGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabGeneral.Name = "tabGeneral";
             this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGeneral.Size = new System.Drawing.Size(384, 506);
+            this.tabGeneral.Size = new System.Drawing.Size(384, 516);
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -631,11 +637,12 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox1);
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
             this.verticalFlowPanel1.Controls.Add(this.groupBox12);
+            this.verticalFlowPanel1.Controls.Add(this.groupBox15);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel1.Name = "verticalFlowPanel1";
-            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 500);
+            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 510);
             this.verticalFlowPanel1.TabIndex = 7;
             // 
             // groupBox1
@@ -940,13 +947,48 @@ namespace EVEMon
             0,
             0});
             // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.labelRestartWarning2);
+            this.groupBox15.Controls.Add(this.labelRestartWarning1);
+            this.groupBox15.Controls.Add(this.cbShowNonPublicSkills);
+            this.groupBox15.Controls.Add(this.cbShowAllPublicSkills);
+            this.groupBox15.Location = new System.Drawing.Point(3, 292);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(370, 81);
+            this.groupBox15.TabIndex = 7;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Character Monitor";
+            // 
+            // cbShowNonPublicSkills
+            // 
+            this.cbShowNonPublicSkills.AutoSize = true;
+            this.cbShowNonPublicSkills.Enabled = false;
+            this.cbShowNonPublicSkills.Location = new System.Drawing.Point(169, 20);
+            this.cbShowNonPublicSkills.Name = "cbShowNonPublicSkills";
+            this.cbShowNonPublicSkills.Size = new System.Drawing.Size(130, 17);
+            this.cbShowNonPublicSkills.TabIndex = 1;
+            this.cbShowNonPublicSkills.Text = "Show Non-Public Skills";
+            this.cbShowNonPublicSkills.UseVisualStyleBackColor = true;
+            // 
+            // cbShowAllPublicSkills
+            // 
+            this.cbShowAllPublicSkills.AutoSize = true;
+            this.cbShowAllPublicSkills.Location = new System.Drawing.Point(15, 20);
+            this.cbShowAllPublicSkills.Name = "cbShowAllPublicSkills";
+            this.cbShowAllPublicSkills.Size = new System.Drawing.Size(121, 17);
+            this.cbShowAllPublicSkills.TabIndex = 0;
+            this.cbShowAllPublicSkills.Text = "Show All Public Skills";
+            this.cbShowAllPublicSkills.UseVisualStyleBackColor = true;
+            this.cbShowAllPublicSkills.CheckedChanged += new System.EventHandler(this.cbShowAllPublicSkills_CheckedChanged);
+            // 
             // tabLookAndFeel
             // 
             this.tabLookAndFeel.Controls.Add(this.flowLayoutPanel16);
             this.tabLookAndFeel.Location = new System.Drawing.Point(4, 22);
             this.tabLookAndFeel.Name = "tabLookAndFeel";
             this.tabLookAndFeel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 506);
+            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 516);
             this.tabLookAndFeel.TabIndex = 4;
             this.tabLookAndFeel.Text = "Look And Feel";
             this.tabLookAndFeel.UseVisualStyleBackColor = true;
@@ -962,7 +1004,7 @@ namespace EVEMon
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 500);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 510);
             this.flowLayoutPanel16.TabIndex = 10;
             // 
             // groupBox11
@@ -1286,7 +1328,7 @@ namespace EVEMon
             this.tabNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabNetwork.Name = "tabNetwork";
             this.tabNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNetwork.Size = new System.Drawing.Size(384, 506);
+            this.tabNetwork.Size = new System.Drawing.Size(384, 516);
             this.tabNetwork.TabIndex = 2;
             this.tabNetwork.Text = "Network";
             this.tabNetwork.UseVisualStyleBackColor = true;
@@ -1299,7 +1341,7 @@ namespace EVEMon
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel3.Name = "verticalFlowPanel3";
-            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 500);
+            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 510);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
             // groupBox6
@@ -1550,7 +1592,7 @@ namespace EVEMon
             this.tabAlerts.Location = new System.Drawing.Point(4, 22);
             this.tabAlerts.Name = "tabAlerts";
             this.tabAlerts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAlerts.Size = new System.Drawing.Size(384, 506);
+            this.tabAlerts.Size = new System.Drawing.Size(384, 516);
             this.tabAlerts.TabIndex = 1;
             this.tabAlerts.Text = "Alerts";
             this.tabAlerts.UseVisualStyleBackColor = true;
@@ -1564,7 +1606,7 @@ namespace EVEMon
             this.verticalFlowPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
-            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 500);
+            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 510);
             this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
@@ -1655,9 +1697,9 @@ namespace EVEMon
             this.groupBox3.AutoSize = true;
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox3.Controls.Add(this.flowLayoutPanel6);
-            this.groupBox3.Location = new System.Drawing.Point(382, 3);
+            this.groupBox3.Location = new System.Drawing.Point(3, 171);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(368, 328);
+            this.groupBox3.Size = new System.Drawing.Size(373, 328);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Email Alert";
@@ -1675,7 +1717,7 @@ namespace EVEMon
             this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
             this.flowLayoutPanel6.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(362, 308);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(367, 308);
             this.flowLayoutPanel6.TabIndex = 1;
             this.flowLayoutPanel6.WrapContents = false;
             // 
@@ -1695,7 +1737,7 @@ namespace EVEMon
             this.tabUpdates.Location = new System.Drawing.Point(4, 22);
             this.tabUpdates.Name = "tabUpdates";
             this.tabUpdates.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUpdates.Size = new System.Drawing.Size(384, 506);
+            this.tabUpdates.Size = new System.Drawing.Size(384, 516);
             this.tabUpdates.TabIndex = 3;
             this.tabUpdates.Text = "Updates";
             this.tabUpdates.UseVisualStyleBackColor = true;
@@ -1771,6 +1813,7 @@ namespace EVEMon
             // 
             // cmbAPIUpdateDelay
             // 
+            this.cmbAPIUpdateDelay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAPIUpdateDelay.FormattingEnabled = true;
             this.cmbAPIUpdateDelay.Items.AddRange(new object[] {
             "1 Minute",
@@ -1786,7 +1829,6 @@ namespace EVEMon
             this.cmbAPIUpdateDelay.Name = "cmbAPIUpdateDelay";
             this.cmbAPIUpdateDelay.Size = new System.Drawing.Size(121, 21);
             this.cmbAPIUpdateDelay.TabIndex = 6;
-            this.cmbAPIUpdateDelay.Text = "10 Minutes";
             // 
             // label26
             // 
@@ -2049,7 +2091,7 @@ namespace EVEMon
             this.tabCalendar.Controls.Add(this.groupBox14);
             this.tabCalendar.Location = new System.Drawing.Point(4, 22);
             this.tabCalendar.Name = "tabCalendar";
-            this.tabCalendar.Size = new System.Drawing.Size(384, 506);
+            this.tabCalendar.Size = new System.Drawing.Size(384, 516);
             this.tabCalendar.TabIndex = 5;
             this.tabCalendar.Text = "Calendar";
             this.tabCalendar.UseVisualStyleBackColor = true;
@@ -2178,7 +2220,7 @@ namespace EVEMon
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(236, 544);
+            this.btnOk.Location = new System.Drawing.Point(236, 554);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 3;
@@ -2236,6 +2278,7 @@ namespace EVEMon
             this.chName.Text = "Sample";
             // 
             // gbExternalCalendar
+            // labelRestartWarning1
             // 
             this.gbExternalCalendar.Controls.Add(this.cbUseExternalCalendar);
             this.gbExternalCalendar.Controls.Add(this.tbReminder);
@@ -2452,13 +2495,32 @@ namespace EVEMon
             this.rbMSOutlook.UseVisualStyleBackColor = true;
             this.rbMSOutlook.Click += new System.EventHandler(this.rbMSOutlook_Click);
             // 
+            // 
+            this.labelRestartWarning1.AutoSize = true;
+            this.labelRestartWarning1.ForeColor = System.Drawing.Color.Blue;
+            this.labelRestartWarning1.Location = new System.Drawing.Point(7, 44);
+            this.labelRestartWarning1.Name = "labelRestartWarning1";
+            this.labelRestartWarning1.Size = new System.Drawing.Size(359, 13);
+            this.labelRestartWarning1.TabIndex = 2;
+            this.labelRestartWarning1.Text = "When displaying all skills, it is necessary to restart the application in order";
+            // 
+            // labelRestartWarning2
+            // 
+            this.labelRestartWarning2.AutoSize = true;
+            this.labelRestartWarning2.ForeColor = System.Drawing.Color.Blue;
+            this.labelRestartWarning2.Location = new System.Drawing.Point(7, 57);
+            this.labelRestartWarning2.Name = "labelRestartWarning2";
+            this.labelRestartWarning2.Size = new System.Drawing.Size(283, 13);
+            this.labelRestartWarning2.TabIndex = 3;
+            this.labelRestartWarning2.Text = "to see any skill groups that do not have any trained skills.";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(404, 579);
+            this.ClientSize = new System.Drawing.Size(404, 589);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.tabControl1);
@@ -2503,6 +2565,8 @@ namespace EVEMon
             this.flowLayoutPanel23.ResumeLayout(false);
             this.flowLayoutPanel23.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
             this.tabLookAndFeel.ResumeLayout(false);
             this.flowLayoutPanel16.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
@@ -2765,5 +2829,10 @@ namespace EVEMon
         private System.Windows.Forms.Label lblGoogleEmail;
         private System.Windows.Forms.RadioButton rbGoogle;
         private System.Windows.Forms.RadioButton rbMSOutlook;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.CheckBox cbShowAllPublicSkills;
+        private System.Windows.Forms.CheckBox cbShowNonPublicSkills;
+        private System.Windows.Forms.Label labelRestartWarning1;
+        private System.Windows.Forms.Label labelRestartWarning2;
     }
 }

@@ -84,6 +84,10 @@ namespace EVEMon
                 G15Handler.LCD.cycleint = (int)ACycleInterval.Value;
                 G15Handler.LCD.showtime = cbG15ShowTime.Checked;
             }
+// 947 - Start
+            s.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
+            s.ShowNonPublicSkills = cbShowNonPublicSkills.Checked;
+// 947 - End
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -277,26 +281,12 @@ namespace EVEMon
             tabControl1.ClientSize = new Size(maxWidth + extraWidth, maxHeight + extraHeight);
             tabControl1.SelectedTab = tabControl1.TabPages[0];
 
-            // Look and feel options
-
+            // General options.
             rbSystemTrayOptionsNever.Checked = m_settings.SystemTrayOptionsIsNever;
             rbSystemTrayOptionsMinimized.Checked = m_settings.SystemTrayOptionsIsMinimized;
             rbSystemTrayOptionsAlways.Checked = m_settings.SystemTrayOptionsIsAlways;
-
             cbCloseToTray.Checked = m_settings.CloseToTray;
-            cbTitleToTime.Checked = m_settings.TitleToTime;
-            cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout - 1;
-            cbSkillInTitle.Checked = m_settings.TitleToTimeSkill;
-            cbWorksafeMode.Checked = m_settings.WorksafeMode;
-            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
-            cbRunIGBServer.Checked = m_settings.RunIGBServer;
-            cbIGBPublic.Checked = m_settings.IGBServerPublic;
-            tb_IgbPort.Text = m_settings.IGBServerPort.ToString();
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
-            cbG15ACycle.Checked = m_settings.G15ACycle;
-            cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
-            cbG15ShowTime.Checked = m_settings.G15ShowTime;
-            ACycleInterval.Value = m_settings.G15ACycleint;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
             {
                 cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
@@ -305,6 +295,24 @@ namespace EVEMon
             {
                 cbScreenList.SelectedIndex = 0;
             }
+            cbG15ACycle.Checked = m_settings.G15ACycle;
+            cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
+            cbG15ShowTime.Checked = m_settings.G15ShowTime;
+            ACycleInterval.Value = m_settings.G15ACycleint;
+// 947 - Start
+            cbShowAllPublicSkills.Checked = m_settings.ShowAllPublicSkills;
+            cbShowNonPublicSkills.Checked = m_settings.ShowNonPublicSkills;
+// 947 - End
+
+            // Look and feel options
+            cbWorksafeMode.Checked = m_settings.WorksafeMode;
+            cbTitleToTime.Checked = m_settings.TitleToTime;
+            cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout - 1;
+            cbSkillInTitle.Checked = m_settings.TitleToTimeSkill;
+            gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
+            cbRunIGBServer.Checked = m_settings.RunIGBServer;
+            cbIGBPublic.Checked = m_settings.IGBServerPublic;
+            tb_IgbPort.Text = m_settings.IGBServerPort.ToString();
 
             // Skill Icon Set
             if (m_settings.SkillIconGroup <= cbSkillIconSet.Items.Count && m_settings.SkillIconGroup > 0)
@@ -785,6 +793,21 @@ namespace EVEMon
             cbUseAlterateReminder.Enabled = cbUseExternalCalendar.Checked;
             dtpEarlyReminder.Enabled = cbUseExternalCalendar.Checked;
             dtpLateReminder.Enabled = cbUseExternalCalendar.Checked;
+        }
+
+
+        private void cbShowAllPublicSkills_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbShowAllPublicSkills.Checked)
+            {
+                cbShowNonPublicSkills.Enabled = true;
+                cbShowNonPublicSkills.Checked = m_settings.ShowNonPublicSkills;
+            }
+            else
+            {
+                cbShowNonPublicSkills.Checked = false;
+                cbShowNonPublicSkills.Enabled = false;
+            }
         }
 
     }

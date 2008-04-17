@@ -667,8 +667,10 @@ namespace EVEMon.Common
 
         public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
+
             lock (mutexLock)
             {
+                Settings m_settings = Settings.GetInstance();
                 SerializableSkillTrainingInfo temp = grandCharacterInfo.SerialSIT;
                 SerializableCharacterSheet sci = GetCharacterInfo(grandCharacterInfo.CharacterId);
                 if (sci == null)
@@ -686,11 +688,11 @@ namespace EVEMon.Common
                 }
 
 #if DEBUG_SINGLETHREAD
-                grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowAllPublicSkills);
 #else
                 invokeControl.Invoke(new MethodInvoker(delegate
                 {
-                    grandCharacterInfo.AssignFromSerializableCharacterSheet(sci);
+                    grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowAllPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
                 }));
 #endif
                 return sci.TimeLeftInCache;

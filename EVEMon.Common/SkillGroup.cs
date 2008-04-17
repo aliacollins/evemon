@@ -19,6 +19,7 @@ namespace EVEMon.Common
         {
             m_name = sgs.Name;
             m_ID = sgs.ID;
+
             foreach (Skill cs in _skills)
             {
                 m_skills[cs.Name] = cs;
@@ -28,6 +29,9 @@ namespace EVEMon.Common
         }
 
         private int m_cachedKnownCount = -1;
+// 947 - Start
+        private int m_publicCount = -1;
+// 947 - End
 
         private void gs_Changed(object sender, EventArgs e)
         {
@@ -77,6 +81,27 @@ namespace EVEMon.Common
                 return m_cachedKnownCount;
             }
         }
+
+// 947 - Start
+        public int PublicCount
+        {
+            get
+            {
+                if (m_publicCount == -1)
+                {
+                    m_publicCount = 0;
+                    foreach (Skill gs in m_skills.Values)
+                    {
+                        if (gs.Public)
+                        {
+                            m_publicCount++;
+                        }
+                    }
+                }
+                return m_publicCount;
+            }
+        }
+// 947 - End
 
         public List<string> OwnedSkills()
         {
@@ -239,13 +264,20 @@ namespace EVEMon.Common
                 string trainingStr = String.Empty;
                 if (hastrainingskill)
                 {
-                    trainingStr = ", 1 training";
+                    trainingStr = ", ( 1 in training )";
                 }
-                string detailText = String.Format(", {0} Skill{1}, {2} Points{3}",
+// 947 - Start            
+//                string detailText = String.Format(", {0} Skill{1}, {2} Points{3}",
+//                                                  this.KnownCount,
+//                                                  this.KnownCount > 1 ? "s" : "",
+//                                                  this.GetTotalPoints().ToString("#,##0"),
+//                                                  trainingStr);
+                string detailText = String.Format(", {0} of {1} skills, {2} Points{3}",
                                                   this.KnownCount,
-                                                  this.KnownCount > 1 ? "s" : "",
+                                                  this.PublicCount,
                                                   this.GetTotalPoints().ToString("#,##0"),
                                                   trainingStr);
+// 947 - End
                 TextRenderer.DrawText(g, this.Name, boldf, titleTopLeftInt, Color.White);
                 TextRenderer.DrawText(g, detailText, fontr, detailTopLeftInt, Color.White);
             }

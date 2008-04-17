@@ -358,6 +358,34 @@ namespace EVEMon.Common
             }
         }
 
+// 947 - Start
+        private bool m_showAllPublicSkills = false;
+        public bool ShowAllPublicSkills
+        {
+            get { return m_showAllPublicSkills; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_showAllPublicSkills = value;
+                }
+            }
+        }
+
+        private bool m_showNonPublicSkills = false;
+        public bool ShowNonPublicSkills
+        {
+            get { return m_showNonPublicSkills; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_showNonPublicSkills = value;
+                }
+            }
+        }
+// 947 - End
+
         #endregion
 
         #region Settings Form - Look and Feel
@@ -1516,7 +1544,7 @@ namespace EVEMon.Common
             {
                 CharacterInfo gci = new CharacterInfo(sci.CharacterSheet.CharacterId, planKeyName);
                 // AssignFromSerializableCharacterSheet fires lots of events and calls the CheckTRainingSkill processing
-                gci.AssignFromSerializableCharacterSheet(GetCharacterSheet(planKeyName));
+                gci.AssignFromSerializableCharacterSheet(GetCharacterSheet(planKeyName), this.ShowAllPublicSkills, this.ShowNonPublicSkills, this.SkillPlannerHighlightPartialSkills);
 
                 p.GrandCharacterInfo = gci;
             }
