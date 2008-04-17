@@ -1855,6 +1855,61 @@ namespace EVEMon
                                        (m_grandCharacterInfo.GetEffectiveAttribute(s.SecondaryAttribute) / 2));
                 string SPPerHour = " (" + Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour)";
 
+// Steven - Start
+                if (e.Button == MouseButtons.Right)
+                {
+                    percentDone = s.GetPercentDone();
+                    bool doPopup = false;
+                    NextLevel = s.Level;
+                    // They haven't completed the level...
+                    if (percentDone < 100.0)
+                    {
+                        // They may have finished the current level, but not started the next level...
+                        if (s.CurrentSkillPoints >= s.GetPointsRequiredForLevel(s.Level))
+                        {
+                            NextLevel += 1;
+                            doPopup = true;
+                        }
+                    }
+                    else
+                    {
+                        // They haven't completed Level V yet...
+                        if (s.Level < 5)
+                        {
+                            NextLevel += 1;
+                            doPopup = true;
+                        }
+                    }
+                    // Check whether we do popup or not. If not drop through and treat the right-click the same as the left.
+                    if (doPopup)
+                    {
+                        // Reset the menu.
+                        contextMenuStripPlanPopup.Items.Clear();
+                        ToolStripMenuItem tm = new ToolStripMenuItem(String.Format("Add {0} to Plan", s.Name));
+                        contextMenuStripPlanPopup.Items.Add(tm);
+
+                        String planKey = this.GetPlanKey();
+                        // Build the level options.
+                        for (int level = NextLevel; level < 6; level++)
+                        {
+                            ToolStripMenuItem menuLevel = new ToolStripMenuItem(string.Format("Level {0}", Skill.GetRomanForInt(level)));
+                            tm.DropDownItems.Add(menuLevel);
+                            foreach (string plan in m_settings.GetPlansForCharacter(planKey))
+                            {
+                                ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan);
+                                Dictionary<Skill, int> skillAndLevel = new Dictionary<Skill, int>();
+                                skillAndLevel.Add(s, level);
+                                menuPlanItem.Tag = skillAndLevel;
+                                menuPlanItem.Click += new EventHandler(menuPlanItem_Click);
+                                menuLevel.DropDownItems.Add(menuPlanItem);
+                            }
+                        }
+                        contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                        return;
+                    }
+                }
+// Steven - End
+
                 if (CurrentSP > s.GetPointsRequiredForLevel(s.Level))
                 {
                     //We must have completed some, but not all, of level II, III or IV
@@ -1951,6 +2006,19 @@ namespace EVEMon
                 }
             }
         }
+
+        // Steven - Start
+        void menuPlanItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
+            Plan plan = m_settings.GetPlanByName(m_charName, m_grandCharacterInfo, planItem.Text);
+            Dictionary<Skill, int> skillAndLevel = planItem.Tag as Dictionary<Skill, int>;
+            foreach (KeyValuePair<Skill, int> kvp in skillAndLevel)
+            {
+                plan.PlanTo(kvp.Key, kvp.Value);
+            }
+        }
+        // Steven - End
 
         private void miUpdatePicture_Click(object sender, EventArgs e)
         {

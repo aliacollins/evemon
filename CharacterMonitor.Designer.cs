@@ -74,6 +74,7 @@ namespace EVEMon
             this.tmrMinTrainingSkillRetry = new System.Windows.Forms.Timer(this.components);
             this.lbSkills = new EVEMon.NoFlickerListBox();
             this.btnAddToCalendar = new System.Windows.Forms.Button();
+            this.contextMenuStripPlanPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -614,6 +615,11 @@ namespace EVEMon
             this.btnAddToCalendar.UseVisualStyleBackColor = true;
             this.btnAddToCalendar.Click += new System.EventHandler(this.btnAddToCalendar_Click);
             // 
+            // contextMenuStripPlanPopup
+            // 
+            this.contextMenuStripPlanPopup.Name = "contextMenuStripPlanPopup";
+            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(153, 26);
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -699,5 +705,6 @@ namespace EVEMon
         private System.Windows.Forms.Timer tmrMinTrainingSkillRetry;
         private System.Windows.Forms.ToolStripMenuItem miHitTrainingSkill;
         private System.Windows.Forms.Button btnAddToCalendar;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripPlanPopup;
     }
 }
