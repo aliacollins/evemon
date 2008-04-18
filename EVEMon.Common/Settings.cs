@@ -11,6 +11,7 @@ using EVEMon.Common;
 using EVEMon.Common.Schedule;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using System.Reflection;
 
 namespace EVEMon.Common
 {
@@ -25,8 +26,67 @@ namespace EVEMon.Common
 
         private static Object mutexLock = new Object();
 
+        public Settings() {}
+
+        private Settings(string version)
+        {
+            VersionNumber = version;
+        }
+
+        #region Version Information
+
+        private string m_versionNumber = string.Empty;
+
+        /// <summary>
+        /// Identifies the application version associated with the settings file. This is verified against
+        /// the current version number when we load the settings file so we can prompt the user to back it up
+        /// when we push out a release, this way if we change the structure of Settings the user can revert to a previous
+        /// release without losing data.
+        /// </summary>
+        public string VersionNumber
+        {
+            get { return m_versionNumber; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_versionNumber = value;
+                }
+            }
+        }
+
+        private void CheckSettingsVersion(bool notifyUser)
+        {
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            if ((VersionNumber != currentVersion) && notifyUser)
+                PromptUserToBackupSettings();
+            VersionNumber = currentVersion;
+        }
+
+        private void PromptUserToBackupSettings()
+        {
+            DialogResult backupSettings =
+                MessageBox.Show("The current EVEMon settings file is from a previous version of EVEMon. Backup the current file before proceeding (recommended)?",
+                    "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            if (backupSettings == DialogResult.Yes)
+            {
+                using (SaveFileDialog fileDialog = new SaveFileDialog())
+                {
+                    fileDialog.Title = "Settings file backup";
+                    fileDialog.Filter = "Settings Backup Files (*.bak) | *.bak";
+                    fileDialog.FileName = string.Format("EVEMon_Settings_{0}.xml.bak", VersionNumber);
+                    fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    DialogResult saveFile = fileDialog.ShowDialog();
+                    if (saveFile == DialogResult.OK)
+                        File.Copy(SettingsFileName, fileDialog.FileName, true);
+                }
+            }
+        }
+
+        #endregion
+
         #region Character Lists
-        
+
         private List<AccountDetails> m_accountList = new List<AccountDetails>();
         public List<AccountDetails> Accounts
         {
@@ -2079,6 +2139,7 @@ namespace EVEMon.Common
             lock (mutexLock)
             {
                 m_instance = LoadFromFile(filename);
+                m_instance.CheckSettingsVersion(false);
                 return m_instance;
             }
         }
@@ -2253,8 +2314,10 @@ namespace EVEMon.Common
             // If we don't have a settings by now, either its a fresh install or all file copies are corrupt, so create new settings
             if (s == null)
             {
-                s = new Settings();
+                s = new Settings(Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
+            // Make sure the version number is good
+            s.CheckSettingsVersion(true);
             s.CalculateChecksums();
             return s;
         }
@@ -2280,7 +2343,7 @@ namespace EVEMon.Common
         /// Performs that actual save process
         /// </summary>
         /// <remarks>
-        /// Saves are only comitted if m_neverSave is false and m_savePending is tru
+        /// Saves are only comitted if m_neverSave is false and m_savePending is true
         /// </remarks>
         /// <param name="state">Ignored. Required by the timer callback</param>
         private void SaveCallback(Object state)
