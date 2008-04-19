@@ -227,39 +227,46 @@ namespace SNCalendar
         #region Public Methods and Implementations
         public override bool AddAppointment()
         {
-            Outlook._AppointmentItem appointmentItem = (Outlook._AppointmentItem)
-                OutlookApplication.CreateItem(Outlook.OlItemType.olAppointmentItem);
-
-            appointmentItem.Subject = subject;
-            appointmentItem.Start = startDate;
-            appointmentItem.End = endDate;
-            appointmentItem.Body = string.Format("Added: {0}", DateTime.Now);
-
-            appointmentItem.ReminderSet = reminder;
-
-            appointmentItem.BusyStatus = Outlook.OlBusyStatus.olBusy;
-            appointmentItem.AllDayEvent = false;
-            appointmentItem.Location = "";
-
-            if (alternateReminder)
+            try
             {
-                earlyReminder = new DateTime(startDate.Year, startDate.Month, startDate.Day, earlyReminder.Hour, earlyReminder.Minute, earlyReminder.Second);
-                lateReminder = new DateTime(startDate.Year, startDate.Month, startDate.Day, lateReminder.Hour, lateReminder.Minute, lateReminder.Second);
+                Outlook._AppointmentItem appointmentItem = (Outlook._AppointmentItem)
+                    OutlookApplication.CreateItem(Outlook.OlItemType.olAppointmentItem);
 
-                DateTime dtReminder = WorkOutAlternateReminders();
-                // Subtract the reminder time from the appointment time.
-                TimeSpan timeSpan = appointmentItem.Start.Subtract(dtReminder);
-                appointmentItem.ReminderMinutesBeforeStart = Math.Abs((timeSpan.Hours * 60) + timeSpan.Minutes);
-                minutes = appointmentItem.ReminderMinutesBeforeStart;
+                appointmentItem.Subject = subject;
+                appointmentItem.Start = startDate;
+                appointmentItem.End = endDate;
+                appointmentItem.Body = string.Format("Added: {0}", DateTime.Now);
+
+                appointmentItem.ReminderSet = reminder;
+
+                appointmentItem.BusyStatus = Outlook.OlBusyStatus.olBusy;
+                appointmentItem.AllDayEvent = false;
+                appointmentItem.Location = "";
+
+                if (alternateReminder)
+                {
+                    earlyReminder = new DateTime(startDate.Year, startDate.Month, startDate.Day, earlyReminder.Hour, earlyReminder.Minute, earlyReminder.Second);
+                    lateReminder = new DateTime(startDate.Year, startDate.Month, startDate.Day, lateReminder.Hour, lateReminder.Minute, lateReminder.Second);
+
+                    DateTime dtReminder = WorkOutAlternateReminders();
+                    // Subtract the reminder time from the appointment time.
+                    TimeSpan timeSpan = appointmentItem.Start.Subtract(dtReminder);
+                    appointmentItem.ReminderMinutesBeforeStart = Math.Abs((timeSpan.Hours * 60) + timeSpan.Minutes);
+                    minutes = appointmentItem.ReminderMinutesBeforeStart;
+                }
+
+                if (reminder)
+                    appointmentItem.ReminderMinutesBeforeStart = minutes;
+                else
+                    appointmentItem.ReminderMinutesBeforeStart = 0;
+
+                appointmentItem.Save();
+                return true;
             }
-
-            if (reminder)
-                appointmentItem.ReminderMinutesBeforeStart = minutes;
-            else
-                appointmentItem.ReminderMinutesBeforeStart = 0;
-
-            appointmentItem.Save();
-            return true;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public override void UpdateAppointment(int iIndex)
@@ -705,4 +712,6 @@ namespace SNCalendar
     }
     #endregion
 }
+
+
 
