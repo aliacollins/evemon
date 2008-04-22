@@ -213,6 +213,60 @@ namespace EVEMon.SkillPlanner
 
         public event EventHandler<EventArgs> SelectedObjectChanged;
 
+        public void expandTreePathForObject(EveObject obj)
+        {
+            if (tvItems.SelectedNode != null && tvItems.SelectedNode.Tag == obj)
+            {
+                return;
+            }
+
+            tvItems.BeginUpdate();
+        
+            tvItems.CollapseAll();
+            foreach (TreeNode n in tvItems.Nodes)
+            {
+                if (expandTreePathForObject(n,obj))
+                {
+                    n.Expand();
+                }
+            }
+
+            tvItems.EndUpdate();
+
+            lbSearchList.Visible = false;
+            tvItems.Visible = true;
+        }
+
+        private Boolean expandTreePathForObject(TreeNode tn, EveObject obj)
+        {
+            EveObject itm = tn.Tag as EveObject;
+            if (itm == null)
+            {
+                foreach (TreeNode subNode in tn.Nodes)
+                {
+                    if (expandTreePathForObject(subNode, obj))
+                    {
+                        subNode.Expand();
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if (itm == obj)
+                {
+                    tvItems.SelectedNodes.Clear();
+                    tvItems.SelectedNodes.Add(tn);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         protected void SetSelectedObjects(List<EveObject> s)
         {
             m_selectedObjects = s;

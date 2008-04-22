@@ -109,6 +109,8 @@ namespace EVEMon.SkillPlanner
             this.lblEveObjName.Size = new System.Drawing.Size(131, 18);
             this.lblEveObjName.TabIndex = 7;
             this.lblEveObjName.Text = "EveObject Name";
+            this.lblEveObjName.Click += new System.EventHandler(EveObjName_Clicked);
+
             // 
             // lblHelp
             // 

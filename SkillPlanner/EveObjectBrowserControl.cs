@@ -140,6 +140,17 @@ namespace EVEMon.SkillPlanner
                 lblHelp.Visible = true;
             }
         }
+
+        /// <summary>
+        /// Expand treeview to show currently selected item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveObjName_Clicked(object sender,EventArgs e)
+        {
+            _objectSelectControl.expandTreePathForObject(_selectedObject);
+        }
+
         /// <summary>
         /// Event cleanup
         /// </summary>
