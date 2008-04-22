@@ -49,11 +49,11 @@ namespace EVEMon
             this.lblTrainingSkill = new System.Windows.Forms.Label();
             this.lblTrainingRemain = new System.Windows.Forms.Label();
             this.lblTrainingEst = new System.Windows.Forms.Label();
+            this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.tmrUpdateCharacter = new System.Windows.Forms.Timer(this.components);
             this.pnlCharData = new System.Windows.Forms.Panel();
             this.tlpInfo = new System.Windows.Forms.TableLayoutPanel();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
-            this.throbber = new EVEMon.Throbber();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
             this.miHitTrainingSkill = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,9 +72,9 @@ namespace EVEMon
             this.updatePictureFromEVECache = new System.Windows.Forms.ToolStripMenuItem();
             this.setEVEFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tmrMinTrainingSkillRetry = new System.Windows.Forms.Timer(this.components);
-            this.lbSkills = new EVEMon.NoFlickerListBox();
-            this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.contextMenuStripPlanPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.throbber = new EVEMon.Throbber();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -83,11 +83,11 @@ namespace EVEMon
             this.pnlCharData.SuspendLayout();
             this.tlpInfo.SuspendLayout();
             this.flpThrobber.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.cmsThrobberMenu.SuspendLayout();
             this.flpButtons.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
             this.cmsPictureOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // pbCharImage
@@ -340,6 +340,17 @@ namespace EVEMon
             this.lblTrainingEst.TabIndex = 3;
             this.lblTrainingEst.Text = ".";
             // 
+            // btnAddToCalendar
+            // 
+            this.btnAddToCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddToCalendar.Location = new System.Drawing.Point(280, 13);
+            this.btnAddToCalendar.Name = "btnAddToCalendar";
+            this.btnAddToCalendar.Size = new System.Drawing.Size(109, 23);
+            this.btnAddToCalendar.TabIndex = 16;
+            this.btnAddToCalendar.Text = "Update Calendar";
+            this.btnAddToCalendar.UseVisualStyleBackColor = true;
+            this.btnAddToCalendar.Click += new System.EventHandler(this.btnAddToCalendar_Click);
+            // 
             // tmrUpdateCharacter
             // 
             this.tmrUpdateCharacter.Tick += new System.EventHandler(this.tmrUpdate_Tick);
@@ -395,23 +406,6 @@ namespace EVEMon
             this.flpThrobber.Size = new System.Drawing.Size(31, 37);
             this.flpThrobber.TabIndex = 15;
             this.flpThrobber.WrapContents = false;
-            // 
-            // throbber
-            // 
-            this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.throbber.BackColor = System.Drawing.Color.Transparent;
-            this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
-            this.throbber.Location = new System.Drawing.Point(7, 0);
-            this.throbber.Margin = new System.Windows.Forms.Padding(0);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Throbber.ThrobberState.Stopped;
-            this.throbber.TabIndex = 18;
-            this.throbber.TabStop = false;
-            this.throbber.Text = "throbber1";
-            this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
             // 
             // cmsThrobberMenu
             // 
@@ -586,6 +580,11 @@ namespace EVEMon
             this.tmrMinTrainingSkillRetry.Interval = 1000;
             this.tmrMinTrainingSkillRetry.Tick += new System.EventHandler(this.tmrMTSRTick);
             // 
+            // contextMenuStripPlanPopup
+            // 
+            this.contextMenuStripPlanPopup.Name = "contextMenuStripPlanPopup";
+            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(61, 4);
+            // 
             // lbSkills
             // 
             this.lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -604,21 +603,22 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
-            // btnAddToCalendar
+            // throbber
             // 
-            this.btnAddToCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddToCalendar.Location = new System.Drawing.Point(280, 13);
-            this.btnAddToCalendar.Name = "btnAddToCalendar";
-            this.btnAddToCalendar.Size = new System.Drawing.Size(109, 23);
-            this.btnAddToCalendar.TabIndex = 16;
-            this.btnAddToCalendar.Text = "Update Calendar";
-            this.btnAddToCalendar.UseVisualStyleBackColor = true;
-            this.btnAddToCalendar.Click += new System.EventHandler(this.btnAddToCalendar_Click);
-            // 
-            // contextMenuStripPlanPopup
-            // 
-            this.contextMenuStripPlanPopup.Name = "contextMenuStripPlanPopup";
-            this.contextMenuStripPlanPopup.Size = new System.Drawing.Size(153, 26);
+            this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.throbber.BackColor = System.Drawing.Color.Transparent;
+            this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
+            this.throbber.Location = new System.Drawing.Point(7, 0);
+            this.throbber.Margin = new System.Windows.Forms.Padding(0);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Throbber.ThrobberState.Stopped;
+            this.throbber.TabIndex = 18;
+            this.throbber.TabStop = false;
+            this.throbber.Text = "throbber1";
+            this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
             // 
             // CharacterMonitor
             // 
@@ -646,13 +646,13 @@ namespace EVEMon
             this.tlpInfo.PerformLayout();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.cmsThrobberMenu.ResumeLayout(false);
             this.flpButtons.ResumeLayout(false);
             this.flpButtons.PerformLayout();
             this.flpCharacterInfo.ResumeLayout(false);
             this.flpCharacterInfo.PerformLayout();
             this.cmsPictureOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

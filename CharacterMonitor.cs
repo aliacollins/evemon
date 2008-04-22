@@ -197,17 +197,12 @@ namespace EVEMon
                             m_groupCollapsed.Add(gsg, true);
                             foreach (Skill gs in gsg)
                             {
-// 947 - Start
-//                                if (gs.Known)
-//                                {
                                 try
                                 {
                                     lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
                                 }
                                 catch
                                 { }
-//                                }
-// 947 - End
                             }
 
                             gsg.isCollapsed = true;
@@ -223,6 +218,7 @@ namespace EVEMon
 
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
             //m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
+            btnAddToCalendar.Visible = m_settings.UseExternalCalendar;
         }
 
         /// <summary>

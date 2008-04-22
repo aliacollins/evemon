@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode19,
-            treeNode20,
-            treeNode21,
-            treeNode22,
-            treeNode23,
-            treeNode24,
-            treeNode25,
-            treeNode26});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -100,6 +100,8 @@ namespace EVEMon
             this.label17 = new System.Windows.Forms.Label();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.labelRestartWarning2 = new System.Windows.Forms.Label();
+            this.labelRestartWarning1 = new System.Windows.Forms.Label();
             this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
             this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
             this.tabLookAndFeel = new System.Windows.Forms.TabPage();
@@ -194,25 +196,6 @@ namespace EVEMon
             this.label15 = new System.Windows.Forms.Label();
             this.numericStatusInterval = new System.Windows.Forms.NumericUpDown();
             this.tabCalendar = new System.Windows.Forms.TabPage();
-            this.groupBox14 = new System.Windows.Forms.GroupBox();
-            this.panelColorText = new System.Windows.Forms.Panel();
-            this.label24 = new System.Windows.Forms.Label();
-            this.panelColorRecurring2 = new System.Windows.Forms.Panel();
-            this.panelColorRecurring1 = new System.Windows.Forms.Panel();
-            this.panelColorSingle2 = new System.Windows.Forms.Panel();
-            this.panelColorSingle1 = new System.Windows.Forms.Panel();
-            this.panelColorBlocking = new System.Windows.Forms.Panel();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.btnOk = new System.Windows.Forms.Button();
-            this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.chName = new System.Windows.Forms.ColumnHeader();
-            this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.gbExternalCalendar = new System.Windows.Forms.GroupBox();
             this.cbUseExternalCalendar = new System.Windows.Forms.CheckBox();
             this.tbReminder = new System.Windows.Forms.TextBox();
@@ -233,8 +216,25 @@ namespace EVEMon
             this.lblGoogleEmail = new System.Windows.Forms.Label();
             this.rbGoogle = new System.Windows.Forms.RadioButton();
             this.rbMSOutlook = new System.Windows.Forms.RadioButton();
-            this.labelRestartWarning1 = new System.Windows.Forms.Label();
-            this.labelRestartWarning2 = new System.Windows.Forms.Label();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.panelColorText = new System.Windows.Forms.Panel();
+            this.label24 = new System.Windows.Forms.Label();
+            this.panelColorRecurring2 = new System.Windows.Forms.Panel();
+            this.panelColorRecurring1 = new System.Windows.Forms.Panel();
+            this.panelColorSingle2 = new System.Windows.Forms.Panel();
+            this.panelColorSingle1 = new System.Windows.Forms.Panel();
+            this.panelColorBlocking = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.chName = new System.Windows.Forms.ColumnHeader();
+            this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -292,10 +292,10 @@ namespace EVEMon
             this.tlpCustomTQSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).BeginInit();
             this.tabCalendar.SuspendLayout();
-            this.groupBox14.SuspendLayout();
-            this.flowLayoutPanel9.SuspendLayout();
             this.gbExternalCalendar.SuspendLayout();
             this.gbGoogle.SuspendLayout();
+            this.groupBox14.SuspendLayout();
+            this.flowLayoutPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -960,6 +960,26 @@ namespace EVEMon
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Character Monitor";
             // 
+            // labelRestartWarning2
+            // 
+            this.labelRestartWarning2.AutoSize = true;
+            this.labelRestartWarning2.ForeColor = System.Drawing.Color.Blue;
+            this.labelRestartWarning2.Location = new System.Drawing.Point(7, 57);
+            this.labelRestartWarning2.Name = "labelRestartWarning2";
+            this.labelRestartWarning2.Size = new System.Drawing.Size(283, 13);
+            this.labelRestartWarning2.TabIndex = 3;
+            this.labelRestartWarning2.Text = "to see any skill groups that do not have any trained skills.";
+            // 
+            // labelRestartWarning1
+            // 
+            this.labelRestartWarning1.AutoSize = true;
+            this.labelRestartWarning1.ForeColor = System.Drawing.Color.Blue;
+            this.labelRestartWarning1.Location = new System.Drawing.Point(7, 44);
+            this.labelRestartWarning1.Name = "labelRestartWarning1";
+            this.labelRestartWarning1.Size = new System.Drawing.Size(359, 13);
+            this.labelRestartWarning1.TabIndex = 2;
+            this.labelRestartWarning1.Text = "When displaying all skills, it is necessary to restart the application in order";
+            // 
             // cbShowNonPublicSkills
             // 
             this.cbShowNonPublicSkills.AutoSize = true;
@@ -1299,26 +1319,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode19.Name = "Node1";
-            treeNode19.Text = "Node1";
-            treeNode20.Name = "Node2";
-            treeNode20.Text = "Node2";
-            treeNode21.Name = "Node3";
-            treeNode21.Text = "Node3";
-            treeNode22.Name = "Node4";
-            treeNode22.Text = "Node4";
-            treeNode23.Name = "Node5";
-            treeNode23.Text = "Node5";
-            treeNode24.Name = "Node6";
-            treeNode24.Text = "Node6";
-            treeNode25.Name = "Node7";
-            treeNode25.Text = "Node7";
-            treeNode26.Name = "Node8";
-            treeNode26.Text = "Node8";
-            treeNode27.Name = "Node0";
-            treeNode27.Text = "Node0";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode27});
+            treeNode9});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -2096,189 +2116,7 @@ namespace EVEMon
             this.tabCalendar.Text = "Calendar";
             this.tabCalendar.UseVisualStyleBackColor = true;
             // 
-            // groupBox14
-            // 
-            this.groupBox14.Controls.Add(this.panelColorText);
-            this.groupBox14.Controls.Add(this.label24);
-            this.groupBox14.Controls.Add(this.panelColorRecurring2);
-            this.groupBox14.Controls.Add(this.panelColorRecurring1);
-            this.groupBox14.Controls.Add(this.panelColorSingle2);
-            this.groupBox14.Controls.Add(this.panelColorSingle1);
-            this.groupBox14.Controls.Add(this.panelColorBlocking);
-            this.groupBox14.Controls.Add(this.label22);
-            this.groupBox14.Controls.Add(this.label21);
-            this.groupBox14.Controls.Add(this.label20);
-            this.groupBox14.Location = new System.Drawing.Point(3, 3);
-            this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(378, 113);
-            this.groupBox14.TabIndex = 1;
-            this.groupBox14.TabStop = false;
-            this.groupBox14.Text = "Scheduler Entry Colors:";
-            // 
-            // panelColorText
-            // 
-            this.panelColorText.BackColor = System.Drawing.Color.White;
-            this.panelColorText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorText.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorText.Location = new System.Drawing.Point(107, 15);
-            this.panelColorText.Name = "panelColorText";
-            this.panelColorText.Size = new System.Drawing.Size(43, 17);
-            this.panelColorText.TabIndex = 4;
-            this.panelColorText.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 19);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(33, 13);
-            this.label24.TabIndex = 5;
-            this.label24.Text = "Text:";
-            // 
-            // panelColorRecurring2
-            // 
-            this.panelColorRecurring2.BackColor = System.Drawing.Color.LightGreen;
-            this.panelColorRecurring2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorRecurring2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorRecurring2.Location = new System.Drawing.Point(156, 86);
-            this.panelColorRecurring2.Name = "panelColorRecurring2";
-            this.panelColorRecurring2.Size = new System.Drawing.Size(43, 17);
-            this.panelColorRecurring2.TabIndex = 4;
-            this.panelColorRecurring2.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // panelColorRecurring1
-            // 
-            this.panelColorRecurring1.BackColor = System.Drawing.Color.Green;
-            this.panelColorRecurring1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorRecurring1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorRecurring1.Location = new System.Drawing.Point(107, 86);
-            this.panelColorRecurring1.Name = "panelColorRecurring1";
-            this.panelColorRecurring1.Size = new System.Drawing.Size(43, 17);
-            this.panelColorRecurring1.TabIndex = 4;
-            this.panelColorRecurring1.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // panelColorSingle2
-            // 
-            this.panelColorSingle2.BackColor = System.Drawing.Color.LightBlue;
-            this.panelColorSingle2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorSingle2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorSingle2.Location = new System.Drawing.Point(156, 63);
-            this.panelColorSingle2.Name = "panelColorSingle2";
-            this.panelColorSingle2.Size = new System.Drawing.Size(43, 17);
-            this.panelColorSingle2.TabIndex = 4;
-            this.panelColorSingle2.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // panelColorSingle1
-            // 
-            this.panelColorSingle1.BackColor = System.Drawing.Color.Blue;
-            this.panelColorSingle1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorSingle1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorSingle1.Location = new System.Drawing.Point(107, 63);
-            this.panelColorSingle1.Name = "panelColorSingle1";
-            this.panelColorSingle1.Size = new System.Drawing.Size(43, 17);
-            this.panelColorSingle1.TabIndex = 4;
-            this.panelColorSingle1.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // panelColorBlocking
-            // 
-            this.panelColorBlocking.BackColor = System.Drawing.Color.Red;
-            this.panelColorBlocking.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorBlocking.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelColorBlocking.Location = new System.Drawing.Point(107, 38);
-            this.panelColorBlocking.Name = "panelColorBlocking";
-            this.panelColorBlocking.Size = new System.Drawing.Size(43, 17);
-            this.panelColorBlocking.TabIndex = 3;
-            this.panelColorBlocking.Click += new System.EventHandler(this.colorPanel_Click);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 67);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(77, 13);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Simple Events:";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 90);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(93, 13);
-            this.label21.TabIndex = 1;
-            this.label21.Text = "Recurring Events:";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 42);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(85, 13);
-            this.label20.TabIndex = 0;
-            this.label20.Text = "Blocking Events:";
-            // 
-            // btnOk
-            // 
-            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(236, 554);
-            this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 3;
-            this.btnOk.Text = "OK";
-            this.btnOk.UseVisualStyleBackColor = true;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
-            // flowLayoutPanel9
-            // 
-            this.flowLayoutPanel9.AutoSize = true;
-            this.flowLayoutPanel9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel9.Controls.Add(this.checkBox1);
-            this.flowLayoutPanel9.Controls.Add(this.checkBox2);
-            this.flowLayoutPanel9.Controls.Add(this.checkBox3);
-            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel9.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(356, 70);
-            this.flowLayoutPanel9.TabIndex = 3;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(102, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Minimize to Tray";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(12, 26);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(171, 17);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "Set window title to training time";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(12, 49);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(264, 17);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // chName
-            // 
-            this.chName.Text = "Sample";
-            // 
             // gbExternalCalendar
-            // labelRestartWarning1
             // 
             this.gbExternalCalendar.Controls.Add(this.cbUseExternalCalendar);
             this.gbExternalCalendar.Controls.Add(this.tbReminder);
@@ -2481,6 +2319,7 @@ namespace EVEMon
             this.rbGoogle.TabIndex = 2;
             this.rbGoogle.Text = "Google";
             this.rbGoogle.UseVisualStyleBackColor = true;
+            this.rbGoogle.Click += new System.EventHandler(this.rbMSOutlook_Click);
             // 
             // rbMSOutlook
             // 
@@ -2495,24 +2334,186 @@ namespace EVEMon
             this.rbMSOutlook.UseVisualStyleBackColor = true;
             this.rbMSOutlook.Click += new System.EventHandler(this.rbMSOutlook_Click);
             // 
+            // groupBox14
             // 
-            this.labelRestartWarning1.AutoSize = true;
-            this.labelRestartWarning1.ForeColor = System.Drawing.Color.Blue;
-            this.labelRestartWarning1.Location = new System.Drawing.Point(7, 44);
-            this.labelRestartWarning1.Name = "labelRestartWarning1";
-            this.labelRestartWarning1.Size = new System.Drawing.Size(359, 13);
-            this.labelRestartWarning1.TabIndex = 2;
-            this.labelRestartWarning1.Text = "When displaying all skills, it is necessary to restart the application in order";
+            this.groupBox14.Controls.Add(this.panelColorText);
+            this.groupBox14.Controls.Add(this.label24);
+            this.groupBox14.Controls.Add(this.panelColorRecurring2);
+            this.groupBox14.Controls.Add(this.panelColorRecurring1);
+            this.groupBox14.Controls.Add(this.panelColorSingle2);
+            this.groupBox14.Controls.Add(this.panelColorSingle1);
+            this.groupBox14.Controls.Add(this.panelColorBlocking);
+            this.groupBox14.Controls.Add(this.label22);
+            this.groupBox14.Controls.Add(this.label21);
+            this.groupBox14.Controls.Add(this.label20);
+            this.groupBox14.Location = new System.Drawing.Point(3, 3);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(378, 113);
+            this.groupBox14.TabIndex = 1;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Scheduler Entry Colors:";
             // 
-            // labelRestartWarning2
+            // panelColorText
             // 
-            this.labelRestartWarning2.AutoSize = true;
-            this.labelRestartWarning2.ForeColor = System.Drawing.Color.Blue;
-            this.labelRestartWarning2.Location = new System.Drawing.Point(7, 57);
-            this.labelRestartWarning2.Name = "labelRestartWarning2";
-            this.labelRestartWarning2.Size = new System.Drawing.Size(283, 13);
-            this.labelRestartWarning2.TabIndex = 3;
-            this.labelRestartWarning2.Text = "to see any skill groups that do not have any trained skills.";
+            this.panelColorText.BackColor = System.Drawing.Color.White;
+            this.panelColorText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorText.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorText.Location = new System.Drawing.Point(107, 15);
+            this.panelColorText.Name = "panelColorText";
+            this.panelColorText.Size = new System.Drawing.Size(43, 17);
+            this.panelColorText.TabIndex = 4;
+            this.panelColorText.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 19);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(33, 13);
+            this.label24.TabIndex = 5;
+            this.label24.Text = "Text:";
+            // 
+            // panelColorRecurring2
+            // 
+            this.panelColorRecurring2.BackColor = System.Drawing.Color.LightGreen;
+            this.panelColorRecurring2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorRecurring2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorRecurring2.Location = new System.Drawing.Point(156, 86);
+            this.panelColorRecurring2.Name = "panelColorRecurring2";
+            this.panelColorRecurring2.Size = new System.Drawing.Size(43, 17);
+            this.panelColorRecurring2.TabIndex = 4;
+            this.panelColorRecurring2.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorRecurring1
+            // 
+            this.panelColorRecurring1.BackColor = System.Drawing.Color.Green;
+            this.panelColorRecurring1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorRecurring1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorRecurring1.Location = new System.Drawing.Point(107, 86);
+            this.panelColorRecurring1.Name = "panelColorRecurring1";
+            this.panelColorRecurring1.Size = new System.Drawing.Size(43, 17);
+            this.panelColorRecurring1.TabIndex = 4;
+            this.panelColorRecurring1.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorSingle2
+            // 
+            this.panelColorSingle2.BackColor = System.Drawing.Color.LightBlue;
+            this.panelColorSingle2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorSingle2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorSingle2.Location = new System.Drawing.Point(156, 63);
+            this.panelColorSingle2.Name = "panelColorSingle2";
+            this.panelColorSingle2.Size = new System.Drawing.Size(43, 17);
+            this.panelColorSingle2.TabIndex = 4;
+            this.panelColorSingle2.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorSingle1
+            // 
+            this.panelColorSingle1.BackColor = System.Drawing.Color.Blue;
+            this.panelColorSingle1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorSingle1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorSingle1.Location = new System.Drawing.Point(107, 63);
+            this.panelColorSingle1.Name = "panelColorSingle1";
+            this.panelColorSingle1.Size = new System.Drawing.Size(43, 17);
+            this.panelColorSingle1.TabIndex = 4;
+            this.panelColorSingle1.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // panelColorBlocking
+            // 
+            this.panelColorBlocking.BackColor = System.Drawing.Color.Red;
+            this.panelColorBlocking.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelColorBlocking.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panelColorBlocking.Location = new System.Drawing.Point(107, 38);
+            this.panelColorBlocking.Name = "panelColorBlocking";
+            this.panelColorBlocking.Size = new System.Drawing.Size(43, 17);
+            this.panelColorBlocking.TabIndex = 3;
+            this.panelColorBlocking.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 67);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(77, 13);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Simple Events:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 90);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(93, 13);
+            this.label21.TabIndex = 1;
+            this.label21.Text = "Recurring Events:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 42);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(85, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Blocking Events:";
+            // 
+            // btnOk
+            // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Location = new System.Drawing.Point(236, 554);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.TabIndex = 3;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // flowLayoutPanel9
+            // 
+            this.flowLayoutPanel9.AutoSize = true;
+            this.flowLayoutPanel9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel9.Controls.Add(this.checkBox1);
+            this.flowLayoutPanel9.Controls.Add(this.checkBox2);
+            this.flowLayoutPanel9.Controls.Add(this.checkBox3);
+            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel9.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 16);
+            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
+            this.flowLayoutPanel9.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(356, 70);
+            this.flowLayoutPanel9.TabIndex = 3;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(12, 3);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(102, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Minimize to Tray";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(12, 26);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(171, 17);
+            this.checkBox2.TabIndex = 1;
+            this.checkBox2.Text = "Set window title to training time";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(12, 49);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(264, 17);
+            this.checkBox3.TabIndex = 2;
+            this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // chName
+            // 
+            this.chName.Text = "Sample";
             // 
             // SettingsForm
             // 
@@ -2631,14 +2632,14 @@ namespace EVEMon
             this.tlpCustomTQSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStatusInterval)).EndInit();
             this.tabCalendar.ResumeLayout(false);
-            this.groupBox14.ResumeLayout(false);
-            this.groupBox14.PerformLayout();
-            this.flowLayoutPanel9.ResumeLayout(false);
-            this.flowLayoutPanel9.PerformLayout();
             this.gbExternalCalendar.ResumeLayout(false);
             this.gbExternalCalendar.PerformLayout();
             this.gbGoogle.ResumeLayout(false);
             this.gbGoogle.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
+            this.flowLayoutPanel9.ResumeLayout(false);
+            this.flowLayoutPanel9.PerformLayout();
             this.ResumeLayout(false);
 
         }
