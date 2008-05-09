@@ -225,6 +225,7 @@ namespace EVEMon
             // 
             this.cbImplant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbImplant.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbImplant.FormattingEnabled = true;
             this.cbImplant.Location = new System.Drawing.Point(88, 30);
             this.cbImplant.Name = "cbImplant";
