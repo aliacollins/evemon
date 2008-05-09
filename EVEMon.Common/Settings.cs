@@ -1909,6 +1909,20 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_skillPieChartMergeMinorGroups = false;
+
+        public bool SkillPieChartMergeMinorGroups
+        {
+            get { return m_skillPieChartMergeMinorGroups; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_skillPieChartMergeMinorGroups = value;
+                }
+            }
+        }
+
         #endregion
 
         #region Ignored Updates

@@ -30,6 +30,7 @@ namespace EVEMon
             skillPieChartControl.SliceRelativeHeight = m_settings.SkillPieChartSliceRelativeHeight;
             skillPieChartControl.InitialAngle = m_settings.SkillPieChartInitialAngle;
             sortBySizeCheck.Checked = m_settings.SkillPieChartSortBySize;
+            mergeMinorCheck.Checked = m_settings.SkillPieChartMergeMinorGroups;
             pieHeight.Value = (decimal)m_settings.SkillPieChartSliceRelativeHeight;
             pieAngle.Value = (decimal)m_settings.SkillPieChartInitialAngle;
             skillPieChartControl.ShadowStyle = ShadowStyle.GradualShadow;
@@ -69,6 +70,10 @@ namespace EVEMon
 
         private void UpdatePieChart()
         {
+            // To avoid trouble during startup
+            if (active_character == null)
+                return;
+
             SerializableCharacterSheet c_info = m_settings.GetCharacterSheet(active_character);
 
             // Retrieve the selected Plan
@@ -230,6 +235,73 @@ namespace EVEMon
                 newSliceRelativeDisplacements = final_newSliceRelativeDisplacements;
             }
 
+            if (m_settings.SkillPieChartMergeMinorGroups)
+            {
+                decimal totalValue = 0;
+                for (int i = 0; i < newValues.Length; i++)
+                {
+                    totalValue += newValues[i];
+                }
+                decimal tresholdValue = 0.01m * totalValue;
+
+                int mergedCount = 0;
+                for (int i = 0; i < newValues.Length; i++)
+                {
+                    if (newValues[i] > tresholdValue)
+                        mergedCount++;
+                }
+
+                if (mergedCount < newValues.Length)
+                {
+                    // Add the "Other" slice
+                    mergedCount++;
+
+                    decimal[] merged_newValues = new decimal[mergedCount];
+                    string[] merged_newTexts = new string[mergedCount];
+                    string[] merged_newToolTips = new string[mergedCount];
+                    float[] merged_newSliceRelativeDisplacements = new float[mergedCount];
+
+                    decimal otherValue = 0;
+                    string otherText = "Other";
+                    string otherToolTip = "";
+                    float otherSliceRelativeDisplacement = 0;
+
+                    int newindex = 0;
+                    bool firstother = true;
+                    for (int oldindex = 0; oldindex < newValues.Length; oldindex++)
+                    {
+                        if (newValues[oldindex] > tresholdValue)
+                        {
+                            merged_newValues[newindex] = newValues[oldindex];
+                            merged_newTexts[newindex] = newTexts[oldindex];
+                            merged_newToolTips[newindex] = newToolTips[oldindex];
+                            merged_newSliceRelativeDisplacements[newindex] = newSliceRelativeDisplacements[oldindex];
+                            newindex++;
+                        }
+                        else
+                        {
+                            otherValue += newValues[oldindex];
+
+                            if (firstother)
+                                firstother = false;
+                            else
+                                otherToolTip += '\n';
+                            otherToolTip += newToolTips[oldindex];
+                        }
+                    }
+                    otherSliceRelativeDisplacement = (otherValue < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
+
+                    merged_newValues[merged_newValues.Length - 1] = otherValue;
+                    merged_newTexts[merged_newValues.Length - 1] = otherText;
+                    merged_newToolTips[merged_newValues.Length - 1] = otherToolTip;
+                    merged_newSliceRelativeDisplacements[merged_newValues.Length - 1] = otherSliceRelativeDisplacement;
+
+                    newValues = merged_newValues;
+                    newTexts = merged_newTexts;
+                    newToolTips = merged_newToolTips;
+                    newSliceRelativeDisplacements = merged_newSliceRelativeDisplacements;
+                }
+            }
 
             skillPieChartControl.Values = newValues;
             skillPieChartControl.Texts = newTexts;
@@ -327,6 +399,12 @@ namespace EVEMon
 
         private void planSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdatePieChart();
+        }
+
+        private void mergeMinorCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            m_settings.SkillPieChartMergeMinorGroups = mergeMinorCheck.Checked;
             UpdatePieChart();
         }
     }

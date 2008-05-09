@@ -42,6 +42,7 @@ namespace EVEMon
             this.savePieDialog = new System.Windows.Forms.SaveFileDialog();
             this.planSelector = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.mergeMinorCheck = new System.Windows.Forms.CheckBox();
             this.pieControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieHeight)).BeginInit();
@@ -66,6 +67,7 @@ namespace EVEMon
             // 
             this.pieControlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.pieControlPanel.Controls.Add(this.mergeMinorCheck);
             this.pieControlPanel.Controls.Add(this.saveButton);
             this.pieControlPanel.Controls.Add(this.closeButton);
             this.pieControlPanel.Controls.Add(this.pieAngle);
@@ -119,7 +121,7 @@ namespace EVEMon
             0,
             -2147483648});
             this.pieAngle.Name = "pieAngle";
-            this.pieAngle.Size = new System.Drawing.Size(52, 20);
+            this.pieAngle.Size = new System.Drawing.Size(52, 21);
             this.pieAngle.TabIndex = 3;
             this.pieAngle.Value = new decimal(new int[] {
             30,
@@ -143,7 +145,7 @@ namespace EVEMon
             0,
             65536});
             this.pieHeight.Name = "pieHeight";
-            this.pieHeight.Size = new System.Drawing.Size(54, 20);
+            this.pieHeight.Size = new System.Drawing.Size(54, 21);
             this.pieHeight.TabIndex = 2;
             this.pieHeight.Value = new decimal(new int[] {
             15,
@@ -157,7 +159,7 @@ namespace EVEMon
             this.pieAngleLabel.AutoSize = true;
             this.pieAngleLabel.Location = new System.Drawing.Point(129, 5);
             this.pieAngleLabel.Name = "pieAngleLabel";
-            this.pieAngleLabel.Size = new System.Drawing.Size(63, 13);
+            this.pieAngleLabel.Size = new System.Drawing.Size(66, 13);
             this.pieAngleLabel.TabIndex = 1;
             this.pieAngleLabel.Text = "Initial angle:";
             // 
@@ -166,16 +168,16 @@ namespace EVEMon
             this.pieHeightLabel.AutoSize = true;
             this.pieHeightLabel.Location = new System.Drawing.Point(1, 5);
             this.pieHeightLabel.Name = "pieHeightLabel";
-            this.pieHeightLabel.Size = new System.Drawing.Size(57, 13);
+            this.pieHeightLabel.Size = new System.Drawing.Size(58, 13);
             this.pieHeightLabel.TabIndex = 0;
             this.pieHeightLabel.Text = "Pie height:";
             // 
             // sortBySizeCheck
             // 
             this.sortBySizeCheck.AutoSize = true;
-            this.sortBySizeCheck.Location = new System.Drawing.Point(280, 5);
+            this.sortBySizeCheck.Location = new System.Drawing.Point(264, 5);
             this.sortBySizeCheck.Name = "sortBySizeCheck";
-            this.sortBySizeCheck.Size = new System.Drawing.Size(80, 17);
+            this.sortBySizeCheck.Size = new System.Drawing.Size(82, 17);
             this.sortBySizeCheck.TabIndex = 6;
             this.sortBySizeCheck.Text = "Sort by size";
             this.sortBySizeCheck.CheckedChanged += new System.EventHandler(this.sortBySizeCheck_CheckedChanged);
@@ -208,6 +210,16 @@ namespace EVEMon
             this.label1.TabIndex = 3;
             this.label1.Text = "Projected Skillpoints using Plan:";
             // 
+            // mergeMinorCheck
+            // 
+            this.mergeMinorCheck.AutoSize = true;
+            this.mergeMinorCheck.Location = new System.Drawing.Point(352, 5);
+            this.mergeMinorCheck.Name = "mergeMinorCheck";
+            this.mergeMinorCheck.Size = new System.Drawing.Size(121, 17);
+            this.mergeMinorCheck.TabIndex = 7;
+            this.mergeMinorCheck.Text = "Merge minor groups";
+            this.mergeMinorCheck.CheckedChanged += new System.EventHandler(this.mergeMinorCheck_CheckedChanged);
+            // 
             // SkillsPieChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,11 +230,12 @@ namespace EVEMon
             this.Controls.Add(this.pieControlPanel);
             this.Controls.Add(this.skillPieChartControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(674, 490);
             this.Name = "SkillsPieChart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SkillsPieChart";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SkillsPieChart_FormClosing);
             this.Load += new System.EventHandler(this.SkillsPieChart_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SkillsPieChart_FormClosing);
             this.pieControlPanel.ResumeLayout(false);
             this.pieControlPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).EndInit();
@@ -247,5 +260,6 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox sortBySizeCheck;
         private System.Windows.Forms.ComboBox planSelector;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox mergeMinorCheck;
     }
 }
