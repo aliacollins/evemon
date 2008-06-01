@@ -3059,6 +3059,34 @@ namespace EVEMon.Common
         }
         #endregion
 
+        #region API Configuration
+
+        private string m_customAPIConfiguration = null;
+
+        public string CustomAPIConfiguration
+        {
+            get { return m_customAPIConfiguration; }
+            set { m_customAPIConfiguration = value; }
+        }
+
+        private List<APIConfiguration> m_apiConfigurations = new List<APIConfiguration>();
+
+        public List<APIConfiguration> APIConfigurations
+        {
+            get
+            {
+                return m_apiConfigurations;
+            }
+            set
+            {
+                lock(mutexLock)
+                {
+                    m_apiConfigurations = value;
+                }
+            }
+        }
+
+        #endregion
     }
 
     [XmlRoot("proxySetting")]

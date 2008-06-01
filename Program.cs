@@ -47,6 +47,11 @@ namespace EVEMon
                 {
                     startMinimized = true;
                 }
+
+                if (targ.ToLower() == "-apidebug")
+                {
+                    Singleton.Instance<APIState>().DebugMode = true;
+                }
             }
 
             Plan.PlannerWindowFactory = new PlannerWindowFactory();

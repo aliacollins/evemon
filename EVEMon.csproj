@@ -81,6 +81,12 @@
     <Compile Include="AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="APISettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="APISettingsForm.Designer.cs">
+      <DependentUpon>APISettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChangeLoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -504,6 +510,10 @@
     <EmbeddedResource Include="AboutWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="APISettingsForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>APISettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChangeLoginWindow.resx">
       <SubType>Designer</SubType>

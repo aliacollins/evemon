@@ -56,6 +56,17 @@
     <Compile Include="AddPlanConfirmWindow.Designer.cs">
       <DependentUpon>AddPlanConfirmWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="APIConfiguration.cs" />
+    <Compile Include="APIMethods.cs" />
+    <Compile Include="APIState.cs" />
+    <Compile Include="Singleton.cs" />
+    <Compile Include="SingletonAttribute.cs" />
+    <Compile Include="APIConstants.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>APIConstants.resx</DependentUpon>
+    </Compile>
+    <Compile Include="APIMethod.cs" />
     <Compile Include="AutoShrink.cs" />
     <Compile Include="BusyDialog.cs">
       <SubType>Form</SubType>
@@ -188,6 +199,11 @@
     <EmbeddedResource Include="AddPlanConfirmWindow.resx">
       <DependentUpon>AddPlanConfirmWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="APIConstants.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>APIConstants.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Collapse_large.png" />
     <EmbeddedResource Include="CopySaveOptionsWindow.resx">

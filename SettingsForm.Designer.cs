@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14,
+            treeNode15,
+            treeNode16,
+            treeNode17});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -104,6 +104,11 @@ namespace EVEMon
             this.labelRestartWarning1 = new System.Windows.Forms.Label();
             this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
             this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
+            this.gbAPIConfiguration = new System.Windows.Forms.GroupBox();
+            this.btnAddAPIServer = new System.Windows.Forms.Button();
+            this.lblAPIServer = new System.Windows.Forms.Label();
+            this.cbAPIServer = new System.Windows.Forms.ComboBox();
+            this.btnEditAPIServer = new System.Windows.Forms.Button();
             this.tabLookAndFeel = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -235,6 +240,7 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.btnDeleteAPIServer = new System.Windows.Forms.Button();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -254,6 +260,7 @@ namespace EVEMon
             this.flowLayoutPanel23.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.groupBox15.SuspendLayout();
+            this.gbAPIConfiguration.SuspendLayout();
             this.tabLookAndFeel.SuspendLayout();
             this.flowLayoutPanel16.SuspendLayout();
             this.groupBox11.SuspendLayout();
@@ -638,6 +645,7 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox5);
             this.verticalFlowPanel1.Controls.Add(this.groupBox12);
             this.verticalFlowPanel1.Controls.Add(this.groupBox15);
+            this.verticalFlowPanel1.Controls.Add(this.gbAPIConfiguration);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
@@ -1002,6 +1010,59 @@ namespace EVEMon
             this.cbShowAllPublicSkills.UseVisualStyleBackColor = true;
             this.cbShowAllPublicSkills.CheckedChanged += new System.EventHandler(this.cbShowAllPublicSkills_CheckedChanged);
             // 
+            // gbAPIConfiguration
+            // 
+            this.gbAPIConfiguration.Controls.Add(this.btnDeleteAPIServer);
+            this.gbAPIConfiguration.Controls.Add(this.btnAddAPIServer);
+            this.gbAPIConfiguration.Controls.Add(this.lblAPIServer);
+            this.gbAPIConfiguration.Controls.Add(this.cbAPIServer);
+            this.gbAPIConfiguration.Controls.Add(this.btnEditAPIServer);
+            this.gbAPIConfiguration.Location = new System.Drawing.Point(3, 379);
+            this.gbAPIConfiguration.Name = "gbAPIConfiguration";
+            this.gbAPIConfiguration.Size = new System.Drawing.Size(370, 81);
+            this.gbAPIConfiguration.TabIndex = 8;
+            this.gbAPIConfiguration.TabStop = false;
+            this.gbAPIConfiguration.Text = "API Configuration";
+            // 
+            // btnAddAPIServer
+            // 
+            this.btnAddAPIServer.Location = new System.Drawing.Point(53, 50);
+            this.btnAddAPIServer.Name = "btnAddAPIServer";
+            this.btnAddAPIServer.Size = new System.Drawing.Size(75, 23);
+            this.btnAddAPIServer.TabIndex = 2;
+            this.btnAddAPIServer.Text = "Add";
+            this.btnAddAPIServer.UseVisualStyleBackColor = true;
+            this.btnAddAPIServer.Click += new System.EventHandler(this.btnAddAPIServer_Click);
+            // 
+            // lblAPIServer
+            // 
+            this.lblAPIServer.AutoSize = true;
+            this.lblAPIServer.Location = new System.Drawing.Point(7, 26);
+            this.lblAPIServer.Name = "lblAPIServer";
+            this.lblAPIServer.Size = new System.Drawing.Size(43, 13);
+            this.lblAPIServer.TabIndex = 1;
+            this.lblAPIServer.Text = "Server:";
+            // 
+            // cbAPIServer
+            // 
+            this.cbAPIServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAPIServer.FormattingEnabled = true;
+            this.cbAPIServer.Location = new System.Drawing.Point(53, 23);
+            this.cbAPIServer.Name = "cbAPIServer";
+            this.cbAPIServer.Size = new System.Drawing.Size(237, 21);
+            this.cbAPIServer.TabIndex = 0;
+            this.cbAPIServer.SelectedIndexChanged += new System.EventHandler(this.cbAPIServer_SelectedIndexChanged);
+            // 
+            // btnEditAPIServer
+            // 
+            this.btnEditAPIServer.Location = new System.Drawing.Point(134, 50);
+            this.btnEditAPIServer.Name = "btnEditAPIServer";
+            this.btnEditAPIServer.Size = new System.Drawing.Size(75, 23);
+            this.btnEditAPIServer.TabIndex = 3;
+            this.btnEditAPIServer.Text = "Edit";
+            this.btnEditAPIServer.UseVisualStyleBackColor = true;
+            this.btnEditAPIServer.Click += new System.EventHandler(this.btnEditAPIServer_Click);
+            // 
             // tabLookAndFeel
             // 
             this.tabLookAndFeel.Controls.Add(this.flowLayoutPanel16);
@@ -1319,26 +1380,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode10.Name = "Node1";
+            treeNode10.Text = "Node1";
+            treeNode11.Name = "Node2";
+            treeNode11.Text = "Node2";
+            treeNode12.Name = "Node3";
+            treeNode12.Text = "Node3";
+            treeNode13.Name = "Node4";
+            treeNode13.Text = "Node4";
+            treeNode14.Name = "Node5";
+            treeNode14.Text = "Node5";
+            treeNode15.Name = "Node6";
+            treeNode15.Text = "Node6";
+            treeNode16.Name = "Node7";
+            treeNode16.Text = "Node7";
+            treeNode17.Name = "Node8";
+            treeNode17.Text = "Node8";
+            treeNode18.Name = "Node0";
+            treeNode18.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode18});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -2515,6 +2576,16 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // btnDeleteAPIServer
+            // 
+            this.btnDeleteAPIServer.Location = new System.Drawing.Point(215, 50);
+            this.btnDeleteAPIServer.Name = "btnDeleteAPIServer";
+            this.btnDeleteAPIServer.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteAPIServer.TabIndex = 4;
+            this.btnDeleteAPIServer.Text = "Delete";
+            this.btnDeleteAPIServer.UseVisualStyleBackColor = true;
+            this.btnDeleteAPIServer.Click += new System.EventHandler(this.btnDeleteAPIServer_Click);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2568,6 +2639,8 @@ namespace EVEMon
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
             this.groupBox15.ResumeLayout(false);
             this.groupBox15.PerformLayout();
+            this.gbAPIConfiguration.ResumeLayout(false);
+            this.gbAPIConfiguration.PerformLayout();
             this.tabLookAndFeel.ResumeLayout(false);
             this.flowLayoutPanel16.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
@@ -2835,5 +2908,11 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbShowNonPublicSkills;
         private System.Windows.Forms.Label labelRestartWarning1;
         private System.Windows.Forms.Label labelRestartWarning2;
+        private System.Windows.Forms.GroupBox gbAPIConfiguration;
+        private System.Windows.Forms.Label lblAPIServer;
+        private System.Windows.Forms.ComboBox cbAPIServer;
+        private System.Windows.Forms.Button btnAddAPIServer;
+        private System.Windows.Forms.Button btnEditAPIServer;
+        private System.Windows.Forms.Button btnDeleteAPIServer;
     }
 }

@@ -6,6 +6,7 @@ using EVEMon.Common;
 using EVEMon.WindowRelocator;
 using Microsoft.Win32;
 using System.IO;
+using System.Collections.Generic;
 
 namespace EVEMon
 {
@@ -430,6 +431,9 @@ namespace EVEMon
             {
                 cbRunAtStartup.Checked = true;
             }
+            // API Configuration
+            gbAPIConfiguration.Enabled = gbAPIConfiguration.Visible = Singleton.Instance<APIState>().DebugMode;
+            InitialiseAPIConfigDropDown();
             UpdateDisables();
         }
 
@@ -489,6 +493,7 @@ namespace EVEMon
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
+            btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedItem == null ? false : !((APIConfiguration) cbAPIServer.SelectedItem).IsDefault;
         }
 
         private bool ValidateProxySetting(string host, string port)
@@ -810,5 +815,66 @@ namespace EVEMon
             }
         }
 
+        private void btnAddAPIServer_Click(object sender, EventArgs e)
+        {
+            APIConfiguration newConfiguration = new APIConfiguration();
+            newConfiguration.Methods = APIConfiguration.DefaultMethods;
+            using (APISettingsForm apiForm = new APISettingsForm(newConfiguration))
+            {
+                DialogResult result = apiForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    m_settings.APIConfigurations.Add(newConfiguration);
+                    m_settings.CustomAPIConfiguration = newConfiguration.Name;
+                    InitialiseAPIConfigDropDown();
+                }
+            }
+        }
+
+        private void btnEditAPIServer_Click(object sender, EventArgs e)
+        {
+            using (APISettingsForm apiForm = new APISettingsForm(cbAPIServer.SelectedItem as APIConfiguration))
+            {
+                apiForm.ShowDialog();
+            }
+        }
+
+        private void btnDeleteAPIServer_Click(object sender, EventArgs e)
+        {
+            DialogResult deleteServer =
+                MessageBox.Show(
+                    string.Format("Delete API Server configuration \"{0}\"?",
+                                  ((APIConfiguration) cbAPIServer.SelectedItem).Name),
+                    "Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+            if (deleteServer == DialogResult.Yes)
+            {
+                m_settings.APIConfigurations.Remove((APIConfiguration) cbAPIServer.SelectedItem);
+                m_settings.CustomAPIConfiguration = m_settings.APIConfigurations.Count > 0
+                                                        ? m_settings.APIConfigurations[0].Name
+                                                        : APIConfiguration.DefaultConfiguration.Name;
+                InitialiseAPIConfigDropDown();
+            }
+        }
+
+        private void cbAPIServer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_settings.CustomAPIConfiguration = ((APIConfiguration) cbAPIServer.SelectedItem).Name;
+            UpdateDisables();
+        }
+
+        private void InitialiseAPIConfigDropDown()
+        {
+            List<APIConfiguration> configurations = new List<APIConfiguration>();
+            configurations.AddRange(m_settings.APIConfigurations);
+            configurations.Add(APIConfiguration.DefaultConfiguration);
+            cbAPIServer.Items.Clear();
+            foreach (APIConfiguration configuration in configurations)
+            {
+                cbAPIServer.Items.Add(configuration);
+                if (configuration.Name == m_settings.CustomAPIConfiguration)
+                    cbAPIServer.SelectedItem = configuration;
+            }
+        }
     }
 }

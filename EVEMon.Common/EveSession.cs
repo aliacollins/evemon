@@ -76,18 +76,6 @@ namespace EVEMon.Common
         }
 
         #region API stuff
-#if USE_LOCALHOST
-        private static string APIBASE = "http://localhost/eveapi";
-        private static string m_ApiCharListUrl = "/account/Characters.xml";
-        private static string m_ApiTrainingSkill = "/char/SkillIntraining.xml";
-        private static string m_ApiCharacterSheet = "/char/CharacterSheet.xml";
-
-#else
-        private static string APIBASE = "http://api.eve-online.com";
-        private static string m_ApiCharListUrl = "/account/Characters.xml.aspx";
-        private static string m_ApiTrainingSkill = "/char/SkillIntraining.xml.aspx";
-        private static string m_ApiCharacterSheet = "/char/CharacterSheet.xml.aspx";
-#endif
         private string m_apiErrorMessage;
         private int m_apiErrorCode;
 
@@ -98,24 +86,30 @@ namespace EVEMon.Common
 
         private static XmlDocument GetCharList(string userId, string apiKey, out string errorMessage)
         {
+            APIState apiState = Singleton.Instance<APIState>();
+            APIConfiguration configuration = apiState.CurrentConfiguration;
             WebRequestState wrs = new WebRequestState();
             wrs.SetPost("userid=" + userId + "&apiKey=" + apiKey);
             errorMessage = string.Empty;
-            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharListUrl, wrs);
+            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.CharacterList), wrs);
         }
 
         private XmlDocument GetTrainingSkill(int charId)
         {
+            APIState apiState = Singleton.Instance<APIState>();
+            APIConfiguration configuration = apiState.CurrentConfiguration;
             WebRequestState wrs = new WebRequestState();
             wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
-            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiTrainingSkill, wrs);
+            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.SkillInTraining), wrs);
         }
 
         private XmlDocument GetCharacterSheet(int charId)
         {
+            APIState apiState = Singleton.Instance<APIState>();
+            APIConfiguration configuration = apiState.CurrentConfiguration;
             WebRequestState wrs = new WebRequestState();
             wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
-            return EVEMonWebRequest.LoadXml(APIBASE + m_ApiCharacterSheet, wrs);
+            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.CharacterSheet), wrs);
         }
 
         private void SetAPIError(XmlElement errorNode)
