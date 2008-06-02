@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 namespace EVEMon.Common
 {
     /// <summary>

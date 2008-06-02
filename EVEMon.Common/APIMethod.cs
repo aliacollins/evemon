@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common
 {
+    /// <summary>
+    /// Serializable class for an API method and its path. Each APIConfiguration maintains a list of APIMethods.
+    /// </summary>
     public class APIMethod
     {
         private APIMethods _method;
@@ -19,15 +19,9 @@ namespace EVEMon.Common
             _path = path;
         }
 
-        [XmlIgnore]
-        public string Name
-        {
-            get
-            {
-                return _method.ToString();
-            }
-        }
-
+        /// <summary>
+        /// Returns the APIMethods enumeration member for this APIMethod.
+        /// </summary>
         [XmlAttribute]
         public APIMethods Method
         {
@@ -35,6 +29,9 @@ namespace EVEMon.Common
             set { _method = value; }
         }
 
+        /// <summary>
+        /// Returns the defined URL path for this APIMethod.
+        /// </summary>
         public string Path
         {
             get { return _path; }
