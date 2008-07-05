@@ -2042,7 +2042,6 @@ namespace EVEMon
                                        (m_grandCharacterInfo.GetEffectiveAttribute(s.SecondaryAttribute) / 2));
                 string SPPerHour = " (" + Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour)";
 
-// Steven - Start
                 if (e.Button == MouseButtons.Right)
                 {
                     percentDone = s.GetPercentDone();
@@ -2072,14 +2071,14 @@ namespace EVEMon
                     {
                         // Reset the menu.
                         contextMenuStripPlanPopup.Items.Clear();
-                        ToolStripMenuItem tm = new ToolStripMenuItem(String.Format("Add {0} to Plan", s.Name));
+                        ToolStripMenuItem tm = new ToolStripMenuItem(String.Format("Add {0}", s.Name));
                         contextMenuStripPlanPopup.Items.Add(tm);
 
                         String planKey = this.GetPlanKey();
                         // Build the level options.
                         for (int level = NextLevel; level < 6; level++)
                         {
-                            ToolStripMenuItem menuLevel = new ToolStripMenuItem(string.Format("Level {0}", Skill.GetRomanForInt(level)));
+                            ToolStripMenuItem menuLevel = new ToolStripMenuItem(string.Format("Level {0} to", Skill.GetRomanForInt(level)));
                             tm.DropDownItems.Add(menuLevel);
                             foreach (string plan in m_settings.GetPlansForCharacter(planKey))
                             {
@@ -2095,7 +2094,6 @@ namespace EVEMon
                         return;
                     }
                 }
-// Steven - End
 
                 if (CurrentSP > s.GetPointsRequiredForLevel(s.Level))
                 {
@@ -2194,7 +2192,6 @@ namespace EVEMon
             }
         }
 
-        // Steven - Start
         void menuPlanItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
@@ -2205,7 +2202,6 @@ namespace EVEMon
                 plan.PlanTo(kvp.Key, kvp.Value);
             }
         }
-        // Steven - End
 
         private void miUpdatePicture_Click(object sender, EventArgs e)
         {
