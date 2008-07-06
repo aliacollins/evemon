@@ -296,20 +296,23 @@ namespace EVEMon.Common
 
         public bool SystemTrayOptionsIsNever
         {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Never; }
+			get { return SystemTrayOptions == SystemTrayDisplayOptions.Never; }
         }
 
         public bool SystemTrayOptionsIsMinimized
         {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Minimized; }
+			get { return SystemTrayOptions == SystemTrayDisplayOptions.Minimized; }
         }
 
         public bool SystemTrayOptionsIsAlways
         {
-            get { return m_systemTrayOptions == SystemTrayDisplayOptions.Always; }
+			get { return SystemTrayOptions == SystemTrayDisplayOptions.Always; }
         }
 
-        private SystemTrayDisplayOptions m_systemTrayOptions = SystemTrayDisplayOptions.Minimized;
+		private SystemTrayDisplayOptions m_systemTrayOptions
+			= Environment.OSVersion.Platform == PlatformID.Unix
+			 ? SystemTrayDisplayOptions.Never
+			 : SystemTrayDisplayOptions.Minimized;
         public SystemTrayDisplayOptions SystemTrayOptions
         {
             get { return m_systemTrayOptions; }

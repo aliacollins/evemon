@@ -283,10 +283,15 @@ namespace EVEMon
             tabControl1.SelectedTab = tabControl1.TabPages[0];
 
             // General options.
+			// this groupbox uses WinAPI, recheck this once #894 is resolved
+			groupBox1.Enabled = Environment.OSVersion.Platform != PlatformID.Unix;
             rbSystemTrayOptionsNever.Checked = m_settings.SystemTrayOptionsIsNever;
             rbSystemTrayOptionsMinimized.Checked = m_settings.SystemTrayOptionsIsMinimized;
             rbSystemTrayOptionsAlways.Checked = m_settings.SystemTrayOptionsIsAlways;
             cbCloseToTray.Checked = m_settings.CloseToTray;
+
+			// binary assemblies won't work on *nix
+			groupBox5.Enabled = Environment.OSVersion.Platform != PlatformID.Unix;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
             if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
             {
@@ -296,6 +301,9 @@ namespace EVEMon
             {
                 cbScreenList.SelectedIndex = 0;
             }
+
+			// mixed mode assemblies don't work with mono
+			groupBox12.Enabled = Type.GetType("Mono.Runtime") == null;
             cbG15ACycle.Checked = m_settings.G15ACycle;
             cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
             cbG15ShowTime.Checked = m_settings.G15ShowTime;
