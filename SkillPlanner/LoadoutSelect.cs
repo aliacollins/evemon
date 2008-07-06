@@ -1,15 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Serialization;
-using System.Reflection;
 using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
@@ -19,6 +16,8 @@ namespace EVEMon.SkillPlanner
         private Ship m_ship;
         private Plan m_plan;
         private Settings m_settings;
+
+        private Dictionary<string,List<string>> _currentLoadoutItems;
 
         public LoadoutSelect()
         {
@@ -173,6 +172,8 @@ namespace EVEMon.SkillPlanner
 
         private void LoadoutLoad()
         {
+            _currentLoadoutItems = new Dictionary<String, List<String>>();
+
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor; 
 
             m_skillsToAdd = new List<Pair<string, int>>();
@@ -185,7 +186,6 @@ namespace EVEMon.SkillPlanner
             lblAuthor.Text = m_selectedLoadout.Author;
             lbDate.Text = m_selectedLoadout.SubmissionDate.ToShortDateString();
             tvLoadout.Nodes.Clear();
-
 
             // Add ship skills to requirements
             foreach (EntityRequiredSkill irs in m_selectedLoadout.ShipObject.RequiredSkills)
@@ -244,6 +244,12 @@ namespace EVEMon.SkillPlanner
                             slotNode.Text = slotItem.Name;
                             slotNode.Tag = slotItem;
                             n.Nodes.Add(slotNode);
+
+                            if (!_currentLoadoutItems.ContainsKey(sls.SlotType))
+                            {
+                                _currentLoadoutItems.Add(sls.SlotType, new List<String>());
+                            }
+                            _currentLoadoutItems[sls.SlotType].Add(slotItem.Name);
                         }
                     }
 
@@ -469,6 +475,74 @@ namespace EVEMon.SkillPlanner
                 w.LoadoutForm = null;
             }
             catch { }
+        }
+
+        private void miExportToEFT_Click(object sender, EventArgs e)
+        {
+            foreach(EntityProperty prop in m_ship.Properties)
+            {
+                if (prop.Name.Contains("High Slots"))
+                {
+                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    while (_currentLoadoutItems.ContainsKey("high") && _currentLoadoutItems["high"].Count < highSlots)
+                    {
+                        _currentLoadoutItems["high"].Add("[empty high slot]");
+                    }
+                }
+                else if (prop.Name.Contains("Med Slots"))
+                {
+                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    while (_currentLoadoutItems.ContainsKey("med") && _currentLoadoutItems["med"].Count < medSlots)
+                    {
+                        _currentLoadoutItems["med"].Add("[empty med slot]");
+                    }
+                }
+                else if (prop.Name.Contains("Low Slots"))
+                {
+                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    while (_currentLoadoutItems.ContainsKey("lo") && _currentLoadoutItems["lo"].Count < lowSlots)
+                    {
+                        _currentLoadoutItems["lo"].Add("[empty low slot]");
+                    }
+                }
+                else if (prop.Name.Contains("Rig Slots"))
+                {
+                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    while (_currentLoadoutItems.ContainsKey("rig") && _currentLoadoutItems["rig"].Count < rigsSlots)
+                    {
+                        _currentLoadoutItems["rig"].Add("[empty rig slot]");
+                    }
+                }
+            }
+
+            StringBuilder exportText = new StringBuilder();
+            exportText.AppendLine("["+m_ship.Name+", EVEMON "+lblName.Text+"]" );
+
+            if (_currentLoadoutItems.ContainsKey("lo"))
+            {
+                exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["lo"].ToArray()));    
+            }
+            if (_currentLoadoutItems.ContainsKey("med"))
+            {
+                exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["med"].ToArray()));
+            }
+            if (_currentLoadoutItems.ContainsKey("high"))
+            {
+                exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["high"].ToArray()));
+            }
+            if (_currentLoadoutItems.ContainsKey("rig"))
+            {
+                exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["rig"].ToArray()));
+            }
+            if (_currentLoadoutItems.ContainsKey("drone"))
+            {
+                foreach (String s in _currentLoadoutItems["drone"])
+                {
+                    exportText.AppendLine(s + " x1");
+                }
+            }
+            Clipboard.Clear();
+            Clipboard.SetText(exportText.ToString());
         }
     }
 
