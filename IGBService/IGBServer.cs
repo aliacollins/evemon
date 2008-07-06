@@ -155,7 +155,7 @@ namespace EVEMon.IGBService
                 client.Write("HTTP/1.1 200 OK\n");
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
-                if (headers["eve.trusted"].ToLower() == "no")
+                if (headers.ContainsKey("eve.trusted") && headers["eve.trusted"].ToLower() == "no")
                 {
                     client.Write("eve.trustme: http://" +  BuildHostAndPort(headers["host"]) + "/::EVEMon needs your pilot information.\n");
                 }
@@ -202,6 +202,11 @@ namespace EVEMon.IGBService
 
         private void ProcessRequest(string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
         {
+            if (!headers.ContainsKey("eve.trusted"))
+            {
+                sw.WriteLine("Please visit this site using the in-game browser.");
+                return;
+            }
             if (headers["eve.trusted"].ToLower() != "yes")
             {
                 sw.WriteLine("not trusted");
