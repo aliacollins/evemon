@@ -402,7 +402,14 @@ namespace EVEMon.SkillPlanner
 
         private void lblForum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            EveSession.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
+            if (m_selectedLoadout != null)
+            {
+                EveSession.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
+            }
+            else
+            {
+                MessageBox.Show("Please select a loadout to discuss.", "No Loadout Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 
