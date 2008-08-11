@@ -418,11 +418,17 @@ namespace EVEMon
             {
                 lock (syncLock)
                 {
-                    // Stop the timer in case its been restarted by a MouseMove
-                    // in the event we were blocked
-                    this.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                    // Dispose of the timer since we're done with it
-                    this.timer.Dispose();
+                    try
+                    {
+                        // Stop the timer in case its been restarted by a MouseMove
+                        // in the event we were blocked
+                        this.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    }
+                    finally
+                    {
+                        // Dispose of the timer since we're done with it
+                        this.timer.Dispose();
+                    }
                     // Mouse tracking no longer required
                     DisableMouseTracking();
                     // Check if the mouse is still in the same place
