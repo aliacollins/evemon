@@ -665,11 +665,7 @@ namespace EVEMon.SkillPlanner
         {
             if (e.Button == MouseButtons.Right)
             {
-                TreeViewHitTestInfo tvHit = tvItems.HitTest(e.Location);
-                if (tvHit.Location == TreeViewHitTestLocations.Label)
-                {
-                    tvItems.SelectedNode = e.Node;
-                }
+                tvItems.SelectedNode = e.Node;
             }
         }
 
@@ -685,9 +681,10 @@ namespace EVEMon.SkillPlanner
 
         private void cmSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
-            cmiCollapseSelected.Enabled = cmiExpandSelected.Enabled = (tvItems.SelectedNode.GetNodeCount(true) > 0);
-            cmiPlanTo.Enabled = !cmiCollapseSelected.Enabled;
+            bool hasSubnodes = tvItems.SelectedNode.GetNodeCount(true) > 0;
+            cmiCollapseSelected.Enabled = hasSubnodes && tvItems.SelectedNode.IsExpanded;
+            cmiExpandSelected.Enabled = hasSubnodes && !tvItems.SelectedNode.IsExpanded;
+            cmiPlanTo.Enabled = !hasSubnodes;
             if (tvItems.SelectedNode.GetNodeCount(true) == 0)
             {
                 for (int i = 1; i <= cmiPlanTo.DropDownItems.Count; i++)
@@ -696,7 +693,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
             string aString;
-            if (cmiCollapseSelected.Enabled)
+            if (hasSubnodes)
             {
                 aString = tvItems.SelectedNode.Text;
             }
