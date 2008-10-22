@@ -59,6 +59,27 @@
     <Compile Include="APIConfiguration.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
+    <Compile Include="Net\DownloadFileAsyncResult.cs" />
+    <Compile Include="Net\DownloadImageAsyncResult.cs" />
+    <Compile Include="Net\DownloadProgressChangedArgs.cs" />
+    <Compile Include="Net\EVEMonWebClient.FileDownload.cs" />
+    <Compile Include="Net\EVEMonWebClient.ImageDownload.cs" />
+    <Compile Include="Net\EVEMonWebClient.XmlDownload.cs" />
+    <Compile Include="Net\EVEMonWebException.cs" />
+    <Compile Include="Net\EVEMonWebExceptionStatus.cs" />
+    <Compile Include="Net\EVEMonWebRequest.cs" />
+    <Compile Include="Net\EVEMonWebClient.cs" />
+    <Compile Include="Net\EVEMonWebClientState.cs" />
+    <Compile Include="Net\EVEMonWebClient.StringDownload.cs" />
+    <Compile Include="Net\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Net\HttpPostData.cs" />
+    <Compile Include="Net\ProxyAuthType.cs" />
+    <Compile Include="Net\ProxySetting.cs" />
+    <Compile Include="Net\WebRequestAsyncState.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="SingletonAttribute.cs" />
     <Compile Include="APIConstants.Designer.cs">
@@ -117,7 +138,6 @@
     <Compile Include="EVEMonForm.Designer.cs">
       <DependentUpon>EVEMonForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EVEMonWebRequest.cs" />
     <Compile Include="EveObject.cs" />
     <Compile Include="EveServer.cs" />
     <Compile Include="ExceptionHandler.cs" />
@@ -217,6 +237,11 @@
     <EmbeddedResource Include="EveImagePopUp.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EveImagePopUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Net\ExceptionMessages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Printing\PrintOptionsDlg.resx">
       <DependentUpon>PrintOptionsDlg.cs</DependentUpon>

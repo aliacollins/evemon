@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\Rich\Documents\Visual Studio 2005\Projects\EVEMon\Current Refactor\Tests.EVEMon\Tests.EVEMon.csproj" total="8" failures="0" not-run="0" date="2008-10-21" time="23:58:26">
+  <environment nunit-version="2.4.8.0" clr-version="2.0.50727.1434" os-version="Microsoft Windows NT 6.0.6001 Service Pack 1" platform="Win32NT" cwd="C:\Program Files\Typemock\Isolator\5.0" machine-name="SPIKE" user="Rich" user-domain="Spike" />
+  <culture-info current-culture="en-GB" current-uiculture="en-US" />
+  <test-suite name="C:\Users\Rich\Documents\Visual Studio 2005\Projects\EVEMon\Current Refactor\Tests.EVEMon\Tests.EVEMon.csproj" success="True" time="1.041" asserts="0">
+    <results>
+      <test-suite name="C:\Users\Rich\Documents\Visual Studio 2005\Projects\EVEMon\Current Refactor\Tests.EVEMon\bin\Debug\Tests.EVEMon.dll" success="True" time="1.038" asserts="0">
+        <results>
+          <test-suite name="Tests" success="True" time="1.038" asserts="0">
+            <results>
+              <test-suite name="EVEMon" success="True" time="1.038" asserts="0">
+                <results>
+                  <test-suite name="Common" success="True" time="1.038" asserts="0">
+                    <results>
+                      <test-suite name="Net" success="True" time="1.038" asserts="0">
+                        <results>
+                          <test-suite name="EVEMonWebClientTests" success="True" time="1.016" asserts="0">
+                            <results>
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.ImageAsyncDownloadTest" executed="True" success="True" time="0.606" asserts="1" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.ImageDownloadExceptionTest" executed="True" success="True" time="0.055" asserts="1" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.ImageDownloadTest" executed="True" success="True" time="0.007" asserts="0" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.IsValidURLTests" executed="True" success="True" time="0.005" asserts="5" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.StringDownloadTest" executed="True" success="True" time="0.013" asserts="1" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.UrlExceptionTests" executed="True" success="True" time="0.007" asserts="3" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.XmlDownloadExceptionTest" executed="True" success="True" time="0.047" asserts="1" />
+                              <test-case name="Tests.EVEMon.Common.Net.EVEMonWebClientTests.XmlDownloadTest" executed="True" success="True" time="0.082" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

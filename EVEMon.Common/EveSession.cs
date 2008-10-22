@@ -18,6 +18,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Serialization;
 using System.Reflection;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common
 {
@@ -86,30 +87,35 @@ namespace EVEMon.Common
 
         private static XmlDocument GetCharList(string userId, string apiKey, out string errorMessage)
         {
+            errorMessage = string.Empty;
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            WebRequestState wrs = new WebRequestState();
-            wrs.SetPost("userid=" + userId + "&apiKey=" + apiKey);
-            errorMessage = string.Empty;
-            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.CharacterList), wrs);
+            HttpPostData postData = new HttpPostData("userid=" + userId + "&apiKey=" + apiKey);
+            return
+                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.CharacterList),
+                                                                  postData);
         }
 
         private XmlDocument GetTrainingSkill(int charId)
         {
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            WebRequestState wrs = new WebRequestState();
-            wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
-            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.SkillInTraining), wrs);
+            HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
+                                    Convert.ToString(charId));
+            return
+                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.SkillInTraining),
+                                                                  postData);
         }
 
         private XmlDocument GetCharacterSheet(int charId)
         {
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            WebRequestState wrs = new WebRequestState();
-            wrs.SetPost("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" + Convert.ToString(charId));
-            return EVEMonWebRequest.LoadXml(configuration.MethodUrl(APIMethods.CharacterSheet), wrs);
+            HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
+                                    Convert.ToString(charId));
+            return
+                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.CharacterSheet),
+                                                                  postData);
         }
 
         private void SetAPIError(XmlElement errorNode)
@@ -263,47 +269,46 @@ namespace EVEMon.Common
                     }
                 }
                 GetImageCallback origCallback = callback;
-                callback = new GetImageCallback(delegate(EveSession s, Image i)
-                {
-                    if (i != null)
+                callback = new GetImageCallback(
+                    delegate(EveSession s, Image i)
                     {
-                        AddImageToCache(url, i);
+                        if (i != null)
+                        {
+                            AddImageToCache(url, i);
+                        }
+                        origCallback(s, i);
                     }
-                    origCallback(s, i);
-                });
+                    );
             }
-            HttpWebRequest wr = EVEMonWebRequest.GetWebRequest(url);
-            Pair<HttpWebRequest, GetImageCallback> p = new Pair<HttpWebRequest, GetImageCallback>(wr, callback);
-            wr.BeginGetResponse(new AsyncCallback(GotImage), p);
+            Singleton.Instance<EVEMonWebClient>().DownloadImageAsync(url, GotImage, new AsyncImageRequestState(callback));
         }
 
-        private static void GotImage(IAsyncResult ar)
+        private class AsyncImageRequestState
         {
-            Pair<HttpWebRequest, GetImageCallback> p = ar.AsyncState as Pair<HttpWebRequest, GetImageCallback>;
-            HttpWebRequest wr = p.A;
-            GetImageCallback callback = p.B;
-            try
+            private readonly GetImageCallback _callback;
+
+            public AsyncImageRequestState(GetImageCallback callback)
             {
-                HttpWebResponse resp = (HttpWebResponse)wr.EndGetResponse(ar);
-                int contentLength = Convert.ToInt32(resp.ContentLength);
-                int bytesToGo = contentLength;
-                byte[] data = new byte[bytesToGo];
-                using (Stream s = resp.GetResponseStream())
-                {
-                    while (bytesToGo > 0)
-                    {
-                        int bytesRead = s.Read(data, contentLength - bytesToGo, bytesToGo);
-                        bytesToGo -= bytesRead;
-                    }
-                }
-                MemoryStream ms = new MemoryStream(data);
-                Image i = Image.FromStream(ms, true, true);
-                callback(null, i);
+                _callback = callback;
             }
-            catch (Exception e)
+
+            public GetImageCallback Callback
             {
-                ExceptionHandler.LogException(e, true);
-                callback(null, null);
+                get { return _callback; }
+            }
+        }
+
+        private static void GotImage(DownloadImageAsyncResult e, object state)
+        {
+            AsyncImageRequestState requestState = (AsyncImageRequestState) state;
+            if (e.Error == null)
+            {
+                requestState.Callback(null, e.Result);
+            }
+            else
+            {
+                ExceptionHandler.LogException(e.Error, true);
+                requestState.Callback(null, null);
             }
         }
 
@@ -367,13 +372,9 @@ namespace EVEMon.Common
             {
                 GetCharacterListUncached();
             }
-            catch (EVEMonNetworkException ex)
+            catch (EVEMonWebException ex)
             {
-                throw new ApplicationException("WebException: " + ex.WebException.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("GetCharacterList() issue: " + ex.Message);
+                throw new ApplicationException(ex.Message);
             }
         }
 

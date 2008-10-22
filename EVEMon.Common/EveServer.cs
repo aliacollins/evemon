@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Net;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common
 {
@@ -172,11 +173,12 @@ namespace EVEMon.Common
         {
             try
             {
-                m_motd = EVEMonWebRequest.GetUrlString("http://www.eve-online.com/motd.asp?server=" + m_settings.CustomTQAddress);
+                m_motd = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                    "http://www.eve-online.com/motd.asp?server=" + m_settings.CustomTQAddress);
             }
-            catch (EVEMonNetworkException ne)
+            catch (EVEMonWebException ex)
             {
-                ExceptionHandler.LogException(ne, true);
+                ExceptionHandler.LogException(ex, true);
             }
         }
 

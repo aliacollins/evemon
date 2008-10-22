@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 using EVEMon.Common.Schedule;
 using System.Windows.Forms;
 using System.Security.Cryptography;
@@ -639,6 +640,7 @@ namespace EVEMon.Common
                 {
                     m_useCustomProxySettings = value;
                 }
+                Singleton.Instance<EVEMonWebClient>().State.UseCustomProxy = value;
             }
         }
 
@@ -652,6 +654,21 @@ namespace EVEMon.Common
                 {
                     m_httpProxy = value;
                 }
+                Singleton.Instance<EVEMonWebClient>().State.Proxy = value;
+            }
+        }
+
+        private bool m_disableRequestsOnAuthenticationFailure = false;
+        public bool DisableRequestsOnAuthenticationFailure
+        {
+            get { return m_disableRequestsOnAuthenticationFailure; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_disableRequestsOnAuthenticationFailure = value;
+                }
+                Singleton.Instance<EVEMonWebClient>().State.DisableOnProxyAuthenticationFailure = value;
             }
         }
 
@@ -3090,71 +3107,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-    }
-
-    [XmlRoot("proxySetting")]
-    public class ProxySetting : ICloneable
-    {
-        private string m_host = String.Empty;
-
-        public string Host
-        {
-            get { return m_host; }
-            set { m_host = value; }
-        }
-
-        private int m_port;
-
-        public int Port
-        {
-            get { return m_port; }
-            set { m_port = value; }
-        }
-
-        private ProxyAuthType m_authType = ProxyAuthType.None;
-
-        public ProxyAuthType AuthType
-        {
-            get { return m_authType; }
-            set { m_authType = value; }
-        }
-
-        private string m_username = String.Empty;
-
-        public string Username
-        {
-            get { return m_username; }
-            set { m_username = value; }
-        }
-
-        private string m_password = String.Empty;
-
-        public string Password
-        {
-            get { return m_password; }
-            set { m_password = value; }
-        }
-
-        #region ICloneable Members
-
-        public ProxySetting Clone()
-        {
-            return (ProxySetting)((ICloneable)this).Clone();
-        }
-
-        object ICloneable.Clone()
-        {
-            return this.MemberwiseClone();
-        }
-
-        #endregion
-    }
-
-    public enum ProxyAuthType
-    {
-        None,
-        SystemDefault,
-        Specified
     }
 
     public enum SystemTrayDisplayOptions

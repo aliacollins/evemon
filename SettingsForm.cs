@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 using EVEMon.WindowRelocator;
 using Microsoft.Win32;
 using System.IO;
@@ -122,6 +123,7 @@ namespace EVEMon
             s.TooltipString = m_tooltipString;
 
             s.UseCustomProxySettings = rbCustomProxy.Checked;
+            s.DisableRequestsOnAuthenticationFailure = cbDisableOnAuthFailure.Checked;
             ProxySetting httpSetting = ((ProxySetting)btnProxyHttpAuth.Tag).Clone();
             httpSetting.Host = tbProxyHttpHost.Text;
             try
@@ -355,6 +357,8 @@ namespace EVEMon
             tbFromAddress.Text = m_settings.EmailFromAddress;
             tbToAddress.Text = m_settings.EmailToAddress;
 
+            // Proxy settings
+            cbDisableOnAuthFailure.Checked = m_settings.DisableRequestsOnAuthenticationFailure;
             rbDefaultProxy.Checked = (m_settings.UseCustomProxySettings == false);
             rbCustomProxy.Checked = (m_settings.UseCustomProxySettings);
             tbProxyHttpHost.Text = m_settings.HttpProxy.Host;

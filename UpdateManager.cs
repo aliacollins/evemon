@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common;
 using System.Collections.Generic;
+using EVEMon.Common.Net;
 
 
 namespace EVEMon
@@ -77,7 +78,9 @@ namespace EVEMon
                     XmlDocument xdoc;
                     try
                     {
-                        xdoc = EVEMonWebRequest.LoadXml(UPDATE_URL + "?ver=" + currentVersion.ToString());
+                        xdoc =
+                            Singleton.Instance<EVEMonWebClient>().DownloadXml(UPDATE_URL + "?ver=" +
+                                                                              currentVersion.ToString());
                     }
                     catch (Exception e)
                     {

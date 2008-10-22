@@ -4,6 +4,7 @@ using System.Text;
 using EVEMon.Common;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
@@ -38,12 +39,13 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://eve-central.com/api/evemon ");
+                content = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                    "http://eve-central.com/api/evemon");
             }
-            catch (EVEMonNetworkException ne)
+            catch (EVEMonWebException ex)
             {
-                ExceptionHandler.LogException(ne, true);
-                throw new MineralParserException(ne.Message);
+                ExceptionHandler.LogException(ex, true);
+                throw new MineralParserException(ex.Message);
             }
 
             //scan for prices

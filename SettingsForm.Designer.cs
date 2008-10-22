@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -105,6 +105,7 @@ namespace EVEMon
             this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
             this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
             this.gbAPIConfiguration = new System.Windows.Forms.GroupBox();
+            this.btnDeleteAPIServer = new System.Windows.Forms.Button();
             this.btnAddAPIServer = new System.Windows.Forms.Button();
             this.lblAPIServer = new System.Windows.Forms.Label();
             this.cbAPIServer = new System.Windows.Forms.ComboBox();
@@ -240,7 +241,7 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.btnDeleteAPIServer = new System.Windows.Forms.Button();
+            this.cbDisableOnAuthFailure = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -1024,6 +1025,16 @@ namespace EVEMon
             this.gbAPIConfiguration.TabStop = false;
             this.gbAPIConfiguration.Text = "API Configuration";
             // 
+            // btnDeleteAPIServer
+            // 
+            this.btnDeleteAPIServer.Location = new System.Drawing.Point(215, 50);
+            this.btnDeleteAPIServer.Name = "btnDeleteAPIServer";
+            this.btnDeleteAPIServer.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteAPIServer.TabIndex = 4;
+            this.btnDeleteAPIServer.Text = "Delete";
+            this.btnDeleteAPIServer.UseVisualStyleBackColor = true;
+            this.btnDeleteAPIServer.Click += new System.EventHandler(this.btnDeleteAPIServer_Click);
+            // 
             // btnAddAPIServer
             // 
             this.btnAddAPIServer.Location = new System.Drawing.Point(53, 50);
@@ -1380,26 +1391,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode10.Name = "Node1";
-            treeNode10.Text = "Node1";
-            treeNode11.Name = "Node2";
-            treeNode11.Text = "Node2";
-            treeNode12.Name = "Node3";
-            treeNode12.Text = "Node3";
-            treeNode13.Name = "Node4";
-            treeNode13.Text = "Node4";
-            treeNode14.Name = "Node5";
-            treeNode14.Text = "Node5";
-            treeNode15.Name = "Node6";
-            treeNode15.Text = "Node6";
-            treeNode16.Name = "Node7";
-            treeNode16.Text = "Node7";
-            treeNode17.Name = "Node8";
-            treeNode17.Text = "Node8";
-            treeNode18.Name = "Node0";
-            treeNode18.Text = "Node0";
+            treeNode19.Name = "Node1";
+            treeNode19.Text = "Node1";
+            treeNode20.Name = "Node2";
+            treeNode20.Text = "Node2";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "Node3";
+            treeNode22.Name = "Node4";
+            treeNode22.Text = "Node4";
+            treeNode23.Name = "Node5";
+            treeNode23.Text = "Node5";
+            treeNode24.Name = "Node6";
+            treeNode24.Text = "Node6";
+            treeNode25.Name = "Node7";
+            treeNode25.Text = "Node7";
+            treeNode26.Name = "Node8";
+            treeNode26.Text = "Node8";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode18});
+            treeNode27});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -1430,7 +1441,7 @@ namespace EVEMon
             this.groupBox6.Controls.Add(this.verticalFlowPanel4);
             this.groupBox6.Location = new System.Drawing.Point(3, 3);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(373, 141);
+            this.groupBox6.Size = new System.Drawing.Size(373, 168);
             this.groupBox6.TabIndex = 0;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Proxy Server Settings";
@@ -1442,12 +1453,13 @@ namespace EVEMon
             this.verticalFlowPanel4.Controls.Add(this.rbDefaultProxy);
             this.verticalFlowPanel4.Controls.Add(this.rbCustomProxy);
             this.verticalFlowPanel4.Controls.Add(this.vfpCustomProxySettings);
+            this.verticalFlowPanel4.Controls.Add(this.cbDisableOnAuthFailure);
             this.verticalFlowPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel4.Location = new System.Drawing.Point(3, 17);
             this.verticalFlowPanel4.Name = "verticalFlowPanel4";
             this.verticalFlowPanel4.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.verticalFlowPanel4.Size = new System.Drawing.Size(367, 121);
+            this.verticalFlowPanel4.Size = new System.Drawing.Size(367, 148);
             this.verticalFlowPanel4.TabIndex = 1;
             // 
             // rbDefaultProxy
@@ -1599,7 +1611,7 @@ namespace EVEMon
             this.groupBox2.AutoSize = true;
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 150);
+            this.groupBox2.Location = new System.Drawing.Point(3, 177);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(373, 100);
             this.groupBox2.TabIndex = 6;
@@ -2576,15 +2588,15 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // btnDeleteAPIServer
+            // cbDisableOnAuthFailure
             // 
-            this.btnDeleteAPIServer.Location = new System.Drawing.Point(215, 50);
-            this.btnDeleteAPIServer.Name = "btnDeleteAPIServer";
-            this.btnDeleteAPIServer.Size = new System.Drawing.Size(75, 23);
-            this.btnDeleteAPIServer.TabIndex = 4;
-            this.btnDeleteAPIServer.Text = "Delete";
-            this.btnDeleteAPIServer.UseVisualStyleBackColor = true;
-            this.btnDeleteAPIServer.Click += new System.EventHandler(this.btnDeleteAPIServer_Click);
+            this.cbDisableOnAuthFailure.AutoSize = true;
+            this.cbDisableOnAuthFailure.Location = new System.Drawing.Point(13, 124);
+            this.cbDisableOnAuthFailure.Name = "cbDisableOnAuthFailure";
+            this.cbDisableOnAuthFailure.Size = new System.Drawing.Size(256, 17);
+            this.cbDisableOnAuthFailure.TabIndex = 4;
+            this.cbDisableOnAuthFailure.Text = "Disable requests on proxy authentication failure";
+            this.cbDisableOnAuthFailure.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -2914,5 +2926,6 @@ namespace EVEMon
         private System.Windows.Forms.Button btnAddAPIServer;
         private System.Windows.Forms.Button btnEditAPIServer;
         private System.Windows.Forms.Button btnDeleteAPIServer;
+        private System.Windows.Forms.CheckBox cbDisableOnAuthFailure;
     }
 }

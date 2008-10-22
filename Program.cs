@@ -7,6 +7,7 @@ using EVEMon.Common;
 using EVEMon.NetworkLogger;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowRelocator;
+using EVEMon.Common.Net;
 
 namespace EVEMon
 {
@@ -31,6 +32,7 @@ namespace EVEMon
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
 
             bool startMinimized = false;
+            bool _apiDebugMode = false;
 
             foreach (string targ in Environment.GetCommandLineArgs())
             {
@@ -50,7 +52,7 @@ namespace EVEMon
 
                 if (targ.ToLower() == "-apidebug")
                 {
-                    Singleton.Instance<APIState>().DebugMode = true;
+                    _apiDebugMode = true;
                 }
             }
 
@@ -62,6 +64,8 @@ namespace EVEMon
 #endif
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+            Singleton.Instance<APIState>().DebugMode = _apiDebugMode;
 
             Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
             Settings.GetInstance().SaveImmediate();

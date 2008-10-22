@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -28,3 +29,6 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly : AssemblyVersion("1.2.5.1167")]
+
+// Friend assembly for unit testing
+[assembly: InternalsVisibleTo("Tests.EVEMon")]

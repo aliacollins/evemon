@@ -245,7 +245,7 @@ namespace EVEMon
 
             if (s == null)
             {
-                //if (EVEMonWebRequest.LastException != null)
+                //if (OldEVEMonWebRequest.LastException != null)
                 //{
                 //    errm += " (" + EVEMonWebRequest.LastException.Message + ")";
                 //}

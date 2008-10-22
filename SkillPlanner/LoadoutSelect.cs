@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon.SkillPlanner
 {
@@ -85,7 +86,9 @@ namespace EVEMon.SkillPlanner
             {
                 // fetch loadouts from battleclinic
                 XmlSerializer xs = new XmlSerializer(typeof(ShipLoadout));
-                XmlDocument doc = EVEMonWebRequest.LoadXml("http://www.battleclinic.com/eve_online/ship_loadout_feed.php?typeID=" + m_ship.Id);
+                XmlDocument doc =
+                    Singleton.Instance<EVEMonWebClient>().DownloadXml(
+                        "http://www.battleclinic.com/eve_online/ship_loadout_feed.php?typeID=" + m_ship.Id);
                 XmlElement shipNode = doc.DocumentElement.SelectSingleNode("//ship") as XmlElement;
                 if (shipNode != null)
                 {
@@ -197,7 +200,9 @@ namespace EVEMon.SkillPlanner
             try
             {
                 XmlSerializer xs = new XmlSerializer(typeof(ShipLoadout));
-                XmlDocument doc = EVEMonWebRequest.LoadXml("http://www.battleclinic.com/eve_online/ship_loadout_feed.php?id=" + m_selectedLoadout.LoadoutId);
+                XmlDocument doc =
+                    Singleton.Instance<EVEMonWebClient>().DownloadXml(
+                        "http://www.battleclinic.com/eve_online/ship_loadout_feed.php?id=" + m_selectedLoadout.LoadoutId);
                 XmlElement shipNode = doc.DocumentElement.SelectSingleNode("//ship") as XmlElement;
 
                 using (XmlNodeReader xnr = new XmlNodeReader(shipNode))

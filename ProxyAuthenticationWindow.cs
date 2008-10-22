@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon
 {

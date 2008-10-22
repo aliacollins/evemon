@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
@@ -36,12 +37,13 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EVEMonWebRequest.GetUrlString("http://www.c-l-o-t.com/cxi/orecalc/evemon.php");
+                content = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                    "http://www.c-l-o-t.com/cxi/orecalc/evemon.php");
             }
-            catch (EVEMonNetworkException ne)
+            catch (EVEMonWebException ex)
             {
-                ExceptionHandler.LogException(ne, true);
-                throw new MineralParserException(ne.Message);
+                ExceptionHandler.LogException(ex, true);
+                throw new MineralParserException(ex.Message);
             }
 
             //scan for prices
