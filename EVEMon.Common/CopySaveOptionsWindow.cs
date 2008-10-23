@@ -113,7 +113,7 @@ namespace EVEMon.Common
         {
             UpdateOptions();
             using (MemoryStream ms = new MemoryStream())
-            using (StreamWriter sw = new StreamWriter(ms))
+            using (StreamWriter sw = new StreamWriter(ms, Encoding.Default))
             {
                 m_plan.SaveAsText(sw, m_planTextOptions);
                 sw.Flush();
