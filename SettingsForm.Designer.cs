@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode19,
-            treeNode20,
-            treeNode21,
-            treeNode22,
-            treeNode23,
-            treeNode24,
-            treeNode25,
-            treeNode26});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -153,6 +153,7 @@ namespace EVEMon
             this.label12 = new System.Windows.Forms.Label();
             this.btnProxyHttpAuth = new System.Windows.Forms.Button();
             this.tbProxyHttpPort = new System.Windows.Forms.TextBox();
+            this.cbDisableOnAuthFailure = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
@@ -241,7 +242,8 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.cbDisableOnAuthFailure = new System.Windows.Forms.CheckBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -304,6 +306,7 @@ namespace EVEMon
             this.gbGoogle.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.groupBox16.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -1391,26 +1394,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode19.Name = "Node1";
-            treeNode19.Text = "Node1";
-            treeNode20.Name = "Node2";
-            treeNode20.Text = "Node2";
-            treeNode21.Name = "Node3";
-            treeNode21.Text = "Node3";
-            treeNode22.Name = "Node4";
-            treeNode22.Text = "Node4";
-            treeNode23.Name = "Node5";
-            treeNode23.Text = "Node5";
-            treeNode24.Name = "Node6";
-            treeNode24.Text = "Node6";
-            treeNode25.Name = "Node7";
-            treeNode25.Text = "Node7";
-            treeNode26.Name = "Node8";
-            treeNode26.Text = "Node8";
-            treeNode27.Name = "Node0";
-            treeNode27.Text = "Node0";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode27});
+            treeNode9});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -1603,6 +1606,16 @@ namespace EVEMon
             this.tbProxyHttpPort.Size = new System.Drawing.Size(38, 21);
             this.tbProxyHttpPort.TabIndex = 2;
             this.tbProxyHttpPort.TextChanged += new System.EventHandler(this.tbProxyHttpPort_TextChanged);
+            // 
+            // cbDisableOnAuthFailure
+            // 
+            this.cbDisableOnAuthFailure.AutoSize = true;
+            this.cbDisableOnAuthFailure.Location = new System.Drawing.Point(13, 124);
+            this.cbDisableOnAuthFailure.Name = "cbDisableOnAuthFailure";
+            this.cbDisableOnAuthFailure.Size = new System.Drawing.Size(256, 17);
+            this.cbDisableOnAuthFailure.TabIndex = 4;
+            this.cbDisableOnAuthFailure.Text = "Disable requests on proxy authentication failure";
+            this.cbDisableOnAuthFailure.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -1839,6 +1852,7 @@ namespace EVEMon
             // 
             this.flowLayoutPanel11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel11.Controls.Add(this.groupBox8);
+            this.flowLayoutPanel11.Controls.Add(this.groupBox16);
             this.flowLayoutPanel11.Controls.Add(this.groupBox9);
             this.flowLayoutPanel11.Controls.Add(this.gbTQSettings);
             this.flowLayoutPanel11.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -1853,7 +1867,7 @@ namespace EVEMon
             this.groupBox8.Controls.Add(this.flowLayoutPanel10);
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(373, 60);
+            this.groupBox8.Size = new System.Drawing.Size(373, 47);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Version Checking";
@@ -1897,7 +1911,7 @@ namespace EVEMon
             this.groupBox9.Controls.Add(this.flowLayoutPanel18);
             this.groupBox9.Controls.Add(this.flowLayoutPanel17);
             this.groupBox9.Controls.Add(this.flowLayoutPanel12);
-            this.groupBox9.Location = new System.Drawing.Point(3, 69);
+            this.groupBox9.Location = new System.Drawing.Point(3, 105);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(373, 109);
             this.groupBox9.TabIndex = 9;
@@ -2027,7 +2041,7 @@ namespace EVEMon
             this.gbTQSettings.Controls.Add(this.label14);
             this.gbTQSettings.Controls.Add(this.label15);
             this.gbTQSettings.Controls.Add(this.numericStatusInterval);
-            this.gbTQSettings.Location = new System.Drawing.Point(3, 184);
+            this.gbTQSettings.Location = new System.Drawing.Point(3, 220);
             this.gbTQSettings.Name = "gbTQSettings";
             this.gbTQSettings.Size = new System.Drawing.Size(373, 220);
             this.gbTQSettings.TabIndex = 8;
@@ -2588,15 +2602,25 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // cbDisableOnAuthFailure
+            // groupBox16
             // 
-            this.cbDisableOnAuthFailure.AutoSize = true;
-            this.cbDisableOnAuthFailure.Location = new System.Drawing.Point(13, 124);
-            this.cbDisableOnAuthFailure.Name = "cbDisableOnAuthFailure";
-            this.cbDisableOnAuthFailure.Size = new System.Drawing.Size(256, 17);
-            this.cbDisableOnAuthFailure.TabIndex = 4;
-            this.cbDisableOnAuthFailure.Text = "Disable requests on proxy authentication failure";
-            this.cbDisableOnAuthFailure.UseVisualStyleBackColor = true;
+            this.groupBox16.Controls.Add(this.cbCheckTimeOnStartup);
+            this.groupBox16.Location = new System.Drawing.Point(3, 56);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(372, 43);
+            this.groupBox16.TabIndex = 7;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "System Time";
+            // 
+            // cbCheckTimeOnStartup
+            // 
+            this.cbCheckTimeOnStartup.AutoSize = true;
+            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(6, 20);
+            this.cbCheckTimeOnStartup.Name = "cbCheckTimeOnStartup";
+            this.cbCheckTimeOnStartup.Size = new System.Drawing.Size(168, 17);
+            this.cbCheckTimeOnStartup.TabIndex = 0;
+            this.cbCheckTimeOnStartup.Text = "Check system time on startup";
+            this.cbCheckTimeOnStartup.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -2725,6 +2749,8 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2927,5 +2953,7 @@ namespace EVEMon
         private System.Windows.Forms.Button btnEditAPIServer;
         private System.Windows.Forms.Button btnDeleteAPIServer;
         private System.Windows.Forms.CheckBox cbDisableOnAuthFailure;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.CheckBox cbCheckTimeOnStartup;
     }
 }

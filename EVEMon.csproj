@@ -291,7 +291,7 @@
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.Designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
@@ -436,6 +436,12 @@
     </Compile>
     <Compile Include="SkillsPieChart.Designer.cs">
       <DependentUpon>SkillsPieChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimeCheckNotification.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimeCheckNotification.Designer.cs">
+      <DependentUpon>TimeCheckNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="TipWindow.cs">
       <SubType>Form</SubType>
@@ -699,6 +705,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>SkillsPieChart.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TimeCheckNotification.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TimeCheckNotification.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TipWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
@@ -761,6 +771,7 @@
     <Content Include="Microsoft.VC80.CRT\msvcr80.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\warning32x32.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

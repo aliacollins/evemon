@@ -59,9 +59,12 @@
     <Compile Include="APIConfiguration.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
+    <Compile Include="TimeCheck.cs" />
     <Compile Include="Net\DownloadFileAsyncResult.cs" />
     <Compile Include="Net\DownloadImageAsyncResult.cs" />
     <Compile Include="Net\DownloadProgressChangedArgs.cs" />
+    <Compile Include="Net\DownloadStringAsyncResult.cs" />
+    <Compile Include="Net\DownloadXmlAsyncResult.cs" />
     <Compile Include="Net\EVEMonWebClient.FileDownload.cs" />
     <Compile Include="Net\EVEMonWebClient.ImageDownload.cs" />
     <Compile Include="Net\EVEMonWebClient.XmlDownload.cs" />

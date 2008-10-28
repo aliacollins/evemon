@@ -81,6 +81,40 @@ namespace Tests.EVEMon.Common.Net
             
         }
 
+        private AutoResetEvent _stringAsyncCompletedTrigger;
+        private DownloadStringAsyncResult _stringAsyncDownloadResult = null;
+
+        [Test]
+        public void StringAsyncDownloadTest()
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
+            byte[] contentAsBytes = encoding.GetBytes(TestResources.CharacterSheet);
+            MemoryStream sourceResponseStream = new MemoryStream();
+            sourceResponseStream.Write(contentAsBytes, 0, contentAsBytes.Length);
+            sourceResponseStream.Position = 0;
+            Mock<HttpWebRequest> mockRequest = MockManager.Mock<HttpWebRequest>(Constructor.NotMocked);
+            MockObject<HttpWebResponse> mockResponse = MockManager.MockObject<HttpWebResponse>(Constructor.Mocked);
+            mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
+            mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
+
+            _stringAsyncCompletedTrigger = new AutoResetEvent(false);
+            EVEMonWebClient client = new EVEMonWebClient();
+            client.DownloadStringAsync("http://www.battleclinic.com", StringAysncDownloadTestCompleted, null);
+            _stringAsyncCompletedTrigger.WaitOne();
+            if (_stringAsyncDownloadResult.Error != null)
+                Assert.Fail(_stringAsyncDownloadResult.Error.Message);
+            Assert.AreEqual(TestResources.CharacterSheet, _stringAsyncDownloadResult.Result);
+            sourceResponseStream.Close();
+            _stringAsyncCompletedTrigger = null;
+            _stringAsyncDownloadResult = null;
+        }
+
+        private void StringAysncDownloadTestCompleted(DownloadStringAsyncResult e, object state)
+        {
+            _stringAsyncDownloadResult = e;
+            _stringAsyncCompletedTrigger.Set();
+        }
+
         [Test]
         public void XmlDownloadTest()
         {
@@ -102,6 +136,43 @@ namespace Tests.EVEMon.Common.Net
             StringAssert.AreEqualIgnoringCase(contentAsXml.ToString(), result.ToString());
 
             sourceResponseStream.Close();
+        }
+
+        private AutoResetEvent _xmlAsyncCompletedTrigger;
+        private DownloadXmlAsyncResult _xmlAsyncDownloadResult = null;
+
+        [Test]
+        public void XmlAsyncDownloadTest()
+        {
+            UTF8Encoding encoding = new UTF8Encoding();
+            byte[] contentAsBytes = encoding.GetBytes(TestResources.CharacterSheet);
+            MemoryStream sourceResponseStream = new MemoryStream();
+            sourceResponseStream.Write(contentAsBytes, 0, contentAsBytes.Length);
+            sourceResponseStream.Position = 0;
+            XmlDocument contentAsXml = new XmlDocument();
+            contentAsXml.Load(new StringReader(TestResources.CharacterSheet));
+
+            Mock<HttpWebRequest> mockRequest = MockManager.Mock<HttpWebRequest>(Constructor.NotMocked);
+            MockObject<HttpWebResponse> mockResponse = MockManager.MockObject<HttpWebResponse>(Constructor.Mocked);
+            mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
+            mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
+
+            _xmlAsyncCompletedTrigger = new AutoResetEvent(false);
+            EVEMonWebClient client = new EVEMonWebClient();
+            client.DownloadXmlAsync("http://www.battleclinic.com", XmlAysncDownloadTestCompleted, null);
+            _xmlAsyncCompletedTrigger.WaitOne();
+            if (_xmlAsyncDownloadResult.Error != null)
+                Assert.Fail(_xmlAsyncDownloadResult.Error.Message);
+            StringAssert.AreEqualIgnoringCase(contentAsXml.ToString(), _xmlAsyncDownloadResult.Result.ToString());
+            sourceResponseStream.Close();
+            _xmlAsyncCompletedTrigger = null;
+            _xmlAsyncDownloadResult = null;
+        }
+
+        private void XmlAysncDownloadTestCompleted(DownloadXmlAsyncResult e, object state)
+        {
+            _xmlAsyncDownloadResult = e;
+            _xmlAsyncCompletedTrigger.Set();
         }
 
         [Test]

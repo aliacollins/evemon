@@ -151,6 +151,7 @@ namespace EVEMon
             s.KeepCharacterPlans = cbKeepCharacterPlans.Checked;
 
             s.DisableEVEMonVersionCheck = cbAutomaticallySearchForNewVersions.Checked;
+            s.CheckTimeOnStartup = cbCheckTimeOnStartup.Checked;
 
             s.EnableSkillCompleteDialog = cbShowCompletedSkillsDialog.Checked;
 
@@ -369,6 +370,7 @@ namespace EVEMon
             numericStatusInterval.Value = m_settings.StatusUpdateInterval;
 
             cbAutomaticallySearchForNewVersions.Checked = m_settings.DisableEVEMonVersionCheck;
+            cbCheckTimeOnStartup.Checked = m_settings.CheckTimeOnStartup;
             cbAutomaticEOSkillUpdate.Checked = m_settings.DisableXMLAutoUpdate;
 
             int j;

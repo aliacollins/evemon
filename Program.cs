@@ -7,7 +7,6 @@ using EVEMon.Common;
 using EVEMon.NetworkLogger;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowRelocator;
-using EVEMon.Common.Net;
 
 namespace EVEMon
 {
@@ -67,6 +66,11 @@ namespace EVEMon
 
             Singleton.Instance<APIState>().DebugMode = _apiDebugMode;
 
+            if (Settings.GetInstance().CheckTimeOnStartup)
+            {
+                TimeCheck.CheckIsSynchronised(TimeCheckCallback);
+            }
+
             Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
             Settings.GetInstance().SaveImmediate();
 
@@ -77,6 +81,17 @@ namespace EVEMon
             }
 
             G15Handler.Shutdown();
+        }
+
+        private static void TimeCheckCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime)
+        {
+            if (isSynchronised == false)
+            {
+                using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
+                {
+                    timeDialog.ShowDialog();
+                }
+            }
         }
 
         private static MainWindow m_mainWindow;

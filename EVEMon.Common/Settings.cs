@@ -910,6 +910,19 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_CheckTimeOnStartup = true;
+        public bool CheckTimeOnStartup
+        {
+            get { return m_CheckTimeOnStartup; }
+            set
+            {
+                lock(mutexLock)
+                {
+                    m_CheckTimeOnStartup = value;
+                }
+            }
+        }
+
         private bool m_DisableXMLAutoUpdate;
         public bool DisableXMLAutoUpdate
         {
