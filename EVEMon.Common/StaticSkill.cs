@@ -138,10 +138,14 @@ namespace EVEMon.Common
                             // Ignore the exception - cost is zero anyway.
                         }
 
-                        StaticSkill ss = new StaticSkill(_pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, prereqs);
-                        m_skillsById[_id] = ss;
-                        m_skillsByName[_name] = ss;
-                        skills.Add(ss);
+                        // Ignore skills with rank 0
+                        if (_rank != 0)
+                        {
+                            StaticSkill ss = new StaticSkill(_pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, prereqs);
+                            m_skillsById[_id] = ss;
+                            m_skillsByName[_name] = ss;
+                            skills.Add(ss);
+                        }
                     }
 
                     string _group = sgel.GetAttribute("n");
