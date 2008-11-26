@@ -60,6 +60,12 @@
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
     <Compile Include="CommonContext.cs" />
+    <Compile Include="EveAttribute.cs" />
+    <Compile Include="EveAttributes.cs" />
+    <Compile Include="ImageService.cs" />
+    <Compile Include="NetworkLogEventArgs.cs" />
+    <Compile Include="NetworkLogEventType.cs" />
+    <Compile Include="Pair.cs" />
     <Compile Include="TimeCheck.cs" />
     <Compile Include="Net\DownloadFileAsyncResult.cs" />
     <Compile Include="Net\DownloadImageAsyncResult.cs" />
@@ -180,9 +186,11 @@
     <Compile Include="StaticSkill.cs" />
     <Compile Include="StaticSkillGroup.cs" />
     <Compile Include="StringTable.cs" />
+    <Compile Include="TimeUtil.cs" />
     <Compile Include="TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Util.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
   <ItemGroup>

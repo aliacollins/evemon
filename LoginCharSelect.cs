@@ -364,7 +364,7 @@ namespace EVEMon
 
         private void lnkAPI_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            EveSession.BrowserLinkClicked(EveSession.ApiKeyUrl);
+            Util.BrowserLinkClicked(EveSession.ApiKeyUrl);
         }
 
     }

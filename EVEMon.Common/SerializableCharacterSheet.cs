@@ -27,10 +27,10 @@ namespace EVEMon.Common
         [XmlElement("currentTime")]
         public string currentTime
         {
-            get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTime); }
+            get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_curTime); }
             set
             {
-                m_curTime = EveSession.ConvertCCPTimeStringToDateTime(value);
+                m_curTime = TimeUtil.ConvertCCPTimeStringToDateTime(value);
             }
 
         }
@@ -48,10 +48,10 @@ namespace EVEMon.Common
         [XmlElement("cachedUntil")]
         public string CachedUntilTime
         {
-            get { return EveSession.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
+            get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
             set
             {
-                m_cachedUntilTime = EveSession.ConvertCCPTimeStringToDateTime(value);
+                m_cachedUntilTime = TimeUtil.ConvertCCPTimeStringToDateTime(value);
             }
         }
 

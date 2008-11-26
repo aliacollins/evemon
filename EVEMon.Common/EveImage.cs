@@ -277,7 +277,7 @@ namespace EVEMon.Common
                             typeData.urlPath,
                             eveSize,
                             imageWebName);
-                        EveSession.GetImageAsync(imageURL, true, delegate(EveSession ss, Image i)
+                        ImageService.GetImageAsync(imageURL, true, delegate(EveSession ss, Image i)
                                                                   {
                                                                       GotImage(m_EveItem.Id, i);
                                                                   });

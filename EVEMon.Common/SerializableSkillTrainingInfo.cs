@@ -39,10 +39,10 @@ namespace EVEMon.Common
         [XmlElement("currentTime")]
         public string CurrentTime
         {
-            get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTime); }
+            get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_curTime); }
             set 
             { 
-                m_curTime = EveSession.ConvertCCPTimeStringToDateTime(value);
+                m_curTime = TimeUtil.ConvertCCPTimeStringToDateTime(value);
             }
         }
 
@@ -59,8 +59,8 @@ namespace EVEMon.Common
         [XmlElement("cachedUntil")]
         public string CachedUntilTime
         {
-            get { return EveSession.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
-            set { m_cachedUntilTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
+            get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_cachedUntilTime); }
+            set { m_cachedUntilTime = TimeUtil.ConvertCCPTimeStringToDateTime(value); }
         }
         #endregion
 
@@ -261,10 +261,10 @@ namespace EVEMon.Common
             [XmlElement("currentTQTime")]
             public string CurrentTQTime
             {
-                get { return EveSession.ConvertDateTimeToCCPTimeString(m_curTQTime); }
+                get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_curTQTime); }
                 set
                 {
-                    m_curTQTime = EveSession.ConvertCCPTimeStringToDateTime(value);
+                    m_curTQTime = TimeUtil.ConvertCCPTimeStringToDateTime(value);
                 }
             }
 
@@ -296,8 +296,8 @@ namespace EVEMon.Common
             [XmlElement("trainingEndTime")]
             public string TrainingEndTimeString
             {
-                get { return EveSession.ConvertDateTimeToCCPTimeString(m_endTime); }
-                set { m_endTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
+                get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_endTime); }
+                set { m_endTime = TimeUtil.ConvertCCPTimeStringToDateTime(value); }
             }
 
             [XmlIgnore]
@@ -311,8 +311,8 @@ namespace EVEMon.Common
             [XmlElement("trainingStartTime")]
             public string TrainingStartTimeString
             {
-                get { return EveSession.ConvertDateTimeToCCPTimeString(m_startTime); }
-                set { m_startTime = EveSession.ConvertCCPTimeStringToDateTime(value); }
+                get { return TimeUtil.ConvertDateTimeToCCPTimeString(m_startTime); }
+                set { m_startTime = TimeUtil.ConvertCCPTimeStringToDateTime(value); }
             }
 
             [XmlIgnore]

@@ -139,7 +139,7 @@ namespace EVEMon
 
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            EveSession.BrowserLinkClicked("http://evemon.battleclinic.com/");
+            Util.BrowserLinkClicked("http://evemon.battleclinic.com/");
         }
 
         private void lstDevelopers_DrawItem(object sender,

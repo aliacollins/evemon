@@ -802,7 +802,7 @@ namespace EVEMon
         private void UpdateCharacterImageRemote()
         {
             pbCharImage.Image = null;
-            EveSession.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId, new GetImageCallback(GotCharacterImage));
+            ImageService.GetCharacterImageAsync(this.GrandCharacterInfo.CharacterId, new GetImageCallback(GotCharacterImage));
         }
 
         /// <summary>

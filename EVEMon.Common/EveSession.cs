@@ -2,29 +2,20 @@
 //#define USE_LOCALHOST
 // (If setting DEBUG_SINGLE THREAD, also set it in CharacterMonitor.cs)
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Serialization;
-using System.Reflection;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common
 {
     public class EveSession
     {
-        private static Dictionary<string, WeakReference<EveSession>> m_sessions =
+        private static readonly Dictionary<string, WeakReference<EveSession>> m_sessions =
             new Dictionary<string, WeakReference<EveSession>>();
 
         public static EveSession GetSession(int userId, string apiKey)
@@ -61,19 +52,6 @@ namespace EVEMon.Common
                 }
                 return result;
             }
-        }
-
-        public static void BrowserLinkClicked(string url)
-        {
-            try
-            {
-                Process.Start(url);
-            }
-            catch (Exception)
-            {
-//                MessageBox.Show("You do not have a default browser configured. Please configure a default browser or visit " + url + " directly in your browser", "No Default Browser", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-
         }
 
         #region API stuff
@@ -159,7 +137,7 @@ namespace EVEMon.Common
             try
             {
                 XmlNode currentTimeNode = xdoc.SelectSingleNode("/eveapi/currentTime");
-                CCPCurrent = EveSession.ConvertCCPTimeStringToDateTime(currentTimeNode.InnerText);
+                CCPCurrent = TimeUtil.ConvertCCPTimeStringToDateTime(currentTimeNode.InnerText);
             }
             catch (Exception)
             {
@@ -171,7 +149,7 @@ namespace EVEMon.Common
             try
             {
                 XmlNode cachedTimeNode = xdoc.SelectSingleNode("/eveapi/cachedUntil");
-                cacheExpires = EveSession.ConvertCCPTimeStringToDateTime(cachedTimeNode.InnerText);
+                cacheExpires = TimeUtil.ConvertCCPTimeStringToDateTime(cachedTimeNode.InnerText);
             }
             catch (Exception)
             {
@@ -183,178 +161,15 @@ namespace EVEMon.Common
             return  DateTime.Now.ToUniversalTime() + (cacheExpires - CCPCurrent);
         }
 
-        /// <summary>
-        /// Converts a UTC DateTime to the CCP API date/time string
-        /// </summary>
-        /// <param name="timeUTC"></param>
-        /// <returns></returns>
-        public static string ConvertDateTimeToCCPTimeString(DateTime timeUTC)
-        {
-            // timeUTC  = yyyy-mm-dd hh:mm:ss
-            string result = string.Format("{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
-                        timeUTC.Year,
-                        timeUTC.Month,
-                        timeUTC.Day,
-                        timeUTC.Hour,
-                        timeUTC.Minute,
-                        timeUTC.Second);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts a CCP API date/time string to a UTC DateTime
-        /// </summary>
-        /// <param name="timeUTC"></param>
-        /// <returns></returns>
-        public static DateTime ConvertCCPTimeStringToDateTime(string timeUTC)
-        {
-            // timeUTC  = yyyy-mm-dd hh:mm:ss
-            if (timeUTC == null || timeUTC == "")
-                return DateTime.MinValue;
-            DateTime dt = new DateTime(
-                            Int32.Parse(timeUTC.Substring(0, 4)),
-                            Int32.Parse(timeUTC.Substring(5, 2)),
-                            Int32.Parse(timeUTC.Substring(8, 2)),
-                            Int32.Parse(timeUTC.Substring(11, 2)),
-                            Int32.Parse(timeUTC.Substring(14, 2)),
-                            Int32.Parse(timeUTC.Substring(17, 2)),
-                            0,
-                            DateTimeKind.Utc);
-            return dt;
-        }
-
-
-
-#endregion
+        #endregion
 
         #region Images
-        public static void GetCharacterImageAsync(int charId, GetImageCallback callback)
-        {
-            GetImageAsync("http://img.eve.is/serv.asp?s=256&c=" + charId.ToString(), false, callback);
-        }
 
-        public static string ImageCacheDirectory
-        {
-            get
-            {
-                string cacheDir = String.Format("{1}{0}cache{0}images", Path.DirectorySeparatorChar, Settings.EveMonDataDir);
-                if (!Directory.Exists(cacheDir))
-                {
-                    Directory.CreateDirectory(cacheDir);
-                }
-                return cacheDir;
-            }
-        }
-
-        public static void GetImageAsync(string url, bool useCache, GetImageCallback callback)
-        {
-            if (useCache)
-            {
-                string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
-                if (File.Exists(cacheFileName))
-                {
-                    try
-                    {
-                        FileStream fs = new FileStream(cacheFileName, FileMode.Open);
-                        Image i = Image.FromStream(fs, true);
-                        fs.Close();
-                        fs.Dispose();
-
-                        callback(null, i);
-                        return;
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHandler.LogException(e, false);
-                    }
-                }
-                GetImageCallback origCallback = callback;
-                callback = new GetImageCallback(
-                    delegate(EveSession s, Image i)
-                    {
-                        if (i != null)
-                        {
-                            AddImageToCache(url, i);
-                        }
-                        origCallback(s, i);
-                    }
-                    );
-            }
-            CommonContext.HttpWebService.DownloadImageAsync(url, GotImage, new AsyncImageRequestState(callback));
-        }
-
-        private class AsyncImageRequestState
-        {
-            private readonly GetImageCallback _callback;
-
-            public AsyncImageRequestState(GetImageCallback callback)
-            {
-                _callback = callback;
-            }
-
-            public GetImageCallback Callback
-            {
-                get { return _callback; }
-            }
-        }
-
-        private static void GotImage(DownloadImageAsyncResult e, object state)
-        {
-            AsyncImageRequestState requestState = (AsyncImageRequestState) state;
-            if (e.Error == null)
-            {
-                requestState.Callback(null, e.Result);
-            }
-            else
-            {
-                ExceptionHandler.LogException(e.Error, true);
-                requestState.Callback(null, null);
-            }
-        }
-
-        private static void AddImageToCache(string url, Image i)
-        {
-            string cacheName = GetCacheName(url);
-            using (StreamWriter sw = new StreamWriter(Path.Combine(ImageCacheDirectory, "file.map"), true))
-            {
-                sw.WriteLine(String.Format("{0} {1}", cacheName, url));
-                sw.Close();
-            }
-            string fn = Path.Combine(ImageCacheDirectory, cacheName);
-            try
-            {
-                FileStream fs = new FileStream(fn, FileMode.Create);
-                i.Save(fs, ImageFormat.Png);
-                fs.Close();
-            }
-            catch (Exception e)
-            {
-                ExceptionHandler.LogException(e, false);
-            }
-        }
-
-        private static string GetCacheName(string url)
-        {
-            Match extensionMatch = Regex.Match(url, @"([^\.]+)$");
-            string ext = String.Empty;
-            if (extensionMatch.Success)
-            {
-                ext = "." + extensionMatch.Groups[1];
-            }
-            byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url));
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                sb.Append(String.Format("{0:x2}", hash[i]));
-            }
-            sb.Append(ext);
-            return sb.ToString();
-        }
         #endregion
 
         #region Nonstatic Members
-        private int m_userId;
-        private string m_apiKey;
+        private readonly int m_userId;
+        private readonly string m_apiKey;
 
 
         private EveSession(int userId, string apiKey)
@@ -399,7 +214,7 @@ namespace EVEMon.Common
             }
 
             List<Pair<string, int>> charList = new List<Pair<string, int>>();
-            XmlDocument xdoc = EveSession.GetCharList(Convert.ToString(m_userId), m_apiKey, out m_characterListError);
+            XmlDocument xdoc = GetCharList(Convert.ToString(m_userId), m_apiKey, out m_characterListError);
             XmlNode error = xdoc.DocumentElement.SelectSingleNode("descendant::error");
             if (error != null)
             {
@@ -408,7 +223,7 @@ namespace EVEMon.Common
             }
             else
             {
-                m_characterListCachedUntil = EveSession.GetCacheExpiryUTC(xdoc);
+                m_characterListCachedUntil = GetCacheExpiryUTC(xdoc);
                 XmlNodeList characters = xdoc.DocumentElement.SelectNodes("descendant::rowset/row");
                 foreach (XmlNode charNode in characters)
                 {
@@ -458,7 +273,7 @@ namespace EVEMon.Common
             // and processing the response.
 
             DateTime requestTime = DateTime.Now;
-            XmlDocument sdoc = null;
+            XmlDocument sdoc;
             try
             {
 
@@ -499,12 +314,12 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="charId">The char id.</param>
         /// <returns>The SerializableCharacterSheet, fully populated</returns>
-        public SerializableCharacterSheet GetCharacterInfo(int charId)
+        private SerializableCharacterSheet GetCharacterInfo(int charId)
         {
             m_apiErrorMessage = string.Empty;
             m_apiErrorCode = 0;
 
-            XmlDocument xdoc = null;
+            XmlDocument xdoc;
             try
             {
                 xdoc = GetCharacterSheet(charId);
@@ -515,11 +330,11 @@ namespace EVEMon.Common
                 return null;
             }
 
-            SerializableCharacterSheet scs = null;
+            SerializableCharacterSheet scs;
             try
             {
                 // Check for an API Error...
-                XmlElement errorNode = null;
+                XmlElement errorNode;
                 errorNode = xdoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
                 if (errorNode != null)
                 {
@@ -527,7 +342,7 @@ namespace EVEMon.Common
                     return null;
                 }
 
-                scs = ProcessCharacterXml(xdoc, charId);
+                scs = ProcessCharacterXml(xdoc);
                 scs.CharacterSheet.CreateSkillGroups();
                 scs.FromCCP = true;
                 //save the xml in the character cache
@@ -542,7 +357,7 @@ namespace EVEMon.Common
             return scs;
         }
 
-        private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc, int charId)
+        private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc)
         {
             XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));
             XmlElement charRoot = xdoc.DocumentElement;
@@ -550,50 +365,6 @@ namespace EVEMon.Common
             {
                 return (SerializableCharacterSheet)xs.Deserialize(xnr);
             }
-        }
-
-        private TimeSpan ConvertTimeStringToTimeSpan(string timeLeft)
-        {
-            TimeSpan result = new TimeSpan();
-            if (timeLeft.Contains("second"))
-            {
-                result += TimeSpan.FromSeconds(
-                    Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) seconds?").Groups[1].Value));
-            }
-            if (timeLeft.Contains("minute"))
-            {
-                result += TimeSpan.FromMinutes(
-                    Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) minutes?").Groups[1].Value));
-            }
-            if (timeLeft.Contains("hour"))
-            {
-                result += TimeSpan.FromHours(
-                    Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) hours?").Groups[1].Value));
-            }
-            if (timeLeft.Contains("day"))
-            {
-                result += TimeSpan.FromDays(
-                    Convert.ToInt32(Regex.Match(timeLeft, @"(\d+) days?").Groups[1].Value));
-            }
-            return result;
-        }
-
-        private string ReverseString(string p)
-        {
-            char[] ca = new char[p.Length];
-            for (int i = 0; i < p.Length; i++)
-            {
-                ca[p.Length - i - 1] = p[i];
-            }
-            return new String(ca);
-        }
-
-        private static Thread m_mainThread = null;
-
-        public static Thread MainThread
-        {
-            get { return m_mainThread; }
-            set { m_mainThread = value; }
         }
 
         private class UpdateGCIArgs
@@ -621,7 +392,7 @@ namespace EVEMon.Common
         {
             UpdateGCIArgs args = (UpdateGCIArgs)state;
             GC.Collect();
-            int timeLeftInCache = this.UpdateGrandCharacterInfo(args.GrandCharacterInfo, args.InvokeControl);
+            int timeLeftInCache = UpdateGrandCharacterInfo(args.GrandCharacterInfo, args.InvokeControl);
             args.UpdateGrandCharacterInfoCallback(null, timeLeftInCache);
         }
 
@@ -650,7 +421,7 @@ namespace EVEMon.Common
         {
             UpdateSTArgs args = (UpdateSTArgs)state;
             GC.Collect();
-            int timeToNextUpdate = this.UpdateSkillTrainingInfo(args.GrandCharacterInfo, args.InvokeControl);
+            int timeToNextUpdate = UpdateSkillTrainingInfo(args.GrandCharacterInfo, args.InvokeControl);
             args.UpdateTrainingSkillInfoCallback(null, timeToNextUpdate);
         }
 
@@ -658,9 +429,9 @@ namespace EVEMon.Common
         // to be more polite to the server.
         private const int DEFAULT_RETRY_INTERVAL = 30 * 60 * 1000;
         private Random autoRand;
-        private Object mutexLock = new Object();
+        private readonly Object mutexLock = new Object();
 
-        public int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
+        private int UpdateGrandCharacterInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
 
             lock (mutexLock)
@@ -694,7 +465,7 @@ namespace EVEMon.Common
             }
         }
 
-        public int UpdateSkillTrainingInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
+        private int UpdateSkillTrainingInfo(CharacterInfo grandCharacterInfo, Control invokeControl)
         {
             lock (mutexLock)
             {
@@ -724,335 +495,9 @@ namespace EVEMon.Common
         #endregion
     }
 
-    [XmlRoot("pair")]
-    public class Pair<TypeA, TypeB>
-    {
-        private TypeA m_a;
-        private TypeB m_b;
-
-        public TypeA A
-        {
-            get { return m_a; }
-            set { m_a = value; }
-        }
-
-        public TypeB B
-        {
-            get { return m_b; }
-            set { m_b = value; }
-        }
-
-        public Pair()
-        {
-        }
-
-        public Pair(TypeA a, TypeB b)
-        {
-            m_a = a;
-            m_b = b;
-        }
-    }
-
     public delegate void UpdateGrandCharacterInfoCallback(EveSession sender, int timeLeftInCache);
 
     public delegate void UpdateTrainingSkillInfoCallback(EveSession sender, int timeRetryIn);
 
     public delegate void GetImageCallback(EveSession sender, Image i);
-
-    [XmlRoot("attributes")]
-    public class EveAttributes
-    {
-
-        // m_owner is used for the adjusted Attribute method, which in turn is only
-        // ever used for the "save as... text" method
-        private CharacterSheetResult m_owner;
-
-        internal void SetOwner(CharacterSheetResult cs)
-        {
-            m_owner = cs;
-        }
-
-        private int[] m_values = new int[5] { 0, 0, 0, 0, 0 };
-
-        [XmlElement("intelligence")]
-        public int BaseIntelligence
-        {
-            get { return m_values[(int)EveAttribute.Intelligence]; }
-            set { m_values[(int)EveAttribute.Intelligence] = value; }
-        }
-
-        [XmlElement("charisma")]
-        public int BaseCharisma
-        {
-            get { return m_values[(int)EveAttribute.Charisma]; }
-            set { m_values[(int)EveAttribute.Charisma] = value; }
-        }
-
-        [XmlElement("perception")]
-        public int BasePerception
-        {
-            get { return m_values[(int)EveAttribute.Perception]; }
-            set { m_values[(int)EveAttribute.Perception] = value; }
-        }
-
-        [XmlElement("memory")]
-        public int BaseMemory
-        {
-            get { return m_values[(int)EveAttribute.Memory]; }
-            set { m_values[(int)EveAttribute.Memory] = value; }
-        }
-
-        [XmlElement("willpower")]
-        public int BaseWillpower
-        {
-            get { return m_values[(int)EveAttribute.Willpower]; }
-            set { m_values[(int)EveAttribute.Willpower] = value; }
-        }
-
-        // AdjustedXXX are only used by the "save as text" method.
-        [XmlIgnore]
-        public double AdjustedIntelligence
-        {
-            get { return GetAdjustedAttribute(EveAttribute.Intelligence); }
-        }
-
-        [XmlIgnore]
-        public double AdjustedCharisma
-        {
-            get { return GetAdjustedAttribute(EveAttribute.Charisma); }
-        }
-
-        [XmlIgnore]
-        public double AdjustedPerception
-        {
-            get { return GetAdjustedAttribute(EveAttribute.Perception); }
-        }
-
-        [XmlIgnore]
-        public double AdjustedMemory
-        {
-            get { return GetAdjustedAttribute(EveAttribute.Memory); }
-        }
-
-        [XmlIgnore]
-        public double AdjustedWillpower
-        {
-            get { return GetAdjustedAttribute(EveAttribute.Willpower); }
-        }
-
-        // only used by the "save as... text" method
-        private double GetAttributeAdjustment(EveAttribute eveAttribute, SerializableEveAttributeAdjustment adjustment)
-        {
-            double result = 0.0;
-            double learningBonus = 1.0;
-            if ((adjustment & SerializableEveAttributeAdjustment.Base) != 0)
-            {
-                result += m_values[(int)eveAttribute];
-            }
-            if ((adjustment & SerializableEveAttributeAdjustment.Implants) != 0)
-            {
-                foreach (SerializableEveAttributeBonus eab in m_owner.AttributeBonuses.Bonuses)
-                {
-                    if (eab.EveAttribute == eveAttribute)
-                    {
-                        result += eab.Amount;
-                    }
-                }
-            }
-            if (((adjustment & SerializableEveAttributeAdjustment.Skills) != 0) ||
-                ((adjustment & SerializableEveAttributeAdjustment.Learning) != 0))
-            {
-                foreach (SerializableSkillGroup sg in m_owner.SkillGroups)
-                {
-                    if (sg.Name == "Learning")
-                    {
-                        foreach (SerializableSkill s in sg.Skills)
-                        {
-                            if ((adjustment & SerializableEveAttributeAdjustment.Skills) != 0)
-                            {
-                                switch (eveAttribute)
-                                {
-                                    case EveAttribute.Intelligence:
-                                        if (s.Name == "Analytical Mind" || s.Name == "Logic")
-                                        {
-                                            result += s.Level;
-                                        }
-                                        break;
-                                    case EveAttribute.Charisma:
-                                        if (s.Name == "Empathy" || s.Name == "Presence")
-                                        {
-                                            result += s.Level;
-                                        }
-                                        break;
-                                    case EveAttribute.Memory:
-                                        if (s.Name == "Instant Recall" || s.Name == "Eidetic Memory")
-                                        {
-                                            result += s.Level;
-                                        }
-                                        break;
-                                    case EveAttribute.Willpower:
-                                        if (s.Name == "Iron Will" || s.Name == "Focus")
-                                        {
-                                            result += s.Level;
-                                        }
-                                        break;
-                                    case EveAttribute.Perception:
-                                        if (s.Name == "Spatial Awareness" || s.Name == "Clarity")
-                                        {
-                                            result += s.Level;
-                                        }
-                                        break;
-                                }
-                            }
-                            if (s.Name == "Learning")
-                            {
-                                learningBonus = 1.0 + (0.02 * s.Level);
-                            }
-                        }
-                    }
-                }
-            }
-            if ((adjustment & SerializableEveAttributeAdjustment.Learning) != 0)
-            {
-                result = result * learningBonus;
-            }
-            return result;
-        }
-
-        // only used by "save as... text file"
-        private double GetAdjustedAttribute(EveAttribute eveAttribute)
-        {
-            return GetAttributeAdjustment(eveAttribute, SerializableEveAttributeAdjustment.AllWithLearning);
-        }
-    }
-
-    public enum NetworkLogEventType
-    {
-        BeginGetUrl,
-        Redirected,
-        ParsedRedirect,
-        GotUrlSuccess,
-        GotUrlFailure
-    }
-
-    public class NetworkLogEventArgs : EventArgs
-    {
-        internal NetworkLogEventArgs()
-        {
-        }
-
-        private NetworkLogEventType m_type;
-
-        public NetworkLogEventType NetworkLogEventType
-        {
-            get { return m_type; }
-            set { m_type = value; }
-        }
-
-        private string m_url;
-
-        public string Url
-        {
-            get { return m_url; }
-            set { m_url = value; }
-        }
-
-        private string m_referer;
-
-        public string Referer
-        {
-            get { return m_referer; }
-            set { m_referer = value; }
-        }
-
-        private CookieCollection m_cookies;
-
-        [XmlIgnore]
-        public CookieCollection Cookies
-        {
-            get { return m_cookies; }
-            set { m_cookies = value; }
-        }
-
-        public List<string> CookieList
-        {
-            get
-            {
-                if (m_cookies == null)
-                {
-                    return null;
-                }
-                List<string> cook = new List<string>();
-                foreach (Cookie c in m_cookies)
-                {
-                    cook.Add(c.ToString());
-                }
-                return cook;
-            }
-        }
-
-        private Exception m_exception;
-
-        [XmlIgnore]
-        public Exception Exception
-        {
-            get { return m_exception; }
-            set { m_exception = value; }
-        }
-
-        public string ExceptionText
-        {
-            get
-            {
-                if (m_exception != null)
-                {
-                    return m_exception.ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private string m_redirectTo;
-
-        public string RedirectTo
-        {
-            get { return m_redirectTo; }
-            set { m_redirectTo = value; }
-        }
-
-        private HttpStatusCode m_statusCode = HttpStatusCode.OK;
-
-        public HttpStatusCode StatusCode
-        {
-            get { return m_statusCode; }
-            set { m_statusCode = value; }
-        }
-
-        private string m_data;
-
-        public string Data
-        {
-            get { return m_data; }
-            set { m_data = value; }
-        }
-    }
-
-    public enum EveAttribute
-    {
-        [XmlEnum("perception")]
-        Perception,
-        [XmlEnum("memory")]
-        Memory,
-        [XmlEnum("willpower")]
-        Willpower,
-        [XmlEnum("intelligence")]
-        Intelligence,
-        [XmlEnum("charisma")]
-        Charisma,
-        [XmlEnum("none")]
-        None
-    }
 }

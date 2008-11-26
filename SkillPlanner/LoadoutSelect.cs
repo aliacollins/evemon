@@ -73,7 +73,7 @@ namespace EVEMon.SkillPlanner
             lbDate.Text = String.Empty;
             lblTrainTime.Text = "N/A";
 
-            EveSession.GetImageAsync(
+            ImageService.GetImageAsync(
                 "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
                 m_ship.Id.ToString() + ".png", true, delegate(EveSession ss, Image i)
                                {
@@ -413,7 +413,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                EveSession.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
+                Util.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
             }
             else
             {

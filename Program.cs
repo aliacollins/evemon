@@ -56,7 +56,7 @@ namespace EVEMon
             }
 
             Plan.PlannerWindowFactory = new PlannerWindowFactory();
-            EveSession.MainThread = Thread.CurrentThread;
+
 #if DEBUG_SINGLETHREAD
 #else
             InstallerDeleter.Schedule();
