@@ -7,8 +7,8 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal abstract class WebRequestAsyncState
     {
-        private EVEMonWebRequest _request;
-        private EVEMonWebException _error;
+        private HttpWebServiceRequest _request;
+        private HttpWebServiceException _error;
         private readonly WebRequestAsyncCallback _callback;
         private readonly DownloadProgressChangedCallback _progressCallback;
 
@@ -23,13 +23,13 @@ namespace EVEMon.Common.Net
             _progressCallback = progressCallback;
         }
 
-        public EVEMonWebRequest Request
+        public HttpWebServiceRequest Request
         {
             get { return _request; }
             set { _request = value; }
         }
 
-        public EVEMonWebException Error
+        public HttpWebServiceException Error
         {
             get { return _error; }
             set { _error = value; }

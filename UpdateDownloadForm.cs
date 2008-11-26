@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Net;
@@ -29,7 +28,7 @@ namespace EVEMon
         {
             try
             {
-                m_request = Singleton.Instance<EVEMonWebClient>().DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback, ProgressChangedCallback);
+                m_request = CommonContext.HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback, ProgressChangedCallback);
             }
             catch (Exception ex)
             {
@@ -103,7 +102,7 @@ namespace EVEMon
         private void button1_Click(object sender, EventArgs e)
         {
             if (m_request != null)
-                Singleton.Instance<EVEMonWebClient>().CancelRequest(m_request);
+                CommonContext.HttpWebService.CancelRequest(m_request);
         }
     }
 }

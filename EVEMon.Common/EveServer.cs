@@ -173,10 +173,10 @@ namespace EVEMon.Common
         {
             try
             {
-                m_motd = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                m_motd = CommonContext.HttpWebService.DownloadString(
                     "http://www.eve-online.com/motd.asp?server=" + m_settings.CustomTQAddress);
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, true);
             }

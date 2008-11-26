@@ -8,9 +8,9 @@ namespace EVEMon.Common.Net
     public class DownloadXmlAsyncResult
     {
         private readonly XmlDocument _result;
-        private readonly EVEMonWebException _error;
+        private readonly HttpWebServiceException _error;
 
-        public DownloadXmlAsyncResult(XmlDocument xdoc, EVEMonWebException error)
+        public DownloadXmlAsyncResult(XmlDocument xdoc, HttpWebServiceException error)
         {
             _error = error;
             _result = xdoc;
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Net
             get { return _result; }
         }
 
-        public EVEMonWebException Error
+        public HttpWebServiceException Error
         {
             get { return _error; }
         }

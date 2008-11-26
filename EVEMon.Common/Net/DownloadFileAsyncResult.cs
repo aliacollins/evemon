@@ -8,10 +8,10 @@ namespace EVEMon.Common.Net
     public class DownloadFileAsyncResult
     {
         private readonly FileInfo _result;
-        private readonly EVEMonWebException _error;
+        private readonly HttpWebServiceException _error;
         private readonly bool _cancelled;
 
-        public DownloadFileAsyncResult(FileInfo file, EVEMonWebException error, bool cancelled)
+        public DownloadFileAsyncResult(FileInfo file, HttpWebServiceException error, bool cancelled)
         {
             _error = error;
             _cancelled = cancelled;
@@ -23,7 +23,7 @@ namespace EVEMon.Common.Net
             get { return _result; }
         }
 
-        public EVEMonWebException Error
+        public HttpWebServiceException Error
         {
             get { return _error; }
         }

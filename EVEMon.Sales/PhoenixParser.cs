@@ -36,10 +36,10 @@ namespace EVEMon.Sales
             string data;
             try
             {
-                data = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                data = CommonContext.HttpWebService.DownloadString(
                     "http://www.phoenix-industries.org/");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 throw new MineralParserException(ex.Message);

@@ -640,7 +640,7 @@ namespace EVEMon.Common
                 {
                     m_useCustomProxySettings = value;
                 }
-                Singleton.Instance<EVEMonWebClient>().State.UseCustomProxy = value;
+                CommonContext.HttpWebService.State.UseCustomProxy = value;
             }
         }
 
@@ -654,7 +654,7 @@ namespace EVEMon.Common
                 {
                     m_httpProxy = value;
                 }
-                Singleton.Instance<EVEMonWebClient>().State.Proxy = value;
+                CommonContext.HttpWebService.State.Proxy = value;
             }
         }
 
@@ -668,7 +668,7 @@ namespace EVEMon.Common
                 {
                     m_disableRequestsOnAuthenticationFailure = value;
                 }
-                Singleton.Instance<EVEMonWebClient>().State.DisableOnProxyAuthenticationFailure = value;
+                CommonContext.HttpWebService.State.DisableOnProxyAuthenticationFailure = value;
             }
         }
 

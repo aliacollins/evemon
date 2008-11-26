@@ -7,9 +7,9 @@ namespace EVEMon.Common.Net
     public delegate void DownloadXmlCompletedCallback(DownloadXmlAsyncResult e, object userState);
 
     /// <summary>
-    /// EVEMonWebClient Xml download implementation
+    /// HttpWebService Xml download implementation
     /// </summary>
-    partial class EVEMonWebClient
+    partial class HttpWebService
     {
         private const string XML_ACCEPT =
             "text/xml,application/xml,application/xhtml+xml;q=0.8,*/*;q=0.5";
@@ -35,7 +35,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             try
             {
                 request.GetResponse(url, new MemoryStream(), XML_ACCEPT, postData);
@@ -49,7 +49,7 @@ namespace EVEMon.Common.Net
             }
             catch (XmlException ex)
             {
-                throw EVEMonWebException.XmlException(url, ex);
+                throw HttpWebServiceException.XmlException(url, ex);
             }
             finally
             {
@@ -70,7 +70,7 @@ namespace EVEMon.Common.Net
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new MemoryStream(), XML_ACCEPT, null, state);
             return request;
         }
@@ -91,7 +91,7 @@ namespace EVEMon.Common.Net
                 }
                 catch (XmlException ex)
                 {
-                    requestState.Error = EVEMonWebException.XmlException(requestState.Request.BaseUrl, ex);
+                    requestState.Error = HttpWebServiceException.XmlException(requestState.Request.BaseUrl, ex);
                 }
             }
             if (requestState.Request.ResponseStream != null)

@@ -7,9 +7,9 @@ namespace EVEMon.Common.Net
     public delegate void DownloadImageCompletedCallback(DownloadImageAsyncResult e, object userState);
 
     /// <summary>
-    /// EVEMonWebClient Image download implementation
+    /// HttpWebService Image download implementation
     /// </summary>
-    partial class EVEMonWebClient
+    partial class HttpWebService
     {
         private const string IMAGE_ACCEPT = "image/png,*/*;q=0.5";
 
@@ -23,7 +23,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             try
             {
                 request.GetResponse(url, new MemoryStream(), IMAGE_ACCEPT);
@@ -48,7 +48,7 @@ namespace EVEMon.Common.Net
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new MemoryStream(), IMAGE_ACCEPT, null, state);
             return request;
         }
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Net
                 {
                     imageResult = GetImage(requestState.Request);
                 }
-                catch(EVEMonWebException ex)
+                catch(HttpWebServiceException ex)
                 {
                     requestState.Error = ex;
                 }
@@ -81,7 +81,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Helper method to return an Image from the completed request
         /// </summary>
-        private Image GetImage(EVEMonWebRequest request)
+        private Image GetImage(HttpWebServiceRequest request)
         {
             Image result = null;
             if (request.ResponseStream != null)
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Net
                 }
                 catch (ArgumentException ex)
                 {
-                    throw EVEMonWebException.ImageException(request.BaseUrl, ex);
+                    throw HttpWebServiceException.ImageException(request.BaseUrl, ex);
                 }
             }
             return result;

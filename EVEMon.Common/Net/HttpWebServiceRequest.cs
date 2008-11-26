@@ -8,9 +8,9 @@ namespace EVEMon.Common.Net
     /// The core class that retrieves data from the web via HTTP. Requests are carried out by the GetResponse methods. The content of
     /// the response is returned via the stream parameter passed to GetResponse
     /// </summary>
-    internal class EVEMonWebRequest
+    internal class HttpWebServiceRequest
     {
-        private readonly EVEMonWebClientState _webClientState;
+        private readonly HttpWebServiceState _webServiceState;
         private string _baseUrl;
         private string _accept;
         private Stream _responseStream;
@@ -23,13 +23,13 @@ namespace EVEMon.Common.Net
         private readonly object _syncLock = new object();
 
         /// <summary>
-        /// Initialises a new instance of EVEMonWebRequest to be submitted as a POST request.
+        /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
         /// </summary>
-        /// <param name="webClientState">An <see cref="EVEMonWebClientState"/> instance</param>
-        internal EVEMonWebRequest(EVEMonWebClientState webClientState)
+        /// <param name="webServiceState">An <see cref="HttpWebServiceState"/> instance</param>
+        internal HttpWebServiceRequest(HttpWebServiceState webServiceState)
         {
-            _webClientState = webClientState;
-            _redirectsRemaining = _webClientState.MaxRedirects;
+            _webServiceState = webServiceState;
+            _redirectsRemaining = _webServiceState.MaxRedirects;
         }
 
         /// <summary>
@@ -78,8 +78,8 @@ namespace EVEMon.Common.Net
         /// </summary>
         internal void GetResponse(string url, Stream responseStream, string accept, HttpPostData postData)
         {
-            if (_webClientState.RequestsDisabled)
-                throw EVEMonWebException.RequestsDisabledException(url);
+            if (_webServiceState.RequestsDisabled)
+                throw HttpWebServiceException.RequestsDisabledException(url);
             _baseUrl = url;
             _url = url;
             _responseStream = responseStream;
@@ -94,7 +94,7 @@ namespace EVEMon.Common.Net
                 int bytesRead;
                 long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
-                int bufferSize = (int)(rawBufferSize > _webClientState.MaxBufferSize  ? _webClientState.MaxBufferSize : (rawBufferSize < _webClientState.MinBufferSize ? _webClientState.MinBufferSize : rawBufferSize));
+                int bufferSize = (int)(rawBufferSize > _webServiceState.MaxBufferSize  ? _webServiceState.MaxBufferSize : (rawBufferSize < _webServiceState.MinBufferSize ? _webServiceState.MinBufferSize : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];
@@ -111,21 +111,21 @@ namespace EVEMon.Common.Net
                     }
                 } while (bytesRead > 0 && !Cancelled);
             }
-            catch (EVEMonWebException)
+            catch (HttpWebServiceException)
             {
                 throw;
             }
             catch (WebException ex)
             {
-                if (ex.Status == WebExceptionStatus.ProtocolError && ((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.ProxyAuthenticationRequired && _webClientState.DisableOnProxyAuthenticationFailure)
+                if (ex.Status == WebExceptionStatus.ProtocolError && ((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.ProxyAuthenticationRequired && _webServiceState.DisableOnProxyAuthenticationFailure)
                 {
-                    _webClientState.RequestsDisabled = true;
+                    _webServiceState.RequestsDisabled = true;
                 }
-                throw EVEMonWebException.WebException(BaseUrl, _webClientState, ex);
+                throw HttpWebServiceException.WebException(BaseUrl, _webServiceState, ex);
             }
             catch (Exception ex)
             {
-                throw EVEMonWebException.Exception(url, ex);
+                throw HttpWebServiceException.Exception(url, ex);
             }
             finally
             {
@@ -155,7 +155,7 @@ namespace EVEMon.Common.Net
             {
                 caller.EndInvoke(ar);
             }
-            catch(EVEMonWebException ex)
+            catch(HttpWebServiceException ex)
             {
                 _asyncState.Error = ex;
             }
@@ -198,7 +198,7 @@ namespace EVEMon.Common.Net
             }
             else
             {
-                throw EVEMonWebException.RedirectsExceededException(BaseUrl);
+                throw HttpWebServiceException.RedirectsExceededException(BaseUrl);
             }
         }
 
@@ -213,7 +213,7 @@ namespace EVEMon.Common.Net
             request.Headers[HttpRequestHeader.AcceptCharset] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
             request.Headers[HttpRequestHeader.Pragma] = "no-cache";
             request.KeepAlive = true;
-            request.UserAgent = _webClientState.UserAgent;
+            request.UserAgent = _webServiceState.UserAgent;
             request.Accept = _accept;
             if (referer != null) request.Referer = referer;
             if (_postData != null)
@@ -222,10 +222,10 @@ namespace EVEMon.Common.Net
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = _postData.Length;
             }
-            if (_webClientState.UseCustomProxy)
+            if (_webServiceState.UseCustomProxy)
             {
-                WebProxy proxy = new WebProxy(_webClientState.Proxy.Host, _webClientState.Proxy.Port);
-                switch (_webClientState.Proxy.AuthType)
+                WebProxy proxy = new WebProxy(_webServiceState.Proxy.Host, _webServiceState.Proxy.Port);
+                switch (_webServiceState.Proxy.AuthType)
                 {
                     case ProxyAuthType.None:
                         proxy.UseDefaultCredentials = false;
@@ -236,7 +236,7 @@ namespace EVEMon.Common.Net
                         break;
                     case ProxyAuthType.Specified:
                         proxy.UseDefaultCredentials = false;
-                        proxy.Credentials = new NetworkCredential(_webClientState.Proxy.Username, _webClientState.Proxy.Password);
+                        proxy.Credentials = new NetworkCredential(_webServiceState.Proxy.Username, _webServiceState.Proxy.Password);
                         break;
                 }
                 request.Proxy = proxy;

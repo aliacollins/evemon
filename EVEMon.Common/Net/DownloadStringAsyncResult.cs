@@ -6,9 +6,9 @@ namespace EVEMon.Common.Net
     public class DownloadStringAsyncResult
     {
         private readonly string _result;
-        private readonly EVEMonWebException _error;
+        private readonly HttpWebServiceException _error;
 
-        public DownloadStringAsyncResult(string result, EVEMonWebException error)
+        public DownloadStringAsyncResult(string result, HttpWebServiceException error)
         {
             _error = error;
             _result = result;
@@ -19,7 +19,7 @@ namespace EVEMon.Common.Net
             get { return _result; }
         }
 
-        public EVEMonWebException Error
+        public HttpWebServiceException Error
         {
             get { return _error; }
         }

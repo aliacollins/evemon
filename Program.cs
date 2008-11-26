@@ -66,7 +66,7 @@ namespace EVEMon
 
             Singleton.Instance<APIState>().DebugMode = _apiDebugMode;
 
-            if (Settings.GetInstance().CheckTimeOnStartup)
+            if (CommonContext.Settings.CheckTimeOnStartup)
             {
                 TimeCheck.CheckIsSynchronised(TimeCheckCallback);
             }

@@ -6,9 +6,9 @@ namespace EVEMon.Common.Net
     public delegate void DownloadStringCompletedCallback(DownloadStringAsyncResult e, object userState);
 
     /// <summary>
-    /// EVEMonWebClient String download implementation
+    /// HttpWebService String download implementation
     /// </summary>
-    public partial class EVEMonWebClient
+    public partial class HttpWebService
     {
         private const string STRING_ACCEPT =
             "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,*/*;q=0.5";
@@ -23,7 +23,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             try
             {
                 request.GetResponse(url, new MemoryStream(), STRING_ACCEPT);
@@ -56,7 +56,7 @@ namespace EVEMon.Common.Net
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new MemoryStream(), STRING_ACCEPT, null, state);
             return request;
         }

@@ -13,26 +13,26 @@ namespace Tests.EVEMon.Common.Net
 {
     [TestFixture]
     [VerifyMocks]
-    public class EVEMonWebClientTests
+    public class HttpWebServiceTests
     {
         [Test]
         public void IsValidURLTests()
         {
             string errorMsg;
-            Assert.IsFalse(EVEMonWebClient.IsValidURL(null, out errorMsg), "Null URL string is not valid");
-            Assert.IsFalse(EVEMonWebClient.IsValidURL(string.Empty, out errorMsg), "Empty string is not valid");
-            Assert.IsFalse(EVEMonWebClient.IsValidURL("This is not a URL", out errorMsg), "Simple text is not valid");
-            Assert.IsFalse(EVEMonWebClient.IsValidURL("ftp://FTPIsNotSupported", out errorMsg), "Incorrect scheme");
-            Assert.IsTrue(EVEMonWebClient.IsValidURL("http://battleclinic.com", out errorMsg), "URL is valid");
+            Assert.IsFalse(HttpWebService.IsValidURL(null, out errorMsg), "Null URL string is not valid");
+            Assert.IsFalse(HttpWebService.IsValidURL(string.Empty, out errorMsg), "Empty string is not valid");
+            Assert.IsFalse(HttpWebService.IsValidURL("This is not a URL", out errorMsg), "Simple text is not valid");
+            Assert.IsFalse(HttpWebService.IsValidURL("ftp://FTPIsNotSupported", out errorMsg), "Incorrect scheme");
+            Assert.IsTrue(HttpWebService.IsValidURL("http://battleclinic.com", out errorMsg), "URL is valid");
         }
 
         [Test]
         public void UrlExceptionTests()
         {
-            EVEMonWebClient client = new EVEMonWebClient();
+            HttpWebService service = new HttpWebService();
             try
             {
-                client.DownloadString(null);
+                service.DownloadString(null);
                 Assert.Fail("Expected ArgumentException for null url");
             }
             catch(Exception ex)
@@ -41,7 +41,7 @@ namespace Tests.EVEMon.Common.Net
             }
             try
             {
-                client.DownloadString(string.Empty);
+                service.DownloadString(string.Empty);
                 Assert.Fail("Expected ArgumentException for empty string");
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace Tests.EVEMon.Common.Net
             }
             try
             {
-                client.DownloadString("not a url");
+                service.DownloadString("not a url");
                 Assert.Fail("Expected ArgumentException for invalid url");
             }
             catch (Exception ex)
@@ -73,8 +73,8 @@ namespace Tests.EVEMon.Common.Net
             mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
-            EVEMonWebClient client = new EVEMonWebClient();
-            string result = client.DownloadString("http://www.battleclinic.com");
+            HttpWebService service = new HttpWebService();
+            string result = service.DownloadString("http://www.battleclinic.com");
             Assert.AreEqual(TestResources.CharacterSheet, result);
 
             sourceResponseStream.Close();
@@ -98,8 +98,8 @@ namespace Tests.EVEMon.Common.Net
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
             _stringAsyncCompletedTrigger = new AutoResetEvent(false);
-            EVEMonWebClient client = new EVEMonWebClient();
-            client.DownloadStringAsync("http://www.battleclinic.com", StringAysncDownloadTestCompleted, null);
+            HttpWebService service = new HttpWebService();
+            service.DownloadStringAsync("http://www.battleclinic.com", StringAysncDownloadTestCompleted, null);
             _stringAsyncCompletedTrigger.WaitOne();
             if (_stringAsyncDownloadResult.Error != null)
                 Assert.Fail(_stringAsyncDownloadResult.Error.Message);
@@ -131,8 +131,8 @@ namespace Tests.EVEMon.Common.Net
             mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
-            EVEMonWebClient client = new EVEMonWebClient();
-            XmlDocument result = client.DownloadXml("http://www.battleclinic.com");
+            HttpWebService service = new HttpWebService();
+            XmlDocument result = service.DownloadXml("http://www.battleclinic.com");
             StringAssert.AreEqualIgnoringCase(contentAsXml.ToString(), result.ToString());
 
             sourceResponseStream.Close();
@@ -158,8 +158,8 @@ namespace Tests.EVEMon.Common.Net
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
             _xmlAsyncCompletedTrigger = new AutoResetEvent(false);
-            EVEMonWebClient client = new EVEMonWebClient();
-            client.DownloadXmlAsync("http://www.battleclinic.com", XmlAysncDownloadTestCompleted, null);
+            HttpWebService service = new HttpWebService();
+            service.DownloadXmlAsync("http://www.battleclinic.com", XmlAysncDownloadTestCompleted, null);
             _xmlAsyncCompletedTrigger.WaitOne();
             if (_xmlAsyncDownloadResult.Error != null)
                 Assert.Fail(_xmlAsyncDownloadResult.Error.Message);
@@ -189,15 +189,15 @@ namespace Tests.EVEMon.Common.Net
             mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
-            EVEMonWebClient client = new EVEMonWebClient();
+            HttpWebService service = new HttpWebService();
             try
             {
-                client.DownloadXml("http://www.battleclinic.com");
+                service.DownloadXml("http://www.battleclinic.com");
                 Assert.Fail("Expected exception was not thrown");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
-                Assert.AreEqual(EVEMonWebExceptionStatus.XmlException, ex.Status);
+                Assert.AreEqual(HttpWebServiceExceptionStatus.XmlException, ex.Status);
             }
             finally
             {
@@ -217,10 +217,10 @@ namespace Tests.EVEMon.Common.Net
             mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
-            EVEMonWebClient client = new EVEMonWebClient();
+            HttpWebService service = new HttpWebService();
             try
             {
-                client.DownloadImage("http://www.battleclinic.com");
+                service.DownloadImage("http://www.battleclinic.com");
             }
             finally
             {
@@ -244,8 +244,8 @@ namespace Tests.EVEMon.Common.Net
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
             _imageAsyncCompletedTrigger = new AutoResetEvent(false);
-            EVEMonWebClient client = new EVEMonWebClient();
-            client.DownloadImageAsync("http://www.battleclinic.com", ImageAysncDownloadTestCompleted, null);
+            HttpWebService service = new HttpWebService();
+            service.DownloadImageAsync("http://www.battleclinic.com", ImageAysncDownloadTestCompleted, null);
             _imageAsyncCompletedTrigger.WaitOne();
             if (_imageAsyncDownloadResult.Error != null)
                 Assert.Fail(_imageAsyncDownloadResult.Error.Message);
@@ -275,15 +275,15 @@ namespace Tests.EVEMon.Common.Net
             mockResponse.ExpectAndReturn("GetResponseStream", sourceResponseStream);
             mockRequest.ExpectAndReturn("GetResponse", mockResponse.Object);
 
-            EVEMonWebClient client = new EVEMonWebClient();
+            HttpWebService service = new HttpWebService();
             try
             {
-                client.DownloadImage("http://www.battleclinic.com");
+                service.DownloadImage("http://www.battleclinic.com");
                 Assert.Fail("Expected exception was not thrown");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
-                Assert.AreEqual(EVEMonWebExceptionStatus.ImageException, ex.Status);
+                Assert.AreEqual(HttpWebServiceExceptionStatus.ImageException, ex.Status);
             }
             finally
             {

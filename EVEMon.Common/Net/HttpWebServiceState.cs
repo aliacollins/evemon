@@ -3,9 +3,9 @@ using System.Reflection;
 namespace EVEMon.Common.Net
 {
     /// <summary>
-    /// Conainer class for EVEMonWebClient settings and state
+    /// Conainer class for HttpWebService settings and state
     /// </summary>
-    public class EVEMonWebClientState
+    public class HttpWebServiceState
     {
         private const int MAX_BUFFER_SIZE = 8192;
         private const int MIN_BUFFER_SIZE = 1024;
@@ -17,7 +17,7 @@ namespace EVEMon.Common.Net
         private bool _disableOnProxyAuthenticationFailure = true;
         private ProxySetting _proxy = new ProxySetting();
 
-        internal EVEMonWebClientState()
+        internal HttpWebServiceState()
         {
         }
 

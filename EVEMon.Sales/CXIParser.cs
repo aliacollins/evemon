@@ -37,10 +37,10 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                content = CommonContext.HttpWebService.DownloadString(
                     "http://www.c-l-o-t.com/cxi/orecalc/evemon.php");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 throw new MineralParserException(ex.Message);

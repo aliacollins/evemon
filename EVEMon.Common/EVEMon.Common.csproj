@@ -59,21 +59,22 @@
     <Compile Include="APIConfiguration.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
+    <Compile Include="CommonContext.cs" />
     <Compile Include="TimeCheck.cs" />
     <Compile Include="Net\DownloadFileAsyncResult.cs" />
     <Compile Include="Net\DownloadImageAsyncResult.cs" />
     <Compile Include="Net\DownloadProgressChangedArgs.cs" />
     <Compile Include="Net\DownloadStringAsyncResult.cs" />
     <Compile Include="Net\DownloadXmlAsyncResult.cs" />
-    <Compile Include="Net\EVEMonWebClient.FileDownload.cs" />
-    <Compile Include="Net\EVEMonWebClient.ImageDownload.cs" />
-    <Compile Include="Net\EVEMonWebClient.XmlDownload.cs" />
-    <Compile Include="Net\EVEMonWebException.cs" />
-    <Compile Include="Net\EVEMonWebExceptionStatus.cs" />
-    <Compile Include="Net\EVEMonWebRequest.cs" />
-    <Compile Include="Net\EVEMonWebClient.cs" />
-    <Compile Include="Net\EVEMonWebClientState.cs" />
-    <Compile Include="Net\EVEMonWebClient.StringDownload.cs" />
+    <Compile Include="Net\HttpWebService.FileDownload.cs" />
+    <Compile Include="Net\HttpWebService.ImageDownload.cs" />
+    <Compile Include="Net\HttpWebService.XmlDownload.cs" />
+    <Compile Include="Net\HttpWebServiceException.cs" />
+    <Compile Include="Net\HttpWebServiceExceptionStatus.cs" />
+    <Compile Include="Net\HttpWebServiceRequest.cs" />
+    <Compile Include="Net\HttpWebService.cs" />
+    <Compile Include="Net\HttpWebServiceState.cs" />
+    <Compile Include="Net\HttpWebService.StringDownload.cs" />
     <Compile Include="Net\ExceptionMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -17,7 +17,7 @@ namespace EVEMon.Common
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
         {
             SyncState state = new SyncState(callback);
-            Singleton.Instance<EVEMonWebClient>().DownloadStringAsync("http://www.battleclinic.com/time.php", SyncDownloadCompleted, state);
+            CommonContext.HttpWebService.DownloadStringAsync("http://www.battleclinic.com/time.php", SyncDownloadCompleted, state);
         }
 
         /// <summary>

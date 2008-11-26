@@ -3,33 +3,30 @@ using System.Net;
 
 namespace EVEMon.Common.Net
 {
-    public delegate void DownloadProgressChangedCallback(DownloadProgressChangedArgs e);
-
     /// <summary>
-    /// EVEMonWebClient provides all HTTP-based download services. It is intended to be used as a singleton
+    /// HttpWebService provides all HTTP-based download services. It is intended to be used as a singleton
     /// instance via the Singleton class.
     /// </summary>
-    [Singleton]
-    public partial class EVEMonWebClient
+    public partial class HttpWebService
     {
-        private readonly EVEMonWebClientState _state = new EVEMonWebClientState();
+        private readonly HttpWebServiceState _state = new HttpWebServiceState();
 
-        public EVEMonWebClient()
+        internal HttpWebService()
         {
             ServicePointManager.Expect100Continue = false;
         }
 
         /// <summary>
-        /// State is a read-only instance of EVEMonWebClientState. Changes to web client settings should be made
+        /// State is a read-only instance of HttpWebServiceState. Changes to web client settings should be made
         /// to properties of this instance.
         /// </summary>
-        public EVEMonWebClientState State
+        public HttpWebServiceState State
         {
             get { return _state; }
         }
 
         /// <summary>
-        /// Validates a Url as acceptable for an EVEMonWebRequest
+        /// Validates a Url as acceptable for an HttpWebServiceRequest
         /// </summary>
         /// <param name="url">A url <see cref="string"/> for the request. The string must specify HTTP as its scheme.</param>
         /// <param name="errorMsg">Is url is invalid, contains a descriptive message of the reason</param>
@@ -68,9 +65,9 @@ namespace EVEMon.Common.Net
         /// </summary>
         public void CancelRequest(object request)
         {
-            if (request.GetType() == typeof(EVEMonWebRequest))
+            if (request.GetType() == typeof(HttpWebServiceRequest))
             {
-                ((EVEMonWebRequest) request).Cancelled = true;
+                ((HttpWebServiceRequest) request).Cancelled = true;
             }
         }
 
@@ -78,9 +75,12 @@ namespace EVEMon.Common.Net
         /// Factory method to construct an EVEMonWebRequest instance
         /// </summary>
         /// <returns></returns>
-        private EVEMonWebRequest GetRequest()
+        private HttpWebServiceRequest GetRequest()
         {
-            return new EVEMonWebRequest(_state);
+            return new HttpWebServiceRequest(_state);
         }
     }
+
+    public delegate void DownloadProgressChangedCallback(DownloadProgressChangedArgs e);
+
 }

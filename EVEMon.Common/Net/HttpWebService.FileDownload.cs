@@ -5,7 +5,7 @@ namespace EVEMon.Common.Net
 {
     public delegate void DownloadFileCompletedCallback(DownloadFileAsyncResult e);
 
-    partial class EVEMonWebClient
+    partial class HttpWebService
     {
         private const string FILE_ACCEPT = "*/*;q=0.5";
 
@@ -20,7 +20,7 @@ namespace EVEMon.Common.Net
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             try
             {
                 FileStream responseStream;
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Net
                 }
                 catch(Exception ex)
                 {
-                    throw EVEMonWebException.FileError(url, ex);
+                    throw HttpWebServiceException.FileError(url, ex);
                 }
                 request.GetResponse(url, responseStream, FILE_ACCEPT);
                 return new FileInfo(filePath);
@@ -55,7 +55,7 @@ namespace EVEMon.Common.Net
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback, DownloadFileAsyncCompleted);
-            EVEMonWebRequest request = GetRequest();
+            HttpWebServiceRequest request = GetRequest();
             request.GetResponseAsync(url, new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None), IMAGE_ACCEPT, null, state);
             return request;
         }
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Net
                 }
                 catch (Exception ex)
                 {
-                    requestState.Error = EVEMonWebException.FileError(requestState.Request.BaseUrl, ex);
+                    requestState.Error = HttpWebServiceException.FileError(requestState.Request.BaseUrl, ex);
                 }
             }
             if (requestState.Request.ResponseStream != null)

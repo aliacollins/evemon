@@ -39,10 +39,10 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                content = CommonContext.HttpWebService.DownloadString(
                     "http://eve-central.com/api/evemon");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 throw new MineralParserException(ex.Message);

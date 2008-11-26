@@ -38,10 +38,10 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = Singleton.Instance<EVEMonWebClient>().DownloadString(
+                content = CommonContext.HttpWebService.DownloadString(
                     "http://www.battleclinic.com/eve_online/market.php?feed=xml");
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 throw new MineralParserException(ex.Message);

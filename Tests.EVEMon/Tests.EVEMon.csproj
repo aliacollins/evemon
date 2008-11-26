@@ -59,8 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Net\EVEMonWebClientTests.cs" />
-    <Compile Include="Common\Net\EVEMonWebRequestTests.cs" />
+    <Compile Include="Common\Net\HttpWebServiceTests.cs" />
+    <Compile Include="Common\Net\HttpWebServiceRequestTests.cs" />
     <Compile Include="Common\Net\TestResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

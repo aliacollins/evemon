@@ -78,9 +78,7 @@ namespace EVEMon
                     XmlDocument xdoc;
                     try
                     {
-                        xdoc =
-                            Singleton.Instance<EVEMonWebClient>().DownloadXml(UPDATE_URL + "?ver=" +
-                                                                              currentVersion.ToString());
+                        xdoc = CommonContext.HttpWebService.DownloadXml(UPDATE_URL + "?ver=" + currentVersion);
                     }
                     catch (Exception e)
                     {

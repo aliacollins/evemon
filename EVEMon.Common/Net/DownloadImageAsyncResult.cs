@@ -8,9 +8,9 @@ namespace EVEMon.Common.Net
     public class DownloadImageAsyncResult
     {
         private readonly Image _result;
-        private readonly EVEMonWebException _error;
+        private readonly HttpWebServiceException _error;
 
-        public DownloadImageAsyncResult(Image image, EVEMonWebException error)
+        public DownloadImageAsyncResult(Image image, HttpWebServiceException error)
         {
             _error = error;
             _result = image;
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Net
             get { return _result; }
         }
 
-        public EVEMonWebException Error
+        public HttpWebServiceException Error
         {
             get { return _error; }
         }

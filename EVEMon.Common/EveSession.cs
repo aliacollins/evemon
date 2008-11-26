@@ -92,7 +92,7 @@ namespace EVEMon.Common
             APIConfiguration configuration = apiState.CurrentConfiguration;
             HttpPostData postData = new HttpPostData("userid=" + userId + "&apiKey=" + apiKey);
             return
-                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.CharacterList),
+                CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.CharacterList),
                                                                   postData);
         }
 
@@ -103,7 +103,7 @@ namespace EVEMon.Common
             HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
                                     Convert.ToString(charId));
             return
-                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.SkillInTraining),
+                CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.SkillInTraining),
                                                                   postData);
         }
 
@@ -114,7 +114,7 @@ namespace EVEMon.Common
             HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
                                     Convert.ToString(charId));
             return
-                Singleton.Instance<EVEMonWebClient>().DownloadXml(configuration.MethodUrl(APIMethods.CharacterSheet),
+                CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.CharacterSheet),
                                                                   postData);
         }
 
@@ -280,7 +280,7 @@ namespace EVEMon.Common
                     }
                     );
             }
-            Singleton.Instance<EVEMonWebClient>().DownloadImageAsync(url, GotImage, new AsyncImageRequestState(callback));
+            CommonContext.HttpWebService.DownloadImageAsync(url, GotImage, new AsyncImageRequestState(callback));
         }
 
         private class AsyncImageRequestState
@@ -372,7 +372,7 @@ namespace EVEMon.Common
             {
                 GetCharacterListUncached();
             }
-            catch (EVEMonWebException ex)
+            catch (HttpWebServiceException ex)
             {
                 throw new ApplicationException(ex.Message);
             }
