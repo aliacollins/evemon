@@ -62,7 +62,9 @@
     <Compile Include="CommonContext.cs" />
     <Compile Include="EveAttribute.cs" />
     <Compile Include="EveAttributes.cs" />
+    <Compile Include="EveServerEventArgs.cs" />
     <Compile Include="ImageService.cs" />
+    <Compile Include="InternetCS.cs" />
     <Compile Include="NetworkLogEventArgs.cs" />
     <Compile Include="NetworkLogEventType.cs" />
     <Compile Include="Pair.cs" />

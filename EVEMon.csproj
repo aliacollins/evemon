@@ -291,7 +291,7 @@
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.Designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>

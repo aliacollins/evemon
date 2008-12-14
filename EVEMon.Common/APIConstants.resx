@@ -129,6 +129,9 @@
   <data name="Server" xml:space="preserve">
     <value>http://api.eve-online.com</value>
   </data>
+  <data name="ServerStatus" xml:space="preserve">
+    <value>/server/ServerStatus.xml.aspx</value>
+  </data>
   <data name="SkillInTraining" xml:space="preserve">
     <value>/char/SkillIntraining.xml.aspx</value>
   </data>

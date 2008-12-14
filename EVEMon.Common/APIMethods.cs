@@ -8,6 +8,7 @@ namespace EVEMon.Common
     {
         CharacterList,
         CharacterSheet,
-        SkillInTraining
+        SkillInTraining,
+        ServerStatus
     }
 }
