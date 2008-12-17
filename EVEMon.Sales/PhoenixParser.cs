@@ -33,33 +33,33 @@ namespace EVEMon.Sales
 
         public IEnumerable<Pair<string, decimal>> GetPrices()
         {
-            string data;
+            MatchCollection mc;
             try
             {
-                data = CommonContext.HttpWebService.DownloadString(
+                string data = CommonContext.HttpWebService.DownloadString(
                     "http://www.phoenix-industries.org/");
+                //scan for prices
+                Match m = mineralLineScan.Match(data);
+
+                string mLine = m.Captures[0].Value;
+                //replacements
+                //Trit:1.75 Pye:4.19 Mex:8.84 Iso:130.00 Nocx:333.46 Zyd:4151.80 Meg:4451.80 Morp:13082.00 Ice:1.00
+                mLine = mLine.Replace("Trit", "Tritanium");
+                mLine = mLine.Replace("Pye", "Pyerite");
+                mLine = mLine.Replace("Mex", "Mexallon");
+                mLine = mLine.Replace("Iso", "Isogen");
+                mLine = mLine.Replace("Nocx", "Nocxium");
+                mLine = mLine.Replace("Zyd", "Zydrine");
+                mLine = mLine.Replace("Meg", "Megacyte");
+                mLine = mLine.Replace("Morp", "Morphite");
+
+                mc = mineralTokenizer.Matches(mLine);
             }
-            catch (HttpWebServiceException ex)
+            catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex, true);
                 throw new MineralParserException(ex.Message);
             }
-            //scan for prices
-            Match m = mineralLineScan.Match(data);
-
-            string mLine = m.Captures[0].Value;
-            //replacements
-            //Trit:1.75 Pye:4.19 Mex:8.84 Iso:130.00 Nocx:333.46 Zyd:4151.80 Meg:4451.80 Morp:13082.00 Ice:1.00
-            mLine = mLine.Replace("Trit", "Tritanium");
-            mLine = mLine.Replace("Pye", "Pyerite");
-            mLine = mLine.Replace("Mex", "Mexallon");
-            mLine = mLine.Replace("Iso", "Isogen");
-            mLine = mLine.Replace("Nocx", "Nocxium");
-            mLine = mLine.Replace("Zyd", "Zydrine");
-            mLine = mLine.Replace("Meg", "Megacyte");
-            mLine = mLine.Replace("Morp", "Morphite");
-
-            MatchCollection mc = mineralTokenizer.Matches(mLine);
             foreach (Match mineral in mc)
             {
                 string name = mineral.Groups["name"].Value;
