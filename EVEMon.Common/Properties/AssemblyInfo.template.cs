@@ -28,7 +28,7 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.2.5.$WCREV$")]
+[assembly : AssemblyVersion("1.2.6.$WCREV$")]
 
 // Friend assembly for unit testing
 [assembly: InternalsVisibleTo("Tests.EVEMon")]
