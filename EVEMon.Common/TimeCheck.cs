@@ -1,5 +1,6 @@
 using System;
 using EVEMon.Common.Net;
+using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -37,9 +38,16 @@ namespace EVEMon.Common
                 string timeString = e.Result;
                 if (timeString != string.Empty)
                 {
-                    timeNow = DateTime.Parse(timeString);
-                    double timediff = Math.Abs((timeNow.ToLocalTime() - completionTime).TotalSeconds);
-                    isSynchronised = timediff < 60;
+                    try
+                    {
+                        timeNow = DateTime.ParseExact(timeString, "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz", CultureInfo.InvariantCulture);
+                        double timediff = Math.Abs((timeNow.ToLocalTime() - completionTime).TotalSeconds);
+                        isSynchronised = timediff < 60;
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionHandler.LogException(ex, true);
+                    }
                 }
             }
             state.Callback(isSynchronised, timeNow, completionTime);
