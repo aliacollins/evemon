@@ -29,9 +29,10 @@ namespace EVEMon.Common.Net
                 request.GetResponse(url, new MemoryStream(), IMAGE_ACCEPT);
                 return GetImage(request);
             }
-            finally
+            catch (Exception)
             {
                 if (request.ResponseStream != null) request.ResponseStream.Close();
+                throw;
             }
         }
 
@@ -60,20 +61,20 @@ namespace EVEMon.Common.Net
         {
             ImageRequestAsyncState requestState = (ImageRequestAsyncState)state;
             Image imageResult = null;
-            if (!requestState.Request.Cancelled && requestState.Error == null)
+            try
             {
-                try
+                if (!requestState.Request.Cancelled && requestState.Error == null)
                 {
                     imageResult = GetImage(requestState.Request);
                 }
-                catch(HttpWebServiceException ex)
-                {
-                    requestState.Error = ex;
-                }
             }
-            if (requestState.Request.ResponseStream != null)
+            catch(HttpWebServiceException ex)
             {
-                requestState.Request.ResponseStream.Close();
+                requestState.Error = ex;
+                if (requestState.Request.ResponseStream != null)
+                {
+                    requestState.Request.ResponseStream.Close();
+                }
             }
             requestState.DownloadImageCompleted(new DownloadImageAsyncResult(imageResult, requestState.Error), requestState.UserState);
         }
