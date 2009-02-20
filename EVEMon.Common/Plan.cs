@@ -1222,7 +1222,6 @@ namespace EVEMon.Common
 
         public void Merge(SerializableCharacterSheet scs)
         {
-
             foreach (Plan.Entry entry in this.Entries)
             {
                 Skill s = entry.Skill;
@@ -1246,7 +1245,6 @@ namespace EVEMon.Common
                 ks.Skillpoints = s.GetPointsRequiredForLevel(entry.Level);
             }
         }
-
 
         public Plan CopyTo(CharacterInfo planOwner)
         {
@@ -1798,8 +1796,6 @@ namespace EVEMon.Common
             {
                 doc.PrinterSettings.PrinterName = prdlg.PrinterName;
 
-                
-
                 entryToPrint = 0;
                 printPoint = new Point();
                 printTotalTrainingTime = TimeSpan.Zero;
@@ -1844,6 +1840,7 @@ namespace EVEMon.Common
             }
 
             bool resetTotal = true;
+            if (entryToPrint == 0) printCurDt = printStartTime;
             foreach (Plan.Entry pe in this.Entries)
             {
                 num++;
@@ -1939,7 +1936,6 @@ namespace EVEMon.Common
                 else
                 {
                     entryToPrint = 0;
-                    printCurDt = printStartTime;
                 }
             }
 
