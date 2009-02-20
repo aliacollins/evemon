@@ -1331,20 +1331,46 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Displays the "Manage Plans" window
+        /// </summary>
+        /// <param name="sender">menu item clicked</param>
+        /// <param name="e"></param>
         private void manageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
             {
+                // Check to see if there character has skills
+                if (cm.GrandCharacterInfo.SkillPointTotal <= 0)
+                {
+                    // if so update the character info before displaying the window
+                    cm.UpdateCharacterInfo();
+                }
+
                 cm.ShowPlanSelectWindow();
             }
         }
 
+        /// <summary>
+        /// Displays the "New Plan" window
+        /// </summary>
+        /// <param name="sender">menu item clicked</param>
+        /// <param name="e"></param>
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
             {
+                // Check to see if there character has a skill point total
+                // if there are no skills the planner will crash.
+                if (cm.GrandCharacterInfo.SkillPointTotal <= 0)
+                {
+                    // so update the character info, the planner will still crash
+                    // in the event this fails.
+                    cm.UpdateCharacterInfo();
+                }
+
                 cm.ShowNewPlanWindow();
             }
         }
