@@ -586,40 +586,6 @@ namespace EVEMon.SkillPlanner
         private void tsbPrintPlan_Click(object sender, EventArgs e)
         {
             m_plan.PrintPlan();
-
-            /*
-            printBrowser = new WebBrowser();
-            printBrowser.Width = 800;
-            printBrowser.Height = m_plan.Entries.Count*19+79;
-            printBrowser.ScrollBarsEnabled = false;
-
-            PlanTextOptions pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
-            pto.Markup = MarkupType.Html;
-            using (MemoryStream ms = new MemoryStream())
-            using (StreamWriter sw = new StreamWriter(ms))
-            {
-                m_plan.SaveAsText(sw, pto);
-                sw.Flush();
-                string s = Encoding.Default.GetString(ms.ToArray());
-                printBrowser.DocumentText = s;
-            }
-            printBrowser.Update();
-            printDocument1.DocumentName = this.Text;
-
-            printPreviewDialog1.Document = printDocument1;
-            try
-            {
-                printPreviewDialog1.ShowDialog(this);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Print preview failed. Check your printer driver!", "Print Preview failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            printBrowser.Dispose();
-            printBmp.Dispose();
-            printBmp = null;
-             * 
-             * */
         }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
