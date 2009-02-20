@@ -13,6 +13,7 @@ namespace EVEMon.Common
 
         private int m_users = 0;
         private bool m_pendingAlerts;
+        private bool m_firstStatusCheck; 
         private Status m_status = Status.Online;
         private Status m_lastStatus = Status.Online;
         private Timer m_tmrCheck;
@@ -91,13 +92,28 @@ namespace EVEMon.Common
         /// </summary>
         public void StartTQChecks()
         {
+            m_firstStatusCheck = true;
+
             if (m_tmrCheck == null)
             {
-                m_tmrCheck = new System.Timers.Timer(m_settings.StatusUpdateInterval * 60000);
+                //In order to prevent blocking on slow connections set the first check to be in .5 sec
+                m_tmrCheck = new System.Timers.Timer(500);
+
                 m_tmrCheck.Elapsed += new ElapsedEventHandler(checkServerStatus);
+
+                m_status = Status.Unknown;
             }
+            else
+            {
+                //If TQChecks are restarted using the options dialog set the first check timer
+                m_tmrCheck.Interval = 500;
+
+                m_status = Status.Unknown;
+
+                OnServerStatusChanged();
+            }
+            
             m_tmrCheck.Enabled = true;
-            checkServerStatus(this, new EventArgs());
         }
 
         /// <summary>
@@ -120,6 +136,14 @@ namespace EVEMon.Common
 
         private void checkServerStatus(object source, EventArgs e)
         {
+            // check to see if this is the first status check and reset
+            // the interval to the user setting
+            if (m_firstStatusCheck == true)
+            {
+                m_firstStatusCheck = false;
+                m_tmrCheck.Interval = m_settings.StatusUpdateInterval * 60000;
+            }
+            
             // Check the semaphore to see if we're mid check
             if (m_checkingServer)
             {
