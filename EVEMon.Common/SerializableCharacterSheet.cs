@@ -186,19 +186,6 @@ namespace EVEMon.Common
 
                 }
 
-                // recover implant sets from the character cache if present
-            //        List<SerializableCharacterInfo> cciList = Settings.GetInstance().CachedCharacterInfo;
-            //        if (cciList != null && cciList.Count > 0)
-            //        {
-            //            foreach (SerializableCharacterInfo csci in cciList)
-            //            {
-            //                if (csci.CharacterId == sci.CharacterId)
-            //                {
-            //                    sci.ImplantSets = csci.ImplantSets;
-            //                    break;
-            //                }
-            //            }
-            //        }
                 foreach (SerializableSkillGroup sg in scs.SkillGroups)
                 {
                     foreach (SerializableSkill s in sg.Skills)
@@ -245,7 +232,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Creates an old style xml docu,ment from a new style one
+        /// Creates an old style xml document from a new style one
         /// This is needed to export files in the old style xml, and also to ctrate html saves
         /// </summary>
         /// <param name="sci"></param>
@@ -466,7 +453,7 @@ namespace EVEMon.Common
                 }
                 return m_skillGroups; 
             }
-         }
+        }
 
         public void CreateSkillGroups()
         {
@@ -507,12 +494,9 @@ namespace EVEMon.Common
                 serSkill.LastConfirmedLevel = sks.SkillLevel;
                 serSkill.Level = sks.SkillLevel;
                 serSkill.SkillPoints = sks.Skillpoints;
-      //          serSkill.Name = StaticSkill.GetStaticSkillById(skill.Id).Name;
                 ssg.Skills.Add(serSkill);
             }
         }
-
-
         #endregion
     }
 
@@ -536,8 +520,6 @@ namespace EVEMon.Common
             set { m_rowsetID = value; ; }
         }
 
-        
-
         private List<SerializableKnownSkill> m_knownSkills = new List<SerializableKnownSkill>();
         [XmlElement("row")]
         public List<SerializableKnownSkill> KnownSkills
@@ -545,16 +527,12 @@ namespace EVEMon.Common
             get { return m_knownSkills; }
             set { m_knownSkills = value; }
         }
-
     }
 
     [XmlRoot("row")]
     public class SerializableKnownSkill
     {
-        public SerializableKnownSkill()
-        {
-
-        }
+        public SerializableKnownSkill() { }
 
         public SerializableKnownSkill(Skill s)
         {
@@ -595,8 +573,5 @@ namespace EVEMon.Common
             get { return m_lastLevel; }
             set { m_lastLevel = value; }
         }
-
-
     }
-
 }
