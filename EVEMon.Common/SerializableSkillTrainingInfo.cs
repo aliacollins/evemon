@@ -208,16 +208,27 @@ namespace EVEMon.Common
         /// <param name="millisecondsDrift"></param>
         public void FixServerTimes(double millisecondsDrift)
         {
-            // convert the drift between webserver time and local time to a timespan
-            TimeSpan drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
-            
+            // convert the drift between webserver time and local time
+            // to a timespan. It is possible for millisecondsDrift to
+            // be erroniously outside of the range of an int thus we 
+            // need to catch an overflow exception and reset to 0.
+            TimeSpan drift;
+
+            try
+            {
+                drift = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(millisecondsDrift));
+            }
+            catch (OverflowException)
+            {
+                drift = new TimeSpan(0, 0, 0, 0);
+            }
+
             // Fix the TQ start/end times first
             m_results.FixTQTimes(millisecondsDrift, m_curTime);
             
             // Now fix the server time to align with local time
             m_curTime = m_curTime.Subtract(drift);
             m_cachedUntilTime = m_cachedUntilTime.Subtract(drift);
-
         }
 
         public int EstimatedPointsAtTime(DateTime checkTime)
