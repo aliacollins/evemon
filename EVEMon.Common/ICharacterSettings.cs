@@ -36,7 +36,7 @@ namespace EVEMon.Common
         }
 
         // Deprecated - use the details in the AccountDetails class instead
-       // keeping for backwards compatability
+        // keeping for backwards compatability
         private string m_apiKey = string.Empty;
         public string ApiKey
         {
@@ -67,6 +67,7 @@ namespace EVEMon.Common
                 m_ineveSync = value;
             }
         }
+
         private string m_characterName;
 
         public string CharacterName
@@ -113,16 +114,29 @@ namespace EVEMon.Common
         #endregion
 
         #region ICharacterSettings Members
-
-
+        
         public string CharacterName
         {
             get
             {
                 if (m_characterName == null)
                 {
+                    // the followng is suceptable to user error
+                    // file deletion and incorect formats.
                     SerializableCharacterSheet sci = SerializableCharacterSheet.CreateFromFile(m_filename);
-                    m_characterName = sci.CharacterSheet.Name;
+                    
+                    // the enclosed would fail if the CharacterSheet
+                    // was null, so lets not set the character name.
+                    if (sci.CharacterSheet != null)
+                    {
+                        m_characterName = sci.CharacterSheet.Name;
+                    }
+                    // instead we will set the character name to an
+                    // error message so EVEMon dosn't just crash.
+                    else
+                    {
+                        m_characterName = "Error: Unable to Load File";
+                    }
                 }
                 return m_characterName;
             }
