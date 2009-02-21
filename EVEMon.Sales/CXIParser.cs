@@ -24,7 +24,7 @@ namespace EVEMon.Sales
 
         public string CourtesyUrl
         {
-            get { return "http://www.supreme-eve.com/cxi/wiki/"; }
+            get { return "http://cxa.supreme-eve.com/wiki/"; }
         }
 
         public string CourtesyText
