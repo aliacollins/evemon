@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A2E5EFE0-614A-4567-95E5-92A4D94169AC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -308,7 +308,7 @@
       <DependentUpon>LoadoutSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SkillPlanner\RequiredSkillsControl.Designer.cs">
       <DependentUpon>RequiredSkillsControl.cs</DependentUpon>
