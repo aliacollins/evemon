@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon.csproj", "{A2E5EFE0-614A-4567-95E5-92A4D94169AC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
