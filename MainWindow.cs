@@ -1025,21 +1025,6 @@ namespace EVEMon
             tmrTranquilityClock.Enabled = true;
         }
 
-        //private void tmrLCD_Tick(object sender, EventArgs e)
-        //{
-        //    if (Program.LCD != null)
-        //    {
-        //        Program.LCD.GetButtonState();
-        //        tmrLCDClock.Enabled = true;
-        //        tmrLCDClock.Interval = 50;
-        //    }
-        //    else
-        //    {
-        //        tmrLCDClock.Enabled = true;
-        //        tmrLCDClock.Interval = 1000;
-        //    }
-        //}
-
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Visible = true;
