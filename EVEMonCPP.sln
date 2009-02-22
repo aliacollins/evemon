@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EVEMon.WinHook", "EVEMon.WinHook\EVEMon.WinHook.vcproj", "{F9553086-E8BE-463B-9A68-1F7794EB060D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lgLcdClassLibrary", "lgLcdClassLibrary\lgLcdClassLibrary.vcproj", "{4DC1603E-1EB1-40BE-AF82-637820765659}"
