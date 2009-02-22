@@ -951,6 +951,11 @@ namespace EVEMon.Common
             return m_attributeBonuses[(int)attribute];
         }
 
+        public int SetAttributeBonus(EveAttribute attribute, int value)
+        {
+            return m_attributeBonuses[(int)attribute] = value;
+        }
+
         public void AdjustAttributeBonus(EveAttribute attribute, int adjustmentAmount)
         {
             m_attributeBonuses[(int)attribute] += adjustmentAmount;

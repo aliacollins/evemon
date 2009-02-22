@@ -248,6 +248,18 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\AttributeDisplayControl.cs" />
+    <Compile Include="SkillPlanner\AttributesOptimizationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\AttributesOptimizationControl.Designer.cs">
+      <DependentUpon>AttributesOptimizationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\AttributesOptimizationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\AttributesOptimizationForm.Designer.cs">
+      <DependentUpon>AttributesOptimizationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\ChangePriorityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -589,6 +601,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>ScheduleEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\AttributesOptimizationControl.resx">
+      <DependentUpon>AttributesOptimizationControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\AttributesOptimizationForm.resx">
+      <DependentUpon>AttributesOptimizationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ChangePriorityForm.resx">
       <DependentUpon>ChangePriorityForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -772,6 +792,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\warning32x32.png" />
+    <Content Include="SkillPlanner\CharismaAtributeIcon.png" />
+    <Content Include="SkillPlanner\InteligenceAtributeIcon.png" />
+    <Content Include="SkillPlanner\MemoryAtributeIcon.png" />
+    <Content Include="SkillPlanner\PerceptionAtributeIcon.png" />
+    <Content Include="SkillPlanner\WillpowerAtributeIcon.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

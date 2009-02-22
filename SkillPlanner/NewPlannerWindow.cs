@@ -501,6 +501,28 @@ namespace EVEMon.SkillPlanner
 
         #endregion Implant Calculator
 
+
+        #region Attributes optimization
+        private AttributesOptimizationForm m_attributesOptimizerWindow;
+
+        private void tsbAttributesOptimization_Click(object sender, EventArgs e)
+        {
+            if (m_attributesOptimizerWindow == null)
+            {
+                m_attributesOptimizerWindow = new AttributesOptimizationForm(m_plan.GrandCharacterInfo, m_plan);
+                m_attributesOptimizerWindow.FormClosed += new FormClosedEventHandler(m_attributesOptimizationWindow_Closed);
+                m_attributesOptimizerWindow.Show();
+            }
+        }
+
+        private void m_attributesOptimizationWindow_Closed(Object o, EventArgs e)
+        {
+            m_attributesOptimizerWindow = null;
+        }
+
+
+        #endregion
+
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.DesignMode)
@@ -561,6 +583,13 @@ namespace EVEMon.SkillPlanner
                 {
                     m_skillExplorer.Shutdown();
                 }
+            }
+
+            // Tell the attributes optimization window we're closing
+            if (m_attributesOptimizerWindow != null)
+            {
+                m_attributesOptimizerWindow.Close();
+                m_attributesOptimizerWindow = null;
             }
 
             // Tell the implant window we're closing

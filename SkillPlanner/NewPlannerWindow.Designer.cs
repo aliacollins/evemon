@@ -43,6 +43,8 @@ namespace EVEMon.SkillPlanner
             this.tsbCopyForum = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbImplantCalculator = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbAttributesOptimization = new System.Windows.Forms.ToolStripButton();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -104,7 +106,9 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan,
             this.tsbCopyForum,
             this.toolStripSeparator2,
-            this.tsbImplantCalculator});
+            this.tsbImplantCalculator,
+            this.toolStripSeparator1,
+            this.tsbAttributesOptimization});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(718, 25);
@@ -187,6 +191,20 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator.Size = new System.Drawing.Size(98, 22);
             this.tsbImplantCalculator.Text = "Implant Calc...";
             this.tsbImplantCalculator.Click += new System.EventHandler(this.tsbImplantCalculator_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbAttributesOptimization
+            // 
+            this.tsbAttributesOptimization.Image = ((System.Drawing.Image)(resources.GetObject("tsbAttributesOptimization.Image")));
+            this.tsbAttributesOptimization.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAttributesOptimization.Name = "tsbAttributesOptimization";
+            this.tsbAttributesOptimization.Size = new System.Drawing.Size(118, 22);
+            this.tsbAttributesOptimization.Text = "Optimize attributes";
+            this.tsbAttributesOptimization.Click += new System.EventHandler(this.tsbAttributesOptimization_Click);
             // 
             // ttToolTip
             // 
@@ -332,10 +350,10 @@ namespace EVEMon.SkillPlanner
             this.Name = "NewPlannerWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EVEMon Skill Planner";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewPlannerWindow_FormClosed);
-            this.Shown += new System.EventHandler(this.NewPlannerWindow_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewPlannerWindow_FormClosing);
             this.Load += new System.EventHandler(this.NewPlannerWindow_Load);
+            this.Shown += new System.EventHandler(this.NewPlannerWindow_Shown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewPlannerWindow_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewPlannerWindow_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -379,5 +397,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripDropDownButton tsddbSave;
         private System.Windows.Forms.ToolStripMenuItem tsmiCharacter;
         private System.Windows.Forms.ToolStripMenuItem tsmiPlan;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tsbAttributesOptimization;
     }
 }

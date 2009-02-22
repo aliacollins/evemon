@@ -239,6 +239,14 @@
         RU5ErkJggg==
 </value>
   </data>
+  <data name="tsbAttributesOptimization.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAG5JREFUSEvllMEK
+        ACAIQ/t0/9w6RAdDTG1CFHhLNufD1ooeDx1ELftMRFdrGi4UQEdUtGqgTJYg01qYIEmLpoQXSFJkRvT+
+        hyxFsn9LJLxkecM0qvACSYrMiP6jyD3x8ZJPb490gBdwUuSOCNbQAbcI0PgYg51SAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="ttToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>226, 17</value>
   </metadata>
