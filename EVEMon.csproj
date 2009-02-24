@@ -797,11 +797,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\warning32x32.png" />
-    <Content Include="SkillPlanner\CharismaAtributeIcon.png" />
-    <Content Include="SkillPlanner\InteligenceAtributeIcon.png" />
-    <Content Include="SkillPlanner\MemoryAtributeIcon.png" />
-    <Content Include="SkillPlanner\PerceptionAtributeIcon.png" />
-    <Content Include="SkillPlanner\WillpowerAtributeIcon.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
