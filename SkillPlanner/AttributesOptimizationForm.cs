@@ -66,8 +66,8 @@ namespace EVEMon.SkillPlanner
             TimeSpan currentTime = m_plan.GetTotalTime(currentScratchpad);
 
             // Best scratchpad
-            EveAttributeScratchpad bestScratchpad = Optimize(currentTime, currentScratchpad);
-            TimeSpan bestTime = m_plan.GetTotalTime(bestScratchpad);
+            TimeSpan bestTime;
+            EveAttributeScratchpad bestScratchpad = Optimize(currentTime, currentScratchpad, out bestTime);
 
             // Update the controls for every attribute
             this.Invoke((MethodInvoker)delegate 
@@ -111,7 +111,7 @@ namespace EVEMon.SkillPlanner
             });
         }
 
-        private EveAttributeScratchpad Optimize(TimeSpan currentTime, EveAttributeScratchpad currentScratchpad)
+        private EveAttributeScratchpad Optimize(TimeSpan currentTime, EveAttributeScratchpad currentScratchpad, out TimeSpan bestTime)
         {
             // Get the number of points currently spent into each
             // attribute
@@ -121,54 +121,55 @@ namespace EVEMon.SkillPlanner
             int perBase = m_char.GetBaseAttribute(EveAttribute.Perception) - minPerSkill;
             int intBase = m_char.GetBaseAttribute(EveAttribute.Intelligence) - minPerSkill;
 
-            // calculate the total points incase CCP do something odd
-            // with attributes in the future
+            // calculate the total points to spend in case CCP do something
+            // odd with attributes in the future.
             int totalPoints = memBase + chaBase + wilBase + perBase + intBase;
 
             // Now, we have the points to spend, let's perform all the
-            // combinations (less than 12^4 = 20,736)
-            TimeSpan bestTime = currentTime;
+            // combinations (less than 11^4 = 14,641)
+            bestTime = currentTime;
             EveAttributeScratchpad bestScratchpad = currentScratchpad;
             EveAttributeScratchpad tempScratchpad = new EveAttributeScratchpad();
 
             // PER
             for (int per = 0; per <= maxPerSkill; per++)
             {
-                tempScratchpad.SetAttributeBonus(EveAttribute.Perception, per - perBase);
-
                 // WIL
                 int maxWillpower = totalPoints - per;
                 for (int will = 0; will <= maxWillpower && will <= maxPerSkill; will++)
                 {
-                    tempScratchpad.SetAttributeBonus(EveAttribute.Willpower, will - wilBase);
-
                     // INT
                     int maxIntelligence = maxWillpower - will;
                     for (int intell = 0; intell <= maxIntelligence && intell <= maxPerSkill; intell++)
                     {
-                        tempScratchpad.SetAttributeBonus(EveAttribute.Intelligence, intell - intBase);
-
                         // MEM
                         int maxMemory = maxIntelligence - intell;
                         for (int mem = 0; mem <= maxMemory && mem <= maxPerSkill; mem++)
                         {
-
                             // CHA
                             int cha = maxMemory - mem;
-                            tempScratchpad.SetAttributeBonus(EveAttribute.Memory, mem - memBase);
-                            tempScratchpad.SetAttributeBonus(EveAttribute.Charisma, cha - chaBase);
 
-                            // Compute plan time
-                            TimeSpan tempTime = m_plan.GetTotalTime(tempScratchpad);
-
-                            // Compare it to the best time so far
-                            if (tempTime.Ticks < bestTime.Ticks)
+                            // exclude any invalid results
+                            if (cha <= maxPerSkill)
                             {
-                                bestTime = tempTime;
-                                for (int i = 0; i < 5; i++)
+                                tempScratchpad.SetAttributeBonus(EveAttribute.Perception, per - perBase);
+                                tempScratchpad.SetAttributeBonus(EveAttribute.Willpower, will - wilBase);
+                                tempScratchpad.SetAttributeBonus(EveAttribute.Intelligence, intell - intBase);
+                                tempScratchpad.SetAttributeBonus(EveAttribute.Memory, mem - memBase);
+                                tempScratchpad.SetAttributeBonus(EveAttribute.Charisma, cha - chaBase);
+
+                                // Compute plan time
+                                TimeSpan tempTime = m_plan.GetTotalTime(tempScratchpad);
+
+                                // Compare it to the best time so far
+                                if (tempTime.Ticks < bestTime.Ticks)
                                 {
-                                    EveAttribute attrib = (EveAttribute)i;
-                                    bestScratchpad.SetAttributeBonus(attrib, tempScratchpad.GetAttributeBonus(attrib));
+                                    bestTime = tempTime;
+                                    bestScratchpad.SetAttributeBonus(EveAttribute.Perception, per - perBase);
+                                    bestScratchpad.SetAttributeBonus(EveAttribute.Willpower, will - wilBase);
+                                    bestScratchpad.SetAttributeBonus(EveAttribute.Intelligence, intell - intBase);
+                                    bestScratchpad.SetAttributeBonus(EveAttribute.Memory, mem - memBase);
+                                    bestScratchpad.SetAttributeBonus(EveAttribute.Charisma, cha - chaBase);
                                 }
                             }
                         }
@@ -179,8 +180,5 @@ namespace EVEMon.SkillPlanner
             // Return the best scratchpad found
             return bestScratchpad;
         }
-
-
-
     }
 }
