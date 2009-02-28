@@ -111,7 +111,15 @@ namespace EVEMon
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Text = String.Format(lblVersion.Text, currentVersion.ToString());
+
             AddDevelopersToListBox();
+            AddDebugTag();
+        }
+
+        [Conditional("DEBUG")]
+        private void AddDebugTag()
+        {
+            lblVersion.Text = String.Format("{0} (Debug)", lblVersion.Text);
         }
 
         private void AddDevelopersToListBox()
