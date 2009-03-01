@@ -28,7 +28,7 @@ namespace EVEMon.Sales
         {
             get
             {
-                foreach (Control c in this.tableLayoutPanel1.Controls)
+                foreach (Control c in this.MineralTileTableLayout.Controls)
                 {
                     if (c is MineralTile)
                     {
@@ -45,7 +45,7 @@ namespace EVEMon.Sales
             {
                 total += mt.Subtotal;
             }
-            tslTotal.Text = total.ToString("N") + " ISK";
+            tslTotal.Text = String.Format("{0} ISK", total.ToString("N"));
         }
 
         private void MineralWorksheet_Load(object sender, EventArgs e)
