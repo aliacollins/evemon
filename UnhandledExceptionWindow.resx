@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label3.Text" xml:space="preserve">
-    <value>EVEMon will be shut down. If this error occurs again, you should try resetting your configuration by using the "Reset Settings" button below. If that does not fix the problem, please be sure to report this error using the details above.
+  <data name="llblInformation.Text" xml:space="preserve">
+    <value>EVEMon will be shut down. If this is the first time you have seen this message please restart EVEMon and try again; If you continue receive this message after restarting EVEMon please visit the Crash Reporting page.
 </value>
   </data>
 </root>

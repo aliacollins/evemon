@@ -198,6 +198,10 @@ namespace EVEMon
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
+            // I wholehartedly expect this to appear on the Daily WTF
+            // it is here to test the crash dialog window works
+            // throw new Exception("EVEMon was intentionally crashed");
+            
             CheckAccountTraining();
             if (m_settings.DisableEVEMonVersionCheck == false)
             {

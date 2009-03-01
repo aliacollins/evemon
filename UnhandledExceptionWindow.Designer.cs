@@ -35,10 +35,10 @@ namespace EVEMon
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.llCopy = new System.Windows.Forms.LinkLabel();
+            this.llblInformation = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbBugImage)).BeginInit();
             this.SuspendLayout();
@@ -53,14 +53,14 @@ namespace EVEMon
             this.panel1.ForeColor = System.Drawing.Color.Black;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(467, 53);
+            this.panel1.Size = new System.Drawing.Size(572, 53);
             this.panel1.TabIndex = 0;
             // 
             // pbBugImage
             // 
             this.pbBugImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbBugImage.Location = new System.Drawing.Point(364, 3);
+            this.pbBugImage.Location = new System.Drawing.Point(469, 3);
             this.pbBugImage.Name = "pbBugImage";
             this.pbBugImage.Size = new System.Drawing.Size(100, 47);
             this.pbBugImage.TabIndex = 2;
@@ -95,7 +95,7 @@ namespace EVEMon
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(443, 104);
+            this.textBox1.Size = new System.Drawing.Size(548, 145);
             this.textBox1.TabIndex = 1;
             // 
             // label2
@@ -107,20 +107,10 @@ namespace EVEMon
             this.label2.TabIndex = 2;
             this.label2.Text = "Technical details of this error:";
             // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.Location = new System.Drawing.Point(12, 200);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(443, 46);
-            this.label3.TabIndex = 3;
-            this.label3.Text = resources.GetString("label3.Text");
-            // 
             // btnReset
             // 
             this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnReset.Location = new System.Drawing.Point(16, 249);
+            this.btnReset.Location = new System.Drawing.Point(16, 295);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(111, 23);
             this.btnReset.TabIndex = 4;
@@ -131,7 +121,7 @@ namespace EVEMon
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(349, 249);
+            this.btnClose.Location = new System.Drawing.Point(454, 295);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(106, 23);
             this.btnClose.TabIndex = 5;
@@ -141,8 +131,10 @@ namespace EVEMon
             // 
             // llCopy
             // 
+            this.llCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.llCopy.AutoSize = true;
-            this.llCopy.Location = new System.Drawing.Point(389, 65);
+            this.llCopy.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.llCopy.Location = new System.Drawing.Point(494, 65);
             this.llCopy.Name = "llCopy";
             this.llCopy.Size = new System.Drawing.Size(66, 13);
             this.llCopy.TabIndex = 6;
@@ -150,21 +142,36 @@ namespace EVEMon
             this.llCopy.Text = "Copy details";
             this.llCopy.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llCopy_LinkClicked);
             // 
+            // llblInformation
+            // 
+            this.llblInformation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.llblInformation.LinkArea = new System.Windows.Forms.LinkArea(194, 20);
+            this.llblInformation.Location = new System.Drawing.Point(12, 235);
+            this.llblInformation.Name = "llblInformation";
+            this.llblInformation.Size = new System.Drawing.Size(548, 49);
+            this.llblInformation.TabIndex = 8;
+            this.llblInformation.TabStop = true;
+            this.llblInformation.Text = resources.GetString("llblInformation.Text");
+            this.llblInformation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.llblInformation.UseCompatibleTextRendering = true;
+            this.llblInformation.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblInformation_LinkClicked);
+            // 
             // UnhandledExceptionWindow
             // 
             this.AcceptButton = this.btnClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(467, 284);
+            this.ClientSize = new System.Drawing.Size(572, 330);
             this.ControlBox = false;
+            this.Controls.Add(this.llblInformation);
             this.Controls.Add(this.llCopy);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnReset);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.panel1);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -186,11 +193,11 @@ namespace EVEMon
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pbBugImage;
         private System.Windows.Forms.LinkLabel llCopy;
+        private System.Windows.Forms.LinkLabel llblInformation;
     }
 }

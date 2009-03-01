@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Text;
 
 namespace EVEMon
 {
@@ -54,19 +55,17 @@ namespace EVEMon
 
             try
             {
-                String exceptionReport;
+                StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport = "EVEMon Version: " + Application.ProductVersion;
-                exceptionReport += Environment.NewLine;
-                exceptionReport += ".NET Runtime Version: " + System.Environment.Version;
-                exceptionReport += Environment.NewLine;
-                exceptionReport += "Operating System: " + os.VersionString;
-                exceptionReport += Environment.NewLine;
-                exceptionReport += Environment.NewLine;
-                exceptionReport += m_exception.ToString();
+                exceptionReport.AppendLine(String.Format("EVEMon Version: {0}", Application.ProductVersion));
+                exceptionReport.AppendLine(String.Format(".NET Runtime Version: {0}", System.Environment.Version));
+                exceptionReport.AppendLine(String.Format("Operating System: {0}", os.VersionString));
+                exceptionReport.AppendLine(String.Format("Executable Path: {0}", System.Environment.CommandLine));
+                exceptionReport.AppendLine();
+                exceptionReport.AppendLine(m_exception.ToString());
 
-                textBox1.Text = exceptionReport;
+                textBox1.Text = exceptionReport.ToString();
             }
             catch (Exception ex)
             {
@@ -107,6 +106,11 @@ namespace EVEMon
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
+        }
+
+        private void llblInformation_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/CrashReporting");
         }
     }
 }
