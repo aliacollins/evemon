@@ -175,7 +175,7 @@ namespace EVEMon.Common.Net
                 requestStream.Close();
             }
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.Redirect)
+            if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.MovedPermanently)
             {
                 string target = response.GetResponseHeader("Location");
                 response.Close();
