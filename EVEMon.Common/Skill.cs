@@ -946,6 +946,11 @@ namespace EVEMon.Common
             m_learningLevelBonus += adjustmentAmount;
         }
 
+        public void SetLearningLevelBonus(int level)
+        {
+            m_learningLevelBonus = level;
+        }
+
         public int GetAttributeBonus(EveAttribute attribute)
         {
             return m_attributeBonuses[(int)attribute];

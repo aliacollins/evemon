@@ -62,17 +62,16 @@ namespace EVEMon.SkillPlanner
         private void Run()
         {
             // Current time -- empty scratchpad is fine
-            EveAttributeScratchpad currentScratchpad = new EveAttributeScratchpad();
-            TimeSpan currentTime = m_plan.GetTotalTime(currentScratchpad);
+            TimeSpan currentTime = m_plan.GetTotalTime(new EveAttributeScratchpad());
 
             // Best scratchpad
             TimeSpan bestTime;
-            EveAttributeScratchpad bestScratchpad = Optimize(currentTime, currentScratchpad, out bestTime);
+            EveAttributeScratchpad bestScratchpad = Optimize(currentTime, out bestTime);
 
             // Update the controls for every attribute
             this.Invoke((MethodInvoker)delegate 
             {
-                // If the thread has been canceled, we stop right now
+                // If the thread has been canceled, we stop right now to prevent an exception
                 if (m_thread == null) return;
 
                 // Hide the throbber and the waiting message
@@ -111,7 +110,7 @@ namespace EVEMon.SkillPlanner
             });
         }
 
-        private EveAttributeScratchpad Optimize(TimeSpan currentTime, EveAttributeScratchpad currentScratchpad, out TimeSpan bestTime)
+        private EveAttributeScratchpad Optimize(TimeSpan currentTime, out TimeSpan bestTime)
         {
             // Get the number of points currently spent into each
             // attribute
@@ -128,7 +127,7 @@ namespace EVEMon.SkillPlanner
             // Now, we have the points to spend, let's perform all the
             // combinations (less than 11^4 = 14,641)
             bestTime = currentTime;
-            EveAttributeScratchpad bestScratchpad = currentScratchpad;
+            EveAttributeScratchpad bestScratchpad = new EveAttributeScratchpad();
             EveAttributeScratchpad tempScratchpad = new EveAttributeScratchpad();
 
             // PER
@@ -146,12 +145,14 @@ namespace EVEMon.SkillPlanner
                         int maxMemory = maxIntelligence - intell;
                         for (int mem = 0; mem <= maxMemory && mem <= maxPerSkill; mem++)
                         {
+
                             // CHA
                             int cha = maxMemory - mem;
 
-                            // exclude any invalid results
+                            // Reject invalid combinations
                             if (cha <= maxPerSkill)
                             {
+                                tempScratchpad.SetLearningLevelBonus(0);
                                 tempScratchpad.SetAttributeBonus(EveAttribute.Perception, per - perBase);
                                 tempScratchpad.SetAttributeBonus(EveAttribute.Willpower, will - wilBase);
                                 tempScratchpad.SetAttributeBonus(EveAttribute.Intelligence, intell - intBase);
@@ -171,6 +172,9 @@ namespace EVEMon.SkillPlanner
                                     bestScratchpad.SetAttributeBonus(EveAttribute.Memory, mem - memBase);
                                     bestScratchpad.SetAttributeBonus(EveAttribute.Charisma, cha - chaBase);
                                 }
+
+                                // If the thread has been canceled, we stop right now to (optional, optimization)
+                                if (m_thread == null) return bestScratchpad;
                             }
                         }
                     }
