@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using EVEMon.Common;
 
 namespace EVEMon
 {
@@ -17,12 +18,13 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            string MyDocumentsPortraitCache = String.Format(
-                "{0}CCP{0}EVE{0}cache{0}Pictures{0}Portraits", 
-                Path.DirectorySeparatorChar);
-            string LocalApplicationData = Environment.GetFolderPath(
-                Environment.SpecialFolder.LocalApplicationData);
-            DefaultFolderLocation = LocalApplicationData + MyDocumentsPortraitCache;
+            DefaultFolderLocation = LocalFileSystem.PortraitCacheFolder;
+
+            if (DefaultFolderLocation == null)
+            {
+                SpecifyFolderRadioButton.Checked = true;
+                DefaultFolderRadioButton.Enabled = false;
+            }
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)

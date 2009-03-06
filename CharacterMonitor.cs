@@ -816,8 +816,16 @@ namespace EVEMon
             // test to see if an EVE Folder has been selected
             if (this.GrandCharacterInfo.PortraitFolder == "")
             {
-                // if the folder has not been selected, ask the user to select it
-                RequestEVEFolder();
+                if (LocalFileSystem.PortraitCacheFolder == null)
+                {
+                    // if the folder has not been selected and can not
+                    // be detected, ask the user to select it
+                    RequestEVEFolder();
+                }
+                else
+                {
+                    this.GrandCharacterInfo.PortraitFolder = LocalFileSystem.PortraitCacheFolder;
+                }
             }
 
             try
