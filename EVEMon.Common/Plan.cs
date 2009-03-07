@@ -15,7 +15,6 @@ namespace EVEMon.Common
     {
         public Plan()
         {
-            //m_entries = new MonitoredList<Plan.Entry>();
             m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
             m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
         }
@@ -26,8 +25,8 @@ namespace EVEMon.Common
         Settings m_settings;
 
         private int entryToPrint;
-        private Font printFont = new Font("Aerial", 10);
-        private Font printFontBold = new Font("Aerial", 10, FontStyle.Bold | FontStyle.Underline);
+        private Font printFont = new Font("Arial", 10);
+        private Font printFontBold = new Font("Arial", 10, FontStyle.Bold | FontStyle.Underline);
         private SolidBrush printBrush = new SolidBrush(Color.Black);
         private Point printPoint = new Point();
         private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
@@ -1322,7 +1321,6 @@ namespace EVEMon.Common
 
             GrandCharacterInfo = gci;
             Form newWin = m_plannerWindowFactory.CreateWindow(s, this);
-            //NewPlannerWindow newWin = new NewPlannerWindow(s, gci, this);
             newWin.Show();
             m_plannerWindow = new WeakReference<Form>(newWin);
         }
