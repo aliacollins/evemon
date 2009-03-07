@@ -23,9 +23,7 @@ namespace EVEMon.Common
             m_lastConfirmedLvl = 0;
             m_prereqs = _prereqs;
             m_owned = _owned;
-// 947 - Start
             m_highlightPartials = false;
-// 947 - End
         }
 
         public void SetOwner(CharacterInfo gci)
@@ -246,7 +244,6 @@ namespace EVEMon.Common
             set { m_owned = value; }
         }
 
-// 947 - Start
         private bool m_highlightPartials;
         public bool HighlightPartiallyTrained
         {
@@ -259,8 +256,6 @@ namespace EVEMon.Common
                 m_highlightPartials = value;
             }
         }
-
-// 947 - End
 
         /// <summary>
         /// Gets the primary attribute of this skill.
@@ -852,7 +847,6 @@ namespace EVEMon.Common
                     TextRenderer.MeasureText(g, pctText, fontr, new Size(0, 0),
                                              TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
 
-// 947 - Start
                 Color highlightColor = Color.Black;
                 if (m_highlightPartials)
                 {
@@ -869,7 +863,6 @@ namespace EVEMon.Common
                 TextRenderer.DrawText(g, spText, fontr,
                                       new Point(e.Bounds.Left + PAD_LEFT,
                                                 e.Bounds.Top + PAD_TOP + skillNameSize.Height + LINE_VPAD), highlightColor);
-// 947 - End
 
                 // Boxes
                 g.DrawRectangle(Pens.Black,
