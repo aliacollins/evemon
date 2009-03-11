@@ -159,21 +159,65 @@ namespace EVEMon.Common
         /// Calculate the time it will take to train a certain amount of skill points.
         /// </summary>
         /// <remarks>
-        /// Note: This does not take into account the attribute increase for each level of the learning skills!
+        /// Note: This does not take into account the attribute increase
+        /// for each level of the learning skills!
         /// </remarks>
         /// <param name="points">The amount of skill points.</param>
         /// <returns>Time it will take.</returns>
         private TimeSpan GetTimeSpanForPoints(int points)
         {
-            return GetTimeSpanForPoints(points, null, true);
+            return GetTimeSpanForPoints(points, this.m_owner.SkillPointTotal, null, true);
         }
 
-        private TimeSpan GetTimeSpanForPoints(int points, EveAttributeScratchpad scratchpad, Boolean includeImplants)
+        /// <summary>
+        /// Gets the time span for a specific number of skill points.
+        /// </summary>
+        /// <param name="points">The points to calculate points.</param>
+        /// <param name="skillPointTotal">Current skill point total.</param>
+        /// <param name="scratchpad">The EVE Attribute Scratchpad.</param>
+        /// <param name="includeImplants">if set to <c>true</c> include implants.</param>
+        /// <returns></returns>
+        private TimeSpan GetTimeSpanForPoints(int points, int skillPointTotal, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
             double primAttr = m_owner.GetEffectiveAttribute(m_staticData.PrimaryAttribute, scratchpad, true, includeImplants);
             double secondaryAttr = m_owner.GetEffectiveAttribute(m_staticData.SecondaryAttribute, scratchpad, true, includeImplants);
             double minutes = Convert.ToDouble(points) / (primAttr + (secondaryAttr / 2));
-            return TimeSpan.FromMinutes(minutes);
+            double newCharacterTrainingBonus = GetNewCharacterSkillTrainingBonus(skillPointTotal, points);
+
+            return TimeSpan.FromMinutes(minutes / newCharacterTrainingBonus);
+        }
+
+        /// <summary>
+        /// Returns the skill training bonus based upon the total number of  skill points and  the number of  points to train the skill.
+        /// </summary>
+        /// <remarks>
+        /// As with Apocrypha 1.0 (10 March 2008) a 100% skill training bonus is  applied to characters  with less than  1.6m skill points.
+        /// </remarks>
+        /// <param name="skillPointTotal">The total number of skill points.</param>
+        /// <param name="skillPoints">The total  number of  points to  train this  skill from the current level to the next.</param>
+        /// <returns>Double between 1.0 (no  bonus  applied) to 2.0 (bonus applied), in  the event that 1.6m SP is  passed  during training of the current skill a number between 1.0 and 2.0 will be returned.</returns>
+        public double GetNewCharacterSkillTrainingBonus(int skillPointTotal, int pointsForThisSkill)
+        {
+            double newCharacterMultiplier = 1;
+
+            if (skillPointTotal < EveConstants.NewCharacterTrainingThreshold)
+            {
+                if ((skillPointTotal + pointsForThisSkill) > EveConstants.NewCharacterTrainingThreshold)
+                {
+                    int pointsWithoutBonus = (skillPointTotal + pointsForThisSkill) - EveConstants.NewCharacterTrainingThreshold;
+                    int pointsWithBonus = pointsForThisSkill - pointsWithoutBonus;
+
+                    // ((pointsWithoutBonus * 1.0) + (pointsWithBonus * EveConstants.NewCharacterTrainingFactor)) / pointsForThisSkill;
+                    // balances down to...
+                    newCharacterMultiplier = ((double)pointsWithBonus / pointsForThisSkill) + 1;
+                }
+                else
+                {
+                    newCharacterMultiplier = EveConstants.NewCharacterTrainingFactor;
+                }
+            }
+                
+            return newCharacterMultiplier;
         }
 
         /// <summary>
@@ -475,23 +519,33 @@ namespace EVEMon.Common
 
         public TimeSpan GetTrainingTimeOfLevelOnly(int level)
         {
-            return GetTrainingTimeOfLevelOnly(level, false);
-        }
-
-        public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP)
-        {
-            return GetTrainingTimeOfLevelOnly(level, includeCurrentSP, null);
+            return GetTrainingTimeOfLevelOnly(level, m_owner.SkillPointTotal, false);
         }
 
         public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad)
         {
-            return GetTrainingTimeOfLevelOnly(level, includeCurrentSP, scratchpad, true);
+            return GetTrainingTimeOfLevelOnly(level, m_owner.SkillPointTotal, includeCurrentSP, scratchpad);
         }
 
-        public TimeSpan GetTrainingTimeOfLevelOnly(int level, bool includeCurrentSP, EveAttributeScratchpad scratchpad, Boolean includeImplants)
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, int skillPointTotal)
+        {
+            return GetTrainingTimeOfLevelOnly(level, skillPointTotal, false);
+        }
+
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, int skillPointTotal, bool includeCurrentSP)
+        {
+            return GetTrainingTimeOfLevelOnly(level, skillPointTotal, includeCurrentSP, null);
+        }
+
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, int skillPointTotal, bool includeCurrentSP, EveAttributeScratchpad scratchpad)
+        {
+            return GetTrainingTimeOfLevelOnly(level, skillPointTotal, includeCurrentSP, scratchpad, true);
+        }
+
+        public TimeSpan GetTrainingTimeOfLevelOnly(int level, int skillPointTotal, bool includeCurrentSP, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
             int pointsNeeded = GetPointsForLevelOnly(level, includeCurrentSP);
-            return this.GetTimeSpanForPoints(pointsNeeded, scratchpad, includeImplants);
+            return this.GetTimeSpanForPoints(pointsNeeded, skillPointTotal, scratchpad, includeImplants);
         }
 
         /// <summary>

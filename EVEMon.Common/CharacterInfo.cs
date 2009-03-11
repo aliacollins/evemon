@@ -1674,6 +1674,7 @@ namespace EVEMon.Common
         {
             Dictionary<Skill, int> trainedAlready = new Dictionary<Skill, int>();
             TimeSpan result = TimeSpan.Zero;
+            int cumulativeSkillTotal = this.SkillPointTotal;
 
             foreach (Pair<Skill, int> ts in skills)
             {
@@ -1688,7 +1689,8 @@ namespace EVEMon.Common
                     }
                     if (needTrain)
                     {
-                        result += ts.A.GetTrainingTimeOfLevelOnly(i, true);
+                        result += ts.A.GetTrainingTimeOfLevelOnly(i, cumulativeSkillTotal, true);
+                        cumulativeSkillTotal += ts.A.GetPointsForLevelOnly(i, true);
                         trainedAlready[ts.A] = ts.A.GetPointsRequiredForLevel(i);
                     }
                 }

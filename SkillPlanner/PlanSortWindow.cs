@@ -329,6 +329,8 @@ namespace EVEMon.SkillPlanner
             CompareDelegate<TimeSpan> comparer,
             TimeSpan initialValue)
         {
+            int cumulativeSkillTotal = m_plan.GrandCharacterInfo.SkillPointTotal;
+
             while (m_skillsToInsert.Count > 0)
             {
                 TimeSpan fastestSpan = initialValue;
@@ -338,7 +340,8 @@ namespace EVEMon.SkillPlanner
                 {
                     Plan.Entry thisPe = m_skillsToInsert[i];
                     Skill thisSkill = m_plan.GrandCharacterInfo.GetSkill(thisPe.SkillName);
-                    TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, true);
+                    TimeSpan thisSpan = thisSkill.GetTrainingTimeOfLevelOnly(thisPe.Level, cumulativeSkillTotal, true);
+                    cumulativeSkillTotal += thisSkill.GetPointsForLevelOnly(thisPe.Level, true);
                     if (comparer(thisSpan, fastestSpan))
                     {
                         // this is potentially the fastest skill...

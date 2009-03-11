@@ -24,16 +24,6 @@ namespace EVEMon.Common
         private string m_planName;
         Settings m_settings;
 
-        private int entryToPrint;
-        private Font printFont = new Font("Arial", 10);
-        private Font printFontBold = new Font("Arial", 10, FontStyle.Bold | FontStyle.Underline);
-        private SolidBrush printBrush = new SolidBrush(Color.Black);
-        private Point printPoint = new Point();
-        private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
-        private DateTime printCurDt = DateTime.Now;
-        private DateTime printStartTime = DateTime.Now;
-        PlanTextOptions m_pto;
-
         [XmlIgnore]
         public string Name
         {
@@ -129,6 +119,7 @@ namespace EVEMon.Common
         }
         #endregion Members
 
+        #region Preferences
         private ColumnPreference m_columnPreference = null;
 
         public ColumnPreference ColumnPreference
@@ -143,6 +134,7 @@ namespace EVEMon.Common
             }
             set { m_columnPreference = value; }
         }
+        #endregion
 
         #region Event suppression
         private object m_eventLock = new object();
@@ -423,17 +415,22 @@ namespace EVEMon.Common
         public TimeSpan GetTotalTime(EveAttributeScratchpad scratchpad)
         {
             TimeSpan ts = TimeSpan.Zero;
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
+
             if (scratchpad == null)
             {
                 scratchpad = new EveAttributeScratchpad();
             }
+
             foreach (Plan.Entry pe in m_entries)
             {
                 if (pe.Skill == null)
                 {
                     continue;
                 }
-                ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+
+                ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
                 scratchpad.ApplyALevelOf(pe.Skill);
             }
             return ts;
@@ -491,6 +488,7 @@ namespace EVEMon.Common
 
         #endregion Statistics
 
+        #region Plan Managment
         public void CheckForMissingPrerequisites()
         {
             this.SuppressEvents();
@@ -906,7 +904,6 @@ namespace EVEMon.Common
         /// <param name="level">The level we want to train to</param>
         /// <param name="note">The reason we want to train this skill</param>
         /// <param name="confirm">Asks the user to confirm the addition of the skills (and geta Priority)</param>
-
         public void PlanTo(Skill gs, int level, string Note, bool confirm)
         {
             if (level == 0)
@@ -1270,7 +1267,7 @@ namespace EVEMon.Common
             }
             return false;
         }
-
+        #endregion
 
         #region Planner Window
         private static IPlannerWindowFactory m_plannerWindowFactory;
@@ -1345,225 +1342,6 @@ namespace EVEMon.Common
             }
         }
         #endregion Planner Window
-
-        public void SaveAsText(StreamWriter sw, PlanTextOptions pto)
-        {
-            MarkupType markupType = pto.Markup;
-            MethodInvoker writeLine = delegate
-                                          {
-                                              if (markupType == MarkupType.Html)
-                                              {
-                                                  sw.WriteLine("<br />");
-                                              }
-                                              else
-                                              {
-                                                  sw.WriteLine();
-                                              }
-                                          };
-            MethodInvoker boldStart = delegate
-                                          {
-                                              switch (markupType)
-                                              {
-                                                  case MarkupType.None:
-                                                      break;
-                                                  case MarkupType.Forum:
-                                                      sw.Write("[b]");
-                                                      break;
-                                                  case MarkupType.Html:
-                                                      sw.Write("<b>");
-                                                      break;
-                                              }
-                                          };
-            MethodInvoker boldEnd = delegate
-                                        {
-                                            switch (markupType)
-                                            {
-                                                case MarkupType.None:
-                                                    break;
-                                                case MarkupType.Forum:
-                                                    sw.Write("[/b]");
-                                                    break;
-                                                case MarkupType.Html:
-                                                    sw.Write("</b>");
-                                                    break;
-                                            }
-                                        };
-
-            if (pto.IncludeHeader)
-            {
-                boldStart();
-                if (pto.ShoppingList)
-                {
-                    sw.Write("Shopping list for {0}", this.GrandCharacterInfo.Name);
-                }
-                else
-                {
-                    sw.Write("Skill plan for {0}", this.GrandCharacterInfo.Name);
-                }
-                boldEnd();
-                writeLine();
-                writeLine();
-            }
-
-            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
-            TimeSpan totalTrainingTime = TimeSpan.Zero;
-            DateTime curDt = DateTime.Now;
-            int num = 0;
-
-            foreach (Plan.Entry pe in this.Entries)
-            {
-                bool shoppingListCandidate = !(pe.Skill.Known || pe.Level != 1 || pe.Skill.Owned);
-                if (pto.ShoppingList && !shoppingListCandidate)
-                {
-                    // for shopping list, if the skill is known or a non-level-1-unknown, skip
-                    continue;
-                }
-                num++;
-                if (pto.EntryNumber)
-                {
-                    sw.Write("{0}. ", num);
-                }
-                boldStart();
-                if (markupType == MarkupType.Html)
-                {
-                    sw.Write("<a href='showinfo:{0}'>", pe.Skill.Id);
-                }
-                sw.Write(pe.SkillName);
-                if (markupType == MarkupType.Html)
-                {
-                    sw.Write("</a>");
-                }
-                if (!pto.ShoppingList)
-                {
-                    sw.Write(' ');
-                    sw.Write(Skill.GetRomanForInt(pe.Level));
-                }
-                boldEnd();
-
-                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
-                scratchpad.ApplyALevelOf(pe.Skill);
-                DateTime startDate = curDt;
-                curDt += trainingTime;
-                DateTime finishDate = curDt;
-                totalTrainingTime += trainingTime;
-
-                if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate || (pto.EntryCost && shoppingListCandidate))
-                {
-                    sw.Write(" (");
-                    bool needComma = false;
-
-                    if (pto.EntryTrainingTimes)
-                    {
-                        sw.Write(Skill.TimeSpanToDescriptiveText(trainingTime,
-                                                                      DescriptiveTextOptions.FullText |
-                                                                      DescriptiveTextOptions.IncludeCommas |
-                                                                      DescriptiveTextOptions.SpaceText));
-                        needComma = true;
-                    }
-                    if (pto.EntryStartDate)
-                    {
-                        if (needComma)
-                        {
-                            sw.Write("; ");
-                        }
-                        sw.Write("Start: ");
-                        sw.Write(startDate.ToString());
-                        needComma = true;
-                    }
-                    if (pto.EntryFinishDate)
-                    {
-                        if (needComma)
-                        {
-                            sw.Write("; ");
-                        }
-                        sw.Write("Finish: ");
-                        sw.Write(finishDate.ToString());
-                        needComma = true;
-                    }
-                    if (pto.EntryCost && shoppingListCandidate)
-                    {
-                        if (needComma)
-                        {
-                            sw.Write("; ");
-                        }
-                        sw.Write(pe.Skill.FormattedCost + " ISK");
-                        needComma = true;
-                    }
-
-                    sw.Write(')');
-                }
-                writeLine();
-            }
-            if (pto.FooterCount || pto.FooterTotalTime || pto.FooterDate || pto.FooterCost)
-            {
-                writeLine();
-                bool needComma = false;
-                if (pto.FooterCount)
-                {
-                    boldStart();
-                    sw.Write(num.ToString());
-                    boldEnd();
-                    sw.Write(" skill");
-                    if (num != 1)
-                    {
-                        sw.Write('s');
-                    }
-                    needComma = true;
-                }
-                if (pto.FooterTotalTime)
-                {
-                    if (needComma)
-                    {
-                        sw.Write("; ");
-                    }
-                    sw.Write("Total time: ");
-                    boldStart();
-                    sw.Write(Skill.TimeSpanToDescriptiveText(totalTrainingTime,
-                                                                  DescriptiveTextOptions.FullText |
-                                                                  DescriptiveTextOptions.IncludeCommas |
-                                                                  DescriptiveTextOptions.SpaceText));
-                    boldEnd();
-                    needComma = true;
-                }
-                if (pto.FooterDate)
-                {
-                    if (needComma)
-                    {
-                        sw.Write("; ");
-                    }
-                    sw.Write("Completion: ");
-                    boldStart();
-                    sw.Write(curDt.ToString());
-                    boldEnd();
-                    needComma = true;
-                }
-                if (pto.FooterCost)
-                {
-                    if (needComma)
-                    {
-                        sw.Write("; ");
-                    }
-                    sw.Write("Cost: ");
-                    boldStart();
-                    if (TrainingCost > 0)
-                    {
-                        sw.Write(String.Format("{0:0,0,0} ISK", TrainingCost));
-                    }
-                    else
-                    {
-                        sw.Write("0 ISK");
-                    }
-                    boldEnd();
-                    needComma = true;
-                }
-                writeLine();
-                if (pto.FooterCost || pto.EntryCost)
-                {
-                    sw.Write("N.B. Skill costs are based on CCP's database and are indicative only");
-                    writeLine();
-                }
-            }
-        }
 
         [XmlRoot("Plan.Entry")]
         public class Entry : ICloneable
@@ -1777,6 +1555,18 @@ namespace EVEMon.Common
             #endregion
         }
 
+        #region Plan Printing
+        
+        private int entryToPrint;
+        private Font printFont = new Font("Arial", 10);
+        private Font printFontBold = new Font("Arial", 10, FontStyle.Bold | FontStyle.Underline);
+        private SolidBrush printBrush = new SolidBrush(Color.Black);
+        private Point printPoint = new Point();
+        private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
+        private DateTime printCurDt = DateTime.Now;
+        private DateTime printStartTime = DateTime.Now;
+        PlanTextOptions m_pto;
+
         public void PrintPlan()
         {
             PrintDocument doc = new PrintDocument();
@@ -1822,6 +1612,7 @@ namespace EVEMon.Common
         {
             EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
             SizeF f = new SizeF(0, 0);
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
             string s = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")"; 
             int num = 0;
 
@@ -1868,7 +1659,8 @@ namespace EVEMon.Common
                 f = printBold(e.Graphics, Skill.GetRomanForInt(pe.Level), printPoint);
                 printPoint.X += (int)f.Width;
 
-                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
                 scratchpad.ApplyALevelOf(pe.Skill);
                 DateTime startDate = printCurDt;
                 printCurDt += trainingTime;
@@ -1994,6 +1786,229 @@ namespace EVEMon.Common
                 printPoint.Y += (int)f.Height;
             }
 
+        }
+        #endregion
+
+        #region Plan Export
+        public void SaveAsText(StreamWriter sw, PlanTextOptions pto)
+        {
+            MarkupType markupType = pto.Markup;
+            MethodInvoker writeLine = delegate
+            {
+                if (markupType == MarkupType.Html)
+                {
+                    sw.WriteLine("<br />");
+                }
+                else
+                {
+                    sw.WriteLine();
+                }
+            };
+            MethodInvoker boldStart = delegate
+            {
+                switch (markupType)
+                {
+                    case MarkupType.None:
+                        break;
+                    case MarkupType.Forum:
+                        sw.Write("[b]");
+                        break;
+                    case MarkupType.Html:
+                        sw.Write("<b>");
+                        break;
+                }
+            };
+            MethodInvoker boldEnd = delegate
+            {
+                switch (markupType)
+                {
+                    case MarkupType.None:
+                        break;
+                    case MarkupType.Forum:
+                        sw.Write("[/b]");
+                        break;
+                    case MarkupType.Html:
+                        sw.Write("</b>");
+                        break;
+                }
+            };
+
+            if (pto.IncludeHeader)
+            {
+                boldStart();
+                if (pto.ShoppingList)
+                {
+                    sw.Write("Shopping list for {0}", this.GrandCharacterInfo.Name);
+                }
+                else
+                {
+                    sw.Write("Skill plan for {0}", this.GrandCharacterInfo.Name);
+                }
+                boldEnd();
+                writeLine();
+                writeLine();
+            }
+
+            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+            TimeSpan totalTrainingTime = TimeSpan.Zero;
+            DateTime curDt = DateTime.Now;
+            int num = 0;
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
+
+            foreach (Plan.Entry pe in this.Entries)
+            {
+                bool shoppingListCandidate = !(pe.Skill.Known || pe.Level != 1 || pe.Skill.Owned);
+                if (pto.ShoppingList && !shoppingListCandidate)
+                {
+                    // for shopping list, if the skill is known or a non-level-1-unknown, skip
+                    continue;
+                }
+                num++;
+                if (pto.EntryNumber)
+                {
+                    sw.Write("{0}. ", num);
+                }
+                boldStart();
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("<a href='showinfo:{0}'>", pe.Skill.Id);
+                }
+                sw.Write(pe.SkillName);
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("</a>");
+                }
+                if (!pto.ShoppingList)
+                {
+                    sw.Write(' ');
+                    sw.Write(Skill.GetRomanForInt(pe.Level));
+                }
+                boldEnd();
+
+                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
+                scratchpad.ApplyALevelOf(pe.Skill);
+                DateTime startDate = curDt;
+                curDt += trainingTime;
+                DateTime finishDate = curDt;
+                totalTrainingTime += trainingTime;
+
+                if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate || (pto.EntryCost && shoppingListCandidate))
+                {
+                    sw.Write(" (");
+                    bool needComma = false;
+
+                    if (pto.EntryTrainingTimes)
+                    {
+                        sw.Write(Skill.TimeSpanToDescriptiveText(trainingTime,
+                                                                      DescriptiveTextOptions.FullText |
+                                                                      DescriptiveTextOptions.IncludeCommas |
+                                                                      DescriptiveTextOptions.SpaceText));
+                        needComma = true;
+                    }
+                    if (pto.EntryStartDate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write("Start: ");
+                        sw.Write(startDate.ToString());
+                        needComma = true;
+                    }
+                    if (pto.EntryFinishDate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write("Finish: ");
+                        sw.Write(finishDate.ToString());
+                        needComma = true;
+                    }
+                    if (pto.EntryCost && shoppingListCandidate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write(pe.Skill.FormattedCost + " ISK");
+                        needComma = true;
+                    }
+
+                    sw.Write(')');
+                }
+                writeLine();
+            }
+            if (pto.FooterCount || pto.FooterTotalTime || pto.FooterDate || pto.FooterCost)
+            {
+                writeLine();
+                bool needComma = false;
+                if (pto.FooterCount)
+                {
+                    boldStart();
+                    sw.Write(num.ToString());
+                    boldEnd();
+                    sw.Write(" skill");
+                    if (num != 1)
+                    {
+                        sw.Write('s');
+                    }
+                    needComma = true;
+                }
+                if (pto.FooterTotalTime)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Total time: ");
+                    boldStart();
+                    sw.Write(Skill.TimeSpanToDescriptiveText(totalTrainingTime,
+                                                                  DescriptiveTextOptions.FullText |
+                                                                  DescriptiveTextOptions.IncludeCommas |
+                                                                  DescriptiveTextOptions.SpaceText));
+                    boldEnd();
+                    needComma = true;
+                }
+                if (pto.FooterDate)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Completion: ");
+                    boldStart();
+                    sw.Write(curDt.ToString());
+                    boldEnd();
+                    needComma = true;
+                }
+                if (pto.FooterCost)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Cost: ");
+                    boldStart();
+                    if (TrainingCost > 0)
+                    {
+                        sw.Write(String.Format("{0:0,0,0} ISK", TrainingCost));
+                    }
+                    else
+                    {
+                        sw.Write("0 ISK");
+                    }
+                    boldEnd();
+                    needComma = true;
+                }
+                writeLine();
+                if (pto.FooterCost || pto.EntryCost)
+                {
+                    sw.Write("N.B. Skill costs are based on CCP's database and are indicative only");
+                    writeLine();
+                }
+            }
         }
 
         public void SerializePlanTo(Stream s)
@@ -2138,8 +2153,10 @@ namespace EVEMon.Common
                                 "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
     }
 
+    #region Public Enums
     public enum MarkupType
     {
         Undefined,
@@ -2168,4 +2185,5 @@ namespace EVEMon.Common
     {
         Form CreateWindow(Settings s, Plan p);
     }
+    #endregion
 }

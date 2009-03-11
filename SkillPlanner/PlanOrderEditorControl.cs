@@ -216,8 +216,8 @@ namespace EVEMon.SkillPlanner
                         lvi.SubItems.Add(String.Empty);
                     }
 
-                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
-                    TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad, false);
+                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, skillPointTotal, true, scratchpad);
+                    TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, skillPointTotal, true, scratchpad, false);
                     TimeSpan trainTimeImpCalc = trainTime;
                     if (m_implantCalculator != null)
                     {
@@ -1271,6 +1271,7 @@ namespace EVEMon.SkillPlanner
                 TimeSpan selectedTrainTime = TimeSpan.Zero;
                 TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
                 long cost = 0;
+                int cumulativeSkillTotal = m_plan.GrandCharacterInfo.SkillPointTotal;
 
                 // need to loop through all entries to include effect of training skills
                 // in the total time of selected skills.
@@ -1280,7 +1281,8 @@ namespace EVEMon.SkillPlanner
                     ListViewItem lvi = lvSkills.Items[i];
                     Plan.Entry pe = (Plan.Entry)lvi.Tag;
                     Skill gs = pe.Skill;
-                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, true, scratchpad);
+                    TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                    cumulativeSkillTotal += gs.GetPointsForLevelOnly(pe.Level, true);
                     if (lvSkills.SelectedItems.Contains(lvi))
                     {
                         // ensure cost is only counted once!
@@ -1292,7 +1294,7 @@ namespace EVEMon.SkillPlanner
                                 cost += gs.Cost;
                             }
                         }
-                        selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, true, null);
+                        selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, null);
                         selectedTimeWithLearning += trainTime;
                     }
                     scratchpad.ApplyALevelOf(gs);
