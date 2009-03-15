@@ -2612,6 +2612,20 @@ namespace EVEMon.Common
             }
         }
 
+        private bool m_ShowT3Items = true;
+
+        public bool ShowT3Items
+        {
+            get { return m_ShowT3Items; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_ShowT3Items = value;
+                }
+            }
+        }
+
         private bool m_ShowNamedItems = true;
 
         public bool ShowNamedItems

@@ -88,11 +88,13 @@ namespace EVEMon.SkillPlanner
             switch (i.Metagroup)
             {
                 case "Tech I":
-                   return cbTech1.Checked;
+                    return cbTech1.Checked;
                 case "Named":
                     return cbNamed.Checked;
                 case "Tech II":
                     return cbTech2.Checked;
+                case "Tech III":
+                    return cbTech3.Checked;
                 case "Officer":
                 case "Storyline":
                     return cbOfficer.Checked;
@@ -145,6 +147,7 @@ namespace EVEMon.SkillPlanner
             if (sender == cbOfficer) m_settings.ShowOfficerItems = cbOfficer.Checked;
             if (sender == cbFaction) m_settings.ShowFactionItems = cbFaction.Checked;
             if (sender == cbDeadspace) m_settings.ShowDeadspaceItems = cbDeadspace.Checked;
+            if (sender == cbTech3) m_settings.ShowT3Items = cbTech3.Checked;
             UpdateDisplay();
         }
 
@@ -231,7 +234,6 @@ namespace EVEMon.SkillPlanner
                 {
                     numberOfItems = BuildSubtree(m_rootCategory, tvItems.Nodes);
                 }
-                
             }
             finally
             {
@@ -294,7 +296,6 @@ namespace EVEMon.SkillPlanner
 
 
         #endregion 
-
 
         #region Events
         #endregion

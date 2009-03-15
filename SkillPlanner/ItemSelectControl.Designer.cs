@@ -38,6 +38,7 @@ namespace EVEMon.SkillPlanner
             this.label2 = new System.Windows.Forms.Label();
             this.gbFittableShipModules = new System.Windows.Forms.GroupBox();
             this.iffsShipFitting = new EVEMon.SkillPlanner.ItemFittingFilterSummary();
+            this.cbTech3 = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -54,14 +55,14 @@ namespace EVEMon.SkillPlanner
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Location = new System.Drawing.Point(33, 202);
+            this.tbSearchText.Location = new System.Drawing.Point(33, 228);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.tbSearchText.Size = new System.Drawing.Size(150, 21);
+            this.tbSearchText.Size = new System.Drawing.Size(143, 21);
             // 
             // tvItems
             // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Size = new System.Drawing.Size(185, 182);
+            this.tvItems.Size = new System.Drawing.Size(185, 155);
             this.tvItems.TabIndex = 12;
             // 
             // lbNoMatches
@@ -73,11 +74,12 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchList
             // 
-            this.lbSearchList.Size = new System.Drawing.Size(185, 182);
+            this.lbSearchList.Size = new System.Drawing.Size(185, 155);
             this.lbSearchList.TabIndex = 0;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.cbTech3);
             this.panel1.Controls.Add(this.cbSlotFilter);
             this.panel1.Controls.Add(this.gbFittableShipModules);
             this.panel1.Controls.Add(this.cbDeadspace);
@@ -87,7 +89,7 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.cbFaction);
             this.panel1.Controls.Add(this.cbNamed);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Size = new System.Drawing.Size(185, 228);
+            this.panel1.Size = new System.Drawing.Size(185, 255);
             this.panel1.Controls.SetChildIndex(this.label2, 0);
             this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
             this.panel1.Controls.SetChildIndex(this.cbNamed, 0);
@@ -102,24 +104,25 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.SetChildIndex(this.label1, 0);
             this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
             this.panel1.Controls.SetChildIndex(this.cbSlotFilter, 0);
+            this.panel1.Controls.SetChildIndex(this.cbTech3, 0);
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 228);
-            this.panel2.Size = new System.Drawing.Size(185, 182);
+            this.panel2.Location = new System.Drawing.Point(0, 255);
+            this.panel2.Size = new System.Drawing.Size(185, 155);
             this.panel2.TabIndex = 0;
             // 
             // lbSearchTextHint
             // 
             this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbSearchTextHint.Location = new System.Drawing.Point(34, 203);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(34, 229);
             this.lbSearchTextHint.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSearchTextHint.Size = new System.Drawing.Size(68, 18);
             this.lbSearchTextHint.TabIndex = 11;
             // 
             // pbSearchImage
             // 
-            this.pbSearchImage.Location = new System.Drawing.Point(9, 202);
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 228);
             // 
             // label1
             // 
@@ -142,7 +145,7 @@ namespace EVEMon.SkillPlanner
             // cbOfficer
             // 
             this.cbOfficer.AutoSize = true;
-            this.cbOfficer.Location = new System.Drawing.Point(9, 102);
+            this.cbOfficer.Location = new System.Drawing.Point(9, 125);
             this.cbOfficer.Name = "cbOfficer";
             this.cbOfficer.Size = new System.Drawing.Size(59, 17);
             this.cbOfficer.TabIndex = 5;
@@ -168,9 +171,9 @@ namespace EVEMon.SkillPlanner
             this.cbTech2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbTech2.Location = new System.Drawing.Point(9, 79);
             this.cbTech2.Name = "cbTech2";
-            this.cbTech2.Size = new System.Drawing.Size(58, 17);
+            this.cbTech2.Size = new System.Drawing.Size(60, 17);
             this.cbTech2.TabIndex = 4;
-            this.cbTech2.Text = "Tech 2";
+            this.cbTech2.Text = "Tech II";
             this.cbTech2.UseVisualStyleBackColor = true;
             this.cbTech2.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
             // 
@@ -231,9 +234,9 @@ namespace EVEMon.SkillPlanner
             // 
             this.gbFittableShipModules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.gbFittableShipModules.Controls.Add(this.iffsShipFitting);
-            this.gbFittableShipModules.Location = new System.Drawing.Point(2, 126);
+            this.gbFittableShipModules.Location = new System.Drawing.Point(2, 150);
             this.gbFittableShipModules.Name = "gbFittableShipModules";
-            this.gbFittableShipModules.Size = new System.Drawing.Size(180, 74);
+            this.gbFittableShipModules.Size = new System.Drawing.Size(180, 73);
             this.gbFittableShipModules.TabIndex = 22;
             this.gbFittableShipModules.TabStop = false;
             this.gbFittableShipModules.Text = "By fitting requirements:";
@@ -245,9 +248,22 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.iffsShipFitting.Location = new System.Drawing.Point(6, 20);
             this.iffsShipFitting.Name = "iffsShipFitting";
-            this.iffsShipFitting.Size = new System.Drawing.Size(168, 47);
+            this.iffsShipFitting.Size = new System.Drawing.Size(168, 46);
             this.iffsShipFitting.TabIndex = 0;
             this.iffsShipFitting.ItemFilterDataChanged += new System.EventHandler<EVEMon.SkillPlanner.ItemFilteringChangedEvent>(this.iffsShipFitting_ItemFilterDataChanged);
+            // 
+            // cbTech3
+            // 
+            this.cbTech3.AutoSize = true;
+            this.cbTech3.Checked = true;
+            this.cbTech3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTech3.Location = new System.Drawing.Point(9, 102);
+            this.cbTech3.Name = "cbTech3";
+            this.cbTech3.Size = new System.Drawing.Size(64, 17);
+            this.cbTech3.TabIndex = 23;
+            this.cbTech3.Text = "Tech III";
+            this.cbTech3.UseVisualStyleBackColor = true;
+            this.cbTech3.CheckedChanged += new System.EventHandler(this.cbClass_SelectedChanged);
             // 
             // ItemSelectControl
             // 
@@ -276,5 +292,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox gbFittableShipModules;
         private ItemFittingFilterSummary iffsShipFitting;
+        private System.Windows.Forms.CheckBox cbTech3;
     }
 }

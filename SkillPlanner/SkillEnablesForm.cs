@@ -470,7 +470,7 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Recursivly work through item categories looking for
-        // items enabled by the current skill level
+        /// items enabled by the current skill level
         /// </summary>
         /// <param name="ic">The parnt item category</param>
         private void PopulateEnabledItems(ItemCategory ic)
