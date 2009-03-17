@@ -74,7 +74,7 @@ namespace EVEMon.SkillPlanner
             lblTrainTime.Text = "N/A";
 
             ImageService.GetImageAsync(
-                "http://www.eve-online.com/bitmaps/icons/itemdb/shiptypes/256_256/" +
+                "http://eve.no-ip.de/icons/256_256/" +
                 m_ship.Id.ToString() + ".png", true, delegate(EveSession ss, Image i)
                                {
                                    GotShipImage(i);

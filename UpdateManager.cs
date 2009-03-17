@@ -59,7 +59,6 @@ namespace EVEMon
             }
         }
 
-        //private const string UPDATE_URL = "http://static.evercrest.com/www/images2/ext/sa/evemon-data.xml";
         private const string UPDATE_URL = "http://evemon.battleclinic.com/patch.xml";
 
         private void TimerTrigger(object state)

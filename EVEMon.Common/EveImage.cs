@@ -26,7 +26,7 @@ namespace EVEMon.Common
         private bool m_PopUpActive;
         private EveImageSize m_ImageSize;
         private EveObject m_EveItem = null;
-        private const string m_EveSite = "http://www.eve-online.com";
+        private const string m_EveSite = "http://eve.no-ip.de";
         #endregion
 
         #region Public Properties
@@ -142,28 +142,28 @@ namespace EVEMon.Common
             validSizes.Add(EveImageSize._64_64);
             validSizes.Add(EveImageSize._128_128);
             validSizes.Add(EveImageSize._256_256);
-            m_ImageTypeAttributes.Add(ImageType.Ship, new ImageTypeData("Ships", "bitmaps/icons/itemdb/shiptypes", ImageNameFrom.TypeID, validSizes));
+            m_ImageTypeAttributes.Add(ImageType.Ship, new ImageTypeData("Ships", "icons", ImageNameFrom.TypeID, validSizes));
             // Items
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize._16_16);
             validSizes.Add(EveImageSize._32_32);
             validSizes.Add(EveImageSize._64_64);
             validSizes.Add(EveImageSize._128_128);
-            m_ImageTypeAttributes.Add(ImageType.Item, new ImageTypeData("Items", "bitmaps/icons/itemdb/black", ImageNameFrom.Icon, validSizes));
+            m_ImageTypeAttributes.Add(ImageType.Item, new ImageTypeData("Items", "icons", ImageNameFrom.Icon, validSizes));
             // Drones
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize._32_32);
             validSizes.Add(EveImageSize._64_64);
             validSizes.Add(EveImageSize._128_128);
             validSizes.Add(EveImageSize._256_256);
-            m_ImageTypeAttributes.Add(ImageType.Drone, new ImageTypeData("Drones", "bitmaps/icons/itemdb/dronetypes", ImageNameFrom.TypeID, validSizes));
+            m_ImageTypeAttributes.Add(ImageType.Drone, new ImageTypeData("Drones", "icons", ImageNameFrom.TypeID, validSizes));
             // Structures
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize._32_32);
             validSizes.Add(EveImageSize._64_64);
             validSizes.Add(EveImageSize._128_128);
             validSizes.Add(EveImageSize._256_256);
-            m_ImageTypeAttributes.Add(ImageType.Structure, new ImageTypeData("", "bitmaps/icons/itemdb/structuretypes", ImageNameFrom.TypeID, validSizes));
+            m_ImageTypeAttributes.Add(ImageType.Structure, new ImageTypeData("", "icons", ImageNameFrom.TypeID, validSizes));
         }
 
         private ImageType GetImageType(EveObject EveItem)
@@ -245,7 +245,7 @@ namespace EVEMon.Common
                     }
                     else
                     {
-                        imageWebName = m_EveItem.Icon.ToString().Substring(m_EveItem.Icon.ToString().LastIndexOf('/') + 1, m_EveItem.Icon.ToString().Substring(m_EveItem.Icon.ToString().LastIndexOf('/') + 1).Length - 4);
+                        imageWebName = m_EveItem.Icon.ToString();
                         imageResourceName = imageWebName;
                     }
 
