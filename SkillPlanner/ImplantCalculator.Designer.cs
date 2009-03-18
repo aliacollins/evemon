@@ -103,20 +103,20 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lblEffectivePerception);
             this.panel1.Controls.Add(this.nudCharisma);
-            this.panel1.Controls.Add(this.lblEffectiveCharisma);
             this.panel1.Controls.Add(this.nudPerception);
-            this.panel1.Controls.Add(this.lblEffectiveIntelligence);
-            this.panel1.Controls.Add(this.nudMemory);
-            this.panel1.Controls.Add(this.label12);
-            this.panel1.Controls.Add(this.nudWillpower);
-            this.panel1.Controls.Add(this.lblAdjustWillpower);
+            this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.lblAdjustMemory);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.lblAdjustPerception);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.lblAdjustCharisma);
+            this.panel1.Controls.Add(this.lblEffectiveCharisma);
+            this.panel1.Controls.Add(this.nudMemory);
+            this.panel1.Controls.Add(this.lblEffectiveIntelligence);
             this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.lblAdjustCharisma);
+            this.panel1.Controls.Add(this.label12);
+            this.panel1.Controls.Add(this.lblAdjustWillpower);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.nudWillpower);
+            this.panel1.Controls.Add(this.lblAdjustPerception);
             this.panel1.Controls.Add(this.lblAdjustIntelligence);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Location = new System.Drawing.Point(12, 20);
@@ -127,7 +127,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveWillpower
             // 
             this.lblEffectiveWillpower.AutoSize = true;
-            this.lblEffectiveWillpower.Location = new System.Drawing.Point(168, 134);
+            this.lblEffectiveWillpower.Location = new System.Drawing.Point(168, 107);
             this.lblEffectiveWillpower.Name = "lblEffectiveWillpower";
             this.lblEffectiveWillpower.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveWillpower.TabIndex = 21;
@@ -159,7 +159,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveMemory
             // 
             this.lblEffectiveMemory.AutoSize = true;
-            this.lblEffectiveMemory.Location = new System.Drawing.Point(168, 107);
+            this.lblEffectiveMemory.Location = new System.Drawing.Point(168, 134);
             this.lblEffectiveMemory.Name = "lblEffectiveMemory";
             this.lblEffectiveMemory.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveMemory.TabIndex = 20;
@@ -177,7 +177,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectivePerception
             // 
             this.lblEffectivePerception.AutoSize = true;
-            this.lblEffectivePerception.Location = new System.Drawing.Point(168, 80);
+            this.lblEffectivePerception.Location = new System.Drawing.Point(168, 53);
             this.lblEffectivePerception.Name = "lblEffectivePerception";
             this.lblEffectivePerception.Size = new System.Drawing.Size(35, 13);
             this.lblEffectivePerception.TabIndex = 19;
@@ -185,7 +185,7 @@ namespace EVEMon.SkillPlanner
             // 
             // nudCharisma
             // 
-            this.nudCharisma.Location = new System.Drawing.Point(71, 51);
+            this.nudCharisma.Location = new System.Drawing.Point(71, 78);
             this.nudCharisma.Maximum = new decimal(new int[] {
             50,
             0,
@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveCharisma
             // 
             this.lblEffectiveCharisma.AutoSize = true;
-            this.lblEffectiveCharisma.Location = new System.Drawing.Point(168, 53);
+            this.lblEffectiveCharisma.Location = new System.Drawing.Point(168, 80);
             this.lblEffectiveCharisma.Name = "lblEffectiveCharisma";
             this.lblEffectiveCharisma.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveCharisma.TabIndex = 18;
@@ -217,7 +217,7 @@ namespace EVEMon.SkillPlanner
             // 
             // nudPerception
             // 
-            this.nudPerception.Location = new System.Drawing.Point(71, 78);
+            this.nudPerception.Location = new System.Drawing.Point(71, 51);
             this.nudPerception.Maximum = new decimal(new int[] {
             50,
             0,
@@ -249,7 +249,7 @@ namespace EVEMon.SkillPlanner
             // 
             // nudMemory
             // 
-            this.nudMemory.Location = new System.Drawing.Point(71, 105);
+            this.nudMemory.Location = new System.Drawing.Point(71, 132);
             this.nudMemory.Maximum = new decimal(new int[] {
             50,
             0,
@@ -282,7 +282,7 @@ namespace EVEMon.SkillPlanner
             // 
             // nudWillpower
             // 
-            this.nudWillpower.Location = new System.Drawing.Point(71, 132);
+            this.nudWillpower.Location = new System.Drawing.Point(71, 105);
             this.nudWillpower.Maximum = new decimal(new int[] {
             50,
             0,
@@ -306,7 +306,7 @@ namespace EVEMon.SkillPlanner
             // lblAdjustWillpower
             // 
             this.lblAdjustWillpower.AutoSize = true;
-            this.lblAdjustWillpower.Location = new System.Drawing.Point(128, 134);
+            this.lblAdjustWillpower.Location = new System.Drawing.Point(128, 107);
             this.lblAdjustWillpower.Name = "lblAdjustWillpower";
             this.lblAdjustWillpower.Size = new System.Drawing.Size(21, 13);
             this.lblAdjustWillpower.TabIndex = 15;
@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 53);
+            this.label2.Location = new System.Drawing.Point(-1, 80);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 6;
@@ -324,7 +324,7 @@ namespace EVEMon.SkillPlanner
             // lblAdjustMemory
             // 
             this.lblAdjustMemory.AutoSize = true;
-            this.lblAdjustMemory.Location = new System.Drawing.Point(128, 107);
+            this.lblAdjustMemory.Location = new System.Drawing.Point(128, 134);
             this.lblAdjustMemory.Name = "lblAdjustMemory";
             this.lblAdjustMemory.Size = new System.Drawing.Size(21, 13);
             this.lblAdjustMemory.TabIndex = 14;
@@ -333,7 +333,7 @@ namespace EVEMon.SkillPlanner
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-1, 80);
+            this.label3.Location = new System.Drawing.Point(-1, 53);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(62, 13);
             this.label3.TabIndex = 7;
@@ -342,7 +342,7 @@ namespace EVEMon.SkillPlanner
             // lblAdjustPerception
             // 
             this.lblAdjustPerception.AutoSize = true;
-            this.lblAdjustPerception.Location = new System.Drawing.Point(128, 80);
+            this.lblAdjustPerception.Location = new System.Drawing.Point(128, 53);
             this.lblAdjustPerception.Name = "lblAdjustPerception";
             this.lblAdjustPerception.Size = new System.Drawing.Size(21, 13);
             this.lblAdjustPerception.TabIndex = 13;
@@ -351,7 +351,7 @@ namespace EVEMon.SkillPlanner
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-1, 107);
+            this.label4.Location = new System.Drawing.Point(-1, 134);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 13);
             this.label4.TabIndex = 8;
@@ -360,7 +360,7 @@ namespace EVEMon.SkillPlanner
             // lblAdjustCharisma
             // 
             this.lblAdjustCharisma.AutoSize = true;
-            this.lblAdjustCharisma.Location = new System.Drawing.Point(128, 53);
+            this.lblAdjustCharisma.Location = new System.Drawing.Point(128, 80);
             this.lblAdjustCharisma.Name = "lblAdjustCharisma";
             this.lblAdjustCharisma.Size = new System.Drawing.Size(21, 13);
             this.lblAdjustCharisma.TabIndex = 12;
@@ -369,7 +369,7 @@ namespace EVEMon.SkillPlanner
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(-1, 134);
+            this.label5.Location = new System.Drawing.Point(-1, 107);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(57, 13);
             this.label5.TabIndex = 9;

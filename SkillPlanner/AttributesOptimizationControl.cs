@@ -68,11 +68,12 @@ namespace EVEMon.SkillPlanner
             // Compute base and effective attributes
             double effectiveAttribute = character.GetEffectiveAttribute(attrib, bestScratchpad);
             int baseAttribute = character.GetBaseAttribute(attrib) + bestScratchpad.GetAttributeBonus(attrib);
+            int oldBaseAttribute = character.GetBaseAttribute(attrib);
             int implantsBonus = (int)character.getImplantValue(attrib);
             int skillsBonus = (int)effectiveAttribute - (baseAttribute + implantsBonus);
 
             // Update the label
-            lb.Text = effectiveAttribute.ToString("##.##") + " (" + baseAttribute.ToString() + ")";
+            lb.Text = effectiveAttribute.ToString("##.##") + " (new : " + baseAttribute.ToString() + " ; old : " + oldBaseAttribute.ToString() + ")";
 
             // Update the bars
             UpdateAttributeBar(pbBase, baseAttribute, true);

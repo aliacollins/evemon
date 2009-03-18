@@ -12,6 +12,15 @@ using System.Drawing;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// Provides a way for implant calculator and attributes optimization form to add a column showning the training time difference.
+    /// </summary>
+    public interface IPlanOrderPluggable
+    {
+        event EventHandler Disposed;
+        int getEffectiveAttributeWithoutLearning(EveAttribute attrib);
+    }
+
     public partial class PlanOrderEditorControl : UserControl
     {
         private System.Drawing.Font m_plannedSkillFont;
@@ -219,17 +228,22 @@ namespace EVEMon.SkillPlanner
                     TimeSpan trainTime = gs.GetTrainingTimeOfLevelOnly(pe.Level, skillPointTotal, true, scratchpad);
                     TimeSpan trainTimeNatural = gs.GetTrainingTimeOfLevelOnly(pe.Level, skillPointTotal, true, scratchpad, false);
                     TimeSpan trainTimeImpCalc = trainTime;
-                    if (m_implantCalculator != null)
+                    if (m_pluggable != null)
                     {
                         int points = gs.GetPointsForLevelOnly(pe.Level, true);
-                        int baseP = m_implantCalculator.getBaseAttributeValue(gs.PrimaryAttribute);
+                        int baseP = m_pluggable.getEffectiveAttributeWithoutLearning(gs.PrimaryAttribute);
                         baseP += scratchpad.GetAttributeBonus(gs.PrimaryAttribute);
-                        double p = m_implantCalculator.EffectiveAttr(baseP,scratchpad);
-                        int baseS = m_implantCalculator.getBaseAttributeValue(gs.SecondaryAttribute);
+                        double p = ApplyLearningLevel(baseP, scratchpad);
+                        int baseS = m_pluggable.getEffectiveAttributeWithoutLearning(gs.SecondaryAttribute);
                         baseS += scratchpad.GetAttributeBonus(gs.SecondaryAttribute);
-                        double s = m_implantCalculator.EffectiveAttr(baseS,scratchpad);
+                        double s = ApplyLearningLevel(baseS, scratchpad);
                         double minutes = Convert.ToDouble(points) / (p + (s / 2));
                         trainTimeImpCalc = TimeSpan.FromMinutes(minutes);
+                        lvi.UseItemStyleForSubItems = false;
+                    }
+                    else
+                    {
+                        lvi.UseItemStyleForSubItems = true;
                     }
                     int currentSP = gs.CurrentSkillPoints;
                     int reqBeforeThisLevel = gs.GetPointsRequiredForLevel(pe.Level - 1);
@@ -284,6 +298,7 @@ namespace EVEMon.SkillPlanner
                         ColumnPreference.ColumnType ct;
                         if (lvSkills.Columns[x].Tag != null)
                         {
+                            lvi.SubItems[x].ForeColor = lvi.ForeColor;
                             ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
                             switch (ct)
                             {
@@ -383,11 +398,18 @@ namespace EVEMon.SkillPlanner
                             {
                                 res = "+";
                                 t = trainTimeImpCalc - trainTime;
+                                lvi.SubItems[x].ForeColor = Color.DarkRed;
+                            }
+                            else if (trainTimeImpCalc < trainTime)
+                            {
+                                res = "-";
+                                t = trainTime - trainTimeImpCalc;
+                                lvi.SubItems[x].ForeColor = Color.DarkGreen;
                             }
                             else
                             {
-                                if (trainTimeImpCalc < trainTime) res = "-";
-                                t = trainTime - trainTimeImpCalc;
+                                t = TimeSpan.Zero;
+                                lvi.SubItems[x].ForeColor = lvi.ForeColor;
                             }
                             res += Skill.TimeSpanToDescriptiveText(t, DescriptiveTextOptions.IncludeCommas);
 
@@ -405,6 +427,18 @@ namespace EVEMon.SkillPlanner
             {
                 lvSkills.EndUpdate();
             }
+        }
+
+        private double ApplyLearningLevel(int value, EveAttributeScratchpad scratchpad)
+        {
+            int learningLevel = m_plan.GrandCharacterInfo.SkillGroups["Learning"]["Learning"].Level;
+            if (scratchpad != null)
+            {
+                learningLevel += scratchpad.LearningLevelBonus;
+            }
+
+            double learningAdjust = 1.0 + (0.02 * Convert.ToDouble(learningLevel));
+            return Convert.ToDouble(value) * learningAdjust;
         }
 
         private void lvSkills_ListViewItemsDragged(object sender, EventArgs e)
@@ -550,7 +584,7 @@ namespace EVEMon.SkillPlanner
             ch.Tag = ct;
             lvSkills.Columns.Add(ch);
             // add a temporary column if we're showing the implant calculator
-            if (m_implantCalculator != null && ch.Text == "Training Time")
+            if (m_pluggable != null && ch.Text == "Training Time")
             {
                 ch = new ColumnHeader();
                 ch.Text = "Diff with Calc Atts";
@@ -563,21 +597,21 @@ namespace EVEMon.SkillPlanner
 
         #region Implant Calc
 
-        private ImplantCalculator m_implantCalculator = null;
-        internal void ShowWithImplantCalc(ImplantCalculator ic)
+        private IPlanOrderPluggable m_pluggable = null;
+        internal void ShowWithPluggable(IPlanOrderPluggable pluggable)
         {
-            if (m_implantCalculator == null)
+            if (m_pluggable == null)
             {
-                m_implantCalculator = ic;
-                ic.Disposed += new EventHandler(ic_Disposed);
+                m_pluggable = pluggable;
+                pluggable.Disposed += new EventHandler(pluggable_Disposed);
                 UpdateListColumns();
             }
             UpdateListViewItems();
         }
 
-        private void ic_Disposed(object o, EventArgs e)
+        private void pluggable_Disposed(object o, EventArgs e)
         {
-            m_implantCalculator = null;
+            m_pluggable = null;
             UpdateListColumns();
         }
 

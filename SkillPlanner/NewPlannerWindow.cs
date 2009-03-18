@@ -509,9 +509,16 @@ namespace EVEMon.SkillPlanner
         {
             if (m_attributesOptimizerWindow == null)
             {
-                m_attributesOptimizerWindow = new AttributesOptimizationForm(m_plan.GrandCharacterInfo, m_plan);
-                m_attributesOptimizerWindow.FormClosed += new FormClosedEventHandler(m_attributesOptimizationWindow_Closed);
-                m_attributesOptimizerWindow.Show();
+                var settingsForm = new AttributesOptimizationSettingsForm(m_plan.GrandCharacterInfo, m_plan);
+                settingsForm.ShowDialog(this);
+
+                if (settingsForm.DialogResult == DialogResult.OK)
+                {
+                    m_attributesOptimizerWindow = settingsForm.OptimizationForm;
+                    m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+                    m_attributesOptimizerWindow.FormClosed += new FormClosedEventHandler(m_attributesOptimizationWindow_Closed);
+                    m_attributesOptimizerWindow.Show();
+                }
             }
         }
 

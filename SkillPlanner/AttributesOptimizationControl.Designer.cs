@@ -98,7 +98,7 @@ namespace EVEMon.SkillPlanner
             // 
             // label10
             // 
-            label10.Location = new System.Drawing.Point(337, -1);
+            label10.Location = new System.Drawing.Point(359, 0);
             label10.Name = "label10";
             label10.Size = new System.Drawing.Size(103, 16);
             label10.TabIndex = 61;
@@ -107,7 +107,7 @@ namespace EVEMon.SkillPlanner
             // 
             // label8
             // 
-            label8.Location = new System.Drawing.Point(266, -1);
+            label8.Location = new System.Drawing.Point(288, 0);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(65, 16);
             label8.TabIndex = 60;
@@ -216,7 +216,7 @@ namespace EVEMon.SkillPlanner
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(145, -1);
+            this.label6.Location = new System.Drawing.Point(167, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(108, 16);
             this.label6.TabIndex = 59;
@@ -269,13 +269,13 @@ namespace EVEMon.SkillPlanner
             this.lbINT.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbINT.Location = new System.Drawing.Point(41, 32);
             this.lbINT.Name = "lbINT";
-            this.lbINT.Size = new System.Drawing.Size(58, 13);
+            this.lbINT.Size = new System.Drawing.Size(118, 13);
             this.lbINT.TabIndex = 40;
-            this.lbINT.Text = "Points : 20";
+            this.lbINT.Text = "20 (new : 18 ; old : 17)";
             // 
             // pbMEMSkills
             // 
-            this.pbMEMSkills.Location = new System.Drawing.Point(339, 180);
+            this.pbMEMSkills.Location = new System.Drawing.Point(361, 181);
             this.pbMEMSkills.Name = "pbMEMSkills";
             this.pbMEMSkills.Size = new System.Drawing.Size(101, 18);
             this.pbMEMSkills.TabIndex = 71;
@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbWILSkills
             // 
-            this.pbWILSkills.Location = new System.Drawing.Point(339, 142);
+            this.pbWILSkills.Location = new System.Drawing.Point(361, 143);
             this.pbWILSkills.Name = "pbWILSkills";
             this.pbWILSkills.Size = new System.Drawing.Size(101, 18);
             this.pbWILSkills.TabIndex = 70;
@@ -291,7 +291,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbCHASkills
             // 
-            this.pbCHASkills.Location = new System.Drawing.Point(339, 104);
+            this.pbCHASkills.Location = new System.Drawing.Point(361, 105);
             this.pbCHASkills.Name = "pbCHASkills";
             this.pbCHASkills.Size = new System.Drawing.Size(101, 18);
             this.pbCHASkills.TabIndex = 69;
@@ -299,7 +299,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbPERSkills
             // 
-            this.pbPERSkills.Location = new System.Drawing.Point(339, 67);
+            this.pbPERSkills.Location = new System.Drawing.Point(361, 68);
             this.pbPERSkills.Name = "pbPERSkills";
             this.pbPERSkills.Size = new System.Drawing.Size(101, 18);
             this.pbPERSkills.TabIndex = 68;
@@ -307,7 +307,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbINTSkills
             // 
-            this.pbINTSkills.Location = new System.Drawing.Point(339, 27);
+            this.pbINTSkills.Location = new System.Drawing.Point(361, 28);
             this.pbINTSkills.Name = "pbINTSkills";
             this.pbINTSkills.Size = new System.Drawing.Size(101, 18);
             this.pbINTSkills.TabIndex = 67;
@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbMEMImplants
             // 
-            this.pbMEMImplants.Location = new System.Drawing.Point(278, 180);
+            this.pbMEMImplants.Location = new System.Drawing.Point(300, 181);
             this.pbMEMImplants.Name = "pbMEMImplants";
             this.pbMEMImplants.Size = new System.Drawing.Size(38, 18);
             this.pbMEMImplants.TabIndex = 66;
@@ -323,7 +323,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbWILImplants
             // 
-            this.pbWILImplants.Location = new System.Drawing.Point(278, 142);
+            this.pbWILImplants.Location = new System.Drawing.Point(300, 143);
             this.pbWILImplants.Name = "pbWILImplants";
             this.pbWILImplants.Size = new System.Drawing.Size(38, 18);
             this.pbWILImplants.TabIndex = 65;
@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbCHAImplants
             // 
-            this.pbCHAImplants.Location = new System.Drawing.Point(278, 104);
+            this.pbCHAImplants.Location = new System.Drawing.Point(300, 105);
             this.pbCHAImplants.Name = "pbCHAImplants";
             this.pbCHAImplants.Size = new System.Drawing.Size(38, 18);
             this.pbCHAImplants.TabIndex = 64;
@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbPERImplants
             // 
-            this.pbPERImplants.Location = new System.Drawing.Point(278, 67);
+            this.pbPERImplants.Location = new System.Drawing.Point(300, 68);
             this.pbPERImplants.Name = "pbPERImplants";
             this.pbPERImplants.Size = new System.Drawing.Size(38, 18);
             this.pbPERImplants.TabIndex = 63;
@@ -347,7 +347,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbINTImplants
             // 
-            this.pbINTImplants.Location = new System.Drawing.Point(278, 27);
+            this.pbINTImplants.Location = new System.Drawing.Point(300, 28);
             this.pbINTImplants.Name = "pbINTImplants";
             this.pbINTImplants.Size = new System.Drawing.Size(38, 18);
             this.pbINTImplants.TabIndex = 62;
@@ -355,7 +355,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbMEMBase
             // 
-            this.pbMEMBase.Location = new System.Drawing.Point(145, 180);
+            this.pbMEMBase.Location = new System.Drawing.Point(167, 181);
             this.pbMEMBase.Name = "pbMEMBase";
             this.pbMEMBase.Size = new System.Drawing.Size(108, 18);
             this.pbMEMBase.TabIndex = 53;
@@ -363,7 +363,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbWILBase
             // 
-            this.pbWILBase.Location = new System.Drawing.Point(145, 142);
+            this.pbWILBase.Location = new System.Drawing.Point(167, 143);
             this.pbWILBase.Name = "pbWILBase";
             this.pbWILBase.Size = new System.Drawing.Size(108, 18);
             this.pbWILBase.TabIndex = 52;
@@ -371,7 +371,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbCHABase
             // 
-            this.pbCHABase.Location = new System.Drawing.Point(145, 104);
+            this.pbCHABase.Location = new System.Drawing.Point(167, 105);
             this.pbCHABase.Name = "pbCHABase";
             this.pbCHABase.Size = new System.Drawing.Size(108, 18);
             this.pbCHABase.TabIndex = 51;
@@ -379,7 +379,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbPERBase
             // 
-            this.pbPERBase.Location = new System.Drawing.Point(145, 67);
+            this.pbPERBase.Location = new System.Drawing.Point(167, 68);
             this.pbPERBase.Name = "pbPERBase";
             this.pbPERBase.Size = new System.Drawing.Size(108, 18);
             this.pbPERBase.TabIndex = 50;
@@ -387,7 +387,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbINTBase
             // 
-            this.pbINTBase.Location = new System.Drawing.Point(145, 27);
+            this.pbINTBase.Location = new System.Drawing.Point(167, 28);
             this.pbINTBase.Name = "pbINTBase";
             this.pbINTBase.Size = new System.Drawing.Size(108, 18);
             this.pbINTBase.TabIndex = 49;
@@ -431,7 +431,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.lbINT);
             this.Controls.Add(label1);
             this.Name = "AttributesOptimizationControl";
-            this.Size = new System.Drawing.Size(442, 205);
+            this.Size = new System.Drawing.Size(469, 205);
             ((System.ComponentModel.ISupportInitialize)(pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pictureBox3)).EndInit();

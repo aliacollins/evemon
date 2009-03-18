@@ -177,7 +177,7 @@ namespace EVEMon.Common
         /// <param name="scratchpad">The EVE Attribute Scratchpad.</param>
         /// <param name="includeImplants">if set to <c>true</c> include implants.</param>
         /// <returns></returns>
-        private TimeSpan GetTimeSpanForPoints(int points, int skillPointTotal, EveAttributeScratchpad scratchpad, Boolean includeImplants)
+        public TimeSpan GetTimeSpanForPoints(int points, int skillPointTotal, EveAttributeScratchpad scratchpad, Boolean includeImplants)
         {
             double primAttr = m_owner.GetEffectiveAttribute(m_staticData.PrimaryAttribute, scratchpad, true, includeImplants);
             double secondaryAttr = m_owner.GetEffectiveAttribute(m_staticData.SecondaryAttribute, scratchpad, true, includeImplants);
@@ -1003,9 +1003,14 @@ namespace EVEMon.Common
             return m_attributeBonuses[(int)attribute];
         }
 
-        public int SetAttributeBonus(EveAttribute attribute, int value)
+        public void Reset(int perBonus, int willBonus, int intBonus, int memBonus, int chaBonus)
         {
-            return m_attributeBonuses[(int)attribute] = value;
+            this.m_attributeBonuses[(int)EveAttribute.Perception] = perBonus;
+            this.m_attributeBonuses[(int)EveAttribute.Willpower] = willBonus;
+            this.m_attributeBonuses[(int)EveAttribute.Intelligence] = intBonus;
+            this.m_attributeBonuses[(int)EveAttribute.Memory] = memBonus;
+            this.m_attributeBonuses[(int)EveAttribute.Charisma] = chaBonus;
+            this.m_learningLevelBonus = 0;
         }
 
         public void AdjustAttributeBonus(EveAttribute attribute, int adjustmentAmount)
