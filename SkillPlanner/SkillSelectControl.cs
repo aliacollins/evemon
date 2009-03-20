@@ -165,6 +165,13 @@ namespace EVEMon.SkillPlanner
                          };
                     break;
 
+                case "Not Known - Untrainable":
+                    sf = delegate(Skill gs)
+                         {
+                             return !gs.Known && !gs.PrerequisitesMet;
+                         };
+                    break;
+
                 case "Planned": // Planned Skills
                     sf = delegate(Skill gs)
                          {

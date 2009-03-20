@@ -88,6 +88,7 @@ namespace EVEMon.SkillPlanner
             "Not Known - Owned",
             "Not Known - Trainable",
             "Not Known - Unowned",
+            "Not Known - Untrainable",
             "Not Planned",
             "Not Planned - Trainable",
             "Partially Trained",
