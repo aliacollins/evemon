@@ -105,7 +105,7 @@ namespace EVEMon.Common.Net
                         if (_asyncState != null && _asyncState.ProgressCallback != null)
                         {
                             totalBytesRead += bytesRead;
-                            int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)(totalBytesRead/webResponse.ContentLength);
+                            int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)((totalBytesRead * 100)/webResponse.ContentLength);
                             _asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
                         }
                     }
