@@ -46,15 +46,15 @@ namespace EVEMon
         {
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
-                Uri i = new Uri(m_args.AutoInstallUrl);
-                string fn = Path.GetFileName(i.AbsolutePath);
+                Uri updateURI = new Uri(m_args.AutoInstallUrl);
+                string localFilename = Path.Combine(Settings.EveMonDataDir, Path.GetFileName(updateURI.AbsolutePath));
                 using (UpdateDownloadForm f = new UpdateDownloadForm(
-                    m_args.AutoInstallUrl, fn))
+                    m_args.AutoInstallUrl, localFilename))
                 {
                     f.ShowDialog();
                     if (f.DialogResult == DialogResult.OK)
                     {
-                        ExecPatcher(fn, m_args.AutoInstallArguments);
+                        ExecPatcher(localFilename, m_args.AutoInstallArguments);
                     }
                 }
             }

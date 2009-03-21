@@ -1,15 +1,18 @@
 #
 #  This is an NSIS Installer build script
-#  for NSIS 2.16
+#  for NSIS 2.44 with the UAC plugin installed
+#  (UAC.dll must be copied to NSIS\Plugins)
 #
 
 SetCompressor /solid lzma
 
+RequestExecutionLevel user
+
+!include "UAC.nsh"
 !include "Library.nsh"
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
 !include "MUI.nsh"
-# ## !define VERSION "1.0.19.0"
 
 Name "EVEMon"
 OutFile "${OUTDIR}\EVEMon-install-${VERSION}.exe"
@@ -57,7 +60,20 @@ Var MUI_TEMP
 !include "NETFrameworkCheck.nsh"
 
 Function .onInit
-  # fix it so it only computes the space needed for evemon itself if >net is not installed
+  UAC::RunElevated 
+
+	StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
+	StrCmp 0 $0 0 UAC_Err ; Error?
+	StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
+	Quit
+	UAC_Err:
+	MessageBox mb_iconstop "Unable to to install EVEMon without Administrator permissions. (error $0)"
+	Abort
+	UAC_ElevationAborted:
+	# elevation was aborted, we still run as normal
+	UAC_Success:
+
+	# fix it so it only computes the space needed for evemon itself if >net is not installed
   SectionSetSize 0 0
   Call GetDotNETVersion
   Pop $0
@@ -179,7 +195,10 @@ FunctionEnd
    Exch $R1
  FunctionEnd
 
-function .onInstSuccess
+Function .onInstSuccess
+	; delete the UAC.dll from the users %TEMP%
+	UAC::Unload ;Must call unload!
+
   ; skip if not in silent mode
   IfSilent 0 lbl_skipRun
 
@@ -194,6 +213,10 @@ function .onInstSuccess
   Exec "$INSTDIR\EVEMon.exe"
 
   lbl_skipRun:
+FunctionEnd
+
+Function .OnInstFailed
+	UAC::Unload ;Must call unload!
 FunctionEnd
 
 Section "Installer Section" 
