@@ -67,20 +67,7 @@ EVEMONWINHOOK_API LRESULT CALLBACK CbtHookProc(int nCode, WPARAM wParam, LPARAM 
 		}
 		break;
 	case HCBT_CREATEWND:
-	//	{
-	//		HWND wnd = (HWND)wParam;
-	//		if (GetForegroundWindow() == wnd)
-	//		{
-	//			WindowBeingCreated(wnd);
-	//		}
-	//	}
-	//	break;
 	case HCBT_MOVESIZE:
-	//	{
-	//		HWND wnd = (HWND)wParam;
-	//		WindowBeingCreated(wnd);
-	//	}
-	//	break;
 	case HCBT_SETFOCUS:
 	case HCBT_CLICKSKIPPED:
 	case HCBT_DESTROYWND:

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -87,7 +87,7 @@
     <PreBuildEvent>copy "$(SolutionDir)lglcdclasslibrary\Bin\$(ConfigurationName)\lgLCDNETWrapper.dll" "$(ProjectDir)"
 IF NOT "$(ConfigurationName)" == "Release" exit 0
 if errorlevel 1 goto BuildEventFailed
-"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
+SubWCRev.exe "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
 :BuildEventFailed
 echo AssemblyInfo Template for $(ProjectName) not updated
 exit 0</PreBuildEvent>
