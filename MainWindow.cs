@@ -1205,21 +1205,22 @@ namespace EVEMon
         {
             if (tcCharacterTabs.SelectedTab == null) return;
             TabPage activeTab = tcCharacterTabs.SelectedTab;
-            SkillsPieChart pie = new SkillsPieChart();
+            string charName = "";
 
             if (activeTab.Tag is CharLoginInfo)
             {
                 CharLoginInfo cli = activeTab.Tag as CharLoginInfo;
-                pie.active_character = cli.CharacterName;
+                charName = cli.CharacterName;
             }
             else if (activeTab.Tag is CharFileInfo)
             {
                 CharFileInfo cfi = activeTab.Tag as CharFileInfo;
-                pie.active_character = cfi.CharacterName;
+                charName = cfi.CharacterName;
             }
 
-            CharacterMonitor cm = GetCharacterMonitor(pie.active_character);
-            pie.character_info = cm.GrandCharacterInfo;
+            CharacterMonitor cm = GetCharacterMonitor(charName);
+            SkillsPieChart pie = new SkillsPieChart(cm.GrandCharacterInfo);
+            pie.active_character = charName;
             pie.plan_key = cm.GetPlanKey();
             pie.Text = "Skillgroup chart for " + pie.active_character;
             pie.Show();
@@ -1541,13 +1542,3 @@ namespace EVEMon
 
     }
 }
-
-
-
-
-
-
-
-
-
-

@@ -16,11 +16,13 @@ namespace EVEMon
         private Settings m_settings;
         public string active_character;
         public string plan_key;
-        public CharacterInfo character_info = null;
+        private CharacterInfo character_info = null;
 
-        public SkillsPieChart()
+        public SkillsPieChart(CharacterInfo character_info)
         {
             InitializeComponent();
+            this.character_info = character_info;
+
             m_settings = Settings.GetInstance();
             skillPieChartControl.LeftMargin = 20F;
             skillPieChartControl.TopMargin = 15F;
@@ -36,26 +38,17 @@ namespace EVEMon
             skillPieChartControl.ShadowStyle = ShadowStyle.GradualShadow;
             skillPieChartControl.EdgeColorType = EVEMon.PieChart.EdgeColorType.DarkerThanSurface;
             skillPieChartControl.EdgeLineWidth = 1F;
-            if (m_settings.SkillPieChartColors.Count < 15)
+            if (m_settings.SkillPieChartColors.Count < character_info.SkillGroups.Count)
             {
                 int alpha = 125;
-                skillPieChartControl.Colors = new Color[] {
-                    Color.FromArgb(alpha, Color.Red),
-                    Color.FromArgb(alpha, Color.Green),
-                    Color.FromArgb(alpha, Color.Blue),
-                    Color.FromArgb(alpha, Color.Red),
-                    Color.FromArgb(alpha, Color.Green),
-                    Color.FromArgb(alpha, Color.Blue),
-                    Color.FromArgb(alpha, Color.Red),
-                    Color.FromArgb(alpha, Color.Green),
-                    Color.FromArgb(alpha, Color.Blue),
-                    Color.FromArgb(alpha, Color.Red),
-                    Color.FromArgb(alpha, Color.Green),
-                    Color.FromArgb(alpha, Color.Blue),
-                    Color.FromArgb(alpha, Color.Red),
-                    Color.FromArgb(alpha, Color.Green),
-                    Color.FromArgb(alpha, Color.Blue)
-                };
+                List<Color> newColors = new List<Color>();
+                while (newColors.Count < character_info.SkillGroups.Count)
+                {
+                    newColors.Add(Color.FromArgb(alpha, Color.Red));
+                    newColors.Add(Color.FromArgb(alpha, Color.Green));
+                    newColors.Add(Color.FromArgb(alpha, Color.Blue));
+                }
+                skillPieChartControl.Colors = newColors.ToArray();
             }
             else
             {
