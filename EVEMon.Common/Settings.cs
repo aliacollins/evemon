@@ -23,7 +23,7 @@ namespace EVEMon.Common
         
         // Any Updates to settings class members must lock(mutexLock)
         // Also... PLEASE put new settings in the right region 
-        //(use outlining and collapse all to see where they go)
+        // (use outlining and collapse all to see where they go)
 
         private static Object mutexLock = new Object();
 
@@ -713,6 +713,44 @@ namespace EVEMon.Common
                 lock (mutexLock)
                 {
                     m_runIgbServer = value; OnRunIGBServerChanged();
+                }
+            }
+        }
+
+        private bool m_useEveProxy = false;
+
+        public bool UseEveProxy
+        {
+            get { return m_useEveProxy; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_useEveProxy = value;
+                }
+            }
+        }
+
+        private string m_eveProxyURL = "";
+
+        public string EveProxyURL
+        {
+            get
+            {
+                if (m_useEveProxy || m_eveProxyURL != String.Empty)
+                {
+                    return m_eveProxyURL;
+                }
+                else
+                {
+                    return APIConstants.Server;
+                }
+            }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_eveProxyURL = value;
                 }
             }
         }

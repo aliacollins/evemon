@@ -140,7 +140,7 @@ namespace EVEMon
             this.tvlist = new System.Windows.Forms.TreeView();
             this.tabNetwork = new System.Windows.Forms.TabPage();
             this.verticalFlowPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ProxyServerGroupBox = new System.Windows.Forms.GroupBox();
             this.verticalFlowPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.rbDefaultProxy = new System.Windows.Forms.RadioButton();
             this.rbCustomProxy = new System.Windows.Forms.RadioButton();
@@ -154,7 +154,12 @@ namespace EVEMon
             this.btnProxyHttpAuth = new System.Windows.Forms.Button();
             this.tbProxyHttpPort = new System.Windows.Forms.TextBox();
             this.cbDisableOnAuthFailure = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ApiProxyGroupBox = new System.Windows.Forms.GroupBox();
+            this.apiProxyFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.DontUseApiProxyRadioButton = new System.Windows.Forms.RadioButton();
+            this.UseApiProxyRadioButton = new System.Windows.Forms.RadioButton();
+            this.EveProxyURLTextBox = new System.Windows.Forms.TextBox();
+            this.IgbMiniServerGroupBox = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbRunIGBServer = new System.Windows.Forms.CheckBox();
             this.cbIGBPublic = new System.Windows.Forms.CheckBox();
@@ -178,6 +183,8 @@ namespace EVEMon
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbAutomaticallySearchForNewVersions = new System.Windows.Forms.CheckBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.cmbAPIUpdateDelay = new System.Windows.Forms.ComboBox();
             this.label26 = new System.Windows.Forms.Label();
@@ -242,8 +249,6 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.groupBox16 = new System.Windows.Forms.GroupBox();
-            this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -278,11 +283,13 @@ namespace EVEMon
             this.tableLayoutPanel4.SuspendLayout();
             this.tabNetwork.SuspendLayout();
             this.verticalFlowPanel3.SuspendLayout();
-            this.groupBox6.SuspendLayout();
+            this.ProxyServerGroupBox.SuspendLayout();
             this.verticalFlowPanel4.SuspendLayout();
             this.vfpCustomProxySettings.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.ApiProxyGroupBox.SuspendLayout();
+            this.apiProxyFlowPanel.SuspendLayout();
+            this.IgbMiniServerGroupBox.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel27.SuspendLayout();
             this.tabAlerts.SuspendLayout();
@@ -297,6 +304,7 @@ namespace EVEMon
             this.flowLayoutPanel11.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.flowLayoutPanel10.SuspendLayout();
+            this.groupBox16.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.gbTQSettings.SuspendLayout();
             this.tlpCustomTQSettings.SuspendLayout();
@@ -306,7 +314,6 @@ namespace EVEMon
             this.gbGoogle.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
-            this.groupBox16.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -1430,8 +1437,9 @@ namespace EVEMon
             // 
             // verticalFlowPanel3
             // 
-            this.verticalFlowPanel3.Controls.Add(this.groupBox6);
-            this.verticalFlowPanel3.Controls.Add(this.groupBox2);
+            this.verticalFlowPanel3.Controls.Add(this.ProxyServerGroupBox);
+            this.verticalFlowPanel3.Controls.Add(this.ApiProxyGroupBox);
+            this.verticalFlowPanel3.Controls.Add(this.IgbMiniServerGroupBox);
             this.verticalFlowPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
@@ -1439,15 +1447,15 @@ namespace EVEMon
             this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 510);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
-            // groupBox6
+            // ProxyServerGroupBox
             // 
-            this.groupBox6.Controls.Add(this.verticalFlowPanel4);
-            this.groupBox6.Location = new System.Drawing.Point(3, 3);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(373, 168);
-            this.groupBox6.TabIndex = 0;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Proxy Server Settings";
+            this.ProxyServerGroupBox.Controls.Add(this.verticalFlowPanel4);
+            this.ProxyServerGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.ProxyServerGroupBox.Name = "ProxyServerGroupBox";
+            this.ProxyServerGroupBox.Size = new System.Drawing.Size(373, 168);
+            this.ProxyServerGroupBox.TabIndex = 0;
+            this.ProxyServerGroupBox.TabStop = false;
+            this.ProxyServerGroupBox.Text = "Proxy Server Settings";
             // 
             // verticalFlowPanel4
             // 
@@ -1617,19 +1625,75 @@ namespace EVEMon
             this.cbDisableOnAuthFailure.Text = "Disable requests on proxy authentication failure";
             this.cbDisableOnAuthFailure.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // ApiProxyGroupBox
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ApiProxyGroupBox.Controls.Add(this.apiProxyFlowPanel);
+            this.ApiProxyGroupBox.Location = new System.Drawing.Point(3, 177);
+            this.ApiProxyGroupBox.Name = "ApiProxyGroupBox";
+            this.ApiProxyGroupBox.Size = new System.Drawing.Size(372, 103);
+            this.ApiProxyGroupBox.TabIndex = 7;
+            this.ApiProxyGroupBox.TabStop = false;
+            this.ApiProxyGroupBox.Text = "API Proxy";
+            // 
+            // apiProxyFlowPanel
+            // 
+            this.apiProxyFlowPanel.AutoSize = true;
+            this.apiProxyFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.apiProxyFlowPanel.Controls.Add(this.DontUseApiProxyRadioButton);
+            this.apiProxyFlowPanel.Controls.Add(this.UseApiProxyRadioButton);
+            this.apiProxyFlowPanel.Controls.Add(this.EveProxyURLTextBox);
+            this.apiProxyFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.apiProxyFlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.apiProxyFlowPanel.Location = new System.Drawing.Point(3, 17);
+            this.apiProxyFlowPanel.Name = "apiProxyFlowPanel";
+            this.apiProxyFlowPanel.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.apiProxyFlowPanel.Size = new System.Drawing.Size(366, 83);
+            this.apiProxyFlowPanel.TabIndex = 2;
+            // 
+            // DontUseApiProxyRadioButton
+            // 
+            this.DontUseApiProxyRadioButton.AutoSize = true;
+            this.DontUseApiProxyRadioButton.Location = new System.Drawing.Point(13, 3);
+            this.DontUseApiProxyRadioButton.Name = "DontUseApiProxyRadioButton";
+            this.DontUseApiProxyRadioButton.Size = new System.Drawing.Size(121, 17);
+            this.DontUseApiProxyRadioButton.TabIndex = 2;
+            this.DontUseApiProxyRadioButton.TabStop = true;
+            this.DontUseApiProxyRadioButton.Text = "Don\'t use API Proxy";
+            this.DontUseApiProxyRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // UseApiProxyRadioButton
+            // 
+            this.UseApiProxyRadioButton.AutoSize = true;
+            this.UseApiProxyRadioButton.Location = new System.Drawing.Point(13, 26);
+            this.UseApiProxyRadioButton.Name = "UseApiProxyRadioButton";
+            this.UseApiProxyRadioButton.Size = new System.Drawing.Size(98, 17);
+            this.UseApiProxyRadioButton.TabIndex = 3;
+            this.UseApiProxyRadioButton.TabStop = true;
+            this.UseApiProxyRadioButton.Text = "Use API Proxy:";
+            this.UseApiProxyRadioButton.UseVisualStyleBackColor = true;
+            this.UseApiProxyRadioButton.CheckedChanged += new System.EventHandler(this.ApiProxyRadioButton_CheckedChanged);
+            // 
+            // EveProxyURLTextBox
+            // 
+            this.EveProxyURLTextBox.Location = new System.Drawing.Point(35, 49);
+            this.EveProxyURLTextBox.Margin = new System.Windows.Forms.Padding(25, 3, 3, 3);
+            this.EveProxyURLTextBox.Name = "EveProxyURLTextBox";
+            this.EveProxyURLTextBox.Size = new System.Drawing.Size(311, 21);
+            this.EveProxyURLTextBox.TabIndex = 4;
+            // 
+            // IgbMiniServerGroupBox
+            // 
+            this.IgbMiniServerGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.AutoSize = true;
-            this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox2.Controls.Add(this.flowLayoutPanel3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 177);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(373, 100);
-            this.groupBox2.TabIndex = 6;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "IGB Mini-server";
+            this.IgbMiniServerGroupBox.AutoSize = true;
+            this.IgbMiniServerGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.IgbMiniServerGroupBox.Controls.Add(this.flowLayoutPanel3);
+            this.IgbMiniServerGroupBox.Location = new System.Drawing.Point(3, 286);
+            this.IgbMiniServerGroupBox.Name = "IgbMiniServerGroupBox";
+            this.IgbMiniServerGroupBox.Size = new System.Drawing.Size(373, 100);
+            this.IgbMiniServerGroupBox.TabIndex = 6;
+            this.IgbMiniServerGroupBox.TabStop = false;
+            this.IgbMiniServerGroupBox.Text = "IGB Mini-server";
             // 
             // flowLayoutPanel3
             // 
@@ -1895,6 +1959,26 @@ namespace EVEMon
             this.cbAutomaticallySearchForNewVersions.Text = "Disable automatic EVEMon updates";
             this.cbAutomaticallySearchForNewVersions.UseVisualStyleBackColor = true;
             this.cbAutomaticallySearchForNewVersions.CheckedChanged += new System.EventHandler(this.cbAutomaticallySearchForNewVersions_CheckedChanged);
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.cbCheckTimeOnStartup);
+            this.groupBox16.Location = new System.Drawing.Point(3, 56);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(372, 43);
+            this.groupBox16.TabIndex = 7;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "System Time";
+            // 
+            // cbCheckTimeOnStartup
+            // 
+            this.cbCheckTimeOnStartup.AutoSize = true;
+            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(6, 20);
+            this.cbCheckTimeOnStartup.Name = "cbCheckTimeOnStartup";
+            this.cbCheckTimeOnStartup.Size = new System.Drawing.Size(168, 17);
+            this.cbCheckTimeOnStartup.TabIndex = 0;
+            this.cbCheckTimeOnStartup.Text = "Check system time on startup";
+            this.cbCheckTimeOnStartup.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
@@ -2602,26 +2686,6 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // groupBox16
-            // 
-            this.groupBox16.Controls.Add(this.cbCheckTimeOnStartup);
-            this.groupBox16.Location = new System.Drawing.Point(3, 56);
-            this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(372, 43);
-            this.groupBox16.TabIndex = 7;
-            this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "System Time";
-            // 
-            // cbCheckTimeOnStartup
-            // 
-            this.cbCheckTimeOnStartup.AutoSize = true;
-            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(6, 20);
-            this.cbCheckTimeOnStartup.Name = "cbCheckTimeOnStartup";
-            this.cbCheckTimeOnStartup.Size = new System.Drawing.Size(168, 17);
-            this.cbCheckTimeOnStartup.TabIndex = 0;
-            this.cbCheckTimeOnStartup.Text = "Check system time on startup";
-            this.cbCheckTimeOnStartup.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2698,16 +2762,20 @@ namespace EVEMon
             this.tabNetwork.ResumeLayout(false);
             this.verticalFlowPanel3.ResumeLayout(false);
             this.verticalFlowPanel3.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            this.ProxyServerGroupBox.ResumeLayout(false);
+            this.ProxyServerGroupBox.PerformLayout();
             this.verticalFlowPanel4.ResumeLayout(false);
             this.verticalFlowPanel4.PerformLayout();
             this.vfpCustomProxySettings.ResumeLayout(false);
             this.vfpCustomProxySettings.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.ApiProxyGroupBox.ResumeLayout(false);
+            this.ApiProxyGroupBox.PerformLayout();
+            this.apiProxyFlowPanel.ResumeLayout(false);
+            this.apiProxyFlowPanel.PerformLayout();
+            this.IgbMiniServerGroupBox.ResumeLayout(false);
+            this.IgbMiniServerGroupBox.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.flowLayoutPanel27.ResumeLayout(false);
@@ -2733,6 +2801,8 @@ namespace EVEMon
             this.groupBox8.PerformLayout();
             this.flowLayoutPanel10.ResumeLayout(false);
             this.flowLayoutPanel10.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.gbTQSettings.ResumeLayout(false);
@@ -2749,8 +2819,6 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
-            this.groupBox16.ResumeLayout(false);
-            this.groupBox16.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2799,7 +2867,7 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel flpScreenSelect;
         private System.Windows.Forms.TabPage tabNetwork;
         private System.Windows.Forms.FlowLayoutPanel verticalFlowPanel3;
-        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox ProxyServerGroupBox;
         private System.Windows.Forms.FlowLayoutPanel verticalFlowPanel4;
         private System.Windows.Forms.FlowLayoutPanel vfpCustomProxySettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
@@ -2875,7 +2943,7 @@ namespace EVEMon
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox cbEmailUseShortFormat;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox IgbMiniServerGroupBox;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.CheckBox cbRunIGBServer;
         private System.Windows.Forms.CheckBox cbIGBPublic;
@@ -2955,5 +3023,10 @@ namespace EVEMon
         private System.Windows.Forms.CheckBox cbDisableOnAuthFailure;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.CheckBox cbCheckTimeOnStartup;
+        private System.Windows.Forms.GroupBox ApiProxyGroupBox;
+        private System.Windows.Forms.FlowLayoutPanel apiProxyFlowPanel;
+        private System.Windows.Forms.RadioButton DontUseApiProxyRadioButton;
+        private System.Windows.Forms.RadioButton UseApiProxyRadioButton;
+        private System.Windows.Forms.TextBox EveProxyURLTextBox;
     }
 }

@@ -40,7 +40,20 @@ namespace EVEMon.Common
                             return configuration;
                     }
                 }
-                return APIConfiguration.DefaultConfiguration;
+
+                if (_settings.UseEveProxy)
+                {
+                    // if the user has selected an EVE API proxy then return a modified DefaultConfiguration
+                    APIConfiguration configuration = new APIConfiguration();
+                    configuration.Name = APIConstants.DefaultConfigurationName;
+                    configuration.Server = _settings.EveProxyURL;
+                    configuration.Methods = APIConfiguration.DefaultConfiguration.Methods;
+                    return configuration;
+                }
+                else
+                {
+                    return APIConfiguration.DefaultConfiguration;
+                }
             }
         }
     }

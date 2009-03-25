@@ -56,15 +56,17 @@ namespace EVEMon.Common
         /// <returns>A String representing the full URL path of the specified method.</returns>
         public string MethodUrl(APIMethods requestMethod)
         {
-            Uri methodUri = new Uri(_server);
+            Uri apiUri = new Uri(_server);
+            UriBuilder methodUri = new UriBuilder(apiUri);
             foreach (APIMethod method in _methods)
             {
                 if (method.Method == requestMethod)
                 {
-                    methodUri = new Uri(methodUri, method.Path);
+                    methodUri.Path += method.Path;
+                    return methodUri.Uri.ToString();
                 }
             }
-            return methodUri.AbsoluteUri;
+            return methodUri.Uri.ToString();
         }
 
         /// <summary>

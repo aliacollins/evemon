@@ -68,7 +68,7 @@ namespace EVEMon.Common
             errorMessage = string.Empty;
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            HttpPostData postData = new HttpPostData("userid=" + userId + "&apiKey=" + apiKey);
+            HttpPostData postData = new HttpPostData("userID=" + userId + "&apiKey=" + apiKey);
             return
                 CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.CharacterList),
                                                                   postData);
@@ -78,7 +78,7 @@ namespace EVEMon.Common
         {
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
+            HttpPostData postData = new HttpPostData("userID=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
                                     Convert.ToString(charId));
             return
                 CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.SkillInTraining),
@@ -89,7 +89,7 @@ namespace EVEMon.Common
         {
             APIState apiState = Singleton.Instance<APIState>();
             APIConfiguration configuration = apiState.CurrentConfiguration;
-            HttpPostData postData = new HttpPostData("userid=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
+            HttpPostData postData = new HttpPostData("userID=" + m_userId + "&apiKey=" + m_apiKey + "&characterID=" +
                                     Convert.ToString(charId));
             return
                 CommonContext.HttpWebService.DownloadXml(configuration.MethodUrl(APIMethods.CharacterSheet),

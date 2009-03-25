@@ -86,10 +86,13 @@ namespace EVEMon
                 G15Handler.LCD.cycleint = (int)ACycleInterval.Value;
                 G15Handler.LCD.showtime = cbG15ShowTime.Checked;
             }
-// 947 - Start
             s.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
             s.ShowNonPublicSkills = cbShowNonPublicSkills.Checked;
-// 947 - End
+            s.UseEveProxy = UseApiProxyRadioButton.Checked;
+            if (s.UseEveProxy)
+            {
+                s.EveProxyURL = EveProxyURLTextBox.Text;
+            }
 
             // Email Options
             s.EnableEmailAlert = cbSendEmail.Checked;
@@ -163,7 +166,6 @@ namespace EVEMon
             s.CalendarSingle2 = panelColorSingle2.BackColor;
             s.CalendarTextColor = panelColorText.BackColor;
 
-// #735 - Start
             // Save External Calendar Settings
             s.UseExternalCalendar = cbUseExternalCalendar.Checked;
             if (rbMSOutlook.Checked)
@@ -187,7 +189,6 @@ namespace EVEMon
             s.UseAlternateReminder = cbUseAlterateReminder.Checked;
             s.EarlyReminder = dtpEarlyReminder.Value;
             s.LateReminder = dtpLateReminder.Value;
-// #735 - End
         }
 
         private void ShowErrorMessage(string caption, string message)
@@ -311,10 +312,8 @@ namespace EVEMon
             cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
             cbG15ShowTime.Checked = m_settings.G15ShowTime;
             ACycleInterval.Value = m_settings.G15ACycleint;
-// 947 - Start
             cbShowAllPublicSkills.Checked = m_settings.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.ShowNonPublicSkills;
-// 947 - End
 
             // Look and feel options
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
@@ -366,6 +365,12 @@ namespace EVEMon
             tbProxyHttpPort.Text = m_settings.HttpProxy.Port.ToString();
             btnProxyHttpAuth.Tag = m_settings.HttpProxy.Clone();
 
+            // EVE Proxy settings
+            UseApiProxyRadioButton.Checked = m_settings.UseEveProxy;
+            DontUseApiProxyRadioButton.Checked = !m_settings.UseEveProxy;
+            EveProxyURLTextBox.Text = m_settings.EveProxyURL;
+            ApiProxySettingChanged();
+
             cbCheckTranquilityStatus.Checked = m_settings.CheckTranquilityStatus;
             numericStatusInterval.Value = m_settings.StatusUpdateInterval;
 
@@ -403,7 +408,6 @@ namespace EVEMon
             panelColorSingle2.BackColor = m_settings.CalendarSingle2;
             panelColorText.BackColor = m_settings.CalendarTextColor;
 
-// #735 - Start
             // Load External Calendar settings.
             try
             {
@@ -424,7 +428,6 @@ namespace EVEMon
                 dtpLateReminder.Value = m_settings.LateReminder;
             }
             catch (Exception) { }
-// #735 - End
 
             // New bits to allow custom server/port options when checking the server status
             tbTQServerAddress.Text = m_settings.CustomTQAddress != "" ? m_settings.CustomTQAddress : "87.237.38.200";
@@ -889,6 +892,16 @@ namespace EVEMon
                 if (configuration.Name == m_settings.CustomAPIConfiguration)
                     cbAPIServer.SelectedItem = configuration;
             }
+        }
+
+        private void ApiProxyRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            ApiProxySettingChanged();
+        }
+
+        private void ApiProxySettingChanged()
+        {
+            EveProxyURLTextBox.Enabled = UseApiProxyRadioButton.Checked;
         }
     }
 }

@@ -160,8 +160,8 @@ namespace EVEMon.Common
             // check that we have a network connection
             if (!InternetCS.IsConnectedToInternet(m_settings.ConnectivityURL))
             {
-               // switch on the semaphore
-               m_checkingServer = true;
+                // switch on the semaphore
+                m_checkingServer = true;
 
                 // oops, we've lost the network - reset timer to 30 seconds
                 m_tmrCheck.Interval = 30000;
