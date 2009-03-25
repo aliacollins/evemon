@@ -571,7 +571,8 @@ namespace EVEMon
             {
                 if (m_estimatedCompletion > now)
                 {
-                    SetLcdData(m_charName + ": " + TimeSpanDescriptiveShort(m_estimatedCompletion), m_estimatedCompletion - now);
+                    SetLcdData(m_charName + ": " + TimeSpanDescriptiveShort(m_estimatedCompletion), 
+                        m_estimatedCompletion.ToUniversalTime() - now.ToUniversalTime());
                 }
                 else
                 {
@@ -643,7 +644,7 @@ namespace EVEMon
             StringBuilder sb = new StringBuilder();
             if (t > DateTime.Now)
             {
-                TimeSpan ts = t - DateTime.Now;
+                TimeSpan ts = t.ToUniversalTime() - DateTime.Now.ToUniversalTime();
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -688,7 +689,7 @@ namespace EVEMon
             StringBuilder sb = new StringBuilder();
             if (t > DateTime.Now)
             {
-                TimeSpan ts = t - DateTime.Now;
+                TimeSpan ts = t.ToUniversalTime() - DateTime.Now.ToUniversalTime();
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -1089,8 +1090,7 @@ namespace EVEMon
                 Skill SSIT = m_grandCharacterInfo.AllSkillsByTypeID[SIT.TrainingSkillWithTypeID];
                 m_skillTrainingName = SSIT.Name + " " + Skill.GetRomanForInt(SIT.TrainingSkillToLevel);
                 lblTrainingSkill.Text = m_skillTrainingName;
-                double spPerHour = 60 * (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.PrimaryAttribute) +
-                                       (m_grandCharacterInfo.GetEffectiveAttribute(SSIT.SecondaryAttribute) / 2));
+                double spPerHour = Math.Round(SIT.SpPerMinute * 60);
                 lblSPPerHour.Text = Convert.ToInt32(Math.Round(spPerHour)).ToString() + " SP/Hour";
                 //   m_estimatedCompletion = ((DateTime)SIT.getTrainingEndTime.Subtract(TimeSpan.FromMilliseconds(SIT.TQOffset))).ToLocalTime();
                 m_estimatedCompletion = SIT.getTrainingEndTime.ToLocalTime();
@@ -2919,7 +2919,6 @@ namespace EVEMon
             get { return m_session; }
         }
 
-        // #735 - Start
         private void btnAddToCalendar_Click(object sender, EventArgs e)
         {
             // Ensure that we are trying to use the external calendar.
@@ -2939,7 +2938,5 @@ namespace EVEMon
             externalCalendar.EstimatedCompletion = m_estimatedCompletion;
             externalCalendar.DoAppointment();
         }
-        // #735 - End
-
     }
 }
