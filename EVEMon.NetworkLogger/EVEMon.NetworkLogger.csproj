@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{45877BAD-6688-42DF-A110-DBE9839F99D0}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -73,7 +73,7 @@
   <PropertyGroup>
     <PreBuildEvent>IF NOT "$(ConfigurationName)" == "Release" exit 0
 if errorlevel 1 goto BuildEventFailed
-SubWCRev.exe "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
+"%25programfiles%25\TortoiseSVN\bin\SubWCRev.exe" "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f
 :BuildEventFailed
 echo AssemblyInfo Template for $(ProjectName) not updated
 exit 0</PreBuildEvent>
