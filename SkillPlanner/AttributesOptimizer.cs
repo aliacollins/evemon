@@ -212,7 +212,7 @@ namespace EVEMon.SkillPlanner
 
                 // We need a bigger plan, still under the max duration
                 int oldTrainingLength = training.Length;
-                training = GetSubTraining(skills, character, bestScratchpad, isPlan, maxDuration);
+                training = GetSubTraining(skills, character, bestScratchpad.Clone(), isPlan, maxDuration);
 
                 // break if it is not shorter than the previous plan
                 if (training.Length == oldTrainingLength) break;

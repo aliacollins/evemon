@@ -1029,5 +1029,13 @@ namespace EVEMon.Common
                 this.AdjustAttributeBonus(gs.AttributeModified, 1);
             }
         }
+
+        public EveAttributeScratchpad Clone()
+        {
+            var copy = new EveAttributeScratchpad();
+            this.m_attributeBonuses.CopyTo(copy.m_attributeBonuses, 0);
+            copy.m_learningLevelBonus = this.m_learningLevelBonus;
+            return copy;
+        }
     }
 }
