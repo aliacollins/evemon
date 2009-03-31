@@ -64,7 +64,13 @@
     <Compile Include="APIConfiguration.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
+    <Compile Include="CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommonContext.cs" />
+    <Compile Include="CustomComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EveAttribute.cs" />
     <Compile Include="EveAttributes.cs" />
     <Compile Include="EveConstants.cs" />

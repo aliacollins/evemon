@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Text;
 
 namespace EVEMon.SkillPlanner
 {
@@ -10,6 +11,34 @@ namespace EVEMon.SkillPlanner
         public ItemSelectControl()
         {
             InitializeComponent();
+
+            // Initialize the tech-level combo box
+            this.ccbTechFilter.ToolTip = this.toolTip;
+            this.ccbTechFilter.ItemCheck += new ItemCheckEventHandler(ccbTechFilter_ItemCheck);
+            this.ccbTechFilter.CustomTextBuilder = (list) =>
+                {
+                    StringBuilder b = new StringBuilder("Tech ");
+                    for (int i = 0; i < list.CheckedIndices.Count; i++)
+                    {
+                        if (i != 0) b.Append(list.ValueSeparator);
+                        b.Append(Skill.GetRomanForInt(list.CheckedIndices[i] + 1));
+                    }
+                    b.Append(", none");
+                    return b.ToString();
+                };
+
+            this.ccbGroupFilter.ToolTip = this.toolTip;
+            this.ccbGroupFilter.ItemCheck += new ItemCheckEventHandler(ccbGroupFilter_ItemCheck);
+            this.ccbGroupFilter.CustomTextBuilder = (list) =>
+            {
+                StringBuilder b = new StringBuilder("Regular, ");
+                for (int i = 0; i < list.CheckedIndices.Count; i++)
+                {
+                    if (i != 0) b.Append(list.ValueSeparator);
+                    b.Append(list.CheckedItems[i].ToString());
+                }
+                return b.ToString();
+            };
         }
 
         private ItemCategory m_rootCategory;
@@ -24,18 +53,21 @@ namespace EVEMon.SkillPlanner
 
             try
             {
-                cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
-                cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
-                cbTech1.Checked = m_settings.ShowT1Items;
-                cbNamed.Checked = m_settings.ShowNamedItems;
-                cbTech2.Checked = m_settings.ShowT2Items;
-                cbOfficer.Checked = m_settings.ShowOfficerItems;
-                cbFaction.Checked = m_settings.ShowFactionItems;
-                cbDeadspace.Checked = m_settings.ShowDeadspaceItems;
+                this.ccbGroupFilter.SetItemChecked(0, m_settings.ShowNamedItems);
+                this.ccbGroupFilter.SetItemChecked(1, m_settings.ShowFactionItems);
+                this.ccbGroupFilter.SetItemChecked(2, m_settings.ShowOfficerItems);
+                this.ccbGroupFilter.SetItemChecked(3, m_settings.ShowDeadspaceItems);
 
+                this.ccbTechFilter.SetItemChecked(0, m_settings.ShowT1Items);
+                this.ccbTechFilter.SetItemChecked(1, m_settings.ShowT2Items);
+                this.ccbTechFilter.SetItemChecked(2, m_settings.ShowT3Items);
+
+                cbSkillFilter.SelectedIndex = m_settings.ItemSkillFilter;
                 this.cbSkillFilter.Items[0] = "All Items";
                 this.cbSkillFilter.Items[1] = "Items I can use";
                 this.cbSkillFilter.Items[2] = "Items I cannot use";
+
+                cbSlotFilter.SelectedIndex = m_settings.ItemSlotFilter;
 
                 m_rootCategory = ItemCategory.GetRootCategory();
 
@@ -56,11 +88,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        #region Filters
-        private delegate bool ItemFilter(Item i);
-        private ItemFilter slotFilter = delegate { return true; };
-        private ItemFilter shipFittingFilter = delegate { return true; };
-
+        #region Skill filter
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             m_settings.ItemSkillFilter=cbSkillFilter.SelectedIndex;
@@ -82,40 +110,13 @@ namespace EVEMon.SkillPlanner
                     break;
             }
         }
+        #endregion
 
-        private bool ClassFilter(Item i)
-        {
-            switch (i.Metagroup)
-            {
-                case "Tech I":
-                    return cbTech1.Checked;
-                case "Named":
-                    return cbNamed.Checked;
-                case "Tech II":
-                    return cbTech2.Checked;
-                case "Tech III":
-                    return cbTech3.Checked;
-                case "Officer":
-                case "Storyline":
-                    return cbOfficer.Checked;
-                case "Faction":
-                    return cbFaction.Checked;
-                case "Deadspace":
-                    return cbDeadspace.Checked;
-                default:
-                    return false;
-             }
-        }
 
+        #region Slot filter
+        private ItemFilter slotFilter = delegate { return true; };
         private void cbSlotFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbSlotFilter.SelectedIndex > 0)
-            {
-                //If we pick anything other than "all items", reset the ship fitting
-                //filter to prevent interference.
-                this.iffsShipFitting.reset();
-            }
-
             m_settings.ItemSlotFilter = cbSlotFilter.SelectedIndex;
             UpdateDisplay();
         }
@@ -138,86 +139,156 @@ namespace EVEMon.SkillPlanner
                     break;
             }
         }
+        #endregion 
 
-        private void cbClass_SelectedChanged(object sender, EventArgs e)
+
+        #region Tech level filter
+        void ccbTechFilter_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (sender == cbTech1) m_settings.ShowT1Items = cbTech1.Checked;
-            if (sender == cbNamed) m_settings.ShowNamedItems = cbNamed.Checked;
-            if (sender == cbTech2) m_settings.ShowT2Items = cbTech2.Checked;
-            if (sender == cbOfficer) m_settings.ShowOfficerItems = cbOfficer.Checked;
-            if (sender == cbFaction) m_settings.ShowFactionItems = cbFaction.Checked;
-            if (sender == cbDeadspace) m_settings.ShowDeadspaceItems = cbDeadspace.Checked;
-            if (sender == cbTech3) m_settings.ShowT3Items = cbTech3.Checked;
+            bool value = (e.NewValue == CheckState.Checked);
+            switch (e.Index)
+            {
+                case 0:
+                    m_settings.ShowT1Items = value;
+                    break;
+                case 1:
+                    m_settings.ShowT2Items = value;
+                    break;
+                case 2:
+                    m_settings.ShowT3Items = value;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             UpdateDisplay();
         }
 
-        private void iffsShipFitting_ItemFilterDataChanged(object sender, ItemFilteringChangedEvent e)
+        private bool TechFilter(Item i)
         {
-            ItemFittingFilterData data = e.filterData;
-            if (data.allFilteringDisabled())
+            switch (i.TechLevel)
             {
-                this.shipFittingFilter = delegate { return true; };
+                case 1:
+                    return this.ccbTechFilter.GetItemChecked(0);
+                case 2:
+                    return this.ccbTechFilter.GetItemChecked(1);
+                case 3:
+                    return this.ccbTechFilter.GetItemChecked(2);
+                default:
+                    return true;
             }
-            else 
+        }
+        #endregion
+
+
+        #region Metagroup filter
+        void ccbGroupFilter_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            bool value = (e.NewValue == CheckState.Checked);
+            switch (e.Index)
             {
-                if (!data.allSlotsSelected())
-                {
-                    //Set the slots combobox to "all items" to prevent interference
-                    this.cbSlotFilter.SelectedIndex = 0; //AllItems
-                    this.UpdateSlotFilter();
-                }
-                this.shipFittingFilter = new ShipFittingFilter(data).evaluateItem;
+                case 0:
+                    m_settings.ShowNamedItems = value;
+                    break;
+                case 1:
+                    m_settings.ShowFactionItems = value;
+                    break;
+                case 2:
+                    m_settings.ShowOfficerItems = value;
+                    break;
+                case 3:
+                    m_settings.ShowDeadspaceItems = value;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            UpdateDisplay();
+        }
+
+        private bool MetaGroupFilter(Item i)
+        {
+            switch (i.Metagroup)
+            {
+                case "Named":
+                    return this.ccbGroupFilter.GetItemChecked(0);
+                case "Officer":
+                case "Storyline":
+                    return this.ccbGroupFilter.GetItemChecked(2);
+                case "Faction":
+                    return this.ccbGroupFilter.GetItemChecked(1);
+                case "Deadspace":
+                    return this.ccbGroupFilter.GetItemChecked(3);
+                default:
+                    return true;
+            }
+        }
+        #endregion
+
+
+        #region Fitting filter
+        private delegate bool ItemFilter(Item i);
+        private ItemFilter itemFittingFilter = delegate { return true; };
+
+        private void UpdateFittingFilter()
+        {
+            if (!this.numCPU.Enabled && !this.numPowergrid.Enabled)
+            {
+                this.itemFittingFilter = delegate { return true; };
+            }
+            else
+            {
+                double? gridAvailable = null;
+                if (numPowergrid.Enabled) gridAvailable = (double)numPowergrid.Value;
+
+                double? cpuAvailable = null;
+                if (numCPU.Enabled) cpuAvailable = (double)numCPU.Value;
+
+                this.itemFittingFilter = (item) => item.canActivate(cpuAvailable, gridAvailable);
             }
             this.BuildTreeView();
         }
 
-        /// <summary>
-        /// Wrapper class for <code>ItemFittingFilterData</code> that decorates it
-        /// with a delegate method for the item filtering.
-        /// </summary>
-        private class ShipFittingFilter
+        private void cbCPU_CheckedChanged(object sender, EventArgs e)
         {
-            ItemFittingFilterData data;
-            public ShipFittingFilter(ItemFittingFilterData mydata)
-            {
-                data = mydata;
-            }
-            public bool evaluateItem(Item i)
-            {
-                bool result;
-                if (data.allSlotsSelected())
-                {
-                    //No slot filtering, so any item is valid.
-                    result = true;
-                }
-                else
-                {
-                    //Item is valid if its slot type is in the selection.
-                    result = data.highSlotSelected && i.SlotIndex == 1;
-                    result = result || (data.medSlotSelected && i.SlotIndex == 2);
-                    result = result || (data.lowSlotSelected && i.SlotIndex == 3);
-                }
-                double? cpuAvailable = null; 
-                double? gridAvailable = null; 
-
-                if (data.cpuAvailable.HasValue) cpuAvailable = Convert.ToDouble(data.cpuAvailable.Value);
-                if (data.gridAvailable.HasValue) gridAvailable = Convert.ToDouble(data.gridAvailable.Value);
-
-                //Now lets see if the item's CPU/Grid needs are within bounds
-                result = result && i.canActivate(cpuAvailable, gridAvailable);
-
-                return result;
-            }
+            this.numCPU.Enabled = this.cbCPU.Checked;
+            this.UpdateFittingFilter();
         }
-        
+
+        private void cbPowergrid_CheckedChanged(object sender, EventArgs e)
+        {
+            this.numPowergrid.Enabled = this.cbPowergrid.Checked;
+            this.UpdateFittingFilter();
+        }
+
+        private void numCPU_ValueChanged(object sender, EventArgs e)
+        {
+            this.UpdateFittingFilter();
+        }
+
+        private void numPowergrid_ValueChanged(object sender, EventArgs e)
+        {
+            this.UpdateFittingFilter();
+        }
         #endregion
 
-        #region Display
 
+        #region Text filter
+        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
+        {
+
+            if (m_settings.StoreBrowserFilters)
+                m_settings.ItemBrowserSearch = tbSearchText.Text;
+            base.tbSearchText_TextChanged(sender, e);
+        }
+        #endregion 
+
+
+
+        #region Display
         private void UpdateDisplay()
         {
             UpdateSkillFilter();
             UpdateSlotFilter();
+            UpdateFittingFilter();
             if (m_rootCategory != null)
                 BuildTreeView();
             SearchTextChanged();
@@ -268,8 +339,9 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_filterDelegate(titem) 
                     && slotFilter(titem) 
-                    && shipFittingFilter(titem)
-                    && ClassFilter(titem))
+                    && itemFittingFilter(titem)
+                    && MetaGroupFilter(titem)
+                    && TechFilter(titem))
                     sortedItems.Add(titem.Name, titem);
             }
             foreach (Item titem in sortedItems.Values)
@@ -282,22 +354,6 @@ namespace EVEMon.SkillPlanner
             }
             return result;
         }
-        #endregion
-
-        #region Search
-  
-        protected override void tbSearchText_TextChanged(object sender, EventArgs e)
-        {
-
-            if (m_settings.StoreBrowserFilters)
-                m_settings.ItemBrowserSearch = tbSearchText.Text;
-            base.tbSearchText_TextChanged(sender, e);
-        }
-
-
-        #endregion 
-
-        #region Events
         #endregion
     }
 }

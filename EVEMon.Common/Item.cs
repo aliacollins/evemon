@@ -63,6 +63,42 @@ namespace EVEMon.Common
             }
         }
 
+        private int m_techLevel = -1;
+        public int TechLevel
+        {
+            get
+            {
+                if (m_techLevel == -1)
+                {
+                    foreach (EntityProperty prop in _properties)
+                    {
+                        if (prop.Name != "Tech Level") continue;
+
+                        switch (prop.Value)
+                        {
+                            case "1":
+                                m_techLevel = 1;
+                                break;
+                            case "2":
+                                m_techLevel = 2;
+                                break;
+                            case "3":
+                                m_techLevel = 3;
+                                break;
+                            default:
+                                m_techLevel = 0; // FIXME: debug warning?
+                                break;
+                        }
+
+                        return m_techLevel;
+                    }
+                    m_techLevel = 0; // No tech level
+                }
+                return m_techLevel;
+
+            }
+        }
+
         /// <summary>
         ///   Evaluates whether this item can be activated if the given CPU
         ///   and/or PowerGrid resources are available. Either argument for this
