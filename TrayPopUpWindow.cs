@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
@@ -26,6 +27,7 @@ namespace EVEMon
         #region Fields
         private CharacterCollection m_characters;
         private Label lblTQStatus;
+        private Label lblEveTime;
         private Settings m_settings;
         private TrayPopupConfig m_config;
         private int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
@@ -108,6 +110,10 @@ namespace EVEMon
             // TQ Server Status
             if (m_config.ShowTQStatus)
                 AddTQStatus();
+
+            // EVE Time
+            if (m_config.ShowEveTime)
+                AddEveTime();
 
             // Fix the panel widths to the largest.
             // We let the framework determine the appropriate widths, then fix them so that
@@ -296,6 +302,17 @@ namespace EVEMon
             }
         }
 
+        private void AddEveTime()
+        {
+            lblEveTime = new Label();
+            lblEveTime.AutoSize = true;
+            mainPanel.Controls.Add(lblEveTime);
+
+            DateTime now = DateTime.Now.ToUniversalTime();
+            DateTimeFormatInfo fi = CultureInfo.CurrentCulture.DateTimeFormat;
+            SetEveTimeLabel("Current EVE Time: " + now.ToString (fi.ShortDatePattern + " HH:mm"));
+        }
+
         /// <summary>
         /// Displays the TQ status message
         /// </summary>
@@ -313,6 +330,22 @@ namespace EVEMon
             else
             {
                 lblTQStatus.Text = statusText;
+            }
+        }
+
+        private void SetEveTimeLabel(String timeText)
+        {
+            if(InvokeRequired)
+            {
+                Invoke (new MethodInvoker (delegate 
+                {
+                    SetEveTimeLabel (timeText);
+                }
+                ));
+            }
+            else
+            {
+                lblEveTime.Text = timeText;
             }
         }
 

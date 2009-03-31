@@ -3264,6 +3264,7 @@ namespace EVEMon.Common
         public PortraitSizes PortraitSize = PortraitSizes.x48;
         public bool ShowWarning = true;
         public bool ShowTQStatus = true;
+        public bool ShowEveTime = true;
 
         public enum CharacterGroupings
         {

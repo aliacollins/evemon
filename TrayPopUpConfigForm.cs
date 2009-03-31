@@ -79,6 +79,7 @@ namespace EVEMon
             cbPortraitSize.SelectedIndex = (int)config.PortraitSize;
             cbShowWarning.Checked = config.ShowWarning;
             cbShowTQStatus.Checked = config.ShowTQStatus;
+            cbShowEveTime.Checked = config.ShowEveTime;
             UpdateEnables();
         }
 
@@ -97,6 +98,7 @@ namespace EVEMon
             m_config.PortraitSize = (TrayPopupConfig.PortraitSizes)cbPortraitSize.SelectedIndex;
             m_config.ShowWarning = cbShowWarning.Checked;
             m_config.ShowTQStatus = cbShowTQStatus.Checked;
+            m_config.ShowEveTime = cbShowEveTime.Checked;
         }
 
         private TrayPopupConfig.SortOrders GetSortOrder(string selectedSortOrder)
