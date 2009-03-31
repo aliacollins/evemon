@@ -221,6 +221,7 @@ namespace EVEMon.SkillPlanner
                 // Price
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Base price","Base price",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false, "Tech Level", "Tech Level", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Meta Level", "Meta Level", false, false));
                 // Fitting
                 m_DisplayAttributes.add(new AttributeDisplayData(true,"=Fitting","Fitting",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"CPU Output","CPU",false,true));
@@ -232,17 +233,23 @@ namespace EVEMon.SkillPlanner
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Launcher hardpoints","Launcher Hardpoints",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Turret hardpoints","Turret Hardpoints",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Rig Slots","Rig Slots",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Sub System Slots", "Sub System Slots", false, false));
+                // Attributes - drones
+                m_DisplayAttributes.add(new AttributeDisplayData(true, "=Drones", "Drones", false, true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Drone Capacity", "Drone Capacity", false, true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Drone Bandwidth", "Drone Bandwidth", false, true));
                 // Attributes - structure
                 m_DisplayAttributes.add(new AttributeDisplayData(true,"=Structure","Structure",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"hp","Structure Hitpoints",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacity","Capacity",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"Drone Capacity","Drone Capacity",false,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Capacity","Cargo Capacity",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Corporate Hangar Capacity", "Corporate Hangar Capacity", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Ship Maintenance Bay Capacity", "Ship Maintenance Bay Capacity", false, false));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Mass","Mass",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Volume","Volume",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"EM dmg resistance","EM Dmg Resistance",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"Explosive dmg resistance","Explosive Dmg Resistance",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"Kinetic dmg resistance","Kinetic Dmg Resistance",false,true));
-                m_DisplayAttributes.add(new AttributeDisplayData(false,"Thermal dmg resistance","Thermal Dmg Resistance",false,true));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"EM dmg resistance","EM Dmg Resistance",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Explosive dmg resistance","Explosive Dmg Resistance",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Kinetic dmg resistance","Kinetic Dmg Resistance",true,false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false,"Thermal dmg resistance","Thermal Dmg Resistance",true,false));
                 // Attributes - Armor"Attributes - Armor
                 m_DisplayAttributes.add(new AttributeDisplayData(true,"=Armor","Armor",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Armor Hitpoints","Armor Hitpoints",false,true));
@@ -277,6 +284,12 @@ namespace EVEMon.SkillPlanner
                 m_DisplayAttributes.add(new AttributeDisplayData(true,"=Propulsion","Propulsion",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false,"Max Velocity","Max Velocity",false,true));
                 m_DisplayAttributes.add(new AttributeDisplayData(false, "agility", "Agility", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Inertia Modifier", "Inertia Modifier", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Warp Speed Multiplier", "Warp Speed Multiplier", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Maximum Jump Range", "Maximum Jump Range", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Jump Drive Capacitor Need", "Jump Drive Capacitor Need", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Jump Drive Fuel Need", "Jump Drive Fuel Need", false, false));
+                m_DisplayAttributes.add(new AttributeDisplayData(false, "Jump Drive Consumption Amount", "Jump Drive Consumption Amount", false, false));
                 m_DisplayAttributes.add(new AttributeDisplayData(true,"=Other","Other",false,true));
             }
             
