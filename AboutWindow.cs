@@ -33,6 +33,7 @@ namespace EVEMon
 
             slDevelopers = new SortedList();
             slDevelopers.Add("Araan Sunn", "01");
+            slDevelopers.Add("Richard Slater", "01");
 
             slDevelopers.Add("Six Anari", "02");
             slDevelopers.Add("Anders Chydenius", "02");
@@ -86,7 +87,6 @@ namespace EVEMon
             slDevelopers.Add("Pharazon", "05");
             slDevelopers.Add("Phoenix Flames", "05");
             slDevelopers.Add("phorge", "05");
-            slDevelopers.Add("Richard Slater", "05");
             slDevelopers.Add("Risako", "05");
             slDevelopers.Add("Ruldar", "05");
             slDevelopers.Add("scoobyrich", "05");
@@ -103,7 +103,10 @@ namespace EVEMon
             slDevelopers.Add("xNomeda", "05");
             slDevelopers.Add("Zarra Kri", "05");
             slDevelopers.Add("zofu", "05");
-
+            slDevelopers.Add("DonQuiche", "05");
+            slDevelopers.Add("Safarian Lanar", "05");
+            slDevelopers.Add("Waste Land", "05");
+    
             slOutput = new SortedList();
         }
 

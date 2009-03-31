@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.2.6.$WCREV$")]
+[assembly: AssemblyVersion("1.2.7.$WCREV$")]
