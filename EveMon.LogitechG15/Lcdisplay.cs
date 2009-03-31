@@ -53,8 +53,11 @@ namespace EVEMon.LogitechG15
             _LCD.Open("EVEMon", false);
             _btnstatehld = DateTime.Now;
             _cycletime = DateTime.Now.AddSeconds(10);
+            _cyclecompletiontimetime = DateTime.Now.AddSeconds(5);
             _cycle = false;
             _showtime = false;
+            _cyclecompletiontime = false;
+            _showingcompletiontime = false;
             _COMPLETESTR = "Hotaru Nakayoshi\nhas finished learning skill\nHull Upgrades V";
             _leasttime = TimeSpan.FromTicks(DateTime.Now.Ticks);
         }
@@ -133,6 +136,10 @@ namespace EVEMon.LogitechG15
         private bool _cycle;
         private int _cycleint;
         private DateTime _cycletime;
+        private bool _cyclecompletiontime;
+        private int _cyclecompletiontimeint;
+        private DateTime _cyclecompletiontimetime;
+        private bool _showingcompletiontime;
         private bool _showtime;
         private string _refreshchar;
         private bool _skillcchg;
@@ -152,6 +159,16 @@ namespace EVEMon.LogitechG15
         {
             get { return _showtime; }
             set { _showtime = value; }
+        }
+        public bool cyclecompletiontime
+        {
+            get { return _cyclecompletiontime; }
+            set { _cyclecompletiontime = value; }
+        }
+        public int cyclecompletiontimeint
+        {
+            get { return _cyclecompletiontimeint; }
+            set { _cyclecompletiontimeint = value; }
         }
         public string refreshchar
         {
@@ -305,7 +322,24 @@ namespace EVEMon.LogitechG15
             if (_curSkillTraining == null || _curSkillTraining == "")
                 _curSkillTraining = "No skill in training";
 
-            string tmpTxt = string.Format(_formatStringConverted, _characterName, _curSkillTraining, FormatTimeSpan(_timeToSkillComplete));
+            string tmpTxt = "";
+            if (_cyclecompletiontime)
+            {
+                if (TimeSpan.FromTicks(DateTime.Now.Ticks - _cyclecompletiontimetime.Ticks).TotalSeconds > _cyclecompletiontimeint)
+                {
+                    _cyclecompletiontimetime = DateTime.Now;
+                    _showingcompletiontime = !_showingcompletiontime;
+                }
+            }
+            if (_showingcompletiontime)
+            {
+                tmpTxt = string.Format(_formatStringConverted, _characterName, _curSkillTraining, String.Format("Finishes {0}", DateTime.Now + _timeToSkillComplete));
+            }
+            else
+            {
+                tmpTxt = string.Format(_formatStringConverted, _characterName, _curSkillTraining, FormatTimeSpan(_timeToSkillComplete));
+            }
+
             string[] tmpLines = tmpTxt.Split("\n".ToCharArray());
             if (tmpLines.Length == 3) 
             {
@@ -338,7 +372,7 @@ namespace EVEMon.LogitechG15
             _lcdGraphics.DrawString(_lines[2], _defaultFont, _defBrush, recLine3);
             _lcdGraphicsX.DrawString(perc, _defaultFont, _defBrush, recLine4);
 
-            if (showtime)
+            if (_showtime)
             {
                 string curTime = DateTime.Now.ToString("T");
                 SizeF size = _lcdGraphics.MeasureString(curTime, _defaultFont);

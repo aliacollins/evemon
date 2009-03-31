@@ -306,6 +306,8 @@ namespace EVEMon
                 // load the cycle settings
                 LCD.cycle = Program.Settings.G15ACycle;
                 LCD.cycleint = Program.Settings.G15ACycleint;
+                LCD.cyclecompletiontime = Program.Settings.G15ACycleTimes;
+                LCD.cyclecompletiontimeint = Program.Settings.G15ACycleTimesint;
 
                 // load the show time setting
                 LCD.showtime = Program.Settings.G15ShowTime;

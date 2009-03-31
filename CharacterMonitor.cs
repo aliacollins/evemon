@@ -931,7 +931,6 @@ namespace EVEMon
                 // Remove the skills in the group from the list
                 foreach (Skill gs in gsg)
                 {
-// 947 - Start
                     // Because they may have toggled the ShowAll settings during this session, we have to 
                     // cater for any invalid indexes when removing the skills.
                     try
@@ -940,7 +939,6 @@ namespace EVEMon
                     }
                     catch
                     { }
-// 947 - End
                 }
 
                 Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
@@ -951,14 +949,12 @@ namespace EVEMon
                 List<Skill> skillList = new List<Skill>();
                 foreach (Skill gs in gsg)
                 {
-// 947 - Start
                     if (m_settings.ShowAllPublicSkills)
                     {
                         if (!gs.Public)
                             if (!m_settings.ShowNonPublicSkills)
                                 continue;
                     }
-// 947 - End
                     skillList.Add(gs);
                 }
                 SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
@@ -1140,13 +1136,11 @@ namespace EVEMon
             try
             {
                 {
-// 947 - Start
                     // Build the list builder into a loop that runs through all skills to ensure that
                     // even skill groups that don't have any learned skills in them will be added to
                     // the list.
                     if (!m_settings.ShowAllPublicSkills)
                     {
-// 947 - End
                         foreach (Skill gs in e.SkillList)
                         {
                             SkillGroup gsg = gs.SkillGroup;
@@ -1221,7 +1215,6 @@ namespace EVEMon
                                 }
                             }
                         }
-// 947 - Start
                     }
                     else
                     {
@@ -1380,7 +1373,6 @@ namespace EVEMon
                             }
                         }
                     }
-// 947 - End
                 }
             }
             finally

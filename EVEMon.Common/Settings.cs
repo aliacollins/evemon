@@ -422,7 +422,32 @@ namespace EVEMon.Common
             }
         }
 
-// 947 - Start
+        private bool m_g15cycletimes = false;
+        public bool G15ACycleTimes
+        {
+            get { return m_g15cycletimes; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15cycletimes = value;
+                }
+            }
+        }
+
+        private int m_g15cycletimesint = 10;
+        public int G15ACycleTimesint
+        {
+            get { return m_g15cycletimesint; }
+            set
+            {
+                lock (mutexLock)
+                {
+                    m_g15cycletimesint = value;
+                }
+            }
+        }
+
         private bool m_showAllPublicSkills = false;
         public bool ShowAllPublicSkills
         {
@@ -448,7 +473,6 @@ namespace EVEMon.Common
                 }
             }
         }
-// 947 - End
 
         #endregion
 

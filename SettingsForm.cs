@@ -79,11 +79,15 @@ namespace EVEMon
             s.UseLogitechG15Display = cbUseLogitechG15Display.Checked;
             s.G15ACycle = cbG15ACycle.Checked;
             s.G15ACycleint = (int)ACycleInterval.Value;
+            s.G15ACycleTimes = cbG15CycleTimes.Checked;
+            s.G15ACycleTimesint = (int)ACycleTimesInterval.Value;
             s.G15ShowTime = cbG15ShowTime.Checked;
             if (G15Handler.LCD != null)
             {
                 G15Handler.LCD.cycle = cbG15ACycle.Checked;
                 G15Handler.LCD.cycleint = (int)ACycleInterval.Value;
+                G15Handler.LCD.cyclecompletiontime = cbG15CycleTimes.Checked;
+                G15Handler.LCD.cyclecompletiontimeint = (int)ACycleTimesInterval.Value;
                 G15Handler.LCD.showtime = cbG15ShowTime.Checked;
             }
             s.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
@@ -312,6 +316,8 @@ namespace EVEMon
             cbUseLogitechG15Display.Checked = m_settings.UseLogitechG15Display;
             cbG15ShowTime.Checked = m_settings.G15ShowTime;
             ACycleInterval.Value = m_settings.G15ACycleint;
+            cbG15CycleTimes.Checked = m_settings.G15ACycleTimes;
+            ACycleTimesInterval.Value = m_settings.G15ACycleTimesint;
             cbShowAllPublicSkills.Checked = m_settings.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.ShowNonPublicSkills;
 

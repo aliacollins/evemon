@@ -1014,9 +1014,7 @@ namespace EVEMon.Common
                     //}
                     if (gs != null)
                     {
-// 947 - Start
                         gs.HighlightPartiallyTrained = highlightPartials;
-// 947 - End
                         gs.CurrentSkillPoints = s.SkillPoints;
                         gs.Known = true;
                         if (ci.FromCCP)
