@@ -26,18 +26,16 @@ namespace EVEMon.Common
     {
         private bool m_ineveSync;
 
-        // Deprecated - use the details in the AccountDetails class instead
-        // keeping for backwards compatability
         private int m_userId = 0;
+        [Obsolete("Use Account.UserID instead")]
         public int UserId
         {
             get { return m_userId; }
             set { m_userId = value; }
         }
 
-        // Deprecated - use the details in the AccountDetails class instead
-        // keeping for backwards compatability
         private string m_apiKey = string.Empty;
+        [Obsolete("Use Account.ApiKey instead")]
         public string ApiKey
         {
             get { return m_apiKey; }
