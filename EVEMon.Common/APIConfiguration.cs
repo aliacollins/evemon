@@ -62,7 +62,7 @@ namespace EVEMon.Common
             {
                 if (method.Method == requestMethod)
                 {
-                    methodUri.Path += method.Path;
+                    methodUri.Path = methodUri.Path.TrimEnd("/".ToCharArray()) + method.Path;
                     return methodUri.Uri.ToString();
                 }
             }
