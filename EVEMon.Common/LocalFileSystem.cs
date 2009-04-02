@@ -17,6 +17,12 @@ namespace EVEMon.Common
             // create a pattern that matches anything "*_tranquility"
             string filePattern = "*_tranquility";
 
+            // check folder exists
+            if (!Directory.Exists(EVEApplicationData))
+            {
+                return null;
+            }
+            
             // enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationData);
             DirectoryInfo[] filesInEveCache = di.GetDirectories(filePattern);
