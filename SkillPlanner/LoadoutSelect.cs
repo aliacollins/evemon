@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -49,7 +50,6 @@ namespace EVEMon.SkillPlanner
             {
                 // Unsubscribe to PlanChanged
                 m_plan.Changed -= new EventHandler<EventArgs>(PlanChanged);
-
             }
             m_plan = p;
             if (m_plan != null)
@@ -99,6 +99,7 @@ namespace EVEMon.SkillPlanner
                         {
                             loadout.ShipObject = m_ship;
                             ListViewItem lvi = new ListViewItem(loadout.LoadoutName);
+
                             lvi.Text = loadout.LoadoutName;
                             lvi.SubItems.Add(loadout.Author);
                             lvi.SubItems.Add(loadout.rating.ToString());
@@ -516,6 +517,14 @@ namespace EVEMon.SkillPlanner
                         _currentLoadoutItems["rig"].Add("[empty rig slot]");
                     }
                 }
+                else if (prop.Name.Contains("Sub System Slots"))
+                {
+                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    while (_currentLoadoutItems.ContainsKey("subSystem") && _currentLoadoutItems["subSystem"].Count < subSysSlots)
+                    {
+                        _currentLoadoutItems["subSystem"].Add("");
+                    }
+                }
             }
 
             StringBuilder exportText = new StringBuilder();
@@ -536,6 +545,10 @@ namespace EVEMon.SkillPlanner
             if (_currentLoadoutItems.ContainsKey("rig"))
             {
                 exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["rig"].ToArray()));
+            }
+            if (_currentLoadoutItems.ContainsKey("subSystem"))
+            {
+                exportText.AppendLine(String.Join(Environment.NewLine, _currentLoadoutItems["subSystem"].ToArray()));
             }
             if (_currentLoadoutItems.ContainsKey("drone"))
             {
@@ -570,7 +583,10 @@ namespace EVEMon.SkillPlanner
         [XmlAttribute("name")]
         public string LoadoutName
         {
-            get { return m_loadoutName; }
+            get 
+            { 
+                return HttpUtility.HtmlDecode(m_loadoutName); 
+            }
             set { m_loadoutName = value; }
         }
 
