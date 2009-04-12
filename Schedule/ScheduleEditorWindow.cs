@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Schedule;
 using System.Drawing;
+using System.Text;
 
 namespace EVEMon.Schedule
 {
@@ -35,8 +36,8 @@ namespace EVEMon.Schedule
             {
                 // How can you only localize the date?
                 string title = "Entries for " + datetime.ToString("d");
-
-                string content = String.Empty;
+                StringBuilder content = new StringBuilder();
+                
                 foreach (ScheduleEntry entry in m_settings.Schedule)
                 {
                     if (entry.IsToday(datetime))
@@ -80,16 +81,28 @@ namespace EVEMon.Schedule
                             to = new DateTime(datetime.Year, datetime.Month, datetime.Day, 23, 59, 59);
                         }
 
-                        content += entry.Title;
-                        content += " [ ";
-                        content += from.ToString("HH:mm") + " - " + to.ToString("HH:mm");
-                        content += " ] ";
-                        content += "\n";
+                        content.Append(entry.Title);
+                        if ((entry.ScheduleEntryOptions & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None)
+                        {
+                            content.Append(" [ EVE Time: ");
+                            content.Append(from.ToString("HH:mm") + " - " + to.ToString("HH:mm"));
+                            content.Append(" ] ");
+                            content.Append(" [ Local Time: ");
+                            content.Append(from.ToLocalTime().ToString("HH:mm") + " - " + to.ToLocalTime().ToString("HH:mm"));
+                            content.Append(" ] ");
+                        }
+                        else
+                        {
+                            content.Append(" [ ");
+                            content.Append(from.ToString("HH:mm") + " - " + to.ToString("HH:mm"));
+                            content.Append(" ] ");
+                        }
+                        content.AppendLine();
                     }
                 }
 
                 ttToolTip.ToolTipTitle = title;
-                ttToolTip.SetToolTip(calControl, content);
+                ttToolTip.SetToolTip(calControl, content.ToString());
                 ttToolTip.Active = true;
             }
             else if (mouse.Button == MouseButtons.Right)
