@@ -36,6 +36,9 @@ namespace EVEMon.WindowRelocator
         private extern static int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("user32")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        [DllImport("user32")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32")]
@@ -158,8 +161,15 @@ namespace EVEMon.WindowRelocator
                 IntPtr fgWin = GetForegroundWindow();
                 StringBuilder sb = new StringBuilder(512);
                 int titleLen = GetWindowText(fgWin, sb, 512);
-                if (sb.ToString() == "EVE")
+
+                int pid = 0;
+                GetWindowThreadProcessId(fgWin, out pid);
+
+                System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(pid);
+
+                if (sb.ToString() == "EVE" && p.ProcessName == "ExeFile")
                 {
+
                     Rectangle r = GetWindowRect(fgWin);
                     if (r.Width > 800)
                     {
