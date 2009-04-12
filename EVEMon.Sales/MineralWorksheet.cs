@@ -3,201 +3,202 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.ComponentModel;
 
 namespace EVEMon.Sales
 {
-    internal delegate void TileUpdate(MineralTile mt, Single s);
+	internal delegate void TileUpdate(MineralTile mt, Single s);
 
-    public partial class MineralWorksheet : EVEMonForm
-    {
-        private EventHandler<EventArgs> tileChangeHandler;
-        private Settings m_settings;
+	public partial class MineralWorksheet : EVEMonForm
+	{
+		private Decimal m_total;
+		private string m_courtesyUrl;
+		private string m_source;
 
-        public MineralWorksheet()
-        {
-            InitializeComponent();
-        }
+		private EventHandler<EventArgs> tileChangeHandler;
 
-        public MineralWorksheet(Settings s)
-            : this()
-        {
-            m_settings = s;
-        }
+		public MineralWorksheet()
+		{
+			InitializeComponent();
+		}
+        
+		private IEnumerable<MineralTile> Tiles
+		{
+			get
+			{
+				foreach (Control c in this.MineralTileTableLayout.Controls)
+				{
+					if (c is MineralTile)
+					{
+						yield return c as MineralTile;
+					}
+				}
+			}
+		}
 
-        private IEnumerable<MineralTile> Tiles
-        {
-            get
-            {
-                foreach (Control c in this.MineralTileTableLayout.Controls)
-                {
-                    if (c is MineralTile)
-                    {
-                        yield return c as MineralTile;
-                    }
-                }
-            }
-        }
+		private void TileSubtotalChanged(object sender, EventArgs e)
+		{
+			m_total = 0;
+			foreach (MineralTile mt in Tiles)
+			{
+				m_total += mt.Subtotal;
+			}
 
-        private void TileSubtotalChanged(object sender, EventArgs e)
-        {
-            Decimal total = 0;
-            foreach (MineralTile mt in Tiles)
-            {
-                total += mt.Subtotal;
-            }
-            tslTotal.Text = String.Format("{0} ISK", total.ToString("N"));
-        }
+			tslTotal.Text = String.Format("{0:N} ISK", m_total);
+		}
 
-        private void MineralWorksheet_Load(object sender, EventArgs e)
-        {
-            tileChangeHandler = new EventHandler<EventArgs>(TileSubtotalChanged);
-            foreach (MineralTile mt in Tiles)
-            {
-                mt.SubtotalChanged += tileChangeHandler;
-            }
+		private void MineralWorksheet_Load(object sender, EventArgs e)
+		{
+			tileChangeHandler = TileSubtotalChanged;
+			foreach (MineralTile mt in Tiles)
+			{
+				mt.SubtotalChanged += tileChangeHandler;
+			}
 
-            SortedList<string, Pair<string, string>> parsersSorted = new SortedList<string, Pair<string, string>>();
+			SortedList<string, Pair<string, string>> parsersSorted = new SortedList<string, Pair<string, string>>();
 
-            foreach (Pair<string, IMineralParser> p in MineralDataRequest.Parsers)
-            {
-                parsersSorted.Add(p.B.Title, new Pair<string, string>(p.A, p.B.Title));
-            }
+			foreach (Pair<string, IMineralParser> p in MineralDataRequest.Parsers)
+			{
+				parsersSorted.Add(p.B.Title, new Pair<string, string>(p.A, p.B.Title));
+			}
 
-            foreach (Pair<string, string> p in parsersSorted.Values)
-            {
-                ToolStripMenuItem mi = new ToolStripMenuItem();
-                mi.Text = p.B;
-                mi.Tag = p.A;
-                mi.Click += new EventHandler(mi_Click);
-                tsddFetch.DropDownItems.Add(mi);
-            }
-        }
+			foreach (Pair<string, string> p in parsersSorted.Values)
+			{
+				ToolStripMenuItem mi = new ToolStripMenuItem();
+				mi.Text = p.B;
+				mi.Tag = p.A;
+				mi.Click += mi_Click;
+				tsddFetch.DropDownItems.Add(mi);
+			}
+		}
 
-        private string m_courtesyUrl = String.Empty;
+		private void mi_Click(object sender, EventArgs e)
+		{
+			if (!bckgrndWrkrGetPrices.IsBusy)
+			{
+				ToolStripMenuItem mi = sender as ToolStripMenuItem;
+				if (mi != null && mi.Tag is string)
+				{
+					m_source = mi.Tag as string;
+					bckgrndWrkrGetPrices.RunWorkerAsync(m_source);
+				}
+			}
+		}
 
-        private void mi_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem mi = (ToolStripMenuItem) sender;
-            string s = (string) mi.Tag;
+		private void bckgrndWrkrGetPrices_DoWork(object sender, DoWorkEventArgs e)
+		{
+			IDictionary<string, Decimal> prices = new Dictionary<string, decimal>();
+			string source = e.Argument as string;
+			if (source != null)
+			{
+				foreach (Pair<string, Decimal> p in MineralDataRequest.GetPrices(source))
+				{
+					prices[p.A] = p.B;
+				}
+			}
 
-            Dictionary<string, Decimal> prices = new Dictionary<string, decimal>();
-            try
-            {
-                foreach (Pair<string, Decimal> p in MineralDataRequest.GetPrices(s))
-                {
-                    prices[p.A] = p.B;
-                }
-            }
-            catch (MineralParserException mpe)
-            {
-                ExceptionHandler.LogException(mpe, true);
-                MessageBox.Show("Failed to retrieve mineral pricing data:\n" + mpe.Message,
-                                "Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+			e.Result = prices;
+		}
 
-            foreach (MineralTile mt in Tiles)
-            {
-                if (prices.ContainsKey(mt.MineralName))
-                {
-                    mt.PricePerUnit = prices[mt.MineralName];
-                }
-            }
+		private void bckgrndWrkrGetPrices_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (e.Error != null)
+			{
+				ExceptionHandler.LogException(e.Error, true);
+				MessageBox.Show("Failed to retrieve mineral pricing data:\n" + e.Error.Message, "Failed to Retrieve Data",
+								MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			else
+			{
+                IDictionary<string, Decimal> prices = e.Result as IDictionary<string, Decimal>;
+				if (prices != null)
+				{
+					foreach (MineralTile mt in Tiles)
+					{
+						if (prices.ContainsKey(mt.MineralName))
+						{
+							mt.PricePerUnit = prices[mt.MineralName];
+						}
+					}
 
-            tslCourtesy.Text = "Mineral Prices Courtesy of " + MineralDataRequest.GetCourtesyText(s);
-            m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(s);
-            tslCourtesy.Visible = true;
-        }
+					tslCourtesy.Text = "Mineral Prices Courtesy of " + MineralDataRequest.GetCourtesyText(m_source);
+					m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source);
+					tslCourtesy.Visible = true;
+				}
+			}
+		}
 
-        private bool m_pricesLocked = false;
+		private bool m_pricesLocked;
 
-        private bool PricesLocked
-        {
-            set
-            {
-                m_pricesLocked = value;
-                foreach (MineralTile mt in Tiles)
-                {
-                    mt.PriceLocked = value;
-                }
-            }
-        }
+		private bool PricesLocked
+		{
+			set
+			{
+				m_pricesLocked = value;
+				foreach (MineralTile mt in Tiles)
+				{
+					mt.PriceLocked = value;
+				}
+			}
+		}
 
-        private void btnLockPrices_Click(object sender, EventArgs e)
-        {
-            if (m_pricesLocked)
-            {
-                PricesLocked = false;
-                btnLockPrices.Text = "Lock Prices";
-            }
-            else
-            {
-                PricesLocked = true;
-                btnLockPrices.Text = "Unlock Prices";
-            }
-        }
+		private void btnLockPrices_Click(object sender, EventArgs e)
+		{
+			if (m_pricesLocked)
+			{
+				PricesLocked = false;
+				btnLockPrices.Text = "Lock Prices";
+			}
+			else
+			{
+				PricesLocked = true;
+				btnLockPrices.Text = "Unlock Prices";
+			}
+		}
 
-        private void tslCourtesy_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Process p = Process.Start(m_courtesyUrl);
-                p.Dispose();
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex, false);
-            }
-        }
+		private void tslCourtesy_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				using (Process.Start(m_courtesyUrl))
+				{
+				}
+			}
+			catch (Exception ex)
+			{
+				ExceptionHandler.LogException(ex, false);
+			}
+		}
 
-        private void mt_MineralPriceChanged(object sender, EventArgs e)
-        {
-            tslCourtesy.Visible = false;
-        }
+		private void mt_MineralPriceChanged(object sender, EventArgs e)
+		{
+			tslCourtesy.Visible = false;
+		}
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            foreach (MineralTile mt in Tiles)
-            {
-                mt.Quantity=0;
-            }
-        }
+		private void btnReset_Click(object sender, EventArgs e)
+		{
+			foreach (MineralTile mt in Tiles)
+			{
+				mt.Quantity = 0;
+			}
+		}
 
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            foreach (MineralTile mt in Tiles)
-            {
-                mt.Quantity=0;
-            }
-        }
+		private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
+		{
+			copyFormattedTotalToolStripMenuItem.Text = string.Format("Formatted ({0:N} ISK)", m_total);
+			copyUnformattedTotalToolStripMenuItem.Text = string.Format("Unformatted ({0})", m_total);
+		}
 
-        String formattedText;
-        String unformattedText;
+		private void copyFormattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Clipboard.Clear();
+			Clipboard.SetText(tslTotal.Text);
+		}
 
-        private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
-        {
-            Decimal total = 0;
-            foreach (MineralTile mt in Tiles)
-            {
-                total += mt.Subtotal;
-            }
-
-            formattedText = total.ToString("N") + " ISK";
-            unformattedText = total.ToString();
-            copyFormattedTotalToolStripMenuItem.Text = "Formatted (" + formattedText + ")";
-            copyUnformattedTotalToolStripMenuItem.Text = "Unformatted (" + unformattedText + ")";
-        }
-
-        private void copyFormattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Clipboard.Clear();
-            Clipboard.SetText(formattedText);
-        }
-
-        private void copyUnformattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Clipboard.Clear();
-            Clipboard.SetText(unformattedText);
-        }
-    }
+		private void copyUnformattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Clipboard.Clear();
+			Clipboard.SetText(m_total.ToString());
+		}
+	}
 }

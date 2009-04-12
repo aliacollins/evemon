@@ -203,8 +203,8 @@
   <data name="tslCourtesy.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEwAA
-        CxMBAJqcGAAAAwtJREFUOE99kmtMklEYx+t7a6v5qWYfal281Lob1rqoqSU0o0wzyxRDUUmszEkgmmFR
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALEQAA
+        CxEBf2RfkQAAAwtJREFUOE99kmtMklEYx+t7a6v5qWYfal281Lob1rqoqSU0o0wzyxRDUUmszEkgmmFR
         vhiCeAsSrAwnhWihfcjpcN106lRWK2GFU4c11zQTsP69L84vUj3b/5yd/Z/nt/M85ywFsIQKRV2rL7md
         IBUxNze3w+V2L3G53D1Ol6vNOevU3+az7J7ExUEB5FoTjZShpEUPeY8OZZZqyD4V4mJ7NJJKCWTmlxtS
         rhI0KnexqGJfqvjaMylufsjD86/t6J6xIk0ngOR9DpL0oQgrkuEMV2w4wc73/RuAl6dVIfnVLihtuTB9
@@ -220,6 +220,9 @@
         1/hsZngm/T/vD258f33XdTumAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="bckgrndWrkrGetPrices.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>478, 17</value>
+  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>45</value>
   </metadata>

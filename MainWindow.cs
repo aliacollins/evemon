@@ -981,12 +981,8 @@ namespace EVEMon
 
         private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MineralWorksheet ws = new MineralWorksheet(m_settings);
-            ws.FormClosed += delegate
-            {
-                ws.Dispose();
-            };
-            ws.Show();
+        	MineralWorksheet ws = new MineralWorksheet();
+			ws.Show();
         }
 
 
