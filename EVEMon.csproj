@@ -143,6 +143,7 @@
     </Compile>
     <Compile Include="InstallerDeleter.cs" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="ListViewExporter.cs" />
     <Compile Include="LoginCharSelect.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -358,6 +358,10 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e) {
+            ListViewExporter.CreateCSV(lvShipProperties);
+        }
+
 
     }
 }

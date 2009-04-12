@@ -28,7 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
+            this.components = new System.ComponentModel.Container();
             this.scShipSelect = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.lblBattleclinic = new System.Windows.Forms.LinkLabel();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
@@ -36,17 +36,28 @@ namespace EVEMon.SkillPlanner
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
+            this.ShipPropertiesContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gbDescription.SuspendLayout();
+            this.gbRequiredSkills.SuspendLayout();
+            this.scDetailsRight.Panel1.SuspendLayout();
+            this.scDetailsRight.Panel2.SuspendLayout();
+            this.scDetailsRight.SuspendLayout();
             this.scDetails.Panel1.SuspendLayout();
+            this.scDetails.Panel2.SuspendLayout();
             this.scDetails.SuspendLayout();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
             this.scObjectBrowser.SuspendLayout();
             this.pnlDetails.SuspendLayout();
             this.pnlBrowserHeader.SuspendLayout();
-            this.scShipSelect.Panel2.SuspendLayout();
             this.scShipSelect.SuspendLayout();
             this.gbAttributes.SuspendLayout();
+            this.ShipPropertiesContextMenu.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // scDetailsRight
+            // 
             // 
             // scDetails
             // 
@@ -80,9 +91,6 @@ namespace EVEMon.SkillPlanner
             this.scShipSelect.Location = new System.Drawing.Point(57, 103);
             this.scShipSelect.Margin = new System.Windows.Forms.Padding(2);
             this.scShipSelect.Name = "scShipSelect";
-            // 
-            // scShipSelect.Panel2
-            // 
             this.scShipSelect.RememberDistanceKey = null;
             this.scShipSelect.Size = new System.Drawing.Size(650, 413);
             this.scShipSelect.SplitterDistance = 163;
@@ -116,6 +124,7 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.lvShipProperties.ContextMenuStrip = this.ShipPropertiesContextMenu;
             this.lvShipProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvShipProperties.FullRowSelect = true;
             this.lvShipProperties.Location = new System.Drawing.Point(3, 16);
@@ -149,12 +158,33 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl.Size = new System.Drawing.Size(163, 413);
             this.shipSelectControl.TabIndex = 0;
             // 
+            // ShipPropertiesContextMenu
+            // 
+            this.ShipPropertiesContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.ShipPropertiesContextMenu.Name = "ShipPropertiesContextMenu";
+            this.ShipPropertiesContextMenu.Size = new System.Drawing.Size(170, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV ...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // ShipBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "ShipBrowserControl";
+            this.Controls.SetChildIndex(this.scObjectBrowser, 0);
+            this.gbDescription.ResumeLayout(false);
+            this.gbRequiredSkills.ResumeLayout(false);
+            this.scDetailsRight.Panel1.ResumeLayout(false);
+            this.scDetailsRight.Panel2.ResumeLayout(false);
+            this.scDetailsRight.ResumeLayout(false);
             this.scDetails.Panel1.ResumeLayout(false);
+            this.scDetails.Panel2.ResumeLayout(false);
             this.scDetails.ResumeLayout(false);
             this.scObjectBrowser.Panel1.ResumeLayout(false);
             this.scObjectBrowser.Panel2.ResumeLayout(false);
@@ -163,9 +193,9 @@ namespace EVEMon.SkillPlanner
             this.pnlDetails.ResumeLayout(false);
             this.pnlBrowserHeader.ResumeLayout(false);
             this.pnlBrowserHeader.PerformLayout();
-            this.scShipSelect.Panel2.ResumeLayout(false);
             this.scShipSelect.ResumeLayout(false);
             this.gbAttributes.ResumeLayout(false);
+            this.ShipPropertiesContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -179,6 +209,8 @@ namespace EVEMon.SkillPlanner
         private ShipSelectControl shipSelectControl;
         private System.Windows.Forms.GroupBox gbAttributes;
         private System.Windows.Forms.LinkLabel lblBattleclinic;
+        private System.Windows.Forms.ContextMenuStrip ShipPropertiesContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
 
 
     }

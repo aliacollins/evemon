@@ -35,14 +35,27 @@ namespace EVEMon.SkillPlanner
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.itemSelectControl = new EVEMon.SkillPlanner.ItemSelectControl();
             this.ttItem = new System.Windows.Forms.ToolTip(this.components);
+            this.ItemAttributeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gbDescription.SuspendLayout();
+            this.gbRequiredSkills.SuspendLayout();
+            this.scDetailsRight.Panel1.SuspendLayout();
+            this.scDetailsRight.Panel2.SuspendLayout();
+            this.scDetailsRight.SuspendLayout();
             this.scDetails.Panel1.SuspendLayout();
+            this.scDetails.Panel2.SuspendLayout();
             this.scDetails.SuspendLayout();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
             this.scObjectBrowser.SuspendLayout();
             this.pnlDetails.SuspendLayout();
+            this.pnlBrowserHeader.SuspendLayout();
             this.gbAttributes.SuspendLayout();
+            this.ItemAttributeContextMenu.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // scDetailsRight
+            // 
             // 
             // scDetails
             // 
@@ -74,6 +87,7 @@ namespace EVEMon.SkillPlanner
             this.lvItemProperties.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.lvItemProperties.ContextMenuStrip = this.ItemAttributeContextMenu;
             this.lvItemProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvItemProperties.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lvItemProperties.FullRowSelect = true;
@@ -108,19 +122,43 @@ namespace EVEMon.SkillPlanner
             this.itemSelectControl.Size = new System.Drawing.Size(163, 413);
             this.itemSelectControl.TabIndex = 0;
             // 
+            // ItemAttributeContextMenu
+            // 
+            this.ItemAttributeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.ItemAttributeContextMenu.Name = "ItemAttributeContextMenu";
+            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(168, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export to CSV ...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // ItemBrowserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "ItemBrowserControl";
+            this.Controls.SetChildIndex(this.scObjectBrowser, 0);
+            this.gbDescription.ResumeLayout(false);
+            this.gbRequiredSkills.ResumeLayout(false);
+            this.scDetailsRight.Panel1.ResumeLayout(false);
+            this.scDetailsRight.Panel2.ResumeLayout(false);
+            this.scDetailsRight.ResumeLayout(false);
             this.scDetails.Panel1.ResumeLayout(false);
+            this.scDetails.Panel2.ResumeLayout(false);
             this.scDetails.ResumeLayout(false);
             this.scObjectBrowser.Panel1.ResumeLayout(false);
             this.scObjectBrowser.Panel2.ResumeLayout(false);
             this.scObjectBrowser.Panel2.PerformLayout();
             this.scObjectBrowser.ResumeLayout(false);
             this.pnlDetails.ResumeLayout(false);
+            this.pnlBrowserHeader.ResumeLayout(false);
+            this.pnlBrowserHeader.PerformLayout();
             this.gbAttributes.ResumeLayout(false);
+            this.ItemAttributeContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -133,5 +171,7 @@ namespace EVEMon.SkillPlanner
         private ItemSelectControl itemSelectControl;
         private System.Windows.Forms.ToolTip ttItem;
         private System.Windows.Forms.GroupBox gbAttributes;
+        private System.Windows.Forms.ContextMenuStrip ItemAttributeContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }
