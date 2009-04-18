@@ -284,7 +284,7 @@ Section "un.Uninstaller Section"
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
   RmDir "$SMPROGRAMS\$STARTMENU_FOLDER"
   RmDir /R "$INSTDIR\Resources"
-  RmDir /R "$INSTDIR\Microsoft.VC80.CRT"
+  RmDir /R "$INSTDIR\Microsoft.VC90.CRT"
   
   ; Just to be sure it gets cleaned up if it was locked...
   Delete /REBOOTOK "$INSTDIR\EVEMon.WinHook.dll"

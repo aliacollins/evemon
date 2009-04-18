@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/clr:oldSyntax"
-				PreprocessorDefinitions="WIN32;NDEBUG"
+				PreprocessorDefinitions="WIN32;NDEBUG;_BIND_TO_CURRENT_CRT_VERSION=1"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
