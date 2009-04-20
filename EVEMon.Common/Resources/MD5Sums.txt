@@ -1,4 +1,4 @@
-a7cf1c97f375569a84795d341ec5f25c *eve-implants2.xml.gz
-1ade175e8bae57fb6829d0dbe7391f6b *eve-items2.xml.gz
-3ca0fe974f70e43176e1d94ec2c21178 *eve-ships2.xml.gz
-f451ff3c6d333388ed2710de0029a618 *eve-skills2.xml.gz
+1827a1303f202efcb7ee8d63e7cb3d8e *eve-implants2.xml.gz
+39cc74fbccf8f789f9f0783b224882d0 *eve-items2.xml.gz
+9fc651e3bb6245836e6e74e78543a77d *eve-ships2.xml.gz
+275929b21e0ccb7ee296d6447fd7a2a8 *eve-skills2.xml.gz
