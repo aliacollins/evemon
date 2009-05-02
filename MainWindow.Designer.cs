@@ -147,9 +147,9 @@ namespace EVEMon
             // 
             this.niAlertIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("niAlertIcon.Icon")));
             this.niAlertIcon.Text = "notifyIcon1";
+            this.niAlertIcon.BalloonTipClicked += new System.EventHandler(this.niAlertIcon_BalloonTipClicked);
             this.niAlertIcon.Click += new System.EventHandler(this.niAlertIcon_Click);
             this.niAlertIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.niAlertIcon_MouseClick);
-            this.niAlertIcon.BalloonTipClicked += new System.EventHandler(this.niAlertIcon_BalloonTipClicked);
             // 
             // tmrAlertRefresh
             // 
@@ -678,10 +678,10 @@ namespace EVEMon
             this.tcCharacterTabs.ShowToolTips = true;
             this.tcCharacterTabs.Size = new System.Drawing.Size(417, 390);
             this.tcCharacterTabs.TabIndex = 0;
-            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
-            this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
             this.tcCharacterTabs.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.DragDrop += new System.Windows.Forms.DragEventHandler(this.tcCharacterTabs_DragDrop);
             this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.UpdateTabVisibility);
+            this.tcCharacterTabs.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.UpdateTabVisibility);
             // 
             // trayIcon
             // 
@@ -706,12 +706,12 @@ namespace EVEMon
             this.MinimumSize = new System.Drawing.Size(425, 350);
             this.Name = "MainWindow";
             this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
-            this.SizeChanged += new System.EventHandler(this.MainWindow_SizeChanged);
-            this.Resize += new System.EventHandler(this.MainWindow_Resize);
-            this.Shown += new System.EventHandler(this.MainWindow_Shown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.SizeChanged += new System.EventHandler(this.MainWindow_SizeChanged);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.trayIconToolStrip.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
