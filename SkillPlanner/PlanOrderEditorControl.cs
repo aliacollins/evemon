@@ -238,7 +238,8 @@ namespace EVEMon.SkillPlanner
                         baseS += scratchpad.GetAttributeBonus(gs.SecondaryAttribute);
                         double s = ApplyLearningLevel(baseS, scratchpad);
                         double minutes = Convert.ToDouble(points) / (p + (s / 2));
-                        trainTimeImpCalc = TimeSpan.FromMinutes(minutes);
+                        double newCharacterTrainingBonus = gs.GetNewCharacterSkillTrainingBonus(skillPointTotal, points);
+                        trainTimeImpCalc = TimeSpan.FromMinutes(minutes / newCharacterTrainingBonus);
                         lvi.UseItemStyleForSubItems = false;
                     }
                     else
