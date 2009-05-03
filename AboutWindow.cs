@@ -113,7 +113,7 @@ namespace EVEMon
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            lblVersion.Text = String.Format(lblVersion.Text, currentVersion.ToString());
+            VersionLabel.Text = String.Format(VersionLabel.Text, currentVersion.ToString());
 
             AddDevelopersToListBox();
             AddDebugTag();
@@ -122,7 +122,7 @@ namespace EVEMon
         [Conditional("DEBUG")]
         private void AddDebugTag()
         {
-            lblVersion.Text = String.Format("{0} (Debug)", lblVersion.Text);
+            VersionLabel.Text = String.Format("{0} (Debug)", VersionLabel.Text);
         }
 
         private void AddDevelopersToListBox()
@@ -148,7 +148,7 @@ namespace EVEMon
             }
             for (int i = 0; i < slOutput.Count; i++)
             {
-                lstDevelopers.Items.Add(slOutput.GetByIndex(i));
+                DevelopersList.Items.Add(slOutput.GetByIndex(i));
             }
         }
 
