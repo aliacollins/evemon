@@ -314,6 +314,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir)." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs" -f</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(SolutionDir)" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
 </Project>

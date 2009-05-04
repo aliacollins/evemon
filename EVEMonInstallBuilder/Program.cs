@@ -4,34 +4,124 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using ICSharpCode.SharpZipLib.Checksums;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace EVEMonInstallBuilder
 {
-    class Program
+    public class Program
     {
-        static int Main(string[] args)
+        private static string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private static string programDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
+        private static string config;
+        private static string projectDir;
+        private static string ver;
+        private static string outputDir;
+
+        public static int Main(string[] args)
         {
-#if DEBUG
-            return 0;
-#else
+            CheckDebug();
+            
             try
             {
-                string config = "Release";
-                string projectDir = String.Join(" ", args);
-                string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                string programDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                PopulateEnvironment(args);
+                
+                // create an installer on the developers desktop
+                Console.WriteLine("Starting Installer creation.");
+                BuildInstaller();
+                Console.WriteLine("Installer creation finished.");
 
-                Assembly exeAsm = Assembly.LoadFrom("../../../bin/x86/"+config+"/EVEMon.exe");
-                string ver = exeAsm.GetName().Version.ToString();
+                // create a zip file on the developers desktop
+                Console.WriteLine("Starting zip installer creation.");
+                BuildZip();
+                Console.WriteLine("Zip installer creation finished.");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occured: {0} in {1}", ex.Message, ex.Source);
+                Console.WriteLine();
+                Console.WriteLine(ex.StackTrace);
+                return 1;
+            }
+        }
 
+        [Conditional("DEBUG")]
+        private static void CheckDebug()
+        {
+            Application.Exit();
+        }
+
+        private static void PopulateEnvironment(string[] args)
+        {
+            config = "Release";
+            projectDir = String.Join(" ", args);
+
+            Assembly exeAsm = Assembly.LoadFrom("../../../bin/x86/" + config + "/EVEMon.exe");
+            ver = exeAsm.GetName().Version.ToString();
+
+            outputDir = Path.Combine(projectDir, "../bin/x86/" + config);
+            Console.WriteLine(outputDir);
+        }
+
+        private static void BuildZip()
+        {
+            string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string svnRevision = ver.Substring(ver.LastIndexOf('.') + 1, ver.Length - (ver.LastIndexOf('.') + 1));
+            string zipFileName = String.Format("{0}_rev_{1}_compiled.zip", formattedDate, svnRevision);
+            zipFileName = Path.Combine(desktopDir, zipFileName);
+
+            string[] filenames = Directory.GetFiles(outputDir, "*", SearchOption.AllDirectories);
+
+            FileInfo fi = new FileInfo(zipFileName);
+            if (fi.Exists)
+            {
+                fi.Delete();
+            }
+
+            using (ZipOutputStream zipStream = new ZipOutputStream(File.Create(zipFileName)))
+            {
+                zipStream.SetLevel(9);
+
+                byte[] buffer = new byte[4096];
+
+                foreach (string file in filenames)
+                {
+                    string entryName = "EVEMon" + file.Remove(0, outputDir.Length);
+                    Console.WriteLine("Zipping {0}", entryName);
+                    ZipEntry entry = new ZipEntry(entryName);
+
+                    entry.DateTime = DateTime.Now;
+                    zipStream.PutNextEntry(entry);
+
+                    using (FileStream fs = File.OpenRead(file))
+                    {
+                        int sourceBytes;
+                        do
+                        {
+                            sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                            zipStream.Write(buffer, 0, sourceBytes);
+                        } while (sourceBytes > 0);
+                    }
+                }
+                zipStream.Finish();
+                zipStream.Close();
+            }
+        }
+
+        private static void BuildInstaller()
+        {
+            try
+            {
                 ProcessInstallScripts(projectDir);
 
                 string processName = programDir + "/NSIS/makensis.exe";
                 string param =
                     "/DVERSION=" + ver + " " +
                     "\"/DOUTDIR=" + desktopDir + "\" " +
-                    "/PAUSE "+
-                    "\""+projectDir+"bin\\x86\\Release\\EVEMon Installer Script.nsi\"";
+                    "/PAUSE " +
+                    "\"" + projectDir + "bin\\x86\\Release\\EVEMon Installer Script.nsi\"";
                 //System.Windows.Forms.MessageBox.Show(param);
                 ProcessStartInfo psi = new ProcessStartInfo(processName, param);
                 psi.WorkingDirectory = projectDir;
@@ -40,14 +130,15 @@ namespace EVEMonInstallBuilder
                 int exitCode = makensisProcess.ExitCode;
                 makensisProcess.Dispose();
 
-                return exitCode;
+                if (exitCode == 1)
+                {
+                    MessageBox.Show("MakeNSIS exited with Errors");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return 1;
             }
-#endif
         }
 
         private static void ProcessInstallScripts(string projectDir)
