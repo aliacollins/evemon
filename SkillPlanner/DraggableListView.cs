@@ -242,7 +242,7 @@ namespace EVEMon.SkillPlanner
 
         private void RestrictedPaint()
         {
-            Rectangle itemRect = base.GetItemRect(m_dropMarkerOn);
+            Rectangle itemRect = base.GetItemRect(m_dropMarkerOn, ItemBoundsPortion.ItemOnly);
             Point start;
             Point end;
             start = new Point(itemRect.Left, (m_dropMarkerBelow ? itemRect.Bottom : itemRect.Top));

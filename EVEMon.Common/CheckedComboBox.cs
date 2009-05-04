@@ -143,7 +143,8 @@ namespace EveMon.Common
         }
 
         // Array holding the checked states of the items. This will be used to reverse any changes if user cancels selection.
-        bool[] oldStates;
+        private bool[] oldStates;
+        private string displayText;
 
         // Event handler for when an item check state changes.
         public event ItemCheckEventHandler ItemCheck;
@@ -158,12 +159,15 @@ namespace EveMon.Common
             this.textForAll = "All";
             this.textForNone = "None";
             this.valueSeparator = ", ";
+            this.Cursor = Cursors.Default;
+            this.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.DrawMode = DrawMode.OwnerDrawFixed;
+            this.DrawItem += new DrawItemEventHandler(CheckedComboBox_DrawItem);
 
             // CheckOnClick style for the dropdown (NOTE: must be set after dropdown is created).
             this.CheckOnClick = true;
             this.listBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listBox_ItemCheck);
         }
-
 
         /// <summary>
         /// Create the popup's content
@@ -306,13 +310,40 @@ namespace EveMon.Common
                 }
 
                 // Update the combobox's text
-                this.Text = GetTextValue();
+                this.displayText = GetTextValue();
+                this.Invalidate();
 
                 if (this.ItemCheck != null)
                 {
                     this.ItemCheck(sender, e);
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws the item that appears on the textbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void CheckedComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush backBrush = new SolidBrush(this.BackColor))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+            }
+
+            if (this.displayText != null)
+            {
+                using (Brush foreBrush = new SolidBrush(this.ForeColor))
+                {
+                    const float offset = 3.0f;
+                    var size = e.Graphics.MeasureString(this.displayText, this.Font);
+                    var rect = new RectangleF(offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - offset, size.Height);
+                    e.Graphics.DrawString(this.displayText, this.Font, foreBrush, rect, StringFormat.GenericTypographic);
+                }
+            }
+
+            e.DrawFocusRectangle();
         }
     }
 

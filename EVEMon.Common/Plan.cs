@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Text;
+using System.Threading;
 
 namespace EVEMon.Common
 {
@@ -84,6 +86,7 @@ namespace EVEMon.Common
             foreach (Plan.Entry pe in e.Items)
             {
                 pe.Plan = null;
+                if (pe.Remapping != null) pe.Remapping.Status = RemappingPoint.PointStatus.Obsolete;
             }
         }
 
@@ -96,27 +99,30 @@ namespace EVEMon.Common
             {
                 case ChangeType.Added:
                     e.Item.Plan = this;
+
+                    // Scroll through the items to find the previous remapping
+                    RemappingPoint lastRemapping = null;
+                    foreach (var entry in this.Entries)
+                    {
+                        if (entry.Remapping != null) lastRemapping = entry.Remapping;
+                        if (entry == e.Item) break;
+                    }
+
+                    // Set the last remapping status as "obsolete"
+                    if (lastRemapping != null) lastRemapping.Status = RemappingPoint.PointStatus.Obsolete;
                     break;
+
+                // When an item was removed, unfortunately we cannot know what remapping it depended on to set the obsolete status
                 case ChangeType.Removed:
                     e.Item.Plan = null;
                     break;
             }
+
             OnChange();
         }
 
         // Generate events when the plan changes
         public event EventHandler<EventArgs> Changed;
-
-        private void OnChange()
-        {
-            FireEvent(delegate
-                          {
-                              if (Changed != null)
-                              {
-                                  Changed(this, new EventArgs());
-                              }
-                          }, "change");
-        }
         #endregion Members
 
         #region Preferences
@@ -136,16 +142,18 @@ namespace EVEMon.Common
         }
         #endregion
 
-        #region Event suppression
-        private object m_eventLock = new object();
+        #region Event firing and suppression
+        // That whole mess is probably overkill but I wasn't sure whether the app could afford things like event fired right 
+        // after event suppression was triggered, or whether contention around the list during subscribers' job was mandatory
+        // In doubt of the original intentions and practical use, I left contention and just ensured that  only one event is 
+        // fired on resume, which was the main trouble
+        private bool m_changed;
         private int m_suppression;
-        private delegate void FireEventInvoker();
-        private Queue<FireEventInvoker> m_firedEvents = new Queue<FireEventInvoker>();
-        private Dictionary<string, bool> m_eventsInQueue = new Dictionary<string, bool>();
+        private readonly object m_lock = new object();
 
         public void SuppressEvents()
         {
-            lock (m_eventLock)
+            lock (m_lock)
             {
                 m_suppression++;
             }
@@ -153,44 +161,44 @@ namespace EVEMon.Common
 
         public void ResumeEvents()
         {
-            lock (m_eventLock)
+            lock (m_lock)
             {
                 m_suppression--;
-                if (m_suppression <= 0)
+                if (m_suppression == 0 && m_changed && Changed != null)
                 {
-                    m_suppression = 0;
-                    while (m_firedEvents.Count > 0)
-                    {
-                        FireEventInvoker fei = m_firedEvents.Dequeue();
-                        fei();
-                    }
-                    m_eventsInQueue.Clear();
+                    m_changed = false;
+                    Changed(this, new EventArgs());
                 }
             }
         }
 
-        private void FireEvent(FireEventInvoker fei, string key)
+        private void OnChange()
         {
-            lock (m_eventLock)
+            if (m_suppression > 0)
             {
-                if (m_suppression > 0)
+                // It can happen that, here, m_suppression is 0 again. So, at worst we dalyed the call
+                m_changed = true;
+            }
+            else
+            {
+                lock (m_lock)
                 {
-                    if (String.IsNullOrEmpty(key) || !m_eventsInQueue.ContainsKey(key))
+                    if (m_suppression > 0)
                     {
-                        m_firedEvents.Enqueue(fei);
-                        if (!String.IsNullOrEmpty(key))
+                        m_changed = true;
+                    }
+                    else
+                    {
+                        if (Changed != null)
                         {
-                            m_eventsInQueue.Add(key, true);
+                            m_changed = false;
+                            Changed(this, new EventArgs());
                         }
                     }
                 }
-                else
-                {
-                    fei();
-                }
             }
         }
-        #endregion Event suppression
+        #endregion Event firing and suppression
 
         #region Suggestions
         private bool? m_attributeSuggestion = null;
@@ -217,7 +225,7 @@ namespace EVEMon.Common
         {
             List<Plan.Entry> result = new List<Plan.Entry>();
 
-            TimeSpan baseTime = GetTotalTime(null);
+            TimeSpan baseTime = GetTotalTime(null, true);
             CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime, result);
             CheckForTimeBenefit("Analytical Mind", "Logic", baseTime, result);
             CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime, result);
@@ -235,7 +243,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            TimeSpan baseTime = GetTotalTime(null);
+            TimeSpan baseTime = GetTotalTime(null, true);
 
             m_attributeSuggestion = CheckForTimeBenefit("Analytical Mind", "Logic", baseTime);
             if (m_attributeSuggestion == true) return;
@@ -303,7 +311,7 @@ namespace EVEMon.Common
                     addedTrainingTime += gs.GetTrainingTimeOfLevelOnly(level, true, scratchpad);
                     scratchpad.AdjustAttributeBonus(gs.AttributeModified, 1);
 
-                    TimeSpan thisTime = GetTotalTime(scratchpad) + addedTrainingTime;
+                    TimeSpan thisTime = GetTotalTime(scratchpad, true) + addedTrainingTime;
                     if (thisTime < bestTime)
                     {
                         bestTime = thisTime;
@@ -372,7 +380,7 @@ namespace EVEMon.Common
                     EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
                     scratchpad.AdjustLearningLevelBonus(++added);
                     addedTrainingTime += learning.GetTrainingTimeOfLevelOnly(level, true, scratchpad);
-                    TimeSpan thisTime = GetTotalTime(scratchpad) + addedTrainingTime;
+                    TimeSpan thisTime = GetTotalTime(scratchpad, true) + addedTrainingTime;
                     if (thisTime < bestTime)
                     {
                         bestTime = thisTime;
@@ -409,10 +417,10 @@ namespace EVEMon.Common
         [XmlIgnore]
         public TimeSpan TotalTrainingTime
         {
-            get { return GetTotalTime(null); }
+            get { return GetTotalTime(null, true); }
         }
 
-        public TimeSpan GetTotalTime(EveAttributeScratchpad scratchpad)
+        public TimeSpan GetTotalTime(EveAttributeScratchpad scratchpad, bool applyRemappingPoints)
         {
             TimeSpan ts = TimeSpan.Zero;
             int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
@@ -432,6 +440,12 @@ namespace EVEMon.Common
                 ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
                 cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
                 scratchpad.ApplyALevelOf(pe.Skill);
+
+                // Apply remapping point
+                if (pe.Remapping != null && applyRemappingPoints)
+                {
+                    pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpad);
+                }
             }
             return ts;
         }
@@ -1343,6 +1357,153 @@ namespace EVEMon.Common
         }
         #endregion Planner Window
 
+
+        #region Plan.RemappingPoint
+        [XmlRoot("Plan.RemappingPoint")]
+        public class RemappingPoint : ICloneable
+        {
+            public enum PointStatus
+            {
+                NotComputed = 0,
+                UpToDate = 1,
+                Obsolete = 2
+            }
+
+            private PointStatus status;
+            private int[] baseAttributes = new int[5];
+            private string attributesDescription = "";
+            public readonly Guid Guid = Guid.NewGuid();
+
+            public RemappingPoint()
+            {
+            }
+
+            public PointStatus Status
+            {
+                get { return this.status; }
+                set { this.status = value; }
+            }
+
+            public int[] BaseAttributes
+            {
+                get { return this.baseAttributes; }
+                set { this.baseAttributes = value; }
+            }
+
+            public string AttributesDescription
+            {
+                get { return this.attributesDescription; }
+                set { this.attributesDescription = value; }
+            }
+
+            public string ToShortString()
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append("i").Append(this.baseAttributes[(int)EveAttribute.Intelligence].ToString()).
+                    Append(" p").Append(this.baseAttributes[(int)EveAttribute.Perception].ToString()).
+                    Append(" c").Append(this.baseAttributes[(int)EveAttribute.Charisma].ToString()).
+                    Append(" w").Append(this.baseAttributes[(int)EveAttribute.Willpower].ToString()).
+                    Append(" m").Append(this.baseAttributes[(int)EveAttribute.Memory].ToString());
+
+                return builder.ToString();
+            }
+
+            public override string ToString()
+            {
+                switch (status)
+                {
+                    case PointStatus.NotComputed:
+                        return "Remapping (not computed, use the attributes optimizer)";
+                    case PointStatus.Obsolete:
+                        return "Remapping (outdated) : " + ToShortString();
+                    case PointStatus.UpToDate:
+                        return "Remapping : " + ToShortString();
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            public string ToLongString()
+            {
+                switch (status)
+                {
+                    case PointStatus.NotComputed:
+                        return "Remapping (not computed, use the attributes optimizer)";
+                    case PointStatus.Obsolete:
+                        return "Remapping (outdated) : " + attributesDescription;
+                    case PointStatus.UpToDate:
+                        return "Remapping : " + attributesDescription;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            public EveAttributeScratchpad TransformSctratchpad(CharacterInfo character, EveAttributeScratchpad scratchpad)
+            {
+                var newScratchpad = scratchpad.Clone();
+                for(int i=0; i<5; i++)
+                {
+                    EveAttribute attrib = (EveAttribute)i;
+                    var bonusDifference = this.baseAttributes[i] - character.GetBaseAttribute(attrib);
+                    newScratchpad.AdjustAttributeBonus(attrib, bonusDifference);
+                }
+                return newScratchpad;
+            }
+
+            public void SetBaseAttributes(CharacterInfo character, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            {
+                // Update the status
+                this.status = PointStatus.UpToDate;
+
+                // Initialize the string
+                StringBuilder builder = new StringBuilder();
+
+                // Scroll through attributes
+                for (int i = 0; i < 5; i++)
+                {
+                    // Compute the new base attribute
+                    EveAttribute attrib = (EveAttribute)i;
+                    var bonusDifference = newScratchpad.GetAttributeBonus(attrib) - oldScratchpad.GetAttributeBonus(attrib);
+                    this.baseAttributes[i] = character.GetBaseAttribute(attrib) + bonusDifference;
+
+                    // Update description
+                    builder.AppendLine().Append(GetStringForAttribute(attrib, character, oldScratchpad, newScratchpad));
+                }
+
+                // Return the final string
+                this.attributesDescription = builder.ToString();
+            }
+
+            public static string GetStringForAttribute(EveAttribute attrib, CharacterInfo character, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            {
+                StringBuilder builder = new StringBuilder(attrib.ToString());
+                var learningGroupBonus = character.GetSkillsBonusesWithoutLearning(attrib) + oldScratchpad.GetAttributeBonus(attrib);
+                var bonusDifference = newScratchpad.GetAttributeBonus(attrib) - oldScratchpad.GetAttributeBonus(attrib);
+                var baseAttrib = character.GetBaseAttribute(attrib) + bonusDifference;
+                var learningFactor = character.GetLearningFactor(oldScratchpad);
+                var implant = character.getImplantValue(attrib);
+
+                builder.Append((bonusDifference > 0 ? " (+" : " (")).Append(bonusDifference.ToString()).Append(")").
+                    Append(" = ").Append(character.GetEffectiveAttribute(attrib, newScratchpad).ToString("##.##")).
+                    Append(" = (").Append(baseAttrib.ToString()).Append(" + ").Append(learningGroupBonus.ToString()).
+                    Append(" + ").Append(implant.ToString()).Append(")").Append(" * ").Append(learningFactor.ToString("#.##")).
+                    Append(" ; old was ").Append(character.GetBaseAttribute(attrib).ToString()).
+                    Append(" / ").Append(character.GetEffectiveAttribute(attrib));
+
+                return builder.ToString();
+            }
+
+            public object Clone()
+            {
+                RemappingPoint clone = new RemappingPoint();
+                clone.status = this.status;
+                Array.Copy(this.baseAttributes, clone.baseAttributes, 5);
+                return clone;
+            }
+        }
+        #endregion
+
+        #region Plan.Entry
         [XmlRoot("Plan.Entry")]
         public class Entry : ICloneable
         {
@@ -1376,6 +1537,7 @@ namespace EVEMon.Common
             private string m_notes;
             public static readonly int DEFAULT_PRIORITY = 3;
             private int m_priority = DEFAULT_PRIORITY;
+            private RemappingPoint remapping;
 
             [XmlIgnore]
             public Plan Plan
@@ -1421,6 +1583,15 @@ namespace EVEMon.Common
             {
                 get { return m_level; }
                 set { m_level = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the remapping point to apply before that skill is trained
+            /// </summary>
+            public RemappingPoint Remapping
+            {
+                get { return this.remapping; }
+                set { this.remapping = value; }
             }
 
             public System.Collections.ArrayList PlanGroups
@@ -1550,13 +1721,14 @@ namespace EVEMon.Common
                 pe.EntryType = this.EntryType;
                 pe.Notes = this.Notes;
                 pe.m_owner = this.m_owner;
+                pe.remapping = (this.remapping != null ? (Plan.RemappingPoint)this.remapping.Clone() : null);
                 return pe;
             }
             #endregion
         }
+        #endregion
 
         #region Plan Printing
-        
         private int entryToPrint;
         private Font printFont = new Font("Arial", 10);
         private Font printFontBold = new Font("Arial", 10, FontStyle.Bold | FontStyle.Underline);

@@ -208,7 +208,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            TimeSpan res = m_plan.GetTotalTime(null);
+            TimeSpan res = m_plan.GetTotalTime(null, true);
             slblStatusText.Text = String.Format("{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}",
                                                 m_plan.Entries.Count,
                                                 m_plan.Entries.Count == 1 ? "" : "s",

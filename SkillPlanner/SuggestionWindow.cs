@@ -68,7 +68,7 @@ namespace EVEMon.SkillPlanner
             // and throw away the test plan
             optimalPlan = null;
             
-            TimeSpan preTime = m_plan.GetTotalTime(null);
+            TimeSpan preTime = m_plan.GetTotalTime(null, true);
             TimeSpan diff = preTime - postTime;
 
             lblBeforeTime.Text = Skill.TimeSpanToDescriptiveText(preTime, DTO_OPTS);

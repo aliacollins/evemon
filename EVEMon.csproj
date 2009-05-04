@@ -785,6 +785,7 @@
     </None>
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <None Include="Resources\warning32x32.png" />
+    <None Include="SkillPlanner\Blue_Glass_Arrow.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

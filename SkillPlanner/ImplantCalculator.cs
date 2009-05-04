@@ -44,38 +44,45 @@ namespace EVEMon.SkillPlanner
             get { return Convert.ToInt32(nudWillpower.Value); }
         }
 
-        public int getEffectiveAttributeWithoutLearning(EveAttribute ea)
+        #region IPlanOrderPluggable implementation
+        public EveAttributeScratchpad GetScratchpad(out bool isNew)
         {
-            int val = 0;
-            switch (ea)
-            {
-                case EveAttribute.Charisma:
-                    val = (int)nudCharisma.Value;
-                    break;
-                case EveAttribute.Intelligence:
-                    val = (int)nudIntelligence.Value;
-                    break;
-                case EveAttribute.Memory:
-                    val = (int)nudMemory.Value;
-                    break;
-                case EveAttribute.Perception:
-                    val = (int)nudPerception.Value;
-                    break;
-                case EveAttribute.Willpower:
-                    val = (int)nudWillpower.Value;
-                    break;
-                case EveAttribute.None:
-                    val = 0;
-                    break;
-            }
-            return val;
+            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+
+            scratchpad.AdjustAttributeBonus(EveAttribute.Charisma, 
+                ((int)this.nudCharisma.Value - (int)m_grandCharacterInfo.GetEffectiveAttribute(EveAttribute.Charisma, null, false, true)));
+
+            scratchpad.AdjustAttributeBonus(EveAttribute.Intelligence,
+                ((int)this.nudIntelligence.Value - (int)m_grandCharacterInfo.GetEffectiveAttribute(EveAttribute.Intelligence, null, false, true)));
+
+            scratchpad.AdjustAttributeBonus(EveAttribute.Memory,
+                ((int)this.nudMemory.Value - (int)m_grandCharacterInfo.GetEffectiveAttribute(EveAttribute.Memory, null, false, true)));
+
+            scratchpad.AdjustAttributeBonus(EveAttribute.Perception,
+                ((int)this.nudPerception.Value - (int)m_grandCharacterInfo.GetEffectiveAttribute(EveAttribute.Perception, null, false, true)));
+
+            scratchpad.AdjustAttributeBonus(EveAttribute.Willpower,
+                ((int)this.nudWillpower.Value - (int)m_grandCharacterInfo.GetEffectiveAttribute(EveAttribute.Willpower, null, false, true)));
+
+            isNew = true;
+            return scratchpad;
         }
+
+        public bool UseRemappingPointsForNew
+        {
+            get { return true; }
+        }
+
+        public bool UseRemappingPointsForOld
+        {
+            get { return true; }
+        }
+        #endregion
+
 
         public PlanOrderEditorControl PlanEditor
         {
-            set { 
-                m_planEditor = value;
-            }
+            set { m_planEditor = value; }
         }
 
         private CharacterInfo m_grandCharacterInfo;
@@ -290,7 +297,7 @@ namespace EVEMon.SkillPlanner
 
         private TimeSpan CalculatePlanTimes(EveAttributeScratchpad scratchpad, Label lblSpan, Label lblDate)
         {
-            TimeSpan ts = m_plan.GetTotalTime(scratchpad);
+            TimeSpan ts = m_plan.GetTotalTime(scratchpad, true);
             DateTime dt = DateTime.Now + ts;
 
             lblSpan.Text = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas);

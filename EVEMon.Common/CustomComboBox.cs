@@ -40,7 +40,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal class to represent the dropdown list of the CheckedComboBox
         /// </summary>
-        internal class Dropdown : Form
+        protected class Dropdown : Form
         {
             private CustomComboBox ccbParent;
             private Control content;
@@ -169,7 +169,7 @@ namespace EVEMon.Common
         private System.ComponentModel.IContainer components = null;
 
         // A form-derived object representing the drop-down list of the checked combo box.
-        private Dropdown dropdown;
+        protected Dropdown dropdown;
         private Control content;
 
         public bool ValueChanged

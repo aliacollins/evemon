@@ -61,7 +61,8 @@ namespace EVEMon.SkillPlanner
             // 
             this.tbSearchText.Location = new System.Drawing.Point(33, 172);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.tbSearchText.Size = new System.Drawing.Size(187, 21);
+            this.tbSearchText.Size = new System.Drawing.Size(421, 21);
+            this.tbSearchText.TabIndex = 10;
             // 
             // tvItems
             // 
@@ -72,7 +73,7 @@ namespace EVEMon.SkillPlanner
             // lbNoMatches
             // 
             this.lbNoMatches.Location = new System.Drawing.Point(2, 2);
-            this.lbNoMatches.Size = new System.Drawing.Size(458, 40);
+            this.lbNoMatches.Size = new System.Drawing.Size(692, 40);
             this.lbNoMatches.TabIndex = 0;
             this.lbNoMatches.Text = "No items match your search.";
             // 
@@ -91,6 +92,7 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.cbSlotFilter);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Size = new System.Drawing.Size(224, 199);
+            this.panel1.TabIndex = 0;
             this.panel1.Controls.SetChildIndex(this.label2, 0);
             this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
             this.panel1.Controls.SetChildIndex(this.pbSearchImage, 0);
@@ -115,7 +117,7 @@ namespace EVEMon.SkillPlanner
             this.lbSearchTextHint.Location = new System.Drawing.Point(34, 173);
             this.lbSearchTextHint.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSearchTextHint.Size = new System.Drawing.Size(68, 18);
-            this.lbSearchTextHint.TabIndex = 11;
+            this.lbSearchTextHint.TabIndex = 9;
             // 
             // pbSearchImage
             // 
@@ -144,7 +146,7 @@ namespace EVEMon.SkillPlanner
             this.cbSlotFilter.Location = new System.Drawing.Point(45, 29);
             this.cbSlotFilter.Name = "cbSlotFilter";
             this.cbSlotFilter.Size = new System.Drawing.Size(177, 21);
-            this.cbSlotFilter.TabIndex = 2;
+            this.cbSlotFilter.TabIndex = 3;
             this.cbSlotFilter.SelectedIndexChanged += new System.EventHandler(this.cbSlotFilter_SelectedIndexChanged);
             // 
             // label2
@@ -153,7 +155,7 @@ namespace EVEMon.SkillPlanner
             this.label2.Location = new System.Drawing.Point(14, 32);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(25, 13);
-            this.label2.TabIndex = 0;
+            this.label2.TabIndex = 2;
             this.label2.Text = "Slot";
             // 
             // ccbTechFilter
@@ -161,9 +163,11 @@ namespace EVEMon.SkillPlanner
             this.ccbTechFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.ccbTechFilter.CheckOnClick = true;
+            this.ccbTechFilter.Cursor = System.Windows.Forms.Cursors.Default;
             this.ccbTechFilter.CustomTextBuilder = null;
             this.ccbTechFilter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.ccbTechFilter.DropDownHeight = 1;
+            this.ccbTechFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ccbTechFilter.FormattingEnabled = true;
             this.ccbTechFilter.IntegralHeight = false;
             this.ccbTechFilter.Items.AddRange(new object[] {
@@ -173,7 +177,7 @@ namespace EVEMon.SkillPlanner
             this.ccbTechFilter.Location = new System.Drawing.Point(45, 56);
             this.ccbTechFilter.Name = "ccbTechFilter";
             this.ccbTechFilter.Size = new System.Drawing.Size(176, 22);
-            this.ccbTechFilter.TabIndex = 24;
+            this.ccbTechFilter.TabIndex = 5;
             this.ccbTechFilter.TextForAll = "Any level";
             this.ccbTechFilter.TextForNone = "No tech level";
             this.ccbTechFilter.ToolTip = null;
@@ -185,7 +189,7 @@ namespace EVEMon.SkillPlanner
             this.label3.Location = new System.Drawing.Point(9, 59);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(30, 13);
-            this.label3.TabIndex = 25;
+            this.label3.TabIndex = 4;
             this.label3.Text = "Tech";
             // 
             // ccbGroupFilter
@@ -193,9 +197,11 @@ namespace EVEMon.SkillPlanner
             this.ccbGroupFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.ccbGroupFilter.CheckOnClick = true;
+            this.ccbGroupFilter.Cursor = System.Windows.Forms.Cursors.Default;
             this.ccbGroupFilter.CustomTextBuilder = null;
             this.ccbGroupFilter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.ccbGroupFilter.DropDownHeight = 1;
+            this.ccbGroupFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ccbGroupFilter.FormattingEnabled = true;
             this.ccbGroupFilter.IntegralHeight = false;
             this.ccbGroupFilter.Items.AddRange(new object[] {
@@ -206,7 +212,7 @@ namespace EVEMon.SkillPlanner
             this.ccbGroupFilter.Location = new System.Drawing.Point(45, 85);
             this.ccbGroupFilter.Name = "ccbGroupFilter";
             this.ccbGroupFilter.Size = new System.Drawing.Size(176, 22);
-            this.ccbGroupFilter.TabIndex = 26;
+            this.ccbGroupFilter.TabIndex = 7;
             this.ccbGroupFilter.TextForAll = "Any group";
             this.ccbGroupFilter.TextForNone = "Regular items only";
             this.ccbGroupFilter.ToolTip = null;
@@ -218,7 +224,7 @@ namespace EVEMon.SkillPlanner
             this.label4.Location = new System.Drawing.Point(3, 88);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(36, 13);
-            this.label4.TabIndex = 27;
+            this.label4.TabIndex = 6;
             this.label4.Text = "Group";
             // 
             // tableLayoutPanel1
@@ -238,7 +244,7 @@ namespace EVEMon.SkillPlanner
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 47.05882F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52.94118F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(214, 48);
-            this.tableLayoutPanel1.TabIndex = 28;
+            this.tableLayoutPanel1.TabIndex = 8;
             // 
             // numPowergrid
             // 
@@ -283,7 +289,7 @@ namespace EVEMon.SkillPlanner
             this.cbPowergrid.Location = new System.Drawing.Point(3, 25);
             this.cbPowergrid.Name = "cbPowergrid";
             this.cbPowergrid.Size = new System.Drawing.Size(77, 17);
-            this.cbPowergrid.TabIndex = 1;
+            this.cbPowergrid.TabIndex = 2;
             this.cbPowergrid.Text = "Power limit";
             this.cbPowergrid.UseVisualStyleBackColor = true;
             this.cbPowergrid.CheckedChanged += new System.EventHandler(this.cbPowergrid_CheckedChanged);
@@ -306,7 +312,7 @@ namespace EVEMon.SkillPlanner
             0});
             this.numCPU.Name = "numCPU";
             this.numCPU.Size = new System.Drawing.Size(125, 21);
-            this.numCPU.TabIndex = 2;
+            this.numCPU.TabIndex = 1;
             this.numCPU.Value = new decimal(new int[] {
             10,
             0,

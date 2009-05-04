@@ -459,8 +459,19 @@ namespace EVEMon.Common
         private double ApplyLearningToAttribute(EveAttribute attribute, EveAttributeScratchpad scratchpad,
                                                 bool includeLearning, double attributeValue)
         {
-            double result = attributeValue;
-            double learningBonus = 1.0F;
+            double result = attributeValue + GetSkillsBonusesWithoutLearning(attribute);
+            if (scratchpad != null)
+            {
+                result += scratchpad.GetAttributeBonus(attribute);
+            }
+
+            if (includeLearning) return result * GetLearningFactor(scratchpad);
+            else return result;
+        }
+
+        public int GetSkillsBonusesWithoutLearning(EveAttribute attribute)
+        {
+            int result = 0;
 
             // XXX: include implants on scratchpad?
             SkillGroup learningSg = m_skillGroups["Learning"];
@@ -487,27 +498,19 @@ namespace EVEMon.Common
                     result += learningSg["Clarity"].Level;
                     break;
             }
+
+            return result;
+        }
+
+        public double GetLearningFactor(EveAttributeScratchpad scratchpad)
+        {
+            int learningLevel = m_skillGroups["Learning"]["Learning"].Level;
             if (scratchpad != null)
             {
-                result += scratchpad.GetAttributeBonus(attribute);
+                learningLevel += scratchpad.LearningLevelBonus;
             }
 
-            if (includeLearning)
-            {
-                int learningLevel = learningSg["Learning"].Level;
-                if (scratchpad != null)
-                {
-                    learningLevel += scratchpad.LearningLevelBonus;
-                }
-
-                learningBonus = 1.0 + (0.02 * learningLevel);
-
-                return (result * learningBonus);
-            }
-            else
-            {
-                return result;
-            }
+            return 1.0 + (0.02 * learningLevel);
         }
 
         public double getImplantValue(EveAttribute eveAttribute)

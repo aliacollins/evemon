@@ -36,20 +36,20 @@ namespace EVEMon.SkillPlanner
             this.label1 = new System.Windows.Forms.Label();
             this.lblEffectivePerception = new System.Windows.Forms.Label();
             this.nudCharisma = new System.Windows.Forms.NumericUpDown();
-            this.lblEffectiveCharisma = new System.Windows.Forms.Label();
             this.nudPerception = new System.Windows.Forms.NumericUpDown();
-            this.lblEffectiveIntelligence = new System.Windows.Forms.Label();
-            this.nudMemory = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
-            this.nudWillpower = new System.Windows.Forms.NumericUpDown();
-            this.lblAdjustWillpower = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblAdjustMemory = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblAdjustPerception = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblAdjustCharisma = new System.Windows.Forms.Label();
+            this.lblEffectiveCharisma = new System.Windows.Forms.Label();
+            this.nudMemory = new System.Windows.Forms.NumericUpDown();
+            this.lblEffectiveIntelligence = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.lblAdjustCharisma = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lblAdjustWillpower = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.nudWillpower = new System.Windows.Forms.NumericUpDown();
+            this.lblAdjustPerception = new System.Windows.Forms.Label();
             this.lblAdjustIntelligence = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
             this.lblEffectiveWillpower.Location = new System.Drawing.Point(168, 107);
             this.lblEffectiveWillpower.Name = "lblEffectiveWillpower";
             this.lblEffectiveWillpower.Size = new System.Drawing.Size(35, 13);
-            this.lblEffectiveWillpower.TabIndex = 21;
+            this.lblEffectiveWillpower.TabIndex = 17;
             this.lblEffectiveWillpower.Text = "22.14";
             // 
             // nudIntelligence
@@ -148,7 +148,7 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudIntelligence.Name = "nudIntelligence";
             this.nudIntelligence.Size = new System.Drawing.Size(39, 21);
-            this.nudIntelligence.TabIndex = 1;
+            this.nudIntelligence.TabIndex = 3;
             this.nudIntelligence.Value = new decimal(new int[] {
             1,
             0,
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
             this.lblEffectiveMemory.Location = new System.Drawing.Point(168, 134);
             this.lblEffectiveMemory.Name = "lblEffectiveMemory";
             this.lblEffectiveMemory.Size = new System.Drawing.Size(35, 13);
-            this.lblEffectiveMemory.TabIndex = 20;
+            this.lblEffectiveMemory.TabIndex = 21;
             this.lblEffectiveMemory.Text = "22.14";
             // 
             // label1
@@ -171,7 +171,7 @@ namespace EVEMon.SkillPlanner
             this.label1.Location = new System.Drawing.Point(-1, 26);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 0;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Intelligence:";
             // 
             // lblEffectivePerception
@@ -180,7 +180,7 @@ namespace EVEMon.SkillPlanner
             this.lblEffectivePerception.Location = new System.Drawing.Point(168, 53);
             this.lblEffectivePerception.Name = "lblEffectivePerception";
             this.lblEffectivePerception.Size = new System.Drawing.Size(35, 13);
-            this.lblEffectivePerception.TabIndex = 19;
+            this.lblEffectivePerception.TabIndex = 9;
             this.lblEffectivePerception.Text = "22.14";
             // 
             // nudCharisma
@@ -198,22 +198,13 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudCharisma.Name = "nudCharisma";
             this.nudCharisma.Size = new System.Drawing.Size(39, 21);
-            this.nudCharisma.TabIndex = 2;
+            this.nudCharisma.TabIndex = 11;
             this.nudCharisma.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nudCharisma.ValueChanged += new System.EventHandler(this.nudCharisma_ValueChanged);
-            // 
-            // lblEffectiveCharisma
-            // 
-            this.lblEffectiveCharisma.AutoSize = true;
-            this.lblEffectiveCharisma.Location = new System.Drawing.Point(168, 80);
-            this.lblEffectiveCharisma.Name = "lblEffectiveCharisma";
-            this.lblEffectiveCharisma.Size = new System.Drawing.Size(35, 13);
-            this.lblEffectiveCharisma.TabIndex = 18;
-            this.lblEffectiveCharisma.Text = "22.14";
             // 
             // nudPerception
             // 
@@ -230,7 +221,7 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudPerception.Name = "nudPerception";
             this.nudPerception.Size = new System.Drawing.Size(39, 21);
-            this.nudPerception.TabIndex = 3;
+            this.nudPerception.TabIndex = 7;
             this.nudPerception.Value = new decimal(new int[] {
             1,
             0,
@@ -238,14 +229,41 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudPerception.ValueChanged += new System.EventHandler(this.nudPerception_ValueChanged);
             // 
-            // lblEffectiveIntelligence
+            // label4
             // 
-            this.lblEffectiveIntelligence.AutoSize = true;
-            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(168, 26);
-            this.lblEffectiveIntelligence.Name = "lblEffectiveIntelligence";
-            this.lblEffectiveIntelligence.Size = new System.Drawing.Size(35, 13);
-            this.lblEffectiveIntelligence.TabIndex = 17;
-            this.lblEffectiveIntelligence.Text = "22.14";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(-1, 134);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(49, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Memory:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(-1, 80);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Charisma:";
+            // 
+            // lblAdjustMemory
+            // 
+            this.lblAdjustMemory.AutoSize = true;
+            this.lblAdjustMemory.Location = new System.Drawing.Point(128, 134);
+            this.lblAdjustMemory.Name = "lblAdjustMemory";
+            this.lblAdjustMemory.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustMemory.TabIndex = 20;
+            this.lblAdjustMemory.Text = "+0";
+            // 
+            // lblEffectiveCharisma
+            // 
+            this.lblEffectiveCharisma.AutoSize = true;
+            this.lblEffectiveCharisma.Location = new System.Drawing.Point(168, 80);
+            this.lblEffectiveCharisma.Name = "lblEffectiveCharisma";
+            this.lblEffectiveCharisma.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveCharisma.TabIndex = 13;
+            this.lblEffectiveCharisma.Text = "22.14";
             // 
             // nudMemory
             // 
@@ -262,13 +280,40 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudMemory.Name = "nudMemory";
             this.nudMemory.Size = new System.Drawing.Size(39, 21);
-            this.nudMemory.TabIndex = 4;
+            this.nudMemory.TabIndex = 19;
             this.nudMemory.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nudMemory.ValueChanged += new System.EventHandler(this.nudMemory_ValueChanged);
+            // 
+            // lblEffectiveIntelligence
+            // 
+            this.lblEffectiveIntelligence.AutoSize = true;
+            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(168, 26);
+            this.lblEffectiveIntelligence.Name = "lblEffectiveIntelligence";
+            this.lblEffectiveIntelligence.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveIntelligence.TabIndex = 5;
+            this.lblEffectiveIntelligence.Text = "22.14";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(-1, 107);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(57, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Willpower:";
+            // 
+            // lblAdjustCharisma
+            // 
+            this.lblAdjustCharisma.AutoSize = true;
+            this.lblAdjustCharisma.Location = new System.Drawing.Point(128, 80);
+            this.lblAdjustCharisma.Name = "lblAdjustCharisma";
+            this.lblAdjustCharisma.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustCharisma.TabIndex = 12;
+            this.lblAdjustCharisma.Text = "+0";
             // 
             // label12
             // 
@@ -277,8 +322,26 @@ namespace EVEMon.SkillPlanner
             this.label12.Location = new System.Drawing.Point(168, 2);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(56, 13);
-            this.label12.TabIndex = 16;
+            this.label12.TabIndex = 1;
             this.label12.Text = "Effective";
+            // 
+            // lblAdjustWillpower
+            // 
+            this.lblAdjustWillpower.AutoSize = true;
+            this.lblAdjustWillpower.Location = new System.Drawing.Point(128, 107);
+            this.lblAdjustWillpower.Name = "lblAdjustWillpower";
+            this.lblAdjustWillpower.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustWillpower.TabIndex = 16;
+            this.lblAdjustWillpower.Text = "+0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(-1, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(62, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Perception:";
             // 
             // nudWillpower
             // 
@@ -295,7 +358,7 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudWillpower.Name = "nudWillpower";
             this.nudWillpower.Size = new System.Drawing.Size(39, 21);
-            this.nudWillpower.TabIndex = 5;
+            this.nudWillpower.TabIndex = 15;
             this.nudWillpower.Value = new decimal(new int[] {
             1,
             0,
@@ -303,77 +366,14 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudWillpower.ValueChanged += new System.EventHandler(this.nudWillpower_ValueChanged);
             // 
-            // lblAdjustWillpower
-            // 
-            this.lblAdjustWillpower.AutoSize = true;
-            this.lblAdjustWillpower.Location = new System.Drawing.Point(128, 107);
-            this.lblAdjustWillpower.Name = "lblAdjustWillpower";
-            this.lblAdjustWillpower.Size = new System.Drawing.Size(21, 13);
-            this.lblAdjustWillpower.TabIndex = 15;
-            this.lblAdjustWillpower.Text = "+0";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 80);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Charisma:";
-            // 
-            // lblAdjustMemory
-            // 
-            this.lblAdjustMemory.AutoSize = true;
-            this.lblAdjustMemory.Location = new System.Drawing.Point(128, 134);
-            this.lblAdjustMemory.Name = "lblAdjustMemory";
-            this.lblAdjustMemory.Size = new System.Drawing.Size(21, 13);
-            this.lblAdjustMemory.TabIndex = 14;
-            this.lblAdjustMemory.Text = "+0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-1, 53);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Perception:";
-            // 
             // lblAdjustPerception
             // 
             this.lblAdjustPerception.AutoSize = true;
             this.lblAdjustPerception.Location = new System.Drawing.Point(128, 53);
             this.lblAdjustPerception.Name = "lblAdjustPerception";
             this.lblAdjustPerception.Size = new System.Drawing.Size(21, 13);
-            this.lblAdjustPerception.TabIndex = 13;
+            this.lblAdjustPerception.TabIndex = 8;
             this.lblAdjustPerception.Text = "+0";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-1, 134);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Memory:";
-            // 
-            // lblAdjustCharisma
-            // 
-            this.lblAdjustCharisma.AutoSize = true;
-            this.lblAdjustCharisma.Location = new System.Drawing.Point(128, 80);
-            this.lblAdjustCharisma.Name = "lblAdjustCharisma";
-            this.lblAdjustCharisma.Size = new System.Drawing.Size(21, 13);
-            this.lblAdjustCharisma.TabIndex = 12;
-            this.lblAdjustCharisma.Text = "+0";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(-1, 107);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Willpower:";
             // 
             // lblAdjustIntelligence
             // 
@@ -381,7 +381,7 @@ namespace EVEMon.SkillPlanner
             this.lblAdjustIntelligence.Location = new System.Drawing.Point(128, 26);
             this.lblAdjustIntelligence.Name = "lblAdjustIntelligence";
             this.lblAdjustIntelligence.Size = new System.Drawing.Size(21, 13);
-            this.lblAdjustIntelligence.TabIndex = 11;
+            this.lblAdjustIntelligence.TabIndex = 4;
             this.lblAdjustIntelligence.Text = "+0";
             // 
             // label6
@@ -391,7 +391,7 @@ namespace EVEMon.SkillPlanner
             this.label6.Location = new System.Drawing.Point(128, 2);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 13);
-            this.label6.TabIndex = 10;
+            this.label6.TabIndex = 0;
             this.label6.Text = "Base";
             // 
             // groupBox2

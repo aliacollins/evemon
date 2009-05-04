@@ -18,9 +18,10 @@ namespace EVEMon.SkillPlanner
         private readonly Brush m_inactiveBrush;
         private readonly Brush m_basePointBrush;
         private readonly Brush m_spentPointBrush;
+        private readonly AttributesOptimizer.Remapping m_remapping;
 
 
-        public AttributesOptimizationControl()
+        public AttributesOptimizationControl(CharacterInfo character, AttributesOptimizer.Remapping remapping)
         {
             InitializeComponent();
             m_borderPen = new Pen(Brushes.Black);
@@ -29,6 +30,34 @@ namespace EVEMon.SkillPlanner
             m_inactiveBrush = new SolidBrush(Color.FromArgb(96, 96, 96));
             m_basePointBrush = new SolidBrush(Color.FromArgb(208, 208, 208));
             m_spentPointBrush = new SolidBrush(Color.FromArgb(54, 202, 54));
+            m_remapping = remapping;
+
+            UpdateAttributeControls(character, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
+            UpdateAttributeControls(character, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
+            UpdateAttributeControls(character, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
+            UpdateAttributeControls(character, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
+            UpdateAttributeControls(character, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
+
+            // Update the current time control
+            this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BaseDuration, DescriptiveTextOptions.IncludeCommas);
+
+            // Update the optimized time control
+            this.lbOptimizedTime.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BestDuration, DescriptiveTextOptions.IncludeCommas);
+
+            // Update the time benefit control
+            if (m_remapping.BestDuration < m_remapping.BaseDuration)
+            {
+                this.lbGain.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BaseDuration - m_remapping.BestDuration, 
+                    DescriptiveTextOptions.IncludeCommas) + " better than current";
+            }
+            else
+            {
+                this.lbGain.Text = "Your skills are already optimized";
+            }
+
+            // A plan may not have a years worth of skills in it,
+            // only fair to warn the user
+            this.lbWarning.Visible = m_remapping.BestDuration < new TimeSpan(365, 0, 0, 0);
         }
 
         public void CleanUp()
@@ -54,21 +83,16 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        public void Update(CharacterInfo character, EveAttributeScratchpad bestScratchpad)
+        public void Update(CharacterInfo character, EveAttributeScratchpad baseScratchpad, EveAttributeScratchpad bestScratchpad)
         {
-            UpdateAttributeControls(character, EveAttribute.Perception, bestScratchpad, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
-            UpdateAttributeControls(character, EveAttribute.Willpower, bestScratchpad, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
-            UpdateAttributeControls(character, EveAttribute.Memory, bestScratchpad, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
-            UpdateAttributeControls(character, EveAttribute.Intelligence, bestScratchpad, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
-            UpdateAttributeControls(character, EveAttribute.Charisma, bestScratchpad, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
         }
 
-        private void UpdateAttributeControls(CharacterInfo character, EveAttribute attrib, EveAttributeScratchpad bestScratchpad, Label lb, PictureBox pbBase, PictureBox pbImplants, PictureBox pbSkills)
+        private void UpdateAttributeControls(CharacterInfo character, EveAttribute attrib, Label lb, PictureBox pbBase, PictureBox pbImplants, PictureBox pbSkills)
         {
             // Compute base and effective attributes
-            double effectiveAttribute = character.GetEffectiveAttribute(attrib, bestScratchpad);
-            int baseAttribute = character.GetBaseAttribute(attrib) + bestScratchpad.GetAttributeBonus(attrib);
+            double effectiveAttribute = character.GetEffectiveAttribute(attrib, m_remapping.BestScratchpad);
             int oldBaseAttribute = character.GetBaseAttribute(attrib);
+            int baseAttribute = oldBaseAttribute + (m_remapping.BestScratchpad.GetAttributeBonus(attrib) - m_remapping.BaseScratchpad.GetAttributeBonus(attrib));
             int implantsBonus = (int)character.getImplantValue(attrib);
             int skillsBonus = (int)effectiveAttribute - (baseAttribute + implantsBonus);
 

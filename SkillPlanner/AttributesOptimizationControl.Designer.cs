@@ -62,6 +62,13 @@ namespace EVEMon.SkillPlanner
             this.pbCHABase = new System.Windows.Forms.PictureBox();
             this.pbPERBase = new System.Windows.Forms.PictureBox();
             this.pbINTBase = new System.Windows.Forms.PictureBox();
+            this.tblayoutComparePanel = new System.Windows.Forms.TableLayoutPanel();
+            this.lbGain = new System.Windows.Forms.Label();
+            this.lbOptimizedTimeInfo = new System.Windows.Forms.Label();
+            this.lbCurrentTime = new System.Windows.Forms.Label();
+            this.lbOptimizedTime = new System.Windows.Forms.Label();
+            this.lbCurrentTimeInfo = new System.Windows.Forms.Label();
+            this.lbWarning = new System.Windows.Forms.Label();
             label10 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
             label9 = new System.Windows.Forms.Label();
@@ -94,6 +101,7 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.pbCHABase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPERBase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbINTBase)).BeginInit();
+            this.tblayoutComparePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label10
@@ -393,10 +401,102 @@ namespace EVEMon.SkillPlanner
             this.pbINTBase.TabIndex = 49;
             this.pbINTBase.TabStop = false;
             // 
+            // tblayoutComparePanel
+            // 
+            this.tblayoutComparePanel.AutoSize = true;
+            this.tblayoutComparePanel.ColumnCount = 2;
+            this.tblayoutComparePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tblayoutComparePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tblayoutComparePanel.Controls.Add(this.lbGain, 0, 2);
+            this.tblayoutComparePanel.Controls.Add(this.lbOptimizedTimeInfo, 0, 1);
+            this.tblayoutComparePanel.Controls.Add(this.lbCurrentTime, 1, 0);
+            this.tblayoutComparePanel.Controls.Add(this.lbOptimizedTime, 1, 1);
+            this.tblayoutComparePanel.Controls.Add(this.lbCurrentTimeInfo, 0, 0);
+            this.tblayoutComparePanel.Location = new System.Drawing.Point(3, 232);
+            this.tblayoutComparePanel.Name = "tblayoutComparePanel";
+            this.tblayoutComparePanel.RowCount = 3;
+            this.tblayoutComparePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblayoutComparePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblayoutComparePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblayoutComparePanel.Size = new System.Drawing.Size(241, 75);
+            this.tblayoutComparePanel.TabIndex = 73;
+            // 
+            // lbGain
+            // 
+            this.lbGain.AutoSize = true;
+            this.tblayoutComparePanel.SetColumnSpan(this.lbGain, 2);
+            this.lbGain.Location = new System.Drawing.Point(6, 56);
+            this.lbGain.Margin = new System.Windows.Forms.Padding(6);
+            this.lbGain.Name = "lbGain";
+            this.lbGain.Size = new System.Drawing.Size(156, 13);
+            this.lbGain.TabIndex = 17;
+            this.lbGain.Text = "Your skills are already optimized";
+            // 
+            // lbOptimizedTimeInfo
+            // 
+            this.lbOptimizedTimeInfo.AutoSize = true;
+            this.lbOptimizedTimeInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOptimizedTimeInfo.Location = new System.Drawing.Point(6, 31);
+            this.lbOptimizedTimeInfo.Margin = new System.Windows.Forms.Padding(6);
+            this.lbOptimizedTimeInfo.Name = "lbOptimizedTimeInfo";
+            this.lbOptimizedTimeInfo.Size = new System.Drawing.Size(97, 13);
+            this.lbOptimizedTimeInfo.TabIndex = 16;
+            this.lbOptimizedTimeInfo.Text = "Optimized time :";
+            // 
+            // lbCurrentTime
+            // 
+            this.lbCurrentTime.AutoSize = true;
+            this.lbCurrentTime.Location = new System.Drawing.Point(115, 6);
+            this.lbCurrentTime.Margin = new System.Windows.Forms.Padding(6);
+            this.lbCurrentTime.Name = "lbCurrentTime";
+            this.lbCurrentTime.Size = new System.Drawing.Size(50, 13);
+            this.lbCurrentTime.TabIndex = 19;
+            this.lbCurrentTime.Text = "0h 0m 0s";
+            // 
+            // lbOptimizedTime
+            // 
+            this.lbOptimizedTime.AutoSize = true;
+            this.lbOptimizedTime.Location = new System.Drawing.Point(115, 31);
+            this.lbOptimizedTime.Margin = new System.Windows.Forms.Padding(6);
+            this.lbOptimizedTime.Name = "lbOptimizedTime";
+            this.lbOptimizedTime.Size = new System.Drawing.Size(13, 13);
+            this.lbOptimizedTime.TabIndex = 20;
+            this.lbOptimizedTime.Text = "?";
+            // 
+            // lbCurrentTimeInfo
+            // 
+            this.lbCurrentTimeInfo.AutoSize = true;
+            this.lbCurrentTimeInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCurrentTimeInfo.Location = new System.Drawing.Point(6, 6);
+            this.lbCurrentTimeInfo.Margin = new System.Windows.Forms.Padding(6);
+            this.lbCurrentTimeInfo.Name = "lbCurrentTimeInfo";
+            this.lbCurrentTimeInfo.Size = new System.Drawing.Size(83, 13);
+            this.lbCurrentTimeInfo.TabIndex = 15;
+            this.lbCurrentTimeInfo.Text = "Current time :";
+            // 
+            // lbWarning
+            // 
+            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWarning.ForeColor = System.Drawing.Color.Red;
+            this.lbWarning.Location = new System.Drawing.Point(251, 238);
+            this.lbWarning.Margin = new System.Windows.Forms.Padding(4);
+            this.lbWarning.Name = "lbWarning";
+            this.lbWarning.Size = new System.Drawing.Size(214, 68);
+            this.lbWarning.TabIndex = 74;
+            this.lbWarning.Text = "Your current plan does not contain sufficent skills to last the entire 12 month p" +
+                "eriod.";
+            this.lbWarning.Visible = false;
+            // 
             // AttributesOptimizationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.tblayoutComparePanel);
+            this.Controls.Add(this.lbWarning);
             this.Controls.Add(this.pbMEMSkills);
             this.Controls.Add(this.pbWILSkills);
             this.Controls.Add(this.pbCHASkills);
@@ -431,7 +531,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.lbINT);
             this.Controls.Add(label1);
             this.Name = "AttributesOptimizationControl";
-            this.Size = new System.Drawing.Size(469, 205);
+            this.Size = new System.Drawing.Size(469, 310);
             ((System.ComponentModel.ISupportInitialize)(pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pictureBox3)).EndInit();
@@ -452,6 +552,8 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.pbCHABase)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPERBase)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbINTBase)).EndInit();
+            this.tblayoutComparePanel.ResumeLayout(false);
+            this.tblayoutComparePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -480,5 +582,12 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lbCHA;
         private System.Windows.Forms.Label lbPER;
         private System.Windows.Forms.Label lbINT;
+        private System.Windows.Forms.TableLayoutPanel tblayoutComparePanel;
+        private System.Windows.Forms.Label lbGain;
+        private System.Windows.Forms.Label lbOptimizedTimeInfo;
+        private System.Windows.Forms.Label lbCurrentTime;
+        private System.Windows.Forms.Label lbOptimizedTime;
+        private System.Windows.Forms.Label lbCurrentTimeInfo;
+        private System.Windows.Forms.Label lbWarning;
     }
 }

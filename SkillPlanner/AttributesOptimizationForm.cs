@@ -13,33 +13,42 @@ namespace EVEMon.SkillPlanner
 {
     public partial class AttributesOptimizationForm : Form, IPlanOrderPluggable
     {
-        private AttributesOptimizer.SkillTraining[] m_training;
-        private EveAttributeScratchpad m_bestScratchPad;
-        private CharacterInfo m_char;
-        private TimeSpan m_maxDuration;
-        private string m_description;
-        private bool m_isPlan;
+        public enum Strategy
+        {
+            RemappingPoints,
+            OneYearPlan,
+            Character
+        }
+
+        private readonly List<AttributesOptimizationControl> optimizationControls = new List<AttributesOptimizationControl>();
         private PlanOrderEditorControl m_planEditor;
+        private CharacterInfo m_char;
+        private Strategy m_strategy;
+        private Plan m_plan;
 
         private Thread m_thread;
+        private string m_description;
+
+        private bool m_pluggableProvidesNewScratchpad;
+        private EveAttributeScratchpad m_pluggableScratchpad;
+
 
         private AttributesOptimizationForm()
         {
             InitializeComponent();
-            this.attributesOptimizationControl.Visible = false;
-            this.tblayoutSummary.Visible = false;
         }
 
-        public AttributesOptimizationForm(CharacterInfo character, AttributesOptimizer.SkillTraining[] training, TimeSpan maxDuration, string name, string description, bool isPlan)
+        public AttributesOptimizationForm(CharacterInfo character, Plan plan, Strategy strategy, string name, string description)
             : this()
         {
             m_char = character;
-            m_training = training;
-            m_maxDuration = maxDuration;
+            m_strategy = strategy;
             m_description = description;
-            m_isPlan = isPlan;
+            m_plan = plan;
             this.Text = name;
             this.labelDescription.Text = description;
+            this.tabControl.TabPages.Remove(this.tabNoResult);
+            this.tabControl.TabPages.Remove(this.tabSummary);
         }
 
         public PlanOrderEditorControl PlanEditor
@@ -58,7 +67,10 @@ namespace EVEMon.SkillPlanner
             }
 
             // Clean up the brushes used by this control
-            this.attributesOptimizationControl.CleanUp();
+            foreach (var ctl in this.optimizationControls)
+            {
+                ctl.CleanUp();
+            }
             this.m_planEditor = null;
 
             // Base call
@@ -76,8 +88,25 @@ namespace EVEMon.SkillPlanner
         private void Run()
         {
             // Compute best scratchpad
-            TimeSpan bestTime, baseTime;
-            m_bestScratchPad = AttributesOptimizer.Optimize(m_training, m_char, m_maxDuration, m_isPlan, out bestTime, out baseTime);
+            TimeSpan bestDuration = TimeSpan.Zero;
+            AttributesOptimizer.Remapping remapping = null;
+            List<AttributesOptimizer.Remapping> remappingList = null;
+
+            switch (m_strategy)
+            {
+                case Strategy.Character:
+                    remapping = AttributesOptimizer.OptimizeFromCharacter(m_char);
+                    break;
+                case Strategy.OneYearPlan:
+                    remapping = AttributesOptimizer.OptimizeFromPlan(m_plan);
+                    break;
+                case Strategy.RemappingPoints:
+                    remappingList = AttributesOptimizer.OptimizeFromPlanAndRemappingPoints(m_plan, out bestDuration);
+                    break;
+                default:
+                    throw new NotImplementedException();
+
+            }
 
             // Update the controls for every attribute
             this.Invoke((MethodInvoker)delegate 
@@ -87,38 +116,98 @@ namespace EVEMon.SkillPlanner
 
                 // Hide the throbber and the waiting message
                 this.throbber.State = Throbber.ThrobberState.Stopped;
-                this.throbber.Visible = false;
-                this.lbWait.Visible = false;
+                this.tabControl.TabPages.Remove(this.tabWait);
 
                 // Update the attributes
-                this.attributesOptimizationControl.Update(m_char, m_bestScratchPad);
-
-                // Update the current time control
-                this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(baseTime, DescriptiveTextOptions.IncludeCommas);
-
-                // Update the optimized time control
-                this.lbOptimizedTime.Text = Skill.TimeSpanToDescriptiveText(bestTime, DescriptiveTextOptions.IncludeCommas);
-
-                // Update the time benefit control
-                if (bestTime < baseTime)
+                if (remapping != null)
                 {
-                    this.lbGain.Text = Skill.TimeSpanToDescriptiveText(baseTime - bestTime, DescriptiveTextOptions.IncludeCommas) + " better than current";
+                    AddTabPage(remapping, "Result");
+
+                    // Pluggable information for the planner window
+                    m_pluggableProvidesNewScratchpad = true;
+                    m_pluggableScratchpad = remapping.BestScratchpad;
                 }
                 else
                 {
-                    this.lbGain.Text = "Your skills are already optimized";
+                    if (remappingList.Count == 0)
+                    {
+                        this.tabControl.TabPages.Add(tabNoResult);
+                        tabNoResult.Focus();
+                    }
+                    else
+                    {
+                        this.tabControl.TabPages.Add(tabSummary);
+                        tabSummary.Focus();
+                    }
+
+                    // Add pages
+                    int index = 1;
+                    TimeSpan lastRemap = TimeSpan.Zero;
+                    foreach (var remap in remappingList)
+                    {
+                        AddTabPage(remap, "#" + index.ToString());
+                        index++;
+
+                        // Create the group
+                        string text = remap.ToString(m_char) + " at " + Skill.TimeSpanToDescriptiveText(remap.Time, DescriptiveTextOptions.IncludeCommas);
+                        ListViewGroup group = new ListViewGroup(text);
+                        this.lvPoints.Groups.Add(group);
+
+                        // Add five items, one for each attribute
+                        AddItemForAttribute(remap, group, EveAttribute.Intelligence);
+                        AddItemForAttribute(remap, group, EveAttribute.Perception);
+                        AddItemForAttribute(remap, group, EveAttribute.Charisma);
+                        AddItemForAttribute(remap, group, EveAttribute.Willpower);
+                        AddItemForAttribute(remap, group, EveAttribute.Memory);
+
+                        // Check there are at least one year between each remap
+                        TimeSpan timeSinceLastRemap = remap.Time - lastRemap;
+                        if (timeSinceLastRemap < TimeSpan.FromDays(365.0) && lastRemap != TimeSpan.Zero)
+                        {
+                            var item = new ListViewItem("The previous remap was only " + Skill.TimeSpanToDescriptiveText(timeSinceLastRemap, DescriptiveTextOptions.IncludeCommas) + " ago.", group);
+                            item.ForeColor = Color.DarkRed;
+                            lvPoints.Items.Add(item);
+                        }
+                        lastRemap = remap.Time;
+
+                    }
+
+                    // Add global informations
+                    ListViewGroup globalGroup = new ListViewGroup("Global informations");
+                    this.lvPoints.Groups.Add(globalGroup);
+
+                    TimeSpan savedTime = TimeSpan.Zero;
+                    foreach (var remap in remappingList)
+                    {
+                        savedTime += (remap.BaseDuration - remap.BestDuration);
+                    }
+                    this.lvPoints.Items.Add(new ListViewItem("Current time : " +
+                        Skill.TimeSpanToDescriptiveText(savedTime + bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
+
+                    if (savedTime != TimeSpan.Zero)
+                    {
+                        this.lvPoints.Items.Add(new ListViewItem("Optimized time : " +
+                            Skill.TimeSpanToDescriptiveText(bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
+                        this.lvPoints.Items.Add(new ListViewItem(
+                            Skill.TimeSpanToDescriptiveText(savedTime, DescriptiveTextOptions.IncludeCommas) + 
+                            " better than current", globalGroup));
+                    }
+                    else
+                    {
+                        this.lvPoints.Items.Add(new ListViewItem("Your attributes are already optimal", globalGroup));
+                    }
+
+                    // Pluggable information for the planner window
+                    m_pluggableProvidesNewScratchpad = false;
+                    m_pluggableScratchpad = new EveAttributeScratchpad();
+                    this.columnHeader.Width = this.lvPoints.ClientSize.Width;
                 }
 
-                // A plan may not have a years worth of skills in it,
-                // only fair to warn the user
-                this.lbWarning.Visible = bestTime < new TimeSpan(365,0,0,0);
-
                 // Make everything visible
-                this.attributesOptimizationControl.Visible = true;
-                this.tblayoutSummary.Visible = true;
+                this.tabWait.Hide();
 
                 // Update the plan order's column
-                if (m_planEditor != null)
+                if (m_planEditor != null && (remapping != null || remappingList.Count != 0))
                 {
                     this.m_planEditor.ShowWithPluggable(this);
                 }
@@ -127,11 +216,41 @@ namespace EVEMon.SkillPlanner
             });
         }
 
+        private void AddItemForAttribute(AttributesOptimizer.Remapping remap, ListViewGroup group, EveAttribute attrib)
+        {
+            StringBuilder builder = new StringBuilder(attrib.ToString());
+            int difference = remap.GetBaseAttributeDifference(attrib);
+
+            // Add the list view item for this attribute
+            string itemText = Plan.RemappingPoint.GetStringForAttribute(attrib, m_char, remap.BaseScratchpad, remap.BestScratchpad);
+            lvPoints.Items.Add(new ListViewItem(itemText, group));
+        }
+
+        private void AddTabPage(AttributesOptimizer.Remapping remapping, string tabName)
+        {
+            var ctl = new AttributesOptimizationControl(m_char, remapping);
+            this.optimizationControls.Add(ctl);
+            ctl.Dock = DockStyle.Fill;
+            TabPage page = new TabPage(tabName);
+            page.Controls.Add(ctl);
+            this.tabControl.TabPages.Add(page);
+        }
 
         #region IPlanOrderPluggable Members
-        public int getEffectiveAttributeWithoutLearning(EveAttribute attrib)
+        public bool UseRemappingPointsForNew
         {
-            return this.m_bestScratchPad.GetAttributeBonus(attrib) + (int)m_char.GetEffectiveAttribute(attrib, null, false, true);
+            get { return !m_pluggableProvidesNewScratchpad; }
+        }
+
+        public bool UseRemappingPointsForOld
+        {
+            get { return false; }
+        }
+
+        public EveAttributeScratchpad GetScratchpad(out bool isNew)
+        {
+            isNew = m_pluggableProvidesNewScratchpad;
+            return m_pluggableScratchpad;
         }
         #endregion
     }

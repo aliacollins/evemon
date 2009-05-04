@@ -117,7 +117,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                tsPlan = plan.GetTotalTime(null);
+                tsPlan = plan.GetTotalTime(null, true);
                 planCache.Add(plan, tsPlan);
             }
             return tsPlan;

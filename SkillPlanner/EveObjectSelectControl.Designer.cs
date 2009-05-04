@@ -35,6 +35,8 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbSearchList = new System.Windows.Forms.ListBox();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -43,8 +45,6 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tvItems = new CodersLab.Windows.Controls.TreeView();
-            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -53,22 +53,21 @@ namespace EVEMon.SkillPlanner
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(31, 29);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tbSearchText.Name = "tbSearchText";
-            this.tbSearchText.Size = new System.Drawing.Size(154, 21);
+            this.tbSearchText.Size = new System.Drawing.Size(152, 21);
             this.tbSearchText.TabIndex = 21;
-            this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
+            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
             this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearchText_KeyPress);
-            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
+            this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
             // 
             // lbSearchTextHint
             // 
-            this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
             this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
             this.lbSearchTextHint.Location = new System.Drawing.Point(32, 31);
@@ -119,6 +118,20 @@ namespace EVEMon.SkillPlanner
             this.contextMenu.Size = new System.Drawing.Size(170, 92);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(169, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
             // cmiExpandAll
             // 
             this.cmiExpandAll.Name = "cmiExpandAll";
@@ -160,7 +173,7 @@ namespace EVEMon.SkillPlanner
             this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSkillFilter.Name = "cbSkillFilter";
-            this.cbSkillFilter.Size = new System.Drawing.Size(154, 21);
+            this.cbSkillFilter.Size = new System.Drawing.Size(152, 21);
             this.cbSkillFilter.TabIndex = 0;
             // 
             // label1
@@ -174,6 +187,7 @@ namespace EVEMon.SkillPlanner
             // 
             // pbSearchImage
             // 
+            this.pbSearchImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
             this.pbSearchImage.Location = new System.Drawing.Point(7, 29);
@@ -209,20 +223,6 @@ namespace EVEMon.SkillPlanner
             this.tvItems.Size = new System.Drawing.Size(185, 344);
             this.tvItems.TabIndex = 22;
             this.tvItems.SelectionsChanged += new System.EventHandler(this.tvItems_SelectionsChanged);
-            // 
-            // cmiCollapseSelected
-            // 
-            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
-            this.cmiCollapseSelected.Size = new System.Drawing.Size(169, 22);
-            this.cmiCollapseSelected.Text = "Collapse Selected";
-            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
-            // 
-            // cmiExpandSelected
-            // 
-            this.cmiExpandSelected.Name = "cmiExpandSelected";
-            this.cmiExpandSelected.Size = new System.Drawing.Size(169, 22);
-            this.cmiExpandSelected.Text = "Expand Selected";
-            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
             // 
             // EveObjectSelectControl
             // 
