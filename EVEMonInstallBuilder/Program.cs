@@ -62,7 +62,6 @@ namespace EVEMonInstallBuilder
             ver = exeAsm.GetName().Version.ToString();
 
             outputDir = Path.Combine(projectDir, "../bin/x86/" + config);
-            Console.WriteLine(outputDir);
         }
 
         private static void BuildZip()
