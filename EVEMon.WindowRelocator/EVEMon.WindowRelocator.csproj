@@ -72,6 +72,6 @@
   -->
   <PropertyGroup>
     <PreBuildEvent>copy "$(SolutionDir)EVEMon.WinHook\bin\$(ConfigurationName)\EVEMon.WinHook.dll" "$(ProjectDir)"
-"$(SolutionDir)UpdateSVNRevision.cmd" "$(SolutionDir)" $(ConfigurationName)</PreBuildEvent>
+"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -109,6 +109,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(SolutionDir)" $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
 </Project>
