@@ -99,28 +99,57 @@ namespace EVEMon.Common
         private void SetAPIError(XmlElement errorNode)
         {
             string text = errorNode.GetAttribute("code");
-            if (text != null)
+            if (!String.IsNullOrEmpty(text))
             {
                 m_apiErrorCode = Int32.Parse(text);
             }
             m_apiErrorMessage = errorNode.InnerText;
         }
 
+        private XmlDocument m_xmlDoc;
+
+        /// <summary>
+        /// Gets the XmlDocument returned by CCP
+        /// </summary>
+        public XmlDocument XmlDocument
+        {
+            get { return m_xmlDoc; }
+        }
+
+        /// <summary>
+        /// Gets true whether the session encountered an error from CCP
+        /// </summary>
+        public bool HasError
+        {
+            get { return m_apiErrorCode != 0 || !String.IsNullOrEmpty(m_apiErrorMessage); }
+        }
+
+        /// <summary>
+        /// The error code return by CCP, may be 0 even when there is actually an error (obsolete ?).
+        /// </summary>
         public int ApiErrorCode
         {
             get { return m_apiErrorCode; }
             set { m_apiErrorCode = value; }
         }
 
+        /// <summary>
+        /// A formatted string composed of the error message and code returned by CCP
+        /// </summary>
         public string ApiErrorMessage
         {
             get
             {
-                if (m_apiErrorCode > 0)
+                if (String.IsNullOrEmpty(m_apiErrorMessage))
                 {
-                    return String.Format("{0}: {1}", m_apiErrorCode, m_apiErrorMessage);
+                    if (m_apiErrorCode == 0) return "";
+                    else return "Error code was " + m_apiErrorCode.ToString();
                 }
-                else return null;
+                else
+                {
+                    if (m_apiErrorCode == 0) return m_apiErrorMessage;
+                    else return m_apiErrorMessage + " (error code was " + m_apiErrorCode.ToString() + ")";
+                }
             }
         }
 
@@ -319,10 +348,9 @@ namespace EVEMon.Common
             m_apiErrorMessage = string.Empty;
             m_apiErrorCode = 0;
 
-            XmlDocument xdoc;
             try
             {
-                xdoc = GetCharacterSheet(charId);
+                m_xmlDoc = GetCharacterSheet(charId);
             }
             catch (Exception e)
             {
@@ -335,18 +363,18 @@ namespace EVEMon.Common
             {
                 // Check for an API Error...
                 XmlElement errorNode;
-                errorNode = xdoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
+                errorNode = m_xmlDoc.DocumentElement.SelectSingleNode("//error") as XmlElement;
                 if (errorNode != null)
                 {
                     SetAPIError(errorNode);
                     return null;
                 }
 
-                scs = ProcessCharacterXml(xdoc);
+                scs = ProcessCharacterXml(m_xmlDoc);
                 scs.CharacterSheet.CreateSkillGroups();
                 scs.FromCCP = true;
                 //save the xml in the character cache
-                LocalXmlCache.Instance.Save(xdoc);
+                LocalXmlCache.Instance.Save(m_xmlDoc);
             }
             catch (Exception e)
             {

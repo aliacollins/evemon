@@ -140,6 +140,36 @@ namespace EVEMon.SkillPlanner
                         tabSummary.Focus();
                     }
 
+                    // Add global informations
+                    ListViewGroup globalGroup = new ListViewGroup("Global informations");
+                    this.lvPoints.Groups.Add(globalGroup);
+
+                    TimeSpan savedTime = TimeSpan.Zero;
+                    foreach (var remap in remappingList)
+                    {
+                        savedTime += (remap.BaseDuration - remap.BestDuration);
+                    }
+                    this.lvPoints.Items.Add(new ListViewItem("Current time : " +
+                        Skill.TimeSpanToDescriptiveText(savedTime + bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
+
+                    if (savedTime != TimeSpan.Zero)
+                    {
+                        this.lvPoints.Items.Add(new ListViewItem("Optimized time : " +
+                            Skill.TimeSpanToDescriptiveText(bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
+                        this.lvPoints.Items.Add(new ListViewItem(
+                            Skill.TimeSpanToDescriptiveText(savedTime, DescriptiveTextOptions.IncludeCommas) + 
+                            " better than current", globalGroup));
+                    }
+                    else
+                    {
+                        this.lvPoints.Items.Add(new ListViewItem("Your attributes are already optimal", globalGroup));
+                    }
+
+                    // Notify plan updated
+                    var lvi = new ListViewItem("Your plan has been updated.", globalGroup);
+                    lvi.Font = new Font(this.lvPoints.Font, FontStyle.Bold);
+                    this.lvPoints.Items.Add(lvi);
+
                     // Add pages
                     int index = 1;
                     TimeSpan lastRemap = TimeSpan.Zero;
@@ -169,32 +199,6 @@ namespace EVEMon.SkillPlanner
                             lvPoints.Items.Add(item);
                         }
                         lastRemap = remap.Time;
-
-                    }
-
-                    // Add global informations
-                    ListViewGroup globalGroup = new ListViewGroup("Global informations");
-                    this.lvPoints.Groups.Add(globalGroup);
-
-                    TimeSpan savedTime = TimeSpan.Zero;
-                    foreach (var remap in remappingList)
-                    {
-                        savedTime += (remap.BaseDuration - remap.BestDuration);
-                    }
-                    this.lvPoints.Items.Add(new ListViewItem("Current time : " +
-                        Skill.TimeSpanToDescriptiveText(savedTime + bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
-
-                    if (savedTime != TimeSpan.Zero)
-                    {
-                        this.lvPoints.Items.Add(new ListViewItem("Optimized time : " +
-                            Skill.TimeSpanToDescriptiveText(bestDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
-                        this.lvPoints.Items.Add(new ListViewItem(
-                            Skill.TimeSpanToDescriptiveText(savedTime, DescriptiveTextOptions.IncludeCommas) + 
-                            " better than current", globalGroup));
-                    }
-                    else
-                    {
-                        this.lvPoints.Items.Add(new ListViewItem("Your attributes are already optimal", globalGroup));
                     }
 
                     // Pluggable information for the planner window

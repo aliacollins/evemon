@@ -117,6 +117,18 @@ namespace EVEMon
 
             AddDevelopersToListBox();
             AddDebugTag();
+
+            AddLinksToLabel(IconSourceLinkLabel, "famfamfam.com", "http://famfamfam.com/");
+            AddLinksToLabel(IconSourceLinkLabel, "Wikimedia", "http://wikimedia.org/");
+            AddLinksToLabel(IconSourceLinkLabel, "CCP Games", "http://www.ccpgames.com/");
+        }
+
+        private void AddLinksToLabel(LinkLabel label, String linkText, String url)
+        {
+            int start = label.Text.IndexOf(linkText);
+            int length = linkText.Length;
+
+            label.Links.Add(start, length, url);
         }
 
         [Conditional("DEBUG")]
@@ -178,6 +190,14 @@ namespace EVEMon
                     sLine = "  " + sLine;
                     e.Graphics.DrawString(sLine, myFont, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
                 }
+            }
+        }
+
+        private void IconSourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (e.Link.LinkData.GetType() == typeof(String))
+            {
+                Util.BrowserLinkClicked(e.Link.LinkData.ToString());
             }
         }
     }

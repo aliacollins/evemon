@@ -60,8 +60,8 @@ namespace EVEMon.SkillPlanner
                                    Skill.GetRomanForInt(pe.Level));
             }
 
-            // Sort the plan in optimal order
-            PlanSorter.SortPlan(optimalPlan, PlanSortType.NoChange, true, false);
+            // Put the learning skills on top
+            PlanSorter.PutOrderedLearningSkillsAhead(optimalPlan, m_plan.SortWithPrioritiesGrouping);
             // And get the time for the plan with learning skills.
             postTime = optimalPlan.TotalTrainingTime;
 

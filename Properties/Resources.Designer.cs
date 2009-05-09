@@ -67,6 +67,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap comment {
+            get {
+                object obj = ResourceManager.GetObject("comment", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap default_char_pic {
             get {
                 object obj = ResourceManager.GetObject("default_char_pic", resourceCulture);
@@ -74,9 +81,44 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap help {
+            get {
+                object obj = ResourceManager.GetObject("help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap text_letter_omega {
+            get {
+                object obj = ResourceManager.GetObject("text_letter_omega", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap text_list_numbers {
+            get {
+                object obj = ResourceManager.GetObject("text_list_numbers", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Warning {
+            get {
+                object obj = ResourceManager.GetObject("Warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap warning32x32 {
             get {
                 object obj = ResourceManager.GetObject("warning32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap wrench_orange {
+            get {
+                object obj = ResourceManager.GetObject("wrench_orange", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -158,7 +158,8 @@ namespace EVEMon
                     CharacterCollection selectedChars = new CharacterCollection();
                     foreach (CharacterMonitor cm in this)
                     {
-                        if (cm.GrandCharacterInfo.IsTraining)
+                        // Quick fix. Don't know how IsTraining can be true while CurrentlyTrainingSkills is null but it happens anyway and caused exceptions, so..
+                        if (cm.GrandCharacterInfo.IsTraining && cm.GrandCharacterInfo.CurrentlyTrainingSkill != null)
                             selectedChars.Add(cm);
                     }
                     selectedChars.Sort(new CompletionTimeComparer());

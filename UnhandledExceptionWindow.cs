@@ -43,8 +43,6 @@ namespace EVEMon
                         int oRight = pbBugImage.Right;
                         pbBugImage.ClientSize = new Size(oWidth, oHeight);
                         pbBugImage.Image = b;
-                        pbBugImage.Left = oRight - pbBugImage.Width;
-                        pbBugImage.Top = (panel1.ClientSize.Height / 2) - (pbBugImage.Height / 2);
                     }
                 }
             }
@@ -108,9 +106,19 @@ namespace EVEMon
             }
         }
 
-        private void llblInformation_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/CrashReporting");
+            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/BugReport");
+        }
+
+        private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/KnownProblems");
+        }
+
+        private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Util.BrowserLinkClicked("http://evemon.battleclinic.com/");
         }
     }
 }

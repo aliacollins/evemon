@@ -57,12 +57,14 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tslSort = new System.Windows.Forms.ToolStripLabel();
-            this.tsbSort = new System.Windows.Forms.ToolStripButton();
+            this.tsSortLearning = new System.Windows.Forms.ToolStripButton();
+            this.tsSortPriorities = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbToggleSkills = new System.Windows.Forms.ToolStripButton();
             this.tsbToggleRemapping = new System.Windows.Forms.ToolStripButton();
             this.ilSkillDependency = new System.Windows.Forms.ImageList(this.components);
             this.tmrSelect = new System.Windows.Forms.Timer(this.components);
+            this.ilColumnsStates = new System.Windows.Forms.ImageList(this.components);
             this.pscPlan = new EVEMon.SkillPlanner.PersistentSplitContainer();
             this.lvSkills = new EVEMon.SkillPlanner.DraggableListView();
             this.pHeader = new System.Windows.Forms.Panel();
@@ -247,14 +249,15 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown,
             this.toolStripSeparator1,
             this.tslSort,
-            this.tsbSort,
+            this.tsSortLearning,
+            this.tsSortPriorities,
             this.toolStripSeparator4,
             this.tsbToggleSkills,
             this.tsbToggleRemapping});
             this.tsPlan.Location = new System.Drawing.Point(0, 0);
             this.tsPlan.Name = "tsPlan";
             this.tsPlan.Size = new System.Drawing.Size(38, 558);
-            this.tsPlan.TabIndex = 10;
+            this.tsPlan.TabIndex = 0;
             this.tsPlan.Text = "planToolStrip";
             // 
             // tslMove
@@ -297,15 +300,25 @@ namespace EVEMon.SkillPlanner
             this.tslSort.Size = new System.Drawing.Size(35, 13);
             this.tslSort.Text = "Sort:";
             // 
-            // tsbSort
+            // tsSortLearning
             // 
-            this.tsbSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSort.Image = ((System.Drawing.Image)(resources.GetObject("tsbSort.Image")));
-            this.tsbSort.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSort.Name = "tsbSort";
-            this.tsbSort.Size = new System.Drawing.Size(35, 20);
-            this.tsbSort.Text = "Sort Plan Entries";
-            this.tsbSort.Click += new System.EventHandler(this.tsbSort_Click);
+            this.tsSortLearning.CheckOnClick = true;
+            this.tsSortLearning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsSortLearning.Image = global::EVEMon.Properties.Resources.text_letter_omega;
+            this.tsSortLearning.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsSortLearning.Name = "tsSortLearning";
+            this.tsSortLearning.Size = new System.Drawing.Size(35, 20);
+            this.tsSortLearning.Text = "Optimize learning skills order and put them ahead";
+            // 
+            // tsSortPriorities
+            // 
+            this.tsSortPriorities.CheckOnClick = true;
+            this.tsSortPriorities.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsSortPriorities.Image = global::EVEMon.Properties.Resources.text_list_numbers;
+            this.tsSortPriorities.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsSortPriorities.Name = "tsSortPriorities";
+            this.tsSortPriorities.Size = new System.Drawing.Size(35, 20);
+            this.tsSortPriorities.Text = "GroupByPriorities";
             // 
             // toolStripSeparator4
             // 
@@ -331,7 +344,7 @@ namespace EVEMon.SkillPlanner
             this.tsbToggleRemapping.Name = "tsbToggleRemapping";
             this.tsbToggleRemapping.Size = new System.Drawing.Size(35, 20);
             this.tsbToggleRemapping.Text = "tsbToggleRemapping";
-            this.tsbToggleRemapping.ToolTipText = "Toggle remapping point";
+            this.tsbToggleRemapping.ToolTipText = "Toggle remapping point (F9)";
             this.tsbToggleRemapping.Click += new System.EventHandler(this.tsbToggleRemapping_Click);
             // 
             // ilSkillDependency
@@ -346,6 +359,13 @@ namespace EVEMon.SkillPlanner
             // tmrSelect
             // 
             this.tmrSelect.Tick += new System.EventHandler(this.tmrSelect_Tick);
+            // 
+            // ilColumnsStates
+            // 
+            this.ilColumnsStates.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilColumnsStates.ImageStream")));
+            this.ilColumnsStates.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilColumnsStates.Images.SetKeyName(0, "arrow_up.png");
+            this.ilColumnsStates.Images.SetKeyName(1, "arrow_down.png");
             // 
             // pscPlan
             // 
@@ -379,8 +399,9 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
             this.lvSkills.Size = new System.Drawing.Size(645, 537);
+            this.lvSkills.SmallImageList = this.ilColumnsStates;
             this.lvSkills.StateImageList = this.ilSkillDependency;
-            this.lvSkills.TabIndex = 3;
+            this.lvSkills.TabIndex = 0;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
             this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
@@ -402,7 +423,7 @@ namespace EVEMon.SkillPlanner
             this.pHeader.Location = new System.Drawing.Point(0, 0);
             this.pHeader.Name = "pHeader";
             this.pHeader.Size = new System.Drawing.Size(645, 21);
-            this.pHeader.TabIndex = 11;
+            this.pHeader.TabIndex = 1;
             // 
             // llSuggestionLink
             // 
@@ -468,7 +489,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripLabel tslSort;
-        private System.Windows.Forms.ToolStripButton tsbSort;
         private System.Windows.Forms.ImageList ilSkillDependency;
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillBrowser;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -491,5 +511,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Timer tmrSelect;
         private System.Windows.Forms.ToolStripButton tsbToggleRemapping;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ImageList ilColumnsStates;
+        private System.Windows.Forms.ToolStripButton tsSortLearning;
+        private System.Windows.Forms.ToolStripButton tsSortPriorities;
     }
 }

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C0665275-3E0B-4117-81B0-751206ED03CD}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -64,6 +64,7 @@
     <Compile Include="APIConfiguration.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
+    <Compile Include="AttributesOptimizer.cs" />
     <Compile Include="CheckedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -81,6 +82,7 @@
     <Compile Include="NetworkLogEventType.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="LocalFileSystem.cs" />
+    <Compile Include="PlanSorter.cs" />
     <Compile Include="TimeCheck.cs" />
     <Compile Include="Net\DownloadFileAsyncResult.cs" />
     <Compile Include="Net\DownloadImageAsyncResult.cs" />

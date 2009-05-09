@@ -367,7 +367,7 @@ namespace EVEMon.SkillPlanner
                 m_plan.CheckForMissingPrerequisites();
 
                 // Arrange the learning skills in the plan in optimal order
-                PlanSorter.SortPlan(m_plan, PlanSortType.NoChange, true, false);
+                PlanSorter.PutOrderedLearningSkillsAhead(m_plan, m_plan.SortWithPrioritiesGrouping);
             }
             finally
             {

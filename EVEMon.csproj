@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A2E5EFE0-614A-4567-95E5-92A4D94169AC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -272,7 +272,6 @@
     <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.Designer.cs">
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\AttributesOptimizer.cs" />
     <Compile Include="SkillPlanner\ChangePriorityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -401,12 +400,6 @@
     </Compile>
     <Compile Include="SkillPlanner\PlanSelectWindow.Designer.cs">
       <DependentUpon>PlanSelectWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\PlanSortWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\PlanSortWindow.Designer.cs">
-      <DependentUpon>PlanSortWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipBrowserControl.cs">
       <SubType>UserControl</SubType>
@@ -693,10 +686,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>PlanSelectWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\PlanSortWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>PlanSortWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipBrowserControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ShipBrowserControl.cs</DependentUpon>
@@ -786,6 +775,12 @@
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <None Include="Resources\warning32x32.png" />
     <None Include="SkillPlanner\Blue_Glass_Arrow.png" />
+    <None Include="Resources\icons\text_letter_omega.png" />
+    <None Include="Resources\icons\text_list_numbers.png" />
+    <None Include="Resources\icons\Warning.png" />
+    <None Include="Resources\icons\help.png" />
+    <None Include="Resources\icons\wrench_orange.png" />
+    <None Include="Resources\icons\comment.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

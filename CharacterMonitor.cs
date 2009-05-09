@@ -438,8 +438,16 @@ namespace EVEMon
         {
             this.Invoke(new MethodInvoker(delegate
             {
-                if (m_session.ApiErrorCode == 0)
+                if (m_session.HasError)
                 {
+                    StopThrobber();
+                    CharacterDownloadFailedCallback();
+                }
+                else
+                {
+                    tlbError.Visible = false;
+                    lbSkills.Visible = true;
+
                     m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
                     ttToolTip.SetToolTip(throbber, "Click to update now.");
                     ttToolTip.IsBalloon = true;
@@ -458,13 +466,6 @@ namespace EVEMon
 
                     StopThrobber();
                 }
-
-                else
-                {
-                    StopThrobber();
-                    CharacterDownloadFailedCallback();
-                }
-
             }));
         }
 #endif
@@ -1052,8 +1053,8 @@ namespace EVEMon
             pbCharImage.Visible = !m_settings.WorksafeMode;
             if (m_settings.WorksafeMode)
             {
-                tlpInfo.SetColumnSpan(lblSkillHeader, 1);
                 tlpInfo.SetColumn(lblSkillHeader, 1);
+                tlpInfo.SetColumnSpan(lblSkillHeader, 1);
             }
             else
             {
@@ -1550,26 +1551,52 @@ namespace EVEMon
                 this.Invoke(new MethodInvoker(CharacterDownloadFailedCallback));
                 return;
             }
-            StringBuilder throbberTip = new StringBuilder();
+
+            // Display the error panel
+            tlbError.Visible = true;
+            lbSkills.Visible = false;
+
             // Stop an exception on first run using new api interface
             try
             {
-                if (m_session.ApiErrorMessage != null)
+                // Update the error message header
+                if (!String.IsNullOrEmpty(m_session.ApiErrorMessage))
                 {
-                    throbberTip.Append(String.Format("Error {0}\n", m_session.ApiErrorMessage));
+                    lbErrorMessage.Text = String.Format("CCP reported : {0}\n", m_session.ApiErrorMessage);
+                }
+                else
+                {
+                    lbErrorMessage.Text = "Couldn't retrieve the data. There may be a problem with your connection, the CCP servers or something else. If all of that seems fine, consider reporting a bug on evemon's forums at Battleclinc.com";
+                }
+
+
+                // Displaye the content of the xml document
+                if (m_session.XmlDocument != null)
+                {
+                    XmlWriterSettings settings = new XmlWriterSettings();
+                    settings.Indent = true;
+                    settings.NewLineHandling = NewLineHandling.Replace;
+
+                    StringBuilder xmlBuilder = new StringBuilder();
+                    XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
+                    m_session.XmlDocument.WriteContentTo(xmlWriter);
+                    xmlWriter.Flush();
+
+                    tbXmlError.Text = xmlBuilder.ToString();
                 }
             }
             catch (Exception) { }
 
-            throbberTip.Append("Could not get character data!\nClick to try again.");
-
-            ttToolTip.SetToolTip(throbber, throbberTip.ToString());
+            // Update the tool tip
+            ttToolTip.SetToolTip(throbber, "Could not get character data!\nClick to try again.");
             ttToolTip.IsBalloon = true;
+
             if (m_settings.DisableXMLAutoUpdate == false)
             {
-                tmrUpdateCharacter.Interval = 1000 * 60 * 30;
+                tmrUpdateCharacter.Interval = 1000 * 60 * 30; // 30 mins
                 tmrUpdateCharacter.Enabled = true;
             }
+
             SetErrorThrobber();
             this.m_grandCharacterInfo.checkOldSkill();
         }

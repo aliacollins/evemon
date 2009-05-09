@@ -1003,14 +1003,14 @@ namespace EVEMon.Common
             return m_attributeBonuses[(int)attribute];
         }
 
-        public void Reset(int perBonus, int willBonus, int intBonus, int memBonus, int chaBonus)
+        public void Reset(int perBonus, int willBonus, int intBonus, int memBonus, int chaBonus, int learning)
         {
             this.m_attributeBonuses[(int)EveAttribute.Perception] = perBonus;
             this.m_attributeBonuses[(int)EveAttribute.Willpower] = willBonus;
             this.m_attributeBonuses[(int)EveAttribute.Intelligence] = intBonus;
             this.m_attributeBonuses[(int)EveAttribute.Memory] = memBonus;
             this.m_attributeBonuses[(int)EveAttribute.Charisma] = chaBonus;
-            this.m_learningLevelBonus = 0;
+            this.m_learningLevelBonus = learning;
         }
 
         public void AdjustAttributeBonus(EveAttribute attribute, int adjustmentAmount)

@@ -86,7 +86,6 @@ namespace EVEMon.Common
             foreach (Plan.Entry pe in e.Items)
             {
                 pe.Plan = null;
-                if (pe.Remapping != null) pe.Remapping.Status = RemappingPoint.PointStatus.Obsolete;
             }
         }
 
@@ -99,20 +98,8 @@ namespace EVEMon.Common
             {
                 case ChangeType.Added:
                     e.Item.Plan = this;
-
-                    // Scroll through the items to find the previous remapping
-                    RemappingPoint lastRemapping = null;
-                    foreach (var entry in this.Entries)
-                    {
-                        if (entry.Remapping != null) lastRemapping = entry.Remapping;
-                        if (entry == e.Item) break;
-                    }
-
-                    // Set the last remapping status as "obsolete"
-                    if (lastRemapping != null) lastRemapping.Status = RemappingPoint.PointStatus.Obsolete;
                     break;
 
-                // When an item was removed, unfortunately we cannot know what remapping it depended on to set the obsolete status
                 case ChangeType.Removed:
                     e.Item.Plan = null;
                     break;
@@ -139,6 +126,44 @@ namespace EVEMon.Common
                 return m_columnPreference;
             }
             set { m_columnPreference = value; }
+        }
+
+        private string m_lastSortKey = "";
+
+        public string LastSortKey
+        {
+            get { return m_lastSortKey; }
+            set { m_lastSortKey = value; }
+        }
+
+        private bool m_lastSortWasReversed = false;
+
+        public bool LastSortWasReversed
+        {
+            get { return m_lastSortWasReversed; }
+            set { m_lastSortWasReversed = value; }
+        }
+
+        private bool m_sortWithLearningSkillsOnTop;
+
+        /// <summary>
+        /// When true, the plan sorter will put learning skills on top
+        /// </summary>
+        public bool SortWithLearningSkillsOnTop
+        {
+            get { return m_sortWithLearningSkillsOnTop; }
+            set { m_sortWithLearningSkillsOnTop = value; }
+        }
+
+        private bool sortWithPrioritiesGrouping;
+
+        /// <summary>
+        /// When true, the plan sorter will group skills by priorities
+        /// </summary>
+        public bool SortWithPrioritiesGrouping
+        {
+            get { return sortWithPrioritiesGrouping; }
+            set { sortWithPrioritiesGrouping = value; }
         }
         #endregion
 
@@ -442,9 +467,9 @@ namespace EVEMon.Common
                 scratchpad.ApplyALevelOf(pe.Skill);
 
                 // Apply remapping point
-                if (pe.Remapping != null && applyRemappingPoints)
+                if (pe.Remapping != null && pe.Remapping.Status != RemappingPoint.PointStatus.NotComputed && applyRemappingPoints)
                 {
-                    pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpad);
+                    scratchpad = pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpad);
                 }
             }
             return ts;
@@ -1365,8 +1390,7 @@ namespace EVEMon.Common
             public enum PointStatus
             {
                 NotComputed = 0,
-                UpToDate = 1,
-                Obsolete = 2
+                UpToDate = 1
             }
 
             private PointStatus status;
@@ -1414,10 +1438,8 @@ namespace EVEMon.Common
                 {
                     case PointStatus.NotComputed:
                         return "Remapping (not computed, use the attributes optimizer)";
-                    case PointStatus.Obsolete:
-                        return "Remapping (outdated) : " + ToShortString();
                     case PointStatus.UpToDate:
-                        return "Remapping : " + ToShortString();
+                        return "Remapping (active) : " + ToShortString();
                     default:
                         throw new NotImplementedException();
                 }
@@ -1429,8 +1451,6 @@ namespace EVEMon.Common
                 {
                     case PointStatus.NotComputed:
                         return "Remapping (not computed, use the attributes optimizer)";
-                    case PointStatus.Obsolete:
-                        return "Remapping (outdated) : " + attributesDescription;
                     case PointStatus.UpToDate:
                         return "Remapping : " + attributesDescription;
                     default:
@@ -1484,9 +1504,9 @@ namespace EVEMon.Common
                 var implant = character.getImplantValue(attrib);
 
                 builder.Append((bonusDifference > 0 ? " (+" : " (")).Append(bonusDifference.ToString()).Append(")").
-                    Append(" = ").Append(character.GetEffectiveAttribute(attrib, newScratchpad).ToString("##.##")).
+                    Append(" = ").Append(character.GetEffectiveAttribute(attrib, newScratchpad).ToString("##.00")).
                     Append(" = (").Append(baseAttrib.ToString()).Append(" + ").Append(learningGroupBonus.ToString()).
-                    Append(" + ").Append(implant.ToString()).Append(")").Append(" * ").Append(learningFactor.ToString("#.##")).
+                    Append(" + ").Append(implant.ToString()).Append(")").Append(" * ").Append(learningFactor.ToString("0.00")).
                     Append(" ; old was ").Append(character.GetBaseAttribute(attrib).ToString()).
                     Append(" / ").Append(character.GetEffectiveAttribute(attrib));
 
@@ -1604,6 +1624,25 @@ namespace EVEMon.Common
                     return m_planGroups;
                 }
                 set { m_planGroups = value; }
+            }
+
+            public string PlanGroupsDescription
+            {
+                get
+                {
+                    if (m_planGroups == null || m_planGroups.Count == 0)
+                    {
+                        return "None";
+                    }
+                    else if (m_planGroups.Count == 1)
+                    {
+                        return (string)m_planGroups[0];
+                    }
+                    else
+                    {
+                        return "Multiple (" + m_planGroups.Count + ")";
+                    }
+                }
             }
 
             public Type EntryType

@@ -11,6 +11,7 @@ using EVEMon.Common.Schedule;
 using System.Drawing;
 using System.Collections.Specialized;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.SkillPlanner
 {
@@ -42,8 +43,10 @@ namespace EVEMon.SkillPlanner
             m_trainablePlanEntryColor = SystemColors.GrayText;
             m_remappingBackColor = SystemColors.Info;
             m_remappingForeColor = SystemColors.HotTrack;
+            lvSkills.ColumnClick += new ColumnClickEventHandler(lvSkills_ColumnClick);
+            tsSortLearning.CheckedChanged += new EventHandler(tsSortLearning_CheckedChanged);
+            tsSortPriorities.CheckedChanged += new EventHandler(tsSortPriorities_CheckedChanged);
         }
-
 
         private NewPlannerWindow m_plannerWindow;
         public NewPlannerWindow PlannerWindow
@@ -71,6 +74,16 @@ namespace EVEMon.SkillPlanner
                 }
                 UpdateListColumns();
                 OnPlanChanged(null, null);
+
+                if (this.IsHandleCreated)
+                {
+                    UpdateSortVisualFeedbackFromPlan();
+                    if (m_plan != null)
+                    {
+                        tsSortLearning.Checked = m_plan.SortWithLearningSkillsOnTop;
+                        tsSortPriorities.Checked = m_plan.SortWithPrioritiesGrouping;
+                    }
+                }
             }
         }
 
@@ -209,8 +222,11 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
-                lvSkills.Items.Clear();
+                // We avoid clear because it causes the sliders's position to reset
+                while (lvSkills.Items.Count > 1) lvSkills.Items.RemoveAt(lvSkills.Items.Count - 1);
+                bool isEmpty = (lvSkills.Items.Count == 0);
                 lvSkills.Items.AddRange(items.ToArray());
+                if (!isEmpty) lvSkills.Items.RemoveAt(0);
 
                 UpdateListViewItems();
             }
@@ -223,7 +239,6 @@ namespace EVEMon.SkillPlanner
         private void InsertRemappingPoint(int index, Plan.Entry pe)
         {
             ListViewItem rlv = new ListViewItem();
-            //rlv.Font = new Font(lvSkills.Font, FontStyle..Underline);
             rlv.BackColor = m_remappingBackColor;
             rlv.ForeColor = m_remappingForeColor;
             rlv.UseItemStyleForSubItems = true;
@@ -235,6 +250,7 @@ namespace EVEMon.SkillPlanner
 
         private const int MAX_NOTES_PREVIEW_CHARS = 60;
 
+        private readonly List<TimeSpan> timeDifferences = new List<TimeSpan>();
         private void UpdateListViewItems()
         {
             if (m_settings == null) m_settings = Settings.GetInstance();
@@ -248,6 +264,7 @@ namespace EVEMon.SkillPlanner
             // Note that pluggable can either override the current scratchpad (Implants calc, 
             // optimizer with no remapping points) or thd old scratchpad (when using remapping points
             // for the new informations)
+            this.timeDifferences.Clear();
             bool useRemappingPointsForOld = true;
             bool useRemappingPointsForNew = true;
             EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
@@ -329,19 +346,7 @@ namespace EVEMon.SkillPlanner
                         oldScratchpad.ApplyALevelOf(gs);
 
                         // Retrieve entry's plan group
-                        string planGroups;
-                        if (pe.PlanGroups.Count == 0)
-                        {
-                            planGroups = "None";
-                        }
-                        else if (pe.PlanGroups.Count == 1)
-                        {
-                            planGroups = (string)pe.PlanGroups[0];
-                        }
-                        else
-                        {
-                            planGroups = "Multiple (" + pe.PlanGroups.Count + ")";
-                        }
+                        string planGroups = pe.PlanGroupsDescription;
 
                         // See if this entry conflicts with a schedule entry
                         string BlockingEntry = string.Empty;
@@ -471,6 +476,7 @@ namespace EVEMon.SkillPlanner
                                     lvi.SubItems[x].ForeColor = lvi.ForeColor;
                                 }
                                 res += Skill.TimeSpanToDescriptiveText(t, DescriptiveTextOptions.IncludeCommas);
+                                timeDifferences.Add(oldTrainTime - trainTime);
 
                                 // needed so Eewec's bit below compiles...
                                 ct = ColumnPreference.ColumnType.TrainingTime;
@@ -606,19 +612,22 @@ namespace EVEMon.SkillPlanner
 
                     foreach (string ts in m_plan.ColumnPreference.Order.Split(','))
                     {
-                        try
-                        {
-                            ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(typeof(ColumnPreference.ColumnType), ts, true);
-                            if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
+                            if (!String.IsNullOrEmpty(ts))
                             {
-                                AddColumn(ct);
-                                alreadyAdded.Add(ct);
+                                try
+                                {
+                                    ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)Enum.Parse(typeof(ColumnPreference.ColumnType), ts, true);
+                                    if (m_plan.ColumnPreference[ct] && !alreadyAdded.Contains(ct))
+                                    {
+                                        AddColumn(ct);
+                                        alreadyAdded.Add(ct);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    ExceptionHandler.LogException(e, false);
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, false);
-                        }
                     }
 
                     for (int i = 0; i < ColumnPreference.ColumnCount; i++)
@@ -630,15 +639,7 @@ namespace EVEMon.SkillPlanner
                             alreadyAdded.Add(ct);
                         }
                     }
-                    //}
-                    //finally
-                    //{
-                    //    lvSkills.EndUpdate();
-                    //}
                     UpdateListViewItems();
-                    //lvSkills.BeginUpdate();
-                    //try
-                    //{
                     for (int i = 0; i < lvSkills.Columns.Count; i++)
                     {
                         ColumnHeader ch = lvSkills.Columns[i];
@@ -648,6 +649,9 @@ namespace EVEMon.SkillPlanner
                             ch.Width = cda.Width;
                         }
                     }
+
+                    // Update sort arrows
+                    if(this.IsHandleCreated) UpdateSortVisualFeedbackFromPlan();
                 }
                 finally
                 {
@@ -907,6 +911,7 @@ namespace EVEMon.SkillPlanner
                 entry.Remapping = null;
                 lvSkills.Items.Remove(item);
                 nextItem.Selected = true;
+                UpdateListViewItems();
             }
             else
             {
@@ -1223,22 +1228,7 @@ namespace EVEMon.SkillPlanner
                 lvSkills.EndUpdate();
             }
         }
-
-        private void tsbSort_Click(object sender, EventArgs e)
-        {
-            using (PlanSortWindow f = new PlanSortWindow())
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    PlanSorter.SortPlan(m_plan, f.SortType, f.LearningFirst, f.Priority);
-                    tsbMoveDown.Enabled = false;
-                    tsbMoveUp.Enabled = false;
-                }
-            }
-        }
         #endregion Plan Re-Ordering
-
 
         #region Selection and items' perma-id
         private ListViewItem GetItemById(int id)
@@ -1329,6 +1319,196 @@ namespace EVEMon.SkillPlanner
         }
         #endregion Selection and items' perma-id
 
+        #region Column click and reordering
+        private string m_lastSortKey = "";
+        private bool m_lastSortWasReversed = false;
+
+        private void tsSortPriorities_CheckedChanged(object sender, EventArgs e)
+        {
+            m_plan.SortWithPrioritiesGrouping = tsSortPriorities.Checked;
+            var column = GetColumn(m_lastSortKey);
+            UpdateSort(column, m_lastSortWasReversed);
+        }
+
+        private void tsSortLearning_CheckedChanged(object sender, EventArgs e)
+        {
+            m_plan.SortWithLearningSkillsOnTop = tsSortLearning.Checked;
+            var column = GetColumn(m_lastSortKey);
+            UpdateSort(column, m_lastSortWasReversed);
+        }
+
+        private void lvSkills_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var column = lvSkills.Columns[e.Column];
+            var sort = GetPlanSort(column);
+
+            if (sort != PlanSort.None)
+            {
+                // Infere reverse order from last sort key
+                bool reverseOrder = false;
+                if (m_lastSortKey == column.Text)
+                {
+                    reverseOrder = !m_lastSortWasReversed;
+                }
+
+                // Update the sort
+                UpdateSort(column, reverseOrder);
+            }
+        }
+
+        private ColumnHeader GetColumn(string sortKey)
+        {
+            foreach (ColumnHeader header in this.lvSkills.Columns)
+            {
+                if (header.Text == sortKey) return header;
+            }
+            return null;
+        }
+
+        private PlanSort GetPlanSort(ColumnHeader header)
+        {
+            if (header.Tag == null) return PlanSort.TimeDifference;
+
+            var ct = (ColumnPreference.ColumnType)header.Tag;
+            switch (ct)
+            {
+                case ColumnPreference.ColumnType.SkillName:
+                    return PlanSort.Name;
+                case ColumnPreference.ColumnType.Cost:
+                    return PlanSort.Cost;
+                case ColumnPreference.ColumnType.TrainingTime:
+                    return PlanSort.TrainingTime;
+                case ColumnPreference.ColumnType.TrainingTimeNatural:
+                    return PlanSort.TrainingTimeNatural;
+                case ColumnPreference.ColumnType.PrimaryAttribute:
+                    return PlanSort.PrimaryAttribute;
+                case ColumnPreference.ColumnType.SecondaryAttribute:
+                    return PlanSort.SecondaryAttribute;
+                case ColumnPreference.ColumnType.Priority:
+                    return PlanSort.Priority;
+                case ColumnPreference.ColumnType.SkillGroup:
+                    return PlanSort.SkillGroupDuration;
+                case ColumnPreference.ColumnType.PlanGroup:
+                    return PlanSort.PlanGroup;
+                case ColumnPreference.ColumnType.PercentComplete:
+                    return PlanSort.PercentCompleted;
+                case ColumnPreference.ColumnType.SkillRank:
+                    return PlanSort.Rank;
+                case ColumnPreference.ColumnType.SPPerHour:
+                    return PlanSort.SPPerHour;
+                case ColumnPreference.ColumnType.Notes:
+                    return PlanSort.Notes;
+                case ColumnPreference.ColumnType.PlanType:
+                    return PlanSort.PlanType;
+                default:
+                    return PlanSort.None;
+            }
+        }
+
+        private void UpdateSort(ColumnHeader column, bool reversed)
+        {
+            // Get the sort
+            PlanSort sort = PlanSort.None;
+            if (column != null) sort = GetPlanSort(column);
+
+            // Perform the sort
+            PlanSorter.Sort(m_plan, sort, reversed, m_plan.SortWithPrioritiesGrouping, m_plan.SortWithLearningSkillsOnTop, this.timeDifferences);
+
+            // Update UI
+            tsbMoveUp.Enabled = false;
+            tsbMoveDown.Enabled = false;
+            UpdateSortVisualFeedback(column, reversed);
+        }
+
+        private void UpdateSortVisualFeedback(ColumnHeader column, bool reversed)
+        {
+            if (column == null)
+            {
+                var lastColumn = GetColumn(m_lastSortKey);
+                if (lastColumn != null) lastColumn.ImageIndex = -1;
+                m_lastSortKey = "";
+            }
+            else
+            {
+                // Remove the icon on the previous sort column when relevant
+                if (m_lastSortKey != column.Text)
+                {
+                    var lastColumn = GetColumn(m_lastSortKey);
+                    if (lastColumn != null) lastColumn.ImageIndex = -1;
+                }
+
+                // Update the icon on the sorted column
+                column.ImageIndex = (reversed ? 0 : 1);
+                ColumnImageToRight(lvSkills, column.Index);
+
+                // Update last sort informations and plan infos
+                m_lastSortKey = column.Text;
+                m_lastSortWasReversed = reversed;
+                m_plan.LastSortKey = m_lastSortKey;
+                m_plan.LastSortWasReversed = m_lastSortWasReversed;
+            }
+        }
+
+        private void UpdateSortVisualFeedbackFromPlan()
+        {
+            ColumnHeader column = null;
+            bool lastSortWasReversed = false;
+            if (m_plan != null)
+            {
+                column = GetColumn(m_plan.LastSortKey);
+                lastSortWasReversed = m_plan.LastSortWasReversed;
+            }
+            UpdateSortVisualFeedback(column, lastSortWasReversed);
+        }
+
+        /// <summary>
+        /// Align the column header's icon to the right.
+        /// Taken from "nobugz", see http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/e3d5c054-3d74-453c-82fe-53f945545025
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="index"></param>
+        public static void ColumnImageToRight(ListView view, int index)
+        {
+            if (!view.IsHandleCreated) throw new InvalidOperationException("ListView not yet created, wait...");
+            if (index >= view.Columns.Count) throw new ArgumentOutOfRangeException("Column index out of range");
+
+            IntPtr buf = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(LVCOLUMN)));
+
+            LVCOLUMN lvc = new LVCOLUMN();
+            lvc.mask = 0xffff;
+            Marshal.StructureToPtr(lvc, buf, false);
+            IntPtr retval = SendMessageW(view.Handle, LVM_GETCOLUMNW, (IntPtr)index, buf);
+
+            lvc = (LVCOLUMN)Marshal.PtrToStructure(buf, typeof(LVCOLUMN));
+            lvc.fmt |= 0x1000;
+            lvc.pszText = Marshal.StringToHGlobalUni(view.Columns[index].Text);
+            Marshal.StructureToPtr(lvc, buf, false);
+            retval = SendMessageW(view.Handle, LVM_SETCOLUMNW, (IntPtr)index, buf);
+
+            Marshal.FreeHGlobal(lvc.pszText);
+            Marshal.FreeHGlobal(buf);
+        }
+
+        // P/Invoke declarations:
+        private const int LVM_GETCOLUMNW = 0x1000 + 95;
+        private const int LVM_SETCOLUMNW = 0x1000 + 96;
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private extern static IntPtr SendMessageW(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private struct LVCOLUMN
+        {
+            public int mask;
+            public int fmt;
+            public int cx;
+            public IntPtr pszText;
+            public int cchTextMax;
+            public int iSubItem;
+            public int iImage;
+            public int iOrder;
+        }
+        #endregion
 
         private Plan.Entry GetPlanEntryForListViewItem(ListViewItem lvi)
         {
@@ -1370,6 +1550,7 @@ namespace EVEMon.SkillPlanner
                 m_settings = Settings.GetInstance();
             }
             tmrSelect.Enabled = false;
+            UpdateSortVisualFeedbackFromPlan();
         }
 
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1392,6 +1573,11 @@ namespace EVEMon.SkillPlanner
             else if (e.KeyCode == Keys.F9)
             {
                 this.tsbToggleRemapping_Click(null, null);
+            }
+            else if (e.KeyCode == Keys.F5)
+            {
+                var column = GetColumn(m_lastSortKey);
+                if (column != null) UpdateSort(column, m_lastSortWasReversed);
             }
         }
 
@@ -1524,6 +1710,7 @@ namespace EVEMon.SkillPlanner
                 {
                     ListViewItem lvi = lvSkills.Items[i];
                     Plan.Entry pe = lvi.Tag as Plan.Entry;
+                    Plan.RemappingPoint rm = lvi.Tag as Plan.RemappingPoint;
                     if (pe != null)
                     {
                         entriesCount++;
@@ -1545,6 +1732,10 @@ namespace EVEMon.SkillPlanner
                             selectedTimeWithLearning += trainTime;
                         }
                         scratchpad.ApplyALevelOf(gs);
+                    }
+                    else if (rm != null)
+                    {
+                        scratchpad = rm.TransformSctratchpad(this.m_plan.GrandCharacterInfo, scratchpad);
                     }
                 }
 
