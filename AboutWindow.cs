@@ -9,6 +9,10 @@ using System.Drawing;
 
 namespace EVEMon
 {
+    /// <summary>
+    /// Displays the About Window (Help -&gt; About) containing contrib,
+    /// legal and version information about the application.
+    /// </summary>
     public partial class AboutWindow : EVEMonForm
     {
         SortedList slPriority;
@@ -17,6 +21,9 @@ namespace EVEMon
         public Font myFont;
         public Font myFontbold;
 
+        /// <summary>
+        /// Setup the list of developers and the standard font
+        /// </summary>
         public AboutWindow()
         {
             InitializeComponent();
@@ -24,6 +31,7 @@ namespace EVEMon
             myFont = new System.Drawing.Font("Tahoma", 8);
             myFontbold = new System.Drawing.Font("Tahoma", 8, FontStyle.Bold);
 
+            // list of headings
             slPriority = new SortedList();
             slPriority.Add("01", "EVEMon Guru:");
             slPriority.Add("02", "Guru (Retired):");
@@ -31,17 +39,24 @@ namespace EVEMon
             slPriority.Add("04", "Developers (Retired):");
             slPriority.Add("05", "Contributors:");
 
+            
+            // list of developers by heading
             slDevelopers = new SortedList();
+            
+            // EVEMon Guru
             slDevelopers.Add("Araan Sunn", "01");
             slDevelopers.Add("Richard Slater", "01");
 
+            // Guru (Retired)
             slDevelopers.Add("Six Anari", "02");
             slDevelopers.Add("Anders Chydenius", "02");
             slDevelopers.Add("Brad Stone", "02");
             slDevelopers.Add("Eewec Ourbyni", "02");
 
+            // Developers
             slDevelopers.Add("mrcue", "03");
 
+            // Developers (Retired)
             slDevelopers.Add("Collin Grady", "04");
             slDevelopers.Add("DCShadow", "04");
             slDevelopers.Add("Grauw", "04");
@@ -52,6 +67,7 @@ namespace EVEMon
             slDevelopers.Add("Stevil Knevil", "04");
             slDevelopers.Add("TheBelgarion", "04");
 
+            // Contributors
             slDevelopers.Add("Adam Butt", "05");
             slDevelopers.Add("Barend", "05");
             slDevelopers.Add("bugusnot", "05");
@@ -59,6 +75,7 @@ namespace EVEMon
             slDevelopers.Add("coeus", "05");
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("Dariana", "05");
+            slDevelopers.Add("DonQuiche", "05");
             slDevelopers.Add("exi", "05");
             slDevelopers.Add("FangVV", "05");
             slDevelopers.Add("Femaref", "05");
@@ -89,6 +106,7 @@ namespace EVEMon
             slDevelopers.Add("phorge", "05");
             slDevelopers.Add("Risako", "05");
             slDevelopers.Add("Ruldar", "05");
+            slDevelopers.Add("Safarian Lanar", "05");
             slDevelopers.Add("scoobyrich", "05");
             slDevelopers.Add("Sertan Deras", "05");
             slDevelopers.Add("shaver", "05");
@@ -99,17 +117,21 @@ namespace EVEMon
             slDevelopers.Add("The_Assimilator", "05");
             slDevelopers.Add("vardoj", "05");
             slDevelopers.Add("Vehlin", "05");
+            slDevelopers.Add("Waste Land", "05");
             slDevelopers.Add("wrok", "05");
             slDevelopers.Add("xNomeda", "05");
             slDevelopers.Add("Zarra Kri", "05");
             slDevelopers.Add("zofu", "05");
-            slDevelopers.Add("DonQuiche", "05");
-            slDevelopers.Add("Safarian Lanar", "05");
-            slDevelopers.Add("Waste Land", "05");
     
             slOutput = new SortedList();
         }
 
+        /// <summary>
+        /// Populates and adds links to the various labels and list
+        /// boxes on the form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -123,6 +145,19 @@ namespace EVEMon
             AddLinksToLabel(IconSourceLinkLabel, "CCP Games", "http://www.ccpgames.com/");
         }
 
+        /// <summary>
+        /// Little function to allow us to add links to a link label
+        /// after the contents has been set, purely by the contained
+        /// text
+        /// </summary>
+        /// <remarks>
+        /// At present this function only works on the first instance
+        /// of a string within the text property of the link label,
+        /// further insances will be ignored.
+        /// </remarks>
+        /// <param name="label">LinkLabel to act upon</param>
+        /// <param name="linkText">text to make a link</param>
+        /// <param name="url">URL for the link to point to</param>
         private void AddLinksToLabel(LinkLabel label, String linkText, String url)
         {
             int start = label.Text.IndexOf(linkText);
@@ -131,12 +166,20 @@ namespace EVEMon
             label.Links.Add(start, length, url);
         }
 
+        /// <summary>
+        /// Adds " (Debug)" to the verison number if the build has
+        /// the DEBUG conditional set.
+        /// </summary>
         [Conditional("DEBUG")]
         private void AddDebugTag()
         {
             VersionLabel.Text = String.Format("{0} (Debug)", VersionLabel.Text);
         }
 
+        /// <summary>
+        /// Loops through the list of headings and developers and adds
+        /// them to the list box.
+        /// </summary>
         private void AddDevelopersToListBox()
         {
             // Set up the list of developers.
@@ -164,16 +207,33 @@ namespace EVEMon
             }
         }
 
+
+        /// <summary>
+        /// Handles the Click event of the btnOk control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOk_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the llHomePage LinkLabel.
+        /// Navigates to the EVEMon website in a browser.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.BrowserLinkClicked("http://evemon.battleclinic.com/");
         }
 
+        /// <summary>
+        /// Handles the DrawItem event of the lstDevelopers control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lstDevelopers_DrawItem(object sender,
         System.Windows.Forms.DrawItemEventArgs e)
         {
@@ -182,7 +242,6 @@ namespace EVEMon
                 string sLine = slOutput.GetByIndex(e.Index).ToString();
                 if (sLine.Contains(":"))
                 {
-                    //sLine = sLine + ":";
                     e.Graphics.DrawString(sLine, myFontbold, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
                 }
                 else
@@ -193,6 +252,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Handles the LinkClicked event of the IconSourceLinkLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void IconSourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Link.LinkData.GetType() == typeof(String))
