@@ -82,6 +82,7 @@ namespace EVEMonInstallBuilder
             using (ZipOutputStream zipStream = new ZipOutputStream(File.Create(zipFileName)))
             {
                 zipStream.SetLevel(9);
+                zipStream.UseZip64 = UseZip64.Off;
 
                 byte[] buffer = new byte[4096];
 
