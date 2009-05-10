@@ -212,6 +212,24 @@ namespace EVEMon.Common
             set { m_corpName = value; }
         }
 
+        private string m_cloneName = String.Empty;
+
+        [XmlElement("cloneName")]
+        public string CloneName
+        {
+            get { return m_cloneName; }
+            set { m_cloneName = value; }
+        }
+
+        private int m_cloneSkillPoints = 0;
+
+        [XmlElement("cloneSkillPoints")]
+        public int CloneSkillPoints
+        {
+            get { return m_cloneSkillPoints; }
+            set { m_cloneSkillPoints = value; }
+        }
+
         private string m_EVEFolder = String.Empty;
 
         [XmlElement("EVEFolder")]

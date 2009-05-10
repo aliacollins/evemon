@@ -98,7 +98,6 @@ namespace EVEMon.Common
             set { m_EVEFolder = value; }
         }
 
-
         private List<SerializableImplantSet> m_implantSets = new List<SerializableImplantSet>();
 
         [XmlArrayItem("ImplantSet")]
@@ -387,13 +386,32 @@ namespace EVEMon.Common
         }
 
         private string m_corpId = String.Empty;
-
+        
         [XmlElement("corporationID")]
         public string CorpId
         {
             get { return m_corpId; }
             set { m_corpId = value; }
         }
+        
+        private string m_cloneName;
+
+        [XmlElement("cloneName")]
+        public string CloneName
+        {
+            get { return m_cloneName; }
+            set { m_cloneName = value; }
+        }
+
+        private int m_cloneSkillPoints;
+
+        [XmlElement("cloneSkillPoints")]
+        public int CloneSkillPoints
+        {
+            get { return m_cloneSkillPoints; }
+            set { m_cloneSkillPoints = value; }
+        }
+
         private Decimal m_balance;
 
         [XmlElement("balance")]

@@ -23,6 +23,8 @@ namespace EVEMon.Common
         private string m_bloodLine;
         private string m_gender;
         private string m_corporationName;
+        private string m_cloneName;
+        private int m_cloneSkillPoints;
         private string m_portraitFolder;
         private Decimal m_balance;
         private GrandEveAttributes m_attributes = new GrandEveAttributes();
@@ -291,6 +293,40 @@ namespace EVEMon.Common
                 if (m_corporationName != value)
                 {
                     m_corporationName = value;
+                    OnBioInfoChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the clone.
+        /// </summary>
+        /// <value>The name of the clone.</value>
+        public string CloneName
+        {
+            get { return m_cloneName; }
+            set
+            {
+                if (m_cloneName != value)
+                {
+                    m_cloneName = value;
+                    OnBioInfoChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the clone skill points.
+        /// </summary>
+        /// <value>The clone skill points.</value>
+        public int CloneSkillPoints
+        {
+            get { return m_cloneSkillPoints; }
+            set
+            {
+                if (m_cloneSkillPoints != value)
+                {
+                    m_cloneSkillPoints = value;
                     OnBioInfoChanged();
                 }
             }
@@ -807,6 +843,8 @@ namespace EVEMon.Common
             this.Race = ci.CharacterSheet.Race;
             this.Bloodline = ci.CharacterSheet.BloodLine;
             this.CorporationName = ci.CharacterSheet.CorpName;
+            this.CloneName = ci.CharacterSheet.CloneName;
+            this.CloneSkillPoints = ci.CharacterSheet.CloneSkillPoints;
             this.XMLExpires = ci.XMLExpires;
             this.UpdatedAt = ci.UpdatedAt;
             this.Balance = ci.CharacterSheet.Balance;
@@ -1570,6 +1608,8 @@ namespace EVEMon.Common
             ci.CharacterSheet.Race = this.Race;
             ci.CharacterSheet.BloodLine = this.Bloodline;
             ci.CharacterSheet.CorpName = this.CorporationName;
+            ci.CharacterSheet.CloneName = this.CloneName;
+            ci.CharacterSheet.CloneSkillPoints = this.CloneSkillPoints;
             ci.PortraitFolder = this.PortraitFolder; // to CI
             ci.CharacterSheet.Balance = this.Balance;
             ci.currentTime = TimeUtil.ConvertDateTimeToCCPTimeString(DateTime.Now.ToUniversalTime());

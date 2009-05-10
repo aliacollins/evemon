@@ -302,10 +302,31 @@ namespace EVEMon
         /// </summary>
         private void UpdateSkillHeaderStats()
         {
-            lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP\n{2} Skills at Level V",
-                                                m_grandCharacterInfo.KnownSkillCount,
-                                                m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
-                                                m_grandCharacterInfo.SkillCountAtLevel(5));
+            // check clone is sufficent
+            String cloneWarning = String.Empty;
+            
+            if (m_grandCharacterInfo.CloneSkillPoints < m_grandCharacterInfo.SkillPointTotal)
+            {
+                CloneWarningLabel.Image = SystemIcons.Warning.ToBitmap();
+                CloneWarningLabel.Visible = true;
+                String toolTipText = "Skill points exceed limitations of clone by {0} SP";
+                int skillPointDifference = m_grandCharacterInfo.CloneSkillPoints - m_grandCharacterInfo.SkillPointTotal;
+                ttToolTip.SetToolTip(CloneWarningLabel, String.Format(toolTipText, skillPointDifference.ToString("#,##0")));
+                cloneWarning = " (Clone Insufficent)";
+            }
+            else
+            {
+                CloneWarningLabel.Visible = false;
+            }
+
+            lblSkillHeader.Text = String.Format("{0} Known Skills\n{1} Total SP{2}\n{3} Skills at Level V\n{4} Clone Limit ({5})",
+                                        m_grandCharacterInfo.KnownSkillCount,
+                                        m_grandCharacterInfo.SkillPointTotal.ToString("#,##0"),
+                                        cloneWarning,
+                                        m_grandCharacterInfo.SkillCountAtLevel(5),
+                                        m_grandCharacterInfo.CloneSkillPoints.ToString("#,##0"),
+                                        m_grandCharacterInfo.CloneName);
+
         }
 
         /// <summary>
