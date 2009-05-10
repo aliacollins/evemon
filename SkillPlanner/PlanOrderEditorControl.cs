@@ -716,9 +716,8 @@ namespace EVEMon.SkillPlanner
 
         private void cmsContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            //miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count == 1);
-            miRemoveFromPlan.Enabled = true;
-            miChangeNote.Enabled = (lvSkills.SelectedItems.Count > 0);
+            miRemoveFromPlan.Enabled = (lvSkills.SelectedItems.Count > 0);
+            miChangeNote.Enabled = miRemoveFromPlan.Enabled;
             miChangePriority.Enabled = miChangeNote.Enabled;
 
             // When there is only one selected item, we enable/disable some items
@@ -766,10 +765,10 @@ namespace EVEMon.SkillPlanner
             miShowInSkillBrowser.Enabled = (lvSkills.SelectedItems.Count == 1);
             miShowInSkillExplorer.Enabled = (lvSkills.SelectedItems.Count == 1);
             miMarkOwned.Enabled = (lvSkills.SelectedItems.Count > 0);
-            var entry = GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]);
+            var entry = lvSkills.SelectedItems.Count > 0 ? GetPlanEntryForListViewItem(lvSkills.SelectedItems[0]) : null;
 
             // If a single item is selected, which belong to different plan groups, we display that menu
-            if (lvSkills.SelectedItems.Count == 1 && entry.PlanGroups.Count > 0)
+            if (lvSkills.SelectedItems.Count == 1 && entry != null && entry.PlanGroups.Count > 0)
             {
                 miPlanGroups.Enabled = true;
                 miPlanGroups.DropDownItems.Clear();
@@ -783,6 +782,7 @@ namespace EVEMon.SkillPlanner
                 {
                     ToolStripButton tsb = new ToolStripButton(pg);
                     tsb.Click += new EventHandler(tsb_Click);
+                    tsb.Width = TextRenderer.MeasureText(pg, tsb.Font).Width;
                     miPlanGroups.DropDownItems.Add(tsb);
                 }
             }
@@ -800,7 +800,6 @@ namespace EVEMon.SkillPlanner
             {
                 miSubPlan.Enabled = false;
             }
-
         }
 
         private void tsb_Click(object sender, EventArgs e)

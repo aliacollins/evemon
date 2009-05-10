@@ -273,7 +273,7 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveUp.Name = "tsbMoveUp";
             this.tsbMoveUp.Size = new System.Drawing.Size(38, 20);
-            this.tsbMoveUp.Text = "Move Up";
+            this.tsbMoveUp.Text = "Move up";
             this.tsbMoveUp.Click += new System.EventHandler(this.tsbMoveUp_Click);
             // 
             // tsbMoveDown
@@ -284,7 +284,7 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveDown.Name = "tsbMoveDown";
             this.tsbMoveDown.Size = new System.Drawing.Size(38, 20);
-            this.tsbMoveDown.Text = "Move Down";
+            this.tsbMoveDown.Text = "Move down";
             this.tsbMoveDown.Click += new System.EventHandler(this.tsbMoveDown_Click);
             // 
             // toolStripSeparator1
@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
             this.tsSortPriorities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsSortPriorities.Name = "tsSortPriorities";
             this.tsSortPriorities.Size = new System.Drawing.Size(38, 20);
-            this.tsSortPriorities.Text = "GroupByPriorities";
+            this.tsSortPriorities.Text = "Group by priorities";
             // 
             // toolStripSeparator4
             // 
@@ -331,8 +331,8 @@ namespace EVEMon.SkillPlanner
             this.tsbToggleSkills.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbToggleSkills.Name = "tsbToggleSkills";
             this.tsbToggleSkills.Size = new System.Drawing.Size(38, 20);
-            this.tsbToggleSkills.Text = "tsbToggleSkills";
-            this.tsbToggleSkills.ToolTipText = "Toggle Skill Pane";
+            this.tsbToggleSkills.Text = "Toggle skills";
+            this.tsbToggleSkills.ToolTipText = "Toggle skill pane";
             this.tsbToggleSkills.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // tsbToggleRemapping
@@ -342,7 +342,7 @@ namespace EVEMon.SkillPlanner
             this.tsbToggleRemapping.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbToggleRemapping.Name = "tsbToggleRemapping";
             this.tsbToggleRemapping.Size = new System.Drawing.Size(38, 20);
-            this.tsbToggleRemapping.Text = "tsbToggleRemapping";
+            this.tsbToggleRemapping.Text = "Toggle remapping";
             this.tsbToggleRemapping.ToolTipText = "Toggle remapping point (F9)";
             this.tsbToggleRemapping.Click += new System.EventHandler(this.tsbToggleRemapping_Click);
             // 
@@ -427,7 +427,7 @@ namespace EVEMon.SkillPlanner
             this.llSuggestionLink.Size = new System.Drawing.Size(181, 22);
             this.llSuggestionLink.TabIndex = 0;
             this.llSuggestionLink.TabStop = true;
-            this.llSuggestionLink.Text = "Select Columns...";
+            this.llSuggestionLink.Text = "Select columns...";
             this.llSuggestionLink.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.llSuggestionLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llSuggestionLink_LinkClicked);
             // 
