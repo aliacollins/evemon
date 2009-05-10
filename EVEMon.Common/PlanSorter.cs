@@ -168,6 +168,8 @@ namespace EVEMon.Common
 
             // First, we apply the required filter
             List<Plan.Entry> list = new List<Plan.Entry>(entries);
+            int initialCount = list.Count;
+
             switch (sort)
             {
                 case PlanSort.Name:
@@ -245,13 +247,19 @@ namespace EVEMon.Common
 
             // Rebuild prerequisites order
             ReorderPorstrequisites(list);
+
+            // Check we didn't mess up anything
+            if (initialCount != list.Count)
+            {
+                throw new UnauthorizedAccessException("The sort algorithm messed up and deleted items");
+            }
+
+            // Return
             return list;
         }
 
         private void ReorderPorstrequisites(List<Plan.Entry> list)
         {
-            int count = list.Count;
-
             // Transform the list as another one of disjointed graph nodes
             List<Node<Plan.Entry>> nodes = new List<Node<Plan.Entry>>();
             foreach (var entry in list)
@@ -267,21 +275,23 @@ namespace EVEMon.Common
                 {
                     if (node != prereqCandidate)
                     {
-                        // First, we test whether the prereq candidate is the previous level
-                        bool isPrereq = (node.Item.Skill == prereqCandidate.Item.Skill && node.Item.Level == prereqCandidate.Item.Level + 1);
-
-                        // If it's not, then we test whether it is an immediate prerequisite
-                        if (!isPrereq) 
+                        int level = node.Item.Level;
+                        if (level == 1)
                         {
+                            // If it's not, then we test whether it is an immediate prerequisite
                             int neededLevel;
-                            isPrereq = node.Item.Skill.HasAsImmedPrereq(prereqCandidate.Item.Skill, out neededLevel);
-                            isPrereq &= (prereqCandidate.Item.Level == neededLevel);
+                            if (node.Item.Skill.HasAsImmedPrereq(prereqCandidate.Item.Skill, out neededLevel))
+                            {
+                                if (level == neededLevel) node.AddPrerequisite(prereqCandidate);
+                            }
                         }
-
-                        // Finally, if it is indeed a prereq, we add it to the list
-                        if (isPrereq)
+                        else
                         {
-                            node.AddPrerequisite(prereqCandidate);
+                            // We test whether the prereq candidate is the previous level
+                            if (node.Item.SkillName == prereqCandidate.Item.SkillName && level == prereqCandidate.Item.Level + 1)
+                            {
+                                node.AddPrerequisite(prereqCandidate);
+                            }
                         }
                     }
                 }
@@ -290,7 +300,6 @@ namespace EVEMon.Common
             // Flatten the graph in a tree
             list.Clear();
             foreach (var tree in nodes) tree.TryAddTo(list);
-            System.Diagnostics.Debug.Assert(list.Count == count);
 
             // Clean up to take care of the bidirectionnal mess for the GC
             foreach (var tree in nodes) tree.CleanUp();

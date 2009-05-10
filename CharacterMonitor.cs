@@ -197,12 +197,8 @@ namespace EVEMon
                             m_groupCollapsed.Add(gsg, true);
                             foreach (Skill gs in gsg)
                             {
-                                try
-                                {
-                                    lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
-                                }
-                                catch
-                                { }
+                                int index = lbSkills.Items.IndexOf(gs);
+                                if (index != -1) lbSkills.Items.RemoveAt(index);
                             }
 
                             gsg.isCollapsed = true;

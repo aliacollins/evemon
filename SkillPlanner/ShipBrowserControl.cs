@@ -346,11 +346,14 @@ namespace EVEMon.SkillPlanner
         {
             try
             {
-                NewPlannerWindow npw = Plan.PlannerWindow.Target as NewPlannerWindow;
-                if (npw == null) return;
-                if (npw.LoadoutForm != null)
+                if (Plan != null)
                 {
-                    npw.LoadoutForm.SetPlan(Plan);
+                    NewPlannerWindow npw = Plan.PlannerWindow.Target as NewPlannerWindow;
+                    if (npw == null) return;
+                    if (npw.LoadoutForm != null)
+                    {
+                        npw.LoadoutForm.SetPlan(Plan);
+                    }
                 }
             }
             catch (Exception)

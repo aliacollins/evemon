@@ -28,12 +28,16 @@ namespace EVEMon.SkillPlanner
 
     public partial class PlanOrderEditorControl : UserControl
     {
+        private const int ArrowUpIndex = 4;
+        private const int ArrowDownIndex = 5;
+
         private System.Drawing.Font m_plannedSkillFont;
         private System.Drawing.Font m_prerequisiteSkillFont;
         private System.Drawing.Color m_trainablePlanEntryColor;
         private System.Drawing.Color m_remappingBackColor;
         private System.Drawing.Color m_remappingForeColor;
         private Settings m_settings;
+        private bool m_canUpdate;
 
         public PlanOrderEditorControl()
         {
@@ -75,14 +79,11 @@ namespace EVEMon.SkillPlanner
                 UpdateListColumns();
                 OnPlanChanged(null, null);
 
-                if (this.IsHandleCreated)
+                UpdateSortVisualFeedbackFromPlan();
+                if (m_plan != null)
                 {
-                    UpdateSortVisualFeedbackFromPlan();
-                    if (m_plan != null)
-                    {
-                        tsSortLearning.Checked = m_plan.SortWithLearningSkillsOnTop;
-                        tsSortPriorities.Checked = m_plan.SortWithPrioritiesGrouping;
-                    }
+                    tsSortLearning.Checked = m_plan.SortWithLearningSkillsOnTop;
+                    tsSortPriorities.Checked = m_plan.SortWithPrioritiesGrouping;
                 }
             }
         }
@@ -170,7 +171,9 @@ namespace EVEMon.SkillPlanner
         #region Skill List View
         private void UpdateSkillList()
         {
+            if (!m_canUpdate) return;
             if (m_plan == null) return;
+
             lvSkills.BeginUpdate();
             try
             {
@@ -190,7 +193,7 @@ namespace EVEMon.SkillPlanner
                             rlv.UseItemStyleForSubItems = true;
                             rlv.Text = pe.Remapping.ToString();
                             rlv.Tag = pe.Remapping;
-                            rlv.StateImageIndex = 3;
+                            rlv.ImageIndex = 3;
                             items.Add(rlv);
                         }
 
@@ -244,7 +247,7 @@ namespace EVEMon.SkillPlanner
             rlv.UseItemStyleForSubItems = true;
             rlv.Text = pe.Remapping.ToString();
             rlv.Tag = pe.Remapping;
-            rlv.StateImageIndex = 3;
+            rlv.ImageIndex = 3;
             lvSkills.Items.Insert(index, rlv);
         }
 
@@ -651,7 +654,7 @@ namespace EVEMon.SkillPlanner
                     }
 
                     // Update sort arrows
-                    if(this.IsHandleCreated) UpdateSortVisualFeedbackFromPlan();
+                    UpdateSortVisualFeedbackFromPlan();
                 }
                 finally
                 {
@@ -1420,13 +1423,24 @@ namespace EVEMon.SkillPlanner
             UpdateSortVisualFeedback(column, reversed);
         }
 
+        /// <summary>
+        /// Updates the sort visual feedback for the specific column.
+        /// </summary>
+        /// <remarks>
+        /// The ColumnHeader.ImageIndex has a bug under Vista that
+        /// causes the value to be set to 0 if you set it to -1,
+        /// resulting in the wrong icon being selected for the sort:
+        /// https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=395739
+        /// </remarks>
+        /// <param name="column">The column.</param>
+        /// <param name="reversed">if set to <c>true</c> [reversed].</param>
         private void UpdateSortVisualFeedback(ColumnHeader column, bool reversed)
         {
             if (column == null)
             {
                 var lastColumn = GetColumn(m_lastSortKey);
-                if (lastColumn != null) lastColumn.ImageIndex = -1;
-                m_lastSortKey = "";
+                if (lastColumn != null) lastColumn.ImageIndex = 6; // see xml comments
+                m_lastSortKey = String.Empty;
             }
             else
             {
@@ -1434,12 +1448,12 @@ namespace EVEMon.SkillPlanner
                 if (m_lastSortKey != column.Text)
                 {
                     var lastColumn = GetColumn(m_lastSortKey);
-                    if (lastColumn != null) lastColumn.ImageIndex = -1;
+                    if (lastColumn != null) lastColumn.ImageIndex = 6; // see xml comments
+                    
                 }
 
                 // Update the icon on the sorted column
-                column.ImageIndex = (reversed ? 0 : 1);
-                ColumnImageToRight(lvSkills, column.Index);
+                column.ImageIndex = (reversed ? ArrowUpIndex : ArrowDownIndex);
 
                 // Update last sort informations and plan infos
                 m_lastSortKey = column.Text;
@@ -1459,54 +1473,6 @@ namespace EVEMon.SkillPlanner
                 lastSortWasReversed = m_plan.LastSortWasReversed;
             }
             UpdateSortVisualFeedback(column, lastSortWasReversed);
-        }
-
-        /// <summary>
-        /// Align the column header's icon to the right.
-        /// Taken from "nobugz", see http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/e3d5c054-3d74-453c-82fe-53f945545025
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="index"></param>
-        public static void ColumnImageToRight(ListView view, int index)
-        {
-            if (!view.IsHandleCreated) throw new InvalidOperationException("ListView not yet created, wait...");
-            if (index >= view.Columns.Count) throw new ArgumentOutOfRangeException("Column index out of range");
-
-            IntPtr buf = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(LVCOLUMN)));
-
-            LVCOLUMN lvc = new LVCOLUMN();
-            lvc.mask = 0xffff;
-            Marshal.StructureToPtr(lvc, buf, false);
-            IntPtr retval = SendMessageW(view.Handle, LVM_GETCOLUMNW, (IntPtr)index, buf);
-
-            lvc = (LVCOLUMN)Marshal.PtrToStructure(buf, typeof(LVCOLUMN));
-            lvc.fmt |= 0x1000;
-            lvc.pszText = Marshal.StringToHGlobalUni(view.Columns[index].Text);
-            Marshal.StructureToPtr(lvc, buf, false);
-            retval = SendMessageW(view.Handle, LVM_SETCOLUMNW, (IntPtr)index, buf);
-
-            Marshal.FreeHGlobal(lvc.pszText);
-            Marshal.FreeHGlobal(buf);
-        }
-
-        // P/Invoke declarations:
-        private const int LVM_GETCOLUMNW = 0x1000 + 95;
-        private const int LVM_SETCOLUMNW = 0x1000 + 96;
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private extern static IntPtr SendMessageW(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        private struct LVCOLUMN
-        {
-            public int mask;
-            public int fmt;
-            public int cx;
-            public IntPtr pszText;
-            public int cchTextMax;
-            public int iSubItem;
-            public int iImage;
-            public int iOrder;
         }
         #endregion
 
@@ -1551,6 +1517,9 @@ namespace EVEMon.SkillPlanner
             }
             tmrSelect.Enabled = false;
             UpdateSortVisualFeedbackFromPlan();
+
+            this.m_canUpdate = true;
+            this.UpdateSkillList();
         }
 
         private void lvSkills_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1669,27 +1638,27 @@ namespace EVEMon.SkillPlanner
 
                 if (current.Tag is Plan.RemappingPoint) 
                 {
-                    current.StateImageIndex = 3;
+                    current.ImageIndex = 3;
                 }
                 else if (isSameSkill)
                 {
                     //current.BackColor = Color.LightYellow;
-                    current.StateImageIndex = 1;
+                    current.ImageIndex = 1;
                 }
                 else if (isPreRequisite)
                 {
                     //current.BackColor = Color.LightPink;
-                    current.StateImageIndex = 2;
+                    current.ImageIndex = 2;
                 }
                 else if (isPostRequisite)
                 {
                     //current.BackColor = Color.LightGreen;
-                    current.StateImageIndex = 0;
+                    current.ImageIndex = 0;
                 }
                 else
                 {
                     //current.BackColor = lvSkills.BackColor;
-                    current.StateImageIndex = -1;
+                    current.ImageIndex = -1;
                 }
             }
 
