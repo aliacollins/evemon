@@ -45,6 +45,7 @@ namespace EVEMon.SkillPlanner
                 }
                 skillTreeDisplay.Plan = value;
                 skillSelectControl.Plan = value;
+                UpdatePlanControl();
             }
         }
 
