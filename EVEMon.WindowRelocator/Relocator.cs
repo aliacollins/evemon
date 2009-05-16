@@ -41,10 +41,9 @@ namespace EVEMon.WindowRelocator
         [DllImport("user32")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
+        // GetClientRect: returns width and height, not right and bottom in lpRect!
         [DllImport("user32")]
         private static extern int GetClientRect(IntPtr hWnd, out RECT lpRect);
-
-        // GetClientRect: returns width and height, not right and bottom in lpRect!
 
         [DllImport("user32")]
         private static extern int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
@@ -116,12 +115,6 @@ namespace EVEMon.WindowRelocator
 
         private static void m_hook_WindowCreated(object sender, EventArgs e)
         {
-            //lock (m_lockObj)
-            //{
-            //    if (m_timer == null)
-            //        m_timer = new System.Threading.Timer(new TimerCallback(TimerCallbackProc));
-            //    m_timer.Change(250, Timeout.Infinite);
-            //}
             m_failCount = 0;
             TimerCallbackProc(null);
         }
@@ -169,13 +162,11 @@ namespace EVEMon.WindowRelocator
 
                 if (sb.ToString() == "EVE" && p.ProcessName == "ExeFile")
                 {
-
                     Rectangle r = GetWindowRect(fgWin);
                     if (r.Width > 800)
                     {
                         if (r.Location != m_positionedPoint)
                         {
-                            //System.Media.SystemSounds.Asterisk.Play();
                             PositionWindow(fgWin);
                         }
                         m_failCount = Int32.MaxValue;
@@ -185,13 +176,11 @@ namespace EVEMon.WindowRelocator
                     {
                         m_failCount = 0;
                         SetupTimer();
-                        //System.Media.SystemSounds.Beep.Play();
                     }
                 }
                 else
                 {
                     CancelTimer();
-                    //System.Media.SystemSounds.Beep.Play();
                 }
             }
         }
