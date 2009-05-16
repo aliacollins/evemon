@@ -490,6 +490,24 @@ namespace EVEMon.SkillPlanner
                              return ts;
                          };
                     break;
+                case 3: // Skill rank
+                    sortColName = "Rank";
+                    sk = delegate(Skill gs)
+                    {
+                        return gs.Rank * 500;
+                    };
+                    dk = delegate(Skill gs, object v)
+                    {
+                        return Convert.ToString(gs.Rank);
+                    };
+                    mu = delegate(IComparable v)
+                    {
+                        int rank = (int)v;
+
+                        return rank + 1;
+                    };
+
+                    break;
             }
 
             lvSortedSkillList.BeginUpdate();

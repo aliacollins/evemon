@@ -367,7 +367,8 @@ namespace EVEMon.SkillPlanner
             this.cbSorting.Items.AddRange(new object[] {
             "No Sorting",
             "Time to Next Level",
-            "Time to Level V"});
+            "Time to Level V",
+            "Skill rank"});
             this.cbSorting.Location = new System.Drawing.Point(31, 29);
             this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSorting.Name = "cbSorting";
