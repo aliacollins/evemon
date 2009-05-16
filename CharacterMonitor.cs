@@ -1061,7 +1061,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        ///Changes worksafe mode - all the lifting is done right in this method.  Allows the settings object to notify monitors when they need to hide from the man.
+        /// Changes worksafe mode - all the lifting is done right in this method.  Allows the settings object to notify monitors when they need to hide from the man.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>

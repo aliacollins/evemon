@@ -93,7 +93,8 @@ namespace EVEMon.SkillPlanner
             "Not Planned - Trainable",
             "Partially Trained",
             "Planned",
-            "Trainable (All)"});
+            "Trainable (All)",
+            "Trainable on trial account"}); 
             this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSkillFilter.MaxDropDownItems = 12;

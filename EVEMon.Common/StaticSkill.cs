@@ -15,6 +15,7 @@ namespace EVEMon.Common
     public class StaticSkill : EveObject
     {
         private bool m_public;
+        private bool m_trainableOnTrialAccount;
         private string m_descriptionNl;
         private EveAttribute m_primaryAttribute;
         private EveAttribute m_secondaryAttribute;
@@ -23,10 +24,11 @@ namespace EVEMon.Common
         private long m_cost;
 
 
-        public StaticSkill(bool pub, string name, int id, string description,
+        public StaticSkill(bool pub, bool trial, string name, int id, string description,
                           EveAttribute a1, EveAttribute a2, int rank, long cost, IEnumerable<Prereq> prereqs)
         {
             m_public = pub;
+            m_trainableOnTrialAccount = trial;
             _name = name;
             _id = id;
             _description = description;
@@ -109,6 +111,13 @@ namespace EVEMon.Common
                         bool _pub = (sel.GetAttribute("p") != "false");
                         int _id = Convert.ToInt32(sel.GetAttribute("i"));
                         string _desc = sel.GetAttribute("d");
+
+                        bool _trial = true;
+                        if (_desc.Contains("Can not be trained on Trial Accounts"))
+                        {
+                            _trial = false;
+                        }
+
                         EveAttribute _primAttr =
                             (EveAttribute)Enum.Parse(typeof(EveAttribute), sel.GetAttribute("a1"), true);
                         EveAttribute _secAttr =
@@ -126,22 +135,23 @@ namespace EVEMon.Common
                         }
                         long _cost = 0;
 
-                        // for a very very few users, this throws an exception on the skill "Salvage drone operation" - I have NO IDEA why.
-                        // - Brad 9 May 2007
+                        // for a very very few users, this throws an
+                        // exception on the skill "Salvage drone 
+                        // operation" - I have NO IDEA why. (May 07)
                         try
                         {
                             string cost = sel.GetAttribute("c");
                             _cost = Convert.ToInt64(cost);
                         }
-                        catch (FormatException)
+                        catch (FormatException fex)
                         {
-                            // Ignore the exception - cost is zero anyway.
+                            ExceptionHandler.LogException(fex, true);
                         }
 
                         // Ignore skills with rank 0
                         if (_rank != 0)
                         {
-                            StaticSkill ss = new StaticSkill(_pub, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, prereqs);
+                            StaticSkill ss = new StaticSkill(_pub, _trial, _name, _id, _desc, _primAttr, _secAttr, _rank, _cost, prereqs);
                             m_skillsById[_id] = ss;
                             m_skillsByName[_name] = ss;
                             skills.Add(ss);
@@ -312,6 +322,14 @@ namespace EVEMon.Common
         public int Rank
         {
             get { return m_rank; }
+        }
+
+        /// <summary>
+        /// Get whether skill is trainable on a trial account
+        /// </summary>
+        public bool IsTrainableOnTrialAccount
+        {
+            get { return m_trainableOnTrialAccount; }
         }
 
         /// <summary>

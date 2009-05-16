@@ -108,6 +108,35 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets whether skill is trainable on trial account.
+        /// </summary>
+        public bool IsTrainableOnTrialAccount
+        {
+            get { 
+                // Skill is trainable on trial account, as are all prereqs
+                if (m_staticData.IsTrainableOnTrialAccount == false)
+                {
+                    return false;
+                }
+                foreach (Prereq p in m_prereqs)
+                {
+                    if (p.Skill.Equals(this))
+                    {
+                        continue;
+                    } else if (p.Skill.IsTrainableOnTrialAccount == false)
+                    {
+                        return false;
+                    }
+                }
+                
+                
+                return true; 
+            
+            
+            }
+        }
+
+        /// <summary>
         /// Gets which attribute this skill modifies.
         /// </summary>
         public EveAttribute AttributeModified

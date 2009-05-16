@@ -137,6 +137,12 @@ namespace EVEMon.SkillPlanner
                              return gs.Known;
                          };
                     break;
+                case "Trainable on trial account": // Can be trained on trial accounts
+                    sf = delegate(Skill gs)
+                    {
+                        return gs.IsTrainableOnTrialAccount;
+                    };
+                    break;
                 case "Not Known": // Not Known Skills
                     sf = delegate(Skill gs)
                          {
