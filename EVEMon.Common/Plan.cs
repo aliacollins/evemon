@@ -19,6 +19,9 @@ namespace EVEMon.Common
         {
             m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
             m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
+
+            printFont = FontHelper.GetDefaultFont(); 
+            printFontBold = FontHelper.GetDefaultFont(10, FontStyle.Bold | FontStyle.Underline);
         }
 
         #region Members
@@ -556,7 +559,7 @@ namespace EVEMon.Common
                         }
 
                         int prIndex = GetIndexOf(pgs.Name, pp.Level);
-                        
+
                         if (prIndex == -1 && pgs.Level < pp.Level)
                         {
                             // Not in the plan, and needs to be trained...
@@ -995,7 +998,7 @@ namespace EVEMon.Common
         /// <param name="skillsToAdd"></param>
         /// <param name="Note"></param>
         /// <returns></returns>
-        private List<Plan.Entry> CheckSkillsToAdd(IEnumerable<Pair<string, int>> skillsToAdd,string Note)
+        private List<Plan.Entry> CheckSkillsToAdd(IEnumerable<Pair<string, int>> skillsToAdd, string Note)
         {
             List<Plan.Entry> planEntries = new List<Plan.Entry>();
             m_lowestPrereqPriority = Int32.MinValue;
@@ -1288,7 +1291,7 @@ namespace EVEMon.Common
             p.m_planName = m_planName;
             p.m_plannerWindow = null;
             p.m_uniqueSkillCount = m_uniqueSkillCount;
-      
+
             foreach (Plan.Entry pe in m_entries)
             {
                 Plan.Entry entry = (Plan.Entry)pe.Clone();
@@ -1461,7 +1464,7 @@ namespace EVEMon.Common
             public EveAttributeScratchpad TransformSctratchpad(CharacterInfo character, EveAttributeScratchpad scratchpad)
             {
                 var newScratchpad = scratchpad.Clone();
-                for(int i=0; i<5; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     EveAttribute attrib = (EveAttribute)i;
                     var bonusDifference = this.baseAttributes[i] - character.GetBaseAttribute(attrib);
@@ -1769,8 +1772,8 @@ namespace EVEMon.Common
 
         #region Plan Printing
         private int entryToPrint;
-        private Font printFont = new Font("Arial", 10);
-        private Font printFontBold = new Font("Arial", 10, FontStyle.Bold | FontStyle.Underline);
+        private Font printFont;
+        private Font printFontBold;
         private SolidBrush printBrush = new SolidBrush(Color.Black);
         private Point printPoint = new Point();
         private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
@@ -1789,7 +1792,7 @@ namespace EVEMon.Common
 
             m_pto = (PlanTextOptions)m_settings.DefaultCopyOptions;
 
-            Printing.PrintOptionsDlg prdlg = new EVEMon.Printing.PrintOptionsDlg(m_settings,m_pto,doc);
+            Printing.PrintOptionsDlg prdlg = new EVEMon.Printing.PrintOptionsDlg(m_settings, m_pto, doc);
 
             if (prdlg.ShowDialog() == DialogResult.OK)
             {
@@ -1824,7 +1827,7 @@ namespace EVEMon.Common
             EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
             SizeF f = new SizeF(0, 0);
             int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
-            string s = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")"; 
+            string s = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")";
             int num = 0;
 
             printPoint.X = 5;
@@ -2326,7 +2329,7 @@ namespace EVEMon.Common
             ExportSaveType saveType = (ExportSaveType)sfdSave.FilterIndex;
             try
             {
-                
+
                 SerializableCharacterSheet ci = this.GrandCharacterInfo.ExportSerializableCharacterSheet();
                 this.Merge(ci);
                 switch (saveType)

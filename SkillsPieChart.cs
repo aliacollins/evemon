@@ -193,8 +193,6 @@ namespace EVEMon
                         
                     }
 
-                    //newToolTips[i] = sg.Name + " (0 skills / " + String.Format("{0:#,###}", newValues[i]) + " skillpoints after plan completion)";
-
                     newAddToolTips[i] = newAddTexts[i] + " (" + skills.Count + " skills with " + String.Format("{0:#,###}", newAddValues[i]) + " skillpoints after plan completion)";
                     newAddSliceRelativeDisplacements[i] = (newAddValues[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;                
                 }

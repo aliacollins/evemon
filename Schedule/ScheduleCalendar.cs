@@ -5,6 +5,7 @@ using EVEMon.Common.Schedule;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using EVEMon.Common;
 
 namespace EVEMon.Schedule
 {
@@ -79,11 +80,11 @@ namespace EVEMon.Schedule
 
         protected void SetupDefaultResources()
         {
-            smallFont = new Font(this.Font.FontFamily, 7.0f, FontStyle.Regular);
+            smallFont = FontHelper.GetDefaultFont(7.0f);
         }
 
         protected override void PaintMonthEntriesForDay(Graphics g, DateTime datetime, Rectangle cellRect)
-        {            
+        {
             List<ScheduleEntry> todays = new List<ScheduleEntry>();
             foreach (ScheduleEntry entry in entries)
             {
@@ -211,7 +212,7 @@ namespace EVEMon.Schedule
                             using (Brush brush = new LinearGradientBrush(new Point(rect.X, rect.Y), new Point(rect.X, rect.Y + rect.Height), Color.Gray, Color.LightGray))
                             {
                                 g.FillRectangle(brush, rect);
-                            }                            
+                            }
                         }
                         break;
                     }
@@ -253,7 +254,7 @@ namespace EVEMon.Schedule
             r.Y = LEGEND_Y + LEGEND_PADDING;
             r.Width = LEGEND_BOX * 2;
             r.Height = LEGEND_BOX;
-            using (Brush b = new LinearGradientBrush(new Point(r.X, r.Y), new Point(r.X + r.Width, r.Y), single_color, single_color2)) 
+            using (Brush b = new LinearGradientBrush(new Point(r.X, r.Y), new Point(r.X + r.Width, r.Y), single_color, single_color2))
             {
                 g.FillRectangle(b, r);
                 g.DrawRectangle(Pens.Black, r);

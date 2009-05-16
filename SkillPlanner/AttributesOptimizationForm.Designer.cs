@@ -142,7 +142,6 @@ namespace EVEMon.SkillPlanner
             this.lvPoints.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader});
             this.lvPoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvPoints.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvPoints.LabelWrap = false;
             this.lvPoints.Location = new System.Drawing.Point(3, 3);
             this.lvPoints.Name = "lvPoints";

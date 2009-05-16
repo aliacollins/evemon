@@ -83,6 +83,8 @@ namespace EVEMon.SkillPlanner
 
             m_thread = new Thread(new ThreadStart(Run));
             m_thread.Start();
+
+            lvPoints.Font = FontHelper.GetDefaultFont(9F, FontStyle.Regular);
         }
 
         private void Run()
@@ -167,7 +169,7 @@ namespace EVEMon.SkillPlanner
 
                     // Notify plan updated
                     var lvi = new ListViewItem("Your plan has been updated.", globalGroup);
-                    lvi.Font = new Font(this.lvPoints.Font, FontStyle.Bold);
+                    lvi.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
                     this.lvPoints.Items.Add(lvi);
 
                     // Add pages

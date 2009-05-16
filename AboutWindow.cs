@@ -28,8 +28,8 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            myFont = new System.Drawing.Font("Tahoma", 8);
-            myFontbold = new System.Drawing.Font("Tahoma", 8, FontStyle.Bold);
+            myFont = FontHelper.GetDefaultFont(8);
+            myFontbold = FontHelper.GetDefaultFont(8,FontStyle.Bold);
 
             // list of headings
             slPriority = new SortedList();
