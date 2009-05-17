@@ -390,7 +390,6 @@ namespace EVEMon.SkillPlanner
 
             SortedListSortKey sk;
             SortedListDisplayKey dk;
-            MakeUniqueSortKey mu;
             string sortColName = String.Empty;
 
             switch (cbSorting.SelectedIndex)
@@ -444,19 +443,7 @@ namespace EVEMon.SkillPlanner
                                         Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
                              }
                          };
-                    mu = delegate(IComparable v)
-                         {
-                             TimeSpan ts = (TimeSpan)v;
-                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                             {
-                                 ts -= TimeSpan.FromTicks(1);
-                             }
-                             else
-                             {
-                                 ts += TimeSpan.FromTicks(1);
-                             }
-                             return ts;
-                         };
+
                     break;
                 case 2: // Training time to level V
                     sortColName = "Time";
@@ -482,19 +469,7 @@ namespace EVEMon.SkillPlanner
                                         Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default);
                              }
                          };
-                    mu = delegate(IComparable v)
-                         {
-                             TimeSpan ts = (TimeSpan)v;
-                             if (ts > TimeSpan.MaxValue - TimeSpan.FromTicks(1000))
-                             {
-                                 ts -= TimeSpan.FromTicks(1);
-                             }
-                             else
-                             {
-                                 ts += TimeSpan.FromTicks(1);
-                             }
-                             return ts;
-                         };
+
                     break;
                 case 3: // Skill rank
                     sortColName = "Rank";
@@ -506,38 +481,40 @@ namespace EVEMon.SkillPlanner
                     {
                         return Convert.ToString(gs.Rank);
                     };
-                    mu = delegate(IComparable v)
-                    {
-                        int rank = (int)v;
-
-                        return rank + 1;
-                    };
-
-                    break;
+                 break;
             }
 
             lvSortedSkillList.BeginUpdate();
             try
             {
-                SortedList<IComparable, Pair<Skill, string>> sortedItems = new SortedList<IComparable, Pair<Skill, string>>();
+
+                List<Pair<IComparable, Skill>> sortedItems = new List<Pair<IComparable, Skill>>();
                 foreach (Skill gs in filteredItems.Values)
                 {
-                    IComparable sortVal = sk(gs);
-                    string dispVal = dk(gs, sortVal);
-                    while (sortedItems.ContainsKey(sortVal))
-                    {
-                        sortVal = mu(sortVal);
-                    }
-                    sortedItems.Add(sortVal, new Pair<Skill, string>(gs, dispVal));
+                    sortedItems.Add(new Pair<IComparable, Skill>(sk(gs), gs));
                 }
+
+                sortedItems.Sort(
+                    delegate(Pair<IComparable, Skill> lhs, Pair<IComparable, Skill> rhs)
+                    {
+                        int result = lhs.A.CompareTo(rhs.A);
+                        if (result == 0)
+                        {
+                            return lhs.B.Name.CompareTo(rhs.B.Name);
+                        }
+                        else
+                        {
+                            return result;
+                        }
+                });
 
                 chSortKey.Text = sortColName;
                 lvSortedSkillList.Items.Clear();
-                foreach (Pair<Skill, string> p in sortedItems.Values)
+                foreach (Pair<IComparable, Skill> p in sortedItems)
                 {
-                    ListViewItem lvi = new ListViewItem(p.A.Name);
-                    lvi.SubItems.Add(p.B);
-                    lvi.Tag = p.A;
+                    ListViewItem lvi = new ListViewItem(p.B.Name);
+                    lvi.SubItems.Add(dk(p.B, p.A));
+                    lvi.Tag = p.B;
                     lvSortedSkillList.Items.Add(lvi);
                 }
 
