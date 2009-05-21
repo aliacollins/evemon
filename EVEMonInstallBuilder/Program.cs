@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using ICSharpCode.SharpZipLib.Checksums;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace EVEMonInstallBuilder
@@ -18,6 +17,7 @@ namespace EVEMonInstallBuilder
         private static string projectDir;
         private static string ver;
         private static string outputDir;
+        private static string nsisExe;
 
         public static int Main(string[] args)
         {
@@ -26,11 +26,14 @@ namespace EVEMonInstallBuilder
             try
             {
                 PopulateEnvironment(args);
-                
-                // create an installer on the developers desktop
-                Console.WriteLine("Starting Installer creation.");
-                BuildInstaller();
-                Console.WriteLine("Installer creation finished.");
+
+                if (!String.IsNullOrEmpty(nsisExe))
+                {
+                    // create an installer on the developers desktop
+                    Console.WriteLine("Starting Installer creation.");
+                    BuildInstaller();
+                    Console.WriteLine("Installer creation finished.");
+                }
 
                 // create a zip file on the developers desktop
                 Console.WriteLine("Starting zip installer creation.");
@@ -53,6 +56,22 @@ namespace EVEMonInstallBuilder
             Application.Exit();
         }
 
+        private static string findMakeNsisExe()
+        {
+            string[] locations = new string[3];
+
+            locations[0] = programDir + "/NSIS/makensis.exe";
+            locations[1] = "C:/Program Files/NSIS/makensis.exe";
+            locations[2] = "C:/Program Files (x86)/NSIS/makensis.exe";
+
+            foreach (string s in locations)
+            {
+                if (File.Exists(s)) return s;
+            }
+
+            return String.Empty;
+        }
+
         private static void PopulateEnvironment(string[] args)
         {
             config = "Release";
@@ -62,6 +81,8 @@ namespace EVEMonInstallBuilder
             ver = exeAsm.GetName().Version.ToString();
 
             outputDir = Path.Combine(projectDir, "../bin/x86/" + config);
+
+            nsisExe = findMakeNsisExe();
         }
 
         private static void BuildZip()
@@ -116,16 +137,17 @@ namespace EVEMonInstallBuilder
             {
                 ProcessInstallScripts(projectDir);
 
-                string processName = programDir + "/NSIS/makensis.exe";
                 string param =
                     "/DVERSION=" + ver + " " +
                     "\"/DOUTDIR=" + desktopDir + "\" " +
-                    "/PAUSE " +
                     "\"" + projectDir + "bin\\x86\\Release\\EVEMon Installer Script.nsi\"";
-                //System.Windows.Forms.MessageBox.Show(param);
-                ProcessStartInfo psi = new ProcessStartInfo(processName, param);
+
+                ProcessStartInfo psi = new ProcessStartInfo(nsisExe, param);
                 psi.WorkingDirectory = projectDir;
+                psi.UseShellExecute = false;
+                psi.RedirectStandardOutput = true;
                 Process makensisProcess = Process.Start(psi);
+                Console.WriteLine(makensisProcess.StandardOutput.ReadToEnd());
                 makensisProcess.WaitForExit();
                 int exitCode = makensisProcess.ExitCode;
                 makensisProcess.Dispose();

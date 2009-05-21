@@ -76,6 +76,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName)==Debug exit
-if exist "%25programfiles%25\NSIS\makensis.exe" "$(TargetPath)" $(ProjectDir)</PostBuildEvent>
+"$(TargetPath)" $(ProjectDir)</PostBuildEvent>
   </PropertyGroup>
 </Project>
