@@ -1127,12 +1127,6 @@ namespace EVEMon
 
         }
 
-        /*void m_settings_NotificationOffsetChanged(object sender, EventArgs e)
-        {
-            if (m_grandCharacterInfo.SerialSIT != null && m_grandCharacterInfo.SerialSIT.isSkillInTraining)
-                m_estimatedCompletion = m_grandCharacterInfo.SerialSIT.getTrainingEndTime.AddSeconds(-m_settings.NotificationOffset);
-        }*/
-
         /// <summary>
         /// Handles everything when the character's training skill has changed.  Called by GrandCharacterInfo.
         /// </summary>
