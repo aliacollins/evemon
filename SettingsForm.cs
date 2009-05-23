@@ -38,6 +38,7 @@ namespace EVEMon
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            Program.MainWindow.UpdateOverviewTabVisibility(m_settings.HideOverviewTab);
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
@@ -64,7 +65,7 @@ namespace EVEMon
             }
 
             s.CloseToTray = cbCloseToTray.Checked;
-            s.TitleToTime = cbTitleToTime.Checked;
+            s.ShowCharacterInfoInWindowTitle = cbTitleToTime.Checked;
             s.TitleToTimeLayout = cbWindowsTitleList.SelectedIndex + 1;
             s.TitleToTimeSkill = cbSkillInTitle.Checked;
             s.WorksafeMode = cbWorksafeMode.Checked;
@@ -123,6 +124,9 @@ namespace EVEMon
             s.RunIGBServer = cbRunIGBServer.Checked;
             s.IGBServerPublic = cbIGBPublic.Checked;
             s.IGBServerPort = Int32.Parse(tb_IgbPort.Text);
+
+            // Main window
+            s.HideOverviewTab = cbHideOverviewTab.Checked;
 
             // Tray Icon Popup
             s.TrayPopupConfig = m_trayPopupConfig;
@@ -253,6 +257,7 @@ namespace EVEMon
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (!ValidateIGBSettings() || !ValidateTQSettings()) return;
+            Program.MainWindow.UpdateOverviewTabVisibility(cbHideOverviewTab.Checked);
             ApplyToSettings(m_settings);
             m_settings.Save();
 
@@ -323,13 +328,16 @@ namespace EVEMon
 
             // Look and feel options
             cbWorksafeMode.Checked = m_settings.WorksafeMode;
-            cbTitleToTime.Checked = m_settings.TitleToTime;
+            cbTitleToTime.Checked = m_settings.ShowCharacterInfoInWindowTitle;
             cbWindowsTitleList.SelectedIndex = m_settings.TitleToTimeLayout - 1;
             cbSkillInTitle.Checked = m_settings.TitleToTimeSkill;
             gbSkillPlannerHighlighting.Enabled = !cbWorksafeMode.Checked;
             cbRunIGBServer.Checked = m_settings.RunIGBServer;
             cbIGBPublic.Checked = m_settings.IGBServerPublic;
             tb_IgbPort.Text = m_settings.IGBServerPort.ToString();
+
+            // Main window
+            cbHideOverviewTab.Checked = m_settings.HideOverviewTab;
 
             // Skill Icon Set
             if (m_settings.SkillIconGroup <= cbSkillIconSet.Items.Count && m_settings.SkillIconGroup > 0)
@@ -908,6 +916,12 @@ namespace EVEMon
         private void ApiProxySettingChanged()
         {
             EveProxyURLTextBox.Enabled = UseApiProxyRadioButton.Checked;
+        }
+
+        private void cbHideOverviewTab_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.MainWindow.UpdateOverviewTabVisibility(cbHideOverviewTab.Checked);
+            UpdateDisables();
         }
     }
 }

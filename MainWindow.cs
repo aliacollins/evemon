@@ -19,9 +19,16 @@ namespace EVEMon
 {
     public partial class MainWindow : EVEMonForm
     {
+        /// <summary>
+        /// A special tag we set on the all character's page
+        /// </summary>
+        private const string AllCharsTag = "All characters";
+
         public MainWindow()
         {
             InitializeComponent();
+            charactersGrid.CharacterClicked += new CharactersGrid.CharacterClickedHandler(charactersGrid_CharacterClicked);
+            tcCharacterTabs.SelectedIndexChanged += new EventHandler(tcCharacterTabs_SelectedIndexChanged);
         }
 
         private Settings m_settings;
@@ -41,6 +48,8 @@ namespace EVEMon
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            if (this.DesignMode) return;
+
             this.Visible = false;
             this.RememberPositionKey = "MainWindow";
             Program.MainWindow = this;
@@ -68,7 +77,12 @@ namespace EVEMon
                 }
             }
 
+            // Update the tabs : may remove the all chars grid ; add the characters
+            tpOverview.Tag = AllCharsTag;
+            if (m_settings.HideOverviewTab) RemoveTab(tpOverview);
             AddCharacters();
+
+            // Check server status
             EveServer server = EveServer.GetInstance();
             lblServerStatus.Text = "// " + server.StatusText;
             if (m_settings.CheckTranquilityStatus)
@@ -80,12 +94,20 @@ namespace EVEMon
                 }
                 server.StartTQChecks();
             }
+
+            // Start minimized ?
             if (startMinimized)
             {
                 this.ShowInTaskbar = false;
                 this.WindowState = FormWindowState.Minimized;
                 this.Visible = true;
             }
+            else
+            {
+                UpdateTabVisibility();
+            }
+
+            // Prepre control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = m_settings.MainWindowMenuBarVisible;
             standardToolStripMenuItem.Checked = standardToolbar.Visible = m_settings.MainWindowToolBarVisible;
         }
@@ -185,15 +207,44 @@ namespace EVEMon
                 }
             }
 
+            // Remove the chars without any character sheet associated to them (how can it happen ?)
             foreach (CharFileInfo cfi in invalidFiles)
             {
                 RemoveCharFileInfo(cfi);
             }
+
+            // Updates settings
             if (invalidFiles.Count > 0)
             {
                 UpdateTabOrder();
             }
 
+            // Updates character's grid
+            UpdateCharactersGrid();
+        }
+
+        /// <summary>
+        /// Updates the character's grid
+        /// </summary>
+        private void UpdateCharactersGrid()
+        {
+            // IF the tab is not connected to the tabs control, we just clean it up
+            if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
+            {
+                charactersGrid.CleanUp();
+            }
+            // However, if it's available, we add it
+            else
+            {
+                List<CharacterMonitor> monitors = new List<CharacterMonitor>();
+                foreach (TabPage tab in tcCharacterTabs.TabPages)
+                {
+                    CharacterMonitor monitor = tab.Controls[0] as CharacterMonitor;
+                    if (monitor != null) monitors.Add(monitor);
+                }
+
+                charactersGrid.UpdateCharactersList(monitors);
+            }
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)
@@ -417,19 +468,101 @@ namespace EVEMon
         {
             TabPage tp = new TabPage(title);
             tp.UseVisualStyleBackColor = true;
-            tp.Tag = charInfo;
             tp.Padding = new Padding(5);
+            tp.Tag = charInfo;
+
             cm.Parent = tp;
             cm.Dock = DockStyle.Fill;
-            cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
-
             cm.Start();
-            tcCharacterTabs.TabPages.Add(tp);
-            cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+
+            cm.LCDDataChanged += new EventHandler(cm_ShortInfoChanged);
             cm.GrandCharacterInfo.TrainingSkillChanged += new EventHandler(GrandCharacterInfo_TrainingSkillChanged);
-            SetRemoveEnable();
+            cm.GrandCharacterInfo.DownloadAttemptCompleted += new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+
+            AddTab(tp);
         }
 
+        /// <summary>
+        /// Adds the specified tab, subscribing events and such
+        /// </summary>
+        /// <param name="tab"></param>
+        private void AddTab(TabPage tab)
+        {
+            // Adds the page
+            if (tab.Tag == AllCharsTag && tcCharacterTabs.TabPages.Count != 0) tcCharacterTabs.TabPages.Insert(0, tab);
+            else tcCharacterTabs.TabPages.Add(tab);
+
+            // Updates G15 and the "remove" (chars, etc) buttons
+            UpdateControlsOnTabSelectionChange();
+        }
+
+        /// <summary>
+        /// Removes the specified tab (unsubscribibe events, cleaning up collapsed groups' infos in the settings, updating controls, etc)
+        /// </summary>
+        /// <param name="tp"></param>
+        private void RemoveTab(TabPage tp)
+        {
+            // Unsubscribe events
+            CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
+            if (cm != null)
+            {
+                cm.Stop();
+                cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
+                cm.GrandCharacterInfo.TrainingSkillChanged -= new EventHandler(GrandCharacterInfo_TrainingSkillChanged);
+                cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
+            }
+
+            // Remove tab
+            tcCharacterTabs.TabPages.Remove(tp);
+
+            // Retrieves the char's name from the removed tab and may remove its plans (depending on the user's settings)
+            string name = string.Empty;
+            if (tp.Tag is CharLoginInfo)
+            {
+                CharLoginInfo cli = tp.Tag as CharLoginInfo;
+                name = cli.CharacterName;
+                m_settings.CharacterList.Remove(cli);
+                if (!m_settings.KeepCharacterPlans)
+                {
+                    m_settings.RemoveAllPlansFor(cli.CharacterName);
+                }
+                m_settings.RemoveCharacterCache(cli.CharacterName);
+                UpdateTabOrder();
+            }
+            else if (tp.Tag is CharFileInfo)
+            {
+                CharFileInfo cfi = tp.Tag as CharFileInfo;
+                name = cfi.CharacterName;
+                RemoveCharFileInfo(cfi);
+                UpdateTabOrder();
+            }
+
+            // Every char has associated informations about skill groups that have to be collasped on the main window.
+            // The following code cleans up those informations
+            if (!String.IsNullOrEmpty(name))
+            {
+                // Collect the groups to remove (the ones whose char's name is this char's name)
+                List<Pair<string, string>> toRemove = new List<Pair<string, string>>();
+                foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
+                {
+                    if (grp.A == name) toRemove.Add(grp);
+                }
+
+                // Remove them
+                foreach (Pair<string, string> grp in toRemove)
+                {
+                    m_settings.CollapsedGroups.Remove(grp);
+                }
+            }
+
+            // Updates controls' statuses
+            UpdateControlsOnTabSelectionChange();
+            CheckAccountTraining();
+        }
+
+        /// <summary>
+        /// Saves the tab's order to the settings (don't ask me why)
+        /// </summary>
         private void UpdateTabOrder()
         {
             List<String> tabOrder = new List<string>();
@@ -449,64 +582,107 @@ namespace EVEMon
             m_settings.TabOrderName = tabOrder;
         }
 
+        /// <summary>
+        /// Updates the window's title.
+        /// </summary>
+        /// <remarks>Called anytime the LCD display and tooltip should be changed, which happens at least every second. Fired by <see cref="CharacterMonitor.LCDDataChanged"/></remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cm_ShortInfoChanged(object sender, EventArgs e)
         {
             this.Invoke(new MethodInvoker(delegate
             {
                 StringBuilder tsb = new StringBuilder();
 
-                if (m_settings.TitleToTime)
+                // If character's trainings must be displayed in title
+                if (m_settings.ShowCharacterInfoInWindowTitle)
                 {
-                    SortedList<TimeSpan, CharacterInfo> gcis = gcisByTimeSpan();
-                    int selectedCharId = (tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor).GrandCharacterInfo.CharacterId;
+                    // Retrieve the selected character
+                    CharacterMonitor cm = this.GetCurrentCharacter();
+                    int selectedCharId = (cm == null ? -1 : cm.GrandCharacterInfo.CharacterId);
 
-                    //there are real optimization opportunities here - this gets updated every second
-
-                    foreach (TimeSpan ts in gcis.Keys)
+                    // Scroll through the ordered list of chars in training
+                    SortedList<TimeSpan, CharacterInfo> orderedTrainingTimes = GetOrderedCharactersTrainingTime();
+                    foreach (TimeSpan ts in orderedTrainingTimes.Keys)
                     {
-                        CharacterInfo gci = gcis[ts];
+                        CharacterInfo gci = orderedTrainingTimes[ts];
 
-                        string gciTimeSpanText = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.Default) + " " + gci.Name
-                            + (m_settings.TitleToTimeSkill == true ? " (" + gci.CurrentlyTrainingSkill.Name + ")" : "");
                         switch (m_settings.TitleToTimeLayout)
                         {
-                            case 1: // single Char - finishing skill next
-                                if (tsb.Length == 0)
-                                {
-                                    tsb.Append(gciTimeSpanText);
-                                }
+                            //this is the default
+                            case 0: 
+
+                            // single Char - finishing skill next
+                            case 1: 
+                                if (tsb.Length == 0) AppendCharacterTrainingTime(tsb, gci, ts);
                                 break;
-                            case 2: // single Char - selected char
+
+                            // single Char - selected char
+                            case 2:
+                                if (selectedCharId == gci.CharacterId) AppendCharacterTrainingTime(tsb, gci, ts);
+                                break;
+
+                            // multi Char - finishing skill next first
+                            case 3:
+                                if (tsb.Length > 0) tsb.Append(" | ");
+                                AppendCharacterTrainingTime(tsb, gci, ts);
+                                break;
+
+                            // multi Char - selected char first
+                            case 4: 
+                                // Selected char ? Insert at the beginning
                                 if (selectedCharId == gci.CharacterId)
                                 {
-                                    tsb.Append(gciTimeSpanText);
+                                    // Precreate the string for this char
+                                    StringBuilder subBuilder = new StringBuilder();
+                                    AppendCharacterTrainingTime(subBuilder, gci, ts);
+                                    if (tsb.Length > 0) subBuilder.Append(" | ");
+
+                                    // Insert it at the beginning
+                                    tsb.Insert(0, subBuilder.ToString());
                                 }
-                                break;
-                            case 0: //this is the default
-                            case 3: // multi Char - finishing skill next first
-                                tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
-                                break;
-                            case 4: // multi Char - selected char first
-                                if (selectedCharId == gci.CharacterId)
-                                {
-                                    tsb.Insert(0, gciTimeSpanText + (tsb.Length > 0 ? " | " : String.Empty));
-                                }
+                                // Non-selected char ? Same as "3"
                                 else
                                 {
-                                    tsb.Append(tsb.Length > 0 ? " | " : String.Empty).Append(gciTimeSpanText);
+                                    if (tsb.Length > 0) tsb.Append(" | ");
+                                    AppendCharacterTrainingTime(tsb, gci, ts);
                                 }
                                 break;
                         }
                     }
                 }
 
-                tsb.Append(tsb.Length > 0 ? " - " : String.Empty).Append(Application.ProductName);
+                // Adds EVEMon at the end
+                if (tsb.Length >0) tsb.Append(" - ");
+                tsb.Append(Application.ProductName);
                 this.Text = tsb.ToString();
             }));
         }
 
-        // Pulled this code out of cm_ShortInfoChanged, as I needed to use the returned List in multiple places
-        private SortedList<TimeSpan, CharacterInfo> gcisByTimeSpan()
+        /// <summary>
+        /// Appends the given training time for the specified character to the provided <see cref="StringBuilder"/>. Format is : "1d, 5h, 32m John Doe (Eidetic Memory)"
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="character"></param>
+        /// <param name="time"></param>
+        private void AppendCharacterTrainingTime(StringBuilder builder, CharacterInfo character, TimeSpan time)
+        {
+            builder.Append(Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default)).Append(" ").Append(character.Name);
+
+            if (m_settings.TitleToTimeSkill)
+            {
+                builder.Append(" (").Append(character.CurrentlyTrainingSkill.Name).Append(")");
+            }
+        }
+
+
+        /// <summary>
+        /// Produces a sorted list of characters in training, ordered from the shortest to the longest training time
+        /// </summary>
+        /// <remarks>Pulled this code out of cm_ShortInfoChanged, as I needed to use the returned List in multiple places</remarks>
+        /// <returns></returns>
+        private SortedList<TimeSpan, CharacterInfo> GetOrderedCharactersTrainingTime()
         {
             //selectedCharId = 0;
 
@@ -643,58 +819,21 @@ namespace EVEMon
         }
 
 
-        private void SetRemoveEnable()
+        /// <summary>
+        /// Updates G15 and enables / disables button (remove chars, plans, etc)
+        /// </summary>
+        private void UpdateControlsOnTabSelectionChange()
         {
             G15Handler.CharListUpdate();
-            removeCharacterToolStripMenuItem.Enabled =
-                tsbRemoveChar.Enabled =
-                    tsdbPlans.Enabled = (tcCharacterTabs.TabPages.Count > 0);
-        }
 
-        private void RemoveTab(TabPage tp)
-        {
-            CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-            if (cm != null)
-            {
-                cm.Stop();
-            }
-            string name = string.Empty;
-            cm.LCDDataChanged -= new EventHandler(cm_ShortInfoChanged);
-            tcCharacterTabs.TabPages.Remove(tp);
-            if (tp.Tag is CharLoginInfo)
-            {
-                CharLoginInfo cli = tp.Tag as CharLoginInfo;
-                name = cli.CharacterName;
-                m_settings.CharacterList.Remove(cli);
-                if (!m_settings.KeepCharacterPlans)
-                {
-                    m_settings.RemoveAllPlansFor(cli.CharacterName);
-                }
-                m_settings.RemoveCharacterCache(cli.CharacterName);
-                UpdateTabOrder();
-            }
-            else if (tp.Tag is CharFileInfo)
-            {
-                CharFileInfo cfi = tp.Tag as CharFileInfo;
-                name = cfi.CharacterName;
-                RemoveCharFileInfo(cfi);
-                UpdateTabOrder();
-            }
-            List<Pair<string, string>> toRemove = new List<Pair<string, string>>();
-            foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
-            {
-                if (grp.A == name)
-                {
-                    toRemove.Add(grp);
-                }
-            }
-            foreach (Pair<string, string> grp in toRemove)
-            {
-                m_settings.CollapsedGroups.Remove(grp);
-            }
-            cm.GrandCharacterInfo.DownloadAttemptCompleted -= new CharacterInfo.DownloadAttemptCompletedHandler(cm_DownloadAttemptCompleted);
-            SetRemoveEnable();
-            CheckAccountTraining();
+            bool hasCharacterSelected = (GetCurrentCharacter() != null);
+            removeCharacterToolStripMenuItem.Enabled = hasCharacterSelected;
+            tsbRemoveChar.Enabled = hasCharacterSelected;
+            tsdbPlans.Enabled = hasCharacterSelected;
+            tsSendToInEve.Enabled = hasCharacterSelected;
+            tsShowOwnedSkillbooks.Enabled = hasCharacterSelected;
+            tsSkillsPieChartTool.Enabled = hasCharacterSelected;
+            tsSaveXMLTool.Enabled = hasCharacterSelected;
         }
 
         private void RemoveCharFileInfo(CharFileInfo cfi)
@@ -748,6 +887,8 @@ namespace EVEMon
                     }
                 }
             }
+
+            UpdateCharactersGrid();
         }
 
         private void removeCharacterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -770,6 +911,7 @@ namespace EVEMon
             {
                 RemoveTab(activeTab);
             }
+            UpdateCharactersGrid();
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -922,10 +1064,13 @@ namespace EVEMon
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
                 CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                CharacterInfo gci = cm.GrandCharacterInfo;
-                if (gci != null && gci.Name == charName)
+                if (cm != null)
                 {
-                    return gci;
+                    CharacterInfo gci = cm.GrandCharacterInfo;
+                    if (gci != null && gci.Name == charName)
+                    {
+                        return gci;
+                    }
                 }
             }
             return null;
@@ -1039,66 +1184,65 @@ namespace EVEMon
             Application.Exit();
         }
 
-        private void UpdateTabVisibility(object sender, EventArgs e)
+        /// <summary>
+        /// When the selected tab changes, we need to inform the characte's monitor about whether they are selected or not, 
+        /// so that they can prevent unnecessary updates and adapt G15 display
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdateTabVisibility()
         {
-            foreach (TabPage p in tcCharacterTabs.TabPages)
+            // Ensures the selected character's monitor will have CurrentlyVisible to true, and false for the other monitors
+            switch (this.WindowState)
             {
-                CharacterMonitor cm = p.Controls[0] as CharacterMonitor;
-                if (p == tcCharacterTabs.SelectedTab && cm != null)
-                {
-                    cm.CurrentlyVisible = true;
-                }
-                else
-                {
-                    cm.CurrentlyVisible = false;
-                }
+                // Notifies the monitors so that they prevent useless UI updates
+                case FormWindowState.Minimized:
+                    foreach (TabPage tab in tcCharacterTabs.TabPages)
+                    {
+                        IMainWindowPage mwp = tab.Controls[0] as IMainWindowPage;
+                        mwp.CurrentlyVisible = false;
+                    }
+                    break;
+
+                // Updates monitor's "CurrentlyVisible" to make the selected one active
+                default:
+                    foreach (TabPage tab in tcCharacterTabs.TabPages)
+                    {
+                        IMainWindowPage mwp = tab.Controls[0] as IMainWindowPage;
+                        mwp.CurrentlyVisible = (tab == tcCharacterTabs.SelectedTab);
+                    }
+                    break;
             }
         }
 
         private void MainWindow_SizeChanged(object sender, EventArgs e)
         {
-            switch (this.WindowState)
-            {
-                case FormWindowState.Minimized:
-                    foreach (TabPage tab in tcCharacterTabs.TabPages)
-                    {
-                        CharacterMonitor cm = tab.Controls[0] as CharacterMonitor;
-                        cm.CurrentlyVisible = false;
-                    }
-                    break;
-                case FormWindowState.Normal:
-                    foreach (TabPage tab in tcCharacterTabs.TabPages)
-                    {
-                        CharacterMonitor cm = tab.Controls[0] as CharacterMonitor;
-                        if (tab == tcCharacterTabs.SelectedTab && cm != null)
-                        {
-                            cm.CurrentlyVisible = true;
-                        }
-                        else
-                        {
-                            cm.CurrentlyVisible = false;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+            UpdateTabVisibility();
         }
+
+        /// <summary>
+        /// Called when the user clickes the "reset cache" toolbar's button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void resetCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverble errors.
             DialogResult dr = MessageBox.Show("Are you sure you want to reset the cache, all settings will be lost including plans?",
                 "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+
             if (dr == DialogResult.Yes)
             {
                 // Take note of what the Keep Character Plans setting is.
                 bool tempKeepPlans = m_settings.KeepCharacterPlans;
                 m_settings.KeepCharacterPlans = false;
+
                 // Run through any characters that are currently loaded.
                 foreach (TabPage tab in tcCharacterTabs.TabPages)
                 {
                     RemoveTab(tab);
                 }
+
                 // Reset the settings. Settings are resaved upon exiting the application, no need to
                 // change this.
                 m_settings.KeepCharacterPlans = tempKeepPlans;
@@ -1165,27 +1309,16 @@ namespace EVEMon
             plan.ShowEditor(m_settings, GetCharacterInfo(planItem.OwnerItem.Text));
         }
 
-        private void UpdateTabVisibility(object sender, ControlEventArgs e)
-        {
-            foreach (TabPage p in tcCharacterTabs.TabPages)
-            {
-                CharacterMonitor cm = p.Controls[0] as CharacterMonitor;
-                if (p == tcCharacterTabs.SelectedTab && cm != null)
-                {
-                    cm.CurrentlyVisible = true;
-                }
-                else
-                {
-                    cm.CurrentlyVisible = false;
-                }
-            }
-
-        }
-
         // we've changed the tab order, so let's reset it
         private void tcCharacterTabs_DragDrop(object sender, DragEventArgs e)
         {
             UpdateTabOrder();
+        }
+
+        void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateTabVisibility();
+            UpdateControlsOnTabSelectionChange();
         }
 
         private void MainWindow_Deactivate(object sender, EventArgs e)
@@ -1197,12 +1330,19 @@ namespace EVEMon
             }
         }
 
-        private void skillsPieChartToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Called when the user's click the "show skills chart" button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsSkillsPieChartTool_Click(object sender, EventArgs e)
         {
+            // Return if no selected tab (cannot infere which character the chart should represent)
             if (tcCharacterTabs.SelectedTab == null) return;
             TabPage activeTab = tcCharacterTabs.SelectedTab;
             string charName = "";
 
+            // Retrieve the character's name from the current tab page
             if (activeTab.Tag is CharLoginInfo)
             {
                 CharLoginInfo cli = activeTab.Tag as CharLoginInfo;
@@ -1213,7 +1353,13 @@ namespace EVEMon
                 CharFileInfo cfi = activeTab.Tag as CharFileInfo;
                 charName = cfi.CharacterName;
             }
+            else
+            {
+                // This page has no character ? Return
+                return;
+            }
 
+            // Create the window
             CharacterMonitor cm = GetCharacterMonitor(charName);
             SkillsPieChart pie = new SkillsPieChart(cm.GrandCharacterInfo);
             pie.active_character = charName;
@@ -1237,16 +1383,32 @@ namespace EVEMon
             Directory.SetCurrentDirectory(m_currntDirectory);
         }
 
+        /// <summary>
+        /// Occurs when the user click the "load settings" toolbar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // Remove all the tabs
             while (tcCharacterTabs.TabPages.Count > 0)
             {
                 RemoveTab(tcCharacterTabs.TabPages[0]);
             }
+
+            // Open the specified settings
             Directory.SetCurrentDirectory(m_currntDirectory);
             m_settings = Settings.Restore(openFileDialog.FileName);
             m_settings.Save();
+
+            // Add the characters' grid when necessary
+            if (!m_settings.HideOverviewTab) AddTab(tpOverview);
+
+            // Add the characters
             AddCharacters();
+
+            // Notifies tabs about their visibilites to prevent unnecessary UI updates and such
+            UpdateTabVisibility();
         }
 
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1267,7 +1429,7 @@ namespace EVEMon
             return tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
         }
 
-        private void saveXMLToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsSaveXML_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
@@ -1368,16 +1530,16 @@ namespace EVEMon
             {
                 inEvenetToolStripMenuItem.Enabled = true;
                 inEvenetToolStripMenuItem.Checked = m_settings.GetCharacterSettings(cm.CharacterName).IneveSync;
-                sendToInEveToolStripMenuItem.Enabled = inEvenetToolStripMenuItem.Checked;
+                tsSendToInEve.Enabled = inEvenetToolStripMenuItem.Checked;
             }
             else
             {
                 inEvenetToolStripMenuItem.Enabled = false;
-                sendToInEveToolStripMenuItem.Enabled = false;
+                tsSendToInEve.Enabled = false;
             }
         }
 
-        private void showOwnedSkillbooksToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
@@ -1386,7 +1548,7 @@ namespace EVEMon
             }
         }
 
-        private void inEvenetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsInEvenet_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
@@ -1404,7 +1566,7 @@ namespace EVEMon
             }
         }
 
-        private void sendToInEveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsSendToInEve_Click(object sender, EventArgs e)
         {
             CharacterMonitor cm = GetCurrentCharacter();
             if (cm != null)
@@ -1508,13 +1670,15 @@ namespace EVEMon
                 foreach (TabPage tp in tcCharacterTabs.TabPages)
                 {
                     CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                    characterList.Add(cm);
+                    if (cm != null) characterList.Add(cm);
                 }
+
                 // Create the popup
                 if (m_settings.TrayPopupStyle == TrayPopupStyles.PopupForm)
                     m_trayPopup = new TrayPopUpWindow(characterList);
                 else
                     m_trayPopup = new TrayTooltipWindow(characterList);
+
                 // Now show the popup
                 m_trayPopup.Show();
             }
@@ -1535,6 +1699,46 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// When a character is clicked on the grid view, select the appropriate tab
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void charactersGrid_CharacterClicked(object sender, CharactersGrid.CharacterClickedEventArgs e)
+        {
+            foreach (TabPage tab in tcCharacterTabs.TabPages)
+            {
+                var monitor = tab.Controls[0] as CharacterMonitor;
+                if (monitor == e.CharacterMonitor)
+                {
+                    tcCharacterTabs.SelectedTab = tab;
+                    break;
+                }
+            }
+        }
 
+        /// <summary>
+        /// Triggered by the settings form when the "all characters" tab visibility must change
+        /// </summary>
+        /// <param name="hideOverviewTab"></param>
+        internal void UpdateOverviewTabVisibility(bool hideOverviewTab)
+        {
+            if (hideOverviewTab)
+            {
+                if (tcCharacterTabs.TabPages.Count != 0 && tcCharacterTabs.TabPages[0].Tag == AllCharsTag)
+                {
+                    RemoveTab(tpOverview);
+                }
+            }
+            else
+            {
+                if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
+                {
+                    AddTab(tpOverview);
+                    UpdateCharactersGrid();
+                    tcCharacterTabs.SelectedTab = tpOverview;
+                }
+            }
+        }
     }
 }

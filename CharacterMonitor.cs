@@ -21,7 +21,18 @@ using System.Web;
 
 namespace EVEMon
 {
-    public partial class CharacterMonitor : UserControl
+    /// <summary>
+    /// An interface shared by the controls used in the main window's tab pages (like <see cref="CharacterMonitor"/> and <see cref="CharactersGrid"/>)
+    /// </summary>
+    public interface IMainWindowPage
+    {
+        /// <summary>
+        /// Gets or sets true when the control is currently the visible tab. This is used to prevent unnecessary UI updates and adapt G15 display
+        /// </summary>
+        bool CurrentlyVisible { get; set; }
+    }
+
+    public partial class CharacterMonitor : UserControl, IMainWindowPage
     {
         private Settings m_settings;
         private CharLoginInfo m_cli;
@@ -41,6 +52,8 @@ namespace EVEMon
 
         //This is data that would be shown ON the LCD display, not data ABOUT the LCD display
         public EventHandler LCDDataChanged;
+        public EventHandler PortraitChanged;
+
         private string m_lcdNote = String.Empty;
         private TimeSpan m_lcdTimeSpan = TimeSpan.Zero;
 
@@ -809,6 +822,7 @@ namespace EVEMon
                 if (File.Exists(cacheFileName))
                 {
                     pbCharImage.Image = PortraitFromCache(cacheFileName);
+                    if (this.PortraitChanged != null) this.PortraitChanged(this, new EventArgs());
                     m_updatingPortrait = false;
                 }
                 if (pbCharImage.Image == null)
@@ -1508,6 +1522,7 @@ namespace EVEMon
             //whatever happened, show a portrait
             pbCharImage.Image = newImage;
             m_updatingPortrait = false;
+            if (this.PortraitChanged != null) this.PortraitChanged(this, new EventArgs());
         }
 
         /// <summary>
@@ -1709,8 +1724,8 @@ namespace EVEMon
                 {
                     if (m_cli.Account == null)
                     {
-                        // find teh account from the accounts list, we didn't have it at start up but now we do
-                        m_cli.Account = m_settings.FindAccount(m_cli.UserId);
+                        // find the account from the accounts list, we didn't have it at start up but now we do
+                        m_cli.Account = m_settings.FindAccount(f.UserId);
                     }
                     m_session = EveSession.GetSession(f.UserId, f.ApiKey);
                     m_cli.Account.UserId = f.UserId;

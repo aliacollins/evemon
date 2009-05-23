@@ -29,23 +29,23 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14,
+            treeNode15,
+            treeNode16,
+            treeNode17});
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -95,10 +95,15 @@ namespace EVEMon
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel23 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbUseLogitechG15Display = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbG15ACycle = new System.Windows.Forms.CheckBox();
-            this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbG15CycleTimes = new System.Windows.Forms.CheckBox();
+            this.ACycleTimesInterval = new System.Windows.Forms.NumericUpDown();
+            this.label28 = new System.Windows.Forms.Label();
+            this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.labelRestartWarning2 = new System.Windows.Forms.Label();
             this.labelRestartWarning1 = new System.Windows.Forms.Label();
@@ -249,11 +254,8 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.cbG15CycleTimes = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
-            this.ACycleTimesInterval = new System.Windows.Forms.NumericUpDown();
-            this.label28 = new System.Windows.Forms.Label();
+            this.gbMainWindow = new System.Windows.Forms.GroupBox();
+            this.cbHideOverviewTab = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -271,7 +273,10 @@ namespace EVEMon
             this.flowLayoutPanel4.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.flowLayoutPanel23.SuspendLayout();
+            this.flowLayoutPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
+            this.flowLayoutPanel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).BeginInit();
             this.groupBox15.SuspendLayout();
             this.gbAPIConfiguration.SuspendLayout();
             this.tabLookAndFeel.SuspendLayout();
@@ -319,9 +324,7 @@ namespace EVEMon
             this.gbGoogle.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
-            this.flowLayoutPanel7.SuspendLayout();
-            this.flowLayoutPanel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).BeginInit();
+            this.gbMainWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -922,6 +925,17 @@ namespace EVEMon
             this.cbUseLogitechG15Display.Text = "Use G15 Display";
             this.cbUseLogitechG15Display.UseVisualStyleBackColor = true;
             // 
+            // flowLayoutPanel7
+            // 
+            this.flowLayoutPanel7.Controls.Add(this.cbG15ACycle);
+            this.flowLayoutPanel7.Controls.Add(this.ACycleInterval);
+            this.flowLayoutPanel7.Controls.Add(this.label17);
+            this.flowLayoutPanel7.Location = new System.Drawing.Point(9, 23);
+            this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(236, 27);
+            this.flowLayoutPanel7.TabIndex = 6;
+            // 
             // cbG15ACycle
             // 
             this.cbG15ACycle.AutoSize = true;
@@ -932,26 +946,6 @@ namespace EVEMon
             this.cbG15ACycle.TabIndex = 1;
             this.cbG15ACycle.Text = "Cycle Chars every";
             this.cbG15ACycle.UseVisualStyleBackColor = true;
-            // 
-            // cbG15ShowTime
-            // 
-            this.cbG15ShowTime.AutoSize = true;
-            this.cbG15ShowTime.Location = new System.Drawing.Point(12, 80);
-            this.cbG15ShowTime.Name = "cbG15ShowTime";
-            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
-            this.cbG15ShowTime.TabIndex = 7;
-            this.cbG15ShowTime.Text = "Show System Time";
-            this.cbG15ShowTime.UseVisualStyleBackColor = true;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(167, 6);
-            this.label17.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(46, 13);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "seconds";
             // 
             // ACycleInterval
             // 
@@ -975,6 +969,81 @@ namespace EVEMon
             0,
             0,
             0});
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(167, 6);
+            this.label17.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(46, 13);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "seconds";
+            // 
+            // flowLayoutPanel8
+            // 
+            this.flowLayoutPanel8.Controls.Add(this.cbG15CycleTimes);
+            this.flowLayoutPanel8.Controls.Add(this.ACycleTimesInterval);
+            this.flowLayoutPanel8.Controls.Add(this.label28);
+            this.flowLayoutPanel8.Location = new System.Drawing.Point(9, 50);
+            this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+            this.flowLayoutPanel8.Size = new System.Drawing.Size(331, 27);
+            this.flowLayoutPanel8.TabIndex = 7;
+            // 
+            // cbG15CycleTimes
+            // 
+            this.cbG15CycleTimes.AutoSize = true;
+            this.cbG15CycleTimes.Location = new System.Drawing.Point(3, 5);
+            this.cbG15CycleTimes.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
+            this.cbG15CycleTimes.Name = "cbG15CycleTimes";
+            this.cbG15CycleTimes.Size = new System.Drawing.Size(220, 17);
+            this.cbG15CycleTimes.TabIndex = 4;
+            this.cbG15CycleTimes.Text = "Cycle training and completion time every";
+            this.cbG15CycleTimes.UseVisualStyleBackColor = true;
+            // 
+            // ACycleTimesInterval
+            // 
+            this.ACycleTimesInterval.Location = new System.Drawing.Point(223, 3);
+            this.ACycleTimesInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ACycleTimesInterval.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            this.ACycleTimesInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ACycleTimesInterval.Name = "ACycleTimesInterval";
+            this.ACycleTimesInterval.Size = new System.Drawing.Size(47, 21);
+            this.ACycleTimesInterval.TabIndex = 5;
+            this.ACycleTimesInterval.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(273, 6);
+            this.label28.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(46, 13);
+            this.label28.TabIndex = 6;
+            this.label28.Text = "seconds";
+            // 
+            // cbG15ShowTime
+            // 
+            this.cbG15ShowTime.AutoSize = true;
+            this.cbG15ShowTime.Location = new System.Drawing.Point(12, 80);
+            this.cbG15ShowTime.Name = "cbG15ShowTime";
+            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
+            this.cbG15ShowTime.TabIndex = 7;
+            this.cbG15ShowTime.Text = "Show System Time";
+            this.cbG15ShowTime.UseVisualStyleBackColor = true;
             // 
             // groupBox15
             // 
@@ -1100,7 +1169,7 @@ namespace EVEMon
             this.tabLookAndFeel.Location = new System.Drawing.Point(4, 22);
             this.tabLookAndFeel.Name = "tabLookAndFeel";
             this.tabLookAndFeel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 516);
+            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 533);
             this.tabLookAndFeel.TabIndex = 4;
             this.tabLookAndFeel.Text = "Look And Feel";
             this.tabLookAndFeel.UseVisualStyleBackColor = true;
@@ -1109,6 +1178,7 @@ namespace EVEMon
             // 
             this.flowLayoutPanel16.Controls.Add(this.groupBox11);
             this.flowLayoutPanel16.Controls.Add(this.groupBox7);
+            this.flowLayoutPanel16.Controls.Add(this.gbMainWindow);
             this.flowLayoutPanel16.Controls.Add(this.gboxTrayIconPopUpOptions);
             this.flowLayoutPanel16.Controls.Add(this.gbSkillPlannerHighlighting);
             this.flowLayoutPanel16.Controls.Add(this.groupBox10);
@@ -1116,7 +1186,7 @@ namespace EVEMon
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 510);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 527);
             this.flowLayoutPanel16.TabIndex = 10;
             // 
             // groupBox11
@@ -1255,7 +1325,7 @@ namespace EVEMon
             this.gboxTrayIconPopUpOptions.Controls.Add(this.btnConfigureTrayPopUp);
             this.gboxTrayIconPopUpOptions.Controls.Add(this.cbTrayPopupStyle);
             this.gboxTrayIconPopUpOptions.Controls.Add(this.label27);
-            this.gboxTrayIconPopUpOptions.Location = new System.Drawing.Point(3, 144);
+            this.gboxTrayIconPopUpOptions.Location = new System.Drawing.Point(3, 198);
             this.gboxTrayIconPopUpOptions.Name = "gboxTrayIconPopUpOptions";
             this.gboxTrayIconPopUpOptions.Size = new System.Drawing.Size(373, 56);
             this.gboxTrayIconPopUpOptions.TabIndex = 7;
@@ -1295,7 +1365,7 @@ namespace EVEMon
             // gbSkillPlannerHighlighting
             // 
             this.gbSkillPlannerHighlighting.Controls.Add(this.flowLayoutPanel13);
-            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 206);
+            this.gbSkillPlannerHighlighting.Location = new System.Drawing.Point(3, 260);
             this.gbSkillPlannerHighlighting.Name = "gbSkillPlannerHighlighting";
             this.gbSkillPlannerHighlighting.Size = new System.Drawing.Size(373, 67);
             this.gbSkillPlannerHighlighting.TabIndex = 11;
@@ -1371,7 +1441,7 @@ namespace EVEMon
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(3, 279);
+            this.groupBox10.Location = new System.Drawing.Point(382, 3);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(373, 218);
             this.groupBox10.TabIndex = 13;
@@ -1411,26 +1481,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
+            treeNode10.Name = "Node1";
+            treeNode10.Text = "Node1";
+            treeNode11.Name = "Node2";
+            treeNode11.Text = "Node2";
+            treeNode12.Name = "Node3";
+            treeNode12.Text = "Node3";
+            treeNode13.Name = "Node4";
+            treeNode13.Text = "Node4";
+            treeNode14.Name = "Node5";
+            treeNode14.Text = "Node5";
+            treeNode15.Name = "Node6";
+            treeNode15.Text = "Node6";
+            treeNode16.Name = "Node7";
+            treeNode16.Text = "Node7";
+            treeNode17.Name = "Node8";
+            treeNode17.Text = "Node8";
+            treeNode18.Name = "Node0";
+            treeNode18.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode18});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -1440,7 +1510,7 @@ namespace EVEMon
             this.tabNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabNetwork.Name = "tabNetwork";
             this.tabNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNetwork.Size = new System.Drawing.Size(384, 516);
+            this.tabNetwork.Size = new System.Drawing.Size(384, 533);
             this.tabNetwork.TabIndex = 2;
             this.tabNetwork.Text = "Network";
             this.tabNetwork.UseVisualStyleBackColor = true;
@@ -1454,7 +1524,7 @@ namespace EVEMon
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel3.Name = "verticalFlowPanel3";
-            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 510);
+            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 527);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
             // ProxyServerGroupBox
@@ -1772,7 +1842,7 @@ namespace EVEMon
             this.tabAlerts.Location = new System.Drawing.Point(4, 22);
             this.tabAlerts.Name = "tabAlerts";
             this.tabAlerts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAlerts.Size = new System.Drawing.Size(384, 516);
+            this.tabAlerts.Size = new System.Drawing.Size(384, 533);
             this.tabAlerts.TabIndex = 1;
             this.tabAlerts.Text = "Alerts";
             this.tabAlerts.UseVisualStyleBackColor = true;
@@ -1786,7 +1856,7 @@ namespace EVEMon
             this.verticalFlowPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
-            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 510);
+            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 527);
             this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
@@ -1917,7 +1987,7 @@ namespace EVEMon
             this.tabUpdates.Location = new System.Drawing.Point(4, 22);
             this.tabUpdates.Name = "tabUpdates";
             this.tabUpdates.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUpdates.Size = new System.Drawing.Size(384, 516);
+            this.tabUpdates.Size = new System.Drawing.Size(384, 533);
             this.tabUpdates.TabIndex = 3;
             this.tabUpdates.Text = "Updates";
             this.tabUpdates.UseVisualStyleBackColor = true;
@@ -2292,7 +2362,7 @@ namespace EVEMon
             this.tabCalendar.Controls.Add(this.groupBox14);
             this.tabCalendar.Location = new System.Drawing.Point(4, 22);
             this.tabCalendar.Name = "tabCalendar";
-            this.tabCalendar.Size = new System.Drawing.Size(384, 516);
+            this.tabCalendar.Size = new System.Drawing.Size(384, 533);
             this.tabCalendar.TabIndex = 5;
             this.tabCalendar.Text = "Calendar";
             this.tabCalendar.UseVisualStyleBackColor = true;
@@ -2696,71 +2766,27 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // cbG15CycleTimes
+            // gbMainWindow
             // 
-            this.cbG15CycleTimes.AutoSize = true;
-            this.cbG15CycleTimes.Location = new System.Drawing.Point(3, 5);
-            this.cbG15CycleTimes.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
-            this.cbG15CycleTimes.Name = "cbG15CycleTimes";
-            this.cbG15CycleTimes.Size = new System.Drawing.Size(220, 17);
-            this.cbG15CycleTimes.TabIndex = 4;
-            this.cbG15CycleTimes.Text = "Cycle training and completion time every";
-            this.cbG15CycleTimes.UseVisualStyleBackColor = true;
+            this.gbMainWindow.Controls.Add(this.cbHideOverviewTab);
+            this.gbMainWindow.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbMainWindow.Location = new System.Drawing.Point(3, 144);
+            this.gbMainWindow.Name = "gbMainWindow";
+            this.gbMainWindow.Size = new System.Drawing.Size(373, 48);
+            this.gbMainWindow.TabIndex = 3;
+            this.gbMainWindow.TabStop = false;
+            this.gbMainWindow.Text = "Main window";
             // 
-            // flowLayoutPanel7
+            // cbHideOverviewTab
             // 
-            this.flowLayoutPanel7.Controls.Add(this.cbG15ACycle);
-            this.flowLayoutPanel7.Controls.Add(this.ACycleInterval);
-            this.flowLayoutPanel7.Controls.Add(this.label17);
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(9, 23);
-            this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(236, 27);
-            this.flowLayoutPanel7.TabIndex = 6;
-            // 
-            // flowLayoutPanel8
-            // 
-            this.flowLayoutPanel8.Controls.Add(this.cbG15CycleTimes);
-            this.flowLayoutPanel8.Controls.Add(this.ACycleTimesInterval);
-            this.flowLayoutPanel8.Controls.Add(this.label28);
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(9, 50);
-            this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(331, 27);
-            this.flowLayoutPanel8.TabIndex = 7;
-            // 
-            // ACycleTimesInterval
-            // 
-            this.ACycleTimesInterval.Location = new System.Drawing.Point(223, 3);
-            this.ACycleTimesInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.ACycleTimesInterval.Maximum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.ACycleTimesInterval.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ACycleTimesInterval.Name = "ACycleTimesInterval";
-            this.ACycleTimesInterval.Size = new System.Drawing.Size(47, 21);
-            this.ACycleTimesInterval.TabIndex = 5;
-            this.ACycleTimesInterval.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(273, 6);
-            this.label28.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(46, 13);
-            this.label28.TabIndex = 6;
-            this.label28.Text = "seconds";
+            this.cbHideOverviewTab.AutoSize = true;
+            this.cbHideOverviewTab.Location = new System.Drawing.Point(15, 21);
+            this.cbHideOverviewTab.Name = "cbHideOverviewTab";
+            this.cbHideOverviewTab.Size = new System.Drawing.Size(141, 17);
+            this.cbHideOverviewTab.TabIndex = 0;
+            this.cbHideOverviewTab.Text = "Hide \"Overview\" tab";
+            this.cbHideOverviewTab.UseVisualStyleBackColor = true;
+            this.cbHideOverviewTab.CheckedChanged += new System.EventHandler(this.cbHideOverviewTab_CheckedChanged);
             // 
             // SettingsForm
             // 
@@ -2812,7 +2838,12 @@ namespace EVEMon
             this.groupBox12.PerformLayout();
             this.flowLayoutPanel23.ResumeLayout(false);
             this.flowLayoutPanel23.PerformLayout();
+            this.flowLayoutPanel7.ResumeLayout(false);
+            this.flowLayoutPanel7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
+            this.flowLayoutPanel8.ResumeLayout(false);
+            this.flowLayoutPanel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).EndInit();
             this.groupBox15.ResumeLayout(false);
             this.groupBox15.PerformLayout();
             this.gbAPIConfiguration.ResumeLayout(false);
@@ -2895,11 +2926,8 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
-            this.flowLayoutPanel7.ResumeLayout(false);
-            this.flowLayoutPanel7.PerformLayout();
-            this.flowLayoutPanel8.ResumeLayout(false);
-            this.flowLayoutPanel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).EndInit();
+            this.gbMainWindow.ResumeLayout(false);
+            this.gbMainWindow.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3114,5 +3142,7 @@ namespace EVEMon
         private System.Windows.Forms.RadioButton DontUseApiProxyRadioButton;
         private System.Windows.Forms.RadioButton UseApiProxyRadioButton;
         private System.Windows.Forms.TextBox EveProxyURLTextBox;
+        private System.Windows.Forms.GroupBox gbMainWindow;
+        private System.Windows.Forms.CheckBox cbHideOverviewTab;
     }
 }

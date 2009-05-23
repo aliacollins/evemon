@@ -19,11 +19,13 @@ namespace EVEMon.Common
     [XmlRoot("logindata2")]
     public class Settings
     {
-        // Important!!
-        
-        // Any Updates to settings class members must lock(mutexLock)
-        // Also... PLEASE put new settings in the right region 
-        // (use outlining and collapse all to see where they go)
+        // *** READ ME FIRST ***
+        //
+        // 1. Some updates to settings class currently need 
+        //    lock(mutexLock), if you are not sure post on the forums
+        //
+        // 2. put new settings in the right region 
+        //   (use outlining and collapse all to see where they go)
 
         private static Object mutexLock = new Object();
 
@@ -474,6 +476,15 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Gets or sets true when the user wants to hide the overview tab on the main page, false otherwise.
+        /// </summary>
+        public bool HideOverviewTab
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region Settings Form - Look and Feel
@@ -491,16 +502,16 @@ namespace EVEMon.Common
             }
         }
 
-        private bool m_titleToTime = true;
+        private bool m_showCharacterInfoInWindowTitle = true;
 
-        public bool TitleToTime
+        public bool ShowCharacterInfoInWindowTitle
         {
-            get { return m_titleToTime; }
+            get { return m_showCharacterInfoInWindowTitle; }
             set
             {
                 lock (mutexLock)
                 {
-                    m_titleToTime = value;
+                    m_showCharacterInfoInWindowTitle = value;
                 }
             }
         }
@@ -3351,7 +3362,5 @@ namespace EVEMon.Common
             }
             return null;
         }
-
     }
-
 }
