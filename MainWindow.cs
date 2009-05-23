@@ -228,8 +228,8 @@ namespace EVEMon
         /// </summary>
         private void UpdateCharactersGrid()
         {
-            // If the tab is not connected to the tabs control, we just clean it up
-            if (tcCharacterTabs.TabPages.Count == 0 || ((string)tcCharacterTabs.TabPages[0].Tag) != AllCharsTag)
+            // IF the tab is not connected to the tabs control, we just clean it up
+            if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
             {
                 charactersGrid.CleanUp();
             }
@@ -489,7 +489,7 @@ namespace EVEMon
         private void AddTab(TabPage tab)
         {
             // Adds the page
-            if (((string)tab.Tag) == AllCharsTag && tcCharacterTabs.TabPages.Count != 0) tcCharacterTabs.TabPages.Insert(0, tab);
+            if (tab.Tag == AllCharsTag && tcCharacterTabs.TabPages.Count != 0) tcCharacterTabs.TabPages.Insert(0, tab);
             else tcCharacterTabs.TabPages.Add(tab);
 
             // Updates G15 and the "remove" (chars, etc) buttons
@@ -1725,14 +1725,14 @@ namespace EVEMon
         {
             if (hideOverviewTab)
             {
-                if (tcCharacterTabs.TabPages.Count != 0 && ((string)tcCharacterTabs.TabPages[0].Tag) == AllCharsTag)
+                if (tcCharacterTabs.TabPages.Count != 0 && tcCharacterTabs.TabPages[0].Tag == AllCharsTag)
                 {
                     RemoveTab(tpOverview);
                 }
             }
             else
             {
-                if (tcCharacterTabs.TabPages.Count == 0 || ((string)tcCharacterTabs.TabPages[0].Tag) != AllCharsTag)
+                if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
                 {
                     AddTab(tpOverview);
                     UpdateCharactersGrid();
