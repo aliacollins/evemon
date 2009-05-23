@@ -9,6 +9,7 @@ namespace EVEMon.Common
         public EVEMonForm()
         {
             InitializeComponent();
+            this.Font = FontHelper.GetFont("Tahoma", 8.25F, FontStyle.Regular);
         }
 
         private string m_rememberPositionKey = null;

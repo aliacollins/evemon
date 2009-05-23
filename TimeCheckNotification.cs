@@ -15,6 +15,7 @@ namespace EVEMon
         public TimeCheckNotification()
         {
             InitializeComponent();
+            this.uxTitleLabel.Font = FontHelper.GetFont("Tahoma", 12F);
         }
 
         public TimeCheckNotification(DateTime serverTime, DateTime localTime)

@@ -564,12 +564,14 @@ namespace EVEMon.SkillPlanner
                     tsddiTemp.MouseLeave += new EventHandler(tsddiTemp_MouseLeave);
                     if (planName == m_plan.Name)
                     {
-                        tsddiTemp.Font = new Font(tsddiTemp.Font, FontStyle.Bold);
+                        tsddiTemp.Font = FontHelper.GetFont(tsddiTemp.Font, FontStyle.Bold);
                     }
                 }
                 catch (InvalidCastException)
                 {
-                    // for some reason, Visual studio cannot set the text of a TooStripDropDownItem to "-" (try it in designer view!!)
+                    // Visual studio cannot set the text of a
+                    // TooStripDropDownItem to "-" because that is the
+                    // placeholder for a seperator.
                 }
             }
         }

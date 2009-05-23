@@ -34,7 +34,7 @@ namespace EVEMon
         {
             base.OnLoad(e);
             // Look and Feel
-            this.Font = new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+            this.Font = FontHelper.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
             string tooltipFormat = Settings.GetInstance().TooltipString;
             // Construct the initial array of tooltip strings
             m_autoRefresh = false;

@@ -13,6 +13,7 @@ namespace EVEMon
         public UnhandledExceptionWindow()
         {
             InitializeComponent();
+            this.label3.Font = FontHelper.GetFont("Tahoma", 10F);
         }
 
         public UnhandledExceptionWindow(Exception err)

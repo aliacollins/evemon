@@ -435,7 +435,6 @@ namespace EVEMon.SkillPlanner
             // 
             this.skillSelectControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.skillSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillSelectControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.skillSelectControl.GrandCharacterInfo = null;
             this.skillSelectControl.Location = new System.Drawing.Point(0, 0);
             this.skillSelectControl.Margin = new System.Windows.Forms.Padding(2);
@@ -450,7 +449,6 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pscPlan);
             this.Controls.Add(this.tsPlan);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "PlanOrderEditorControl";
             this.Size = new System.Drawing.Size(683, 558);
             this.Load += new System.EventHandler(this.PlanOrderEditorControl_Load);

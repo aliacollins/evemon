@@ -28,8 +28,10 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            myFont = FontHelper.GetDefaultFont(8);
-            myFontbold = FontHelper.GetDefaultFont(8,FontStyle.Bold);
+            myFont = FontHelper.GetDefaultFont(8.25f);
+            myFontbold = FontHelper.GetDefaultFont(8.25f, FontStyle.Bold);
+            this.EveMonLabel.Font = FontHelper.GetDefaultFont(8.25F, FontStyle.Bold);
+            this.DevContribLabel.Font = FontHelper.GetDefaultFont(8.25F, FontStyle.Bold);
 
             // list of headings
             slPriority = new SortedList();

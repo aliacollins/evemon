@@ -310,7 +310,6 @@ namespace EVEMon.Schedule
             this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
             this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
             this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.calControl.EntryFont = new System.Drawing.Font("Microsoft Sans Serif", 7F);
             this.calControl.Location = new System.Drawing.Point(0, 27);
             this.calControl.Name = "calControl";
             this.calControl.RecurringColor = System.Drawing.Color.Green;

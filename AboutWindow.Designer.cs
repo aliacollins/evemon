@@ -89,7 +89,6 @@ namespace EVEMon
             // 
             this.DevContribLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.DevContribLabel.AutoSize = true;
-            this.DevContribLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DevContribLabel.Location = new System.Drawing.Point(3, 0);
             this.DevContribLabel.Name = "DevContribLabel";
             this.DevContribLabel.Size = new System.Drawing.Size(169, 13);
@@ -170,7 +169,6 @@ namespace EVEMon
             // EveMonLabel
             // 
             this.EveMonLabel.AutoSize = true;
-            this.EveMonLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EveMonLabel.Location = new System.Drawing.Point(3, 25);
             this.EveMonLabel.Name = "EveMonLabel";
             this.EveMonLabel.Size = new System.Drawing.Size(50, 13);

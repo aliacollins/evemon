@@ -871,14 +871,14 @@ namespace EVEMon.Common
         {
             get
             {
-                Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+                Font fontr = FontHelper.GetFont("Tahoma", 8.25F);
                 return Math.Max(fontr.Height * 2 + PAD_TOP + LINE_VPAD + PAD_TOP, SKILL_DETAIL_HEIGHT);
             }
         }
 
         public void Draw(DrawItemEventArgs e)
         {
-            Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+            Font fontr = FontHelper.GetFont("Tahoma", 8.25F);
             Graphics g = e.Graphics;
 
             if (m_inTraining)
@@ -894,7 +894,7 @@ namespace EVEMon.Common
                 g.FillRectangle(Brushes.LightGray, e.Bounds);
             }
 
-            using (Font boldf = new Font(fontr, FontStyle.Bold))
+            using (Font boldf = FontHelper.GetFont(fontr, FontStyle.Bold))
             {
                 double percentComplete = 1.0f;
                 if (this.Level == 0)

@@ -18,6 +18,11 @@ namespace EVEMon.SkillPlanner
         public AttributesOptimizationSettingsForm(CharacterInfo character, Plan plan)
         {
             InitializeComponent();
+
+            this.buttonWholePlan.Font = FontHelper.GetFont("Microsoft Sans Serif", 10F);
+            this.buttonCharacter.Font = FontHelper.GetFont("Microsoft Sans Serif", 10F);
+            this.buttonRemappingPoints.Font = FontHelper.GetFont("Microsoft Sans Serif", 10F);
+
             this.m_plan = plan;
             this.m_character = character;
         }

@@ -240,7 +240,6 @@ namespace EVEMon.SkillPlanner
             this.tvSkills.Location = new System.Drawing.Point(-1, 17);
             this.tvSkills.Name = "tvSkills";
             treeNode1.Name = "Node0";
-            treeNode1.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             treeNode1.Text = "Node0";
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});

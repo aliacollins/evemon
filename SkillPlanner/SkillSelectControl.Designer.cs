@@ -466,7 +466,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.pnlResults);
             this.Controls.Add(this.pnlFilter);
             this.Controls.Add(this.cbShowNonPublic);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SkillSelectControl";
             this.Size = new System.Drawing.Size(200, 413);

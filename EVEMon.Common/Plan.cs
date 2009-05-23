@@ -20,8 +20,8 @@ namespace EVEMon.Common
             m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
             m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
 
-            printFont = FontHelper.GetDefaultFont(); 
-            printFontBold = FontHelper.GetDefaultFont(10, FontStyle.Bold | FontStyle.Underline);
+            printFont = FontHelper.GetFont("Arial", 10); 
+            printFontBold = FontHelper.GetFont("Arial", 10, FontStyle.Bold | FontStyle.Underline);
         }
 
         #region Members

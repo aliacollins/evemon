@@ -72,6 +72,13 @@ namespace EVEMon
         {
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+
+            this.lblCharacterName.Font = FontHelper.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            this.lblCurrentlyTraining.Font = FontHelper.GetFont("Tahoma", FontStyle.Bold);
+            this.lblScheduleWarning.Font = FontHelper.GetFont("Tahoma", FontStyle.Bold);
+            this.lblSkillHeader.Font = FontHelper.GetFont("Tahoma", FontStyle.Bold);
+            this.Font = FontHelper.GetFont("Tahoma", FontStyle.Regular);
+
             m_settings = Settings.GetInstance();
             throbber.Click += new EventHandler(throbber_Click);
         }

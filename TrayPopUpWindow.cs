@@ -67,7 +67,7 @@ namespace EVEMon
             base.OnLoad(e);
             // Get settings
             // Form level look and feel
-            this.Font = new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+            this.Font = FontHelper.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
             // Set background color
             mainPanel.BackColor = SystemColors.ControlLightLight;
             // Character Details
@@ -271,7 +271,7 @@ namespace EVEMon
             }
             Label lblNames = new Label();
             lblNames.AutoSize = true;
-            lblNames.Font = new Font(lblNames.Font.Name, SystemFonts.MessageBoxFont.SizeInPoints * 11 / 9, FontStyle.Regular, GraphicsUnit.Point);
+            lblNames.Font = FontHelper.GetFont(lblNames.Font.Name, SystemFonts.MessageBoxFont.SizeInPoints * 11 / 9, FontStyle.Regular, GraphicsUnit.Point);
             lblNames.Text = sb.ToString();
             textPanel.Controls.Add(lblNames);
             Label lblMessage = new Label();

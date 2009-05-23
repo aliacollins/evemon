@@ -148,7 +148,6 @@ namespace EVEMon.SkillPlanner
             // 
             this.shipSelectControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.shipSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.shipSelectControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.shipSelectControl.Location = new System.Drawing.Point(0, 0);
             this.shipSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.shipSelectControl.Name = "shipSelectControl";

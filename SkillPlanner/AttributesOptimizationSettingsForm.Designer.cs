@@ -40,7 +40,6 @@ namespace EVEMon.SkillPlanner
             this.buttonWholePlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonWholePlan.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonWholePlan.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonWholePlan.Image = global::EVEMon.Properties.Resources.Blue_Glass_Arrow;
             this.buttonWholePlan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonWholePlan.Location = new System.Drawing.Point(12, 67);
@@ -66,7 +65,6 @@ namespace EVEMon.SkillPlanner
             this.buttonRemappingPoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemappingPoints.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonRemappingPoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonRemappingPoints.Image = global::EVEMon.Properties.Resources.Blue_Glass_Arrow;
             this.buttonRemappingPoints.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonRemappingPoints.Location = new System.Drawing.Point(12, 13);
@@ -83,7 +81,6 @@ namespace EVEMon.SkillPlanner
             this.buttonCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCharacter.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCharacter.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCharacter.Image = global::EVEMon.Properties.Resources.Blue_Glass_Arrow;
             this.buttonCharacter.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonCharacter.Location = new System.Drawing.Point(12, 121);

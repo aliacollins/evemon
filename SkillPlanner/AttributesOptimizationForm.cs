@@ -57,6 +57,11 @@ namespace EVEMon.SkillPlanner
             set { this.m_planEditor = value; }
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            this.lvPoints.Font = FontHelper.GetFont("Arial", 9F);
+            base.OnLoad(e);
+        }
         protected override void OnClosed(EventArgs e)
         {
             // Stop the thread
@@ -169,7 +174,7 @@ namespace EVEMon.SkillPlanner
 
                     // Notify plan updated
                     var lvi = new ListViewItem("Your plan has been updated.", globalGroup);
-                    lvi.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+                    lvi.Font = FontHelper.GetFont(lvPoints.Font, FontStyle.Bold);
                     this.lvPoints.Items.Add(lvi);
 
                     // Add pages

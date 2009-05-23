@@ -24,6 +24,20 @@ namespace EVEMon.SkillPlanner
         public AttributesOptimizationControl(CharacterInfo character, AttributesOptimizer.Remapping remapping)
         {
             InitializeComponent();
+            this.label9.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+            this.label7.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+            this.label5.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+            this.label3.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+            this.label1.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
+            this.lbMEM.Font = FontHelper.GetFont("Tahoma", 8.25F);
+            this.lbWIL.Font = FontHelper.GetFont("Tahoma", 8.25F);
+            this.lbCHA.Font = FontHelper.GetFont("Tahoma", 8.25F);
+            this.lbPER.Font = FontHelper.GetFont("Tahoma", 8.25F);
+            this.lbINT.Font = FontHelper.GetFont("Tahoma", 8.25F);
+            this.lbOptimizedTimeInfo.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
+            this.lbCurrentTimeInfo.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
+            this.lbWarning.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
+
             m_borderPen = new Pen(Brushes.Black);
             m_outerBorderPen = new Pen(Brushes.Gray);
             m_activeBrush = new SolidBrush(Color.FromArgb(208, 208, 208));

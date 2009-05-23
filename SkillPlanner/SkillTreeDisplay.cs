@@ -634,7 +634,7 @@ namespace EVEMon.SkillPlanner
                 linePen.Dispose();
             }
 
-            using (Font boldf = new Font(this.Font, FontStyle.Bold))
+            using (Font boldf = FontHelper.GetFont(this.Font, FontStyle.Bold))
             {
                 int level = 0;
                 m_skillsToUpdateOnTick.Clear();

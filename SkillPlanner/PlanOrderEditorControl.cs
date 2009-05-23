@@ -42,8 +42,8 @@ namespace EVEMon.SkillPlanner
         public PlanOrderEditorControl()
         {
             InitializeComponent();
-            m_plannedSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Bold);
-            m_prerequisiteSkillFont = new System.Drawing.Font(lvSkills.Font, System.Drawing.FontStyle.Regular);
+            m_plannedSkillFont = FontHelper.GetFont(lvSkills.Font, System.Drawing.FontStyle.Bold);
+            m_prerequisiteSkillFont = FontHelper.GetFont(lvSkills.Font, System.Drawing.FontStyle.Regular);
             m_trainablePlanEntryColor = SystemColors.GrayText;
             m_remappingBackColor = SystemColors.Info;
             m_remappingForeColor = SystemColors.HotTrack;
@@ -187,7 +187,6 @@ namespace EVEMon.SkillPlanner
                         if (pe.Remapping != null)
                         {
                             ListViewItem rlv = new ListViewItem();
-                            //rlv.Font = new Font(lvSkills.Font, FontStyle..Underline);
                             rlv.BackColor = m_remappingBackColor;
                             rlv.ForeColor = m_remappingForeColor;
                             rlv.UseItemStyleForSubItems = true;

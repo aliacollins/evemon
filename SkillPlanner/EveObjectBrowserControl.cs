@@ -20,7 +20,6 @@ namespace EVEMon.SkillPlanner
     /// try to design a class that inherits from an abstract class.</remarks>
     public partial class EveObjectBrowserControl : UserControl
     {
-
         #region Fields
         private EveObjectSelectControl  _objectSelectControl;
         private Plan                    _plan;
@@ -35,6 +34,8 @@ namespace EVEMon.SkillPlanner
         public EveObjectBrowserControl()
         {
             InitializeComponent();
+            this.lblEveObjName.Font = FontHelper.GetFont("Tahoma", 11.25F, System.Drawing.FontStyle.Bold);
+
         }
         #endregion
 

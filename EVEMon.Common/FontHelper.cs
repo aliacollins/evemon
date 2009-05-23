@@ -23,6 +23,7 @@ namespace EVEMon.Common
             }
         }
 
+        #region Helpers for default font
         /// <summary>
         /// Gets the default font.
         /// </summary>
@@ -55,35 +56,156 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the default font.
         /// </summary>
-        /// <param name="emSize">Size of the em.</param>
+        /// <param name="emSize">Size of the em, in points.</param>
         /// <param name="style">The style.</param>
+        /// <param name="unit">Units for the size : pixels, points, etc. Default should be point.</param>
         /// <returns></returns>
         public static Font GetDefaultFont(float emSize, FontStyle style)
         {
-            Font newFont = null;
+            return FontHelper.GetDefaultFont(emSize, style, GraphicsUnit.Point);
+        }
 
+        /// <summary>
+        /// Gets the default font.
+        /// </summary>
+        /// <param name="emSize">Size of the em, in the given unit.</param>
+        /// <param name="style">The style.</param>
+        /// <param name="unit">Units for the size : pixels, points, etc. Default should be point.</param>
+        /// <returns></returns>
+        public static Font GetDefaultFont(float emSize, FontStyle style, GraphicsUnit unit)
+        {
+            return FontHelper.GetFont(FontHelper.DefaultFont.FontFamily.Name, emSize, style, unit);
+        }
+        #endregion
+
+
+        #region Helpers for non-default font
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="fontName">The font's name</param>
+        /// <param name="emSize">The font's size, in points</param>
+        /// <returns></returns>
+        public static Font GetFont(string fontName, float emSize)
+        {
+            return FontHelper.GetFont(fontName, emSize, FontStyle.Regular, GraphicsUnit.Point);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="fontName">The font's name</param>
+        /// <param name="style">The font's style</param>
+        /// <returns></returns>
+        public static Font GetFont(string fontName, FontStyle style)
+        {
+            return FontHelper.GetFont(fontName, FontHelper.DefaultFont.Size, style, FontHelper.DefaultFont.Unit);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="fontName">The font's name</param>
+        /// <param name="emSize">The font's size, in the given unit</param>
+        /// <param name="unit">The unit to use for the given size (points, pixels, etc)</param>
+        /// <returns></returns>
+        public static Font GetFont(string fontName, float emSize, GraphicsUnit unit)
+        {
+            return FontHelper.GetFont(fontName, emSize, FontStyle.Regular, unit);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="fontName">The font's name</param>
+        /// <param name="emSize">The font's size, in points</param>
+        /// <param name="style">The overriden style.</param>
+        /// <returns></returns>
+        public static Font GetFont(string fontName, float emSize, FontStyle style)
+        {
+            return FontHelper.GetFont(fontName, emSize, style, GraphicsUnit.Point);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="prototype">The font's prototype this font will be based on</param>
+        /// <param name="style">The overriden style.</param>
+        /// <returns></returns>
+        public static Font GetFont(Font prototype, FontStyle style)
+        {
+            return FontHelper.GetFont(prototype.FontFamily.Name, prototype.Size, style, prototype.Unit);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="family">The font's family</param>
+        /// <param name="emSize">Size of the font, in points.</param>
+        /// <param name="style">The font's style.</param>
+        /// <returns></returns>
+        public static Font GetFont(FontFamily family, float emSize, FontStyle style)
+        {
+            return FontHelper.GetFont(family.Name, emSize, style, GraphicsUnit.Point);
+        }
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="family">The font's family</param>
+        /// <param name="emSize">Size of the font, in the provided unit.</param>
+        /// <param name="style">The font's style.</param>
+        /// <param name="unit">The unit to use for the given size (points, pixels, etc)</param>
+        /// <returns></returns>
+        public static Font GetFont(FontFamily family, float emSize, FontStyle style, GraphicsUnit unit)
+        {
+            return FontHelper.GetFont(family.Name, emSize, style, unit);
+        }
+        #endregion
+
+        /// <summary>
+        /// Gets the specified font.
+        /// </summary>
+        /// <param name="family">The font's family</param>
+        /// <param name="emSize">Size of the font, in the given unit.</param>
+        /// <param name="style">The font's style.</param>
+        /// <param name="unit">Units for the size : pixels, points, etc. Default is point.</param>
+        /// <returns></returns>
+        public static Font GetFont(string familyName, float emSize, FontStyle style, GraphicsUnit unit)
+        {
+            FontFamily family = null;
             try
             {
-                newFont = new Font(FontHelper.DefaultFont.FontFamily, emSize, style);
+                try
+                {
+                    try
+                    {
+                        // Inital try
+                        family = new FontFamily(familyName); // Will accept anything and won't throw an error
+                        return new Font(familyName, emSize, style, unit);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        // First fallback : default family
+                        ExceptionHandler.LogException(e, true);
+                        family = FontHelper.DefaultFont.FontFamily;
+                        return new Font(family, emSize, style, unit);
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    // Second fallback : default family and style
+                    ExceptionHandler.LogException(e, true);
+                    style = FontHelper.DefaultFont.Style;
+                    return new Font(family, emSize, style, unit);
+                }
             }
             catch (ArgumentException e)
             {
-                // An ArgumentException is thrown when a Font doens't
-                // support a requested feature (e.g. the FontStyle).
-                // Maybe there's a better way to check if the font
-                // would support the style. I'm looking for something
-                // like Font.SupportsStyle(..). So we're just using the
-                // basic font without any styles. 
-                newFont = new Font(FontHelper.DefaultFont.FontFamily, emSize);
+                // Fourth fallback : all to default
                 ExceptionHandler.LogException(e, true);
+                return FontHelper.DefaultFont;
             }
-
-            // Now we're enforcing that newFont must be properly constructed.
-            // Maybe the check isn't needed ..
-            string errorMessage = String.Format(CultureInfo.CurrentCulture, "The default Operating System Font {0} can't be used.", DefaultFont.Name);
-            Enforce.NotNull(newFont, errorMessage);
-
-            return newFont;
         }
     }
 }

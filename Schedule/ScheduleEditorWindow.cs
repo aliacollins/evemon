@@ -17,6 +17,7 @@ namespace EVEMon.Schedule
         public ScheduleEditorWindow()
         {
             InitializeComponent();
+            this.calControl.EntryFont = FontHelper.GetFont("Microsoft Sans Serif", 7F);
 
             // Setup Balloon Tooltip for later use
             ttToolTip = new ToolTip();

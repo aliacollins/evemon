@@ -89,7 +89,6 @@ namespace EVEMon.SkillPlanner
             this.columnHeader2});
             this.lvItemProperties.ContextMenuStrip = this.ItemAttributeContextMenu;
             this.lvItemProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvItemProperties.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lvItemProperties.FullRowSelect = true;
             this.lvItemProperties.Location = new System.Drawing.Point(3, 16);
             this.lvItemProperties.Name = "lvItemProperties";
@@ -112,7 +111,6 @@ namespace EVEMon.SkillPlanner
             // 
             this.itemSelectControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.itemSelectControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemSelectControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.itemSelectControl.Location = new System.Drawing.Point(0, 0);
             this.itemSelectControl.Margin = new System.Windows.Forms.Padding(2);
             this.itemSelectControl.Name = "itemSelectControl";

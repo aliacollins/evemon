@@ -85,7 +85,6 @@ namespace EVEMon.Common
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(41, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(273, 16);

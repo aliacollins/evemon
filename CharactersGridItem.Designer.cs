@@ -65,7 +65,6 @@ namespace EVEMon
             this.lblCompletionTime.AutoEllipsis = true;
             this.lblCompletionTime.BackColor = System.Drawing.Color.Transparent;
             this.lblCompletionTime.Enabled = false;
-            this.lblCompletionTime.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompletionTime.ForeColor = System.Drawing.Color.DimGray;
             this.lblCompletionTime.Location = new System.Drawing.Point(107, 90);
             this.lblCompletionTime.Name = "lblCompletionTime";
@@ -78,7 +77,6 @@ namespace EVEMon
             this.lblCharName.AutoEllipsis = true;
             this.lblCharName.BackColor = System.Drawing.Color.Transparent;
             this.lblCharName.Enabled = false;
-            this.lblCharName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCharName.Location = new System.Drawing.Point(107, 11);
             this.lblCharName.Name = "lblCharName";
             this.lblCharName.Size = new System.Drawing.Size(186, 18);
@@ -90,7 +88,6 @@ namespace EVEMon
             this.lblSkillInTraining.AutoEllipsis = true;
             this.lblSkillInTraining.BackColor = System.Drawing.Color.Transparent;
             this.lblSkillInTraining.Enabled = false;
-            this.lblSkillInTraining.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSkillInTraining.ForeColor = System.Drawing.Color.DimGray;
             this.lblSkillInTraining.Location = new System.Drawing.Point(107, 77);
             this.lblSkillInTraining.Name = "lblSkillInTraining";
@@ -103,7 +100,6 @@ namespace EVEMon
             this.lblTimeToCompletion.AutoEllipsis = true;
             this.lblTimeToCompletion.BackColor = System.Drawing.Color.Transparent;
             this.lblTimeToCompletion.Enabled = false;
-            this.lblTimeToCompletion.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTimeToCompletion.ForeColor = System.Drawing.Color.DimGray;
             this.lblTimeToCompletion.Location = new System.Drawing.Point(107, 61);
             this.lblTimeToCompletion.Name = "lblTimeToCompletion";
@@ -116,7 +112,6 @@ namespace EVEMon
             this.lblBalance.AutoEllipsis = true;
             this.lblBalance.BackColor = System.Drawing.Color.Transparent;
             this.lblBalance.Enabled = false;
-            this.lblBalance.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBalance.ForeColor = System.Drawing.Color.DimGray;
             this.lblBalance.Location = new System.Drawing.Point(108, 30);
             this.lblBalance.Name = "lblBalance";

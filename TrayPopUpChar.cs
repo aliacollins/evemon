@@ -56,7 +56,7 @@ namespace EVEMon
                 TrayPopupConfig config = s.TrayPopupConfig;
                 // Form level look and feel
                 this.ForeColor = charInfo.IsTraining ? SystemColors.ControlText : SystemColors.GrayText;
-                this.Font = new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
+                this.Font = FontHelper.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
                 // Character portrait
                 if (!s.WorksafeMode && config.ShowPortrait)
                 {
@@ -72,7 +72,7 @@ namespace EVEMon
                 }
                 // Character Name
                 lblCharName.Text = charInfo.Name;
-                lblCharName.Font = new Font(lblCharName.Font.Name, SystemFonts.MessageBoxFont.SizeInPoints*11/9, FontStyle.Regular, GraphicsUnit.Point);
+                lblCharName.Font = FontHelper.GetFont(lblCharName.Font.Name, SystemFonts.MessageBoxFont.SizeInPoints * 11 / 9, FontStyle.Regular, GraphicsUnit.Point);
                 // Skill Training Info
                 if (charInfo.IsTraining)
                 {

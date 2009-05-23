@@ -229,7 +229,7 @@ namespace EVEMon.Common
 
         public void Draw(DrawItemEventArgs e)
         {
-            Font fontr = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+            Font fontr = FontHelper.GetFont("Tahoma", 8.25F);
             Graphics g = e.Graphics;
             bool hastrainingskill = false;
             foreach (Skill gs in m_skills.Values)
@@ -248,7 +248,7 @@ namespace EVEMon.Common
             {
                 g.DrawLine(p, e.Bounds.Left, e.Bounds.Top, e.Bounds.Right + 1, e.Bounds.Top);
             }
-            using (Font boldf = new Font(fontr, FontStyle.Bold))
+            using (Font boldf = FontHelper.GetFont(fontr, FontStyle.Bold))
             {
                 Size titleSizeInt =
                     TextRenderer.MeasureText(g, this.Name, boldf, new Size(0, 0),

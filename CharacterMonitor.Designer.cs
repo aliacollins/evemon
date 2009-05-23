@@ -101,7 +101,6 @@ namespace EVEMon
             // lblCharacterName
             // 
             this.lblCharacterName.AutoSize = true;
-            this.lblCharacterName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCharacterName.Location = new System.Drawing.Point(0, 0);
             this.lblCharacterName.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCharacterName.Name = "lblCharacterName";
@@ -257,7 +256,6 @@ namespace EVEMon
             // lblCurrentlyTraining
             // 
             this.lblCurrentlyTraining.AutoSize = true;
-            this.lblCurrentlyTraining.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCurrentlyTraining.Location = new System.Drawing.Point(0, 0);
             this.lblCurrentlyTraining.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCurrentlyTraining.Name = "lblCurrentlyTraining";
@@ -278,7 +276,6 @@ namespace EVEMon
             // lblScheduleWarning
             // 
             this.lblScheduleWarning.AutoSize = true;
-            this.lblScheduleWarning.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblScheduleWarning.ForeColor = System.Drawing.Color.Red;
             this.lblScheduleWarning.Location = new System.Drawing.Point(0, 26);
             this.lblScheduleWarning.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -549,7 +546,6 @@ namespace EVEMon
             // 
             this.lblSkillHeader.AutoSize = true;
             this.lblSkillHeader.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblSkillHeader.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSkillHeader.Location = new System.Drawing.Point(53, 0);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblSkillHeader.Name = "lblSkillHeader";
@@ -684,6 +680,38 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
+            // SkillHeaderFlowLayout
+            // 
+            this.tlpInfo.SetColumnSpan(this.SkillHeaderFlowLayout, 2);
+            this.SkillHeaderFlowLayout.Controls.Add(this.CloneWarningLabel);
+            this.SkillHeaderFlowLayout.Controls.Add(this.lblSkillHeader);
+            this.SkillHeaderFlowLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SkillHeaderFlowLayout.Location = new System.Drawing.Point(3, 134);
+            this.SkillHeaderFlowLayout.Name = "SkillHeaderFlowLayout";
+            this.SkillHeaderFlowLayout.Size = new System.Drawing.Size(257, 54);
+            this.SkillHeaderFlowLayout.TabIndex = 19;
+            // 
+            // lblSkillHeader
+            // 
+            this.lblSkillHeader.AutoSize = true;
+            this.lblSkillHeader.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblSkillHeader.Location = new System.Drawing.Point(53, 0);
+            this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.lblSkillHeader.Name = "lblSkillHeader";
+            this.lblSkillHeader.Size = new System.Drawing.Size(104, 52);
+            this.lblSkillHeader.TabIndex = 2;
+            this.lblSkillHeader.Text = "0 Known Skills\r\n0 Total SP\r\n0 Clone Limit\r\n0 Skills at Level V";
+            this.lblSkillHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CloneWarningLabel
+            // 
+            this.CloneWarningLabel.Image = global::EVEMon.Properties.Resources.warning32x32;
+            this.CloneWarningLabel.Location = new System.Drawing.Point(3, 0);
+            this.CloneWarningLabel.Name = "CloneWarningLabel";
+            this.CloneWarningLabel.Size = new System.Drawing.Size(47, 52);
+            this.CloneWarningLabel.TabIndex = 3;
+            this.CloneWarningLabel.Visible = false;
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -693,7 +721,6 @@ namespace EVEMon
             this.Controls.Add(this.lbSkills);
             this.Controls.Add(this.pnlCharData);
             this.Controls.Add(this.pnlTraining);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "CharacterMonitor";
             this.Size = new System.Drawing.Size(392, 499);
             this.pnlTraining.ResumeLayout(false);

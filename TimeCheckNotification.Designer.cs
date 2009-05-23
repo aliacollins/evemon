@@ -96,7 +96,6 @@ namespace EVEMon
             // 
             this.uxTitleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.uxTitleLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.uxTitleLabel.Location = new System.Drawing.Point(50, 12);
             this.uxTitleLabel.Name = "uxTitleLabel";
             this.uxTitleLabel.Size = new System.Drawing.Size(322, 32);

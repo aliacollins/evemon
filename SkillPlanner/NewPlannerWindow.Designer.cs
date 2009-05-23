@@ -247,7 +247,6 @@ namespace EVEMon.SkillPlanner
             // 
             this.planEditor.DimUntrainable = false;
             this.planEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planEditor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.planEditor.HighlightConflicts = false;
             this.planEditor.HighlightPlannedSkills = false;
             this.planEditor.HighlightPrerequisites = false;

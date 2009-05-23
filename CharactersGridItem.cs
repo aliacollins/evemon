@@ -47,6 +47,12 @@ namespace EVEMon
             this.DoubleBuffered = true;
             InitializeComponent();
 
+            this.lblCharName.Font = FontHelper.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            this.lblBalance.Font = FontHelper.GetFont("Tahoma", 9.75F, FontStyle.Bold);
+            this.lblSkillInTraining.Font = FontHelper.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            this.lblTimeToCompletion.Font = FontHelper.GetFont("Tahoma", 9.75F, FontStyle.Regular);
+            this.lblCompletionTime.Font = FontHelper.GetFont("Tahoma", FontStyle.Regular);
+
             // Retrieves data
             m_characterMon = characterMon;
             if (characterMon != null) m_character = characterMon.GrandCharacterInfo;
