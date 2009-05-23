@@ -310,7 +310,7 @@ namespace EVEMon
                 CloneWarningLabel.Image = SystemIcons.Warning.ToBitmap();
                 CloneWarningLabel.Visible = true;
                 String toolTipText = "Skill points exceed limitations of clone by {0} SP";
-                int skillPointDifference = m_grandCharacterInfo.CloneSkillPoints - m_grandCharacterInfo.SkillPointTotal;
+                int skillPointDifference = m_grandCharacterInfo.SkillPointTotal - m_grandCharacterInfo.CloneSkillPoints;
                 ttToolTip.SetToolTip(CloneWarningLabel, String.Format(toolTipText, skillPointDifference.ToString("#,##0")));
                 cloneWarning = " (Clone Insufficent)";
             }
