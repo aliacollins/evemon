@@ -20,9 +20,9 @@ namespace EVEMon
     public partial class MainWindow : EVEMonForm
     {
         /// <summary>
-        /// A special tag we set on the all character's page
+        /// A special tag we set on the "Overview" tab
         /// </summary>
-        private const string AllCharsTag = "All characters";
+        private const string OverviewTabTag = "Overview Tab";
 
         public MainWindow()
         {
@@ -78,7 +78,7 @@ namespace EVEMon
             }
 
             // Update the tabs : may remove the all chars grid ; add the characters
-            tpOverview.Tag = AllCharsTag;
+            tpOverview.Tag = OverviewTabTag;
             if (m_settings.HideOverviewTab) RemoveTab(tpOverview);
             AddCharacters();
 
@@ -229,7 +229,7 @@ namespace EVEMon
         private void UpdateCharactersGrid()
         {
             // IF the tab is not connected to the tabs control, we just clean it up
-            if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
+            if (tcCharacterTabs.TabPages.IndexOf(tpOverview) == -1)
             {
                 charactersGrid.CleanUp();
             }
@@ -481,23 +481,34 @@ namespace EVEMon
 
             AddTab(tp);
         }
-
+        
         /// <summary>
         /// Adds the specified tab, subscribing events and such
         /// </summary>
         /// <param name="tab"></param>
         private void AddTab(TabPage tab)
         {
+            // the tab could already be in the collection if it is the
+            // "Overview" tab
+            if (tcCharacterTabs.TabPages.IndexOf(tab) != -1) return;
+            
             // Adds the page
-            if (tab.Tag == AllCharsTag && tcCharacterTabs.TabPages.Count != 0) tcCharacterTabs.TabPages.Insert(0, tab);
-            else tcCharacterTabs.TabPages.Add(tab);
+            if (tab == tpOverview)
+            {
+                tcCharacterTabs.TabPages.Insert(0, tab);
+            }
+            else
+            {
+                tcCharacterTabs.TabPages.Add(tab);
 
-            // Updates G15 and the "remove" (chars, etc) buttons
-            UpdateControlsOnTabSelectionChange();
+                // Updates G15 and the "remove" (chars, etc) buttons
+                UpdateControlsOnTabSelectionChange();
+            }
         }
 
         /// <summary>
-        /// Removes the specified tab (unsubscribibe events, cleaning up collapsed groups' infos in the settings, updating controls, etc)
+        /// Removes the specified tab (unsubscribibe events, cleaning up
+        /// collapsed groups' infos in the settings, updating controls, etc)
         /// </summary>
         /// <param name="tp"></param>
         private void RemoveTab(TabPage tp)
@@ -515,7 +526,8 @@ namespace EVEMon
             // Remove tab
             tcCharacterTabs.TabPages.Remove(tp);
 
-            // Retrieves the char's name from the removed tab and may remove its plans (depending on the user's settings)
+            // Retrieves the char's name from the removed tab and may
+            // remove its plans (depending on the user's settings)
             string name = string.Empty;
             if (tp.Tag is CharLoginInfo)
             {
@@ -1725,14 +1737,14 @@ namespace EVEMon
         {
             if (hideOverviewTab)
             {
-                if (tcCharacterTabs.TabPages.Count != 0 && tcCharacterTabs.TabPages[0].Tag == AllCharsTag)
+                if (tcCharacterTabs.TabPages.IndexOf(tpOverview) != -1)
                 {
-                    RemoveTab(tpOverview);
+                    tcCharacterTabs.TabPages.Remove(tpOverview);
                 }
             }
             else
             {
-                if (tcCharacterTabs.TabPages.Count == 0 || tcCharacterTabs.TabPages[0].Tag != AllCharsTag)
+                if (tcCharacterTabs.TabPages.IndexOf(tpOverview) == -1)
                 {
                     AddTab(tpOverview);
                     UpdateCharactersGrid();

@@ -128,6 +128,8 @@ namespace EVEMon
             this.flowLayoutPanel26 = new System.Windows.Forms.FlowLayoutPanel();
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
+            this.gbMainWindow = new System.Windows.Forms.GroupBox();
+            this.cbHideOverviewTab = new System.Windows.Forms.CheckBox();
             this.gboxTrayIconPopUpOptions = new System.Windows.Forms.GroupBox();
             this.btnConfigureTrayPopUp = new System.Windows.Forms.Button();
             this.cbTrayPopupStyle = new System.Windows.Forms.ComboBox();
@@ -254,8 +256,6 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.gbMainWindow = new System.Windows.Forms.GroupBox();
-            this.cbHideOverviewTab = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -286,6 +286,7 @@ namespace EVEMon
             this.groupBox7.SuspendLayout();
             this.flowLayoutPanel25.SuspendLayout();
             this.flowLayoutPanel26.SuspendLayout();
+            this.gbMainWindow.SuspendLayout();
             this.gboxTrayIconPopUpOptions.SuspendLayout();
             this.gbSkillPlannerHighlighting.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -324,14 +325,13 @@ namespace EVEMon
             this.gbGoogle.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
-            this.gbMainWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(317, 571);
+            this.btnCancel.Location = new System.Drawing.Point(317, 598);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -645,7 +645,7 @@ namespace EVEMon
             this.tabControl1.Location = new System.Drawing.Point(6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(392, 559);
+            this.tabControl1.Size = new System.Drawing.Size(392, 586);
             this.tabControl1.TabIndex = 5;
             // 
             // tabGeneral
@@ -654,7 +654,7 @@ namespace EVEMon
             this.tabGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabGeneral.Name = "tabGeneral";
             this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGeneral.Size = new System.Drawing.Size(384, 533);
+            this.tabGeneral.Size = new System.Drawing.Size(384, 560);
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -672,7 +672,7 @@ namespace EVEMon
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel1.Name = "verticalFlowPanel1";
-            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 527);
+            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 554);
             this.verticalFlowPanel1.TabIndex = 7;
             // 
             // groupBox1
@@ -1169,7 +1169,7 @@ namespace EVEMon
             this.tabLookAndFeel.Location = new System.Drawing.Point(4, 22);
             this.tabLookAndFeel.Name = "tabLookAndFeel";
             this.tabLookAndFeel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 533);
+            this.tabLookAndFeel.Size = new System.Drawing.Size(384, 560);
             this.tabLookAndFeel.TabIndex = 4;
             this.tabLookAndFeel.Text = "Look And Feel";
             this.tabLookAndFeel.UseVisualStyleBackColor = true;
@@ -1186,7 +1186,7 @@ namespace EVEMon
             this.flowLayoutPanel16.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel16.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel16.Name = "flowLayoutPanel16";
-            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 527);
+            this.flowLayoutPanel16.Size = new System.Drawing.Size(378, 554);
             this.flowLayoutPanel16.TabIndex = 10;
             // 
             // groupBox11
@@ -1320,6 +1320,28 @@ namespace EVEMon
             this.cbSkillInTitle.Text = "Show skill in training";
             this.cbSkillInTitle.UseVisualStyleBackColor = true;
             // 
+            // gbMainWindow
+            // 
+            this.gbMainWindow.Controls.Add(this.cbHideOverviewTab);
+            this.gbMainWindow.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbMainWindow.Location = new System.Drawing.Point(3, 144);
+            this.gbMainWindow.Name = "gbMainWindow";
+            this.gbMainWindow.Size = new System.Drawing.Size(373, 48);
+            this.gbMainWindow.TabIndex = 3;
+            this.gbMainWindow.TabStop = false;
+            this.gbMainWindow.Text = "Main window";
+            // 
+            // cbHideOverviewTab
+            // 
+            this.cbHideOverviewTab.AutoSize = true;
+            this.cbHideOverviewTab.Location = new System.Drawing.Point(15, 21);
+            this.cbHideOverviewTab.Name = "cbHideOverviewTab";
+            this.cbHideOverviewTab.Size = new System.Drawing.Size(123, 17);
+            this.cbHideOverviewTab.TabIndex = 0;
+            this.cbHideOverviewTab.Text = "Hide \"Overview\" tab";
+            this.cbHideOverviewTab.UseVisualStyleBackColor = true;
+            this.cbHideOverviewTab.CheckedChanged += new System.EventHandler(this.cbHideOverviewTab_CheckedChanged);
+            // 
             // gboxTrayIconPopUpOptions
             // 
             this.gboxTrayIconPopUpOptions.Controls.Add(this.btnConfigureTrayPopUp);
@@ -1441,7 +1463,7 @@ namespace EVEMon
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox10.Location = new System.Drawing.Point(382, 3);
+            this.groupBox10.Location = new System.Drawing.Point(3, 333);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(373, 218);
             this.groupBox10.TabIndex = 13;
@@ -1510,7 +1532,7 @@ namespace EVEMon
             this.tabNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabNetwork.Name = "tabNetwork";
             this.tabNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNetwork.Size = new System.Drawing.Size(384, 533);
+            this.tabNetwork.Size = new System.Drawing.Size(384, 560);
             this.tabNetwork.TabIndex = 2;
             this.tabNetwork.Text = "Network";
             this.tabNetwork.UseVisualStyleBackColor = true;
@@ -1524,7 +1546,7 @@ namespace EVEMon
             this.verticalFlowPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel3.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel3.Name = "verticalFlowPanel3";
-            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 527);
+            this.verticalFlowPanel3.Size = new System.Drawing.Size(378, 554);
             this.verticalFlowPanel3.TabIndex = 1;
             // 
             // ProxyServerGroupBox
@@ -1842,7 +1864,7 @@ namespace EVEMon
             this.tabAlerts.Location = new System.Drawing.Point(4, 22);
             this.tabAlerts.Name = "tabAlerts";
             this.tabAlerts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAlerts.Size = new System.Drawing.Size(384, 533);
+            this.tabAlerts.Size = new System.Drawing.Size(384, 560);
             this.tabAlerts.TabIndex = 1;
             this.tabAlerts.Text = "Alerts";
             this.tabAlerts.UseVisualStyleBackColor = true;
@@ -1856,7 +1878,7 @@ namespace EVEMon
             this.verticalFlowPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel2.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel2.Name = "verticalFlowPanel2";
-            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 527);
+            this.verticalFlowPanel2.Size = new System.Drawing.Size(378, 554);
             this.verticalFlowPanel2.TabIndex = 1;
             // 
             // groupBox4
@@ -1987,7 +2009,7 @@ namespace EVEMon
             this.tabUpdates.Location = new System.Drawing.Point(4, 22);
             this.tabUpdates.Name = "tabUpdates";
             this.tabUpdates.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUpdates.Size = new System.Drawing.Size(384, 533);
+            this.tabUpdates.Size = new System.Drawing.Size(384, 560);
             this.tabUpdates.TabIndex = 3;
             this.tabUpdates.Text = "Updates";
             this.tabUpdates.UseVisualStyleBackColor = true;
@@ -2362,7 +2384,7 @@ namespace EVEMon
             this.tabCalendar.Controls.Add(this.groupBox14);
             this.tabCalendar.Location = new System.Drawing.Point(4, 22);
             this.tabCalendar.Name = "tabCalendar";
-            this.tabCalendar.Size = new System.Drawing.Size(384, 533);
+            this.tabCalendar.Size = new System.Drawing.Size(384, 560);
             this.tabCalendar.TabIndex = 5;
             this.tabCalendar.Text = "Calendar";
             this.tabCalendar.UseVisualStyleBackColor = true;
@@ -2709,7 +2731,7 @@ namespace EVEMon
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(236, 571);
+            this.btnOk.Location = new System.Drawing.Point(236, 598);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 3;
@@ -2766,35 +2788,13 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
-            // gbMainWindow
-            // 
-            this.gbMainWindow.Controls.Add(this.cbHideOverviewTab);
-            this.gbMainWindow.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbMainWindow.Location = new System.Drawing.Point(3, 144);
-            this.gbMainWindow.Name = "gbMainWindow";
-            this.gbMainWindow.Size = new System.Drawing.Size(373, 48);
-            this.gbMainWindow.TabIndex = 3;
-            this.gbMainWindow.TabStop = false;
-            this.gbMainWindow.Text = "Main window";
-            // 
-            // cbHideOverviewTab
-            // 
-            this.cbHideOverviewTab.AutoSize = true;
-            this.cbHideOverviewTab.Location = new System.Drawing.Point(15, 21);
-            this.cbHideOverviewTab.Name = "cbHideOverviewTab";
-            this.cbHideOverviewTab.Size = new System.Drawing.Size(141, 17);
-            this.cbHideOverviewTab.TabIndex = 0;
-            this.cbHideOverviewTab.Text = "Hide \"Overview\" tab";
-            this.cbHideOverviewTab.UseVisualStyleBackColor = true;
-            this.cbHideOverviewTab.CheckedChanged += new System.EventHandler(this.cbHideOverviewTab_CheckedChanged);
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(404, 606);
+            this.ClientSize = new System.Drawing.Size(404, 633);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.tabControl1);
@@ -2858,6 +2858,8 @@ namespace EVEMon
             this.flowLayoutPanel25.PerformLayout();
             this.flowLayoutPanel26.ResumeLayout(false);
             this.flowLayoutPanel26.PerformLayout();
+            this.gbMainWindow.ResumeLayout(false);
+            this.gbMainWindow.PerformLayout();
             this.gboxTrayIconPopUpOptions.ResumeLayout(false);
             this.gboxTrayIconPopUpOptions.PerformLayout();
             this.gbSkillPlannerHighlighting.ResumeLayout(false);
@@ -2926,8 +2928,6 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
-            this.gbMainWindow.ResumeLayout(false);
-            this.gbMainWindow.PerformLayout();
             this.ResumeLayout(false);
 
         }
