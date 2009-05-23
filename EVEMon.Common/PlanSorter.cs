@@ -129,8 +129,6 @@ namespace EVEMon.Common
         }
         #endregion
 
-
-
         private PlanSort sort;
         private bool reverseOrder;
         private bool groupByPriority;
@@ -282,7 +280,7 @@ namespace EVEMon.Common
                             int neededLevel;
                             if (node.Item.Skill.HasAsImmedPrereq(prereqCandidate.Item.Skill, out neededLevel))
                             {
-                                if (level == neededLevel) node.AddPrerequisite(prereqCandidate);
+                                if (prereqCandidate.Item.Level == neededLevel) node.AddPrerequisite(prereqCandidate);
                             }
                         }
                         else
