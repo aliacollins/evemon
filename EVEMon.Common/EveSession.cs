@@ -186,7 +186,7 @@ namespace EVEMon.Common
             }
 
 
-            // Work out teh cache period from the message and calculate the expiry time according to user's pc clock...
+            // Work out the cache period from the message and calculate the expiry time according to user's pc clock...
             return  DateTime.Now.ToUniversalTime() + (cacheExpires - CCPCurrent);
         }
 

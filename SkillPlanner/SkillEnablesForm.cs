@@ -236,7 +236,7 @@ namespace EVEMon.SkillPlanner
 
                foreach (Skill.Prereq pr in skill.Prereqs)
                {
-                   // again, get the instance of this skill from teh current character
+                   // again, get the instance of this skill from the current character
                    Skill prs = m_characterInfo.GetSkill(pr.Name);
                    if (prs.Id != m_skill.Id && prs.Level < pr.Level)
                    {

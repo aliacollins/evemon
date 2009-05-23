@@ -1557,17 +1557,18 @@ namespace EVEMon.SkillPlanner
 
         private void lvSkills_SelectedIndexChanged(object sender, EventArgs e)
         {
-            /* Calculating the summary status for all selected skills is a 
-             * slow operation. If user does a shift-click to select multiple rows, 
-             * then this event handler will be called for every item in the selectiom.
-             * i.e. if tehre are 100 entries in the plan, and user clicks 1st item and shift-clicks
-             * the last item, then this handler will be called 100 times - but we're
-             * only interested in the last event from a shift-click - so we start a
-             * timer that runs for 100 milliseconds before we process the event.
-             * If the timer is already running, then we don't do anything.
-             * Hence, we only respond to one event every 100 milliseconds.
-             * Cunning!!
-             */
+            // Calculating the summary status for all selected skills
+            // is a slow operation. If user does a shift-click to 
+            // select multiple rows, then this event handler will be
+            // called for every item in the selection.
+            // f.ex. if there are 100 entries in the plan, and user
+            // clicks 1st item and shift-clicks the last item, then
+            // this handler will be called 100 times - but we're only
+            // interested in the last event from a shift-click - so we
+            // start a timer that runs for 100 milliseconds before we
+            // process the event. If the timer is already running, then
+            // we don't do anything. Hence, we only respond to one 
+            // event every 100 milliseconds.
             if (tmrSelect.Enabled)
             {
                 return;

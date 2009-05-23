@@ -147,8 +147,6 @@ namespace EVEMon.IGBService
             using (StreamWriter sw = new StreamWriter(ms))
             {
                 ProcessRequest(requestUrl, headers, sw);
-                //sw.WriteLine("<html><head><title>here</title></head><body>hello world");
-                //sw.WriteLine("verb={0}, url={1}</body></html>", requestVerb, requestUrl);
 
                 sw.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
@@ -167,10 +165,6 @@ namespace EVEMon.IGBService
                 }
             }
 
-            //client.Write("HTTP/1.0 200 OK\n");
-            //client.Write("Content-type: text/plain\n\n");
-            //client.Write("hello world\n");
-            //client.Write(String.Format("verb={0}, url={1}", requestVerb, requestUrl));
             client.Close();
         }
 
@@ -214,7 +208,7 @@ namespace EVEMon.IGBService
             }
             if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/"))
             {
-                // strip off the bad trailing / added by IGB (Trac ticket 425)
+                // strip off the bad trailing / added by IGB (Trac ticket #425)
                 if (requestUrl.EndsWith("/"))
                 {
                     requestUrl=requestUrl.Substring(0,requestUrl.Length-1);
