@@ -237,21 +237,9 @@ namespace EVEMon.Common
         {
             double newCharacterMultiplier = 1;
 
-            if (skillPointTotal < EveConstants.NewCharacterTrainingThreshold)
+            if ((skillPointTotal + pointsForThisSkill) < EveConstants.NewCharacterTrainingThreshold)
             {
-                if ((skillPointTotal + pointsForThisSkill) > EveConstants.NewCharacterTrainingThreshold)
-                {
-                    int pointsWithoutBonus = (skillPointTotal + pointsForThisSkill) - EveConstants.NewCharacterTrainingThreshold;
-                    int pointsWithBonus = pointsForThisSkill - pointsWithoutBonus;
-
-                    // ((pointsWithoutBonus * 1.0) + (pointsWithBonus * EveConstants.NewCharacterTrainingFactor)) / pointsForThisSkill;
-                    // balances down to...
-                    newCharacterMultiplier = ((double)pointsWithBonus / pointsForThisSkill) + 1;
-                }
-                else
-                {
-                    newCharacterMultiplier = EveConstants.NewCharacterTrainingFactor;
-                }
+                newCharacterMultiplier = EveConstants.NewCharacterTrainingFactor;
             }
                 
             return newCharacterMultiplier;
