@@ -524,18 +524,26 @@ namespace EVEMon
             m_canUpdateSkills = false;
 #else
 
-            this.Invoke(new MethodInvoker(delegate
+            try
             {
-                m_canUpdateSkills = false;
-                miHitTrainingSkill.Enabled = false;
-                if (timeToNextUpdate != -1) // Only reason the timer would = -1 would be if the Character login details were correct, but didn't have this char on that account.
+                this.Invoke(new MethodInvoker(delegate
                 {
-                    tmrMinTrainingSkillRetry.Interval = timeToNextUpdate <= 0 ? 900000 : timeToNextUpdate;
-                    tmrMinTrainingSkillRetry.Enabled = true;
-                    DateTime nextUpdate = DateTime.Now + new TimeSpan(0, 0, (timeToNextUpdate / 1000));
-                    miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToLongTimeString() + ")";
-                }
-            }));
+                    m_canUpdateSkills = false;
+                    miHitTrainingSkill.Enabled = false;
+                    if (timeToNextUpdate != -1) // Only reason the timer would = -1 would be if the Character login details were correct, but didn't have this char on that account.
+                    {
+                        tmrMinTrainingSkillRetry.Interval = timeToNextUpdate <= 0 ? 900000 : timeToNextUpdate;
+                        tmrMinTrainingSkillRetry.Enabled = true;
+                        DateTime nextUpdate = DateTime.Now + new TimeSpan(0, 0, (timeToNextUpdate / 1000));
+                        miHitTrainingSkill.ToolTipText = "This is activated through a Timer. (Next update at " + nextUpdate.ToLongTimeString() + ")";
+                    }
+                }));
+            }
+            // The control has been disposed, it may happen when the window is closed while the API was queried
+            catch (InvalidOperationException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
 #endif
         }
 
