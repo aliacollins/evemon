@@ -283,6 +283,12 @@ namespace EVEMon.SkillPlanner
                 useRemappingPointsForNew = m_pluggable.UseRemappingPointsForNew;
             }
 
+            // We cannot apply multiple remapping without messing up things.
+            // So we need to hold a base scratchpad whihch will be never remapped 
+            // and will hold the cumultative learning skills' bonuses.
+            EveAttributeScratchpad scratchpadWithoutRemap = scratchpad.Clone();
+            EveAttributeScratchpad oldScratchpadWithoutRemap = oldScratchpad.Clone();
+
             // Start updating the list
             lvSkills.BeginUpdate();
             try
@@ -305,11 +311,11 @@ namespace EVEMon.SkillPlanner
                         {
                             if (useRemappingPointsForNew)
                             {
-                                scratchpad = rm.TransformSctratchpad(m_plan.GrandCharacterInfo, scratchpad);
+                                scratchpad = rm.TransformSctratchpad(m_plan.GrandCharacterInfo, scratchpadWithoutRemap);
                             }
                             if (useRemappingPointsForOld)
                             {
-                                oldScratchpad = rm.TransformSctratchpad(m_plan.GrandCharacterInfo, oldScratchpad);
+                                oldScratchpad = rm.TransformSctratchpad(m_plan.GrandCharacterInfo, oldScratchpadWithoutRemap);
                             }
                         }
 
@@ -345,7 +351,9 @@ namespace EVEMon.SkillPlanner
                         skillPointTotal += (reqToThisLevel - reqBeforeThisLevel - pointsInThisLevel);
 
                         scratchpad.ApplyALevelOf(gs);
+                        scratchpadWithoutRemap.ApplyALevelOf(gs);
                         oldScratchpad.ApplyALevelOf(gs);
+                        oldScratchpadWithoutRemap.ApplyALevelOf(gs);
 
                         // Retrieve entry's plan group
                         string planGroups = pe.PlanGroupsDescription;
@@ -1661,7 +1669,7 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            // Multi-selection, check for prerequisites
+            // Multi-selection, check for prerequisites and compute training time
             if (lvSkills.SelectedItems.Count > 1)
             {
                 List<Skill> countedSkills = new List<Skill>();
@@ -1671,9 +1679,14 @@ namespace EVEMon.SkillPlanner
                 int cumulativeSkillTotal = m_plan.GrandCharacterInfo.SkillPointTotal;
                 int entriesCount = 0;
 
+                // We cannot apply multiple remapping without messing up things.
+                // So we need to hold a base scratchpad whihch will be never remapped 
+                // and will hold the cumultative learning skills' bonuses.
+                EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                EveAttributeScratchpad scratchpadWithoutRemap = new EveAttributeScratchpad();
+
                 // need to loop through all entries to include effect of training skills
                 // in the total time of selected skills.
-                EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
                 for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
                     ListViewItem lvi = lvSkills.Items[i];
@@ -1699,11 +1712,13 @@ namespace EVEMon.SkillPlanner
                             selectedTrainTime += gs.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, null);
                             selectedTimeWithLearning += trainTime;
                         }
+
+                        scratchpadWithoutRemap.ApplyALevelOf(gs);
                         scratchpad.ApplyALevelOf(gs);
                     }
-                    else if (rm != null)
+                    else if (rm != null && rm.Status == Plan.RemappingPoint.PointStatus.UpToDate)
                     {
-                        scratchpad = rm.TransformSctratchpad(this.m_plan.GrandCharacterInfo, scratchpad);
+                        scratchpad = rm.TransformSctratchpad(this.m_plan.GrandCharacterInfo, scratchpadWithoutRemap);
                     }
                 }
 

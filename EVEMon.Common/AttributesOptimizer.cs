@@ -306,7 +306,6 @@ namespace EVEMon.Common
                         if (remapping != null)
                         {
                             time = remapping.Compute(plan.GrandCharacterInfo, time, limit, startSp);
-                            //scratchpad = remapping.BestScratchpad.Clone();
                             remappingList.Add(remapping);
                         }
                         // At the beginning, we had other trainings
@@ -336,7 +335,7 @@ namespace EVEMon.Common
             // Compute the current remapping and adds it to the list
             if (remapping != null)
             {
-                remapping.Compute(plan.GrandCharacterInfo, time, limit, startSp);
+                time = remapping.Compute(plan.GrandCharacterInfo, time, limit, startSp);
                 remappingList.Add(remapping);
             }
 

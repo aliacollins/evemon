@@ -453,10 +453,11 @@ namespace EVEMon.Common
             TimeSpan ts = TimeSpan.Zero;
             int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
 
-            if (scratchpad == null)
-            {
-                scratchpad = new EveAttributeScratchpad();
-            }
+            // We cannot apply multiple remapping without messing up things.
+            // So we need to hold a base scratchpad whihch will be never remapped 
+            // and will hold the cumultative learning skills' bonuses.
+            if (scratchpad == null) scratchpad = new EveAttributeScratchpad();
+            EveAttributeScratchpad scratchpadWithoutRemap = new EveAttributeScratchpad();
 
             foreach (Plan.Entry pe in m_entries)
             {
@@ -467,12 +468,14 @@ namespace EVEMon.Common
 
                 ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
                 cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
+
+                scratchpadWithoutRemap.ApplyALevelOf(pe.Skill);
                 scratchpad.ApplyALevelOf(pe.Skill);
 
                 // Apply remapping point
                 if (pe.Remapping != null && pe.Remapping.Status != RemappingPoint.PointStatus.NotComputed && applyRemappingPoints)
                 {
-                    scratchpad = pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpad);
+                    scratchpad = pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpadWithoutRemap);
                 }
             }
             return ts;
@@ -1461,9 +1464,16 @@ namespace EVEMon.Common
                 }
             }
 
-            public EveAttributeScratchpad TransformSctratchpad(CharacterInfo character, EveAttributeScratchpad scratchpad)
+            /// <summary>
+            /// Transforms the given scratchpad into a new one, reflecting the remapping.
+            /// </summary>
+            /// <remarks>The provided scratchpad must not have been affected by a remap before.</remarks>
+            /// <param name="character"></param>
+            /// <param name="scratchpadWithoutPreviousRemapping">The scratchpad before the remapping. It must not have been affected by a remap before.</param>
+            /// <returns></returns>
+            public EveAttributeScratchpad TransformSctratchpad(CharacterInfo character, EveAttributeScratchpad scratchpadWithoutPreviousRemapping)
             {
-                var newScratchpad = scratchpad.Clone();
+                var newScratchpad = scratchpadWithoutPreviousRemapping.Clone();
                 for (int i = 0; i < 5; i++)
                 {
                     EveAttribute attrib = (EveAttribute)i;
