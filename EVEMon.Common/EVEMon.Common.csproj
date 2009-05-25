@@ -65,6 +65,7 @@
     <Compile Include="APIMethods.cs" />
     <Compile Include="APIState.cs" />
     <Compile Include="AttributesOptimizer.cs" />
+    <Compile Include="Certificate.cs" />
     <Compile Include="CheckedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -85,6 +86,7 @@
     <Compile Include="Pair.cs" />
     <Compile Include="LocalFileSystem.cs" />
     <Compile Include="PlanSorter.cs" />
+    <Compile Include="StaticCertificates.cs" />
     <Compile Include="TimeCheck.cs" />
     <Compile Include="Net\DownloadFileAsyncResult.cs" />
     <Compile Include="Net\DownloadImageAsyncResult.cs" />
@@ -204,11 +206,11 @@
     </Compile>
     <Compile Include="StaticSkill.cs" />
     <Compile Include="StaticSkillGroup.cs" />
-    <Compile Include="StringTable.cs" />
     <Compile Include="TimeUtil.cs" />
     <Compile Include="TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TreeViewHelper.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
@@ -236,6 +238,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\eve-certificates.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\eve-implants2.xml.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -67,6 +67,20 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Certificate_32 {
+            get {
+                object obj = ResourceManager.GetObject("Certificate-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Certificate_64 {
+            get {
+                object obj = ResourceManager.GetObject("Certificate-64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap comment {
             get {
                 object obj = ResourceManager.GetObject("comment", resourceCulture);

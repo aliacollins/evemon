@@ -54,6 +54,11 @@ namespace EVEMon.SkillPlanner
 
         public ImageList GetIconSet(int index)
         {
+            return GetIconSet(index, this.ilSkillIcons);
+        }
+
+        public static ImageList GetIconSet(int index, ImageList defaultList)
+        {
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
@@ -61,10 +66,22 @@ namespace EVEMon.SkillPlanner
             {
                 groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             }
+            if ((groupname != null && !System.IO.File.Exists(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory,
+                        index,
+                        groupname)) ||
+                !System.IO.File.Exists(String.Format(
+                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        System.AppDomain.CurrentDomain.BaseDirectory))))
+            {
+                groupname = null;
+            }
             if (groupname != null)
             {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(
-                    String.Format(
+                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(String.Format(
                         "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory));
@@ -74,8 +91,7 @@ namespace EVEMon.SkillPlanner
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
-                basic = new System.Resources.ResourceReader(
-                    String.Format(
+                basic = new System.Resources.ResourceReader(String.Format(
                         "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory,
@@ -95,14 +111,8 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                return this.ilSkillIcons;
+                return defaultList;
             }
-        }
-
-        public void UseIconSet(int index)
-        {
-            tvItems.ImageList = GetIconSet(index);
-            UpdateSkillDisplay();
         }
 
         private delegate bool SkillFilter(Skill gs);
@@ -222,67 +232,14 @@ namespace EVEMon.SkillPlanner
                         };
                     break;
             }
+
+            // Update the image list choice
             int index = Settings.GetInstance().SkillIconGroup;
-            if (index == 0)
-            {
-                index = 1;
-            }
-            ImageList def = new ImageList();
-            def.ColorDepth = ColorDepth.Depth32Bit;
-            string groupname = null;
-            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
-            {
-                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
-            }
-            if ((groupname != null && !System.IO.File.Exists(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
-                        index,
-                        groupname)) ||
-                !System.IO.File.Exists(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory))))
-            {
-                groupname = null;
-            }
-            if (groupname != null)
-            {
-                System.Resources.IResourceReader basic = new System.Resources.ResourceReader(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory));
-                IDictionaryEnumerator basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
-                }
-                basic.Close();
-                basic = new System.Resources.ResourceReader(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
-                        index,
-                        groupname));
-                basicx = basic.GetEnumerator();
-                while (basicx.MoveNext())
-                {
-                    if (def.Images.ContainsKey(basicx.Key.ToString()))
-                    {
-                        def.Images.RemoveByKey(basicx.Key.ToString());
-                    }
-                    def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
-                }
-                basic.Close();
-            }
-            else
-            {
-                def = this.ilSkillIcons;
-            }
-            tvItems.Nodes.Clear();
-            tvItems.ImageList = def;
+            if (index == 0) index = 1;
+            tvItems.ImageList = GetIconSet(index);
             tvItems.ImageList.ColorDepth = ColorDepth.Depth32Bit;
+
+            tvItems.Nodes.Clear();
             foreach (SkillGroup gsg in m_grandCharacterInfo.SkillGroups.Values)
             {
                 TreeNode gtn = new TreeNode(gsg.Name, tvItems.ImageList.Images.IndexOfKey("book"), tvItems.ImageList.Images.IndexOfKey("book"));

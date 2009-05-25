@@ -1050,6 +1050,13 @@ namespace EVEMon.Common
             return planEntries;
         }
 
+        /// <summary>
+        /// Adds a set of skills to this plan
+        /// </summary>
+        /// <param name="skillsToAdd"></param>
+        /// <param name="Note"></param>
+        /// <param name="withConfirm">When true, the user is asked hwo to resolve priorities conflicts</param>
+        /// <returns></returns>
         public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd, string Note, bool withConfirm)
         {
             List<Plan.Entry> planEntries = CheckSkillsToAdd(skillsToAdd, Note);
@@ -1098,6 +1105,47 @@ namespace EVEMon.Common
                                 "Already Planned", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Adds the provided certificate's prerequisites to the plan
+        /// </summary>
+        /// <param name="certificate"></param>
+        /// <param name="withConfirm">When true, the user is asked hwo to resolve priorities conflicts</param>
+        public void PlanTo(Certificate certificate, bool withConfirm)
+        {
+            var skillsToTrain = new List<Pair<string,int>>();
+            foreach (var prereq in certificate.AllPrerequisiteSkills)
+            {
+                skillsToTrain.Add(new Pair<string, int>(prereq.Name, prereq.Level));
+            }
+            PlanSetTo(skillsToTrain, certificate.ToString(), withConfirm);
+        }
+
+        /// <summary>
+        /// Checks whether, after this plan, the owner will be eligible to the provided certificate
+        /// </summary>
+        /// <param name="cert"></param>
+        /// <returns></returns>
+        public bool WillGrantEligibilityFor(Certificate cert)
+        {
+            var status = m_grandCharacterInfo.GetCertificateStatus(cert);
+            if (status == CertificateStatus.Claimable || status == CertificateStatus.Granted) return true;
+
+            // We check every prerequisite
+            foreach (var skillToTrain in cert.AllPrerequisiteSkills)
+            {
+                // If level already greater or skill level planned, we continue the loop
+                var skill = m_grandCharacterInfo.GetSkill(skillToTrain.Name);
+                if (skill.LastConfirmedLvl >= skillToTrain.Level) continue;
+                if (this.IsPlanned(skill, skillToTrain.Level)) continue;
+
+                // If it's not, then eligibility tests are over
+                return false;
+            }
+
+            // All tests successed, ok
+            return true;
         }
 
         private int m_lowestPrereqPriority;

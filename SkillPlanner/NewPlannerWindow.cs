@@ -49,6 +49,9 @@ namespace EVEMon.SkillPlanner
             itemBrowser.Plan = m_plan;
             PopulateTsPlans();
 
+            certBrowser.Plan = m_plan;
+            certBrowser.Character = m_plan.GrandCharacterInfo;
+
             // See if this is a new plan
             if (m_plan.Entries.Count == 0)
             {
@@ -131,6 +134,12 @@ namespace EVEMon.SkillPlanner
         {
             itemBrowser.SelectedObject = i;
             tabControl.SelectedTab = tpItemBrowser;
+        }
+
+        public void ShowCertInBrowser(Certificate c)
+        {
+            certBrowser.SelectedCertificate = c;
+            tabControl.SelectedTab = tpCertificateBrowser;
         }
 
         private void NewPlannerWindow_Shown(object sender, EventArgs e)
@@ -287,8 +296,8 @@ namespace EVEMon.SkillPlanner
             planEditor.PlannerWindow = this;
 
             shipBrowser.Plan = m_plan;
-
             itemBrowser.Plan = m_plan;
+            certBrowser.Plan = m_plan;
 
             // Tell ths skill explorer form we#re switching plans
             // this has to be done after we've told the skill browser about the plan!

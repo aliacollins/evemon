@@ -32,6 +32,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the StaticSkill this skill is bound to.
+        /// </summary>
+        internal StaticSkill StaticSkill
+        {
+            get { return m_staticData; }
+        }
+
+        /// <summary>
         /// Gets or sets the most recent skill level that was confirmed from the CCP server or an XML file.
         /// </summary>
         public int LastConfirmedLvl

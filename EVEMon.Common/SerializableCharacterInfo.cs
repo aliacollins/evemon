@@ -328,6 +328,15 @@ namespace EVEMon.Common
             set { m_skillGroups = value; }
         }
 
+        List<SerializableCertificate> m_certificates = new List<SerializableCertificate>();
+
+        [XmlArray("certificates")]
+        public List<SerializableCertificate> Certificates
+        {
+            get { return m_certificates; }
+            set { m_certificates = value; }
+        }
+
         public SerializableSkill GetSkill(string skillName)
         {
             foreach (SerializableSkillGroup sg in m_skillGroups)
@@ -361,7 +370,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("skillGroup")]
-    public class SerializableSkillGroup
+    public sealed class SerializableSkillGroup
     {
         private string m_name = String.Empty;
         private int m_id;
@@ -421,8 +430,21 @@ namespace EVEMon.Common
         }
     }
 
+    [XmlRoot("certificate")]
+    public sealed class SerializableCertificate
+    {
+        private int m_certificateID;
+
+        [XmlAttribute("certificateID")]
+        public int CertificateID
+        {
+            get { return m_certificateID; }
+            set { m_certificateID = value; }
+        }
+    }
+
     [XmlRoot("skill")]
-    public class SerializableSkill
+    public sealed class SerializableSkill
     {
         private int m_id;
         private int m_skillPoints;
@@ -531,7 +553,7 @@ namespace EVEMon.Common
 
     [XmlRoot("skillInTraining")]
     [Obsolete]
-    public class SerializableSkillInTraining
+    public sealed class SerializableSkillInTraining
     {
         private string m_skillName = String.Empty;
 
@@ -575,7 +597,7 @@ namespace EVEMon.Common
     }
 
     [XmlRoot("ImplantSet")]
-    public class SerializableImplantSet
+    public sealed class SerializableImplantSet
     {
         private int m_number;
 

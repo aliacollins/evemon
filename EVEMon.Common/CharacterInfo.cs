@@ -36,6 +36,10 @@ namespace EVEMon.Common
         // This is to keep track of the number of times you've tried to dl this character and been unsuccessful.
         private int m_downloadfailed = 0;
 
+        // Certificates
+        private Dictionary<Certificate, CertificateStatus> m_certificateStatuses = new Dictionary<Certificate, CertificateStatus>();
+
+        // Skills
         private Dictionary<string, SkillGroup> m_skillGroups = new Dictionary<string, SkillGroup>();
         private Dictionary<int, Skill> m_AllSkillsByID = new Dictionary<int, Skill>();
         private Dictionary<string, Skill> m_AllSkillsByName = new Dictionary<string, Skill>();
@@ -652,6 +656,9 @@ namespace EVEMon.Common
             get { return m_skillGroups; }
         }
 
+        /// <summary>
+        /// Gets a dictionary of skills with ID as keys
+        /// </summary>
         public Dictionary<int, Skill> AllSkillsByTypeID
         {
             get { return m_AllSkillsByID; }
@@ -695,6 +702,16 @@ namespace EVEMon.Common
             {
                 OnAttributeChanged();
             }
+
+            // Updates certificate to claimable
+            foreach (var cert in StaticCertificates.Certificates)
+            {
+                int neededLevel;
+                if (cert.HasAsImmediatePrerequisite(gs, out neededLevel))
+                {
+                    cert.TryUpdateCertificateStatus(this, m_certificateStatuses);
+                }
+            }
         }
 
         void gs_TrainingStatusChanged(object sender, EventArgs e)
@@ -710,6 +727,44 @@ namespace EVEMon.Common
 
         public event SkillChangedHandler SkillChanged;
         public event EventHandler TrainingSkillChanged;
+
+        /// <summary>
+        /// Gets the status of the given certificate
+        /// </summary>
+        /// <param name="cert">The certificate whose status must be retrieved.</param>
+        /// <returns></returns>
+        public CertificateStatus GetCertificateStatus(Certificate cert)
+        {
+            return m_certificateStatuses[cert];
+        }
+
+        /// <summary>
+        /// Gets the certificates with the specified status
+        /// </summary>
+        /// <param name="status">The status the certificates must have</param>
+        /// <returns></returns>
+        public IEnumerable<Certificate> GetCertificatesWithStatus(CertificateStatus status)
+        {
+            foreach (var certPair in m_certificateStatuses)
+            {
+                if (certPair.Value == status)
+                {
+                    yield return certPair.Key;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the certificates granted to that character
+        /// </summary>
+        [XmlIgnore]
+        public IEnumerable<Certificate> GrantedCertificates
+        {
+            get
+            {
+                return GetCertificatesWithStatus(CertificateStatus.Granted);
+            }
+        }
 
         public Skill GetSkill(string skillName)
         {
@@ -826,11 +881,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Updates this character with the provided <see cref="SerializableCharacterSheet"/>.
+        /// </summary>
+        /// <remarks>
         /// Called from CharcterMonitor.start() to load from settings cache for both online and file based
         /// Called from CharcterMonitor.RelaodFromFile() (when file is updated)
         /// Called from EveSession.UpdateGrandCharacterInfo when xml is retrieved and there is more than 3 minutes 30 secs left in it's cache
         /// Called from GetPlanByName in settings.cs (!!! Fix that!!!)
-        /// </summary>
+        /// </remarks>
         /// <param name="ci"></param>
         public void AssignFromSerializableCharacterSheet(SerializableCharacterSheet ci, bool showAll, bool showNonPublic, bool highlightPartials)
         {
@@ -1068,6 +1126,28 @@ namespace EVEMon.Common
                         }
                     }
                 }
+            }
+
+            // Load the granted certificates first, assigning known statuses
+            this.m_certificateStatuses.Clear();
+            foreach (int certID in ci.CharacterSheet.CertificatesID)
+            {
+                var grantedCert = StaticCertificates.GetCertificate(certID);
+                m_certificateStatuses[grantedCert] = CertificateStatus.Granted;
+            }
+
+            // Look at the granted certificates
+            while (true)
+            {
+                bool updatedEverything = true;
+                foreach (var cert in StaticCertificates.Certificates)
+                {
+                    if (!m_certificateStatuses.ContainsKey(cert))
+                    {
+                        updatedEverything &= cert.TryUpdateCertificateStatus(this, m_certificateStatuses);
+                    }
+                }
+                if (updatedEverything) break;
             }
 
             checkTrainingSkills(ci.TrainingSkillInfo);
@@ -1700,6 +1780,7 @@ namespace EVEMon.Common
                     }
                 }
             }
+
             if (this.m_SkillInTraining != null)
             {
                 ci.TrainingSkillInfo = (SerializableSkillTrainingInfo)this.m_SkillInTraining.Clone();
@@ -1708,6 +1789,16 @@ namespace EVEMon.Common
             {
                 ci.TrainingSkillInfo = null;
             }
+
+            // Export certificates
+            foreach (var certPair in m_certificateStatuses)
+            {
+                if (certPair.Value == CertificateStatus.Granted)
+                {
+                    ci.CharacterSheet.CertificatesID.Add(certPair.Key.ID);
+                }
+            }
+
             return ci;
         }
 
@@ -1878,5 +1969,28 @@ namespace EVEMon.Common
             m_amount = amount;
             m_manual = manual;
         }
+    }
+
+    /// <summary>
+    /// Represents a certificate's status from a character's point of view
+    /// </summary>
+    public enum CertificateStatus
+    {
+        /// <summary>
+        /// The certificate has been granted to this character
+        /// </summary>
+        Granted,
+        /// <summary>
+        /// The certificate can be claimed by the char, all prerequisites are met.
+        /// </summary>
+        Claimable,
+        /// <summary>
+        /// The certificate is not claimable yet but at least one prerequisite is satisfied
+        /// </summary>
+        PartiallyTrained,
+        /// <summary>
+        /// The certificate is not claimable and none of its prerequisites are satisfied
+        /// </summary>
+        Untrained
     }
 }

@@ -2588,6 +2588,7 @@ namespace EVEMon.Common
                 m_checksums.Add(GenerateMD5("eve-items2.xml.gz"));
                 m_checksums.Add(GenerateMD5("eve-ships2.xml.gz"));
                 m_checksums.Add(GenerateMD5("eve-skills2.xml.gz"));
+                m_checksums.Add(GenerateMD5("eve-certificates.xml.gz"));
             }
             // don't worry if we cant create MD5  maybe they have FIPS enforced.
             catch (Exception) { }
@@ -2955,6 +2956,25 @@ namespace EVEMon.Common
                     m_skillBrowserSort = value;
                 }
             }
+        }
+
+        // No need for mutexes, this is a simple assignment
+        public int CertificateBrowserFilter
+        {
+            get;
+            set;
+        }
+
+        public int CertificateBrowserSort
+        {
+            get;
+            set;
+        }
+
+        public string CertificateBrowserTextSearch
+        {
+            get;
+            set;
         }
 
         private String m_skillBrowserSearch = String.Empty;

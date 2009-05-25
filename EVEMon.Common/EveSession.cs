@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common.Net;
+using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -370,7 +371,7 @@ namespace EVEMon.Common
                     return null;
                 }
 
-                scs = ProcessCharacterXml(m_xmlDoc);
+                scs = SerializableCharacterSheet.CreateFromXmlDocument(m_xmlDoc);
                 scs.CharacterSheet.CreateSkillGroups();
                 scs.FromCCP = true;
                 //save the xml in the character cache
@@ -383,16 +384,6 @@ namespace EVEMon.Common
             }
 
             return scs;
-        }
-
-        private SerializableCharacterSheet ProcessCharacterXml(XmlDocument xdoc)
-        {
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));
-            XmlElement charRoot = xdoc.DocumentElement;
-            using (XmlNodeReader xnr = new XmlNodeReader(charRoot))
-            {
-                return (SerializableCharacterSheet)xs.Deserialize(xnr);
-            }
         }
 
         private class UpdateGCIArgs

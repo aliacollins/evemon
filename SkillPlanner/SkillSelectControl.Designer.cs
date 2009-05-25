@@ -113,10 +113,10 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Name = "tbSearchText";
             this.tbSearchText.Size = new System.Drawing.Size(169, 21);
             this.tbSearchText.TabIndex = 36;
-            this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
+            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearch_Leave);
             this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
-            this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
+            this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
             // 
             // pbSearchImage
             // 
@@ -147,12 +147,12 @@ namespace EVEMon.SkillPlanner
             // cmSkills
             // 
             this.cmSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiPlanTo,
+            this.toolStripSeparator1,
             this.cmiExpandSelected,
             this.cmiCollapseSelected,
             this.cmiExpandAll,
-            this.cmiCollapseAll,
-            this.toolStripSeparator1,
-            this.cmiPlanTo});
+            this.cmiCollapseAll});
             this.cmSkills.Name = "contextMenuStrip1";
             this.cmSkills.Size = new System.Drawing.Size(170, 120);
             this.cmSkills.Opening += new System.ComponentModel.CancelEventHandler(this.cmSkills_Opening);
@@ -205,35 +205,35 @@ namespace EVEMon.SkillPlanner
             // level1ToolStripMenuItem
             // 
             this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
-            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.level1ToolStripMenuItem.Text = "Level &1";
             this.level1ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level2ToolStripMenuItem
             // 
             this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
-            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.level2ToolStripMenuItem.Text = "Level &2";
             this.level2ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level3ToolStripMenuItem
             // 
             this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
-            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.level3ToolStripMenuItem.Text = "Level &3";
             this.level3ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level4ToolStripMenuItem
             // 
             this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
-            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.level4ToolStripMenuItem.Text = "Level &4";
             this.level4ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
             // level5ToolStripMenuItem
             // 
             this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
-            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.levelToolStripMenuItem_Click);
             // 
@@ -409,6 +409,7 @@ namespace EVEMon.SkillPlanner
             // chName
             // 
             this.chName.Text = "Name";
+            this.chName.Width = 120;
             // 
             // chSortKey
             // 

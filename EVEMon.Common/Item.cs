@@ -27,7 +27,7 @@ namespace EVEMon.Common
         public string Metagroup
         {
             get { return m_metagroup; }
-            set { m_metagroup = StringTable.GetSharedString(value); }
+            set { m_metagroup = String.Intern(value); }
         }
 
         private int m_slotIndex = -1;
@@ -238,11 +238,8 @@ namespace EVEMon.Common
                 using (FileStream s = new FileStream(itemfile, FileMode.Open, FileAccess.Read))
                 using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
                 {
-                    using (StringTable.GetInstanceScope())
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof (ItemCategory));
-                        rootCat = xs.Deserialize(zs) as ItemCategory;
-                    }
+                    XmlSerializer xs = new XmlSerializer(typeof (ItemCategory));
+                    rootCat = xs.Deserialize(zs) as ItemCategory;
                 }
 
                 m_rootCategory = new WeakReference<ItemCategory>(rootCat);

@@ -29,7 +29,7 @@ namespace EVEMon.Common
         public string Icon
         {
             get { return _icon; }
-            set { _icon = StringTable.GetSharedString(value); }
+            set { _icon = String.Intern(value); }
         }
 
         protected string _name = String.Empty;
@@ -47,7 +47,7 @@ namespace EVEMon.Common
         public string Description
         {
             get { return _description; }
-            set { _description = StringTable.GetSharedString(value); }
+            set { _description = String.Intern(value); }
         }
 
         protected List<EntityRequiredSkill> _requiredSkills = new List<EntityRequiredSkill>();
@@ -90,7 +90,7 @@ namespace EVEMon.Common
         public string Name
         {
             get { return m_name; }
-            set { m_name = StringTable.GetSharedString(value); }
+            set { m_name = String.Intern(value); }
         }
 
         protected string m_value;
@@ -99,7 +99,7 @@ namespace EVEMon.Common
         public string Value
         {
             get { return m_value.Trim(); }
-            set { m_value = StringTable.GetSharedString(value); }
+            set { m_value = String.Intern(value); }
         }
 
 
@@ -123,7 +123,7 @@ namespace EVEMon.Common
         public string Name
         {
             get { return _name; }
-            set { _name = StringTable.GetSharedString(value); }
+            set { _name = String.Intern(value); }
         }
 
         protected int _level;

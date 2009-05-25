@@ -214,7 +214,7 @@ namespace EVEMon.Common
         public string Attribute
         {
             get { return m_attribute; }
-            set { m_attribute = StringTable.GetSharedString(value); }
+            set { m_attribute = String.Intern(value); }
         }
 
         private List<Implant> m_Implants = new List<Implant>();
@@ -345,7 +345,7 @@ namespace EVEMon.Common
         public string Icon
         {
             get { return m_icon; }
-            set { m_icon = StringTable.GetSharedString(value); }
+            set { m_icon = String.Intern(value); }
         }
 
         private string m_name;
@@ -363,7 +363,7 @@ namespace EVEMon.Common
         public string Description
         {
             get { return m_description; }
-            set { m_description = StringTable.GetSharedString(value); }
+            set { m_description = String.Intern(value); }
         }
 
         private List<ImplantProperty> m_properties;
@@ -440,7 +440,7 @@ namespace EVEMon.Common
         public string Name
         {
             get { return m_name; }
-            set { m_name = StringTable.GetSharedString(value); }
+            set { m_name = String.Intern(value); }
         }
 
         private int m_level;

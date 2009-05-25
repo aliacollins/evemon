@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A2E5EFE0-614A-4567-95E5-92A4D94169AC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -286,6 +286,24 @@
     </Compile>
     <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.Designer.cs">
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateBrowserControl.Designer.cs">
+      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateSelectControl.Designer.cs">
+      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.Designer.cs">
+      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ChangePriorityForm.cs">
       <SubType>Form</SubType>
@@ -630,6 +648,18 @@
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateBrowserControl.resx">
+      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateSelectControl.resx">
+      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateTreeDisplayControl.resx">
+      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ChangePriorityForm.resx">
       <DependentUpon>ChangePriorityForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -806,6 +836,9 @@
     <None Include="Resources\icons\help.png" />
     <None Include="Resources\icons\wrench_orange.png" />
     <None Include="Resources\icons\comment.png" />
+    <None Include="Resources\icons\Certificate-32.png" />
+    <None Include="Resources\icons\Certificate-64.png" />
+    <Content Include="Resources\icons\Certificate-24.png" />
     <Content Include="SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

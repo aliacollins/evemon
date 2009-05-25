@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -68,7 +69,6 @@ namespace EVEMon.Common
 
         #endregion
 
-
         #region EVEMon stuff
 
         private bool m_fromCCP = true;
@@ -79,8 +79,7 @@ namespace EVEMon.Common
             get { return m_fromCCP; }
             set { m_fromCCP = value; }
         }
-
-
+        
         private SerializableSkillTrainingInfo m_TrainingSkillInfo;
         [XmlElement("skillTraining", typeof(SerializableSkillTrainingInfo))]
         public SerializableSkillTrainingInfo TrainingSkillInfo
@@ -166,11 +165,7 @@ namespace EVEMon.Common
                 if (charRootEl == null)
                 {
                     // New style API xml
-                    using (XmlNodeReader nxr = new XmlNodeReader(xdoc))
-                    {
-                        XmlSerializer xs = new XmlSerializer(typeof(SerializableCharacterSheet));
-                        scs = (SerializableCharacterSheet)xs.Deserialize(nxr);
-                    }
+                    scs = CreateFromXmlDocument(xdoc);
                 }
                 else
                 {
@@ -199,6 +194,104 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(e, true);
                 return null;
             } 
+        }
+
+        /// <summary>
+        /// Read a xmldoc from CCP and transforms it into a <see cref="SerializableCharacterSheet"/>
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        public static SerializableCharacterSheet CreateFromXmlDocument(XmlDocument xdoc)
+        {
+            SerializableCharacterSheet scs = new SerializableCharacterSheet();
+
+            // Header
+            var root = xdoc["eveapi"];
+            scs.currentTime = root["currentTime"].InnerText;
+            scs.CachedUntilTime = root["cachedUntil"].InnerText;
+
+            // Result
+            root = root["result"];
+            var cs = scs.CharacterSheet;
+
+            cs.Name = root["name"].InnerText;
+            cs.Race = root["race"].InnerText;
+            cs.Gender = root["gender"].InnerText;
+            cs.BloodLine = root["bloodLine"].InnerText;
+            cs.CorpName = root["corporationName"].InnerText;
+            cs.CloneName = root["cloneName"].InnerText;
+
+            cs.CloneSkillPoints = Int32.Parse(root["cloneSkillPoints"].InnerText);
+            cs.CharacterId = Int32.Parse(root["characterID"].InnerText);
+            cs.CorpId = root["corporationID"].InnerText;
+            cs.Balance = Decimal.Parse(root["balance"].InnerText, CultureInfo.InvariantCulture.NumberFormat);
+
+            // Implants
+            var implantsRoot = root["attributeEnhancers"];
+            var iRoot = implantsRoot["intelligenceBonus"];
+            if (iRoot != null)
+            {
+                cs.AttributeBonuses.Bonuses.Add(new SerializableIntelligenceBonus { Name = iRoot["augmentatorName"].InnerText, Amount = Int32.Parse(iRoot["augmentatorValue"].InnerText) });
+            }
+
+            var pRoot = implantsRoot["perceptionBonus"];
+            if (pRoot != null)
+            {
+                cs.AttributeBonuses.Bonuses.Add(new SerializablePerceptionBonus { Name = pRoot["augmentatorName"].InnerText, Amount = Int32.Parse(pRoot["augmentatorValue"].InnerText) });
+            }
+
+            var wRoot = implantsRoot["willpowerBonus"];
+            if (wRoot != null)
+            {
+                cs.AttributeBonuses.Bonuses.Add(new SerializableWillpowerBonus { Name = wRoot["augmentatorName"].InnerText, Amount = Int32.Parse(wRoot["augmentatorValue"].InnerText) });
+            }
+
+            var mRoot = implantsRoot["memoryBonus"];
+            if (mRoot != null)
+            {
+                cs.AttributeBonuses.Bonuses.Add(new SerializableMemoryBonus { Name = mRoot["augmentatorName"].InnerText, Amount = Int32.Parse(mRoot["augmentatorValue"].InnerText) });
+            }
+
+            var cRoot = implantsRoot["charismaBonus"];
+            if (cRoot != null)
+            {
+                cs.AttributeBonuses.Bonuses.Add(new SerializableCharismaBonus { Name = cRoot["augmentatorName"].InnerText, Amount = Int32.Parse(cRoot["augmentatorValue"].InnerText) });
+            }
+
+            // Attributes
+            var attributesRoot = root["attributes"];
+            cs.Attributes.BaseIntelligence = Int32.Parse(attributesRoot["intelligence"].InnerText);
+            cs.Attributes.BasePerception = Int32.Parse(attributesRoot["perception"].InnerText);
+            cs.Attributes.BaseWillpower = Int32.Parse(attributesRoot["willpower"].InnerText);
+            cs.Attributes.BaseCharisma = Int32.Parse(attributesRoot["charisma"].InnerText);
+            cs.Attributes.BaseMemory = Int32.Parse(attributesRoot["memory"].InnerText);
+
+            // Skills, certificates, etc
+            foreach (XmlNode rowset in root.SelectNodes("rowset"))
+            {
+                var setname = rowset.Attributes["name"].InnerText;
+                if (setname == "skills")
+                {
+                    foreach (XmlNode row in rowset.ChildNodes)
+                    {
+                        cs.KnownSkillsSet.KnownSkills.Add(new SerializableKnownSkill
+                        {
+                            SkillId = Int32.Parse(row.Attributes["typeID"].InnerText),
+                            Skillpoints = Int32.Parse(row.Attributes["skillpoints"].InnerText),
+                            SkillLevel = Int32.Parse(row.Attributes["level"].InnerText)
+                        });
+                    }
+                }
+                else if (setname == "certificates")
+                {
+                    foreach (XmlNode row in rowset.ChildNodes)
+                    {
+                        cs.CertificatesID.Add(Int32.Parse(row.Attributes["certificateID"].InnerText));
+                    }
+                }
+            }
+
+            return scs;
         }
 
         private void CopyFromSerializableCharacterInfo(SerializableCharacterInfo sci)
@@ -453,7 +546,15 @@ namespace EVEMon.Common
             set { m_knownSkills = value; }
         }
 
-#endregion
+        private List<int> m_certificatesID = new List<int>();
+
+        [XmlArray("certificatesID")]
+        public List<int> CertificatesID
+        {
+            get { return m_certificatesID; }
+            set { m_certificatesID = value; }
+        }
+        #endregion
 
         #region EVEMon Data
         // Added by EVEMon
@@ -529,14 +630,15 @@ namespace EVEMon.Common
             set { m_rowsetName = "skills"; }
         }
 
+        /*
         private string m_rowsetID = "typeID"
 ;
-        [XmlAttribute("typeID")]
+        [XmlAttribute("key")]
         public string RowsetTypeID
         {
             get { return m_rowsetID; }
             set { m_rowsetID = value; ; }
-        }
+        }*/
 
         private List<SerializableKnownSkill> m_knownSkills = new List<SerializableKnownSkill>();
         [XmlElement("row")]
