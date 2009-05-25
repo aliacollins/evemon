@@ -45,6 +45,9 @@ namespace EVEMon
 
         private void ApplyToSettings(Settings s)
         {
+            // General - Compatibility
+            m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
+
             // Look and feel options
             s.SkillPlannerHighlightPrerequisites = cbHighlightPrerequisites.Checked;
             s.SkillPlannerHighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
@@ -325,6 +328,9 @@ namespace EVEMon
             ACycleTimesInterval.Value = m_settings.G15ACycleTimesint;
             cbShowAllPublicSkills.Checked = m_settings.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.ShowNonPublicSkills;
+
+            // Compatibility
+            compatibilityCombo.SelectedIndex = (int)m_settings.Compatibility;
 
             // Look and feel options
             cbWorksafeMode.Checked = m_settings.WorksafeMode;

@@ -29,23 +29,24 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23,
+            treeNode24,
+            treeNode25,
+            treeNode26});
+            System.Windows.Forms.Label label29;
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -256,6 +257,9 @@ namespace EVEMon
             this.chName = new System.Windows.Forms.ColumnHeader();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.compatibilityGroupBox = new System.Windows.Forms.GroupBox();
+            this.compatibilityCombo = new System.Windows.Forms.ComboBox();
+            label29 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2.SuspendLayout();
             this.tlpEmailSettings.SuspendLayout();
             this.tlpEmailAuthTable.SuspendLayout();
@@ -325,13 +329,14 @@ namespace EVEMon
             this.gbGoogle.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
+            this.compatibilityGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(317, 598);
+            this.btnCancel.Location = new System.Drawing.Point(317, 604);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -645,7 +650,7 @@ namespace EVEMon
             this.tabControl1.Location = new System.Drawing.Point(6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(392, 586);
+            this.tabControl1.Size = new System.Drawing.Size(392, 592);
             this.tabControl1.TabIndex = 5;
             // 
             // tabGeneral
@@ -654,7 +659,7 @@ namespace EVEMon
             this.tabGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabGeneral.Name = "tabGeneral";
             this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGeneral.Size = new System.Drawing.Size(384, 560);
+            this.tabGeneral.Size = new System.Drawing.Size(384, 566);
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -668,11 +673,12 @@ namespace EVEMon
             this.verticalFlowPanel1.Controls.Add(this.groupBox12);
             this.verticalFlowPanel1.Controls.Add(this.groupBox15);
             this.verticalFlowPanel1.Controls.Add(this.gbAPIConfiguration);
+            this.verticalFlowPanel1.Controls.Add(this.compatibilityGroupBox);
             this.verticalFlowPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verticalFlowPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.verticalFlowPanel1.Location = new System.Drawing.Point(3, 3);
             this.verticalFlowPanel1.Name = "verticalFlowPanel1";
-            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 554);
+            this.verticalFlowPanel1.Size = new System.Drawing.Size(378, 560);
             this.verticalFlowPanel1.TabIndex = 7;
             // 
             // groupBox1
@@ -1503,26 +1509,26 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode10.Name = "Node1";
-            treeNode10.Text = "Node1";
-            treeNode11.Name = "Node2";
-            treeNode11.Text = "Node2";
-            treeNode12.Name = "Node3";
-            treeNode12.Text = "Node3";
-            treeNode13.Name = "Node4";
-            treeNode13.Text = "Node4";
-            treeNode14.Name = "Node5";
-            treeNode14.Text = "Node5";
-            treeNode15.Name = "Node6";
-            treeNode15.Text = "Node6";
-            treeNode16.Name = "Node7";
-            treeNode16.Text = "Node7";
-            treeNode17.Name = "Node8";
-            treeNode17.Text = "Node8";
-            treeNode18.Name = "Node0";
-            treeNode18.Text = "Node0";
+            treeNode19.Name = "Node1";
+            treeNode19.Text = "Node1";
+            treeNode20.Name = "Node2";
+            treeNode20.Text = "Node2";
+            treeNode21.Name = "Node3";
+            treeNode21.Text = "Node3";
+            treeNode22.Name = "Node4";
+            treeNode22.Text = "Node4";
+            treeNode23.Name = "Node5";
+            treeNode23.Text = "Node5";
+            treeNode24.Name = "Node6";
+            treeNode24.Text = "Node6";
+            treeNode25.Name = "Node7";
+            treeNode25.Text = "Node7";
+            treeNode26.Name = "Node8";
+            treeNode26.Text = "Node8";
+            treeNode27.Name = "Node0";
+            treeNode27.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode18});
+            treeNode27});
             this.tvlist.Size = new System.Drawing.Size(361, 165);
             this.tvlist.TabIndex = 9;
             // 
@@ -2731,7 +2737,7 @@ namespace EVEMon
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(236, 598);
+            this.btnOk.Location = new System.Drawing.Point(236, 604);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 3;
@@ -2788,13 +2794,45 @@ namespace EVEMon
             // 
             this.chName.Text = "Sample";
             // 
+            // compatibilityGroupBox
+            // 
+            this.compatibilityGroupBox.Controls.Add(label29);
+            this.compatibilityGroupBox.Controls.Add(this.compatibilityCombo);
+            this.compatibilityGroupBox.Location = new System.Drawing.Point(3, 493);
+            this.compatibilityGroupBox.Name = "compatibilityGroupBox";
+            this.compatibilityGroupBox.Size = new System.Drawing.Size(366, 55);
+            this.compatibilityGroupBox.TabIndex = 9;
+            this.compatibilityGroupBox.TabStop = false;
+            this.compatibilityGroupBox.Text = "Compatibility";
+            // 
+            // compatibilityCombo
+            // 
+            this.compatibilityCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.compatibilityCombo.FormattingEnabled = true;
+            this.compatibilityCombo.Items.AddRange(new object[] {
+            "Windows",
+            "Mac OS + Wine"});
+            this.compatibilityCombo.Location = new System.Drawing.Point(231, 20);
+            this.compatibilityCombo.Name = "compatibilityCombo";
+            this.compatibilityCombo.Size = new System.Drawing.Size(121, 21);
+            this.compatibilityCombo.TabIndex = 0;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new System.Drawing.Point(6, 23);
+            label29.Name = "label29";
+            label29.Size = new System.Drawing.Size(222, 13);
+            label29.TabIndex = 1;
+            label29.Text = "Environment (requires restart to take effect)";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(404, 633);
+            this.ClientSize = new System.Drawing.Size(404, 639);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.tabControl1);
@@ -2928,6 +2966,8 @@ namespace EVEMon
             this.groupBox14.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
             this.flowLayoutPanel9.PerformLayout();
+            this.compatibilityGroupBox.ResumeLayout(false);
+            this.compatibilityGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3144,5 +3184,7 @@ namespace EVEMon
         private System.Windows.Forms.TextBox EveProxyURLTextBox;
         private System.Windows.Forms.GroupBox gbMainWindow;
         private System.Windows.Forms.CheckBox cbHideOverviewTab;
+        private System.Windows.Forms.GroupBox compatibilityGroupBox;
+        private System.Windows.Forms.ComboBox compatibilityCombo;
     }
 }

@@ -485,6 +485,14 @@ namespace EVEMon.Common
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the running platform, so that EVEMon can apply miscellaneous tweaks at runtime
+        /// </summary>
+        public CompatibilityMode Compatibility
+        {
+            get;
+            set;
+        }
         #endregion
 
         #region Settings Form - Look and Feel
@@ -3363,4 +3371,20 @@ namespace EVEMon.Common
             return null;
         }
     }
+
+    /// <summary>
+    /// Describes the target platform to allow EVEMon to apply different tweaks at runtime
+    /// </summary>
+    public enum CompatibilityMode
+    {
+        /// <summary>
+        /// Windows and Linux + Wine
+        /// </summary>
+        Default = 0,
+        /// <summary>
+        /// Mac OS + Wine
+        /// </summary>
+        MacOSWine = 1
+    }
 }
+

@@ -74,6 +74,16 @@ namespace EVEMon.SkillPlanner
             // Force an update
             m_settings_WorksafeChanged(null, null);
             m_settings_SkillHighlightingChanged(null, null);
+
+            // Compatibility mode : Mac OS
+            if (m_settings.Compatibility == CompatibilityMode.MacOSWine)
+            {
+                // Under MacOS + Wine, the upper toolbar is not displayed
+                // We move it at the top of the first tab
+                this.Controls.Remove(this.upperToolStrip);
+                this.tabControl.TabPages[0].Controls.Add(this.upperToolStrip);
+                this.tabControl.TabPages[0].Controls.SetChildIndex(this.upperToolStrip, 0);
+            }
         }
 
         void tsddiTemp_MouseEnter(object sender, EventArgs e)

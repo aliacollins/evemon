@@ -33,7 +33,7 @@ namespace EVEMon.SkillPlanner
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tslSuggestion = new System.Windows.Forms.ToolStripStatusLabel();
             this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.upperToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsddbSave = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsmiCharacter = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +60,7 @@ namespace EVEMon.SkillPlanner
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.statusStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.upperToolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpPlanQueue.SuspendLayout();
             this.tpSkillBrowser.SuspendLayout();
@@ -97,9 +97,9 @@ namespace EVEMon.SkillPlanner
             this.slblStatusText.Size = new System.Drawing.Size(79, 17);
             this.slblStatusText.Text = "0 Skills Planned";
             // 
-            // toolStrip1
+            // upperToolStrip
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.upperToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsddbPlans,
             this.tsddbSave,
             this.tsbDeletePlan,
@@ -109,11 +109,11 @@ namespace EVEMon.SkillPlanner
             this.tsbImplantCalculator,
             this.toolStripSeparator1,
             this.tsbAttributesOptimization});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(718, 25);
-            this.toolStrip1.TabIndex = 3;
-            this.toolStrip1.Text = "toolStrip1";
+            this.upperToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.upperToolStrip.Name = "upperToolStrip";
+            this.upperToolStrip.Size = new System.Drawing.Size(718, 25);
+            this.upperToolStrip.TabIndex = 3;
+            this.upperToolStrip.Text = "toolStrip1";
             // 
             // tsddbPlans
             // 
@@ -139,14 +139,14 @@ namespace EVEMon.SkillPlanner
             // tsmiCharacter
             // 
             this.tsmiCharacter.Name = "tsmiCharacter";
-            this.tsmiCharacter.Size = new System.Drawing.Size(152, 22);
+            this.tsmiCharacter.Size = new System.Drawing.Size(133, 22);
             this.tsmiCharacter.Text = "Character";
             this.tsmiCharacter.Click += new System.EventHandler(this.tsmiCharacter_Click);
             // 
             // tsmiPlan
             // 
             this.tsmiPlan.Name = "tsmiPlan";
-            this.tsmiPlan.Size = new System.Drawing.Size(152, 22);
+            this.tsmiPlan.Size = new System.Drawing.Size(133, 22);
             this.tsmiPlan.Text = "Plan";
             this.tsmiPlan.Click += new System.EventHandler(this.tsmiPlan_Click);
             // 
@@ -343,7 +343,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(718, 618);
             this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.upperToolStrip);
             this.Controls.Add(this.statusStrip1);
             this.MinimumSize = new System.Drawing.Size(666, 353);
             this.Name = "NewPlannerWindow";
@@ -355,8 +355,8 @@ namespace EVEMon.SkillPlanner
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewPlannerWindow_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.upperToolStrip.ResumeLayout(false);
+            this.upperToolStrip.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tpPlanQueue.ResumeLayout(false);
             this.tpSkillBrowser.ResumeLayout(false);
@@ -371,7 +371,7 @@ namespace EVEMon.SkillPlanner
 
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel slblStatusText;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip upperToolStrip;
         private System.Windows.Forms.ToolStripButton tsbDeletePlan;
         private System.Windows.Forms.ToolStripStatusLabel tslSuggestion;
         private System.Windows.Forms.ToolTip ttToolTip;
