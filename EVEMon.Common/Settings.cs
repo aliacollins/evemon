@@ -2486,13 +2486,25 @@ namespace EVEMon.Common
                         m_saveTimer.Dispose();
                         m_saveTimer = null;
                     }
-                    string fn = SettingsFileName;
+
+                    // Save in temp file
+                    string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                     //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForDomain())
                     //using (IsolatedStorageFileStream s = new IsolatedStorageFileStream(StoreFileName(m_key), FileMode.Create, store))
-                    using (FileStream s = new FileStream(fn, FileMode.Create, FileAccess.Write))
+                    using (FileStream s = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
                     {
                         SaveTo(s);
+                        s.Flush();
                     }
+
+                    // Overwrite settings file
+                    string fn = SettingsFileName;
+                    if (File.Exists(fn)) File.Delete(fn);
+                    File.Move(tempFileName, fn);
+
+                    // Delete temp file
+                    File.Delete(tempFileName);
+
                     // Reset savePending flag
                     m_savePending = false;
                 }
