@@ -77,7 +77,7 @@ namespace EVEMon
             // 
             this.label5.Location = new System.Drawing.Point(13, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(475, 33);
+            this.label5.Size = new System.Drawing.Size(468, 33);
             this.label5.TabIndex = 12;
             this.label5.Text = "I think Little Fluffy is dead, Jimmy. \r\nEVEMon will be shut down. Restart and try" +
                 " again to test whether the problem repeats.";
@@ -193,16 +193,16 @@ namespace EVEMon
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(16, 312);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(127, 17);
+            this.label3.Size = new System.Drawing.Size(97, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "What can you do ?";
             // 
             // pbBugImage
             // 
             this.pbBugImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbBugImage.Location = new System.Drawing.Point(507, 3);
+            this.pbBugImage.Location = new System.Drawing.Point(487, 13);
             this.pbBugImage.Name = "pbBugImage";
-            this.pbBugImage.Size = new System.Drawing.Size(64, 65);
+            this.pbBugImage.Size = new System.Drawing.Size(81, 65);
             this.pbBugImage.TabIndex = 2;
             this.pbBugImage.TabStop = false;
             // 
@@ -223,7 +223,7 @@ namespace EVEMon
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(267, 13);
+            this.label1.Size = new System.Drawing.Size(231, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "EVEMon has encountered an unexpected error";
             // 

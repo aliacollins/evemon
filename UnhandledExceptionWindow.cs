@@ -29,7 +29,7 @@ namespace EVEMon
             try
             {
                 Assembly casm = Assembly.GetExecutingAssembly();
-                using (Stream s = casm.GetManifestResourceStream("EVEMon.omg.jpg"))
+                using (Stream s = casm.GetManifestResourceStream(casm.GetName().Name + ".bee.jpg"))
                 using (Image i = Image.FromStream(s))
                 {
                     int oHeight = i.Height;
