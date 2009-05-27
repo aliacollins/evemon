@@ -1093,10 +1093,13 @@ namespace EVEMon
             foreach (TabPage tp in tcCharacterTabs.TabPages)
             {
                 CharacterMonitor cm = tp.Controls[0] as CharacterMonitor;
-                CharacterInfo gci = cm.GrandCharacterInfo;
-                if (gci != null && gci.Name == charName)
+                if (cm != null)
                 {
-                    return cm;
+                    CharacterInfo gci = cm.GrandCharacterInfo;
+                    if (gci != null && gci.Name == charName)
+                    {
+                        return cm;
+                    }
                 }
             }
             return null;
