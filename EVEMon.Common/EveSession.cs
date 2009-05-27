@@ -496,10 +496,17 @@ namespace EVEMon.Common
 #if DEBUG_SINGLETHREAD
                 grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowAllPublicSkills);
 #else
-                invokeControl.Invoke(new MethodInvoker(delegate
+                try
                 {
-                    grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowAllPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
-                }));
+                    invokeControl.Invoke(new MethodInvoker(delegate
+                    {
+                        grandCharacterInfo.AssignFromSerializableCharacterSheet(sci, m_settings.ShowAllPublicSkills, m_settings.ShowAllPublicSkills, m_settings.SkillPlannerHighlightPartialSkills);
+                    }));
+                }
+                catch (ObjectDisposedException exc)
+                {
+                    ExceptionHandler.LogException(exc, true);
+                } 
 #endif
                 return sci.TimeLeftInCache;
             }
@@ -522,10 +529,17 @@ namespace EVEMon.Common
                 }
                 try
                 {
-                    invokeControl.Invoke(new MethodInvoker(delegate
+                    try
                     {
-                        grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
-                    }));
+                        invokeControl.Invoke(new MethodInvoker(delegate
+                        {
+                            grandCharacterInfo.AssignFromSerializableSkillTrainingInfo(ssti);
+                        }));
+                    }
+                    catch (ObjectDisposedException exc)
+                    {
+                        ExceptionHandler.LogException(exc, true);
+                    }
                 }
                 catch (Exception) { }
                 return (1000 * ssti.TimerToNextUpdate);
