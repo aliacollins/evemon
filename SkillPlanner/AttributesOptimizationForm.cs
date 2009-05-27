@@ -261,7 +261,7 @@ namespace EVEMon.SkillPlanner
         public EveAttributeScratchpad GetScratchpad(out bool isNew)
         {
             isNew = m_pluggableProvidesNewScratchpad;
-            return m_pluggableScratchpad;
+            return m_pluggableScratchpad.Clone();
         }
         #endregion
     }
