@@ -394,6 +394,7 @@ namespace EVEMon.SkillPlanner
                 m_skillEnablesForm.SetSkill(s);
             }
             m_skillEnablesForm.Show();
+            m_skillEnablesForm.Focus();
         }
 
         private SkillEnablesForm m_skillEnablesForm = null;
