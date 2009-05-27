@@ -3410,13 +3410,13 @@ namespace EVEMon.Common
     public enum CompatibilityMode
     {
         /// <summary>
-        /// Windows and Linux + Wine
+        /// Windows
         /// </summary>
         Default = 0,
         /// <summary>
-        /// Mac OS + Wine
+        /// Wine (Linux & MacOS X)
         /// </summary>
-        MacOSWine = 1
+        Wine = 1
     }
 }
 

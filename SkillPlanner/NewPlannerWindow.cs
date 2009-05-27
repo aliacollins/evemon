@@ -79,9 +79,9 @@ namespace EVEMon.SkillPlanner
             m_settings_SkillHighlightingChanged(null, null);
 
             // Compatibility mode : Mac OS
-            if (m_settings.Compatibility == CompatibilityMode.MacOSWine)
+            if (m_settings.Compatibility == CompatibilityMode.Wine)
             {
-                // Under MacOS + Wine, the upper toolbar is not displayed
+                // Under Wine, the upper toolbar is not displayed
                 // We move it at the top of the first tab
                 this.Controls.Remove(this.upperToolStrip);
                 this.tabControl.TabPages[0].Controls.Add(this.upperToolStrip);

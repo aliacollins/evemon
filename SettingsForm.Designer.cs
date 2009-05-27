@@ -2811,7 +2811,7 @@ namespace EVEMon
             this.compatibilityCombo.FormattingEnabled = true;
             this.compatibilityCombo.Items.AddRange(new object[] {
             "Windows",
-            "Mac OS + Wine"});
+            "Wine"});
             this.compatibilityCombo.Location = new System.Drawing.Point(231, 20);
             this.compatibilityCombo.Name = "compatibilityCombo";
             this.compatibilityCombo.Size = new System.Drawing.Size(121, 21);
