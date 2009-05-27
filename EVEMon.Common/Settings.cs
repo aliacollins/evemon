@@ -2397,7 +2397,7 @@ namespace EVEMon.Common
                     // If the settings loaded OK, make a backup as 'last good settings'
                     if (s != null)
                     {
-                        File.Copy(settingsFile, backupFile, true);
+                        LocalFileSystem.OverwriteOrWarnTheUser(settingsFile, backupFile, OverwriteOperation.Copy);
                     }
                 }
                 if (s == null)
@@ -2498,14 +2498,7 @@ namespace EVEMon.Common
                     }
 
                     // Overwrite settings file
-                    string fn = SettingsFileName;
-                    if (File.Exists(fn)) File.Delete(fn);
-                    File.Move(tempFileName, fn);
-
-                    // Delete temp file
-                    File.Delete(tempFileName);
-
-                    // Reset savePending flag
+                    LocalFileSystem.OverwriteOrWarnTheUser(tempFileName, SettingsFileName, OverwriteOperation.Move);
                     m_savePending = false;
                 }
             }

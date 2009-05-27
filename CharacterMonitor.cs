@@ -474,37 +474,45 @@ namespace EVEMon
         /// <param name="timeLeftInCache">The time left in cache - that is, the time before the next update to the sheet on eve-o.</param>
         private void GrandCharacterUpdatedCallback(EveSession s, int timeLeftInCache)
         {
-            this.Invoke(new MethodInvoker(delegate
+            try
             {
-                if (m_session.HasError)
+                this.Invoke(new MethodInvoker(delegate
                 {
-                    StopThrobber();
-                    CharacterDownloadFailedCallback();
-                }
-                else
-                {
-                    tlbError.Visible = false;
-                    skillsPanel.Visible = true;
-
-                    m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
-                    ttToolTip.SetToolTip(throbber, "Click to update now.");
-                    ttToolTip.IsBalloon = true;
-                    //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
-                    tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
-                    if (m_settings.DisableXMLAutoUpdate == false)
+                    if (m_session.HasError)
                     {
-                        tmrUpdateCharacter.Enabled = true;
+                        StopThrobber();
+                        CharacterDownloadFailedCallback();
                     }
-
-                    if (tmrMinTrainingSkillRetry.Enabled == false)
+                    else
                     {
-                        miHitTrainingSkill.Enabled = true;
-                        m_canUpdateSkills = true;
-                    }
+                        tlbError.Visible = false;
+                        lbSkills.Visible = true;
 
-                    StopThrobber();
-                }
-            }));
+                        m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
+                        ttToolTip.SetToolTip(throbber, "Click to update now.");
+                        ttToolTip.IsBalloon = true;
+                        //timeLeftInCache == 0 is the same as timeLeftInCache == 60 minutes.
+                        tmrUpdateCharacter.Interval = timeLeftInCache == 0 ? 3600000 : timeLeftInCache;
+                        if (m_settings.DisableXMLAutoUpdate == false)
+                        {
+                            tmrUpdateCharacter.Enabled = true;
+                        }
+
+                        if (tmrMinTrainingSkillRetry.Enabled == false)
+                        {
+                            miHitTrainingSkill.Enabled = true;
+                            m_canUpdateSkills = true;
+                        }
+
+                        StopThrobber();
+                    }
+                }));
+            }
+            // Can occurs at the end of the application
+            catch (InvalidOperationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+            }
         }
 #endif
 
@@ -910,14 +918,17 @@ namespace EVEMon
                     // pick the largest image
                     string eveCacheFileName = sl.Values[sl.Count - 1];
 
-                    FileStream fs1 = new FileStream(eveCacheFileName, FileMode.Open);
-                    FileStream fs2 = new FileStream(cacheFileName, FileMode.Create);
-                    i = Image.FromStream(fs1, true);
-                    i.Save(fs2, ImageFormat.Png);
-                    fs1.Close();
-                    fs1.Dispose();
-                    fs2.Close();
-                    fs2.Dispose();
+                    // Convert the image to png and copy it to a temp file
+                    i = Image.FromFile(eveCacheFileName);
+                    string tempFileName = Path.GetTempFileName();
+                    using (FileStream fileStream = new FileStream(tempFileName, FileMode.Create))
+                    {
+                        i.Save(fileStream, ImageFormat.Png);
+                        fileStream.Flush();
+                    }
+
+                    // Overwrite the portrait file
+                    LocalFileSystem.OverwriteOrWarnTheUser(tempFileName, cacheFileName, OverwriteOperation.Move);
                 }
                 else
                 {

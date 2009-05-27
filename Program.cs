@@ -12,6 +12,9 @@ namespace EVEMon
 {
     internal static class Program
     {
+        // See ApplicationExitCallback for explanations
+        private static bool m_exitRequested = false;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -29,6 +32,7 @@ namespace EVEMon
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+            Application.ApplicationExit += new EventHandler(ApplicationExitCallback);
 
             bool startMinimized = false;
             bool _apiDebugMode = false;
@@ -64,23 +68,48 @@ namespace EVEMon
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
+            // Initialize APIState and Settings
             Singleton.Instance<APIState>().DebugMode = _apiDebugMode;
 
+            // Check time synchronization
             if (CommonContext.Settings.CheckTimeOnStartup)
             {
                 TimeCheck.CheckIsSynchronised(TimeCheckCallback);
             }
 
-            Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
-            Settings.GetInstance().SaveImmediate();
-
-            SetRelocatorState(false);
-            if (m_logger != null)
+            try
             {
-                m_logger.Dispose();
-            }
+                // Did we requested an exit before we enter Run() ?
+                // See ApplicationExitCallback
+                if (m_exitRequested) return;
 
-            G15Handler.Shutdown();
+                // Main application's loop
+                Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
+            }
+            // Clean up
+            finally
+            {
+                Settings.GetInstance().SaveImmediate();
+
+                SetRelocatorState(false);
+                if (m_logger != null)
+                {
+                    m_logger.Dispose();
+                }
+
+                G15Handler.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// If <see cref="Application.Exit()"/> is called before the <see cref="Application.Run()"/> method, then it won't occur. 
+        /// So, here, we set up a boolean to prevent that.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void ApplicationExitCallback(object sender, EventArgs e)
+        {
+            m_exitRequested = true;
         }
 
         private static void TimeCheckCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime)

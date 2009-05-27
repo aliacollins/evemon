@@ -38,11 +38,7 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        FileStream fs = new FileStream(cacheFileName, FileMode.Open);
-                        Image i = Image.FromStream(fs, true);
-                        fs.Close();
-                        fs.Dispose();
-
+                        Image i = Image.FromFile(cacheFileName, true); 
                         callback(null, i);
                         return;
                     }
@@ -95,20 +91,44 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Adds the image to the memory cache, flush the cache to the hard drive, then save the image to a cached file.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="i"></param>
         private static void AddImageToCache(string url, Image i)
         {
             string cacheName = GetCacheName(url);
-            using (StreamWriter sw = new StreamWriter(Path.Combine(ImageCacheDirectory, "file.map"), true))
+
+
+            // Make sure the file map is writeable, or attemp to make it so by prompting the user. Returns on denial.
+            string mapFileName = Path.Combine(ImageCacheDirectory, "file.map");
+            if (File.Exists(mapFileName))
+            {
+                if (!LocalFileSystem.TryMakeWritable(mapFileName)) return;
+            }
+
+            // Appends this entry to the map file
+            using (StreamWriter sw = new StreamWriter(mapFileName, true))
             {
                 sw.WriteLine(String.Format("{0} {1}", cacheName, url));
                 sw.Close();
             }
-            string fn = Path.Combine(ImageCacheDirectory, cacheName);
+
+            // Saves the image file
             try
             {
-                FileStream fs = new FileStream(fn, FileMode.Create);
-                i.Save(fs, ImageFormat.Png);
-                fs.Close();
+                // Write this image to a temp file name
+                string tempFileName = Path.GetTempFileName();
+                using (FileStream fs = new FileStream(tempFileName, FileMode.Create))
+                {
+                    i.Save(fs, ImageFormat.Png);
+                    fs.Flush();
+                }
+
+                // Move to the file
+                string fn = Path.Combine(ImageCacheDirectory, cacheName);
+                LocalFileSystem.OverwriteOrWarnTheUser(tempFileName, fn, OverwriteOperation.Move);
             }
             catch (Exception e)
             {
