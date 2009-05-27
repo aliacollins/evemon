@@ -57,7 +57,6 @@ namespace EVEMon
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.pbCharImage = new System.Windows.Forms.PictureBox();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
-            this.throbber = new EVEMon.Throbber();
             this.cmsThrobberMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miHitEveO = new System.Windows.Forms.ToolStripMenuItem();
             this.miHitTrainingSkill = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +78,10 @@ namespace EVEMon
             this.lbErrorMessage = new System.Windows.Forms.Label();
             this.tlbError = new System.Windows.Forms.TableLayoutPanel();
             this.tbXmlError = new System.Windows.Forms.TextBox();
+            this.noSkillsLabel = new System.Windows.Forms.Label();
+            this.skillsPanel = new System.Windows.Forms.Panel();
             this.lbSkills = new EVEMon.NoFlickerListBox();
+            this.throbber = new EVEMon.Throbber();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -90,12 +92,13 @@ namespace EVEMon
             this.flpCharacterInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).BeginInit();
             this.flpThrobber.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.cmsThrobberMenu.SuspendLayout();
             this.SkillHeaderFlowLayout.SuspendLayout();
             this.cmsPictureOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbError)).BeginInit();
             this.tlbError.SuspendLayout();
+            this.skillsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // lblCharacterName
@@ -104,37 +107,37 @@ namespace EVEMon
             this.lblCharacterName.Location = new System.Drawing.Point(0, 0);
             this.lblCharacterName.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCharacterName.Name = "lblCharacterName";
-            this.lblCharacterName.Size = new System.Drawing.Size(129, 18);
+            this.lblCharacterName.Size = new System.Drawing.Size(84, 13);
             this.lblCharacterName.TabIndex = 0;
             this.lblCharacterName.Text = "Character Name";
             // 
             // lblBioInfo
             // 
             this.lblBioInfo.AutoSize = true;
-            this.lblBioInfo.Location = new System.Drawing.Point(0, 18);
+            this.lblBioInfo.Location = new System.Drawing.Point(0, 13);
             this.lblBioInfo.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblBioInfo.Name = "lblBioInfo";
-            this.lblBioInfo.Size = new System.Drawing.Size(44, 13);
+            this.lblBioInfo.Size = new System.Drawing.Size(43, 13);
             this.lblBioInfo.TabIndex = 1;
             this.lblBioInfo.Text = "Bio Info";
             // 
             // lblCorpInfo
             // 
             this.lblCorpInfo.AutoSize = true;
-            this.lblCorpInfo.Location = new System.Drawing.Point(0, 31);
+            this.lblCorpInfo.Location = new System.Drawing.Point(0, 26);
             this.lblCorpInfo.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCorpInfo.Name = "lblCorpInfo";
-            this.lblCorpInfo.Size = new System.Drawing.Size(87, 13);
+            this.lblCorpInfo.Size = new System.Drawing.Size(82, 13);
             this.lblCorpInfo.TabIndex = 2;
             this.lblCorpInfo.Text = "Corporation Info";
             // 
             // lblBalance
             // 
             this.lblBalance.AutoSize = true;
-            this.lblBalance.Location = new System.Drawing.Point(0, 44);
+            this.lblBalance.Location = new System.Drawing.Point(0, 39);
             this.lblBalance.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblBalance.Name = "lblBalance";
-            this.lblBalance.Size = new System.Drawing.Size(92, 13);
+            this.lblBalance.Size = new System.Drawing.Size(93, 13);
             this.lblBalance.TabIndex = 3;
             this.lblBalance.Text = "Balance: 0.00 ISK";
             // 
@@ -143,7 +146,7 @@ namespace EVEMon
             this.lblWillpower.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblWillpower.AutoSize = true;
-            this.lblWillpower.Location = new System.Drawing.Point(0, 112);
+            this.lblWillpower.Location = new System.Drawing.Point(0, 107);
             this.lblWillpower.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblWillpower.Name = "lblWillpower";
             this.lblWillpower.Size = new System.Drawing.Size(62, 13);
@@ -156,10 +159,10 @@ namespace EVEMon
             this.lblMemory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblMemory.AutoSize = true;
-            this.lblMemory.Location = new System.Drawing.Point(0, 99);
+            this.lblMemory.Location = new System.Drawing.Point(0, 94);
             this.lblMemory.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblMemory.Name = "lblMemory";
-            this.lblMemory.Size = new System.Drawing.Size(54, 13);
+            this.lblMemory.Size = new System.Drawing.Size(53, 13);
             this.lblMemory.TabIndex = 7;
             this.lblMemory.Text = "0 Memory";
             this.lblMemory.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
@@ -169,7 +172,7 @@ namespace EVEMon
             this.lblPerception.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblPerception.AutoSize = true;
-            this.lblPerception.Location = new System.Drawing.Point(0, 86);
+            this.lblPerception.Location = new System.Drawing.Point(0, 81);
             this.lblPerception.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblPerception.Name = "lblPerception";
             this.lblPerception.Size = new System.Drawing.Size(67, 13);
@@ -182,10 +185,10 @@ namespace EVEMon
             this.lblCharisma.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblCharisma.AutoSize = true;
-            this.lblCharisma.Location = new System.Drawing.Point(0, 60);
+            this.lblCharisma.Location = new System.Drawing.Point(0, 55);
             this.lblCharisma.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCharisma.Name = "lblCharisma";
-            this.lblCharisma.Size = new System.Drawing.Size(60, 13);
+            this.lblCharisma.Size = new System.Drawing.Size(59, 13);
             this.lblCharisma.TabIndex = 4;
             this.lblCharisma.Text = "0 Charisma";
             this.lblCharisma.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
@@ -195,10 +198,10 @@ namespace EVEMon
             this.lblIntelligence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.lblIntelligence.AutoSize = true;
-            this.lblIntelligence.Location = new System.Drawing.Point(0, 73);
+            this.lblIntelligence.Location = new System.Drawing.Point(0, 68);
             this.lblIntelligence.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblIntelligence.Name = "lblIntelligence";
-            this.lblIntelligence.Size = new System.Drawing.Size(71, 13);
+            this.lblIntelligence.Size = new System.Drawing.Size(70, 13);
             this.lblIntelligence.TabIndex = 5;
             this.lblIntelligence.Text = "0 Intelligence";
             this.lblIntelligence.MouseHover += new System.EventHandler(this.lblAttribute_MouseHover);
@@ -249,7 +252,7 @@ namespace EVEMon
             this.flpStatusLabels.Location = new System.Drawing.Point(0, 0);
             this.flpStatusLabels.Margin = new System.Windows.Forms.Padding(0);
             this.flpStatusLabels.Name = "flpStatusLabels";
-            this.flpStatusLabels.Size = new System.Drawing.Size(115, 39);
+            this.flpStatusLabels.Size = new System.Drawing.Size(96, 39);
             this.flpStatusLabels.TabIndex = 15;
             this.flpStatusLabels.WrapContents = false;
             // 
@@ -259,7 +262,7 @@ namespace EVEMon
             this.lblCurrentlyTraining.Location = new System.Drawing.Point(0, 0);
             this.lblCurrentlyTraining.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblCurrentlyTraining.Name = "lblCurrentlyTraining";
-            this.lblCurrentlyTraining.Size = new System.Drawing.Size(112, 13);
+            this.lblCurrentlyTraining.Size = new System.Drawing.Size(92, 13);
             this.lblCurrentlyTraining.TabIndex = 2;
             this.lblCurrentlyTraining.Text = "Currently Training:";
             // 
@@ -269,7 +272,7 @@ namespace EVEMon
             this.lblSPPerHour.Location = new System.Drawing.Point(0, 13);
             this.lblSPPerHour.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblSPPerHour.Name = "lblSPPerHour";
-            this.lblSPPerHour.Size = new System.Drawing.Size(53, 13);
+            this.lblSPPerHour.Size = new System.Drawing.Size(54, 13);
             this.lblSPPerHour.TabIndex = 0;
             this.lblSPPerHour.Text = "X sp/hour";
             // 
@@ -280,7 +283,7 @@ namespace EVEMon
             this.lblScheduleWarning.Location = new System.Drawing.Point(0, 26);
             this.lblScheduleWarning.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblScheduleWarning.Name = "lblScheduleWarning";
-            this.lblScheduleWarning.Size = new System.Drawing.Size(106, 13);
+            this.lblScheduleWarning.Size = new System.Drawing.Size(93, 13);
             this.lblScheduleWarning.TabIndex = 1;
             this.lblScheduleWarning.Text = "Schedule Conflict!";
             this.lblScheduleWarning.Visible = false;
@@ -293,7 +296,7 @@ namespace EVEMon
             this.flpStatusValues.Controls.Add(this.lblTrainingRemain);
             this.flpStatusValues.Controls.Add(this.lblTrainingEst);
             this.flpStatusValues.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpStatusValues.Location = new System.Drawing.Point(115, 0);
+            this.flpStatusValues.Location = new System.Drawing.Point(96, 0);
             this.flpStatusValues.Margin = new System.Windows.Forms.Padding(0);
             this.flpStatusValues.Name = "flpStatusValues";
             this.flpStatusValues.Size = new System.Drawing.Size(47, 39);
@@ -317,7 +320,7 @@ namespace EVEMon
             this.lblTrainingRemain.Location = new System.Drawing.Point(0, 13);
             this.lblTrainingRemain.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblTrainingRemain.Name = "lblTrainingRemain";
-            this.lblTrainingRemain.Size = new System.Drawing.Size(11, 13);
+            this.lblTrainingRemain.Size = new System.Drawing.Size(10, 13);
             this.lblTrainingRemain.TabIndex = 1;
             this.lblTrainingRemain.Text = ".";
             // 
@@ -328,7 +331,7 @@ namespace EVEMon
             this.lblTrainingEst.Location = new System.Drawing.Point(0, 26);
             this.lblTrainingEst.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblTrainingEst.Name = "lblTrainingEst";
-            this.lblTrainingEst.Size = new System.Drawing.Size(11, 13);
+            this.lblTrainingEst.Size = new System.Drawing.Size(10, 13);
             this.lblTrainingEst.TabIndex = 2;
             this.lblTrainingEst.Text = ".";
             // 
@@ -388,10 +391,10 @@ namespace EVEMon
             this.flpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpButtons.Controls.Add(this.llToggleAll);
             this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flpButtons.Location = new System.Drawing.Point(336, 172);
+            this.flpButtons.Location = new System.Drawing.Point(335, 172);
             this.flpButtons.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.flpButtons.Name = "flpButtons";
-            this.flpButtons.Size = new System.Drawing.Size(56, 16);
+            this.flpButtons.Size = new System.Drawing.Size(57, 16);
             this.flpButtons.TabIndex = 2;
             // 
             // llToggleAll
@@ -401,7 +404,7 @@ namespace EVEMon
             this.llToggleAll.Location = new System.Drawing.Point(3, 3);
             this.llToggleAll.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.llToggleAll.Name = "llToggleAll";
-            this.llToggleAll.Size = new System.Drawing.Size(53, 13);
+            this.llToggleAll.Size = new System.Drawing.Size(54, 13);
             this.llToggleAll.TabIndex = 0;
             this.llToggleAll.TabStop = true;
             this.llToggleAll.Text = "Toggle All";
@@ -452,29 +455,12 @@ namespace EVEMon
             this.flpThrobber.Controls.Add(this.throbber);
             this.flpThrobber.Controls.Add(this.lblUpdateTimer);
             this.flpThrobber.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpThrobber.Location = new System.Drawing.Point(361, 0);
+            this.flpThrobber.Location = new System.Drawing.Point(363, 0);
             this.flpThrobber.Margin = new System.Windows.Forms.Padding(0);
             this.flpThrobber.Name = "flpThrobber";
-            this.flpThrobber.Size = new System.Drawing.Size(31, 37);
+            this.flpThrobber.Size = new System.Drawing.Size(29, 37);
             this.flpThrobber.TabIndex = 0;
             this.flpThrobber.WrapContents = false;
-            // 
-            // throbber
-            // 
-            this.throbber.BackColor = System.Drawing.Color.Transparent;
-            this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
-            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
-            this.throbber.Location = new System.Drawing.Point(7, 0);
-            this.throbber.Margin = new System.Windows.Forms.Padding(0);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Throbber.ThrobberState.Stopped;
-            this.throbber.TabIndex = 18;
-            this.throbber.TabStop = false;
-            this.throbber.Text = "throbber1";
-            this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
             // 
             // cmsThrobberMenu
             // 
@@ -516,7 +502,7 @@ namespace EVEMon
             this.lblUpdateTimer.Location = new System.Drawing.Point(0, 24);
             this.lblUpdateTimer.Margin = new System.Windows.Forms.Padding(0);
             this.lblUpdateTimer.Name = "lblUpdateTimer";
-            this.lblUpdateTimer.Size = new System.Drawing.Size(31, 13);
+            this.lblUpdateTimer.Size = new System.Drawing.Size(29, 13);
             this.lblUpdateTimer.TabIndex = 0;
             this.lblUpdateTimer.Text = "timer";
             this.lblUpdateTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -549,7 +535,7 @@ namespace EVEMon
             this.lblSkillHeader.Location = new System.Drawing.Point(53, 0);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
             this.lblSkillHeader.Name = "lblSkillHeader";
-            this.lblSkillHeader.Size = new System.Drawing.Size(104, 52);
+            this.lblSkillHeader.Size = new System.Drawing.Size(91, 52);
             this.lblSkillHeader.TabIndex = 2;
             this.lblSkillHeader.Text = "0 Known Skills\r\n0 Total SP\r\n0 Clone Limit\r\n0 Skills at Level V";
             this.lblSkillHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -662,6 +648,28 @@ namespace EVEMon
             this.tbXmlError.Size = new System.Drawing.Size(386, 221);
             this.tbXmlError.TabIndex = 1;
             // 
+            // noSkillsLabel
+            // 
+            this.noSkillsLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.noSkillsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noSkillsLabel.ForeColor = System.Drawing.Color.DimGray;
+            this.noSkillsLabel.Location = new System.Drawing.Point(0, 0);
+            this.noSkillsLabel.Name = "noSkillsLabel";
+            this.noSkillsLabel.Size = new System.Drawing.Size(392, 266);
+            this.noSkillsLabel.TabIndex = 3;
+            this.noSkillsLabel.Text = "Skills information not available";
+            this.noSkillsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // skillsPanel
+            // 
+            this.skillsPanel.Controls.Add(this.noSkillsLabel);
+            this.skillsPanel.Controls.Add(this.lbSkills);
+            this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsPanel.Location = new System.Drawing.Point(0, 191);
+            this.skillsPanel.Name = "skillsPanel";
+            this.skillsPanel.Size = new System.Drawing.Size(392, 266);
+            this.skillsPanel.TabIndex = 3;
+            // 
             // lbSkills
             // 
             this.lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -669,7 +677,7 @@ namespace EVEMon
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
             this.lbSkills.ItemHeight = 15;
-            this.lbSkills.Location = new System.Drawing.Point(0, 191);
+            this.lbSkills.Location = new System.Drawing.Point(0, 0);
             this.lbSkills.Name = "lbSkills";
             this.lbSkills.Size = new System.Drawing.Size(392, 266);
             this.lbSkills.TabIndex = 12;
@@ -680,37 +688,22 @@ namespace EVEMon
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
             this.lbSkills.MouseLeave += new System.EventHandler(this.lbSkills_MouseLeave);
             // 
-            // SkillHeaderFlowLayout
+            // throbber
             // 
-            this.tlpInfo.SetColumnSpan(this.SkillHeaderFlowLayout, 2);
-            this.SkillHeaderFlowLayout.Controls.Add(this.CloneWarningLabel);
-            this.SkillHeaderFlowLayout.Controls.Add(this.lblSkillHeader);
-            this.SkillHeaderFlowLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillHeaderFlowLayout.Location = new System.Drawing.Point(3, 134);
-            this.SkillHeaderFlowLayout.Name = "SkillHeaderFlowLayout";
-            this.SkillHeaderFlowLayout.Size = new System.Drawing.Size(257, 54);
-            this.SkillHeaderFlowLayout.TabIndex = 19;
-            // 
-            // lblSkillHeader
-            // 
-            this.lblSkillHeader.AutoSize = true;
-            this.lblSkillHeader.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblSkillHeader.Location = new System.Drawing.Point(53, 0);
-            this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
-            this.lblSkillHeader.Name = "lblSkillHeader";
-            this.lblSkillHeader.Size = new System.Drawing.Size(104, 52);
-            this.lblSkillHeader.TabIndex = 2;
-            this.lblSkillHeader.Text = "0 Known Skills\r\n0 Total SP\r\n0 Clone Limit\r\n0 Skills at Level V";
-            this.lblSkillHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // CloneWarningLabel
-            // 
-            this.CloneWarningLabel.Image = global::EVEMon.Properties.Resources.warning32x32;
-            this.CloneWarningLabel.Location = new System.Drawing.Point(3, 0);
-            this.CloneWarningLabel.Name = "CloneWarningLabel";
-            this.CloneWarningLabel.Size = new System.Drawing.Size(47, 52);
-            this.CloneWarningLabel.TabIndex = 3;
-            this.CloneWarningLabel.Visible = false;
+            this.throbber.BackColor = System.Drawing.Color.Transparent;
+            this.throbber.ContextMenuStrip = this.cmsThrobberMenu;
+            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
+            this.throbber.Location = new System.Drawing.Point(5, 0);
+            this.throbber.Margin = new System.Windows.Forms.Padding(0);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Throbber.ThrobberState.Stopped;
+            this.throbber.TabIndex = 18;
+            this.throbber.TabStop = false;
+            this.throbber.Text = "throbber1";
+            this.ttToolTip.SetToolTip(this.throbber, "Click to update now.");
             // 
             // CharacterMonitor
             // 
@@ -718,7 +711,7 @@ namespace EVEMon
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.tlbError);
-            this.Controls.Add(this.lbSkills);
+            this.Controls.Add(this.skillsPanel);
             this.Controls.Add(this.pnlCharData);
             this.Controls.Add(this.pnlTraining);
             this.Name = "CharacterMonitor";
@@ -742,7 +735,6 @@ namespace EVEMon
             ((System.ComponentModel.ISupportInitialize)(this.pbCharImage)).EndInit();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.cmsThrobberMenu.ResumeLayout(false);
             this.SkillHeaderFlowLayout.ResumeLayout(false);
             this.SkillHeaderFlowLayout.PerformLayout();
@@ -750,6 +742,8 @@ namespace EVEMon
             ((System.ComponentModel.ISupportInitialize)(this.pbError)).EndInit();
             this.tlbError.ResumeLayout(false);
             this.tlbError.PerformLayout();
+            this.skillsPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -808,5 +802,7 @@ namespace EVEMon
         private System.Windows.Forms.FlowLayoutPanel SkillHeaderFlowLayout;
         private System.Windows.Forms.Label lblSkillHeader;
         private System.Windows.Forms.Label CloneWarningLabel;
+        private System.Windows.Forms.Label noSkillsLabel;
+        private System.Windows.Forms.Panel skillsPanel;
     }
 }

@@ -73,6 +73,7 @@ namespace EVEMon
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
+            this.noSkillsLabel.Font = FontHelper.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             this.lblCharacterName.Font = FontHelper.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             this.lblCurrentlyTraining.Font = FontHelper.GetFont("Tahoma", FontStyle.Bold);
             this.lblScheduleWarning.Font = FontHelper.GetFont("Tahoma", FontStyle.Bold);
@@ -483,7 +484,7 @@ namespace EVEMon
                 else
                 {
                     tlbError.Visible = false;
-                    lbSkills.Visible = true;
+                    skillsPanel.Visible = true;
 
                     m_nextScheduledUpdateAt = DateTime.Now + TimeSpan.FromMilliseconds(timeLeftInCache);
                     ttToolTip.SetToolTip(throbber, "Click to update now.");
@@ -1421,6 +1422,8 @@ namespace EVEMon
                 lbSkills.EndUpdate();
             }
 
+
+            noSkillsLabel.Visible = (lbSkills.Items.Count == 0);
             UpdateSkillHeaderStats();
             UpdateCachedCopy();
         }
@@ -1595,35 +1598,58 @@ namespace EVEMon
 
             // Display the error panel
             tlbError.Visible = true;
-            lbSkills.Visible = false;
+            skillsPanel.Visible = false;
 
             // Stop an exception on first run using new api interface
             try
             {
-                // Update the error message header
-                if (!String.IsNullOrEmpty(m_session.ApiErrorMessage))
+                // If session is null, an error occured while querying the characters list
+                if (m_session == null)
                 {
-                    lbErrorMessage.Text = String.Format("CCP reported : {0}\n", m_session.ApiErrorMessage);
+                    if (m_cli.Account == null)
+                    {
+                        lbErrorMessage.Text = "This character has been either transfered to an unmanaged account or deleted from the EVE universe";
+                    }
+                    else if (!String.IsNullOrEmpty(EveSession.SessionOpeningError))
+                    {
+                        lbErrorMessage.Text = EveSession.SessionOpeningError;
+                    }
+                    else
+                    {
+                        lbErrorMessage.Text = "An unknown error occured while retrieving the characters list. Please check your internet connection, the status of CCP servers, etc.";
+                    }
+
+                    tbXmlError.Text = "";
                 }
+                // Session was instantiated, which means the characters list has been correctly queried. 
+                // Odds are high the problem occured during the querying of the character's sheet
                 else
                 {
-                    lbErrorMessage.Text = "Couldn't retrieve the data. There may be a problem with your connection, the CCP servers or something else. If all of that seems fine, consider reporting a bug on evemon's forums at Battleclinc.com";
-                }
+                    // Session was fine, there was an error written in the XML stream returned by CCP when querying the character's sheet
+                    if (!String.IsNullOrEmpty(m_session.ApiErrorMessage))
+                    {
+                        lbErrorMessage.Text = "CCP reported : " + m_session.ApiErrorMessage;
+                    }
+                    // Something odd happened 
+                    else
+                    {
+                        lbErrorMessage.Text = "An unknown error occured.";
+                    }
 
+                    // Display the content of the xml document
+                    if (m_session.XmlDocument != null)
+                    {
+                        XmlWriterSettings settings = new XmlWriterSettings();
+                        settings.Indent = true;
+                        settings.NewLineHandling = NewLineHandling.Replace;
 
-                // Displaye the content of the xml document
-                if (m_session.XmlDocument != null)
-                {
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Indent = true;
-                    settings.NewLineHandling = NewLineHandling.Replace;
+                        StringBuilder xmlBuilder = new StringBuilder();
+                        XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
+                        m_session.XmlDocument.WriteContentTo(xmlWriter);
+                        xmlWriter.Flush();
 
-                    StringBuilder xmlBuilder = new StringBuilder();
-                    XmlWriter xmlWriter = XmlWriter.Create(xmlBuilder, settings);
-                    m_session.XmlDocument.WriteContentTo(xmlWriter);
-                    xmlWriter.Flush();
-
-                    tbXmlError.Text = xmlBuilder.ToString();
+                        tbXmlError.Text = xmlBuilder.ToString();
+                    }
                 }
             }
             catch (Exception) { }

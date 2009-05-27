@@ -58,6 +58,15 @@ namespace EVEMon.Common
         #region API stuff
         private string m_apiErrorMessage;
         private int m_apiErrorCode;
+        private static string m_sessionOpeningError = "";
+
+        /// <summary>
+        /// When the session instantiation failed, an error is stored here.
+        /// </summary>
+        public static string SessionOpeningError
+        {
+            get { return m_sessionOpeningError; }
+        }
 
         public static string ApiKeyUrl
         {
@@ -206,6 +215,7 @@ namespace EVEMon.Common
         {
             m_userId = userId;
             m_apiKey = apiKey;
+            m_sessionOpeningError = "";
             Settings m_settings = Settings.GetInstance();
             AccountDetails acc = m_settings.FindAccount(m_userId);
             if (acc != null)
@@ -219,7 +229,18 @@ namespace EVEMon.Common
             }
             catch (HttpWebServiceException ex)
             {
+                m_sessionOpeningError = ex.Message;
                 throw new ApplicationException(ex.Message);
+            }
+            catch (InvalidDataException ex)
+            {
+                m_sessionOpeningError = "CCP reported : " + m_characterListError;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                m_sessionOpeningError = ex.Message;
+                throw ex;
             }
         }
 
