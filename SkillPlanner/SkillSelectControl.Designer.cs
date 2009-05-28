@@ -249,6 +249,7 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Size = new System.Drawing.Size(200, 313);
             this.lbSearchList.TabIndex = 46;
             this.lbSearchList.Visible = false;
+            this.lbSearchList.MouseDown += new System.Windows.Forms.MouseEventHandler(lbSearchList_MouseDown);
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
             // cmListSkills

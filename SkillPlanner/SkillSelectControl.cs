@@ -626,6 +626,17 @@ namespace EVEMon.SkillPlanner
             tvItems.CollapseAll();
         }
 
+        /// <summary>
+        /// Changes the selection when you right click on a skill node
+        /// </summary>
+        /// <remarks>
+        /// This fixes an issue with XP (and possibly Vista) where
+        /// right click does not select the list item the mouse is
+        /// over. in Windows 7 (Beta) this is default behaviour and
+        /// this event has no effect.
+        /// </remarks>
+        /// <param name="sender">is tvItems</param>
+        /// <param name="e">is a member of tvItems.Items</param>
         private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -634,9 +645,29 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Changes the selection when you right click on a search
+        /// </summary>
+        /// <remarks>
+        /// This fixes an issue with XP (and possibly Vista) where
+        /// right click does not select the list item the mouse is
+        /// over. in Windows 7 (Beta) this is default behaviour and
+        /// this event has no effect.
+        /// </remarks>
+        /// <param name="sender">is lbSearchList</param>
+        /// <param name="e"></param>
+        private void lbSearchList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
+            }
+        }
+
         private void cmiCollapseSelected_Click(object sender, EventArgs e)
         {
             tvItems.SelectedNode.Collapse();
+            
         }
 
         private void cmiExpandSelected_Click(object sender, EventArgs e)
@@ -670,7 +701,7 @@ namespace EVEMon.SkillPlanner
             cmiExpandSelected.Text = "Expand " + aString;
             cmiCollapseSelected.Text = "Collapse " + aString;
         }
-
+        
         private void cmListSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (this.SelectedSkill == null)
