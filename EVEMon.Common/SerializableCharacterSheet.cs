@@ -274,11 +274,15 @@ namespace EVEMon.Common
                 {
                     foreach (XmlNode row in rowset.ChildNodes)
                     {
+                        Int32 mySkillLevel = 0;
+                        if ((row.Attributes["level"]!=null)){
+                            mySkillLevel = Int32.Parse(row.Attributes["level"].InnerText);
+                        }
                         cs.KnownSkillsSet.KnownSkills.Add(new SerializableKnownSkill
                         {
                             SkillId = Int32.Parse(row.Attributes["typeID"].InnerText),
                             Skillpoints = Int32.Parse(row.Attributes["skillpoints"].InnerText),
-                            SkillLevel = Int32.Parse(row.Attributes["level"].InnerText)
+                            SkillLevel = mySkillLevel
                         });
                     }
                 }
