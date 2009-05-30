@@ -538,6 +538,7 @@ namespace EVEMon
             this.lblSkillHeader.Size = new System.Drawing.Size(91, 52);
             this.lblSkillHeader.TabIndex = 2;
             this.lblSkillHeader.Text = "0 Known Skills\r\n0 Total SP\r\n0 Clone Limit\r\n0 Skills at Level V";
+            this.lblSkillHeader.MouseHover += new System.EventHandler(this.lblSkillHeader_MouseHover);
             this.lblSkillHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tmrTick

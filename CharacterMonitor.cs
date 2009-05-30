@@ -2389,7 +2389,6 @@ namespace EVEMon
         /// <param name="e"></param>
         private void lblSkillHeader_MouseHover(object sender, EventArgs e)
         {
-
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < 6; i++)
             {
