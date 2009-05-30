@@ -311,6 +311,12 @@
     <Compile Include="SkillPlanner\ChangePriorityForm.Designer.cs">
       <DependentUpon>ChangePriorityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\EFTLoadout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\EFTLoadout.Designer.cs">
+      <DependentUpon>EFTLoadout.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\EveObjectBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -667,6 +673,9 @@
     <EmbeddedResource Include="SkillPlanner\CrossPlanSelect.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CrossPlanSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\EFTLoadout.resx">
+      <DependentUpon>EFTLoadout.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\EveObjectBrowserControl.resx">
       <SubType>Designer</SubType>

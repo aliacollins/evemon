@@ -697,6 +697,18 @@ namespace EVEMon.SkillPlanner
         {
             m_plan.Export_Character();
         }
+
+        /// <summary>
+        /// Opens the EFTLoadout form and passes it the current Plan
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsbEFTImport_Click(object sender, EventArgs e)
+        {
+            EFTLoadout eftLoadout = new EFTLoadout();
+            eftLoadout.Plan = m_plan;
+            eftLoadout.Show(this);
+        }
     }
 
     public class PlannerWindowFactory : IPlannerWindowFactory

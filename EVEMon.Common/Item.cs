@@ -313,12 +313,65 @@ namespace EVEMon.Common
             get { return m_items; }
         }
 
+        /// <summary>
+        /// Recursively searches the root category and all underlying categories for the first item with a 
+        /// name that exactly matches the given itemName.
+        /// </summary>
+        /// <param name="itemName">The name of the item to find.</param>
+        /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
+        public static Item findItem(string itemName)
+        {
+            return searchCategory(ItemCategory.GetRootCategory(), itemName);
+        }
+
+        /// <summary>
+        /// Recursively searches the root category and all underlying categories for the first item with an 
+        /// Id matching the given itemId.
+        /// </summary>
+        /// <param name="itemId">The id of the item to find.</param>
+        /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
         public static Item findItem(int itemId)
         {
             ItemCategory ic = ItemCategory.GetRootCategory();
             return searchCategory(ic, itemId);
         }
 
+        /// <summary>
+        /// Recursively searches the ItemCategory ic and all underlying categories for the first item with a
+        /// name that exactly matches the given itemName.
+        /// </summary>
+        /// <param name="ic">The ItemCategory to search in.</param>
+        /// <param name="itemName">The name of the item to find.</param>
+        /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
+        private static Item searchCategory(ItemCategory ic, string itemName)
+        {
+            Item item = null;
+            foreach (Item anItem in ic.Items)
+            {
+                if (anItem.Name == itemName)
+                {
+                    item = anItem;
+                    break;
+                }
+            }
+           if (item != null) return item;
+
+            foreach(ItemCategory sc in ic.Subcategories)
+            {
+                item = searchCategory(sc, itemName);
+                if (item != null) return item;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Recursively searches the ItemCategory ic and all underlying categories for the first item with an
+        /// id matching the given itemId.
+        /// </summary>
+        /// <param name="ic">The ItemCategory to search in.</param>
+        /// <param name="itemId">The item id to search for.</param>
+        /// <returns>The first item with id matching itemId, Null if no such item is found.</returns>
         private static Item searchCategory(ItemCategory ic, int itemId)
         {
             foreach (Item i in ic.Items)

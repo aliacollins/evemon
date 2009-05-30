@@ -78,6 +78,7 @@ namespace EVEMon
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("Dariana", "05");
             slDevelopers.Add("DonQuiche", "05");
+            slDevelopers.Add("Eviro", "05");
             slDevelopers.Add("exi", "05");
             slDevelopers.Add("FangVV", "05");
             slDevelopers.Add("Femaref", "05");
