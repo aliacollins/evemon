@@ -112,9 +112,11 @@ namespace EVEMon.Common
 
     /// <summary>
     /// Describes a skill required to use a ship or item.
-    /// N.B The list of required skills for a ship/item should only include
-    /// the top level promary requirements
     /// </summary>
+    /// <remarks>
+    /// N.B The list of required skills for a ship/item should only
+    /// include the top level primary requirements.
+    /// </remarks>
     public class EntityRequiredSkill
     {
         protected string _name;
