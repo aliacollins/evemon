@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using EVEMon.Common;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.Sales
 {
@@ -191,14 +192,34 @@ namespace EVEMon.Sales
 
 		private void copyFormattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Clipboard.Clear();
-			Clipboard.SetText(tslTotal.Text);
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(tslTotal.Text);
+            }
+            catch (ExternalException ex)
+            {
+                // there is a bug that results in an exception being
+                // thrown when the clipboard is in use by another
+                // thread.
+                ExceptionHandler.LogException(ex, true);
+            }
 		}
 
 		private void copyUnformattedTotalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Clipboard.Clear();
-			Clipboard.SetText(m_total.ToString());
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(m_total.ToString());
+            }
+            catch (ExternalException ex)
+            {
+                // there is a bug that results in an exception being
+                // thrown when the clipboard is in use by another
+                // thread.
+                ExceptionHandler.LogException(ex, true);
+            }
 		}
 	}
 }

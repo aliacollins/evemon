@@ -10,6 +10,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common;
 using EVEMon.Common.Net;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.SkillPlanner
 {
@@ -557,8 +558,18 @@ namespace EVEMon.SkillPlanner
                     exportText.AppendLine(s + " x1");
                 }
             }
-            Clipboard.Clear();
-            Clipboard.SetText(exportText.ToString());
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(exportText.ToString());
+            }
+            catch (ExternalException ex)
+            {
+                // there is a bug that results in an exception being
+                // thrown when the clipboard is in use by another
+                // thread.
+                ExceptionHandler.LogException(ex, true);
+            }
         }
     }
 

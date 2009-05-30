@@ -18,6 +18,7 @@ using EVEMon.Common.Schedule;
 using EVEMon.SkillPlanner;
 using EVEMon.ImpGroups;
 using System.Web;
+using System.Runtime.InteropServices;
 
 namespace EVEMon
 {
@@ -2640,7 +2641,18 @@ namespace EVEMon
             result.AppendLine("Skills at Level 4: " + m_grandCharacterInfo.SkillCountAtLevel(4).ToString());
             result.AppendLine("Skills at Level 5: " + m_grandCharacterInfo.SkillCountAtLevel(5).ToString());
 
-            Clipboard.SetText(result.ToString());
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(result.ToString());
+            }
+            catch (ExternalException ex)
+            {
+                // there is a bug that results in an exception being
+                // thrown when the clipboard is in use by another
+                // thread.
+                ExceptionHandler.LogException(ex, true);
+            }
         }
 
         /// <summary>

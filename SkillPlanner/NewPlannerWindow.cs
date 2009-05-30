@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using EVEMon.Common;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.SkillPlanner
 {
@@ -477,7 +478,19 @@ namespace EVEMon.SkillPlanner
                 string s = Encoding.Default.GetString(ms.ToArray());
                 try
                 {
-                    Clipboard.SetText(s);
+                    try
+                    {
+                        Clipboard.Clear();
+                        Clipboard.SetText(s);
+                    }
+                    catch (ExternalException ex)
+                    {
+                        // there is a bug that results in an exception being
+                        // thrown when the clipboard is in use by another
+                        // thread.
+                        ExceptionHandler.LogException(ex, true);
+                    }
+ 
                     MessageBox.Show("The skill plan has been copied to the clipboard in a " +
                                     "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
