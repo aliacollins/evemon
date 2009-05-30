@@ -47,6 +47,7 @@ namespace EVEMon
             this.DoubleBuffered = true;
             InitializeComponent();
 
+            // Initializes fonts
             this.lblCharName.Font = FontHelper.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             this.lblBalance.Font = FontHelper.GetFont("Tahoma", 9.75F, FontStyle.Bold);
             this.lblSkillInTraining.Font = FontHelper.GetFont("Tahoma", 8.25F, FontStyle.Regular);
@@ -157,9 +158,6 @@ namespace EVEMon
                     string blockingEntry = string.Empty;
                     m_highlightConflict = m_settings.SkillIsBlockedAt(m_estimatedCompletion, out blockingEntry);
 
-                    // Updates the time remaining label
-                    UpdateTimeRemainingLabel();
-
                     // Updates the skill in training label
                     lblSkillInTraining.Show();
                     lblSkillInTraining.Text = trainingSkill.Name + " " + Skill.GetRomanForInt(trainingSkill.TrainingToLevel);
@@ -173,6 +171,9 @@ namespace EVEMon
 
                     if (m_highlightConflict) lblCompletionTime.ForeColor = Color.Red;
                     else lblCompletionTime.ForeColor = m_lightForeColor;
+
+                    // Updates the time remaining label
+                    UpdateTimeRemainingLabel();
                 }
                 else
                 {
@@ -194,16 +195,30 @@ namespace EVEMon
         /// </summary>
         private void UpdateTimeRemainingLabel()
         {
+            // Is training ?
             if (m_estimatedCompletion != DateTime.MaxValue)
             {
                 var timeLeft = m_estimatedCompletion - DateTime.Now;
 
-                lblTimeToCompletion.Show();
-                lblTimeToCompletion.Text = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
+                // Completed ?
+                if (timeLeft <= TimeSpan.Zero)
+                {
+                    lblTimeToCompletion.Show();
+                    lblTimeToCompletion.Text = "Completed";
+                    lblCompletionTime.Hide();
+                    lblCompletionTime.Text = "";
+                }
+                // Not completed, updates time remaining
+                else
+                {
+                    lblTimeToCompletion.Show();
+                    lblTimeToCompletion.Text = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
 
-                if (m_highlightConflict) lblTimeToCompletion.ForeColor = Color.Red;
-                else lblTimeToCompletion.ForeColor = m_lightForeColor;
+                    if (m_highlightConflict) lblTimeToCompletion.ForeColor = Color.Red;
+                    else lblTimeToCompletion.ForeColor = m_lightForeColor;
+                }
             }
+            // Not training, let's hide the label
             else
             {
                 lblTimeToCompletion.Hide();
