@@ -73,7 +73,7 @@ namespace EVEMon
             s.TitleToTimeSkill = cbSkillInTitle.Checked;
             s.WorksafeMode = cbWorksafeMode.Checked;
             s.RelocateEveWindow = cbRelocateEveWindow.Checked;
-            s.RelocateTargetScreen = cbScreenList.SelectedIndex;
+            s.RelocateTargetScreen = cbScreenList.SelectedIndex - 1;
             s.SkillIconGroup = cbSkillIconSet.SelectedIndex + 1;
             s.EnableBalloonTips = cbShowBalloonTips.Checked;
             s.NotificationOffset = tbNotificationOffset.Value;
@@ -271,6 +271,7 @@ namespace EVEMon
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             cbScreenList.Items.Clear();
+            cbScreenList.Items.Add("Autoselect");
             for (int i = 0; i < Screen.AllScreens.Length; i++)
             {
                 cbScreenList.Items.Add(String.Format("Screen {0}", i + 1));
@@ -309,9 +310,9 @@ namespace EVEMon
 			// binary assemblies won't work on *nix
 			groupBox5.Enabled = Environment.OSVersion.Platform != PlatformID.Unix;
             cbRelocateEveWindow.Checked = m_settings.RelocateEveWindow;
-            if (m_settings.RelocateTargetScreen < cbScreenList.Items.Count)
+            if (m_settings.RelocateTargetScreen + 1 < cbScreenList.Items.Count)
             {
-                cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen;
+                cbScreenList.SelectedIndex = m_settings.RelocateTargetScreen + 1;
             }
             else
             {

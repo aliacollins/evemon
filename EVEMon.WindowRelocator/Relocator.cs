@@ -2,17 +2,26 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using Timer=System.Threading.Timer;
+using Timer = System.Windows.Forms.Timer;
 
 namespace EVEMon.WindowRelocator
 {
+    /// <summary>
+    /// Provides window-reloaction functionality through calls to User32
+    /// </summary>
     public static class Relocator
     {
         private static CbtHook m_hook = null;
         private static int m_targetScreen = 0;
-
+        private static bool m_autoselectScreen;
+        private static Timer m_timer = null;
+        private static object m_lockObj = new object();
+        
+        /// <summary>
+        /// Indirectly loads EVEMon.WinHook.dll and starts timer
+        /// </summary>
+        /// <param name="targetScreen"></param>
         public static void Start(int targetScreen)
         {
             if (m_hook == null)
@@ -20,13 +29,23 @@ namespace EVEMon.WindowRelocator
                 m_hook = new CbtHook();
                 m_hook.WindowCreated += new EventHandler<EventArgs>(m_hook_WindowCreated);
             }
+            if (m_timer == null)
+            {
+                m_timer = new Timer();
+                m_timer.Interval = 250;
+                m_timer.Tick += TimerCallbackProc;
+            }
             m_targetScreen = targetScreen;
         }
 
+        /// <summary>
+        /// Disposes of the hook and stops the timer.
+        /// </summary>
         public static void Stop()
         {
             m_hook.Dispose();
             m_hook = null;
+            m_timer.Stop();
         }
 
         [DllImport("user32")]
@@ -67,6 +86,11 @@ namespace EVEMon.WindowRelocator
             public int Y;
         }
 
+        /// <summary>
+        /// Get the dimensions of the window specified by hWnd
+        /// </summary>
+        /// <param name="hWnd">A valid window</param>
+        /// <returns>new Rectangle(Left, Top, Width, Height)</returns>
         private static Rectangle GetWindowRect(IntPtr hWnd)
         {
             RECT r;
@@ -74,6 +98,11 @@ namespace EVEMon.WindowRelocator
             return new Rectangle(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
         }
 
+        /// <summary>
+        /// Get the screen coordinates relative to the window
+        /// </summary>
+        /// <param name="hWnd">A valid window</param>
+        /// <returns>new Rectangle(Left, Top, Right, Bottom) relative to the screen</returns>
         private static Rectangle GetClientRectInScreenCoords(IntPtr hWnd)
         {
             RECT cr;
@@ -87,19 +116,46 @@ namespace EVEMon.WindowRelocator
 
         private static Point m_positionedPoint = new Point(Int32.MaxValue, Int32.MaxValue);
 
+        /// <summary>
+        /// Position the window on the targe screen
+        /// </summary>
+        /// <param name="hWnd"></param>
         private static void PositionWindow(IntPtr hWnd)
         {
-            // TODO: get screen number from settings!!
-            Screen sc = Screen.AllScreens[0];
-            if (Screen.AllScreens.Length > m_targetScreen)
-            {
-                sc = Screen.AllScreens[m_targetScreen];
-            }
-
             Rectangle ncr = GetWindowRect(hWnd);
             Rectangle cr = GetClientRectInScreenCoords(hWnd);
             int wDiff = ncr.Width - cr.Width;
             int hDiff = ncr.Height - cr.Height;
+
+            Screen sc = null;
+            if (m_targetScreen == -1)
+            {
+                foreach (Screen s in Screen.AllScreens)
+                {
+                    if (s.Bounds.Width == cr.Width && s.Bounds.Height == cr.Height)
+                    {
+                        sc = s;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (Screen.AllScreens.Length > m_targetScreen)
+                {
+                    sc = Screen.AllScreens[m_targetScreen];
+                }
+                else
+                    sc = Screen.AllScreens[0];
+            }
+
+            if (sc == null)
+                return;
+
+            // Don't resize if the eve window if it's size is not that of the screen
+            if (sc.Bounds.Width != cr.Width || sc.Bounds.Height != cr.Height)
+                return;
+
 
             m_positionedPoint = new Point(sc.Bounds.X - (cr.Left - ncr.Left),
                                           sc.Bounds.Y - (cr.Top - ncr.Top));
@@ -110,44 +166,46 @@ namespace EVEMon.WindowRelocator
                        sc.Bounds.Height + hDiff, true);
         }
 
-        private static Timer m_timer = null;
-        private static object m_lockObj = new object();
-
+        /// <summary>
+        /// Event fired when window is detected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void m_hook_WindowCreated(object sender, EventArgs e)
         {
             m_failCount = 0;
-            TimerCallbackProc(null);
+            TimerCallbackProc(null, null);
         }
 
         private static int m_failCount = 0;
 
+        /// <summary>
+        /// Start timer
+        /// </summary>
         private static void SetupTimer()
         {
-            if (m_timer == null)
-            {
-                m_timer = new Timer(new TimerCallback(TimerCallbackProc));
-            }
-            m_timer.Change(250, Timeout.Infinite);
+            m_timer.Start();
         }
 
+        /// <summary>
+        /// Stop timer
+        /// </summary>
         private static void CancelTimer()
         {
-            if (m_failCount > 8)
-            {
-                if (m_timer != null)
-                {
-                    m_timer.Dispose();
-                    m_timer = null;
-                }
-            }
-            else
+            m_timer.Stop();
+            if (m_failCount <= 8)
             {
                 m_failCount++;
                 SetupTimer();
             }
         }
 
-        private static void TimerCallbackProc(object o)
+        /// <summary>
+        /// Identify and move window 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
+        private static void TimerCallbackProc(object o, EventArgs e)
         {
             lock (m_lockObj)
             {

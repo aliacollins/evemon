@@ -40,20 +40,9 @@ namespace EVEMon.WindowRelocator
         }
 
         public event EventHandler<EventArgs> WindowCreated;
-        //private object m_lockObj = new object();
 
         private void OnWindowCreated()
         {
-            //lock (m_lockObj)
-            //{
-            //    IntPtr fgWin = GetForegroundWindow();
-            //    StringBuilder sb = new StringBuilder(512);
-            //    int titleLen = GetWindowText(fgWin, sb, 512);
-            //    if (sb.ToString() == "EVE")
-            //    {
-            //        System.Media.SystemSounds.Asterisk.Play();
-            //    }
-            //}
             if (WindowCreated != null)
             {
                 WindowCreated(this, new EventArgs());
