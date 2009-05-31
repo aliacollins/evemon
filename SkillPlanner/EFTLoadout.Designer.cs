@@ -41,7 +41,7 @@ namespace EVEMon.SkillPlanner
             this.AddToPlanButton = new System.Windows.Forms.Button();
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.TrainTimeLabel = new System.Windows.Forms.Label();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.TopSplitContainer.Panel1.SuspendLayout();
             this.TopSplitContainer.Panel2.SuspendLayout();
             this.TopSplitContainer.SuspendLayout();
@@ -120,7 +120,7 @@ namespace EVEMon.SkillPlanner
             this.BottomPanel.Controls.Add(this.AddToPlanButton);
             this.BottomPanel.Controls.Add(this.TrainingTimeLabel);
             this.BottomPanel.Controls.Add(this.TrainTimeLabel);
-            this.BottomPanel.Controls.Add(this.CancelButton);
+            this.BottomPanel.Controls.Add(this.CloseButton);
             this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.BottomPanel.Location = new System.Drawing.Point(0, 407);
             this.BottomPanel.Name = "BottomPanel";
@@ -168,17 +168,17 @@ namespace EVEMon.SkillPlanner
             this.TrainTimeLabel.TabIndex = 32;
             this.TrainTimeLabel.Text = "label2";
             // 
-            // CancelButton
+            // CloseButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(660, 9);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "Close";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.btnCancel_Click);
+            this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CloseButton.Location = new System.Drawing.Point(660, 9);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(75, 23);
+            this.CloseButton.TabIndex = 3;
+            this.CloseButton.Text = "Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // EFTLoadout
             // 
@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button AddToPlanButton;
         private System.Windows.Forms.Label TrainingTimeLabel;
         private System.Windows.Forms.Label TrainTimeLabel;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Label PlanedLabel;
         private System.Windows.Forms.Label ExplantionLabel;
         private System.Windows.Forms.ContextMenuStrip RightClickContextMenuStrip;
