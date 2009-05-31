@@ -14,7 +14,6 @@ namespace EVEMon.WindowRelocator
     {
         private static CbtHook m_hook = null;
         private static int m_targetScreen = 0;
-        private static bool m_autoselectScreen;
         private static Timer m_timer = null;
         private static object m_lockObj = new object();
         
