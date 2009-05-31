@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using lgLcdClassLibrary;
+using EVEMon.Common;
 
 namespace EVEMon.LogitechG15
 {
@@ -21,7 +22,7 @@ namespace EVEMon.LogitechG15
 
         private Lcdisplay() 
         {
-            _defaultFont = new Font("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
+            _defaultFont = FontHelper.GetFont("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
             _bufferOut = new byte[6880];
 
             // using standard brushes in a multithreaded app is bad mkay ?

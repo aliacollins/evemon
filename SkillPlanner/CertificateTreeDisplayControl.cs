@@ -37,6 +37,7 @@ namespace EVEMon.SkillPlanner
 
             cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
             m_boldFont = FontHelper.GetFont(this.Font, FontStyle.Bold);
+            this.treeView.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         /// <summary>

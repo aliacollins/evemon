@@ -14,6 +14,7 @@ namespace EVEMon.SkillPlanner
         public CertificateBrowserControl()
         {
             InitializeComponent();
+            this.lblName.Font = FontHelper.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
             this.certSelectCtl.SelectionChanged += new EventHandler<EventArgs>(certSelectCtl_SelectionChanged);
             this.certDisplayCtl.SelectionChanged += new EventHandler(certDisplayCtl_SelectionChanged);
         }

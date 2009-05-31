@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
+using EVEMon.Common;
 
 namespace EVEMon.WindowRelocator
 {
@@ -62,10 +63,6 @@ namespace EVEMon.WindowRelocator
             m_displayedForms = null;
         }
 
-        private void IdentifyScreenForm_Shown(object sender, EventArgs e)
-        {
-        }
-
         private const int STROKE_SIZE = 4;
 
         private void IdentifyScreenForm_Load(object sender, EventArgs e)
@@ -73,7 +70,7 @@ namespace EVEMon.WindowRelocator
             Bitmap b = new Bitmap(pbScreenNumber.ClientSize.Width,
                                   pbScreenNumber.ClientSize.Height);
             using (Graphics g = Graphics.FromImage(b))
-            using (Font tf = new Font("Tahoma", b.Height - STROKE_SIZE, GraphicsUnit.Pixel))
+            using (Font tf = FontHelper.GetFont("Tahoma", b.Height - STROKE_SIZE, GraphicsUnit.Pixel))
             using (GraphicsPath p = new GraphicsPath())
             using (Pen sp = new Pen(Color.Black, Convert.ToSingle(STROKE_SIZE)))
             {

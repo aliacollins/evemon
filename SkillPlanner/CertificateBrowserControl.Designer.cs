@@ -217,7 +217,6 @@ namespace EVEMon.SkillPlanner
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.Location = new System.Drawing.Point(3, 16);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(65, 13);

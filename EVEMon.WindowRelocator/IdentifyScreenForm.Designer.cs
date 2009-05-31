@@ -54,7 +54,6 @@ namespace EVEMon.WindowRelocator
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TransparencyKey = System.Drawing.Color.Magenta;
-            this.Shown += new System.EventHandler(this.IdentifyScreenForm_Shown);
             this.Load += new System.EventHandler(this.IdentifyScreenForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbScreenNumber)).EndInit();
             this.ResumeLayout(false);
