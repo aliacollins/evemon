@@ -99,7 +99,8 @@ namespace EVEMon.SkillPlanner
             else
             {
                 panelRight.Visible = true;
-                lblName.Text = certClass.Name;
+                var firstCert = certClass.LowestGradeCertificate;
+                lblName.Text = certClass.Name + (firstCert == null ? "" : " " + firstCert.Grade.ToString());
                 lblCategory.Text = certClass.Category.Name;
 
                 // Initialize the labels' text for every existing grade
@@ -134,7 +135,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
-            var cert = certDisplayCtl.SelectedCertificate;
+            var cert = certDisplayCtl.SelectedCertificateLevel;
             var certClass = this.certSelectCtl.SelectedCertificateClass;
 
             // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
@@ -142,11 +143,13 @@ namespace EVEMon.SkillPlanner
             {
                 var firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? "" : firstCert.Description);
+                lblName.Text = certClass.Name + (firstCert == null ? "" : " " + firstCert.Grade.ToString());
             }
             // So, one of our cert class's grades has been selected, we use its description
             else
             {
                 textboxDescription.Text = cert.Description;
+                lblName.Text = certClass.Name + " " + cert.Grade.ToString();
             }
         }
 

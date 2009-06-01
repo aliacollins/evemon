@@ -95,6 +95,27 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Gets cert of the displayed class which contains the current selection
+        /// </summary>
+        public Certificate SelectedCertificateLevel
+        {
+            get
+            {
+                TreeNode curr = treeView.SelectedNode;
+                while (curr != null)
+                {
+                    Certificate c = curr.Tag as Certificate;
+                    if (c != null && c.Class.Equals(this.CertificateClass))
+                    {
+                        return c;
+                    }
+                    curr = curr.Parent;
+                }
+                return null;
+            }
+        }
+
         
         /// <summary>
         /// Expands the node representing this certificate
