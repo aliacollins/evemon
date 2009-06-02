@@ -10,6 +10,7 @@ namespace EVEMon.Common
     public class Ship : EveObject
     {
         private static Ship[] sm_ships = null;
+        private static Dictionary<string, Ship> sm_shipDict = null;
 
         public static Ship[] GetShips()
         {
@@ -38,9 +39,33 @@ namespace EVEMon.Common
             return sm_ships;
         }
 
+        public static Ship GetShip(string name)
+        {
+            if (sm_shipDict == null)
+            {
+                if(sm_ships == null)
+                    GetShips();
+                sm_shipDict = new Dictionary<string, Ship>(sm_ships.Length);
+                foreach (Ship s in sm_ships)
+                {
+                    sm_shipDict[s.Name] = s;
+                }
+            }
+            return sm_shipDict[name];
+        }
+
         public override string GetCategoryPath()
         {
             return this.Type + " > " + this.Race;
+        }
+
+        /// <summary>
+        /// Gives you all recommended certificates for this ship
+        /// </summary>
+        /// <returns>Possibly empty List, but not null</returns>
+        public List<Certificate> GetRecommendedCertificates()
+        {
+            return Certificate.GetCertsRecommendedForShip(this._name);
         }
 
         private string m_race = String.Empty;

@@ -16,216 +16,18 @@ namespace EVEMon.Common
         Elite = 3
     }
 
-    #region CertificateCategory
-    /// <summary>
-    /// Represents a certificate category. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
-    /// </summary>
-    public sealed class CertificateCategory
-    {
-        private readonly List<CertificateClass> classes = new List<CertificateClass>();
-
-        public readonly int ID;
-        public readonly string Name;
-        public readonly string Description;
-
-        /// <summary>
-        /// Constructor from XML
-        /// </summary>
-        /// <param name="element"></param>
-        internal CertificateCategory(XmlElement element)
-        {
-            this.Name = element.GetAttribute("name");
-            this.Description = element.GetAttribute("descr");
-            this.ID = Int32.Parse(element.GetAttribute("id"));
-
-            if (element.HasChildNodes)
-            {
-                foreach (var child in element.ChildNodes)
-                {
-                    var certClass = new CertificateClass(this, (XmlElement)child);
-                    this.classes.Add(certClass);
-                }
-
-                // Sorty by name
-                this.classes.Sort((c1, c2) => String.Compare(c1.Name, c2.Name));
-            }
-        }
-
-        /// <summary>
-        /// Gets the certificate classes, sorted by name
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<CertificateClass> Classes
-        {
-            get { return this.classes; }
-        }
-    } 
-    #endregion
-
-
-    #region CertificateClass
-    /// <summary>
-    /// Represents a certificate class. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
-    /// </summary>
-    public sealed class CertificateClass
-    {
-        private readonly Certificate[] certificates = new Certificate[4];
-
-        public readonly int ID;
-        public readonly string Name;
-        public readonly string Description;
-        public readonly CertificateCategory Category;
-
-        /// <summary>
-        /// Constructor from XML
-        /// </summary>
-        /// <param name="category"></param>
-        /// <param name="element"></param>
-        internal CertificateClass(CertificateCategory category, XmlElement element)
-        {
-            this.Category = category;
-            this.Name = element.GetAttribute("name");
-            this.Description = element.GetAttribute("descr");
-            this.ID = Int32.Parse(element.GetAttribute("id"));
-
-            if (element.HasChildNodes)
-            {
-                foreach (var child in element.ChildNodes)
-                {
-                    var cert = new Certificate(this, (XmlElement)child);
-                    this.certificates[(int)cert.Grade] = cert;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the non-null certificates within this class, sorted by grade
-        /// </summary>
-        public IEnumerable<Certificate> Certificates
-        {
-            get
-            {
-                foreach (var cert in this.certificates)
-                {
-                    if (cert != null) yield return cert;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the certificate with the specified grade
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Certificate this[CertificateGrade grade]
-        {
-            get { return this.certificates[(int)grade]; }
-        }
-
-        /// <summary>
-        /// Gets true if the provided character has completed this class
-        /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
-        public bool HasBeenCompletedBy(CharacterInfo character)
-        {
-            foreach (var cert in Certificates)
-            {
-                if (character.GetCertificateStatus(cert) != CertificateStatus.Granted) return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Gets true if the provided character can train to the next grade, false if the class has already been completed or if the next grade is untrainable.
-        /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
-        public bool IsFurtherTrainableBy(CharacterInfo character)
-        {
-            foreach (var cert in Certificates)
-            {
-                var status = character.GetCertificateStatus(cert);
-                if (status == CertificateStatus.PartiallyTrained) return true;
-                else if (status == CertificateStatus.Untrained) return false;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the lowest grade, untrained, certificate for the provided character
-        /// </summary>
-        /// <param name="character"></param>
-        public Certificate GetLowestGradeUntrainedCertificate(CharacterInfo character)
-        {
-            // Look for the next grade
-            foreach (var cert in Certificates)
-            {
-                var status = character.GetCertificateStatus(cert);
-                if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted) return cert;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the highest grade, claimed, certificate for the provided character
-        /// </summary>
-        /// <param name="character"></param>
-        public Certificate GetHighestGradeClaimedCertificate(CharacterInfo character)
-        {
-            // Look for the next grade
-            Certificate lastCert = null;
-            foreach (var cert in Certificates)
-            {
-                var status = character.GetCertificateStatus(cert);
-                if (status != CertificateStatus.Granted) return lastCert;
-                lastCert = cert;
-            }
-            return lastCert;
-        }
-
-
-        /// <summary>
-        /// Gets the lowest grade certificate.
-        /// </summary>
-        public Certificate LowestGradeCertificate
-        {
-            get
-            {
-                foreach (var cert in Certificates) return cert;
-                throw new NotImplementedException();
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the highest grade certificate.
-        /// </summary>
-        public Certificate HighestGradeCertificate
-        {
-            get
-            {
-                // Look for the next grade
-                Certificate lastCert = null;
-                foreach (var cert in Certificates) lastCert = cert;
-                return lastCert;
-            }
-        }
-
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    } 
-    #endregion
-
-
-    #region Certificate
 	/// <summary>
-    /// Represents a certificate. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
+    /// Represents a certificate.
     /// </summary>
+    /// <remarks>
+    /// Every category (i.e. "Business and Industry") contains
+    /// certificate classes (i.e. "Production Manager") which
+    /// contain certificates (i.e. "Production Manager Basic").
+    /// </remarks>
     public sealed class Certificate
     {
+        private static readonly Dictionary<string, List<Certificate>> sm_shipRecomms = new Dictionary<string, List<Certificate>>();
+
         #region PrereqCertificate
         /// <summary>
         /// Structure used during initialization before we can resolve names
@@ -246,6 +48,7 @@ namespace EVEMon.Common
         private List<TempPrereqCertificate> m_tempPrereqCertificates = new List<TempPrereqCertificate>();
         private readonly List<Certificate> m_prereqCertificates = new List<Certificate>();
         private readonly Dictionary<StaticSkill, int> m_prereqSkillsLevels = new Dictionary<StaticSkill, int>();
+        private readonly List<string> m_recomForShips = new List<string>();
 
         public readonly int ID;
         public readonly string Description;
@@ -288,6 +91,14 @@ namespace EVEMon.Common
                             this.m_tempPrereqCertificates.Add(new TempPrereqCertificate(String.Intern(name), GetGrade(level)));
                         }
                     }
+                    else if (child.Name == "recommendation" && child.HasAttribute("ship"))
+                    {
+                        string name = child.GetAttribute("ship");
+                        this.m_recomForShips.Add(name);
+                        if (!sm_shipRecomms.ContainsKey(name))
+                            sm_shipRecomms[name] = new List<Certificate>();
+                        sm_shipRecomms[name].Add(this);
+                    }
                 }
             }
         }
@@ -308,8 +119,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the grade from the provided grade key. No need to previously interns the key, it will be itnerned in this method
+        /// Gets the grade from the provided grade key.
         /// </summary>
+        /// <remarks>
+        /// No need to previously intern the key, it will be interned in this method
+        /// </remarks>
         /// <param name="key"></param>
         /// <returns></returns>
         private static CertificateGrade GetGrade(string key)
@@ -330,15 +144,25 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Try to update the certificate's status for the given character with the given statuses dictionary. The dictionary is updated if the operation successes.
+        /// Try to update the certificate's status for the given
+        /// character with the given statuses dictionary. The
+        /// dictionary is updated if the operation successes.
         /// </summary>
         /// <remarks>
-        /// <para>This method has been designed to be used by <see cref="CharacterInfo.AssignFromSerializableCharacterSheet"/>. It assumes the statuses dictionary at least contains correct statuses for the granted certificates.</para>
-        /// <para>To update its status, a certificate needs to have its prerequisites statuses. Therefore, it can fail and return false if not all prerequsiite's status were defined.</para>
+        /// <para>This method has been designed to be used by
+        /// <see cref="CharacterInfo.AssignFromSerializableCharacterSheet"/>.
+        /// It assumes the statuses dictionary at least contains
+        /// correct statuses for the granted certificates.</para>
+        /// <para>To update its status, a certificate needs to have its
+        /// prerequisites statuses. Therefore, it can fail and return
+        /// false if not all prerequsiite's status were defined.</para>
         /// </remarks>
         /// <param name="character">The character to update from.</param>
-        /// <param name="statuses">The dictionary providing the status of every certificate. This dictionary is updated when the operation is successful.</param>
-        /// <returns>True if the status could be defined (if all pererequisites' statuses were defined), false otherwise.</returns>
+        /// <param name="statuses">The dictionary providing the status of
+        /// every certificate. This dictionary is updated when the operation
+        /// is successful.</param>
+        /// <returns>True if the status could be defined (if all
+        /// pererequisites' statuses were defined), false otherwise.</returns>
         internal bool TryUpdateCertificateStatus(CharacterInfo character, IDictionary<Certificate, CertificateStatus> statuses)
         {
 
@@ -398,7 +222,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets all the prerequisite skills, including the ones from prerequisite certificates. However, it does not include the skill's prerequisites.
+        /// Gets all the prerequisite skills, including the ones from
+        /// prerequisite certificates. However, it does not include the
+        /// skill's prerequisites.
         /// </summary>
         public IEnumerable<StaticSkill.Prereq> AllPrerequisiteSkills
         {
@@ -419,10 +245,37 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Get all ships this certificate is recommended for
+        /// </summary>
+        public IEnumerable<Ship> RecommendedForShips
+        {
+            get
+            {
+                foreach (string name in m_recomForShips)
+                {
+                    yield return Ship.GetShip(name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all certificates that are recommended for a specific ship
+        /// </summary>
+        /// <param name="name">name of the ship</param>
+        /// <returns>a possibly empty List</returns>
+        public static List<Certificate> GetCertsRecommendedForShip(string name)
+        {
+            if (!sm_shipRecomms.ContainsKey(name))
+                return new List<Certificate>();
+            return sm_shipRecomms[name];
+        }
+
+        /// <summary>
         /// Checks whether the provided skill is an immediate prerequisite
         /// </summary>
         /// <param name="skill">The skill to test</param>
-        /// <param name="neededLevel">When this skill is an immediate prerequsiite, this parameter will hold the required level</param>
+        /// <param name="neededLevel">When this skill is an immediate
+        /// prerequsiite, this parameter will hold the required level</param>
         /// <returns></returns>
         public bool HasAsImmediatePrerequisite(Skill skill, out int neededLevel)
         {
@@ -452,7 +305,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gathes all the skills to train, including the ones for the prerequisite certificates, and store them in the provided list.
+        /// Gathes all the skills to train, including the ones for the
+        /// prerequisite certificates, and store them in the provided list.
         /// </summary>
         /// <param name="character">The trainign character</param>
         /// <param name="skills">The skills list where to store the skills</param>
@@ -468,11 +322,14 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Converts the certificate instance to a String representation
+        /// </summary>
+        /// <returns>Representation of certificate</returns>
         public override string ToString()
         {
             return this.Class.Name + " " + this.Grade.ToString();
         }
     }
-	#endregion
 }
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C0665275-3E0B-4117-81B0-751206ED03CD}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -66,6 +66,8 @@
     <Compile Include="APIState.cs" />
     <Compile Include="AttributesOptimizer.cs" />
     <Compile Include="Certificate.cs" />
+    <Compile Include="CertificateCategory.cs" />
+    <Compile Include="CertificateClass.cs" />
     <Compile Include="CheckedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
