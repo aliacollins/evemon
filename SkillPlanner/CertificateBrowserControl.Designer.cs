@@ -47,6 +47,7 @@ namespace EVEMon.SkillPlanner
             this.lblLevel1Time = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitCertRecom = new System.Windows.Forms.SplitContainer();
             this.certSelectCtl = new EVEMon.SkillPlanner.CertificateSelectControl();
             this.certDisplayCtl = new EVEMon.SkillPlanner.CertificateTreeDisplayControl();
             this.panelRight = new System.Windows.Forms.Panel();
@@ -57,6 +58,8 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panelRight.SuspendLayout();
+            this.splitCertRecom.Panel1.SuspendLayout();
+            this.splitCertRecom.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelHeader
@@ -240,6 +243,26 @@ namespace EVEMon.SkillPlanner
             this.splitContainer1.SplitterDistance = 232;
             this.splitContainer1.TabIndex = 3;
             // 
+            // splitCertRecom
+            // 
+            this.splitCertRecom.BackColor = System.Drawing.SystemColors.Control;
+            this.splitCertRecom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitCertRecom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitCertRecom.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitCertRecom.Location = new System.Drawing.Point(0, 116);
+            this.splitCertRecom.Name = "splitCertRecom";
+            // 
+            // splitCertRecom.Panel1
+            // 
+            this.splitCertRecom.Panel1.Controls.Add(this.certDisplayCtl);
+            // 
+            // splitCertRecom.Panel2
+            // 
+            this.splitCertRecom.Panel2.AutoScroll = true;
+            this.splitCertRecom.Size = new System.Drawing.Size(588, 434);
+            this.splitCertRecom.SplitterDistance = 420;
+            this.splitCertRecom.TabIndex = 3;
+            // 
             // certSelectCtl
             // 
             this.certSelectCtl.Character = null;
@@ -247,6 +270,7 @@ namespace EVEMon.SkillPlanner
             this.certSelectCtl.Location = new System.Drawing.Point(0, 0);
             this.certSelectCtl.Name = "certSelectCtl";
             this.certSelectCtl.Plan = null;
+            this.certSelectCtl.SelectedCertificateClass = null;
             this.certSelectCtl.Size = new System.Drawing.Size(232, 550);
             this.certSelectCtl.TabIndex = 0;
             // 
@@ -263,7 +287,7 @@ namespace EVEMon.SkillPlanner
             // 
             // panelRight
             // 
-            this.panelRight.Controls.Add(this.certDisplayCtl);
+            this.panelRight.Controls.Add(this.splitCertRecom);
             this.panelRight.Controls.Add(this.panelHeader);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRight.Location = new System.Drawing.Point(0, 0);
@@ -284,6 +308,8 @@ namespace EVEMon.SkillPlanner
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.splitCertRecom.Panel1.ResumeLayout(false);
+            this.splitCertRecom.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -315,5 +341,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem tsPlanToBasic;
         private System.Windows.Forms.Panel panelRight;
+        private System.Windows.Forms.SplitContainer splitCertRecom;
     }
 }

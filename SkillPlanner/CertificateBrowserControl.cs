@@ -104,6 +104,7 @@ namespace EVEMon.SkillPlanner
                 lblCategory.Text = certClass.Category.Name;
 
                 // Initialize the labels' text for every existing grade
+                List<Control> newItems = new List<Control>();
                 Label[] labels = new Label[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
                 int lbIndex = 0;
                 foreach (var cert in certClass.Certificates)
@@ -113,6 +114,45 @@ namespace EVEMon.SkillPlanner
                     label.Text = cert.Grade + " : " + Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.IncludeCommas);
                     label.Visible = true;
                     lbIndex++;
+
+                    SortedList<string, Ship> ships = new SortedList<string, Ship>();
+                    foreach (Ship s in cert.RecommendedForShips)
+                    {
+                        ships.Add(s.Name, s);
+                    }
+                    if (ships.Count != 0)
+                    {
+                        Label tsl = new Label();
+                        tsl.Dock = DockStyle.Top;
+                        tsl.Text = "Recommends " + cert.Grade.ToString() + ":";
+                        tsl.Font = new Font(tsl.Font, FontStyle.Bold);
+                        newItems.Add(tsl);
+
+                        foreach (Ship s in ships.Values)
+                        {
+                            LinkLabel ll = new LinkLabel();
+                            ll.Dock = DockStyle.Top;
+                            ll.Text = s.Name;
+                            ll.MouseClick += new MouseEventHandler(recommendations_MenuItem);
+                            ll.Tag = s;
+                            newItems.Add(ll);
+                        }
+                    }
+                }
+                this.splitCertRecom.Panel2.Controls.Clear();
+                if (newItems.Count != 0)
+                {
+                    newItems.Reverse();
+                    this.splitCertRecom.Panel2.Controls.AddRange(newItems.ToArray());
+                }
+                else
+                {
+                    Label tsl = new Label();
+                    tsl.Dock = DockStyle.Fill;
+                    tsl.Text = "No Recommendations";
+                    tsl.Enabled = false;
+                    tsl.TextAlign = ContentAlignment.MiddleCenter;
+                    this.splitCertRecom.Panel2.Controls.Add(tsl);
                 }
 
                 // Hides the other labels
@@ -126,6 +166,22 @@ namespace EVEMon.SkillPlanner
                 UpdateEligibility();
             }
 
+        }
+
+        /// <summary>
+        /// Handler for the ship-links generated for the recommendations
+        /// </summary>
+        void recommendations_MenuItem(object sender, EventArgs e)
+        {
+            Control tsi = sender as Control;
+            if (tsi == null)
+                return;
+            Ship s = tsi.Tag as Ship;
+            NewPlannerWindow npw = this.m_plan.PlannerWindow.Target as NewPlannerWindow;
+            if (s != null && npw != null)
+            {
+                npw.ShowShipInBrowser(s);
+            }
         }
 
         /// <summary>
