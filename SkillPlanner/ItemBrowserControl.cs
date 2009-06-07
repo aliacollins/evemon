@@ -33,6 +33,9 @@ namespace EVEMon.SkillPlanner
                     // (re)construct item properties list
                     lvItemProperties.Items.Clear();
 
+                    //Adjust column title for single/multiple selections
+                    lvItemProperties.Columns[1].Text = itemSelectControl.SelectedObjects.Count == 1 ? "Value" : item.Name;
+
                     ListViewItem listItem = new ListViewItem(new string[] { "Class", item.Metagroup });
                     listItem.Name = "Class";
                     lvItemProperties.Items.Add(listItem);

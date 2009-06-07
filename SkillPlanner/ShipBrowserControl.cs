@@ -41,6 +41,9 @@ namespace EVEMon.SkillPlanner
                 // (re)construct ship properties list
                 lvShipProperties.Items.Clear();
 
+                //Adjust column title for single/multiple selections
+                lvShipProperties.Columns[1].Text = shipSelectControl.SelectedObjects.Count == 1 ? "Value" : s.Name;
+
                 // display the properties in a logical sequence
 
                 ListViewItem listItem = null;
