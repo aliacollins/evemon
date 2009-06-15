@@ -88,7 +88,7 @@ namespace EVEMon.SkillPlanner
                 // fetch loadouts from battleclinic
                 XmlSerializer xs = new XmlSerializer(typeof(ShipLoadout));
                 XmlDocument doc = CommonContext.HttpWebService.DownloadXml(
-                        "http://www.battleclinic.com/eve_online/ship_loadout_feed.php?typeID=" + m_ship.Id);
+                        "http://eve.battleclinic.com/ship_loadout_feed.php?typeID=" + m_ship.Id);
                 XmlElement shipNode = doc.DocumentElement.SelectSingleNode("//ship") as XmlElement;
                 if (shipNode != null)
                 {
@@ -202,7 +202,7 @@ namespace EVEMon.SkillPlanner
             {
                 XmlSerializer xs = new XmlSerializer(typeof(ShipLoadout));
                 XmlDocument doc = CommonContext.HttpWebService.DownloadXml(
-                        "http://www.battleclinic.com/eve_online/ship_loadout_feed.php?id=" + m_selectedLoadout.LoadoutId);
+                        "http://eve.battleclinic.com/ship_loadout_feed.php?id=" + m_selectedLoadout.LoadoutId);
                 XmlElement shipNode = doc.DocumentElement.SelectSingleNode("//ship") as XmlElement;
 
                 using (XmlNodeReader xnr = new XmlNodeReader(shipNode))
@@ -415,7 +415,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.BrowserLinkClicked("http://eve.battleclinic.com/forum/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
+                Util.BrowserLinkClicked("http://forum.battleclinic.com/index.php/topic," + m_selectedLoadout.Topic + ".0.html");
             }
             else
             {
