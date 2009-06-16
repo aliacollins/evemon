@@ -129,6 +129,11 @@ namespace EVEMon.SkillPlanner
                 {
                     this.treeView.SelectedNode = n;
                     n.Expand();
+                    if (this.SelectionChanged != null)
+                    {
+                        this.SelectionChanged(this, new EventArgs());
+                    }
+                    break;
                 }
             }
         }
