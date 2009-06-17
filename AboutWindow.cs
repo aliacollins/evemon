@@ -70,11 +70,15 @@ namespace EVEMon
             slDevelopers.Add("TheBelgarion", "04");
 
             // Contributors
+            slDevelopers.Add("Abomb", "05");
             slDevelopers.Add("Adam Butt", "05");
+            slDevelopers.Add("aMUSiC", "05");
+            slDevelopers.Add("ATGardner", "05");
             slDevelopers.Add("Barend", "05");
             slDevelopers.Add("bugusnot", "05");
             slDevelopers.Add("Candle","05");
             slDevelopers.Add("coeus", "05");
+            slDevelopers.Add("CrazyMahone", "05");
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("Dariana", "05");
             slDevelopers.Add("DonQuiche", "05");
@@ -94,11 +98,15 @@ namespace EVEMon
             slDevelopers.Add("justinian", "05");            
             slDevelopers.Add("Kw4h", "05");
             slDevelopers.Add("Lexiica", "05");
+            slDevelopers.Add("Master of Dice", "05");
             slDevelopers.Add("Maximilian Kernbach", "05");
+            slDevelopers.Add("MaZ", "05");
             slDevelopers.Add("Michayel Lyon", "05");
             slDevelopers.Add("mintoko", "05");
             slDevelopers.Add("misterilla", "05");
             slDevelopers.Add("Namistai", "05");
+            slDevelopers.Add("Moq", "05");
+            slDevelopers.Add("morgangreenacre", "05");
             slDevelopers.Add("Nascent Nimbus", "05");
             slDevelopers.Add("NetMage", "05");
             slDevelopers.Add("Nagapito", "05");
@@ -117,7 +125,10 @@ namespace EVEMon
             slDevelopers.Add("Shwehan Juanis", "05");
             slDevelopers.Add("skolima", "05");
             slDevelopers.Add("Spiff Nutter", "05");
+            slDevelopers.Add("Subkahnshus", "05");
             slDevelopers.Add("The_Assimilator", "05");
+            slDevelopers.Add("TheConstructor", "05");
+            slDevelopers.Add("Trin", "05");
             slDevelopers.Add("vardoj", "05");
             slDevelopers.Add("Vehlin", "05");
             slDevelopers.Add("Waste Land", "05");
