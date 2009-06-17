@@ -25,7 +25,7 @@ namespace EVEMon.Sales
 
         public string CourtesyUrl
         {
-            get { return "http://eve.battleclinic.com/eve_online/market.php"; }
+            get { return "http://eve.battleclinic.com/"; }
         }
 
         public string CourtesyText
@@ -39,7 +39,7 @@ namespace EVEMon.Sales
             try
             {
                 content = CommonContext.HttpWebService.DownloadString(
-                    "http://www.battleclinic.com/eve_online/market.php?feed=xml");
+                    "http://eve.battleclinic.com/market_xml.php");
             }
             catch (HttpWebServiceException ex)
             {
