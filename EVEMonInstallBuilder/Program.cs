@@ -89,7 +89,7 @@ namespace EVEMonInstallBuilder
         {
             string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
             string svnRevision = ver.Substring(ver.LastIndexOf('.') + 1, ver.Length - (ver.LastIndexOf('.') + 1));
-            string zipFileName = String.Format("{0}_rev_{1}_compiled.zip", formattedDate, svnRevision);
+            string zipFileName = String.Format("EVEMon-binaries-{0}.zip", ver);
             zipFileName = Path.Combine(desktopDir, zipFileName);
 
             string[] filenames = Directory.GetFiles(outputDir, "*", SearchOption.AllDirectories);
