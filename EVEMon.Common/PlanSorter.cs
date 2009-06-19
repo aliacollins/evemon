@@ -206,22 +206,38 @@ namespace EVEMon.Common
                 case PlanSort.TrainingTime:
                     // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
                     if (!this.learningSkillsFirst) StableSort(list, CompareByTrainingTime);
-                    else ignoreReverse = true;
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
                     break;
                 case PlanSort.TrainingTimeNatural:
                     // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
                     if (!this.learningSkillsFirst) StableSort(list, CompareByTrainingTimeNatural);
-                    else ignoreReverse = true;
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
                     break;
                 case PlanSort.SkillGroupDuration:
                     // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
                     if (!this.learningSkillsFirst) StableSort(list, CompareBySkillGroupDuration);
-                    else ignoreReverse = true;
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
                     break;
                 case PlanSort.SPPerHour:
                     // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
                     if (!this.learningSkillsFirst) StableSort(list, CompareBySPPerHour);
-                    else ignoreReverse = true;
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
                     break;
                 default:
                     ignoreReverse = true;
@@ -316,26 +332,32 @@ namespace EVEMon.Common
 
             list.Clear();
             list.AddRange(OptimizeLearningSkills(learningSkills, startSP));
+            bool did_sorting = false;
             switch(this.sort)
             {
                 case PlanSort.TrainingTime:
                     StableSort(nonLearningSkills, CompareByTrainingTime);
-                    if (reverseOrder) nonLearningSkills.Reverse();
+                    did_sorting = true;
                     break;
                 case PlanSort.TrainingTimeNatural:
                     StableSort(nonLearningSkills, CompareByTrainingTimeNatural);
-                    if (reverseOrder) nonLearningSkills.Reverse();
+                    did_sorting = true;
                     break;
                 case PlanSort.SkillGroupDuration:
                     StableSort(nonLearningSkills, CompareBySkillGroupDuration);
-                    if (reverseOrder) nonLearningSkills.Reverse();
+                    did_sorting = true;
                     break;
                 case PlanSort.SPPerHour:
                     StableSort(nonLearningSkills, CompareBySPPerHour);
-                    if (reverseOrder) nonLearningSkills.Reverse();
+                    did_sorting = true;
                     break;
                 default:
                     break;
+            }
+            if (did_sorting)
+            {
+                if (reverseOrder) nonLearningSkills.Reverse();
+                if (groupByPriority) GroupByPriority(nonLearningSkills);
             }
             list.AddRange(nonLearningSkills);
         }

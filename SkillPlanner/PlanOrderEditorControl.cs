@@ -368,12 +368,11 @@ namespace EVEMon.SkillPlanner
                         for (int x = 0; x < lvSkills.Columns.Count; x++)
                         {
                             string res = String.Empty;
-                            ColumnPreference.ColumnType ct;
                             // Regular columns (not pluggable-dependent)
                             if (lvSkills.Columns[x].Tag != null)
                             {
                                 lvi.SubItems[x].ForeColor = lvi.ForeColor;
-                                ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
+                                ColumnPreference.ColumnType ct = (ColumnPreference.ColumnType)lvSkills.Columns[x].Tag;
                                 switch (ct)
                                 {
                                     case ColumnPreference.ColumnType.SkillName:
@@ -487,9 +486,6 @@ namespace EVEMon.SkillPlanner
                                 }
                                 res += Skill.TimeSpanToDescriptiveText(t, DescriptiveTextOptions.IncludeCommas);
                                 timeDifferences.Add(oldTrainTime - trainTime);
-
-                                // needed so Eewec's bit below compiles...
-                                ct = ColumnPreference.ColumnType.TrainingTime;
                             }
 
                             lvi.SubItems[x].Text = res;
@@ -603,6 +599,15 @@ namespace EVEMon.SkillPlanner
 
                 // Enforces proper ordering too!
                 m_plan.CheckForMissingPrerequisites();
+
+                // So we don't destroy the new order on plan reload
+                // and the user is not misslead by the buttons
+                bool t = this.m_canUpdate;
+                this.m_canUpdate = false;
+                this.tsSortLearning.Checked = false;
+                this.tsSortPriorities.Checked = false;
+                UpdateSort(null, false);
+                this.m_canUpdate = t;
             }
             finally
             {
@@ -1420,12 +1425,16 @@ namespace EVEMon.SkillPlanner
             PlanSort sort = PlanSort.None;
             if (column != null) sort = GetPlanSort(column);
 
-            // Perform the sort
-            PlanSorter.Sort(m_plan, sort, reversed, m_plan.SortWithPrioritiesGrouping, m_plan.SortWithLearningSkillsOnTop, this.timeDifferences);
+            if (this.m_canUpdate)
+            {
+                // Perform the sort
+                PlanSorter.Sort(m_plan, sort, reversed, m_plan.SortWithPrioritiesGrouping, m_plan.SortWithLearningSkillsOnTop, this.timeDifferences);
 
+                // No Selection, No Moving
+                tsbMoveUp.Enabled = false;
+                tsbMoveDown.Enabled = false;
+            }
             // Update UI
-            tsbMoveUp.Enabled = false;
-            tsbMoveDown.Enabled = false;
             UpdateSortVisualFeedback(column, reversed);
         }
 
