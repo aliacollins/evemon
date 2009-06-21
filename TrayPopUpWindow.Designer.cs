@@ -59,11 +59,9 @@ namespace EVEMon
             this.Name = "TrayPopUpWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "EveMon Status";
-            this.TransparencyKey = System.Drawing.SystemColors.Info;
+            this.Text = "EVEMon Status";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

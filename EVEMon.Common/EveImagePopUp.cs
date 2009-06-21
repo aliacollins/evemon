@@ -15,7 +15,7 @@ namespace EVEMon.Common
     /// </summary>
     public partial class EveImagePopUp : EVEMonForm
     {
-        private const string titleBase = "EveMon Image Viewer";
+        private const string titleBase = "EVEMon Image Viewer";
         private EveObject m_imageSource = null;
 
         public EveImagePopUp(EveObject imageSource)
@@ -25,7 +25,7 @@ namespace EVEMon.Common
             if (m_imageSource != null)
             {
                 // Set window title
-                this.Text = m_imageSource.Name + " - " + titleBase;
+                this.Text = String.Format("{0} - {1}", m_imageSource.Name, titleBase);
                 eveImage.EveItem = m_imageSource;
             }
             else
