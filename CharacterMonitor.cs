@@ -235,7 +235,6 @@ namespace EVEMon
             WorksafeChangedCallback(null, null);
 
             m_settings.UseLogitechG15DisplayChanged += new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
-            //m_settings.NotificationOffsetChanged += new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
             btnAddToCalendar.Visible = m_settings.UseExternalCalendar;
         }
 
@@ -265,7 +264,6 @@ namespace EVEMon
             m_settings.WorksafeChanged -= new EventHandler<EventArgs>(WorksafeChangedCallback);
             m_settings.UseLogitechG15DisplayChanged -= new EventHandler<EventArgs>(UpdateLcdDisplayCallback);
             m_settings.ScheduleEntriesChanged -= new EventHandler<EventArgs>(m_settings_ScheduleEntriesChanged);
-            //m_settings.NotificationOffsetChanged -= new EventHandler<EventArgs>(m_settings_NotificationOffsetChanged);
         }
 
         void m_settings_ScheduleEntriesChanged(object sender, EventArgs e)
@@ -975,61 +973,62 @@ namespace EVEMon
         /// <param name="gsg">The group to expand or collapse.</param>
         private void ToggleGroupExpandCollapse(SkillGroup gsg)
         {
-            bool toCollapse;
+            m_groupCollapsed[gsg] = !gsg.isCollapsed;
+            gsg.isCollapsed = m_groupCollapsed[gsg];
             if (gsg.isCollapsed)
             {
-                toCollapse = false;
+                ColapseSkillGroup(gsg);
             }
             else
             {
-                toCollapse = true;
-            }
-            m_groupCollapsed[gsg] = toCollapse;
-            gsg.isCollapsed = m_groupCollapsed[gsg];
-            if (toCollapse)
-            {
-                // Remove the skills in the group from the list
-                foreach (Skill gs in gsg)
-                {
-                    // Because they may have toggled the ShowAll settings during this session, we have to 
-                    // cater for any invalid indexes when removing the skills.
-                    try
-                    {
-                        lbSkills.Items.RemoveAt(lbSkills.Items.IndexOf(gs));
-                    }
-                    catch
-                    { }
-                }
-
-                Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
-                m_settings.CollapsedGroups.Add(grp);
-            }
-            else
-            {
-                List<Skill> skillList = new List<Skill>();
-                foreach (Skill gs in gsg)
-                {
-                    if (m_settings.ShowAllPublicSkills)
-                    {
-                        if (!gs.Public)
-                            if (!m_settings.ShowNonPublicSkills)
-                                continue;
-                    }
-                    skillList.Add(gs);
-                }
-                SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
-                CharacterSkillChangedCallback(this, args);
-                foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
-                {
-                    if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
-                    {
-                        m_settings.CollapsedGroups.Remove(grp);
-                        break;
-                    }
-                }
-                //void m_grandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
+                ExpandSkillGroup(gsg);
             }
             lbSkills.Invalidate(lbSkills.GetItemRectangle(lbSkills.Items.IndexOf(gsg)));
+        }
+
+        /// <summary>
+        /// Expand a skill group
+        /// </summary>
+        /// <param name="gsg">Skill group in lbSkills</param>
+        private void ExpandSkillGroup(SkillGroup gsg)
+        {
+            List<Skill> skillList = new List<Skill>();
+            foreach (Skill gs in gsg)
+            {
+                if (m_settings.ShowAllPublicSkills)
+                {
+                    if (!gs.Public)
+                        if (!m_settings.ShowNonPublicSkills)
+                            continue;
+                }
+                skillList.Add(gs);
+            }
+            SkillChangedEventArgs args = new SkillChangedEventArgs(skillList.ToArray());
+            CharacterSkillChangedCallback(this, args);
+            foreach (Pair<string, string> grp in m_settings.CollapsedGroups)
+            {
+                if ((grp.A == m_grandCharacterInfo.Name) && (grp.B == gsg.Name))
+                {
+                    m_settings.CollapsedGroups.Remove(grp);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Collapse a skill group
+        /// </summary>
+        /// <param name="gsg">Skill group in lbSkills</param>
+        private void ColapseSkillGroup(SkillGroup gsg)
+        {
+            // Remove the skills in the group from the list
+            foreach (Skill gs in gsg)
+            {
+                lbSkills.Items.Remove(gs);
+            }
+
+            Pair<string, string> grp = new Pair<string, string>(m_grandCharacterInfo.Name, gsg.Name);
+            m_settings.CollapsedGroups.Add(grp);
         }
 
         /// <summary>
