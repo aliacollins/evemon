@@ -366,6 +366,7 @@ namespace EVEMon
             this.tlpInfo.AutoSize = true;
             this.tlpInfo.ColumnCount = 3;
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpInfo.Controls.Add(this.flpButtons, 1, 1);
@@ -380,7 +381,6 @@ namespace EVEMon
             this.tlpInfo.RowCount = 1;
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpInfo.Size = new System.Drawing.Size(392, 191);
             this.tlpInfo.TabIndex = 0;
             // 
