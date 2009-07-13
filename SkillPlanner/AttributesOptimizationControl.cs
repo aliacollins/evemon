@@ -10,103 +10,109 @@ using System.Drawing.Imaging;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// Represents the method that will handle change of attributes in optimization control.
+    /// </summary>
+    /// <param name="control">Source attribute optimization control</param>
+    /// <param name="remapping">Current remapping in control</param>
+    public delegate void AttributeChangedHandler(AttributesOptimizationControl control, AttributesOptimizer.Remapping remapping);
+
+    /// <summary>
+    /// Control that shows attribute remapping and allows to adjust it.
+    /// </summary>
     public partial class AttributesOptimizationControl : UserControl
     {
-        private readonly Pen m_borderPen;
-        private readonly Pen m_outerBorderPen;
-        private readonly Brush m_activeBrush;
-        private readonly Brush m_inactiveBrush;
-        private readonly Brush m_basePointBrush;
-        private readonly Brush m_spentPointBrush;
+        private readonly CharacterInfo m_character;
         private readonly AttributesOptimizer.Remapping m_remapping;
 
+        /// <summary>
+        /// Occurs when attributes changes. 
+        /// </summary>
+        [Category("Behavior")]
+        public event AttributeChangedHandler AttributeChanged;
 
+        /// <summary>
+        /// Initializes a new instance of EVEMon.SkillPlanner.AttributesOptimizationControl.
+        /// </summary>
+        /// <param name="character">Character information</param>
+        /// <param name="remapping">Optimized remapping</param>
         public AttributesOptimizationControl(CharacterInfo character, AttributesOptimizer.Remapping remapping)
         {
             InitializeComponent();
-            this.label9.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
-            this.label7.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
-            this.label5.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
-            this.label3.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
-            this.label1.Font = FontHelper.GetDefaultFont(FontStyle.Bold);
-            this.lbMEM.Font = FontHelper.GetFont("Tahoma", 8.25F);
-            this.lbWIL.Font = FontHelper.GetFont("Tahoma", 8.25F);
-            this.lbCHA.Font = FontHelper.GetFont("Tahoma", 8.25F);
-            this.lbPER.Font = FontHelper.GetFont("Tahoma", 8.25F);
-            this.lbINT.Font = FontHelper.GetFont("Tahoma", 8.25F);
-            this.lbOptimizedTimeInfo.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
-            this.lbCurrentTimeInfo.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
-            this.lbWarning.Font = FontHelper.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Bold);
-
-            m_borderPen = new Pen(Brushes.Black);
-            m_outerBorderPen = new Pen(Brushes.Gray);
-            m_activeBrush = new SolidBrush(Color.FromArgb(208, 208, 208));
-            m_inactiveBrush = new SolidBrush(Color.FromArgb(96, 96, 96));
-            m_basePointBrush = new SolidBrush(Color.FromArgb(208, 208, 208));
-            m_spentPointBrush = new SolidBrush(Color.FromArgb(54, 202, 54));
+            
+            m_character = character;
             m_remapping = remapping;
 
-            UpdateAttributeControls(character, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
-            UpdateAttributeControls(character, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
-            UpdateAttributeControls(character, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
-            UpdateAttributeControls(character, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
-            UpdateAttributeControls(character, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
+            UpdateControls(m_character, m_remapping);
+        }
+
+        /// <summary>
+        /// Updates bars and labels with given attributes from remapping.
+        /// </summary>
+        /// <param name="character">Character information</param>
+        /// <param name="remapping">Remapping with attributes and training time</param>
+        private void UpdateControls(CharacterInfo character, AttributesOptimizer.Remapping remapping)
+        {
+            UpdateAttributeControls(character, remapping, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
+            UpdateAttributeControls(character, remapping, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
+            UpdateAttributeControls(character, remapping, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
+            UpdateAttributeControls(character, remapping, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
+            UpdateAttributeControls(character, remapping, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
 
             // Update the current time control
-            this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BaseDuration, DescriptiveTextOptions.IncludeCommas);
+            this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(remapping.BaseDuration, DescriptiveTextOptions.IncludeCommas);
 
             // Update the optimized time control
-            this.lbOptimizedTime.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BestDuration, DescriptiveTextOptions.IncludeCommas);
+            this.lbOptimizedTime.Text = Skill.TimeSpanToDescriptiveText(remapping.BestDuration, DescriptiveTextOptions.IncludeCommas);
 
             // Update the time benefit control
-            if (m_remapping.BestDuration < m_remapping.BaseDuration)
+            if (remapping.BestDuration < remapping.BaseDuration)
             {
-                this.lbGain.Text = Skill.TimeSpanToDescriptiveText(m_remapping.BaseDuration - m_remapping.BestDuration, 
+                this.lbGain.ForeColor = Color.Black;
+                this.lbGain.Text = Skill.TimeSpanToDescriptiveText(remapping.BaseDuration - remapping.BestDuration,
                     DescriptiveTextOptions.IncludeCommas) + " better than current";
             }
             else
-            {
-                this.lbGain.Text = "Your skills are already optimized";
-            }
+                if (remapping.BaseDuration < remapping.BestDuration)
+                {
+                    this.lbGain.ForeColor = Color.Red;
+                    this.lbGain.Text = Skill.TimeSpanToDescriptiveText(remapping.BestDuration - remapping.BaseDuration,
+                    DescriptiveTextOptions.IncludeCommas) + " slower than current";
+                }
+                else
+                {
+                    this.lbGain.ForeColor = Color.Black;
+                    this.lbGain.Text = "Same as current";
+                }
 
             // A plan may not have a years worth of skills in it,
             // only fair to warn the user
-            this.lbWarning.Visible = m_remapping.BestDuration < new TimeSpan(365, 0, 0, 0);
+            this.lbWarning.Visible = remapping.BestDuration < new TimeSpan(365, 0, 0, 0);
         }
 
-        public void CleanUp()
-        {
-            // Cleanup the brushes on closed
-            m_activeBrush.Dispose();
-            m_inactiveBrush.Dispose();
-            m_basePointBrush.Dispose();
-            m_spentPointBrush.Dispose();
-            m_outerBorderPen.Dispose();
-            m_borderPen.Dispose();
-
-            // Cleanup the generated bitmaps on closed
-            foreach (Control ctl in this.Controls)
-            {
-                PictureBox box = ctl as PictureBox;
-                if (box != null && box.Image != null)
-                {
-                    Image oldImage = box.Image;
-                    box.Image = null;
-                    oldImage.Dispose();
-                }
-            }
-        }
-
-        public void Update(CharacterInfo character, EveAttributeScratchpad baseScratchpad, EveAttributeScratchpad bestScratchpad)
-        {
-        }
-
-        private void UpdateAttributeControls(CharacterInfo character, EveAttribute attrib, Label lb, PictureBox pbBase, PictureBox pbImplants, PictureBox pbSkills)
+        /// <summary>
+        /// Updates bars and labels for specified attribute.
+        /// </summary>
+        /// <param name="character">Character information</param>
+        /// <param name="remapping">Attribute remapping</param>
+        /// <param name="attrib">Attribute that will be used to update controls</param>
+        /// <param name="lb">Label control</param>
+        /// <param name="pbBase">Attribute bar for base value</param>
+        /// <param name="pbImplants">Attribute bar for implants</param>
+        /// <param name="pbSkills">Attribute bar for skills</param>
+        private void UpdateAttributeControls(
+            CharacterInfo character,
+            AttributesOptimizer.Remapping remapping,
+            EveAttribute attrib,
+            Label lb,
+            AttributeBarControl pbBase,
+            AttributeBarControl pbImplants,
+            AttributeBarControl pbSkills)
         {
             // Compute base and effective attributes
-            double effectiveAttribute = character.GetEffectiveAttribute(attrib, m_remapping.BestScratchpad);
+            double effectiveAttribute = character.GetEffectiveAttribute(attrib, remapping.BestScratchpad);
             int oldBaseAttribute = character.GetBaseAttribute(attrib);
-            int baseAttribute = oldBaseAttribute + (m_remapping.BestScratchpad.GetAttributeBonus(attrib) - m_remapping.BaseScratchpad.GetAttributeBonus(attrib));
+            int baseAttribute = oldBaseAttribute + (remapping.BestScratchpad.GetAttributeBonus(attrib) - remapping.BaseScratchpad.GetAttributeBonus(attrib));
             int implantsBonus = (int)character.getImplantValue(attrib);
             int skillsBonus = (int)effectiveAttribute - (baseAttribute + implantsBonus);
 
@@ -114,59 +120,146 @@ namespace EVEMon.SkillPlanner
             lb.Text = effectiveAttribute.ToString("##.##") + " (new : " + baseAttribute.ToString() + " ; old : " + oldBaseAttribute.ToString() + ")";
 
             // Update the bars
-            UpdateAttributeBar(pbBase, baseAttribute, true);
-            UpdateAttributeBar(pbImplants, implantsBonus, false);
-            UpdateAttributeBar(pbSkills, skillsBonus, false);
+            pbBase.Value = baseAttribute;
+            pbImplants.Value = implantsBonus;
+            pbSkills.Value = skillsBonus;
         }
 
-        private void UpdateAttributeBar(PictureBox pb, int value, bool isBase)
+        /// <summary>
+        /// Calculates new remapping from values of controls.
+        /// </summary>
+        private void Recalculate()
         {
-            // Dispose the old image
-            if (pb.Image != null)
-            {
-                Image oldImg = pb.Image;
-                pb.Image = null;
-                oldImg.Dispose();
-            }
+            int perDiff = pbPERBase.Value - m_character.GetBaseAttribute(EveAttribute.Perception) +
+                m_remapping.BaseScratchpad.GetAttributeBonus(EveAttribute.Perception);
+            int wilDiff = pbWILBase.Value - m_character.GetBaseAttribute(EveAttribute.Willpower) +
+                m_remapping.BaseScratchpad.GetAttributeBonus(EveAttribute.Willpower);
+            int intDiff = pbINTBase.Value - m_character.GetBaseAttribute(EveAttribute.Intelligence) +
+                m_remapping.BaseScratchpad.GetAttributeBonus(EveAttribute.Intelligence);
+            int memDiff = pbMEMBase.Value -    m_character.GetBaseAttribute(EveAttribute.Memory) +
+                m_remapping.BaseScratchpad.GetAttributeBonus(EveAttribute.Memory);
+            int chaDiff = pbCHABase.Value - m_character.GetBaseAttribute(EveAttribute.Charisma) +
+                m_remapping.BaseScratchpad.GetAttributeBonus(EveAttribute.Charisma);
 
-            // Create the new image
-            Bitmap bmp = new Bitmap(pb.Width, pb.Height, PixelFormat.Format32bppArgb);
+            // Fill scratchpad with attributes from controls
+            EveAttributeScratchpad manualScratchpad = new EveAttributeScratchpad();
+            manualScratchpad.Reset(perDiff, wilDiff, intDiff, memDiff, chaDiff, 0);
 
-            // Draw the image
-            const int tileWidth = 6;
-            int tileHeight = pb.Height - 4;
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                // Draw the borders
-                g.DrawRectangle(m_outerBorderPen, 0, 0, bmp.Width - 1, bmp.Height - 1);
-                g.DrawRectangle(m_borderPen, 1, 1, bmp.Width - 3, bmp.Height - 3);
+            // Get remapping for provided attributes
+            AttributesOptimizer.Remapping manualRemapping = AttributesOptimizer.OptimizeManually(m_character, m_remapping, manualScratchpad);
+            UpdateControls(m_character, manualRemapping);
 
-                // Draw the tiles
-                int i = 0;
-                int x = 2;
-                while (x < bmp.Width - 2)
-                {
-                    // Draw the tile
-                    Brush brush = m_inactiveBrush;
-                    if (i < value)
-                    {
-                        if (isBase) brush = (i < 4 ? m_basePointBrush : m_spentPointBrush);
-                        else brush = m_activeBrush;
-                    }
-
-                    g.FillRectangle(brush, x, 2, tileWidth, tileHeight);
-
-                    // Draw the tile's border
-                    x += tileWidth;
-                    g.DrawLine(m_borderPen, x, 2, x, bmp.Height - 2);
-
-                    // Update for next cycle
-                    x++;
-                    i++;
-                }
-            }
-
-            pb.Image = bmp;
+            if (AttributeChanged != null)
+                AttributeChanged(this, manualRemapping);
         }
+
+        #region Events
+
+        /// <summary>
+        /// Change of any attribute must be adjusted if there is no enough free points in the pool.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="deltaValue"></param>
+        private void pbBase_ValueChanging(AttributeBarControl sender, ref int deltaValue)
+        {
+            // Adjust delta if there is no enough free points
+            if (pbUnassigned.Value < deltaValue)
+                deltaValue = pbUnassigned.Value;
+
+            // Add/remove pionts from pool
+            pbUnassigned.Value -= deltaValue;
+        }
+
+        /// <summary>
+        /// Recalculate the time after change of an attribute.
+        /// </summary>
+        /// <param name="sender"></param>
+        private void pb_ValueChanged(AttributeBarControl sender)
+        {
+            Recalculate();
+        }
+
+        /// <summary>
+        /// Correct highlight if selected cell is inaccessable.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="highlightValue"></param>
+        private void pbBase_Highlighting(AttributeBarControl sender, ref int highlightValue)
+        {
+            // Adjust possible highlight using free points in pool
+            if (highlightValue - sender.Value > pbUnassigned.Value)
+                highlightValue = sender.Value + pbUnassigned.Value;
+        }
+
+        /// <summary>
+        /// Reset to original optimized remapping.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonOptimize_Click(object sender, EventArgs e)
+        {
+            // Set all labels and bars to calculated optimized remap
+            if (m_remapping.Point != null)
+                m_remapping.Point.SetBaseAttributes(m_character, m_remapping.BaseScratchpad, m_remapping.BestScratchpad);
+            UpdateControls(m_character, m_remapping);
+            pbUnassigned.Value = 0;
+            if (AttributeChanged != null)
+                AttributeChanged(this, m_remapping);
+        }
+
+        /// <summary>
+        /// Reset to remapping with current attributes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonCurrent_Click(object sender, EventArgs e)
+        {
+            EveAttributeScratchpad baseScratchpad = m_remapping.BaseScratchpad.Clone();
+            // Make unoptimized remap
+            AttributesOptimizer.Remapping zeroRemapping = AttributesOptimizer.OptimizeManually(m_character, m_remapping, baseScratchpad);
+            UpdateControls(m_character, zeroRemapping);
+            pbUnassigned.Value = 0;
+            if (AttributeChanged != null)
+                AttributeChanged(this, zeroRemapping);
+        }
+
+        /// <summary>
+        /// One of +/- buttons was pressed.
+        /// Check is it possible to change requested attribute and do it if we can.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void attributeButton_Click(object sender, EventArgs e)
+        {
+            AttributeButtonControl button = (sender as AttributeButtonControl);
+            if (button == null)
+                return;
+
+            if (button.AttributeBar == null)
+                return;
+
+            // Adjust delta
+            int deltaValue = button.ValueChange;
+            if (pbUnassigned.Value < deltaValue)
+                deltaValue = pbUnassigned.Value;
+
+            if (deltaValue < 0 && button.AttributeBar.Value <= button.AttributeBar.BaseValue)
+                return;
+
+            if (button.AttributeBar.Value + deltaValue < button.AttributeBar.BaseValue)
+                deltaValue = Math.Max(button.AttributeBar.Value - button.AttributeBar.BaseValue, deltaValue);
+
+            if (button.AttributeBar.Value + deltaValue > button.AttributeBar.MaxPoints)
+                deltaValue = button.AttributeBar.MaxPoints - button.AttributeBar.Value;
+
+            if (deltaValue == 0)
+                return;
+
+            button.AttributeBar.Value += deltaValue;
+            pbUnassigned.Value -= deltaValue;
+            Recalculate();
+        }
+
+        #endregion
     }
 }

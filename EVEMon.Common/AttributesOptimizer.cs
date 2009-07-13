@@ -41,11 +41,21 @@ namespace EVEMon.Common
             private TimeSpan bestDuration;
             private TimeSpan baseDuration;
             private TimeSpan time;
+            private TimeSpan limit;
+            private int startSp;
 
             public Remapping(Plan.RemappingPoint point, EveAttributeScratchpad baseScratchpad)
             {
                 this.Point = point;
                 this.BaseScratchpad = baseScratchpad ?? new EveAttributeScratchpad();
+            }
+
+            /// <summary>
+            /// Gets skillpoints before the remapping
+            /// </summary>
+            public int StartSP
+            {
+                get { return startSp; }
             }
 
             /// <summary>
@@ -81,19 +91,59 @@ namespace EVEMon.Common
             }
 
             /// <summary>
-            /// Computes the times and scratchpad
+            /// Gets the maximum optimization duration
             /// </summary>
-            /// <param name="time"></param>
-            /// <param name="character"></param>
-            /// <param name="maxDuration"></param>
-            /// <param name="startSp"></param>
-            /// <returns></returns>
+            public TimeSpan Limit
+            {
+                get { return this.limit; }
+            }
+
+            /// <summary>
+            /// Computes remapping.
+            /// </summary>
+            /// <param name="character">Character information</param>
+            /// <param name="time">Time when remapping begins</param>
+            /// <param name="maxDuration">Maximum duration of optimization period</param>
+            /// <param name="startSp">Start skillpoints</param>
+            /// <returns>Training time after remapping</returns>
             internal TimeSpan Compute(CharacterInfo character, TimeSpan time, TimeSpan maxDuration, int startSp)
             {
                 this.time = time;
+                this.limit = maxDuration;
+                this.startSp = startSp;
                 var skills = this.Skills.ToArray();
                 this.bestScratchpad = Optimize(skills, character, this.BaseScratchpad.Clone(), maxDuration, startSp, out this.bestDuration, out this.baseDuration);
-                if (this.Point != null) this.Point.SetBaseAttributes(character, this.BaseScratchpad, this.BestScratchpad);
+                if (this.Point != null)
+                    this.Point.SetBaseAttributes(character, this.BaseScratchpad, this.BestScratchpad);
+                return this.time + ComputeTotalTime(skills, character, this.bestScratchpad.Clone(), startSp);
+            }
+
+            /// <summary>
+            /// Computes remapping from given scratchpad.
+            /// This method allows to make EVEMon.Common.AttributesOptimizer.Remapping object without performing an optimization.
+            /// </summary>
+            /// <param name="character">Character information</param>
+            /// <param name="time">Time at which remapping starts</param>
+            /// <param name="maxDuration">Maximum duration of optimization period</param>
+            /// <param name="startSp">Start skillpoints</param>
+            /// <param name="oldScratchpad">Optimized scratchpad from base remapping</param>
+            /// <param name="newScratchpad">New scratchpad to compute time for</param>
+            /// <returns>Training time after remapping</returns>
+            internal TimeSpan ComputeManually(CharacterInfo character, TimeSpan time, TimeSpan maxDuration, int startSp, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            {
+                this.time = time;
+                this.limit = maxDuration;
+                this.startSp = startSp;
+                var skills = this.Skills.ToArray();
+                this.bestScratchpad = newScratchpad;
+
+                // Compute time based on provided scratchpads
+                var training = GetSubTraining(skills, character, oldScratchpad.Clone(), startSp, maxDuration);
+                this.baseDuration = ComputeTotalTime(training, character, this.BaseScratchpad.Clone(), startSp);
+                this.bestDuration = ComputeTotalTime(training, character, this.BestScratchpad.Clone(), startSp);
+
+                if (this.Point != null)
+                    this.Point.SetBaseAttributes(character, this.BaseScratchpad, this.BestScratchpad);
                 return this.time + ComputeTotalTime(skills, character, this.bestScratchpad.Clone(), startSp);
             }
 
@@ -276,14 +326,12 @@ namespace EVEMon.Common
             return bestScratchpad;
         }
 
-
-
         /// <summary>
-        /// Generate a trainings array from a plan
+        /// Generate a trainings array from a plan and reampping points
         /// </summary>
-        /// <param name="plan"></param>
-        /// <param name="bestDuration"></param>
-        /// <returns></returns>
+        /// <param name="plan">Plan with remapping points</param>
+        /// <param name="bestDuration">Best training time</param>
+        /// <returns>Computed remapping</returns>
         public static List<Remapping> OptimizeFromPlanAndRemappingPoints(Plan plan, out TimeSpan bestDuration)
         {
             var time = TimeSpan.Zero;
@@ -346,8 +394,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Compute the best remapping for the first year of this plan
         /// </summary>
-        /// <param name="plan"></param>
-        /// <returns></returns>
+        /// <param name="plan">Plan with skills for which to optimize</param>
+        /// <returns>Computed remapping</returns>
         public static Remapping OptimizeFromPlan(Plan plan)
         {
             var remapping = new Remapping(null, null);
@@ -368,10 +416,25 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Allows to create EVEMon.Common.AttributesOptimizer.Remapping object for a given attributes set
+        /// </summary>
+        /// <param name="baseRemapping">Optimized remapping on which to base new remapping</param>
+        /// <param name="scratchpad">Scratchpad with attributes</param>
+        /// <returns>Computed remapping</returns>
+        public static Remapping OptimizeManually(CharacterInfo character, Remapping baseRemapping, EveAttributeScratchpad scratchpad)
+        {
+            var remapping = new Remapping(baseRemapping.Point, baseRemapping.BaseScratchpad);
+            remapping.Skills.AddRange(baseRemapping.Skills);
+
+            remapping.ComputeManually(character, baseRemapping.Time, baseRemapping.Limit, baseRemapping.StartSP, baseRemapping.BestScratchpad, scratchpad);
+            return remapping;
+        }
+
+        /// <summary>
         /// Generate a trainings array from the skills already know by a character
         /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
+        /// <param name="character">Character information</param>
+        /// <returns>Computed remapping</returns>
         public static Remapping OptimizeFromCharacter(CharacterInfo character)
         {
             // Create a sorted plan for the learning skills
