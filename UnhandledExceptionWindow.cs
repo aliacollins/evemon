@@ -109,12 +109,12 @@ namespace EVEMon
 
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/BugReport");
+            Util.BrowserLinkClicked("http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F");
         }
 
         private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.BrowserLinkClicked("http://evemon.battleclinic.com:8000/trac/wiki/KnownProblems");
+            Util.BrowserLinkClicked("http://wiki.battleclinic.com/index.php/Known_problems_%28EVEMon%29");
         }
 
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
