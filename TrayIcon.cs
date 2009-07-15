@@ -418,6 +418,11 @@ namespace EVEMon
             {
                 lock (syncLock)
                 {
+                    // We may have multiple callbacks pending because the threads in the threadpool were busy waiting for our requests to CCP.
+                    // As a result, they're going to execute one after the other one, raising ObjectDisposedException when trying to stops the timer.
+                    if (this.timer == null) return;
+
+                    // Stops and disposes the timer.
                     try
                     {
                         // Stop the timer in case its been restarted by a MouseMove
@@ -428,9 +433,12 @@ namespace EVEMon
                     {
                         // Dispose of the timer since we're done with it
                         this.timer.Dispose();
+                        this.timer = null;
                     }
+
                     // Mouse tracking no longer required
                     DisableMouseTracking();
+
                     // Check if the mouse is still in the same place
                     // Since we update mousePosition and reset the timer on MouseMove events, if it has moved
                     // when HoverTimeout is called it means its no longer over the icon
