@@ -115,8 +115,11 @@ namespace EVEMon.SkillPlanner
                         ResultsTreeView.Enabled = false;
                         return;
                     }
-                    string shipTypeName = line.Substring(1, line.IndexOf(',') - 1);
-                    m_loadoutPlan.Name = line.Substring(line.IndexOf(',') + 1);
+
+                    int m_lineLength = line.Length;
+                    int m_commaIndex = line.IndexOf(',');
+                    string shipTypeName = line.Substring(1, m_commaIndex - 1);
+                    m_loadoutPlan.Name = line.Substring(m_commaIndex + 1, (m_lineLength - m_commaIndex - 2));
 
                     Ship ship = Array.Find(Ship.GetShips(), delegate(Ship s) { return s.Name == shipTypeName; });
 
