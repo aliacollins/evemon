@@ -42,13 +42,14 @@ namespace EVEMon.WindowRelocator
         /// </summary>
         public static void Stop()
         {
-            m_hook.Dispose();
+            if (m_hook != null) m_hook.Dispose();
             m_hook = null;
-            m_timer.Stop();
+            if (m_timer != null) m_timer.Stop();
+            m_timer = null;
         }
 
-        [DllImport("user32")]
-        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32")]
         private extern static int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
@@ -208,23 +209,24 @@ namespace EVEMon.WindowRelocator
         {
             lock (m_lockObj)
             {
-                IntPtr fgWin = GetForegroundWindow();
+                IntPtr findWin = FindWindow(null, "EVE");
                 StringBuilder sb = new StringBuilder(512);
-                int titleLen = GetWindowText(fgWin, sb, 512);
+                int titleLenB = GetWindowText(findWin, sb, 512);
 
                 int pid = 0;
-                GetWindowThreadProcessId(fgWin, out pid);
+
+                GetWindowThreadProcessId(findWin, out pid);
 
                 System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(pid);
 
                 if (sb.ToString() == "EVE" && p.ProcessName == "ExeFile")
                 {
-                    Rectangle r = GetWindowRect(fgWin);
+                    Rectangle r = GetWindowRect(findWin);
                     if (r.Width > 800)
                     {
                         if (r.Location != m_positionedPoint)
                         {
-                            PositionWindow(fgWin);
+                            PositionWindow(findWin);
                         }
                         m_failCount = Int32.MaxValue;
                         CancelTimer();
