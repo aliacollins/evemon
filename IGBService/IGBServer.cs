@@ -196,12 +196,12 @@ namespace EVEMon.IGBService
 
         private void ProcessRequest(string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
         {
-            if (!headers.ContainsKey("eve.trusted"))
+            if (!headers.ContainsKey("eve_trusted"))
             {
                 sw.WriteLine("Please visit this site using the in-game browser.");
                 return;
             }
-            if (headers["eve.trusted"].ToLower() != "yes")
+            if (headers["eve_trusted"].ToLower() != "yes")
             {
                 sw.WriteLine("not trusted");
                 return;
@@ -221,9 +221,9 @@ namespace EVEMon.IGBService
                 sw.WriteLine(String.Format("<h1>Plan: {0}</h1>",
                                            HttpUtility.HtmlEncode(planName)));
 
-                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve.charname"]);
+                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve_charname"]);
 
-                Plan p = Program.Settings.GetPlanByName(headers["eve.charname"], ci, planName);
+                Plan p = Program.Settings.GetPlanByName(headers["eve_charname"], ci, planName);
                 if (p == null)
                 {
                     sw.WriteLine("non-existant plan name");
@@ -262,11 +262,11 @@ namespace EVEMon.IGBService
             {
                 sw.WriteLine("<html><head><title>Skills</title></head><body>");
                 sw.WriteLine("<h1>Skills: By training time</h1>");
-                sw.WriteLine(string.Format("<p>Skills for {0}</p>", HttpUtility.HtmlEncode(headers["eve.charname"])));            
+                sw.WriteLine(string.Format("<p>Skills for {0}</p>", HttpUtility.HtmlEncode(headers["eve_charname"])));
 
-                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve.charname"]);
+                CharacterInfo ci = Program.MainWindow.GetCharacterInfo(headers["eve_charname"]);
                 List<Skill> allskills = new List<Skill>();
-                SerializableCharacterSheet charSheet = Program.Settings.GetCharacterSheet(headers["eve.charname"]);
+                SerializableCharacterSheet charSheet = Program.Settings.GetCharacterSheet(headers["eve_charname"]);
 
                 foreach (SerializableSkillGroup ssg in charSheet.SkillGroups)
                     foreach (SerializableSkill ss in ssg.Skills)
@@ -295,7 +295,7 @@ namespace EVEMon.IGBService
                     sw.Write("</td>");
 
                     sw.Write("<td width=\"250\">");
-                    sw.Write(string.Format("<b><a href=\"showinfo:{0}\">{1}</a></b>", s.Id, s.Name));
+                    sw.Write(string.Format("<b><a href=\"\\#\" onclick=\"CCPEVE.showInfo({0})\">{1}</a></b>", s.Id, s.Name));
                     sw.Write("</td>");
 
                     sw.Write("<td width=\"100\">");
@@ -319,10 +319,10 @@ namespace EVEMon.IGBService
             {
                 sw.WriteLine(
                     String.Format("<html><head><title>Hi</title></head><body><h1>Hello, {0}</h1>",
-                                  headers["eve.charname"]));
+                                  headers["eve_charname"]));
 
                 sw.WriteLine("<h2>Your Plans:</h2>");
-                foreach (string s in Program.Settings.GetPlansForCharacter(headers["eve.charname"]))
+                foreach (string s in Program.Settings.GetPlansForCharacter(headers["eve_charname"]))
                 {
                     sw.WriteLine(String.Format("<a href=\"/plan/{0}\">{1}</a> (<a href=\"/shopping/{0}\">shopping list</a>)<br>",
                                                HttpUtility.UrlEncode(s),

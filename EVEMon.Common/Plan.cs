@@ -2143,7 +2143,7 @@ namespace EVEMon.Common
                 boldStart();
                 if (markupType == MarkupType.Html)
                 {
-                    sw.Write("<a href='showinfo:{0}'>", pe.Skill.Id);
+                    sw.Write("<a href='#' onclick=\"CCPEVE.showInfo({0})\">", pe.Skill.Id);
                 }
                 sw.Write(pe.SkillName);
                 if (markupType == MarkupType.Html)
