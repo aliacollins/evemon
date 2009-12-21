@@ -1,0 +1,1 @@
+lgLCDNETWrapper.dll - The project for this file is in lglcdClassLibrary in the main directory. You can build it yourself if you so desire. It is a C++ project.

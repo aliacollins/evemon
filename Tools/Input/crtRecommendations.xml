@@ -1,0 +1,3593 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database name="mssql">
+	<table_structure name="crtRecommendations">
+		<field Field="recommendationID" Type="int(11)" Null="NO" Key="PRI" Extra="" />
+		<field Field="shipTypeID" Type="smallint(6)" Null="YES" Key="MUL" Extra="" />
+		<field Field="certificateID" Type="int(11)" Null="YES" Key="MUL" Extra="" />
+		<field Field="recommendationLevel" Type="tinyint(4)" Null="NO" Key="" Extra="" />
+		<key Table="crtRecommendations" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="recommendationID" Collation="A" Cardinality="596" Null="" Index_type="BTREE" Comment="" />
+		<key Table="crtRecommendations" Non_unique="1" Key_name="crtRecommendations_IX_certificate" Seq_in_index="1" Column_name="certificateID" Collation="A" Cardinality="119" Null="YES" Index_type="BTREE" Comment="" />
+		<key Table="crtRecommendations" Non_unique="1" Key_name="crtRecommendations_IX_shipType" Seq_in_index="1" Column_name="shipTypeID" Collation="A" Cardinality="149" Null="YES" Index_type="BTREE" Comment="" />
+		<options Name="crtRecommendations" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="596" Avg_row_length="12" Data_length="7152" Max_data_length="3377699720527871" Index_length="23552" Data_free="0" Create_time="2009-11-25 22:00:06" Update_time="2009-11-25 22:00:06" Check_time="2009-11-25 22:00:06" Collation="utf8_general_ci" Create_options="" Comment="" />
+	</table_structure>
+	<table_data name="crtRecommendations">
+	<row>
+		<field name="recommendationID">4</field>
+		<field name="shipTypeID">642</field>
+		<field name="certificateID">86</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">5</field>
+		<field name="shipTypeID">22452</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">6</field>
+		<field name="shipTypeID">22452</field>
+		<field name="certificateID">144</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">9</field>
+		<field name="shipTypeID">582</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">10</field>
+		<field name="shipTypeID">582</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">11</field>
+		<field name="shipTypeID">582</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">12</field>
+		<field name="shipTypeID">583</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">13</field>
+		<field name="shipTypeID">583</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">14</field>
+		<field name="shipTypeID">583</field>
+		<field name="certificateID">200</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">15</field>
+		<field name="shipTypeID">583</field>
+		<field name="certificateID">195</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">16</field>
+		<field name="shipTypeID">584</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">17</field>
+		<field name="shipTypeID">584</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">18</field>
+		<field name="shipTypeID">584</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">19</field>
+		<field name="shipTypeID">584</field>
+		<field name="certificateID">186</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">20</field>
+		<field name="shipTypeID">585</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">21</field>
+		<field name="shipTypeID">585</field>
+		<field name="certificateID">114</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">22</field>
+		<field name="shipTypeID">585</field>
+		<field name="certificateID">200</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">23</field>
+		<field name="shipTypeID">585</field>
+		<field name="certificateID">195</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">24</field>
+		<field name="shipTypeID">586</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">25</field>
+		<field name="shipTypeID">586</field>
+		<field name="certificateID">114</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">27</field>
+		<field name="shipTypeID">586</field>
+		<field name="certificateID">204</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">28</field>
+		<field name="shipTypeID">587</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">29</field>
+		<field name="shipTypeID">587</field>
+		<field name="certificateID">114</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">30</field>
+		<field name="shipTypeID">587</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">31</field>
+		<field name="shipTypeID">589</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">32</field>
+		<field name="shipTypeID">589</field>
+		<field name="certificateID">72</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">33</field>
+		<field name="shipTypeID">589</field>
+		<field name="certificateID">200</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">34</field>
+		<field name="shipTypeID">589</field>
+		<field name="certificateID">195</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">35</field>
+		<field name="shipTypeID">590</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">36</field>
+		<field name="shipTypeID">590</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">37</field>
+		<field name="shipTypeID">590</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">38</field>
+		<field name="shipTypeID">591</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">39</field>
+		<field name="shipTypeID">591</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">40</field>
+		<field name="shipTypeID">591</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">41</field>
+		<field name="shipTypeID">592</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">42</field>
+		<field name="shipTypeID">592</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">43</field>
+		<field name="shipTypeID">592</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">44</field>
+		<field name="shipTypeID">593</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">45</field>
+		<field name="shipTypeID">593</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">46</field>
+		<field name="shipTypeID">593</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">47</field>
+		<field name="shipTypeID">594</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">48</field>
+		<field name="shipTypeID">594</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">49</field>
+		<field name="shipTypeID">594</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">50</field>
+		<field name="shipTypeID">597</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">51</field>
+		<field name="shipTypeID">597</field>
+		<field name="certificateID">72</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">52</field>
+		<field name="shipTypeID">597</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">53</field>
+		<field name="shipTypeID">598</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">54</field>
+		<field name="shipTypeID">598</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">55</field>
+		<field name="shipTypeID">598</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">56</field>
+		<field name="shipTypeID">599</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">57</field>
+		<field name="shipTypeID">599</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">58</field>
+		<field name="shipTypeID">599</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">59</field>
+		<field name="shipTypeID">602</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">60</field>
+		<field name="shipTypeID">602</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">61</field>
+		<field name="shipTypeID">602</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">62</field>
+		<field name="shipTypeID">603</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">63</field>
+		<field name="shipTypeID">603</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">64</field>
+		<field name="shipTypeID">603</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">65</field>
+		<field name="shipTypeID">605</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">66</field>
+		<field name="shipTypeID">605</field>
+		<field name="certificateID">139</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">67</field>
+		<field name="shipTypeID">605</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">68</field>
+		<field name="shipTypeID">605</field>
+		<field name="certificateID">204</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">69</field>
+		<field name="shipTypeID">607</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">70</field>
+		<field name="shipTypeID">607</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">71</field>
+		<field name="shipTypeID">607</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">72</field>
+		<field name="shipTypeID">607</field>
+		<field name="certificateID">204</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">73</field>
+		<field name="shipTypeID">608</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">74</field>
+		<field name="shipTypeID">608</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">75</field>
+		<field name="shipTypeID">608</field>
+		<field name="certificateID">200</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">76</field>
+		<field name="shipTypeID">608</field>
+		<field name="certificateID">195</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">77</field>
+		<field name="shipTypeID">609</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">78</field>
+		<field name="shipTypeID">609</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">79</field>
+		<field name="shipTypeID">609</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">80</field>
+		<field name="shipTypeID">609</field>
+		<field name="certificateID">189</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">81</field>
+		<field name="shipTypeID">620</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">82</field>
+		<field name="shipTypeID">620</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">83</field>
+		<field name="shipTypeID">620</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">84</field>
+		<field name="shipTypeID">620</field>
+		<field name="certificateID">65</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">85</field>
+		<field name="shipTypeID">621</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">86</field>
+		<field name="shipTypeID">621</field>
+		<field name="certificateID">146</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">87</field>
+		<field name="shipTypeID">621</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">88</field>
+		<field name="shipTypeID">622</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">89</field>
+		<field name="shipTypeID">622</field>
+		<field name="certificateID">121</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">90</field>
+		<field name="shipTypeID">622</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">91</field>
+		<field name="shipTypeID">622</field>
+		<field name="certificateID">201</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">92</field>
+		<field name="shipTypeID">623</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">93</field>
+		<field name="shipTypeID">623</field>
+		<field name="certificateID">100</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">94</field>
+		<field name="shipTypeID">623</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">95</field>
+		<field name="shipTypeID">624</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">96</field>
+		<field name="shipTypeID">624</field>
+		<field name="certificateID">79</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">97</field>
+		<field name="shipTypeID">624</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">98</field>
+		<field name="shipTypeID">625</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">99</field>
+		<field name="shipTypeID">625</field>
+		<field name="certificateID">79</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">100</field>
+		<field name="shipTypeID">625</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">101</field>
+		<field name="shipTypeID">625</field>
+		<field name="certificateID">65</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">102</field>
+		<field name="shipTypeID">626</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">103</field>
+		<field name="shipTypeID">626</field>
+		<field name="certificateID">166</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">104</field>
+		<field name="shipTypeID">626</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">105</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">106</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">100</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">107</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">108</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">201</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">109</field>
+		<field name="shipTypeID">628</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">110</field>
+		<field name="shipTypeID">628</field>
+		<field name="certificateID">166</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">111</field>
+		<field name="shipTypeID">628</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">112</field>
+		<field name="shipTypeID">628</field>
+		<field name="certificateID">192</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">113</field>
+		<field name="shipTypeID">629</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">114</field>
+		<field name="shipTypeID">629</field>
+		<field name="certificateID">121</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">115</field>
+		<field name="shipTypeID">629</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">116</field>
+		<field name="shipTypeID">630</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">117</field>
+		<field name="shipTypeID">630</field>
+		<field name="certificateID">121</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">118</field>
+		<field name="shipTypeID">630</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">119</field>
+		<field name="shipTypeID">630</field>
+		<field name="certificateID">183</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">120</field>
+		<field name="shipTypeID">631</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">121</field>
+		<field name="shipTypeID">631</field>
+		<field name="certificateID">239</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">122</field>
+		<field name="shipTypeID">631</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">123</field>
+		<field name="shipTypeID">631</field>
+		<field name="certificateID">65</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">124</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">125</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">146</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">126</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">127</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">186</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">128</field>
+		<field name="shipTypeID">633</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">129</field>
+		<field name="shipTypeID">633</field>
+		<field name="certificateID">100</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">130</field>
+		<field name="shipTypeID">633</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">131</field>
+		<field name="shipTypeID">633</field>
+		<field name="certificateID">189</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">132</field>
+		<field name="shipTypeID">634</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">133</field>
+		<field name="shipTypeID">634</field>
+		<field name="certificateID">100</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">134</field>
+		<field name="shipTypeID">634</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">136</field>
+		<field name="shipTypeID">638</field>
+		<field name="certificateID">153</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">137</field>
+		<field name="shipTypeID">638</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">138</field>
+		<field name="shipTypeID">639</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">139</field>
+		<field name="shipTypeID">639</field>
+		<field name="certificateID">128</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">140</field>
+		<field name="shipTypeID">639</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">141</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">142</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">107</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">143</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">144</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">187</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">145</field>
+		<field name="shipTypeID">641</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">146</field>
+		<field name="shipTypeID">641</field>
+		<field name="certificateID">107</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">147</field>
+		<field name="shipTypeID">641</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">148</field>
+		<field name="shipTypeID">642</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">150</field>
+		<field name="shipTypeID">642</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">151</field>
+		<field name="shipTypeID">643</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">152</field>
+		<field name="shipTypeID">643</field>
+		<field name="certificateID">86</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">153</field>
+		<field name="shipTypeID">643</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">154</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">155</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">128</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">156</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">157</field>
+		<field name="shipTypeID">645</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">158</field>
+		<field name="shipTypeID">645</field>
+		<field name="certificateID">170</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">159</field>
+		<field name="shipTypeID">645</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">160</field>
+		<field name="shipTypeID">648</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">161</field>
+		<field name="shipTypeID">648</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">162</field>
+		<field name="shipTypeID">649</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">163</field>
+		<field name="shipTypeID">649</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">164</field>
+		<field name="shipTypeID">650</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">165</field>
+		<field name="shipTypeID">650</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">166</field>
+		<field name="shipTypeID">651</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">167</field>
+		<field name="shipTypeID">651</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">168</field>
+		<field name="shipTypeID">652</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">169</field>
+		<field name="shipTypeID">652</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">170</field>
+		<field name="shipTypeID">653</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">171</field>
+		<field name="shipTypeID">653</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">172</field>
+		<field name="shipTypeID">654</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">173</field>
+		<field name="shipTypeID">654</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">174</field>
+		<field name="shipTypeID">655</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">175</field>
+		<field name="shipTypeID">655</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">176</field>
+		<field name="shipTypeID">656</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">177</field>
+		<field name="shipTypeID">656</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">178</field>
+		<field name="shipTypeID">657</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">179</field>
+		<field name="shipTypeID">657</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">180</field>
+		<field name="shipTypeID">1944</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">181</field>
+		<field name="shipTypeID">1944</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">182</field>
+		<field name="shipTypeID">2006</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">183</field>
+		<field name="shipTypeID">2006</field>
+		<field name="certificateID">79</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">184</field>
+		<field name="shipTypeID">2006</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">185</field>
+		<field name="shipTypeID">2161</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">186</field>
+		<field name="shipTypeID">2161</field>
+		<field name="certificateID">72</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">187</field>
+		<field name="shipTypeID">2161</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">188</field>
+		<field name="shipTypeID">2161</field>
+		<field name="certificateID">192</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">189</field>
+		<field name="shipTypeID">3766</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">190</field>
+		<field name="shipTypeID">3766</field>
+		<field name="certificateID">114</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">191</field>
+		<field name="shipTypeID">3766</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">192</field>
+		<field name="shipTypeID">3766</field>
+		<field name="certificateID">183</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">193</field>
+		<field name="shipTypeID">11172</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">194</field>
+		<field name="shipTypeID">11172</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">195</field>
+		<field name="shipTypeID">11172</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">196</field>
+		<field name="shipTypeID">11172</field>
+		<field name="certificateID">205</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">197</field>
+		<field name="shipTypeID">11174</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">198</field>
+		<field name="shipTypeID">11174</field>
+		<field name="certificateID">98</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">199</field>
+		<field name="shipTypeID">11174</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">200</field>
+		<field name="shipTypeID">11174</field>
+		<field name="certificateID">190</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">201</field>
+		<field name="shipTypeID">11176</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">202</field>
+		<field name="shipTypeID">11176</field>
+		<field name="certificateID">142</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">203</field>
+		<field name="shipTypeID">11176</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">204</field>
+		<field name="shipTypeID">11176</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">205</field>
+		<field name="shipTypeID">11178</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">206</field>
+		<field name="shipTypeID">11178</field>
+		<field name="certificateID">98</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">207</field>
+		<field name="shipTypeID">11178</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">208</field>
+		<field name="shipTypeID">11178</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">209</field>
+		<field name="shipTypeID">11182</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">210</field>
+		<field name="shipTypeID">11182</field>
+		<field name="certificateID">115</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">211</field>
+		<field name="shipTypeID">11182</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">212</field>
+		<field name="shipTypeID">11182</field>
+		<field name="certificateID">205</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">213</field>
+		<field name="shipTypeID">11184</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">214</field>
+		<field name="shipTypeID">11184</field>
+		<field name="certificateID">75</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">215</field>
+		<field name="shipTypeID">11184</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">216</field>
+		<field name="shipTypeID">11184</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">217</field>
+		<field name="shipTypeID">11186</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">218</field>
+		<field name="shipTypeID">11186</field>
+		<field name="certificateID">144</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">219</field>
+		<field name="shipTypeID">11186</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">220</field>
+		<field name="shipTypeID">11186</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">221</field>
+		<field name="shipTypeID">11188</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">223</field>
+		<field name="shipTypeID">11188</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">224</field>
+		<field name="shipTypeID">11188</field>
+		<field name="certificateID">205</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">225</field>
+		<field name="shipTypeID">11190</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">226</field>
+		<field name="shipTypeID">11190</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">227</field>
+		<field name="shipTypeID">11190</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">228</field>
+		<field name="shipTypeID">11190</field>
+		<field name="certificateID">193</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">229</field>
+		<field name="shipTypeID">11192</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">230</field>
+		<field name="shipTypeID">11192</field>
+		<field name="certificateID">140</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">231</field>
+		<field name="shipTypeID">11192</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">232</field>
+		<field name="shipTypeID">11192</field>
+		<field name="certificateID">205</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">233</field>
+		<field name="shipTypeID">11194</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">234</field>
+		<field name="shipTypeID">11194</field>
+		<field name="certificateID">142</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">235</field>
+		<field name="shipTypeID">11194</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">236</field>
+		<field name="shipTypeID">11194</field>
+		<field name="certificateID">187</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">237</field>
+		<field name="shipTypeID">11196</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">238</field>
+		<field name="shipTypeID">11196</field>
+		<field name="certificateID">117</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">239</field>
+		<field name="shipTypeID">11196</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">240</field>
+		<field name="shipTypeID">11196</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">241</field>
+		<field name="shipTypeID">11198</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">242</field>
+		<field name="shipTypeID">11198</field>
+		<field name="certificateID">119</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">243</field>
+		<field name="shipTypeID">11198</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">244</field>
+		<field name="shipTypeID">11198</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">245</field>
+		<field name="shipTypeID">11200</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">246</field>
+		<field name="shipTypeID">11200</field>
+		<field name="certificateID">96</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">247</field>
+		<field name="shipTypeID">11200</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">248</field>
+		<field name="shipTypeID">11200</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">249</field>
+		<field name="shipTypeID">11202</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">250</field>
+		<field name="shipTypeID">11202</field>
+		<field name="certificateID">96</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">251</field>
+		<field name="shipTypeID">11202</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">252</field>
+		<field name="shipTypeID">11202</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">253</field>
+		<field name="shipTypeID">11365</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">254</field>
+		<field name="shipTypeID">11365</field>
+		<field name="certificateID">144</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">255</field>
+		<field name="shipTypeID">11365</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">256</field>
+		<field name="shipTypeID">11371</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">257</field>
+		<field name="shipTypeID">11371</field>
+		<field name="certificateID">117</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">258</field>
+		<field name="shipTypeID">11371</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">259</field>
+		<field name="shipTypeID">11377</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">260</field>
+		<field name="shipTypeID">11377</field>
+		<field name="certificateID">154</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">261</field>
+		<field name="shipTypeID">11377</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">262</field>
+		<field name="shipTypeID">11377</field>
+		<field name="certificateID">160</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">263</field>
+		<field name="shipTypeID">11379</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">264</field>
+		<field name="shipTypeID">11379</field>
+		<field name="certificateID">142</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">265</field>
+		<field name="shipTypeID">11379</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">266</field>
+		<field name="shipTypeID">11381</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">267</field>
+		<field name="shipTypeID">11381</field>
+		<field name="certificateID">98</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">268</field>
+		<field name="shipTypeID">11381</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">269</field>
+		<field name="shipTypeID">11387</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">270</field>
+		<field name="shipTypeID">11387</field>
+		<field name="certificateID">119</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">271</field>
+		<field name="shipTypeID">11387</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">272</field>
+		<field name="shipTypeID">11387</field>
+		<field name="certificateID">184</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">273</field>
+		<field name="shipTypeID">11393</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">274</field>
+		<field name="shipTypeID">11393</field>
+		<field name="certificateID">75</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">276</field>
+		<field name="shipTypeID">11400</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">277</field>
+		<field name="shipTypeID">11400</field>
+		<field name="certificateID">119</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">278</field>
+		<field name="shipTypeID">11400</field>
+		<field name="certificateID">58</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">279</field>
+		<field name="shipTypeID">11400</field>
+		<field name="certificateID">201</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">280</field>
+		<field name="shipTypeID">11957</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">281</field>
+		<field name="shipTypeID">11957</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">282</field>
+		<field name="shipTypeID">11957</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">283</field>
+		<field name="shipTypeID">11957</field>
+		<field name="certificateID">187</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">284</field>
+		<field name="shipTypeID">11959</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">285</field>
+		<field name="shipTypeID">11959</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">286</field>
+		<field name="shipTypeID">11959</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">287</field>
+		<field name="shipTypeID">11959</field>
+		<field name="certificateID">187</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">288</field>
+		<field name="shipTypeID">11961</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">289</field>
+		<field name="shipTypeID">11961</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">290</field>
+		<field name="shipTypeID">11961</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">291</field>
+		<field name="shipTypeID">11961</field>
+		<field name="certificateID">184</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">292</field>
+		<field name="shipTypeID">11963</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">293</field>
+		<field name="shipTypeID">11963</field>
+		<field name="certificateID">126</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">294</field>
+		<field name="shipTypeID">11963</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">295</field>
+		<field name="shipTypeID">11963</field>
+		<field name="certificateID">183</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">296</field>
+		<field name="shipTypeID">11965</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">297</field>
+		<field name="shipTypeID">11965</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">298</field>
+		<field name="shipTypeID">11965</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">299</field>
+		<field name="shipTypeID">11965</field>
+		<field name="certificateID">193</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">300</field>
+		<field name="shipTypeID">11969</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">302</field>
+		<field name="shipTypeID">11969</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">303</field>
+		<field name="shipTypeID">11969</field>
+		<field name="certificateID">190</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">304</field>
+		<field name="shipTypeID">11971</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">305</field>
+		<field name="shipTypeID">11971</field>
+		<field name="certificateID">105</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">306</field>
+		<field name="shipTypeID">11971</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">307</field>
+		<field name="shipTypeID">11971</field>
+		<field name="certificateID">190</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">308</field>
+		<field name="shipTypeID">11978</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">309</field>
+		<field name="shipTypeID">11978</field>
+		<field name="certificateID">66</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">310</field>
+		<field name="shipTypeID">11978</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">311</field>
+		<field name="shipTypeID">11985</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">312</field>
+		<field name="shipTypeID">11985</field>
+		<field name="certificateID">66</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">314</field>
+		<field name="shipTypeID">11987</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">315</field>
+		<field name="shipTypeID">11987</field>
+		<field name="certificateID">66</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">316</field>
+		<field name="shipTypeID">11987</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">317</field>
+		<field name="shipTypeID">11989</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">318</field>
+		<field name="shipTypeID">11989</field>
+		<field name="certificateID">66</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">319</field>
+		<field name="shipTypeID">11989</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">320</field>
+		<field name="shipTypeID">11993</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">321</field>
+		<field name="shipTypeID">11993</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">322</field>
+		<field name="shipTypeID">11993</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">323</field>
+		<field name="shipTypeID">11995</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">324</field>
+		<field name="shipTypeID">11995</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">325</field>
+		<field name="shipTypeID">11995</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">326</field>
+		<field name="shipTypeID">11995</field>
+		<field name="certificateID">199</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">327</field>
+		<field name="shipTypeID">11999</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">328</field>
+		<field name="shipTypeID">11999</field>
+		<field name="certificateID">124</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">330</field>
+		<field name="shipTypeID">11999</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">331</field>
+		<field name="shipTypeID">12003</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">332</field>
+		<field name="shipTypeID">12003</field>
+		<field name="certificateID">82</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">333</field>
+		<field name="shipTypeID">12003</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">334</field>
+		<field name="shipTypeID">12005</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">335</field>
+		<field name="shipTypeID">12005</field>
+		<field name="certificateID">171</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">336</field>
+		<field name="shipTypeID">12005</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">337</field>
+		<field name="shipTypeID">12011</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">338</field>
+		<field name="shipTypeID">12011</field>
+		<field name="certificateID">105</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">339</field>
+		<field name="shipTypeID">12011</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">340</field>
+		<field name="shipTypeID">12013</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">341</field>
+		<field name="shipTypeID">12013</field>
+		<field name="certificateID">124</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">342</field>
+		<field name="shipTypeID">12013</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">343</field>
+		<field name="shipTypeID">12013</field>
+		<field name="certificateID">199</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">344</field>
+		<field name="shipTypeID">12015</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">345</field>
+		<field name="shipTypeID">12015</field>
+		<field name="certificateID">126</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">346</field>
+		<field name="shipTypeID">12015</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">347</field>
+		<field name="shipTypeID">12017</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">348</field>
+		<field name="shipTypeID">12017</field>
+		<field name="certificateID">82</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">349</field>
+		<field name="shipTypeID">12017</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">350</field>
+		<field name="shipTypeID">12017</field>
+		<field name="certificateID">199</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">351</field>
+		<field name="shipTypeID">12019</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">352</field>
+		<field name="shipTypeID">12019</field>
+		<field name="certificateID">151</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">353</field>
+		<field name="shipTypeID">12019</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">354</field>
+		<field name="shipTypeID">12021</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">355</field>
+		<field name="shipTypeID">12021</field>
+		<field name="certificateID">103</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">356</field>
+		<field name="shipTypeID">12021</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">357</field>
+		<field name="shipTypeID">12021</field>
+		<field name="certificateID">199</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">358</field>
+		<field name="shipTypeID">12023</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">359</field>
+		<field name="shipTypeID">12023</field>
+		<field name="certificateID">103</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">360</field>
+		<field name="shipTypeID">12023</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">361</field>
+		<field name="shipTypeID">12023</field>
+		<field name="certificateID">202</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">362</field>
+		<field name="shipTypeID">12032</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">363</field>
+		<field name="shipTypeID">12032</field>
+		<field name="certificateID">154</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">364</field>
+		<field name="shipTypeID">12032</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">365</field>
+		<field name="shipTypeID">12032</field>
+		<field name="certificateID">160</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">366</field>
+		<field name="shipTypeID">12034</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">367</field>
+		<field name="shipTypeID">12034</field>
+		<field name="certificateID">154</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">368</field>
+		<field name="shipTypeID">12034</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">369</field>
+		<field name="shipTypeID">12034</field>
+		<field name="certificateID">160</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">370</field>
+		<field name="shipTypeID">12038</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">371</field>
+		<field name="shipTypeID">12038</field>
+		<field name="certificateID">154</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">372</field>
+		<field name="shipTypeID">12038</field>
+		<field name="certificateID">181</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">373</field>
+		<field name="shipTypeID">12038</field>
+		<field name="certificateID">160</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">374</field>
+		<field name="shipTypeID">12042</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">375</field>
+		<field name="shipTypeID">12042</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">376</field>
+		<field name="shipTypeID">12042</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">377</field>
+		<field name="shipTypeID">12044</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">378</field>
+		<field name="shipTypeID">12044</field>
+		<field name="certificateID">96</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">379</field>
+		<field name="shipTypeID">12044</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">380</field>
+		<field name="shipTypeID">12729</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">381</field>
+		<field name="shipTypeID">12729</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">382</field>
+		<field name="shipTypeID">12731</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">383</field>
+		<field name="shipTypeID">12731</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">384</field>
+		<field name="shipTypeID">12733</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">385</field>
+		<field name="shipTypeID">12733</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">386</field>
+		<field name="shipTypeID">12735</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">387</field>
+		<field name="shipTypeID">12735</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">388</field>
+		<field name="shipTypeID">12743</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">389</field>
+		<field name="shipTypeID">12743</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">390</field>
+		<field name="shipTypeID">12745</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">391</field>
+		<field name="shipTypeID">12745</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">393</field>
+		<field name="shipTypeID">12747</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">394</field>
+		<field name="shipTypeID">12753</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">395</field>
+		<field name="shipTypeID">12753</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">396</field>
+		<field name="shipTypeID">16227</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">397</field>
+		<field name="shipTypeID">16227</field>
+		<field name="certificateID">101</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">398</field>
+		<field name="shipTypeID">16227</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">399</field>
+		<field name="shipTypeID">16229</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">400</field>
+		<field name="shipTypeID">16229</field>
+		<field name="certificateID">101</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">401</field>
+		<field name="shipTypeID">16229</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">402</field>
+		<field name="shipTypeID">16231</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">403</field>
+		<field name="shipTypeID">16231</field>
+		<field name="certificateID">122</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">404</field>
+		<field name="shipTypeID">16231</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">405</field>
+		<field name="shipTypeID">16233</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">407</field>
+		<field name="shipTypeID">16233</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">408</field>
+		<field name="shipTypeID">16236</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">409</field>
+		<field name="shipTypeID">16236</field>
+		<field name="certificateID">72</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">410</field>
+		<field name="shipTypeID">16236</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">411</field>
+		<field name="shipTypeID">16238</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">412</field>
+		<field name="shipTypeID">16238</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">413</field>
+		<field name="shipTypeID">16238</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">414</field>
+		<field name="shipTypeID">16240</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">415</field>
+		<field name="shipTypeID">16240</field>
+		<field name="certificateID">93</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">416</field>
+		<field name="shipTypeID">16240</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">417</field>
+		<field name="shipTypeID">16242</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">418</field>
+		<field name="shipTypeID">16242</field>
+		<field name="certificateID">114</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">419</field>
+		<field name="shipTypeID">16242</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">420</field>
+		<field name="shipTypeID">17476</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">421</field>
+		<field name="shipTypeID">17476</field>
+		<field name="certificateID">241</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">422</field>
+		<field name="shipTypeID">17476</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">424</field>
+		<field name="shipTypeID">17478</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">425</field>
+		<field name="shipTypeID">17478</field>
+		<field name="certificateID">241</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">426</field>
+		<field name="shipTypeID">17478</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">428</field>
+		<field name="shipTypeID">17480</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">429</field>
+		<field name="shipTypeID">17480</field>
+		<field name="certificateID">241</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">430</field>
+		<field name="shipTypeID">17480</field>
+		<field name="certificateID">53</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">432</field>
+		<field name="shipTypeID">19744</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">433</field>
+		<field name="shipTypeID">19744</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">434</field>
+		<field name="shipTypeID">20125</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">435</field>
+		<field name="shipTypeID">20125</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">436</field>
+		<field name="shipTypeID">20125</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">437</field>
+		<field name="shipTypeID">20125</field>
+		<field name="certificateID">193</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">438</field>
+		<field name="shipTypeID">22428</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">439</field>
+		<field name="shipTypeID">22428</field>
+		<field name="certificateID">91</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">440</field>
+		<field name="shipTypeID">22428</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">441</field>
+		<field name="shipTypeID">22428</field>
+		<field name="certificateID">208</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">442</field>
+		<field name="shipTypeID">22430</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">443</field>
+		<field name="shipTypeID">22430</field>
+		<field name="certificateID">171</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">444</field>
+		<field name="shipTypeID">22430</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">445</field>
+		<field name="shipTypeID">22430</field>
+		<field name="certificateID">208</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">446</field>
+		<field name="shipTypeID">22436</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">447</field>
+		<field name="shipTypeID">22436</field>
+		<field name="certificateID">156</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">449</field>
+		<field name="shipTypeID">22436</field>
+		<field name="certificateID">187</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">450</field>
+		<field name="shipTypeID">22440</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">451</field>
+		<field name="shipTypeID">22440</field>
+		<field name="certificateID">133</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">452</field>
+		<field name="shipTypeID">22440</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">453</field>
+		<field name="shipTypeID">22440</field>
+		<field name="certificateID">208</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">454</field>
+		<field name="shipTypeID">22442</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">455</field>
+		<field name="shipTypeID">22442</field>
+		<field name="certificateID">167</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">456</field>
+		<field name="shipTypeID">22442</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">457</field>
+		<field name="shipTypeID">22442</field>
+		<field name="certificateID">225</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">458</field>
+		<field name="shipTypeID">22444</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">459</field>
+		<field name="shipTypeID">22444</field>
+		<field name="certificateID">124</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">460</field>
+		<field name="shipTypeID">22444</field>
+		<field name="certificateID">55</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">461</field>
+		<field name="shipTypeID">22446</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">463</field>
+		<field name="shipTypeID">22446</field>
+		<field name="certificateID">59</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">464</field>
+		<field name="shipTypeID">22446</field>
+		<field name="certificateID">228</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">465</field>
+		<field name="shipTypeID">22448</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">466</field>
+		<field name="shipTypeID">22448</field>
+		<field name="certificateID">82</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">467</field>
+		<field name="shipTypeID">22448</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">470</field>
+		<field name="shipTypeID">22452</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">471</field>
+		<field name="shipTypeID">22452</field>
+		<field name="certificateID">198</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">472</field>
+		<field name="shipTypeID">22456</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">473</field>
+		<field name="shipTypeID">22456</field>
+		<field name="certificateID">119</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">474</field>
+		<field name="shipTypeID">22456</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">475</field>
+		<field name="shipTypeID">22456</field>
+		<field name="certificateID">198</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">476</field>
+		<field name="shipTypeID">22460</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">477</field>
+		<field name="shipTypeID">22460</field>
+		<field name="certificateID">96</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">478</field>
+		<field name="shipTypeID">22460</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">479</field>
+		<field name="shipTypeID">22460</field>
+		<field name="certificateID">198</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">480</field>
+		<field name="shipTypeID">22464</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">482</field>
+		<field name="shipTypeID">22464</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">483</field>
+		<field name="shipTypeID">22464</field>
+		<field name="certificateID">198</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">484</field>
+		<field name="shipTypeID">22466</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">485</field>
+		<field name="shipTypeID">22466</field>
+		<field name="certificateID">103</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">486</field>
+		<field name="shipTypeID">22466</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">487</field>
+		<field name="shipTypeID">22468</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">488</field>
+		<field name="shipTypeID">22468</field>
+		<field name="certificateID">124</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">489</field>
+		<field name="shipTypeID">22468</field>
+		<field name="certificateID">55</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">490</field>
+		<field name="shipTypeID">22468</field>
+		<field name="certificateID">231</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">491</field>
+		<field name="shipTypeID">22470</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">492</field>
+		<field name="shipTypeID">22470</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">493</field>
+		<field name="shipTypeID">22470</field>
+		<field name="certificateID">59</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">494</field>
+		<field name="shipTypeID">22474</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">495</field>
+		<field name="shipTypeID">22474</field>
+		<field name="certificateID">149</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">496</field>
+		<field name="shipTypeID">22474</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">497</field>
+		<field name="shipTypeID">22474</field>
+		<field name="certificateID">221</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">498</field>
+		<field name="shipTypeID">22544</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">499</field>
+		<field name="shipTypeID">22544</field>
+		<field name="certificateID">242</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">500</field>
+		<field name="shipTypeID">22544</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">502</field>
+		<field name="shipTypeID">22546</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">504</field>
+		<field name="shipTypeID">22546</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">506</field>
+		<field name="shipTypeID">22548</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">508</field>
+		<field name="shipTypeID">22548</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">510</field>
+		<field name="shipTypeID">24688</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">511</field>
+		<field name="shipTypeID">24688</field>
+		<field name="certificateID">107</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">512</field>
+		<field name="shipTypeID">24688</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">513</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">514</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">107</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">515</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">516</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">201</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">517</field>
+		<field name="shipTypeID">24692</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">518</field>
+		<field name="shipTypeID">24692</field>
+		<field name="certificateID">86</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">519</field>
+		<field name="shipTypeID">24692</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">520</field>
+		<field name="shipTypeID">24694</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">521</field>
+		<field name="shipTypeID">24694</field>
+		<field name="certificateID">128</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">522</field>
+		<field name="shipTypeID">24694</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">523</field>
+		<field name="shipTypeID">24696</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">524</field>
+		<field name="shipTypeID">24696</field>
+		<field name="certificateID">80</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">525</field>
+		<field name="shipTypeID">24696</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">526</field>
+		<field name="shipTypeID">24698</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">527</field>
+		<field name="shipTypeID">24698</field>
+		<field name="certificateID">147</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">528</field>
+		<field name="shipTypeID">24698</field>
+		<field name="certificateID">58</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">529</field>
+		<field name="shipTypeID">24700</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">531</field>
+		<field name="shipTypeID">24700</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">532</field>
+		<field name="shipTypeID">24702</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">533</field>
+		<field name="shipTypeID">24702</field>
+		<field name="certificateID">122</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">534</field>
+		<field name="shipTypeID">24702</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">535</field>
+		<field name="shipTypeID">28659</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">536</field>
+		<field name="shipTypeID">28659</field>
+		<field name="certificateID">91</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">537</field>
+		<field name="shipTypeID">28659</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">538</field>
+		<field name="shipTypeID">28659</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">539</field>
+		<field name="shipTypeID">28661</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">540</field>
+		<field name="shipTypeID">28661</field>
+		<field name="certificateID">112</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">541</field>
+		<field name="shipTypeID">28661</field>
+		<field name="certificateID">48</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">542</field>
+		<field name="shipTypeID">28661</field>
+		<field name="certificateID">196</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">543</field>
+		<field name="shipTypeID">28665</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">544</field>
+		<field name="shipTypeID">28665</field>
+		<field name="certificateID">131</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">545</field>
+		<field name="shipTypeID">28665</field>
+		<field name="certificateID">55</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">546</field>
+		<field name="shipTypeID">28665</field>
+		<field name="certificateID">184</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">547</field>
+		<field name="shipTypeID">28710</field>
+		<field name="certificateID">18</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">548</field>
+		<field name="shipTypeID">28710</field>
+		<field name="certificateID">156</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">549</field>
+		<field name="shipTypeID">28710</field>
+		<field name="certificateID">55</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">550</field>
+		<field name="shipTypeID">28710</field>
+		<field name="certificateID">184</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">551</field>
+		<field name="shipTypeID">29248</field>
+		<field name="certificateID">15</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">552</field>
+		<field name="shipTypeID">29248</field>
+		<field name="certificateID">72</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">553</field>
+		<field name="shipTypeID">29248</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">554</field>
+		<field name="shipTypeID">29248</field>
+		<field name="certificateID">204</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">555</field>
+		<field name="shipTypeID">638</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">556</field>
+		<field name="shipTypeID">12747</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">557</field>
+		<field name="shipTypeID">586</field>
+		<field name="certificateID">46</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">558</field>
+		<field name="shipTypeID">11393</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">559</field>
+		<field name="shipTypeID">16233</field>
+		<field name="certificateID">80</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">560</field>
+		<field name="shipTypeID">22436</field>
+		<field name="certificateID">208</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">561</field>
+		<field name="shipTypeID">11985</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">562</field>
+		<field name="shipTypeID">24700</field>
+		<field name="certificateID">166</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">563</field>
+		<field name="shipTypeID">22446</field>
+		<field name="certificateID">105</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">564</field>
+		<field name="shipTypeID">11999</field>
+		<field name="certificateID">58</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">565</field>
+		<field name="shipTypeID">22548</field>
+		<field name="certificateID">251</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">566</field>
+		<field name="shipTypeID">22546</field>
+		<field name="certificateID">244</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">567</field>
+		<field name="shipTypeID">29986</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">568</field>
+		<field name="shipTypeID">29986</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">569</field>
+		<field name="shipTypeID">29986</field>
+		<field name="certificateID">80</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">570</field>
+		<field name="shipTypeID">29990</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">571</field>
+		<field name="shipTypeID">29990</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">572</field>
+		<field name="shipTypeID">29990</field>
+		<field name="certificateID">122</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">573</field>
+		<field name="shipTypeID">29988</field>
+		<field name="certificateID">47</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">574</field>
+		<field name="shipTypeID">29988</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">575</field>
+		<field name="shipTypeID">29988</field>
+		<field name="certificateID">101</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">576</field>
+		<field name="shipTypeID">29988</field>
+		<field name="certificateID">166</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">577</field>
+		<field name="shipTypeID">29984</field>
+		<field name="certificateID">54</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">578</field>
+		<field name="shipTypeID">29984</field>
+		<field name="certificateID">16</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">579</field>
+		<field name="shipTypeID">29984</field>
+		<field name="certificateID">147</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">580</field>
+		<field name="shipTypeID">2006</field>
+		<field name="certificateID">380</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">581</field>
+		<field name="shipTypeID">624</field>
+		<field name="certificateID">380</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">582</field>
+		<field name="shipTypeID">2006</field>
+		<field name="certificateID">379</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">583</field>
+		<field name="shipTypeID">624</field>
+		<field name="certificateID">379</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">584</field>
+		<field name="shipTypeID">628</field>
+		<field name="certificateID">381</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">585</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">383</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">586</field>
+		<field name="shipTypeID">632</field>
+		<field name="certificateID">384</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">587</field>
+		<field name="shipTypeID">621</field>
+		<field name="certificateID">385</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">588</field>
+		<field name="shipTypeID">621</field>
+		<field name="certificateID">386</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">589</field>
+		<field name="shipTypeID">623</field>
+		<field name="certificateID">387</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">590</field>
+		<field name="shipTypeID">623</field>
+		<field name="certificateID">388</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">591</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">389</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">592</field>
+		<field name="shipTypeID">627</field>
+		<field name="certificateID">390</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">593</field>
+		<field name="shipTypeID">626</field>
+		<field name="certificateID">391</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">594</field>
+		<field name="shipTypeID">626</field>
+		<field name="certificateID">392</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">595</field>
+		<field name="shipTypeID">622</field>
+		<field name="certificateID">393</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">596</field>
+		<field name="shipTypeID">639</field>
+		<field name="certificateID">395</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">597</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">395</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">598</field>
+		<field name="shipTypeID">24694</field>
+		<field name="certificateID">395</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">599</field>
+		<field name="shipTypeID">639</field>
+		<field name="certificateID">396</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">600</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">396</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">601</field>
+		<field name="shipTypeID">24694</field>
+		<field name="certificateID">396</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">602</field>
+		<field name="shipTypeID">641</field>
+		<field name="certificateID">397</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">603</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">397</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">604</field>
+		<field name="shipTypeID">641</field>
+		<field name="certificateID">398</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">605</field>
+		<field name="shipTypeID">24690</field>
+		<field name="certificateID">398</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">606</field>
+		<field name="shipTypeID">645</field>
+		<field name="certificateID">399</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">607</field>
+		<field name="shipTypeID">645</field>
+		<field name="certificateID">400</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">608</field>
+		<field name="shipTypeID">642</field>
+		<field name="certificateID">401</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">609</field>
+		<field name="shipTypeID">643</field>
+		<field name="certificateID">401</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">610</field>
+		<field name="shipTypeID">24692</field>
+		<field name="certificateID">401</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">611</field>
+		<field name="shipTypeID">642</field>
+		<field name="certificateID">402</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">612</field>
+		<field name="shipTypeID">24692</field>
+		<field name="certificateID">402</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">613</field>
+		<field name="shipTypeID">643</field>
+		<field name="certificateID">402</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">614</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">403</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">615</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">153</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">616</field>
+		<field name="shipTypeID">640</field>
+		<field name="certificateID">404</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">617</field>
+		<field name="shipTypeID">638</field>
+		<field name="certificateID">405</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">618</field>
+		<field name="shipTypeID">638</field>
+		<field name="certificateID">406</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">619</field>
+		<field name="shipTypeID">24688</field>
+		<field name="certificateID">407</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">620</field>
+		<field name="shipTypeID">24688</field>
+		<field name="certificateID">408</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">622</field>
+		<field name="shipTypeID">22464</field>
+		<field name="certificateID">142</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">623</field>
+		<field name="shipTypeID">634</field>
+		<field name="certificateID">65</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">624</field>
+		<field name="shipTypeID">11969</field>
+		<field name="certificateID">105</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">625</field>
+		<field name="shipTypeID">644</field>
+		<field name="certificateID">153</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	<row>
+		<field name="recommendationID">627</field>
+		<field name="shipTypeID">11188</field>
+		<field name="certificateID">140</field>
+		<field name="recommendationLevel">0</field>
+	</row>
+	</table_data>
+</database>
+</mysqldump>

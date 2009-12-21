@@ -1,0 +1,114 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{097C8821-39BB-446D-87E1-5D24E9115CFB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EVEMon.Sales</RootNamespace>
+    <AssemblyName>EVEMon.Sales</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BattleclinicParser.cs" />
+    <Compile Include="CXIParser.cs" />
+    <Compile Include="EveCentralParser.cs" />
+    <Compile Include="IMineralParser.cs" />
+    <Compile Include="MatariParser.cs" />
+    <Compile Include="MineralTile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MineralTile.Designer.cs">
+      <DependentUpon>MineralTile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MineralWorksheet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MineralWorksheet.Designer.cs">
+      <DependentUpon>MineralWorksheet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\AssemblyInfo.template.cs" />
+    <EmbeddedResource Include="MineralTile.resx">
+      <DependentUpon>MineralTile.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MineralWorksheet.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MineralWorksheet.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
+      <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
+      <Name>EVEMon.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Zydrine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Isogen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Megacyte.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Mexallon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Morphite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Nocxium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Pyerite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="icons\Tritanium.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
+  </PropertyGroup>
+</Project>

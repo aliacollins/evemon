@@ -1,0 +1,535 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0665275-3E0B-4117-81B0-751206ED03CD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EVEMon.Common</RootNamespace>
+    <AssemblyName>EVEMon.Common</AssemblyName>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NO_THREAD_SAFETY</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NO_THREAD_SAFETY</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="Account.cs" />
+    <Compile Include="Datafile.cs" />
+    <Compile Include="APIProvider.cs" />
+    <Compile Include="AttributesOptimizer.cs" />
+    <Compile Include="Controls\CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CustomComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Enforce.cs" />
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="EveConstants.cs" />
+    <Compile Include="EveClient.cs" />
+    <Compile Include="EveServerEventArgs.cs" />
+    <Compile Include="FontFactory.cs" />
+    <Compile Include="ImageService.cs" />
+    <Compile Include="Pair.cs" />
+    <Compile Include="FileHelper.cs" />
+    <Compile Include="PlanSorter.cs" />
+    <Compile Include="Serialization\Settings\SerializableSettings.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsObjects\Enumerations.cs" />
+    <Compile Include="Threading\Dispatcher.cs" />
+    <Compile Include="Threading\ActorTimer.cs" />
+    <Compile Include="Threading\IActor.cs" />
+    <Compile Include="Threading\UIActor.cs" />
+    <Compile Include="TimeCheck.cs" />
+    <Compile Include="Net\DownloadFileAsyncResult.cs" />
+    <Compile Include="Net\DownloadImageAsyncResult.cs" />
+    <Compile Include="Net\DownloadProgressChangedArgs.cs" />
+    <Compile Include="Net\DownloadStringAsyncResult.cs" />
+    <Compile Include="Net\DownloadXmlAsyncResult.cs" />
+    <Compile Include="Net\HttpWebService.FileDownload.cs" />
+    <Compile Include="Net\HttpWebService.ImageDownload.cs" />
+    <Compile Include="Net\HttpWebService.XmlDownload.cs" />
+    <Compile Include="Net\HttpWebServiceException.cs" />
+    <Compile Include="Net\HttpWebServiceExceptionStatus.cs" />
+    <Compile Include="Net\HttpWebServiceRequest.cs" />
+    <Compile Include="Net\HttpWebService.cs" />
+    <Compile Include="Net\HttpWebServiceState.cs" />
+    <Compile Include="Net\HttpWebService.StringDownload.cs" />
+    <Compile Include="Net\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Net\HttpPostData.cs" />
+    <Compile Include="Net\WebRequestAsyncState.cs" />
+    <Compile Include="Singleton.cs" />
+    <Compile Include="NetworkConstants.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NetworkConstants.resx</DependentUpon>
+    </Compile>
+    <Compile Include="APIMethod.cs" />
+    <Compile Include="AutoShrink.cs" />
+    <Compile Include="Controls\BusyDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\BusyDialog.Designer.cs">
+      <DependentUpon>BusyDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\API\APIError.cs" />
+    <Compile Include="Controls\CopySaveOptionsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\CopySaveOptionsWindow.Designer.cs">
+      <DependentUpon>CopySaveOptionsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EveImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EveImage.Designer.cs">
+      <DependentUpon>EveImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EveImagePopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\EveImagePopUp.Designer.cs">
+      <DependentUpon>EveImagePopUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\API\SerializableSkillQueue.cs" />
+    <Compile Include="Controls\EVEMonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\EVEMonForm.Designer.cs">
+      <DependentUpon>EVEMonForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EveServer.cs" />
+    <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="ImplantSet.cs" />
+    <Compile Include="SettingsObjects\SerializableColor.cs" />
+    <Compile Include="Skill.cs" />
+    <Compile Include="SkillGroup.cs" />
+    <Compile Include="CharacterCollection.cs" />
+    <Compile Include="LocalXmlCache.cs" />
+    <Compile Include="SettingsObjects\PlanExportSettings.cs" />
+    <Compile Include="Character.cs" />
+    <Compile Include="Plan.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\SerializableCharacterBase.cs" />
+    <Compile Include="Controls\SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SplitButton.Designer.cs">
+      <DependentUpon>SplitButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SplitContainerMinFixed.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\StaticDataErrorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\StaticDataErrorForm.Designer.cs">
+      <DependentUpon>StaticDataErrorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimeUtil.cs" />
+    <Compile Include="Controls\TreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeViewExtensions.cs" />
+    <Compile Include="Threading\Actor.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="WeakReferenceOfT.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\BusyDialog.resx">
+      <DependentUpon>BusyDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EVEMonForm.resx">
+      <DependentUpon>EVEMonForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountComparer.cs" />
+    <Compile Include="AccountCreationEventArgs.cs" />
+    <Compile Include="AccountIgnoreList.cs" />
+    <Compile Include="AccountQueryMonitor.cs" />
+    <Compile Include="Attributes\EnforceUIThreadAffinity.cs" />
+    <Compile Include="Attributes\ForcedOnStartupAttribute.cs" />
+    <Compile Include="Attributes\FullKeyAttribute.cs" />
+    <Compile Include="Attributes\HeaderAttribute.cs" />
+    <Compile Include="Attributes\Internals\NotifyPropertyChanged.Subs.cs" />
+    <Compile Include="Attributes\NotifyPropertyChanged.cs" />
+    <Compile Include="BaseCharacter.cs" />
+    <Compile Include="BasePlan.cs" />
+    <Compile Include="Certificate.cs" />
+    <Compile Include="CertificateCategory.cs" />
+    <Compile Include="CertificateCategoryCollection.cs" />
+    <Compile Include="CertificateClass.cs" />
+    <Compile Include="CertificateClassCollection.cs" />
+    <Compile Include="CertificateCollection.cs" />
+    <Compile Include="CharacterAttribute.cs" />
+    <Compile Include="CharacterAttributeScratchpad.cs" />
+    <Compile Include="CharacterComparer.cs" />
+    <Compile Include="CharacterExporter.cs" />
+    <Compile Include="CharacterExtensions.cs" />
+    <Compile Include="CharacterQueryMonitor.cs" />
+    <Compile Include="Collections\FastList.cs" />
+    <Compile Include="Controls\MsgBoxCustom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\MsgBoxCustom.Designer.cs">
+      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CultureConstants.cs" />
+    <Compile Include="Data\Constellation.cs" />
+    <Compile Include="Data\DBConstants.cs" />
+    <Compile Include="Data\EveProperty.cs" />
+    <Compile Include="Data\EvePropertyCategory.cs" />
+    <Compile Include="Data\EvePropertyValue.cs" />
+    <Compile Include="Data\Geography.cs" />
+    <Compile Include="Data\Implant.cs" />
+    <Compile Include="Data\Item.cs" />
+    <Compile Include="Data\MarketGroup.cs" />
+    <Compile Include="Data\Material.cs" />
+    <Compile Include="Data\PathFinder.cs" />
+    <Compile Include="Data\Region.cs" />
+    <Compile Include="Data\ReprocessingDatafile.cs" />
+    <Compile Include="Data\Ship.cs" />
+    <Compile Include="Data\SolarSystem.cs" />
+    <Compile Include="Data\SolarSystemRange.cs" />
+    <Compile Include="Data\StaticCertificate.cs" />
+    <Compile Include="Data\StaticCertificateCategory.cs" />
+    <Compile Include="Data\StaticCertificateClass.cs" />
+    <Compile Include="Data\StaticCertificates.cs" />
+    <Compile Include="Data\StaticItems.cs" />
+    <Compile Include="Data\StaticProperties.cs" />
+    <Compile Include="Data\StaticRecommendations.cs" />
+    <Compile Include="Data\StaticSkill.cs" />
+    <Compile Include="Data\StaticSkillEnumerableExtensions.cs" />
+    <Compile Include="Data\StaticSkillGroup.cs" />
+    <Compile Include="Data\StaticSkillLevel.cs" />
+    <Compile Include="Data\StaticSkillLevelEnumerableExtensions.cs" />
+    <Compile Include="Data\StaticSkills.cs" />
+    <Compile Include="Data\Station.cs" />
+    <Compile Include="Data\StationServices.cs" />
+    <Compile Include="EnumExtensions.cs" />
+    <Compile Include="GlobalNotificationCollection.cs" />
+    <Compile Include="IGBService\ClientConnectedEventArgs.cs" />
+    <Compile Include="IGBService\IgbClientDataReadEventArgs.cs" />
+    <Compile Include="IGBService\IgbServer.cs" />
+    <Compile Include="IGBService\IgbTcpClient.cs" />
+    <Compile Include="IGBService\IgbTcpListener.cs" />
+    <Compile Include="IgnoredCharacter.cs" />
+    <Compile Include="Attributes\UpdateAttribute.cs" />
+    <Compile Include="IQueryMonitor.cs" />
+    <Compile Include="MarketOrder.cs" />
+    <Compile Include="MarketOrderCollection.cs" />
+    <Compile Include="MarketOrderComparer.cs" />
+    <Compile Include="Net\NetworkMonitor.cs" />
+    <Compile Include="CharacterScratchpad.cs" />
+    <Compile Include="Collections\EmptyEnumerator.cs" />
+    <Compile Include="Collections\Interfaces.cs" />
+    <Compile Include="Collections\ReadonlyKeyedCollection.cs" />
+    <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
+    <Compile Include="IPlanOperation.cs" />
+    <Compile Include="Notifications\APIErrorNotification.cs" />
+    <Compile Include="Notifications\MarketOrdersNotification.cs" />
+    <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Notifications\NotificationBehaviour.cs" />
+    <Compile Include="Notifications\NotificationCategory.cs" />
+    <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
+    <Compile Include="Notifications\NotificationPriority.cs" />
+    <Compile Include="PlanScratchpad.cs" />
+    <Compile Include="Controls\CharacterPortrait.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CharacterPortrait.Designer.cs">
+      <DependentUpon>CharacterPortrait.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ControlExtensions.cs" />
+    <Compile Include="Controls\EVEFolderWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\EVEFolderWindow.Designer.cs">
+      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisposableWithCallback.cs" />
+    <Compile Include="CCPCharacter.cs" />
+    <Compile Include="Emailer.cs" />
+    <Compile Include="Collections\EnumerableExtensions.cs" />
+    <Compile Include="GlobalCharacterCollection.cs" />
+    <Compile Include="GlobalDatafileCollection.cs" />
+    <Compile Include="ICharacterAttribute.cs" />
+    <Compile Include="ImplantSetCollection.cs" />
+    <Compile Include="IStaticSkill.cs" />
+    <Compile Include="Collections\BaseList.cs" />
+    <Compile Include="PlanCollection.cs" />
+    <Compile Include="PlanComparer.cs" />
+    <Compile Include="Pricer.cs" />
+    <Compile Include="QueryMonitor.cs" />
+    <Compile Include="QueryMonitorCollection.cs" />
+    <Compile Include="Serialization\API\IAPIResult.cs" />
+    <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
+    <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
+    <Compile Include="Serialization\Datafiles\GeoDatafile.cs" />
+    <Compile Include="Serialization\Datafiles\PropertiesDatafile.cs" />
+    <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
+    <Compile Include="Serialization\Exportation\OutputPlan.cs" />
+    <Compile Include="Serialization\Exportation\OutputSkillGroup.cs" />
+    <Compile Include="Serialization\Importation\OldSettings.cs" />
+    <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
+    <Compile Include="SettingsObjects\CharacterUISettings.cs" />
+    <Compile Include="SettingsObjects\ExportationSettings.cs" />
+    <Compile Include="SettingsObjects\IGBSettings.cs" />
+    <Compile Include="SettingsObjects\MarketOrderColumn.cs" />
+    <Compile Include="SettingsObjects\MarketOrderColumnSettings.cs" />
+    <Compile Include="SettingsObjects\MarketOrderSettings.cs" />
+    <Compile Include="SettingsObjects\PlanColumn.cs" />
+    <Compile Include="PlanEntry.cs" />
+    <Compile Include="PlanExporter.cs" />
+    <Compile Include="PlanSuggestions.cs" />
+    <Compile Include="RemappingPoint.cs" />
+    <Compile Include="Scheduling\Enumerations.cs" />
+    <Compile Include="Scheduling\RecurringScheduleEntry.cs" />
+    <Compile Include="Scheduling\ScheduleDateTimeRange.cs" />
+    <Compile Include="Scheduling\ScheduleEntry.cs" />
+    <Compile Include="Scheduling\ScheduleEntryTitleComparer.cs" />
+    <Compile Include="Scheduling\Scheduler.cs" />
+    <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
+    <Compile Include="Serialization\Battleclinic\SerializableLoadoutFeed.cs" />
+    <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
+    <Compile Include="Serialization\Datafiles\ItemsDatafiles.cs" />
+    <Compile Include="Serialization\API\SerializableAPICharacter.cs" />
+    <Compile Include="Serialization\API\SerializableAttributes.cs" />
+    <Compile Include="Serialization\API\SerializableCertificate.cs" />
+    <Compile Include="Serialization\API\SerializableAPIImplantSet.cs" />
+    <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
+    <Compile Include="Serialization\Settings\SerializableSimpleScheduleEntry.cs" />
+    <Compile Include="SettingsObjects\CalendarSettings.cs" />
+    <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
+    <Compile Include="SettingsObjects\ItemBrowserSettings.cs" />
+    <Compile Include="SettingsObjects\MonitoredCharacterSettings.cs" />
+    <Compile Include="SettingsObjects\PlanColumnSettings.cs" />
+    <Compile Include="SettingsObjects\PlanSorting.cs" />
+    <Compile Include="SettingsObjects\ProxySettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SettingsObjects\SchedulerUISettings.cs" />
+    <Compile Include="SettingsObjects\G15Settings.cs" />
+    <Compile Include="SettingsObjects\MainWindowSettings.cs" />
+    <Compile Include="SettingsObjects\NotificationSettings.cs" />
+    <Compile Include="Serialization\Settings\SerializableScheduler.cs" />
+    <Compile Include="SettingsObjects\SerializableDictionary.cs" />
+    <Compile Include="Serialization\Settings\SerializableAccount.cs" />
+    <Compile Include="Serialization\Settings\SerializableSettingsImplantSet.cs" />
+    <Compile Include="Serialization\Settings\SerializablePlan.cs" />
+    <Compile Include="Serialization\Datafiles\SkillsDatafile.cs" />
+    <Compile Include="Serialization\Settings\SerializableCharacterIdentity.cs" />
+    <Compile Include="Serialization\Settings\SerializableSettingsCharacter.cs" />
+    <Compile Include="SettingsObjects\SerializableRectangle.cs" />
+    <Compile Include="SettingsObjects\PlanWindowSettings.cs" />
+    <Compile Include="SettingsObjects\ShipBrowserSettings.cs" />
+    <Compile Include="SettingsObjects\SkillBrowserSettings.cs" />
+    <Compile Include="SettingsObjects\SkillPieChartSettings.cs" />
+    <Compile Include="SettingsObjects\TrayPopupSettings.cs" />
+    <Compile Include="SettingsObjects\TrayTooltipSettings.cs" />
+    <Compile Include="SettingsObjects\UISettings.cs" />
+    <Compile Include="SettingsObjects\UpdateSettings.cs" />
+    <Compile Include="SkillCollection.cs" />
+    <Compile Include="SkillEnumerableExtensions.cs" />
+    <Compile Include="SkillGroupCollection.cs" />
+    <Compile Include="SkillLevelEnumerableExtensions.cs" />
+    <Compile Include="SkillLevelSet.cs" />
+    <Compile Include="SkillQueue.cs" />
+    <Compile Include="CharacterIdentity.cs" />
+    <Compile Include="Serialization\API\APIResult.cs" />
+    <Compile Include="Collections\ReadonlyCollection.cs" />
+    <Compile Include="SkillLevel.cs" />
+    <Compile Include="Threading\IActorTimer.cs" />
+    <Compile Include="Threading\UIActorTimer.cs" />
+    <Compile Include="TimeExtensions.cs" />
+    <Compile Include="UriCharacter.cs" />
+    <Compile Include="GlobalAccountCollection.cs" />
+    <Compile Include="GlobalAPIProviderCollection.cs" />
+    <Compile Include="GlobalCharacterIdentityCollection.cs" />
+    <Compile Include="GlobalMonitoredCharacterCollection.cs" />
+    <Compile Include="EventArgs.cs" />
+    <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
+    <Compile Include="Serialization\Settings\SerializableAPIProviders.cs" />
+    <Compile Include="Serialization\API\SerializableSkill.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterList.cs" />
+    <Compile Include="Serialization\API\SerializableServerStatus.cs" />
+    <Compile Include="QueuedSkill.cs" />
+    <Compile Include="UriCharacterEventArgs.cs" />
+    <None Include="Diagrams\Certificates.cd" />
+    <None Include="Diagrams\Characters - accounting.cd" />
+    <None Include="Diagrams\Settings.cd" />
+    <None Include="Diagrams\Implants.cd" />
+    <None Include="Diagrams\Serialization - Characters.cd" />
+    <None Include="Diagrams\Serialization - Settings.cd" />
+    <None Include="Diagrams\Ships.cd" />
+    <None Include="Diagrams\Items.cd" />
+    <None Include="Diagrams\Plan.cd" />
+    <None Include="ForceSgen.cmd" />
+    <None Include="Resources\eve-certificates.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-geography.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Diagrams\SkillLevel.cd" />
+    <None Include="Diagrams\Skills.cd" />
+    <None Include="Resources\eve-items.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-properties.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-reprocessing.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-skills.xml.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NetworkConstants.resx">
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NetworkConstants.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CopySaveOptionsWindow.resx">
+      <DependentUpon>CopySaveOptionsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EveImage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EveImagePopUp.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EveImagePopUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Net\ExceptionMessages.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\StaticDataErrorForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StaticDataErrorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TreeView.resx">
+      <DependentUpon>TreeView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Sql.Server.Express.1.0">
+      <Visible>False</Visible>
+      <ProductName>SQL Server 2005 Express Edition</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\CharacterPortrait.resx">
+      <DependentUpon>CharacterPortrait.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EVEFolderWindow.resx">
+      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MsgBoxCustom.resx">
+      <DependentUpon>MsgBoxCustom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LinqBridge\LinqBridge.csproj">
+      <Project>{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}</Project>
+      <Name>LinqBridge</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Serialization\Exportation\output-html.xslt" />
+    <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)
+</PreBuildEvent>
+    <PostBuildEvent>"$(ProjectDir)ForceSgen.cmd" "$(TargetPath)"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="EVEMon.SkillPlanner.ItemBrowserControl">
+    <Position X="9.75" Y="5.75" Width="2" />
+    <InheritanceLine Type="EVEMon.SkillPlanner.EveObjectBrowserSimple" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.25" Y="4.562" />
+        <Point X="9.013" Y="4.562" />
+        <Point X="9.013" Y="6.562" />
+        <Point X="9.75" Y="6.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AACAABCAACAAAAAAAACAgAACAwAAAAAgAAAAAAQAAQA=</HashCode>
+      <FileName>SkillPlanner\ItemBrowserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EVEMon.SkillPlanner.ShipBrowserControl">
+    <Position X="9.75" Y="1.25" Width="2" />
+    <InheritanceLine Type="EVEMon.SkillPlanner.EveObjectBrowserSimple" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="4.562" />
+        <Point X="8.992" Y="4.562" />
+        <Point X="8.992" Y="2.906" />
+        <Point X="9.75" Y="2.906" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAACBAAIAAAACAgAACAyAAAAAAAAAAgAACAQE=</HashCode>
+      <FileName>SkillPlanner\ShipBrowserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EVEMon.SkillPlanner.EveObjectBrowserSimple">
+    <Position X="6.25" Y="2.5" Width="2" />
+    <InheritanceLine Type="EVEMon.SkillPlanner.EveObjectBrowserControl" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.25" Y="4.562" />
+        <Point X="6.25" Y="4.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAACEAAAAAIACAAAACAAAAAAkAAAAgAAACAgA=</HashCode>
+      <FileName>SkillPlanner\EveObjectBrowserSimple.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EVEMon.SkillPlanner.EveObjectBrowserControl">
+    <Position X="3.25" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEBhMAAACkBAQAIAACAAAAKEAAGIAABAAAAgAQCAAA=</HashCode>
+      <FileName>SkillPlanner\EveObjectBrowserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
