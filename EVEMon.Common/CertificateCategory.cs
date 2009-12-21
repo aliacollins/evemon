@@ -1,68 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
-using EVEMon.Common.Collections;
-using EVEMon.Common.Data;
+using System.Xml;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a certificate category from a character's point of view.
+    /// Represents a certificate category. Every category
+    /// (i.e. "Business and Industry") contains certificate classes
+    /// (i.e. "Production Manager"), which contain certificates
+    /// (i.e. "Production Manager Basic").
     /// </summary>
-    [EnforceUIThreadAffinity]
-    public sealed class CertificateCategory : ReadonlyKeyedCollection<string, CertificateClass>
+    public sealed class CertificateCategory
     {
-        private readonly Character m_character;
-        private readonly StaticCertificateCategory m_staticData;
+        private readonly List<CertificateClass> classes = new List<CertificateClass>();
+
+        public readonly int ID;
+        public readonly string Name;
+        public readonly string Description;
 
         /// <summary>
-        /// Constructor
+        /// Constructor from XML
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
-        internal CertificateCategory(Character character, StaticCertificateCategory src)
+        /// <param name="element"></param>
+        internal CertificateCategory(XmlElement element)
         {
-            m_character = character;
-            m_staticData = src;
+            this.Name = element.GetAttribute("name");
+            this.Description = element.GetAttribute("descr");
+            this.ID = Int32.Parse(element.GetAttribute("id"));
 
-            foreach (var srcClass in src)
+            if (element.HasChildNodes)
             {
-                var certClass = new CertificateClass(character, srcClass, this);
-                m_items[certClass.Name] = certClass;
+                foreach (var child in element.ChildNodes)
+                {
+                    var certClass = new CertificateClass(this, (XmlElement)child);
+                    this.classes.Add(certClass);
+                }
+
+                // Sorty by name
+                this.classes.Sort((c1, c2) => String.Compare(c1.Name, c2.Name));
             }
         }
 
         /// <summary>
-        /// Gets the static data associated with this object.
+        /// Gets the certificate classes, sorted by name
         /// </summary>
-        public StaticCertificateCategory StaticData
+        /// <returns></returns>
+        public IEnumerable<CertificateClass> Classes
         {
-            get { return m_staticData; }
+            get { return this.classes; }
         }
-
-        /// <summary>
-        /// Gets this skill's id
-        /// </summary>
-        public int ID
-        {
-            get { return m_staticData.ID; }
-        }
-
-        /// <summary>
-        /// Gets this skill's name
-        /// </summary>
-        public string Name
-        {
-            get { return m_staticData.Name; }
-        }
-
-        /// <summary>
-        /// Gets this skill's description
-        /// </summary>
-        public string Description
-        {
-            get { return m_staticData.Description; }
-        }
-    }
+    } 
 }

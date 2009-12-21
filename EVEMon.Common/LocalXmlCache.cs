@@ -6,28 +6,59 @@ using System.IO;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// Represents the cache for the XML character sheet downloaded from CCP. 
-    /// </summary>
-    public static class LocalXmlCache
+    public sealed class LocalXmlCache
     {
-        private static readonly object m_syncLock = new object();
-        private static string m_cacheDirectory;
+        static WeakReference<LocalXmlCache> instance;
+        private string _cacheDirectory;
 
 
         /// <summary>
-        /// Static constructor.
+        /// Initializes the <see cref="LocalXmlCache"/> class.
+        /// This constructor exists purely to ensure lazy initialization
         /// </summary>
-        public static void Initialize()
+        static LocalXmlCache()
         {
-            string EVEMonDir = Path.Combine(EveClient.EVEMonDataDir, "cache");
+            instance = new WeakReference<LocalXmlCache>(new LocalXmlCache());
+        }
 
-            if (!Directory.Exists(EVEMonDir)) Directory.CreateDirectory(EVEMonDir);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalXmlCache"/> class.
+        /// </summary>
+        LocalXmlCache()
+        {
+            string evemonDir = Path.Combine(Settings.EveMonDataDir, "cache");
 
-            EVEMonDir = Path.Combine(EVEMonDir, "xml");
-            if (!Directory.Exists(EVEMonDir)) Directory.CreateDirectory(EVEMonDir);
+            if (!Directory.Exists(evemonDir))
+                Directory.CreateDirectory(evemonDir);
 
-            m_cacheDirectory = EVEMonDir + Path.DirectorySeparatorChar;
+            evemonDir = Path.Combine(evemonDir,  "xml");
+            if (!Directory.Exists(evemonDir))
+                Directory.CreateDirectory(evemonDir);
+
+            _cacheDirectory = evemonDir + Path.DirectorySeparatorChar;
+        }
+
+
+        /// <summary>
+        /// Gets the singleton instance of the LocalXmlCache object
+        /// </summary>
+        /// <value>The singleton instance - no more than one of these, ever.</value>
+        public static LocalXmlCache Instance
+        {
+            get
+            {
+                LocalXmlCache targ = null;
+                if (instance != null)
+                {
+                    targ = instance.Target;
+                }
+                if (targ == null)
+                {
+                    targ = new LocalXmlCache();
+                    instance = new WeakReference<LocalXmlCache>(targ);
+                }
+                return targ;
+            }
         }
 
         /// <summary>
@@ -35,68 +66,44 @@ namespace EVEMon.Common
         /// If you really want the xml, use GetCharacterXml
         /// </summary>
         /// <value></value>
-        public static FileInfo GetFile(string charName)
+        public FileInfo this[string charName]
         {
-            lock (m_syncLock)
+            get
             {
                 string encodedName = charName + ".xml";
-                return new FileInfo(m_cacheDirectory + encodedName);
+                return new FileInfo(_cacheDirectory + encodedName);
             }
         }
 
-        /// <summary>
-        /// Gets the character XML
-        /// </summary>
-        /// <param name="charName"></param>
-        /// <returns></returns>
-        public static XmlDocument GetCharacterXml(string charName)
+        public XmlDocument GetCharacterXml(string charName)
         {
-            lock (m_syncLock)
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(m_cacheDirectory + charName + ".xml");
-                return doc;
-            }
+            XmlDocument doc = new XmlDocument();
+            doc.Load(_cacheDirectory + charName + ".xml");
+            return doc;
         }
 
         /// <summary>
         /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument"/> straight from CCP
         /// </summary>
         /// <param name="xdoc">The character xml to save.</param>
-        internal static void Save(string key, XmlDocument xdoc)
+        public void Save(XmlDocument xdoc)
         {
-            lock (m_syncLock)
+            XmlNode characterNode = xdoc.SelectSingleNode("//name");
+            string name = characterNode.InnerText;
+            string encodedName = name+".xml";
+
+            // Writes in a temporary file name
+            string tempFileName = Path.GetTempFileName();
+            using (XmlTextWriter writer = new XmlTextWriter(new FileStream(tempFileName, FileMode.Create), Encoding.GetEncoding("iso-8859-1")))
             {
-                XmlNode characterNode = xdoc.SelectSingleNode("//name");
-                string name = characterNode.InnerText;
-                string encodedName = name + ".xml";
-
-                // Writes in a temporary file name
-                string tempFileName = Path.GetTempFileName();
-                using (XmlTextWriter writer = new XmlTextWriter(new FileStream(tempFileName, FileMode.Create), Encoding.GetEncoding("iso-8859-1")))
-                {
-                    xdoc.WriteTo(writer);
-                    writer.Flush();
-                    writer.Close();
-                }
-
-                // Overwrite the target file
-                string fileName = Path.Combine(m_cacheDirectory, characterNode.InnerText + ".xml");
-                FileHelper.OverwriteOrWarnTheUser(tempFileName, fileName, OverwriteOperation.Move);
+                xdoc.WriteTo(writer);
+                writer.Flush();
+                writer.Close();
             }
-        }
 
-        /// <summary>
-        /// Gets the URI for the cached xml for the given character
-        /// </summary>
-        /// <param name="characterName"></param>
-        /// <returns></returns>
-        internal static Uri GetCharacterUri(string characterName)
-        {
-            lock (m_syncLock)
-            {
-                return new Uri(m_cacheDirectory + characterName + ".xml");
-            }
+            // Overwrite the target file
+            string fileName = Path.Combine(_cacheDirectory, characterNode.InnerText + ".xml");
+            LocalFileSystem.OverwriteOrWarnTheUser(tempFileName, fileName, OverwriteOperation.Move);
         }
     }
 }

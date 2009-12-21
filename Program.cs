@@ -1,0 +1,194 @@
+//#define DEBUG_SINGLETHREAD
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Windows.Forms;
+using EVEMon.Common;
+using EVEMon.NetworkLogger;
+using EVEMon.SkillPlanner;
+using EVEMon.WindowRelocator;
+
+namespace EVEMon
+{
+    internal static class Program
+    {
+        // See ApplicationExitCallback for explanations
+        private static bool m_exitRequested = false;
+
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        private static void Main()
+        {
+#if !DEBUG
+            InstanceManager im = InstanceManager.GetInstance();
+            if (!im.CreatedNew)
+            {
+                im.Signal();
+                return;
+            }
+#endif
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+            Application.ApplicationExit += new EventHandler(ApplicationExitCallback);
+
+            bool startMinimized = false;
+            bool _apiDebugMode = false;
+
+            foreach (string targ in Environment.GetCommandLineArgs())
+            {
+                if (targ == "-netlog")
+                {
+                    StartNetlog();
+                    if (m_logger == null)
+                    {
+                        return;
+                    }
+                }
+
+                if (targ == "-startMinimized")
+                {
+                    startMinimized = true;
+                }
+
+                if (targ.ToLower() == "-apidebug")
+                {
+                    _apiDebugMode = true;
+                }
+            }
+
+            Plan.PlannerWindowFactory = new PlannerWindowFactory();
+
+#if DEBUG_SINGLETHREAD
+#else
+            InstallerDeleter.Schedule();
+#endif
+
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+            // Initialize APIState and Settings
+            Singleton.Instance<APIState>().DebugMode = _apiDebugMode;
+
+            // Check time synchronization
+            if (CommonContext.Settings.CheckTimeOnStartup)
+            {
+                TimeCheck.CheckIsSynchronised(TimeCheckCallback);
+            }
+
+            try
+            {
+                // Did we requested an exit before we enter Run() ?
+                // See ApplicationExitCallback
+                if (m_exitRequested) return;
+
+                // Main application's loop
+                Application.Run(new MainWindow(Settings.GetInstance(), startMinimized));
+            }
+            // Clean up
+            finally
+            {
+                Settings.GetInstance().SaveImmediate();
+
+                SetRelocatorState(false);
+                if (m_logger != null)
+                {
+                    m_logger.Dispose();
+                }
+
+                G15Handler.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// If <see cref="Application.Exit()"/> is called before the <see cref="Application.Run()"/> method, then it won't occur. 
+        /// So, here, we set up a boolean to prevent that.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void ApplicationExitCallback(object sender, EventArgs e)
+        {
+            m_exitRequested = true;
+        }
+
+        private static void TimeCheckCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime)
+        {
+            if (isSynchronised == false)
+            {
+                using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
+                {
+                    timeDialog.ShowDialog();
+                }
+            }
+        }
+
+        private static MainWindow m_mainWindow;
+
+        public static MainWindow MainWindow
+        {
+            get { return m_mainWindow; }
+            set { m_mainWindow = value; }
+        }
+
+        private static IDisposable m_logger;
+
+        private static void StartNetlog()
+        {
+            m_logger = Logger.StartLogging();
+        }
+
+        private static bool m_relocatorRunning = false;
+
+        public static void SetRelocatorState(bool state)
+        {
+            if (!state && !m_relocatorRunning)
+            {
+                return;
+            }
+            InternalSetRelocatorState(state);
+        }
+
+        private static void InternalSetRelocatorState(bool state)
+        {
+            if (state)
+            {
+                m_relocatorRunning = true;
+                Relocator.Start(Settings.RelocateTargetScreen);
+            }
+            else
+            {
+                m_relocatorRunning = false;
+                Relocator.Stop();
+            }
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (!Debugger.IsAttached)
+            {
+                ShowError(e.ExceptionObject as Exception);
+                Environment.Exit(1);
+            }
+        }
+
+        public static Settings Settings
+        {
+            get { return Settings.GetInstance(); }
+        }
+
+        private static bool m_showWindowOnError = true;
+
+        private static void ShowError(Exception e)
+        {
+            if (m_showWindowOnError)
+            {
+                m_showWindowOnError = false;
+                using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(e))
+                {
+                    f.ShowDialog();
+                }
+            }
+        }
+    }
+}

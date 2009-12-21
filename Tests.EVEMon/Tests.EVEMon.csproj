@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -79,7 +79,7 @@
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EVEMon\EVEMon.csproj">
+    <ProjectReference Include="..\EVEMon.csproj">
       <Project>{A2E5EFE0-614A-4567-95E5-92A4D94169AC}</Project>
       <Name>EVEMon</Name>
     </ProjectReference>

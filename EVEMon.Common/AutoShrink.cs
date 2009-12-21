@@ -39,8 +39,8 @@ namespace EVEMon.Common
         /// completed processing either the successful call or the timeout.
         /// </remarks>
         public static TimeSpan IdleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
-        private static readonly TimeSpan Infinite = new TimeSpan(0, 0, 0, 0, -1);
-        private static readonly Timer dirtyTimer = new Timer(DirtyCallback);
+        private static TimeSpan Infinite = new TimeSpan(0, 0, 0, 0, -1);
+        private static Timer dirtyTimer = new Timer(DirtyCallback);
 
         /// <summary>
         /// Call this method after an operation has occured that might have increased the working set of the application
@@ -81,15 +81,6 @@ namespace EVEMon.Common
         public static void Dirty(TimeSpan idleMillisecondsBeforeClean)
         {
             dirtyTimer.Change(idleMillisecondsBeforeClean, Infinite);
-        }
-
-        /// <summary>
-        /// Forces an immediate cleanup
-        /// </summary>
-        public static void DirtyImmediate()
-        {
-            DirtyCallback(null);
-            dirtyTimer.Change(Infinite, Infinite);
         }
 
         private static void DirtyCallback(object state)

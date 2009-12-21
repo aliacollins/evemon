@@ -8,7 +8,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Exception class for all exceptions thrown by HttpWebService requests
     /// </summary>
-    public sealed class HttpWebServiceException : ApplicationException
+    public class HttpWebServiceException : ApplicationException
     {
         private readonly HttpWebServiceExceptionStatus _status;
         private readonly string _url;
@@ -84,46 +84,31 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException WebException(string url, HttpWebServiceState webServiceState, WebException ex)
         {
-            string proxyHost;
-            if (webServiceState.Proxy.Enabled)
-            {
-                proxyHost = webServiceState.Proxy.Host;
-            }
-            else
-            {
-                proxyHost = HttpWebRequest.DefaultWebProxy.GetProxy(new Uri(url)).Host;
-            }
-
+            StringBuilder messageBuilder = new StringBuilder();
             HttpWebServiceExceptionStatus status;
+            string proxyHost;
+            if (webServiceState.UseCustomProxy)
+                proxyHost = webServiceState.Proxy.Host;
+            else
+                proxyHost = HttpWebRequest.DefaultWebProxy.GetProxy(new Uri(url)).Host;
 
-            var msg = ParseWebException(ex, url, proxyHost, out status);
-            return new HttpWebServiceException(status, ex, url, msg);
-        }
-
-        /// <summary>
-        /// Parses a web exception to get an error message and a <see cref="HttpWebServiceExceptionStatus"/> status code.
-        /// </summary>
-        /// <param name="ex"></param>
-        /// <param name="url"></param>
-        /// <param name="proxyHost"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        public static string ParseWebException(WebException ex, string url, string proxyHost, out HttpWebServiceExceptionStatus status)
-        {
-            var messageBuilder = new StringBuilder();
-            switch (ex.Status)
+            switch(ex.Status)
             {
                 case WebExceptionStatus.ProtocolError:
-                    HttpWebResponse response = (HttpWebResponse)ex.Response;
-                    switch (response.StatusCode)
+                    HttpWebResponse response = (HttpWebResponse) ex.Response;
+                    switch(response.StatusCode)
                     {
                         case HttpStatusCode.ProxyAuthenticationRequired:
                             status = HttpWebServiceExceptionStatus.ProxyError;
-                            messageBuilder.AppendLine(
-                                String.Format(ExceptionMessages.ProxyAuthenticationFailure,
-                                              proxyHost, GetHostName(url)));
+                            if (webServiceState.RequestsDisabled)
+                                messageBuilder.AppendLine(
+                                    String.Format(ExceptionMessages.ProxyAuthenticationFailureDisabledRequests,
+                                                  proxyHost, GetHostName(url)));
+                            else
+                                messageBuilder.AppendLine(
+                                    String.Format(ExceptionMessages.ProxyAuthenticationFailure,
+                                                  proxyHost, GetHostName(url)));
                             break;
-
                         default:
                             status = HttpWebServiceExceptionStatus.ServerError;
                             messageBuilder.AppendLine(
@@ -161,8 +146,7 @@ namespace EVEMon.Common.Net
                         String.Format(ExceptionMessages.UnknownWebException, GetHostName(url), ex.Status));
                     break;
             }
-
-            return messageBuilder.ToString();
+            return new HttpWebServiceException(status, ex, url, messageBuilder.ToString());
         }
 
         /// <summary>

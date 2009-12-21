@@ -9,7 +9,7 @@ namespace EVEMon.Common
     /// <summary>
     /// Ensures synchronisation of local time to a knonw time source
     /// </summary>
-    public static class TimeCheck
+    public class TimeCheck
     {
         /// <summary>
         /// Asynchronous method to determine if the user's clock is syncrhonised to Battleclinic time
@@ -18,7 +18,7 @@ namespace EVEMon.Common
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
         {
             SyncState state = new SyncState(callback);
-            EveClient.HttpWebService.DownloadStringAsync(NetworkConstants.BatlleclinicTimeSynch, SyncDownloadCompleted, state);
+            CommonContext.HttpWebService.DownloadStringAsync("http://www.battleclinic.com/time.php", SyncDownloadCompleted, state);
         }
 
         /// <summary>

@@ -1,695 +1,2461 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+
+using System.Drawing;
+using System.Drawing.Printing;
 using System.Text;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Attributes;
-using EVEMon.Common.Controls;
-using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Settings;
 using System.Threading;
-using EVEMon.Common.SettingsObjects;
-using System.Collections.ObjectModel;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// Represents a character's plan
-    /// </summary>
-    [EnforceUIThreadAffinity]
-    public sealed class Plan : BasePlan
+    [XmlRoot("plan")]
+    public class Plan
     {
-        #region PlanOperation
-        /// <summary>
-        /// This class is used to add entries. It enumerates the prerequisites to add, their lowest prioties, etc.
-        /// </summary>
-        private sealed class PlanOperation : IPlanOperation
+        public Plan()
         {
-            private readonly Plan m_plan;
-            private readonly PlanOperations m_type;
+            m_entries.Changed += new EventHandler<ChangedEventArgs<Plan.Entry>>(Entries_Changed);
+            m_entries.Cleared += new EventHandler<ClearedEventArgs<Plan.Entry>>(Entries_Cleared);
 
-            // Addition
-            private readonly int m_highestPriorityForAddition;
-            private readonly List<ISkillLevel> m_skillsToAdd = new List<ISkillLevel>();
-            private readonly List<PlanEntry> m_allEntriesToAdd = new List<PlanEntry>();
-
-            // Suppression
-            private readonly List<ISkillLevel> m_skillsToRemove = new List<ISkillLevel>();
-            private readonly List<PlanEntry> m_allEntriesToRemove = new List<PlanEntry>();
-            private readonly List<PlanEntry> m_removablePrerequisites = new List<PlanEntry>();
-
-
-            /// <summary>
-            /// Constructor for an empty operation.
-            /// </summary>
-            /// <param name="plan"></param>
-            public PlanOperation(Plan plan)
-            {
-                m_plan = plan;
-            }
-
-            /// <summary>
-            /// Constructor for entries addition.
-            /// </summary>
-            /// <param name="plan"></param>
-            /// <param name="entries"></param>
-            /// <param name="lowestPrerequisitesPriority"></param>
-            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToAdd, IEnumerable<PlanEntry> allEntriesToAdd, int lowestPrerequisitesPriority)
-            {
-                m_plan = plan;
-                m_type = (skillsToAdd.IsEmpty() ? PlanOperations.None : PlanOperations.Addition);
-
-                m_skillsToAdd.AddRange(skillsToAdd);
-                m_allEntriesToAdd.AddRange(allEntriesToAdd);
-                m_highestPriorityForAddition = lowestPrerequisitesPriority;
-            }
-
-            /// <summary>
-            /// Constructor for entries suppression.
-            /// </summary>
-            /// <param name="plan"></param>
-            /// <param name="entries"></param>
-            /// <param name="highestPriority"></param>
-            public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToRemove, IEnumerable<PlanEntry> allEntriesToRemove, IEnumerable<PlanEntry> removablePrerequisites)
-            {
-                m_plan = plan;
-                m_type = (skillsToRemove.IsEmpty() ? PlanOperations.None : PlanOperations.Suppression);
-
-                m_skillsToRemove.AddRange(skillsToRemove);
-                m_allEntriesToRemove.AddRange(allEntriesToRemove);
-                m_removablePrerequisites.AddRange(removablePrerequisites);
-            }
-
-            /// <summary>
-            /// Gets the type of operation to perform
-            /// </summary>
-            public PlanOperations Type
-            {
-                get { return m_type; }
-            }
-
-            /// <summary>
-            /// Gets the plan affected by this operation.
-            /// </summary>
-            public Plan Plan 
-            {
-                get { return m_plan; } 
-            }
-
-            /// <summary>
-            /// Gets the skill levels the user originally wanted to add.
-            /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToAdd
-            {
-                get { return m_skillsToAdd.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets all the entries to add when an addition is performed, including the prerequisites.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToAdd
-            {
-                get { return m_allEntriesToAdd.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the skill levels the user originally wanted to remove.
-            /// </summary>
-            public ReadOnlyCollection<ISkillLevel> SkillsToRemove
-            {
-                get { return m_skillsToRemove.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets all the entries to remove when a suppression is performed, including the dependencies.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> AllEntriesToRemove
-            {
-                get { return m_allEntriesToRemove.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the entries that can be optionally removed when a suppression is performed.
-            /// </summary>
-            public ReadOnlyCollection<PlanEntry> RemovablePrerequisites
-            {
-                get { return m_removablePrerequisites.AsReadOnly(); }
-            }
-
-            /// <summary>
-            /// Gets the highest possible priority (lowest possible number) for new entries when an addition is performed. 
-            /// This limit is due to the prerequisites, since they cannot have a lower priority than the entries to add.
-            /// </summary>
-            public int HighestPriorityForAddition
-            {
-                get { return m_highestPriorityForAddition; }
-            }
-
-            /// <summary>
-            /// Performs the operation in the simplest possible way, using default priority for insertions and not removing useless prerequisites for 
-            /// suppressions (but still removing dependent entries !).
-            /// </summary>
-            public void Perform()
-            {
-                switch (m_type)
-                {
-                    case PlanOperations.Suppression:
-                        PerformSuppression(false);
-                        break;
-                    case PlanOperations.Addition:
-                        PerformAddition(PlanEntry.DefaultPriority);
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-            /// <summary>
-            /// Suppress the entries.
-            /// </summary>
-            /// <param name="removePrerequisites">When true, also remove the prerequisites that are not used anymore.</param>
-            public void PerformSuppression(bool removePrerequisites)
-            {
-                // Checks this operation is an addition
-                if (m_type == PlanOperations.Addition) throw new InvalidOperationException("The represented operation is an addition.");
-
-                // No entries ? Quit
-                if (m_skillsToRemove.Count == 0) return;
-
-
-                using (m_plan.SuspendingEvents())
-                {
-                    // Remove the entries
-                    foreach (PlanEntry entry in m_allEntriesToRemove)
-                    {
-                        var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                        if (existingEntry != null) m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
-                    }
-
-                    // Also remove the prerequisites if the caller requested it.
-                    if (removePrerequisites)
-                    {
-                        foreach (PlanEntry entry in m_removablePrerequisites)
-                        {
-                            var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                            if (existingEntry != null) m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
-                        }
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Adds the entries.
-            /// </summary>
-            /// <param name="priority">The desired priority for the new entries, it is automatically adjusted to match the <see cref="HighestPriorityForAddition"/> property.</param>
-            public void PerformAddition(int priority)
-            {
-                // Checks this operation is an addition
-                if (m_type == PlanOperations.Suppression) throw new InvalidOperationException("The represented operation is a suppression.");
-
-                // No entries ? Quit
-                if (m_allEntriesToAdd.Count == 0) return;
-
-                // Fixes priority
-                priority = Math.Max(priority, m_highestPriorityForAddition);
-
-                using (m_plan.SuspendingEvents())
-                {
-                    foreach (PlanEntry entry in m_allEntriesToAdd)
-                    {
-                        var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-
-                        // Are we updating an existing entry ? Then just change the note
-                        if (existingEntry != null)
-                        {
-                            // If existing entry's notes is null, we replace it 
-                            if (String.IsNullOrEmpty(existingEntry.Notes))
-                            {
-                                existingEntry.Notes = entry.Notes;
-                            }
-                            // Else, we concatenate the notes
-                            else if (entry.Notes.Contains(entry.Notes))
-                            {
-                                existingEntry.Notes += (", " + entry.Notes);
-                            }
-
-                            // Update the priority
-                            if (existingEntry.Priority > priority) existingEntry.Priority = priority;
-                        }
-                        else
-                        {
-                            entry.Priority = priority;
-                            m_plan.AddCore(entry.Clone(m_plan));
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
-
-        private string m_name;
-        private bool m_isConnected;
-        private int m_changedNotificationSuppressions;
-        private PlanChange m_change;
-        private PlanSorting m_sortingPreferences;
-
-        #region Construction, importation, exportation
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="character"></param>
-        public Plan(BaseCharacter character)
-            : base(character)
-        {
-            m_sortingPreferences = new PlanSorting();
+            printFont = FontHelper.GetFont("Arial", 10); 
+            printFontBold = FontHelper.GetFont("Arial", 10, FontStyle.Bold | FontStyle.Underline);
         }
 
-        /// <summary>
-        /// Deserialization constructor
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="serial"></param>
-        internal Plan(BaseCharacter character, SerializablePlan serial)
-            : this(character)
-        {
-            Import(serial);
-        }
+        #region Members
+        // Plan Name
+        private string m_planName;
+        Settings m_settings;
 
-        /// <summary>
-        /// Imports data from a serialization object
-        /// </summary>
-        /// <param name="serial"></param>
-        public void Import(SerializablePlan serial)
-        {
-            // Update name
-            m_name = serial.Name;
-            m_sortingPreferences = serial.SortingPreferences.Clone();
-
-            // Update entries
-            List<PlanEntry> entries = new List<PlanEntry>();
-            foreach (var serialEntry in serial.Entries)
-            {
-                entries.Add(new PlanEntry(this, serialEntry));
-            }
-            RebuildPlanFrom(entries);
-
-            // Notify name change
-            if (m_isConnected) EveClient.OnPlanNameChanged(this);
-        }
-
-        /// <summary>
-        /// Generates a serialization object
-        /// </summary>
-        /// <returns></returns>
-        public SerializablePlan Export()
-        {
-            // Create serialization object
-            var character = (Character)m_character;
-            var serial = new SerializablePlan { Name = m_name, Owner = character.Guid, SortingPreferences = m_sortingPreferences.Clone() };
-
-            // Add entries
-            foreach (var entry in m_items)
-            {
-                var serialEntry = new SerializablePlanEntry
-                {
-                    SkillName = entry.Skill.Name,
-                    Level = entry.Level,
-                    Type = entry.Type,
-                    Notes = entry.Notes, 
-                    Priority = entry.Priority
-                };
-
-                // Add groups
-                foreach (var group in entry.PlanGroups)
-                {
-                    serialEntry.PlanGroups.Add(group);
-                }
-
-                // Remapping point
-                if (entry.Remapping != null)
-                {
-                    serialEntry.Remapping = entry.Remapping.Export();
-                }
-
-                serial.Entries.Add(serialEntry);
-            }
-
-            return serial;
-        }
-        #endregion
-
-
-        /// <summary>
-        /// Gets or sets true if the plan is connected to a character and will send notifications. When false, it's just a computing helper.
-        /// </summary>
-        internal bool IsConnected
-        {
-            get { return m_isConnected; }
-            set { m_isConnected = true; }
-        }
-
-        /// <summary>
-        /// Gets or sets the plan's name
-        /// </summary>
+        [XmlIgnore]
         public string Name
         {
-            get { return m_name; }
-            set 
-            { 
-                m_name = value;
-                if (m_isConnected) EveClient.OnPlanNameChanged(this);
+            get { return m_planName; }
+            set { m_planName = value; }
+        }
+
+        // The Character
+        private CharacterInfo m_grandCharacterInfo = null;
+
+        [XmlIgnore]
+        public CharacterInfo GrandCharacterInfo
+        {
+            get { return m_grandCharacterInfo; }
+            set
+            {
+                this.SuppressEvents();
+                try
+                {
+                    m_attributeSuggestion = null;
+                    if (m_grandCharacterInfo != null)
+                    {
+                        m_grandCharacterInfo.SkillChanged -= new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
+                    }
+                    m_grandCharacterInfo = value;
+                    if (m_grandCharacterInfo != null)
+                    {
+                        m_grandCharacterInfo.SkillChanged += new SkillChangedHandler(GrandCharacterInfo_SkillChanged);
+
+                        CheckForCompletedSkills();
+                        CheckForMissingPrerequisites();
+                    }
+                }
+                finally
+                {
+                    this.ResumeEvents();
+                }
             }
         }
 
-        /// <summary>
-        /// Gets sorting preferences for this plan. Those are only preferences, it does not change the plan.
-        /// </summary>
-        public PlanSorting SortingPreferences
+        private void GrandCharacterInfo_SkillChanged(object sender, SkillChangedEventArgs e)
         {
-            get { return m_sortingPreferences; }
+            CheckForCompletedSkills();
         }
+
+        // The Plan Entries
+        private MonitoredList<Plan.Entry> m_entries = new MonitoredList<Plan.Entry>();
+
+        [XmlArrayItem("entry")]
+        public MonitoredList<Plan.Entry> Entries
+        {
+            get { return m_entries; }
+        }
+
+        // Handle Events on the monitored list
+        private void Entries_Cleared(object sender, ClearedEventArgs<Plan.Entry> e)
+        {
+            foreach (Plan.Entry pe in e.Items)
+            {
+                pe.Plan = null;
+            }
+        }
+
+        // Handle Events on the monitored list
+        private void Entries_Changed(object sender, ChangedEventArgs<Plan.Entry> e)
+        {
+            m_uniqueSkillCount = -1;
+            m_attributeSuggestion = null;
+            switch (e.ChangeType)
+            {
+                case ChangeType.Added:
+                    e.Item.Plan = this;
+                    break;
+
+                case ChangeType.Removed:
+                    e.Item.Plan = null;
+                    break;
+            }
+
+            OnChange();
+        }
+
+        // Generate events when the plan changes
+        public event EventHandler<EventArgs> Changed;
+        #endregion Members
+
+        #region Preferences
+        private ColumnPreference m_columnPreference = null;
+
+        public ColumnPreference ColumnPreference
+        {
+            get
+            {
+                if (m_columnPreference == null)
+                {
+                    m_columnPreference = Settings.GetInstance().ColumnPreferences;
+                }
+                return m_columnPreference;
+            }
+            set { m_columnPreference = value; }
+        }
+
+        private string m_lastSortKey = "";
+
+        public string LastSortKey
+        {
+            get { return m_lastSortKey; }
+            set { m_lastSortKey = value; }
+        }
+
+        private bool m_lastSortWasReversed = false;
+
+        public bool LastSortWasReversed
+        {
+            get { return m_lastSortWasReversed; }
+            set { m_lastSortWasReversed = value; }
+        }
+
+        private bool m_sortWithLearningSkillsOnTop;
+
+        /// <summary>
+        /// When true, the plan sorter will put learning skills on top
+        /// </summary>
+        public bool SortWithLearningSkillsOnTop
+        {
+            get { return m_sortWithLearningSkillsOnTop; }
+            set { m_sortWithLearningSkillsOnTop = value; }
+        }
+
+        private bool sortWithPrioritiesGrouping;
+
+        /// <summary>
+        /// When true, the plan sorter will group skills by priorities
+        /// </summary>
+        public bool SortWithPrioritiesGrouping
+        {
+            get { return sortWithPrioritiesGrouping; }
+            set { sortWithPrioritiesGrouping = value; }
+        }
+        #endregion
 
         #region Event firing and suppression
-        /// <summary>
-        /// Returns an <see cref="IDisposable"/> object which suspends events notification and will resume them once disposed.
-        /// </summary>
-        /// <remarks>Use the returned object in a <c>using</c> block to ensure the disposal of the object even when exceptions are thrown.</remarks>
-        /// <returns></returns>
-        public override IDisposable SuspendingEvents()
-        {
-            Interlocked.Increment(ref m_changedNotificationSuppressions);
+        // That whole mess is probably overkill but I wasn't sure whether the app could afford things like event fired right 
+        // after event suppression was triggered, or whether contention around the list during subscribers' job was mandatory
+        // In doubt of the original intentions and practical use, I left contention and just ensured that  only one event is 
+        // fired on resume, which was the main trouble
+        private bool m_changed;
+        private int m_suppression;
+        private readonly object m_lock = new object();
 
-            return new DisposableWithCallback(() =>
-                {
-                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0)
-                    {
-                        if (m_change != PlanChange.None) OnChanged(m_change);
-                    }
-                });
+        public void SuppressEvents()
+        {
+            lock (m_lock)
+            {
+                m_suppression++;
+            }
         }
 
-        /// <summary>
-        /// Notify changes happened in the entries
-        /// </summary>
-        internal override void OnChanged(PlanChange change)
+        public void ResumeEvents()
         {
-            // Updates and notifications have been suspended
-            if (m_changedNotificationSuppressions > 0)
+            lock (m_lock)
             {
-                m_change |= change;
+                m_suppression--;
+                if (m_suppression == 0 && m_changed && Changed != null)
+                {
+                    m_changed = false;
+                    Changed(this, new EventArgs());
+                }
+            }
+        }
+
+        private void OnChange()
+        {
+            if (m_suppression > 0)
+            {
+                // It can happen that, here, m_suppression is 0 again. So, at worst we dalyed the call
+                m_changed = true;
+            }
+            else
+            {
+                lock (m_lock)
+                {
+                    if (m_suppression > 0)
+                    {
+                        m_changed = true;
+                    }
+                    else
+                    {
+                        if (Changed != null)
+                        {
+                            m_changed = false;
+                            Changed(this, new EventArgs());
+                        }
+                    }
+                }
+            }
+        }
+        #endregion Event firing and suppression
+
+        #region Suggestions
+        private bool? m_attributeSuggestion = null;
+
+        [XmlIgnore]
+        public bool HasAttributeSuggestion
+        {
+            get
+            {
+                if (m_attributeSuggestion == null)
+                {
+                    CheckForAttributeSuggestion();
+                }
+                return m_attributeSuggestion.Value;
+            }
+        }
+
+        public void ResetSuggestions()
+        {
+            CheckForAttributeSuggestion();
+        }
+
+        public IEnumerable<Plan.Entry> GetSuggestions()
+        {
+            List<Plan.Entry> result = new List<Plan.Entry>();
+
+            TimeSpan baseTime = GetTotalTime(null, true);
+            CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime, result);
+            CheckForTimeBenefit("Analytical Mind", "Logic", baseTime, result);
+            CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime, result);
+            CheckForTimeBenefit("Iron Will", "Focus", baseTime, result);
+            CheckForTimeBenefit("Empathy", "Presence", baseTime, result);
+            CheckForLearningBenefit(baseTime, result);
+            return result;
+        }
+
+        private void CheckForAttributeSuggestion()
+        {
+            if (GrandCharacterInfo == null)
+            {
+                m_attributeSuggestion = false;
                 return;
             }
 
-            // Changes are about to be fired
-            change |= m_change;
-            m_change = PlanChange.None;
+            TimeSpan baseTime = GetTotalTime(null, true);
 
-            // Add missing prerequisites
-            if ((change & PlanChange.Prerequisites) != PlanChange.None)
-            {
-                FixPrerequisites();
-            }
+            m_attributeSuggestion = CheckForTimeBenefit("Analytical Mind", "Logic", baseTime);
+            if (m_attributeSuggestion == true) return;
 
-            // Notify changes
-            if ((change & PlanChange.Notification) != PlanChange.None)
-            {
-                if (m_isConnected) EveClient.OnPlanChanged(this);
-            }
+            m_attributeSuggestion = CheckForTimeBenefit("Spatial Awareness", "Clarity", baseTime);
+            if (m_attributeSuggestion == true) return;
 
-        }
-        #endregion
+            m_attributeSuggestion = CheckForTimeBenefit("Iron Will", "Focus", baseTime);
+            if (m_attributeSuggestion == true) return;
 
+            m_attributeSuggestion = CheckForTimeBenefit("Instant Recall", "Eidetic Memory", baseTime);
+            if (m_attributeSuggestion == true) return;
 
-        #region Insertion and removal
-        /// <summary>
-        /// Set the planned level to the given one, lowering it if it's higher than the targetted one. 
-        /// When the skill is not planned already, the prerequisites are automatically added.
-        /// </summary>
-        /// <param name="skill">The skill we want to plan</param>
-        /// <param name="level">The level we want to train to</param>
-        public void PlanTo(StaticSkill skill, int level)
-        {
-            PlanTo(skill, level, PlanEntry.DefaultPriority, skill.Name);
+            m_attributeSuggestion = CheckForTimeBenefit("Empathy", "Presence", baseTime);
+            if (m_attributeSuggestion == true) return;
+
+            m_attributeSuggestion = CheckForLearningBenefit(baseTime, null);
+            if (m_attributeSuggestion == true) return;
         }
 
-        /// <summary>
-        /// Set the planned level to the given one, lowering it if it's higher than the targetted one. 
-        /// When the skill is not planned already, the prerequisites are automatically added.
-        /// Note this method won't remove entries other entries depend of.
-        /// </summary>
-        /// <param name="skill">The skill we want to plan</param>
-        /// <param name="level">The level we want to train to</param>
-        /// <param name="noteForNewEntries">The reason we want to train this skill</param>
-        public void PlanTo(StaticSkill skill, int level, int priority, string noteForNewEntries)
+        private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime)
         {
-            int plannedLevel = GetPlannedLevel(skill);
-            if (level == plannedLevel) return;
+            return CheckForTimeBenefit(skillA, skillB, baseTime, null);
+        }
 
-            using (SuspendingEvents())
+        private bool CheckForTimeBenefit(string skillA, string skillB, TimeSpan baseTime, List<Plan.Entry> entries)
+        {
+            Skill gsa = GrandCharacterInfo.SkillGroups["Learning"][skillA];
+            Skill gsb = GrandCharacterInfo.SkillGroups["Learning"][skillB];
+
+            TimeSpan bestTime = baseTime;
+            TimeSpan addedTrainingTime = TimeSpan.Zero;
+            Skill bestGs = null;
+            int bestLevel = -1;
+            int added = 0;
+            for (int i = 0; i < 10; i++)
             {
-                // We may either have to add or remove entries. First, we assume we have to add ones
-                if (level > plannedLevel)
+                int level;
+                Skill gs;
+                if (i < 4)
                 {
-                    var skillsToAdd = new List<StaticSkillLevel>();
-                    skillsToAdd.Add(new StaticSkillLevel(skill, level));
-
-                    // None added ? Then return
-                    var operation = TryAddSet(skillsToAdd, noteForNewEntries);
-                    operation.PerformAddition(priority);
+                    gs = gsa;
+                    level = i + 1;
+                }
+                else if (i < 8)
+                {
+                    gs = gsb;
+                    level = i - 3;
+                }
+                else if (i < 9)
+                {
+                    gs = gsa;
+                    level = i - 3;
                 }
                 else
                 {
-                    level = Math.Max(level, GetMinimumLevel(skill));
+                    gs = gsb;
+                    level = i - 4;
+                }
 
-                    // If we reach this point, then we have to remove entries
-                    for (int i = 5; i > level; i--)
+                if (gs.Level < level && !this.IsPlanned(gs, level))
+                {
+                    EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                    scratchpad.AdjustAttributeBonus(gs.AttributeModified, added++);
+                    addedTrainingTime += gs.GetTrainingTimeOfLevelOnly(level, true, scratchpad);
+                    scratchpad.AdjustAttributeBonus(gs.AttributeModified, 1);
+
+                    TimeSpan thisTime = GetTotalTime(scratchpad, true) + addedTrainingTime;
+                    if (thisTime < bestTime)
                     {
-                        PlanEntry entry = GetEntry(skill, i);
-                        if (entry == null) continue;
+                        bestTime = thisTime;
+                        bestGs = gs;
+                        bestLevel = level;
+                    }
+                }
+            }
 
-                        RemoveCore(m_items.IndexOf(entry));
+            if (entries != null)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    int level;
+                    Skill gs;
+                    if (i < 4)
+                    {
+                        gs = gsa;
+                        level = i + 1;
+                    }
+                    else if (i < 8)
+                    {
+                        gs = gsb;
+                        level = i - 3;
+                    }
+                    else if (i < 9)
+                    {
+                        gs = gsa;
+                        level = i - 3;
+                    }
+                    else
+                    {
+                        gs = gsb;
+                        level = i - 4;
+                    }
+                    if (gs.Level < level && !this.IsPlanned(gs, level))
+                    {
+                        if ((level < 5 && ((level <= bestLevel && gs == bestGs) || (bestGs == gsb && gs == gsa)))
+                            || ((level == 5 && bestLevel == 5) && ((gs == bestGs) || (bestGs == gsb && gs == gsa))))
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = level;
+                            pe.EntryType = Plan.Entry.Type.Planned;
+                            entries.Add(pe);
+                        }
+                    }
+                }
+            }
+
+            return (bestGs != null);
+        }
+        private bool CheckForLearningBenefit(TimeSpan baseTime, List<Plan.Entry> entries)
+        {
+            Skill learning = GrandCharacterInfo.SkillGroups["Learning"]["Learning"];
+
+            TimeSpan bestTime = baseTime;
+            TimeSpan addedTrainingTime = TimeSpan.Zero;
+            int bestLevel = -1;
+            int added = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                int level = i + 1;
+                if (learning.Level < level && !this.IsPlanned(learning, level))
+                {
+                    EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+                    scratchpad.AdjustLearningLevelBonus(++added);
+                    addedTrainingTime += learning.GetTrainingTimeOfLevelOnly(level, true, scratchpad);
+                    TimeSpan thisTime = GetTotalTime(scratchpad, true) + addedTrainingTime;
+                    if (thisTime < bestTime)
+                    {
+                        bestTime = thisTime;
+                        bestLevel = level;
+                    }
+                }
+            }
+
+            if (entries != null)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    int level = i + 1;
+                    if (learning.Level < level && !this.IsPlanned(learning, level))
+                    {
+                        if (level <= bestLevel)
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = learning.Name;
+                            pe.Level = level;
+                            pe.EntryType = Plan.Entry.Type.Planned;
+                            entries.Add(pe);
+                        }
+                    }
+                }
+            }
+
+            return (bestLevel != -1);
+        }
+        #endregion Suggestions
+
+        #region Statistics
+
+        [XmlIgnore]
+        public TimeSpan TotalTrainingTime
+        {
+            get { return GetTotalTime(null, true); }
+        }
+
+        public TimeSpan GetTotalTime(EveAttributeScratchpad scratchpad, bool applyRemappingPoints)
+        {
+            TimeSpan ts = TimeSpan.Zero;
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
+
+            // We cannot apply multiple remapping without messing up things.
+            // So we need to hold a base scratchpad whihch will be never remapped 
+            // and will hold the cumultative learning skills' bonuses.
+            if (scratchpad == null) scratchpad = new EveAttributeScratchpad();
+            EveAttributeScratchpad scratchpadWithoutRemap = new EveAttributeScratchpad();
+
+            foreach (Plan.Entry pe in m_entries)
+            {
+                if (pe.Skill == null)
+                {
+                    continue;
+                }
+
+                ts += pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
+
+                scratchpadWithoutRemap.ApplyALevelOf(pe.Skill);
+                scratchpad.ApplyALevelOf(pe.Skill);
+
+                // Apply remapping point
+                if (pe.Remapping != null && pe.Remapping.Status != RemappingPoint.PointStatus.NotComputed && applyRemappingPoints)
+                {
+                    scratchpad = pe.Remapping.TransformSctratchpad(this.m_grandCharacterInfo, scratchpadWithoutRemap);
+                }
+            }
+            return ts;
+        }
+
+        private int m_uniqueSkillCount = -1;
+
+        [XmlIgnore]
+        public int UniqueSkillCount
+        {
+            get
+            {
+                if (m_uniqueSkillCount == -1)
+                {
+                    CountUniqueSkills();
+                }
+                return m_uniqueSkillCount;
+            }
+        }
+
+        private void CountUniqueSkills()
+        {
+            Dictionary<string, bool> counted = new Dictionary<string, bool>();
+            m_uniqueSkillCount = 0;
+            foreach (Plan.Entry pe in m_entries)
+            {
+                if (!counted.ContainsKey(pe.SkillName))
+                {
+                    m_uniqueSkillCount++;
+                    counted[pe.SkillName] = true;
+                }
+            }
+        }
+        [XmlIgnore]
+        public long TrainingCost
+        {
+            get
+            {
+                long cost = 0;
+                Dictionary<string, bool> counted = new Dictionary<string, bool>();
+                foreach (Plan.Entry pe in m_entries)
+                {
+                    if (!counted.ContainsKey(pe.SkillName))
+                    {
+                        if (!pe.Skill.Known && !pe.Skill.Owned)
+                        {
+                            cost += pe.Skill.Cost;
+                        }
+                        counted[pe.SkillName] = true;
+                    }
+                }
+                return cost;
+            }
+        }
+
+        #endregion Statistics
+
+        #region Plan Managment
+        public void CheckForMissingPrerequisites()
+        {
+            this.SuppressEvents();
+            try
+            {
+                for (int i = 0; i < m_entries.Count; i++)
+                {
+                    bool jumpBack = false;
+                    Plan.Entry pe = m_entries[i];
+                    Skill gs = pe.Skill;
+                    //skill has been removed
+                    if (gs == null)
+                    {
+                        this.RemoveEntry(pe);
+                        continue;
+                    }
+
+                    foreach (Skill.Prereq pp in gs.Prereqs)
+                    {
+                        Skill pgs = pp.Skill;
+
+                        // ignore recursive skills (e.g Polaris)
+                        if (pgs.Id == gs.Id)
+                        {
+                            continue;
+                        }
+
+                        int prIndex = GetIndexOf(pgs.Name, pp.Level);
+
+                        if (prIndex == -1 && pgs.Level < pp.Level)
+                        {
+                            // Not in the plan, and needs to be trained...
+                            Plan.Entry npe = new Plan.Entry();
+                            npe.SkillName = pgs.Name;
+                            npe.Level = pp.Level;
+                            npe.Priority = pe.Priority;
+                            npe.EntryType = Plan.Entry.Type.Prerequisite;
+                            m_entries.Insert(i, npe);
+                            jumpBack = true;
+                            i -= 1;
+                            break;
+                        }
+                        else if (prIndex > i)
+                        {
+                            // In the plan, but in invalid order...
+                            Plan.Entry mve = m_entries[prIndex];
+                            m_entries.RemoveAt(prIndex);
+                            m_entries.Insert(i, mve);
+                            jumpBack = true;
+                            i -= 1;
+                            break;
+                        }
+                    }
+                    if (!jumpBack)
+                    {
+                        if (pe.Level - 1 > gs.Level)
+                        {
+                            // The previous level is needed in the plan...
+                            int prIndex = GetIndexOf(gs.Name, pe.Level - 1);
+                            if (prIndex == -1)
+                            {
+                                // ...it's not in the plan.
+                                Plan.Entry ppe = new Plan.Entry();
+                                ppe.SkillName = gs.Name;
+                                ppe.Priority = pe.Priority;
+                                ppe.Level = pe.Level - 1;
+                                m_entries.Insert(i, ppe);
+                                jumpBack = true;
+                                i -= 1;
+                            }
+                            else if (prIndex > i)
+                            {
+                                // ..it's in the plan, but it's after this.
+                                Plan.Entry mve = m_entries[prIndex];
+                                m_entries.RemoveAt(prIndex);
+                                m_entries.Insert(i, mve);
+                                jumpBack = true;
+                                i -= 1;
+                            }
+                        }
+                    }
+                }
+                CheckPriorities(true);
+
+                // do we need to sanity check priorities (in case this is called by learning suggestions/plan import etc?
+            }
+            finally
+            {
+                this.ResumeEvents();
+            }
+        }
+
+        public bool CheckPriorities(bool fixConflicts)
+        {
+            return CheckPriorities(fixConflicts, false);
+        }
+
+        /// <summary>
+        /// Find the highest priority of all dependants of a skill
+        /// </summary>
+        /// <param name="posSkillToCheck"></param>
+        int HighestDepPriority(int posSkillToCheck)
+        {
+            Plan.Entry pe = m_entries[posSkillToCheck];
+            Skill s = pe.Skill;
+
+            int highestDepPriority = Int32.MaxValue;
+
+            if (s == null)
+            {
+                return highestDepPriority;
+            }
+
+            for (int j = posSkillToCheck + 1; j < m_entries.Count; ++j)
+            {
+                Plan.Entry ped = m_entries[j];
+                Skill sd = ped.Skill;
+                if (sd == null)
+                {
+                    continue;
+                }
+                if (sd.Name == s.Name && pe.Level < ped.Level)
+                {
+                    if (ped.Priority < highestDepPriority)
+                    {
+                        highestDepPriority = ped.Priority;
+                    }
+                }
+                else
+                {
+                    int neededLevel;
+                    bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+                    if (hap && neededLevel >= pe.Level)
+                    {
+                        if (ped.Priority < highestDepPriority)
+                        {
+                            highestDepPriority = ped.Priority;
+                        }
+                    }
+                }
+            }
+
+            return highestDepPriority;
+        }
+
+        /// <summary>
+        /// Lower priorities of all dependant skills to match parent skill
+        /// </summary>
+        /// <param name="posSkill">position of parent skill</param>
+        public void LowerDepSkills(int posSkill)
+        {
+            Plan.Entry pe = m_entries[posSkill];
+            Skill s = pe.Skill;
+
+            for (int j = posSkill + 1; j < m_entries.Count; ++j)
+            {
+                Plan.Entry ped = m_entries[j];
+                Skill sd = ped.Skill;
+                if (sd.Name == s.Name && pe.Level < ped.Level)
+                {
+                    if (ped.Priority < pe.Priority)
+                        ped.Priority = pe.Priority;
+                }
+                else
+                {
+                    int neededLevel = 0;
+                    bool hap = sd.HasAsPrerequisite(s, out neededLevel);
+                    if (hap && neededLevel >= pe.Level)
+                    {
+                        if (ped.Priority < pe.Priority)
+                            ped.Priority = pe.Priority;
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Returns an operation to set the planned level to the given one, lowering it if it's higher than the targetted one. 
-        /// The returned object allows an extended control, to automatically remove dependencies and prerequisites. 
+        /// Check that the plan has a consistant set of priorities (i.e. pre-reqs have a higher priority
+        /// than dependant skills
+        /// 
+        /// If fixConflicts is true, then we set the priority of prerequisites to the same as the 
+        /// highest priority of any dependant skill
+        /// unless loweringPriorities is true, then we set all dependant skills to the priority of the
+        /// prerequisite
         /// </summary>
-        /// <param name="skill">The skill we want to plan</param>
-        /// <param name="level">The level we want to train to</param>
-        /// <returns></returns>
-        public IPlanOperation TryPlanTo(Skill skill, int level)
+        /// <param name="fixConflicts"></param>
+        /// <param name="loweringPriorities"></param>
+        /// <returns>priorities are ok</returns>
+        public bool CheckPriorities(bool fixConflicts, bool loweringPriorities)
         {
-            return TryPlanTo(skill, level, skill.Name);
+            bool planOK = true;
+            // check all plan entries
+            for (int i = 0; i < m_entries.Count; i++)
+            {
+                Plan.Entry pe = m_entries[i];
+                int highestDepPriority = HighestDepPriority(i);
+                // find all dependants on this skill and get the highest priority
+                if (pe.Priority > highestDepPriority)
+                {
+                    planOK = false;
+                    if (fixConflicts)
+                    {
+                        if (loweringPriorities)
+                            LowerDepSkills(i);
+                        else
+                            pe.Priority = highestDepPriority;
+                    }
+                    else
+                        break;
+                }
+            }
+            return planOK;
+        }
+
+        private int GetIndexOf(string skillName, int level)
+        {
+            for (int i = 0; i < m_entries.Count; i++)
+            {
+                Plan.Entry pe = m_entries[i];
+                if (pe.SkillName == skillName && pe.Level == level)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private void CheckForCompletedSkills()
+        {
+            this.SuppressEvents();
+            try
+            {
+                for (int i = 0; i < m_entries.Count; i++)
+                {
+                    Plan.Entry pe = m_entries[i];
+                    Skill gs = GrandCharacterInfo.GetSkill(pe.SkillName);
+                    if (gs == null || pe.Level > 5 || pe.Level < 1)
+                    {
+                        try
+                        {
+                            this.RemoveEntry(pe);
+                            return;
+                        }
+                        catch (Exception)
+                        {
+                            throw new ApplicationException("The plan contains " + pe.SkillName + ", which is an unknown skill");
+                        }
+                    }
+                    if (gs.LastConfirmedLvl >= pe.Level)
+                    {
+                        m_entries.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+            finally
+            {
+                this.ResumeEvents();
+            }
+        }
+
+        public bool IsPlanned(Skill gs)
+        {
+            foreach (Plan.Entry pe in m_entries)
+            {
+                if (pe.Skill == gs)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int PlannedLevel(Skill gs)
+        {
+            for (int i = 5; i > 0; i--)
+            {
+                if (IsPlanned(gs, i))
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public bool IsPlanned(Skill gs, int level)
+        {
+            return Priority(gs, level) != Int32.MinValue;
+        }
+
+        public int Priority(Skill gs, int level)
+        {
+            foreach (Plan.Entry pe in m_entries)
+            {
+                if (pe.SkillName == gs.Name && pe.Level == level)
+                {
+                    return pe.Priority;
+                }
+            }
+            return Int32.MinValue;
         }
 
         /// <summary>
-        /// Returns an operation to set the planned level to the given one, lowering it if it's higher than the targetted one. 
-        /// The returned object allows an extended control, to automatically remove dependencies and prerequisites. 
+        /// Test if this skill & level is not trained and is not already in the list of candidate entries
+        /// This is needed as sometimes the chain of prerequisites will include the same skill twice
+        /// e.g. Assuming we have Gunnery II and want to train Large hybrid turret
+        /// we need gunnery V and medium hybrid turret  and medium hybrid also requires Gunnery III so we would
+        /// have Gunnery III twice in the prereqs list.
+        /// If we do find a prereq that's alreay in the list, ensure that the note contains the reason
+        /// we're adding these skills.
         /// </summary>
-        /// <param name="skill">The skill we want to plan</param>
-        /// <param name="level">The level we want to train to</param>
-        /// <param name="noteForNewEntries">The reason we want to train this skill</param>
-        /// <returns></returns>
-        public IPlanOperation TryPlanTo(Skill skill, int level, string noteForNewEntries)
+        /// <param name="gs">The skill we're wanting to add</param>
+        /// <param name="level">and it's level</param>
+        /// <param name="list">The list of prereqs we're already adding</param>
+        /// <param name="Note">The reason we're adding these skills</param>
+        /// <returns>true if we should add this entry</returns>
+        private bool ShouldAdd(Skill gs, int level, IEnumerable<Plan.Entry> list, string Note)
         {
-            int plannedLevel = GetPlannedLevel(skill);
-            if (level == plannedLevel) return new PlanOperation(this);
-
-            // Addition
-            if (level > plannedLevel)
+            // check that the current level is less than the requsted level
+            if (gs.Level < level)
             {
-                // Get skill levels to add
-                var skillsToAdd = new List<StaticSkillLevel>();
-                for (int i = plannedLevel + 1; i <= level; i++)
+                foreach (Plan.Entry pe in list)
                 {
-                    skillsToAdd.Add(new StaticSkillLevel(skill, level));
+                    if (pe.SkillName == gs.Name)
+                    {
+                        // If we don't have a note, use the one provided
+                        if (Note != "" && !pe.Notes.Contains(Note))
+                            pe.Notes = pe.Notes + ", " + Note;
+                        if (pe.Level == level)
+                            return false;
+                    }
                 }
-
-                // Create the operation
-                return TryAddSet(skillsToAdd, noteForNewEntries);
+                return true;
             }
-            // Suppression
-            else
+            return false;
+        }
+
+        private void AddPrerequisiteEntries(Skill gs, List<Plan.Entry> planEntries, string Note)
+        {
+            foreach (Skill.Prereq pp in gs.Prereqs)
             {
-                // Get skill levels to remove
-                var skillsToRemove = new List<StaticSkillLevel>();
-                for (int i = plannedLevel; i > level && i > skill.Level; i--)
+                Skill pgs = pp.Skill;
+                if (pgs.Id == gs.Id)
                 {
-                    skillsToRemove.Add(new StaticSkillLevel(skill, i));
+                    continue;
                 }
+                AddPrerequisiteEntries(pgs, planEntries, Note);
+                for (int i = 1; i <= pp.Level; i++)
+                {
+                    // do we already have this planned?
+                    if (IsPlanned(pgs, i))
+                    {
+                        // get the Priority and see if it's the lowest so far (higher numbers = lower priority)...
+                        int pr = Priority(pgs, i);
+                        if (pr > m_lowestPrereqPriority) m_lowestPrereqPriority = pr;
 
-                return TryRemoveSet(skillsToRemove);
+                        // Yes it's planned but we need to update the note so add a "Note only" entry
+                        if (!ExistInPlannedEntries(planEntries, pgs.Name, i))
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = pgs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.AddNoteonly = true;
+                            pe.Priority = pr;
+                            pe.EntryType = Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                    }
+                    // not planned - check again  if trained or already in the candidate entries
+                    // (need a second check to ensure other prepreqs have not added this yet)
+                    else if (ShouldAdd(pgs, i, planEntries, Note))
+                    {
+                        Plan.Entry pe = new Plan.Entry();
+                        pe.SkillName = pgs.Name;
+                        pe.Level = i;
+                        pe.Notes = Note;
+                        pe.EntryType = Plan.Entry.Type.Prerequisite;
+                        planEntries.Add(pe);
+                    }
+                }
             }
+        }
+
+        public void PlanTo(Skill gs, int level, bool confirm)
+        {
+            string n = gs.Name;
+            PlanTo(gs, level, n, confirm);
+        }
+
+        public void PlanTo(Skill gs, int level)
+        {
+            string n = gs.Name;
+            PlanTo(gs, level, n, false);
+        }
+
+        public void PlanTo(Skill gs, int level, string note)
+        {
+            PlanTo(gs, level, note, false);
+        }
+
+        /// <summary>
+        /// Check if the plan contains the given Skill at the specified level.
+        /// There are 3 outcomes:
+        /// 1 If  the skill is trained or planned to that level already, do nothing.
+        /// 2 If the skill is not trained or planned to the requested level then add the skill and 
+        /// any prerequisites.
+        /// 3 If the skill is already planned to a higher level than requested, then remove the higher level plan entries.
+        /// For outcomes 1 and 2, the final skill level is tagged as "Planned" and previous levels and prereq skills are tagged as "Prerequisites"
+        /// For outcome 3, the level we want to plan to is changed from "Preqreq" to "Planned"
+        /// </summary>
+        /// <param name="gs">The skill we want to plan</param>
+        /// <param name="level">The level we want to train to</param>
+        /// <param name="note">The reason we want to train this skill</param>
+        /// <param name="confirm">Asks the user to confirm the addition of the skills (and geta Priority)</param>
+        public void PlanTo(Skill gs, int level, string Note, bool confirm)
+        {
+            if (level == 0)
+            {
+                RemoveEntry(GetEntry(gs.Name, level));
+                return;
+            }
+
+            List<Pair<string, int>> skillsToAdd = new List<Pair<string, int>>();
+            skillsToAdd.Add(new Pair<string, int>(gs.Name, level));
+            bool result = PlanSetTo(skillsToAdd, Note, confirm);
+            if (!result)
+            {
+                // there were no skills to be added - we must be lowering the level...
+                for (int i = 5; i > level; i--)
+                {
+                    Plan.Entry pe = GetEntry(gs.Name, i);
+                    if (pe != null)
+                    {
+                        RemoveEntry(pe);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if a skill set is already planned
+        /// </summary>
+        /// <param name="skillsToAdd"></param>
+        /// <returns></returns>
+        public bool SkillsetPlanned(IEnumerable<Pair<string, int>> skillsToAdd)
+        {
+            List<Plan.Entry> planEntries = CheckSkillsToAdd(skillsToAdd, "Test");
+            if (planEntries.Count > 0)
+            {
+                foreach (Plan.Entry pe in planEntries)
+                {
+                    if (pe.AddNoteonly == false)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Build a list of plan entries to add from a list of skill names and levels
+        /// </summary>
+        /// <param name="skillsToAdd"></param>
+        /// <param name="Note"></param>
+        /// <returns></returns>
+        private List<Plan.Entry> CheckSkillsToAdd(IEnumerable<Pair<string, int>> skillsToAdd, string Note)
+        {
+            List<Plan.Entry> planEntries = new List<Plan.Entry>();
+            m_lowestPrereqPriority = Int32.MinValue;
+
+            foreach (Pair<string, int> ts in skillsToAdd)
+            {
+                Skill gs = GrandCharacterInfo.GetSkill(ts.A);
+
+                // determine if this skill and level is either trained or already in the planned entries
+                if (ShouldAdd(gs, ts.B, planEntries, Note))
+                {
+                    // Yes it should - check the prereqs of this skill
+                    AddPrerequisiteEntries(gs, planEntries, Note);
+                    // and now add this skill and all preceding levels of it
+                    for (int i = 1; i <= ts.B; i++)
+                    {
+                        if (IsPlanned(gs, i))
+                        {
+                            // get the Priority and see if it's the lowest so far (higher numbers = lower priority)...
+                            int pr = Priority(gs, i);
+                            if (pr > m_lowestPrereqPriority) m_lowestPrereqPriority = pr;
+
+                            //Skill at this level is planned - just update the Note.
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.AddNoteonly = true;
+                            pe.Priority = pr;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                        else if (ShouldAdd(gs, i, planEntries, Note))
+                        // check again if we should add this skill it may have been added by other prereqs
+                        {
+                            Plan.Entry pe = new Plan.Entry();
+                            pe.SkillName = gs.Name;
+                            pe.Level = i;
+                            pe.Notes = Note;
+                            pe.EntryType = (i == ts.B) ? Plan.Entry.Type.Planned : Plan.Entry.Type.Prerequisite;
+                            planEntries.Add(pe);
+                        }
+                    }
+                }
+            }
+            return planEntries;
         }
 
         /// <summary>
         /// Adds a set of skills to this plan
         /// </summary>
-        /// <param name="skillsToAdd">The skill levels to add.</param>
-        /// <param name="note">The note for the new entries.</param>
-        /// <returns>An object allowing to perform and control the addition.</returns>
-        public IPlanOperation TryAddSet<T>(IEnumerable<T> skillsToAdd, string note)
-            where T : ISkillLevel
+        /// <param name="skillsToAdd"></param>
+        /// <param name="Note"></param>
+        /// <param name="withConfirm">When true, the user is asked hwo to resolve priorities conflicts</param>
+        /// <returns></returns>
+        public bool PlanSetTo(IEnumerable<Pair<string, int>> skillsToAdd, string Note, bool withConfirm)
         {
-            int lowestPrereqPriority;
-            var allEntriesToAdd = GetAllEntriesToAdd(skillsToAdd, note, out lowestPrereqPriority);
-
-            return new PlanOperation(this, skillsToAdd.Cast<ISkillLevel>(), allEntriesToAdd, lowestPrereqPriority);
-
-        }
-
-        /// <summary>
-        /// Removes a set of skill levels from this plan.
-        /// </summary>
-        /// <param name="skillsToRemove">The skill levels to remove.</param>
-        /// <returns>An object allowing to perform and control the removal.</returns>
-        public IPlanOperation TryRemoveSet<T>(IEnumerable<T> skillsToRemove)
-            where T : ISkillLevel
-        {
-            var allEntriesToRemove = GetAllEntriesToRemove(skillsToRemove);
-
-            // Creates a plan where the entries and their dependencies have been removed
-            var freePlan = new PlanScratchpad(m_character);
-            freePlan.RebuildPlanFrom(m_items);
-            foreach (var entry in allEntriesToRemove) freePlan.Remove(entry);
-
-            // Gather removables prerequisites now useless
-            var removablePrerequisites = new List<PlanEntry>();
-            foreach (var entryToRemove in allEntriesToRemove)
+            List<Plan.Entry> planEntries = CheckSkillsToAdd(skillsToAdd, Note);
+            bool result = false;
+            if (planEntries.Count > 0)
             {
-                foreach (var prereq in m_items)
+                // check that we have at least  one entry not already on the plan 
+                // (we could be reducing a skill level)
+                foreach (Plan.Entry pe in planEntries)
                 {
-                    // Skip if this skill was not dependent of the prereq.
-                    if (!entryToRemove.IsDependentOf(prereq)) continue;
-
-                    // Skip if still required
-                    if (freePlan.GetMinimumLevel(prereq.Skill) != 0) continue;
-
-                    // Add the entry if its type is Prerequisite
-                    var prereqEntry = freePlan.GetEntry(prereq.Skill, prereq.Level);
-                    if (prereqEntry == null) continue;
-
-                    // Adds it as a removable prerequisite
-                    if (prereqEntry.Type == PlanEntryType.Prerequisite)
+                    if (pe.AddNoteonly == false)
                     {
-                        removablePrerequisites.Add(prereqEntry);
-                        freePlan.Remove(prereqEntry);
+                        result = true;
+                        break;
+                    }
+                }
+                if (result)
+                {
+                    // OK we have a list of candidate plan entries - check with the user and add them
+                    if (withConfirm)
+                    {
+                        if (AddPlanConfirmWindow.ConfirmSkillAdd(planEntries, m_lowestPrereqPriority))
+                        {
+                            AddList(planEntries);
+                        }
+                    }
+                    else
+                    {
+                        // Not asking user for confirmation, so we need to set priorites, set them to be  current highest for any prereqs, or default if the default is a lower priority
+                        // (i.e. a higher number)
+                        if (Plan.Entry.DEFAULT_PRIORITY > m_lowestPrereqPriority) m_lowestPrereqPriority = Plan.Entry.DEFAULT_PRIORITY;
+                        foreach (Plan.Entry pe in planEntries)
+                        {
+                            if (!pe.AddNoteonly)
+                            {
+                                pe.Priority = m_lowestPrereqPriority;
+                            }
+                        }
+                        AddList(planEntries);
                     }
                 }
             }
-
-            // Create the operation
-            return new PlanOperation(this, skillsToRemove.Cast<ISkillLevel>(), allEntriesToRemove, removablePrerequisites);
+            else if (withConfirm)
+            {
+                MessageBox.Show("All the required skills are already in your plan.",
+                                "Already Planned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            return result;
         }
-        #endregion
 
-
-        #region Certificates
         /// <summary>
         /// Adds the provided certificate's prerequisites to the plan
         /// </summary>
         /// <param name="certificate"></param>
-        /// <param name="confirmationCallback">A callback to request the user a confirmation</param>
-        public IPlanOperation TryPlanTo(StaticCertificate certificate)
+        /// <param name="withConfirm">When true, the user is asked hwo to resolve priorities conflicts</param>
+        public void PlanTo(Certificate certificate, bool withConfirm)
         {
-            return TryAddSet(certificate.AllTopPrerequisiteSkills, certificate.ToString());
-        }
-        #endregion
-
-
-        #region Priorities changes
-        /// <summary>
-        /// Try to set the priority of the given entries and cancel if a conflict arises.
-        /// </summary>
-        /// <param name="entries">The list of entries to change priority of</param>
-        /// <param name="priority">The new priority to set</param>
-        /// <returns>True when successful, false when a conflict arised.</returns>
-        public bool TrySetPriority(PlanScratchpad m_displayPlan, IEnumerable<PlanEntry> entries, int priority)
-        {
-            // Change priorities and make a backup
-            Queue<int> oldPriorities = new Queue<int>();
-            foreach (var entry in entries)
+            var skillsToTrain = new List<Pair<string,int>>();
+            foreach (var prereq in certificate.AllPrerequisiteSkills)
             {
-                oldPriorities.Enqueue(entry.Priority);
-                entry.Priority = priority;
+                skillsToTrain.Add(new Pair<string, int>(prereq.Name, prereq.Level));
             }
-            
-            // We are rebuilding the plan with the new priorities in order to check them
-            RebuildPlanFrom(m_displayPlan, true);
+            PlanSetTo(skillsToTrain, certificate.ToString(), withConfirm);
+        }
 
-            // Check priorities
-            if (FixPrioritiesOrder(false, false))
+        /// <summary>
+        /// Checks whether, after this plan, the owner will be eligible to the provided certificate
+        /// </summary>
+        /// <param name="cert"></param>
+        /// <returns></returns>
+        public bool WillGrantEligibilityFor(Certificate cert)
+        {
+            var status = m_grandCharacterInfo.GetCertificateStatus(cert);
+            if (status == CertificateStatus.Claimable || status == CertificateStatus.Granted) return true;
+
+            // We check every prerequisite
+            foreach (var skillToTrain in cert.AllPrerequisiteSkills)
             {
-                // Priorities are OK we save them and return
-                OnChanged(PlanChange.Notification);
+                // If level already greater or skill level planned, we continue the loop
+                var skill = m_grandCharacterInfo.GetSkill(skillToTrain.Name);
+                if (skill.LastConfirmedLvl >= skillToTrain.Level) continue;
+                if (this.IsPlanned(skill, skillToTrain.Level)) continue;
+
+                // If it's not, then eligibility tests are over
+                return false;
+            }
+
+            // All tests successed, ok
+            return true;
+        }
+
+        private int m_lowestPrereqPriority;
+
+        public void AddList(List<Plan.Entry> planEntries)
+        {
+            this.SuppressEvents();
+            try
+            {
+                foreach (Plan.Entry pe in planEntries)
+                {
+                    // If we're updating an existing entry, just
+                    // change the note and the priority (user may have requested
+                    // a different prioroty for a specific ship/item
+                    if (pe.AddNoteonly)
+                    {
+                        Plan.Entry pn = GetEntry(pe.SkillName, pe.Level);
+                        if (pn != null)
+                        {
+                            if (!pn.Notes.Contains(pe.Notes))
+                            {
+                                if (pn.Notes != "")
+                                {
+                                    pn.Notes = pn.Notes + ", ";
+                                }
+                                pn.Notes = pn.Notes + pe.Notes;
+                                pn.Priority = pe.Priority;
+                                m_entries.ForceUpdate(pn, ChangeType.Added);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        m_entries.Add(pe);
+                    }
+                }
+            }
+            finally
+            {
+                this.ResumeEvents();
+            }
+        }
+
+        public bool RemoveEntry(Plan.Entry pe)
+        {
+            if (pe == null) return false;
+            this.SuppressEvents();
+            try
+            {
+                //see if it's a "no longer available" skill - this fix for Squadron Command in 1.1.6 by Anders
+                if (pe.Skill == null)
+                {
+                    m_entries.Remove(pe);
+                    return true;
+                }
+                foreach (Plan.Entry tpe in m_entries)
+                {
+                    Skill tSkill = tpe.Skill;
+                    int thisMinNeeded;
+                    if (pe.Skill == tpe.Skill && tpe.Level > pe.Level)
+                    {
+                        return false;
+                    }
+                    if (tSkill.HasAsPrerequisite(pe.Skill, out thisMinNeeded))
+                    {
+                        if (thisMinNeeded >= pe.Level)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                m_entries.Remove(pe);
                 return true;
             }
-
-            // Failure, restore the priorities
-            foreach (var entry in entries)
+            finally
             {
-                entry.Priority = oldPriorities.Dequeue();
+                this.ResumeEvents();
             }
+        }
 
-            // We are rebuilding the plan from the old priorities
-            RebuildPlanFrom(m_displayPlan, true);
-            
+        public bool RemoveEntry(Skill gs, bool removePrerequisites, bool nonPlannedOnly)
+        {
+            this.SuppressEvents();
+            try
+            {
+                int minNeeded = 0;
+                // Verify nothing else in the plan requires this...
+                foreach (Plan.Entry pe in m_entries)
+                {
+                    Skill tSkill = pe.Skill;
+                    int thisMaxNeeded;
+                    if (tSkill.HasAsPrerequisite(gs, out thisMaxNeeded) && tSkill.Id != gs.Id)
+                    {
+                        if (thisMaxNeeded == 5) // All are needed, fail now
+                            return false;
+
+                        if (thisMaxNeeded > minNeeded)
+                            minNeeded = thisMaxNeeded;
+                    }
+                }
+                // Remove this skill...
+                bool anyRemoved = false;
+                for (int i = 0; i < m_entries.Count; i++)
+                {
+                    Plan.Entry tpe = m_entries[i];
+                    bool canRemove = (nonPlannedOnly && tpe.EntryType == Plan.Entry.Type.Prerequisite) || !nonPlannedOnly;
+                    if (tpe.Skill == gs && tpe.Level > minNeeded && canRemove)
+                    {
+                        anyRemoved = true;
+                        m_entries.RemoveAt(i);
+                        i--;
+                    }
+                }
+                if (!anyRemoved)
+                {
+                    return false;
+                }
+                if (!removePrerequisites)
+                {
+                    return true;
+                }
+
+                // Remove prerequisites
+                foreach (Skill.Prereq pp in gs.Prereqs)
+                {
+                    RemoveEntry(pp.Skill, true, true);
+                }
+                return true;
+            }
+            finally
+            {
+                this.ResumeEvents();
+            }
+        }
+
+        public Plan.Entry GetEntry(string name, int level)
+        {
+            foreach (Plan.Entry pe in m_entries)
+            {
+                if (pe.SkillName == name && pe.Level == level)
+                {
+                    return pe;
+                }
+            }
+            return null;
+        }
+
+        public Plan.Entry GetEntryWithRoman(string name)
+        {
+            int level = 0;
+            for (int i = 1; i <= 5; i++)
+            {
+                string tRomanSuffix = " " + Skill.GetRomanForInt(i);
+                if (name.EndsWith(tRomanSuffix))
+                {
+                    level = i;
+                    name = name.Substring(0, name.Length - tRomanSuffix.Length);
+                    break;
+                }
+            }
+            return GetEntry(name, level);
+        }
+
+        public void Merge(SerializableCharacterSheet scs)
+        {
+            foreach (Plan.Entry entry in this.Entries)
+            {
+                Skill s = entry.Skill;
+                SerializableKnownSkill ks = null;
+                foreach (SerializableKnownSkill sks in scs.CharacterSheet.KnownSkillsSet.KnownSkills)
+                {
+                    if (s.Id == sks.SkillId)
+                    {
+                        ks = sks;
+                        break;
+                    }
+                }
+
+                if (ks == null)
+                {
+                    ks = new SerializableKnownSkill(s);
+                    scs.CharacterSheet.KnownSkillsSet.KnownSkills.Add(ks);
+                }
+
+                ks.SkillLevel = entry.Level;
+                ks.Skillpoints = s.GetPointsRequiredForLevel(entry.Level);
+            }
+        }
+
+        public Plan CopyTo(CharacterInfo planOwner)
+        {
+            Plan p = new Plan();
+            p.m_grandCharacterInfo = planOwner;
+            p.m_planName = m_planName;
+            p.m_plannerWindow = null;
+            p.m_uniqueSkillCount = m_uniqueSkillCount;
+
+            foreach (Plan.Entry pe in m_entries)
+            {
+                Plan.Entry entry = (Plan.Entry)pe.Clone();
+                entry.Plan = p;
+                p.m_entries.Add(entry);
+            }
+            return p;
+        }
+
+        private bool ExistInPlannedEntries(List<Plan.Entry> planEntries, string eSkillName, int eSkillLevel)
+        {
+            foreach (Plan.Entry pe in planEntries)
+            {
+                if (pe.SkillName == eSkillName && pe.Level == eSkillLevel) return true;
+            }
             return false;
         }
         #endregion
 
-        /// <summary>
-        /// Gets suggestions for this plan
-        /// </summary>
-        /// <returns></returns>
-        public PlanSuggestions GetSuggestions()
+        #region Planner Window
+        private static IPlannerWindowFactory m_plannerWindowFactory;
+
+        [XmlIgnore]
+        public static IPlannerWindowFactory PlannerWindowFactory
         {
-            return new PlanSuggestions(this);
+            get { return m_plannerWindowFactory; }
+            set { m_plannerWindowFactory = value; }
         }
 
-        /// <summary>
-        /// Creates a clone for another character
-        /// </summary>
-        /// <param name="character"></param>
-        /// <returns></returns>
-        public Plan Clone(BaseCharacter character)
+        private WeakReference<Form> m_plannerWindow;
+
+        [XmlIgnore]
+        public WeakReference<Form> PlannerWindow
         {
-            Plan plan = new Plan(character);
-            plan.m_name = m_name;
-            plan.RebuildPlanFrom(this);
-            return plan;
+            set { m_plannerWindow = value; }
+            get { return m_plannerWindow; }
         }
 
-        /// <summary>
-        /// Creates a clone
-        /// </summary>
-        /// <returns></returns>
-        public Plan Clone()
+        public void ShowEditor(Settings s, CharacterInfo gci)
         {
-            return Clone(m_character);
+            if (m_plannerWindow != null)
+            {
+                Form npw = m_plannerWindow.Target;
+                if (npw != null)
+                {
+                    try
+                    {
+                        if (npw.Visible)
+                        {
+                            npw.BringToFront();
+                            return;
+                        }
+                        else
+                        {
+                            npw.Show();
+                            return;
+                        }
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        ExceptionHandler.LogException(e, false);
+                    }
+                }
+                m_plannerWindow = null;
+            }
+
+            GrandCharacterInfo = gci;
+            Form newWin = m_plannerWindowFactory.CreateWindow(s, this);
+            newWin.Show();
+            m_plannerWindow = new WeakReference<Form>(newWin);
         }
+
+        public void CloseEditor()
+        {
+            if (m_plannerWindow != null)
+            {
+                Form npw = m_plannerWindow.Target;
+                if (npw != null)
+                {
+                    try
+                    {
+                        npw.Close();
+                    }
+                    catch (ObjectDisposedException e)
+                    {
+                        ExceptionHandler.LogException(e, false);
+                    }
+                }
+                m_plannerWindow = null;
+            }
+        }
+        #endregion Planner Window
+
+
+        #region Plan.RemappingPoint
+        [XmlRoot("Plan.RemappingPoint")]
+        public class RemappingPoint : ICloneable
+        {
+            public enum PointStatus
+            {
+                NotComputed = 0,
+                UpToDate = 1
+            }
+
+            private PointStatus status;
+            private int[] baseAttributes = new int[5];
+            private string attributesDescription = "";
+            public readonly Guid Guid = Guid.NewGuid();
+
+            public RemappingPoint()
+            {
+            }
+
+            public PointStatus Status
+            {
+                get { return this.status; }
+                set { this.status = value; }
+            }
+
+            public int[] BaseAttributes
+            {
+                get { return this.baseAttributes; }
+                set { this.baseAttributes = value; }
+            }
+
+            public string AttributesDescription
+            {
+                get { return this.attributesDescription; }
+                set { this.attributesDescription = value; }
+            }
+
+            public string ToShortString()
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append("i").Append(this.baseAttributes[(int)EveAttribute.Intelligence].ToString()).
+                    Append(" p").Append(this.baseAttributes[(int)EveAttribute.Perception].ToString()).
+                    Append(" c").Append(this.baseAttributes[(int)EveAttribute.Charisma].ToString()).
+                    Append(" w").Append(this.baseAttributes[(int)EveAttribute.Willpower].ToString()).
+                    Append(" m").Append(this.baseAttributes[(int)EveAttribute.Memory].ToString());
+
+                return builder.ToString();
+            }
+
+            public override string ToString()
+            {
+                switch (status)
+                {
+                    case PointStatus.NotComputed:
+                        return "Remapping (not computed, use the attributes optimizer)";
+                    case PointStatus.UpToDate:
+                        return "Remapping (active) : " + ToShortString();
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            public string ToLongString()
+            {
+                switch (status)
+                {
+                    case PointStatus.NotComputed:
+                        return "Remapping (not computed, use the attributes optimizer)";
+                    case PointStatus.UpToDate:
+                        return "Remapping : " + attributesDescription;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            /// <summary>
+            /// Transforms the given scratchpad into a new one, reflecting the remapping.
+            /// </summary>
+            /// <remarks>The provided scratchpad must not have been affected by a remap before.</remarks>
+            /// <param name="character"></param>
+            /// <param name="scratchpadWithoutPreviousRemapping">The scratchpad before the remapping. It must not have been affected by a remap before.</param>
+            /// <returns></returns>
+            public EveAttributeScratchpad TransformSctratchpad(CharacterInfo character, EveAttributeScratchpad scratchpadWithoutPreviousRemapping)
+            {
+                var newScratchpad = scratchpadWithoutPreviousRemapping.Clone();
+                for (int i = 0; i < 5; i++)
+                {
+                    EveAttribute attrib = (EveAttribute)i;
+                    var bonusDifference = this.baseAttributes[i] - character.GetBaseAttribute(attrib);
+                    newScratchpad.AdjustAttributeBonus(attrib, bonusDifference);
+                }
+                return newScratchpad;
+            }
+
+            public void SetBaseAttributes(CharacterInfo character, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            {
+                // Update the status
+                this.status = PointStatus.UpToDate;
+
+                // Initialize the string
+                StringBuilder builder = new StringBuilder();
+
+                // Scroll through attributes
+                for (int i = 0; i < 5; i++)
+                {
+                    // Compute the new base attribute
+                    EveAttribute attrib = (EveAttribute)i;
+                    var bonusDifference = newScratchpad.GetAttributeBonus(attrib) - oldScratchpad.GetAttributeBonus(attrib);
+                    this.baseAttributes[i] = character.GetBaseAttribute(attrib) + bonusDifference;
+
+                    // Update description
+                    builder.AppendLine().Append(GetStringForAttribute(attrib, character, oldScratchpad, newScratchpad));
+                }
+
+                // Return the final string
+                this.attributesDescription = builder.ToString();
+            }
+
+            public static string GetStringForAttribute(EveAttribute attrib, CharacterInfo character, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            {
+                StringBuilder builder = new StringBuilder(attrib.ToString());
+                var learningGroupBonus = character.GetSkillsBonusesWithoutLearning(attrib) + oldScratchpad.GetAttributeBonus(attrib);
+                var bonusDifference = newScratchpad.GetAttributeBonus(attrib) - oldScratchpad.GetAttributeBonus(attrib);
+                var baseAttrib = character.GetBaseAttribute(attrib) + bonusDifference;
+                var learningFactor = character.GetLearningFactor(oldScratchpad);
+                var implant = character.getImplantValue(attrib);
+
+                builder.Append((bonusDifference > 0 ? " (+" : " (")).Append(bonusDifference.ToString()).Append(")").
+                    Append(" = ").Append(character.GetEffectiveAttribute(attrib, newScratchpad).ToString("##.00")).
+                    Append(" = (").Append(baseAttrib.ToString()).Append(" + ").Append(learningGroupBonus.ToString()).
+                    Append(" + ").Append(implant.ToString()).Append(")").Append(" * ").Append(learningFactor.ToString("0.00")).
+                    Append(" ; old was ").Append(character.GetBaseAttribute(attrib).ToString()).
+                    Append(" / ").Append(character.GetEffectiveAttribute(attrib));
+
+                return builder.ToString();
+            }
+
+            public object Clone()
+            {
+                RemappingPoint clone = new RemappingPoint();
+                clone.status = this.status;
+                Array.Copy(this.baseAttributes, clone.baseAttributes, 5);
+                return clone;
+            }
+        }
+        #endregion
+
+        #region Plan.Entry
+        [XmlRoot("Plan.Entry")]
+        public class Entry : ICloneable
+        {
+            public enum Type
+            {
+                Planned,
+                Prerequisite
+            }
+
+            public class Prerequisite
+            {
+                private Entry m_entry;
+
+                public Entry PlanEntry
+                {
+                    get { return m_entry; }
+                }
+
+                internal Prerequisite(Entry entry)
+                {
+                    m_entry = entry;
+                }
+            }
+
+            private Plan m_owner;
+            private string m_skillName;
+            private int m_level;
+            private System.Collections.ArrayList m_planGroups;
+            private Entry.Type m_entryType;
+            private bool m_addNoteonly = false;
+            private string m_notes;
+            public static readonly int DEFAULT_PRIORITY = 3;
+            private int m_priority = DEFAULT_PRIORITY;
+            private RemappingPoint remapping;
+
+            [XmlIgnore]
+            public Plan Plan
+            {
+                get { return m_owner; }
+                set
+                {
+                    if (m_owner != value)
+                    {
+                        if (m_owner != null)
+                        {
+                            m_owner.Changed -= new EventHandler<EventArgs>(m_owner_Changed);
+                        }
+                        m_owner = value;
+                        if (m_owner != null)
+                        {
+                            m_owner.Changed += new EventHandler<EventArgs>(m_owner_Changed);
+                        }
+                    }
+                }
+            }
+
+            private IEnumerable<Prerequisite> m_prerequisiteCache;
+
+            private void m_owner_Changed(object sender, EventArgs e)
+            {
+                m_prerequisiteCache = null;
+            }
+
+            /// <summary>
+            /// Gets or sets the name of this plan entry's skill.
+            /// </summary>
+            public string SkillName
+            {
+                get { return m_skillName; }
+                set { m_skillName = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the skill level of this plan entry.
+            /// </summary>
+            public int Level
+            {
+                get { return m_level; }
+                set { m_level = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the remapping point to apply before that skill is trained
+            /// </summary>
+            public RemappingPoint Remapping
+            {
+                get { return this.remapping; }
+                set { this.remapping = value; }
+            }
+
+            public System.Collections.ArrayList PlanGroups
+            {
+                get
+                {
+                    if (m_planGroups == null)
+                        m_planGroups = new System.Collections.ArrayList();
+
+                    return m_planGroups;
+                }
+                set { m_planGroups = value; }
+            }
+
+            public string PlanGroupsDescription
+            {
+                get
+                {
+                    if (m_planGroups == null || m_planGroups.Count == 0)
+                    {
+                        return "None";
+                    }
+                    else if (m_planGroups.Count == 1)
+                    {
+                        return (string)m_planGroups[0];
+                    }
+                    else
+                    {
+                        return "Multiple (" + m_planGroups.Count + ")";
+                    }
+                }
+            }
+
+            public Type EntryType
+            {
+                get { return m_entryType; }
+                set { m_entryType = value; }
+            }
+
+            public string Notes
+            {
+                get { return (m_notes == null ? "" : m_notes); }
+                set { m_notes = value; }
+            }
+
+            public int Priority
+            {
+                get { return m_priority; }
+                set { m_priority = value; }
+            }
+
+            [XmlIgnore]
+            public bool AddNoteonly
+            {
+                get { return m_addNoteonly; }
+                set { m_addNoteonly = value; }
+            }
+
+            /// <summary>
+            /// Gets the skill of this plan entry.
+            /// </summary>
+            public Skill Skill
+            {
+                get
+                {
+                    if (m_owner == null || m_owner.GrandCharacterInfo == null)
+                    {
+                        return null;
+                    }
+                    return m_owner.GrandCharacterInfo.GetSkill(m_skillName);
+                }
+            }
+
+            /// <summary>
+            /// Gets whether this entry can be trained now.
+            /// </summary>
+            public bool CanTrainNow
+            {
+                get
+                {
+                    return Skill.PrerequisitesMet && Level == Skill.Level + 1;
+                }
+            }
+
+            [XmlIgnore]
+            public IEnumerable<Prerequisite> Prerequisites
+            {
+                get
+                {
+                    if (m_prerequisiteCache == null)
+                    {
+                        Dictionary<string, bool> contains = new Dictionary<string, bool>();
+                        List<Prerequisite> result = new List<Prerequisite>();
+                        BuildPrereqs(this.Skill, this.Level, result, contains);
+                        m_prerequisiteCache = result;
+                    }
+                    return m_prerequisiteCache;
+                }
+            }
+
+            private void BuildPrereqs(Skill gs, int level, List<Prerequisite> result,
+                                      Dictionary<string, bool> contains)
+            {
+                for (int l = level; l >= 1; l--)
+                {
+                    string tSkill = gs.Name + " " + Skill.GetRomanForInt(l);
+                    if (!contains.ContainsKey(tSkill))
+                    {
+                        Plan.Entry.Prerequisite pep = new Plan.Entry.Prerequisite(m_owner.GetEntry(gs.Name, l));
+                        contains[tSkill] = true;
+                        result.Insert(0, pep);
+                    }
+                }
+                foreach (Skill.Prereq pp in gs.Prereqs)
+                {
+                    if (pp.Skill.Id == gs.Id) continue;
+                    string tSkill = pp.Skill + " " + Skill.GetRomanForInt(pp.Level);
+                    if (!contains.ContainsKey(tSkill))
+                    {
+                        Prerequisite pep = new Prerequisite(m_owner.GetEntry(pp.Skill.Name,
+                                                                                               pp.Level));
+                        contains[tSkill] = true;
+                        result.Insert(0, pep);
+                        BuildPrereqs(pp.Skill, pp.Level, result, contains);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Returns a string representation of entry - eases debugging.
+            /// </summary>
+            /// <returns>SkillName[Level]</returns>
+            public override string ToString()
+            {
+                return String.Format("{0}[{1}]", SkillName, Level);
+            }
+
+            #region ICloneable Members
+            public object Clone()
+            {
+                Plan.Entry pe = new Plan.Entry();
+                pe.SkillName = this.SkillName;
+                pe.Level = this.Level;
+                pe.Priority = this.Priority;
+                pe.PlanGroups = (System.Collections.ArrayList)this.PlanGroups.Clone();
+                pe.EntryType = this.EntryType;
+                pe.Notes = this.Notes;
+                pe.m_owner = this.m_owner;
+                pe.remapping = (this.remapping != null ? (Plan.RemappingPoint)this.remapping.Clone() : null);
+                return pe;
+            }
+            #endregion
+        }
+        #endregion
+
+        #region Plan Printing
+        private int entryToPrint;
+        private Font printFont;
+        private Font printFontBold;
+        private SolidBrush printBrush = new SolidBrush(Color.Black);
+        private Point printPoint = new Point();
+        private TimeSpan printTotalTrainingTime = TimeSpan.Zero;
+        private DateTime printCurDt = DateTime.Now;
+        private DateTime printStartTime = DateTime.Now;
+        PlanTextOptions m_pto;
+
+        public void PrintPlan()
+        {
+            PrintDocument doc = new PrintDocument();
+            doc.DocumentName = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")";
+            doc.PrintPage += new PrintPageEventHandler(doc_PrintPage);
+            PrintPreviewDialog pd = new PrintPreviewDialog();
+
+            m_settings = Settings.GetInstance();
+
+            m_pto = (PlanTextOptions)m_settings.DefaultCopyOptions;
+
+            Printing.PrintOptionsDlg prdlg = new EVEMon.Printing.PrintOptionsDlg(m_settings, m_pto, doc);
+
+            if (prdlg.ShowDialog() == DialogResult.OK)
+            {
+                doc.PrinterSettings.PrinterName = prdlg.PrinterName;
+
+                entryToPrint = 0;
+                printPoint = new Point();
+                printTotalTrainingTime = TimeSpan.Zero;
+                printCurDt = DateTime.Now;
+                printStartTime = DateTime.Now;
+
+                pd.Document = doc;
+                pd.ShowDialog();
+            }
+        }
+
+        SizeF printBold(Graphics g, string s, Point p)
+        {
+            SizeF f = g.MeasureString(s, printFontBold);
+            g.DrawString(s, printFontBold, printBrush, printPoint);
+            return f;
+        }
+        SizeF print(Graphics g, string s, Point p)
+        {
+            SizeF f = g.MeasureString(s, printFont);
+            g.DrawString(s, printFont, printBrush, printPoint);
+            return f;
+        }
+
+        void doc_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+            SizeF f = new SizeF(0, 0);
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
+            string s = "Skill Plan for " + this.GrandCharacterInfo.Name + " (" + this.Name + ")";
+            int num = 0;
+
+            printPoint.X = 5;
+            printPoint.Y = 5;
+
+            if (m_pto.IncludeHeader)
+            {
+                f = e.Graphics.MeasureString(s, printFontBold);
+                printPoint.X = (int)((e.MarginBounds.Width - f.Width) / 2);
+                f = printBold(e.Graphics, s, printPoint);
+                printPoint.Y += (int)(2 * f.Height);
+                printPoint.X = 5;
+            }
+
+            bool resetTotal = true;
+            if (entryToPrint == 0) printCurDt = printStartTime;
+            foreach (Plan.Entry pe in this.Entries)
+            {
+                num++;
+
+                if (entryToPrint >= num)
+                {
+                    // we're not printing the first entry so no need to reset the total time
+                    resetTotal = false;
+                    continue;
+                }
+
+                if (resetTotal)
+                {
+                    printTotalTrainingTime = TimeSpan.Zero;
+                }
+                resetTotal = false;
+
+
+                if (m_pto.EntryNumber)
+                {
+                    f = print(e.Graphics, num.ToString() + ": ", printPoint);
+                    printPoint.X += (int)f.Width;
+                }
+
+                f = printBold(e.Graphics, pe.SkillName, printPoint);
+                printPoint.X += (int)f.Width;
+                f = printBold(e.Graphics, Skill.GetRomanForInt(pe.Level), printPoint);
+                printPoint.X += (int)f.Width;
+
+                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
+                scratchpad.ApplyALevelOf(pe.Skill);
+                DateTime startDate = printCurDt;
+                printCurDt += trainingTime;
+                DateTime finishDate = printCurDt;
+                printTotalTrainingTime += trainingTime;
+
+                if (m_pto.EntryTrainingTimes || m_pto.EntryStartDate || m_pto.EntryFinishDate)
+                {
+                    printPoint.Y += (int)f.Height;
+                    printPoint.X = 20;
+
+                    f = print(e.Graphics, " (", printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    bool needComma = false;
+                    if (m_pto.EntryTrainingTimes)
+                    {
+                        f = print(e.Graphics, Skill.TimeSpanToDescriptiveText(trainingTime,
+                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), printPoint);
+                        printPoint.X += (int)f.Width;
+                        needComma = true;
+                    }
+                    if (m_pto.EntryStartDate)
+                    {
+                        if (needComma)
+                        {
+                            f = print(e.Graphics, "; ", printPoint);
+                            printPoint.X += (int)f.Width;
+                        }
+                        f = print(e.Graphics, "Start: ", printPoint);
+                        printPoint.X += (int)f.Width;
+
+                        f = print(e.Graphics, startDate.ToString(), printPoint);
+                        printPoint.X += (int)f.Width;
+
+                        needComma = true;
+                    }
+                    if (m_pto.EntryFinishDate)
+                    {
+                        if (needComma)
+                        {
+                            f = print(e.Graphics, "; ", printPoint);
+                            printPoint.X += (int)f.Width;
+                        }
+                        f = print(e.Graphics, "Finish: ", printPoint);
+                        printPoint.X += (int)f.Width;
+                        f = print(e.Graphics, finishDate.ToString(), printPoint);
+                        printPoint.X += (int)f.Width;
+                        needComma = true;
+                    }
+                    f = print(e.Graphics, ")", printPoint);
+                    printPoint.X += (int)f.Width;
+                }
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+
+                if (printPoint.Y > e.MarginBounds.Bottom)
+                {
+                    entryToPrint = num;
+                    e.HasMorePages = true;
+                    return;
+                }
+                else
+                {
+                    entryToPrint = 0;
+                }
+            }
+
+            e.HasMorePages = false;
+
+            if (m_pto.FooterCount || m_pto.FooterTotalTime || m_pto.FooterDate)
+            {
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+
+                bool needComma = false;
+
+                if (m_pto.FooterCount)
+                {
+                    f = print(e.Graphics, num.ToString(), printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    if (num != 1)
+                        f = print(e.Graphics, " skills", printPoint);
+                    else
+                        f = print(e.Graphics, " skill", printPoint);
+
+                    printPoint.X += (int)f.Width;
+                    needComma = true;
+                }
+                if (m_pto.FooterTotalTime)
+                {
+                    if (needComma)
+                    {
+                        f = print(e.Graphics, "; ", printPoint);
+                        printPoint.X += (int)f.Width;
+                    }
+                    f = print(e.Graphics, "Total time: ", printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    f = print(e.Graphics, Skill.TimeSpanToDescriptiveText(printTotalTrainingTime,
+                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), printPoint);
+
+                    printPoint.X += (int)f.Width;
+
+                    needComma = true;
+                }
+                if (m_pto.FooterDate)
+                {
+                    if (needComma)
+                    {
+                        f = print(e.Graphics, "; ", printPoint);
+                        printPoint.X += (int)f.Width;
+                    }
+                    f = print(e.Graphics, "Completion: ", printPoint);
+                    printPoint.X += (int)f.Width;
+                    f = print(e.Graphics, printCurDt.ToString(), printPoint);
+                    printPoint.X += (int)f.Width;
+
+                    needComma = true;
+                }
+                printPoint.X = 5;
+                printPoint.Y += (int)f.Height;
+            }
+
+        }
+        #endregion
+
+        #region Plan Export
+        public void SaveAsText(StreamWriter sw, PlanTextOptions pto)
+        {
+            MarkupType markupType = pto.Markup;
+            MethodInvoker writeLine = delegate
+            {
+                if (markupType == MarkupType.Html)
+                {
+                    sw.WriteLine("<br />");
+                }
+                else
+                {
+                    sw.WriteLine();
+                }
+            };
+            MethodInvoker boldStart = delegate
+            {
+                switch (markupType)
+                {
+                    case MarkupType.None:
+                        break;
+                    case MarkupType.Forum:
+                        sw.Write("[b]");
+                        break;
+                    case MarkupType.Html:
+                        sw.Write("<b>");
+                        break;
+                }
+            };
+            MethodInvoker boldEnd = delegate
+            {
+                switch (markupType)
+                {
+                    case MarkupType.None:
+                        break;
+                    case MarkupType.Forum:
+                        sw.Write("[/b]");
+                        break;
+                    case MarkupType.Html:
+                        sw.Write("</b>");
+                        break;
+                }
+            };
+
+            if (pto.IncludeHeader)
+            {
+                boldStart();
+                if (pto.ShoppingList)
+                {
+                    sw.Write("Shopping list for {0}", this.GrandCharacterInfo.Name);
+                }
+                else
+                {
+                    sw.Write("Skill plan for {0}", this.GrandCharacterInfo.Name);
+                }
+                boldEnd();
+                writeLine();
+                writeLine();
+            }
+
+            EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+            TimeSpan totalTrainingTime = TimeSpan.Zero;
+            DateTime curDt = DateTime.Now;
+            int num = 0;
+            int cumulativeSkillTotal = this.m_grandCharacterInfo.SkillPointTotal;
+
+            foreach (Plan.Entry pe in this.Entries)
+            {
+                bool shoppingListCandidate = !(pe.Skill.Known || pe.Level != 1 || pe.Skill.Owned);
+                if (pto.ShoppingList && !shoppingListCandidate)
+                {
+                    // for shopping list, if the skill is known or a non-level-1-unknown, skip
+                    continue;
+                }
+                num++;
+                if (pto.EntryNumber)
+                {
+                    sw.Write("{0}. ", num);
+                }
+                boldStart();
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("<a href='#' onclick=\"CCPEVE.showInfo({0})\">", pe.Skill.Id);
+                }
+                sw.Write(pe.SkillName);
+                if (markupType == MarkupType.Html)
+                {
+                    sw.Write("</a>");
+                }
+                if (!pto.ShoppingList)
+                {
+                    sw.Write(' ');
+                    sw.Write(Skill.GetRomanForInt(pe.Level));
+                }
+                boldEnd();
+
+                TimeSpan trainingTime = pe.Skill.GetTrainingTimeOfLevelOnly(pe.Level, cumulativeSkillTotal, true, scratchpad);
+                cumulativeSkillTotal += pe.Skill.GetPointsForLevelOnly(pe.Level, true);
+                scratchpad.ApplyALevelOf(pe.Skill);
+                DateTime startDate = curDt;
+                curDt += trainingTime;
+                DateTime finishDate = curDt;
+                totalTrainingTime += trainingTime;
+
+                if (pto.EntryTrainingTimes || pto.EntryStartDate || pto.EntryFinishDate || (pto.EntryCost && shoppingListCandidate))
+                {
+                    sw.Write(" (");
+                    bool needComma = false;
+
+                    if (pto.EntryTrainingTimes)
+                    {
+                        sw.Write(Skill.TimeSpanToDescriptiveText(trainingTime,
+                                                                      DescriptiveTextOptions.FullText |
+                                                                      DescriptiveTextOptions.IncludeCommas |
+                                                                      DescriptiveTextOptions.SpaceText));
+                        needComma = true;
+                    }
+                    if (pto.EntryStartDate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write("Start: ");
+                        sw.Write(startDate.ToString());
+                        needComma = true;
+                    }
+                    if (pto.EntryFinishDate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write("Finish: ");
+                        sw.Write(finishDate.ToString());
+                        needComma = true;
+                    }
+                    if (pto.EntryCost && shoppingListCandidate)
+                    {
+                        if (needComma)
+                        {
+                            sw.Write("; ");
+                        }
+                        sw.Write(pe.Skill.FormattedCost + " ISK");
+                        needComma = true;
+                    }
+
+                    sw.Write(')');
+                }
+                writeLine();
+            }
+            if (pto.FooterCount || pto.FooterTotalTime || pto.FooterDate || pto.FooterCost)
+            {
+                writeLine();
+                bool needComma = false;
+                if (pto.FooterCount)
+                {
+                    boldStart();
+                    sw.Write(num.ToString());
+                    boldEnd();
+                    sw.Write(" skill");
+                    if (num != 1)
+                    {
+                        sw.Write('s');
+                    }
+                    needComma = true;
+                }
+                if (pto.FooterTotalTime)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Total time: ");
+                    boldStart();
+                    sw.Write(Skill.TimeSpanToDescriptiveText(totalTrainingTime,
+                                                                  DescriptiveTextOptions.FullText |
+                                                                  DescriptiveTextOptions.IncludeCommas |
+                                                                  DescriptiveTextOptions.SpaceText));
+                    boldEnd();
+                    needComma = true;
+                }
+                if (pto.FooterDate)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Completion: ");
+                    boldStart();
+                    sw.Write(curDt.ToString());
+                    boldEnd();
+                    needComma = true;
+                }
+                if (pto.FooterCost)
+                {
+                    if (needComma)
+                    {
+                        sw.Write("; ");
+                    }
+                    sw.Write("Cost: ");
+                    boldStart();
+                    if (TrainingCost > 0)
+                    {
+                        sw.Write(String.Format("{0:0,0,0} ISK", TrainingCost));
+                    }
+                    else
+                    {
+                        sw.Write("0 ISK");
+                    }
+                    boldEnd();
+                    needComma = true;
+                }
+                writeLine();
+                if (pto.FooterCost || pto.EntryCost)
+                {
+                    sw.Write("N.B. Skill costs are based on CCP's database and are indicative only");
+                    writeLine();
+                }
+            }
+        }
+
+        public void SerializePlanTo(Stream s)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Plan));
+            xs.Serialize(s, this);
+        }
+
+        public void Export_Plan()
+        {
+            m_settings = Settings.GetInstance();
+            SaveFileDialog sfdSave = new SaveFileDialog();
+            sfdSave.Title = "Save to File";
+            string planSaveName = this.Name;
+            char[] invalidFileChars = Path.GetInvalidFileNameChars();
+            int fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            while (fileInd != -1)
+            {
+                planSaveName = planSaveName.Replace(planSaveName[fileInd], '-');
+                fileInd = planSaveName.IndexOfAny(invalidFileChars);
+            }
+
+            sfdSave.FileName = this.GrandCharacterInfo.Name + " - " + planSaveName;
+            sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+            sfdSave.FilterIndex = (int)PlanSaveType.Emp;
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            string fileName = sfdSave.FileName;
+            try
+            {
+                PlanTextOptions pto = null;
+                if ((PlanSaveType)sfdSave.FilterIndex == PlanSaveType.Text)
+                {
+                    pto = (PlanTextOptions)m_settings.DefaultSaveOptions.Clone();
+                    using (CopySaveOptionsWindow f = new CopySaveOptionsWindow(pto, this, false))
+                    {
+                        if (pto.Markup == MarkupType.Undefined)
+                        {
+                            pto.Markup = MarkupType.None;
+                        }
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                        if (f.SetAsDefault)
+                        {
+                            m_settings.DefaultSaveOptions = pto;
+                            m_settings.Save();
+                        }
+                    }
+                }
+
+                using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                {
+                    switch ((PlanSaveType)sfdSave.FilterIndex)
+                    {
+                        case PlanSaveType.Emp:
+                            using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
+                            {
+                                SerializePlanTo(gzs);
+                            }
+                            break;
+                        case PlanSaveType.Xml:
+                            SerializePlanTo(fs);
+                            break;
+                        case PlanSaveType.Text:
+                            using (StreamWriter sw = new StreamWriter(fs))
+                            {
+                                SaveAsText(sw, pto);
+                            }
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void Export_Character()
+        {
+            SaveFileDialog sfdSave = new SaveFileDialog();
+            sfdSave.Title = "Export to XML";
+            sfdSave.FileName = this.GrandCharacterInfo.Name + " Planned Character Export";
+            sfdSave.Filter = "XML Short Format (*.xml)|*.xml|XML Long Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+            sfdSave.FilterIndex = (int)ExportSaveType.ShortXml;
+            DialogResult dr = sfdSave.ShowDialog();
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            string fileName = sfdSave.FileName;
+            ExportSaveType saveType = (ExportSaveType)sfdSave.FilterIndex;
+            try
+            {
+
+                SerializableCharacterSheet ci = this.GrandCharacterInfo.ExportSerializableCharacterSheet();
+                this.Merge(ci);
+                switch (saveType)
+                {
+                    case ExportSaveType.Text:
+                        ci.SaveTextFile(fileName);
+                        break;
+                    case ExportSaveType.ShortXml:
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        {
+                            XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterSheet));
+                            ser.Serialize(fs, ci);
+                        }
+                        break;
+                    case ExportSaveType.LongXml:
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        {
+                            SerializableCharacterInfo cfi = ci.CreateSerializableCharacterInfo();
+                            XmlSerializer ser = new XmlSerializer(typeof(SerializableCharacterInfo));
+                            ser.Serialize(fs, cfi);
+                        }
+                        break;
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                ExceptionHandler.LogException(ioe, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + ioe.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (IOException err)
+            {
+                ExceptionHandler.LogException(err, true);
+                MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
+                                "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
     }
 
-    /// <summary>
-    /// Represents the type of a plan operation
-    /// </summary>
-    public enum PlanOperations
+    #region Public Enums
+    public enum MarkupType
     {
-        /// <summary>
-        /// None, there is nothing to do.
-        /// </summary>
+        Undefined,
         None,
-        /// <summary>
-        /// The operation is an addition.
-        /// </summary>
-        Addition,
-        /// <summary>
-        /// The operation is a suppression.
-        /// </summary>
-        Suppression
+        Forum,
+        Html
     }
+
+    public enum PlanSaveType
+    {
+        None = 0,
+        Emp = 1,
+        Xml = 2,
+        Text = 3
+    }
+
+    public enum ExportSaveType
+    {
+        None = 0,
+        ShortXml = 1,
+        LongXml = 2,
+        Text = 3
+    }
+
+    public interface IPlannerWindowFactory
+    {
+        Form CreateWindow(Settings s, Plan p);
+    }
+    #endregion
 }

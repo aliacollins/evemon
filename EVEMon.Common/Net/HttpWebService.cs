@@ -9,7 +9,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     public partial class HttpWebService
     {
-        private readonly HttpWebServiceState m_state = new HttpWebServiceState();
+        private readonly HttpWebServiceState _state = new HttpWebServiceState();
 
         internal HttpWebService()
         {
@@ -22,7 +22,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         public HttpWebServiceState State
         {
-            get { return m_state; }
+            get { return _state; }
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         private HttpWebServiceRequest GetRequest()
         {
-            return new HttpWebServiceRequest(m_state);
+            return new HttpWebServiceRequest(_state);
         }
     }
 

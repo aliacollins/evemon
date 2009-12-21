@@ -10,6 +10,8 @@ namespace EVEMon.Sales
     [DefaultMineralParser("matari")]
     public class MatariParser : IMineralParser
     {
+        private static Regex mineralLineScan = new Regex(@"\<table.*last.updated", RegexOptions.Compiled);
+
         private static Regex mineralTokenizer =
             new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td",
                       RegexOptions.Compiled);
@@ -35,7 +37,7 @@ namespace EVEMon.Sales
             string phoenixContent;
             try
             {
-                phoenixContent = EveClient.HttpWebService.DownloadString(
+                phoenixContent = CommonContext.HttpWebService.DownloadString(
                     "http://www.evegeek.com/mineralindex.php");
             }
             catch (HttpWebServiceException ex)
@@ -45,7 +47,11 @@ namespace EVEMon.Sales
             }
 
             //scan for prices
-            MatchCollection mc = mineralTokenizer.Matches(phoenixContent);
+            Match m = mineralLineScan.Match(phoenixContent);
+
+            string mLine = m.Captures[0].Value;
+
+            MatchCollection mc = mineralTokenizer.Matches(mLine);
 
             foreach (Match mineral in mc)
             {

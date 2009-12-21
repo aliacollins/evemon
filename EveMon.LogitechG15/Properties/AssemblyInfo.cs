@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly : AssemblyTitle("EVEMon.LogitechG15")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1591 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/branches/Foundations/EveMon.LogitechG15")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1376 Local Changes: Yes Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EveMon.LogitechG15")] 
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("EVEMon Development Team")]
 [assembly : AssemblyProduct("EVEMon")]
@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.2.8.1591")]
+[assembly : AssemblyVersion("1.2.8.1376")]

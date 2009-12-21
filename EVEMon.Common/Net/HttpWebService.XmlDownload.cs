@@ -47,6 +47,10 @@ namespace EVEMon.Common.Net
                 }
                 return result;
             }
+            catch (XmlException ex)
+            {
+                throw HttpWebServiceException.XmlException(url, ex);
+            }
             finally
             {
                 if (request.ResponseStream != null) request.ResponseStream.Close();
@@ -60,17 +64,14 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <returns></returns>
-        public object DownloadXmlAsync(string url, HttpPostData postData, DownloadXmlCompletedCallback callback, object userState)
+        public object DownloadXmlAsync(string url, DownloadXmlCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
-            {
                 throw new ArgumentException(urlValidationError);
-            }
-
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
-            request.GetResponseAsync(url, new MemoryStream(), XML_ACCEPT, postData, state);
+            request.GetResponseAsync(url, new MemoryStream(), XML_ACCEPT, null, state);
             return request;
         }
 

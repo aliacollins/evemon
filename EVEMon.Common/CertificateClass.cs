@@ -1,164 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
-using EVEMon.Common.Collections;
-using EVEMon.Common.Data;
+using System.Xml;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a certificate class from a character's point of view.
+    /// Represents a certificate class. Every category
+    /// (i.e. "Business and Industry") contains certificate classes
+    /// (i.e. "Production Manager"), which contain certificates
+    /// (i.e. "Production Manager Basic").
     /// </summary>
-    [EnforceUIThreadAffinity]
-    public sealed class CertificateClass : ReadonlyVirtualCollection<Certificate>
+    public sealed class CertificateClass
     {
-        private readonly Character m_character;
-        private readonly StaticCertificateClass m_staticData;
-        private readonly Certificate[] m_items = new Certificate[4];
-        private readonly CertificateCategory m_category;
+        private readonly Certificate[] certificates = new Certificate[4];
+
+        public readonly int ID;
+        public readonly string Name;
+        public readonly string Description;
+        public readonly CertificateCategory Category;
 
         /// <summary>
-        /// Constructor
+        /// Constructor from XML
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
-        internal CertificateClass(Character character, StaticCertificateClass src, CertificateCategory category)
+        /// <param name="category"></param>
+        /// <param name="element"></param>
+        internal CertificateClass(CertificateCategory category, XmlElement element)
         {
-            m_character = character;
-            m_category = category;
-            m_staticData = src;
+            this.Category = category;
+            this.Name = element.GetAttribute("name");
+            this.Description = element.GetAttribute("descr");
+            this.ID = Int32.Parse(element.GetAttribute("id"));
 
-            foreach (var srcCert in src)
+            if (element.HasChildNodes)
             {
-                var cert = new Certificate(character, srcCert, this);
-                m_items[(int)cert.Grade] = cert;
+                foreach (var child in element.ChildNodes)
+                {
+                    var cert = new Certificate(this, (XmlElement)child);
+                    this.certificates[(int)cert.Grade] = cert;
+                }
             }
         }
 
         /// <summary>
-        /// Core implementation of the <see cref="ReadonlyVirtualCollection{T}"/> collection.
+        /// Gets the non-null certificates within this class, sorted by grade
         /// </summary>
-        /// <returns></returns>
-        protected override IEnumerable<Certificate>  Enumerate()
+        public IEnumerable<Certificate> Certificates
         {
- 	        foreach(var cert in m_items)
+            get
             {
-                if (cert != null) yield return cert;
+                foreach (var cert in this.certificates)
+                {
+                    if (cert != null) yield return cert;
+                }
             }
         }
 
         /// <summary>
-        /// Gets the static data associated with this object.
+        /// Gets the certificate with the specified grade
         /// </summary>
-        public StaticCertificateClass StaticData
-        {
-            get { return m_staticData; }
-        }
-
-        /// <summary>
-        /// Gets the category for this certificate class
-        /// </summary>
-        public CertificateCategory Category
-        {
-            get { return m_category; }
-        }
-
-        /// <summary>
-        /// Gets this skill's id
-        /// </summary>
-        public int ID
-        {
-            get { return m_staticData.ID; }
-        }
-
-        /// <summary>
-        /// Gets this skill's name
-        /// </summary>
-        public string Name
-        {
-            get { return m_staticData.Name; }
-        }
-
-        /// <summary>
-        /// Gets this skill's description
-        /// </summary>
-        public string Description
-        {
-            get { return m_staticData.Description; }
-        }
-
-        /// <summary>
-        /// Gets a certificate from this class by its grade. May be null if there is no such grade for this class.
-        /// </summary>
-        /// <param name="grade"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public Certificate this[CertificateGrade grade]
         {
-            get { return m_items[(int)grade]; }
-        }
-
-        /// <summary>
-        /// Gets the lowest grade certificate.
-        /// </summary>
-        public Certificate LowestGradeCertificate
-        {
-            get
-            {
-                var scert = m_staticData.LowestGradeCertificate;
-                return m_items[(int)scert.Grade];
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the highest grade certificate.
-        /// </summary>
-        public Certificate HighestGradeCertificate
-        {
-            get
-            {
-                var scert = m_staticData.HighestGradeCertificate;
-                return m_items[(int)scert.Grade];
-            }
-        }
-
-        /// <summary>
-        /// Gets the lowest untrained (neither granted nor claimable). Null if all certificates have been granted or are claimable.
-        /// </summary>
-        public Certificate LowestUntrainedGrade
-        {
-            get
-            {
-                foreach (var cert in m_items)
-                {
-                    if (cert != null)
-                    {
-                        if (cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted) return cert;
-                    }
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the highest claimed grade. May be null if no grade has been granted.
-        /// </summary>
-        public Certificate HighestClaimedGrade
-        {
-            get
-            {
-                Certificate lastCert = null;
-                foreach (var cert in m_items)
-                {
-                    if (cert != null)
-                    {
-                        if (cert.Status != CertificateStatus.Granted) return lastCert;
-                        lastCert = cert;
-                    }
-                }
-                return lastCert;
-            }
+            get { return this.certificates[(int)grade]; }
         }
 
         /// <summary>
@@ -166,46 +70,98 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public bool IsCompleted
+        public bool HasBeenCompletedBy(CharacterInfo character)
         {
-            get
+            foreach (var cert in Certificates)
             {
-                foreach (var cert in m_items)
-                {
-                    if (cert != null && cert.Status != CertificateStatus.Granted) return false;
-                }
-                return true;
+                if (character.GetCertificateStatus(cert) != CertificateStatus.Granted) return false;
             }
+            return true;
         }
 
         /// <summary>
-        /// Gets true if the provided character can train to the next grade, false if the class has already been completed or if the next grade is untrainable.
+        /// Gets true if the provided character can train to the next
+        /// grade, false if the class has already been completed or if
+        /// the next grade is untrainable.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public bool IsFurtherTrainable
+        public bool IsFurtherTrainableBy(CharacterInfo character)
+        {
+            foreach (var cert in Certificates)
+            {
+                var status = character.GetCertificateStatus(cert);
+                if (status == CertificateStatus.PartiallyTrained) return true;
+                else if (status == CertificateStatus.Untrained) return false;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the lowest grade, untrained, certificate for the provided character
+        /// </summary>
+        /// <param name="character"></param>
+        public Certificate GetLowestGradeUntrainedCertificate(CharacterInfo character)
+        {
+            // Look for the next grade
+            foreach (var cert in Certificates)
+            {
+                var status = character.GetCertificateStatus(cert);
+                if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted) return cert;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the highest grade, claimed, certificate for the provided character
+        /// </summary>
+        /// <param name="character"></param>
+        public Certificate GetHighestGradeClaimedCertificate(CharacterInfo character)
+        {
+            // Look for the next grade
+            Certificate lastCert = null;
+            foreach (var cert in Certificates)
+            {
+                var status = character.GetCertificateStatus(cert);
+                if (status != CertificateStatus.Granted) return lastCert;
+                lastCert = cert;
+            }
+            return lastCert;
+        }
+        
+        /// <summary>
+        /// Gets the lowest grade certificate.
+        /// </summary>
+        public Certificate LowestGradeCertificate
         {
             get
             {
-                foreach (var cert in m_items)
-                {
-                    if (cert != null)
-                    {
-                        if (cert.Status == CertificateStatus.PartiallyTrained) return true;
-                        else if (cert.Status == CertificateStatus.Untrained) return false;
-                    }
-                }
-                return false;
+                foreach (var cert in Certificates) return cert;
+                throw new NotImplementedException();
+            }
+        }
+        
+        /// <summary>
+        /// Gets the highest grade certificate.
+        /// </summary>
+        public Certificate HighestGradeCertificate
+        {
+            get
+            {
+                // Look for the next grade
+                Certificate lastCert = null;
+                foreach (var cert in Certificates) lastCert = cert;
+                return lastCert;
             }
         }
 
         /// <summary>
-        /// Gets the name of the class.
+        /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return m_staticData.Name;
+            return this.Name;
         }
-    }
+    } 
 }

@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using EVEMon.Common.Controls;
 
 namespace EVEMon.Sales
 {

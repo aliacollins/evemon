@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Net;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Net
 {
@@ -12,22 +10,17 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal class HttpWebServiceRequest
     {
-        private const int Timeout = 10000;
-
-        private readonly object m_syncLock = new object();
-
-        private readonly HttpWebServiceState m_webServiceState;
-        private WebRequestAsyncState m_asyncState;
-        private HttpPostData m_postData;
-        private Stream m_responseStream;
-
-        private string m_baseUrl;
-        private string m_accept;
-        private string m_url;
-        private string m_referer = String.Empty;
-
-        private int m_redirectsRemaining;
-        private bool m_cancelled = false;
+        private readonly HttpWebServiceState _webServiceState;
+        private string _baseUrl;
+        private string _accept;
+        private Stream _responseStream;
+        private HttpPostData _postData;
+        private string _url;
+        private int _redirectsRemaining;
+        private string _referer = String.Empty;
+        private WebRequestAsyncState _asyncState;
+        private bool _cancelled = false;
+        private readonly object _syncLock = new object();
 
         /// <summary>
         /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
@@ -35,8 +28,8 @@ namespace EVEMon.Common.Net
         /// <param name="webServiceState">An <see cref="HttpWebServiceState"/> instance</param>
         internal HttpWebServiceRequest(HttpWebServiceState webServiceState)
         {
-            m_webServiceState = webServiceState;
-            m_redirectsRemaining = m_webServiceState.MaxRedirects;
+            _webServiceState = webServiceState;
+            _redirectsRemaining = _webServiceState.MaxRedirects;
         }
 
         /// <summary>
@@ -44,7 +37,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         internal Stream ResponseStream
         {
-            get { return m_responseStream; }
+            get { return _responseStream; }
         }
 
         /// <summary>
@@ -52,7 +45,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         public string BaseUrl
         {
-            get { return m_baseUrl; }
+            get { return _baseUrl; }
         }
 
         /// <summary>
@@ -60,8 +53,8 @@ namespace EVEMon.Common.Net
         /// </summary>
         public bool Cancelled
         {
-            get { lock(m_syncLock) return m_cancelled; }
-            set { lock(m_syncLock) m_cancelled = value; }
+            get { lock(_syncLock) return _cancelled; }
+            set { lock(_syncLock) _cancelled = value; }
         }
 
         /// <summary>
@@ -75,24 +68,25 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Delegate for asynchronous invocation of GetResponse
         /// </summary>
-        private delegate void GetResponseDelegate(string url, Stream responseStream, string accept, HttpPostData postData);
+        private delegate void GetResponseDelegate(
+            string url, Stream responseStream, string accept, HttpPostData postData);
 
         /// <summary>
-        /// Retrieve the response from the reguested URL to the specified response stream
+        /// Retrieve the response from the reqyested URL to the specified response stream
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
         internal void GetResponse(string url, Stream responseStream, string accept, HttpPostData postData)
         {
-            // Store params
-            m_url = url;
-            m_baseUrl = url;
-            m_accept = accept;
-            m_postData = postData;
-            m_responseStream = responseStream;
-
-            Stream webResponseStream = null;
+            if (_webServiceState.RequestsDisabled)
+                throw HttpWebServiceException.RequestsDisabledException(url);
+            _baseUrl = url;
+            _url = url;
+            _responseStream = responseStream;
+            _accept = accept;
+            _postData = postData;
             HttpWebResponse webResponse = null;
+            Stream webResponseStream = null;
             try
             {
                 webResponse = GetHttpResponse();
@@ -100,31 +94,34 @@ namespace EVEMon.Common.Net
                 int bytesRead;
                 long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
-                int bufferSize = (int)(rawBufferSize > m_webServiceState.MaxBufferSize  ? m_webServiceState.MaxBufferSize : (rawBufferSize < m_webServiceState.MinBufferSize ? m_webServiceState.MinBufferSize : rawBufferSize));
+                int bufferSize = (int)(rawBufferSize > _webServiceState.MaxBufferSize  ? _webServiceState.MaxBufferSize : (rawBufferSize < _webServiceState.MinBufferSize ? _webServiceState.MinBufferSize : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];
                     bytesRead = webResponseStream.Read(buffer, 0, bufferSize);
                     if (bytesRead > 0)
                     {
-                        m_responseStream.Write(buffer, 0, bytesRead);
-                        if (m_asyncState != null && m_asyncState.ProgressCallback != null)
+                        _responseStream.Write(buffer, 0, bytesRead);
+                        if (_asyncState != null && _asyncState.ProgressCallback != null)
                         {
                             totalBytesRead += bytesRead;
                             int progressPercentage = webResponse.ContentLength == 0 ? 0 : (int)((totalBytesRead * 100)/webResponse.ContentLength);
-                            m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
+                            _asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead, progressPercentage));
                         }
                     }
                 } while (bytesRead > 0 && !Cancelled);
             }
-            catch (HttpWebServiceException ex)
+            catch (HttpWebServiceException)
             {
-                throw ex;
+                throw;
             }
             catch (WebException ex)
             {
-                // Aborted, time out or error while processing the request
-                throw HttpWebServiceException.WebException(BaseUrl, m_webServiceState, ex);
+                if (ex.Status == WebExceptionStatus.ProtocolError && ((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.ProxyAuthenticationRequired && _webServiceState.DisableOnProxyAuthenticationFailure)
+                {
+                    _webServiceState.RequestsDisabled = true;
+                }
+                throw HttpWebServiceException.WebException(BaseUrl, _webServiceState, ex);
             }
             catch (Exception ex)
             {
@@ -142,17 +139,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         public void GetResponseAsync(string url, Stream responseStream, string accept, HttpPostData postData, WebRequestAsyncState state)
         {
-            m_asyncState = state;
-            m_asyncState.Request = this;
-            if (Dispatcher.IsMultiThreaded)
-            {
-                GetResponseDelegate caller = GetResponse;
-                caller.BeginInvoke(url, responseStream, accept, postData, GetResponseAsyncCompleted, caller);
-            }
-            else
-            {
-                GetResponseAsyncCompletedCore(() => GetResponse(url, responseStream, accept, postData));
-            }
+            _asyncState = state;
+            _asyncState.Request = this;
+            GetResponseDelegate caller = GetResponse;
+            caller.BeginInvoke(url, responseStream, accept, postData, GetResponseAsyncCompleted, caller);
         }
 
         /// <summary>
@@ -160,57 +150,37 @@ namespace EVEMon.Common.Net
         /// </summary>
         private void GetResponseAsyncCompleted(IAsyncResult ar)
         {
-            GetResponseDelegate caller = (GetResponseDelegate)ar.AsyncState;
-            GetResponseAsyncCompletedCore(() => caller.EndInvoke(ar));
-        }
-
-        /// <summary>
-        /// Callback method for asynchronous requests
-        /// </summary>
-        private void GetResponseAsyncCompletedCore(Action completion)
-        {
+            GetResponseDelegate caller = (GetResponseDelegate) ar.AsyncState;
             try
             {
-                completion();
+                caller.EndInvoke(ar);
             }
-            catch (HttpWebServiceException ex)
+            catch(HttpWebServiceException ex)
             {
-                m_asyncState.Error = ex;
+                _asyncState.Error = ex;
             }
-
-            // Prevents invoking the callback on the UI thread when the application has been closed.
-            if (EveClient.Closed) return;
-            m_asyncState.Callback(m_asyncState);
+            _asyncState.Callback(_asyncState);
         }
-
 
         /// <summary>
         /// Get the HttpWebResponse for the specified URL
         /// </summary>
         private HttpWebResponse GetHttpResponse()
         {
-            HttpWebRequest request = GetHttpWebRequest(m_url, m_referer);
-
-            // Prepare the POST request we're going to send.
+            HttpWebRequest request = GetHttpWebRequest(_url, _referer);
             if (request.Method == "POST")
             {
                 Stream requestStream = request.GetRequestStream();
-                requestStream.Write(m_postData.Content, 0, m_postData.Length);
+                requestStream.Write(_postData.Content, 0, _postData.Length);
                 requestStream.Close();
             }
-
-            // Query the web site.
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            // When the address has been redirected, connects to the redirection.
             if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.MovedPermanently)
             {
                 string target = response.GetResponseHeader("Location");
                 response.Close();
-
-                return GetRedirectedHttpResponse(target);
+                response = GetRedirectedHttpResponse(target);
             }
-
             return response;
         }
 
@@ -219,11 +189,11 @@ namespace EVEMon.Common.Net
         /// </summary>
         private HttpWebResponse GetRedirectedHttpResponse(string target)
         {
-            if (m_redirectsRemaining-- > 0)
+            if (_redirectsRemaining-- > 0)
             {
-                Uri referer = new Uri(m_url);
-                m_referer = referer.ToString();
-                m_url = new Uri(referer, target).ToString();
+                Uri referer = new Uri(_url);
+                _referer = referer.ToString();
+                _url = new Uri(referer, target).ToString();
                 return GetHttpResponse();
             }
             else
@@ -243,32 +213,30 @@ namespace EVEMon.Common.Net
             request.Headers[HttpRequestHeader.AcceptCharset] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
             request.Headers[HttpRequestHeader.Pragma] = "no-cache";
             request.KeepAlive = true;
-            request.UserAgent = m_webServiceState.UserAgent;
-            request.Accept = m_accept;
-            request.Timeout = Timeout;
-
+            request.UserAgent = _webServiceState.UserAgent;
+            request.Accept = _accept;
             if (referer != null) request.Referer = referer;
-            if (m_postData != null)
+            if (_postData != null)
             {
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = m_postData.Length;
+                request.ContentLength = _postData.Length;
             }
-            if (m_webServiceState.Proxy.Enabled)
+            if (_webServiceState.UseCustomProxy)
             {
-                WebProxy proxy = new WebProxy(m_webServiceState.Proxy.Host, m_webServiceState.Proxy.Port);
-                switch (m_webServiceState.Proxy.Authentication)
+                WebProxy proxy = new WebProxy(_webServiceState.Proxy.Host, _webServiceState.Proxy.Port);
+                switch (_webServiceState.Proxy.AuthType)
                 {
-                    case ProxyAuthentication.None:
+                    case ProxyAuthType.None:
                         proxy.UseDefaultCredentials = false;
                         proxy.Credentials = null;
                         break;
-                    case ProxyAuthentication.SystemDefault:
+                    case ProxyAuthType.SystemDefault:
                         proxy.UseDefaultCredentials = true;
                         break;
-                    case ProxyAuthentication.Specified:
+                    case ProxyAuthType.Specified:
                         proxy.UseDefaultCredentials = false;
-                        proxy.Credentials = new NetworkCredential(m_webServiceState.Proxy.Username, m_webServiceState.Proxy.Password);
+                        proxy.Credentials = new NetworkCredential(_webServiceState.Proxy.Username, _webServiceState.Proxy.Password);
                         break;
                 }
                 request.Proxy = proxy;

@@ -38,7 +38,7 @@ namespace EVEMon.Sales
             string content;
             try
             {
-                content = EveClient.HttpWebService.DownloadString(
+                content = CommonContext.HttpWebService.DownloadString(
                     "http://eve.battleclinic.com/market_xml.php");
             }
             catch (HttpWebServiceException ex)

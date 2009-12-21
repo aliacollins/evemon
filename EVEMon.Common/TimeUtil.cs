@@ -32,8 +32,8 @@ namespace EVEMon.Common
         public static DateTime ConvertCCPTimeStringToDateTime(string timeUTC)
         {
             // timeUTC  = yyyy-mm-dd hh:mm:ss
-            if (String.IsNullOrEmpty(timeUTC)) return DateTime.MinValue;
-
+            if (timeUTC == null || timeUTC == "")
+                return DateTime.MinValue;
             DateTime dt = new DateTime(
                 Int32.Parse(timeUTC.Substring(0, 4)),
                 Int32.Parse(timeUTC.Substring(5, 2)),

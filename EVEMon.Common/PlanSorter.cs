@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
-    public enum PlanEntrySort
+    public enum PlanSort
     {
         None,
         Cost,
@@ -26,101 +24,243 @@ namespace EVEMon.Common
         Notes
     }
 
-    /// <summary>
-    /// This classes holds the responsibility to sort enumerations of plan entries
-    /// </summary>
-    internal sealed class PlanSorter
+    public sealed class PlanSorter
     {
-        private PlanEntrySort m_sort;
-        private bool m_reverseOrder;
-        private bool m_groupByPriority;
-        private bool m_learningSkillsFirst;
-        private IEnumerable<PlanEntry> m_entries;
-        private Dictionary<StaticSkillGroup, TimeSpan> m_skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
-        private BaseCharacter m_character;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="entries"></param>
-        /// <param name="sort"></param>
-        /// <param name="reverseOrder"></param>
-        /// <param name="groupByPriority"></param>
-        /// <param name="learningSkillsFirst"></param>
-        internal PlanSorter(BaseCharacter character, IEnumerable<PlanEntry> entries, PlanEntrySort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst)
+        #region Node<T>
+        private sealed class Node<T>
         {
-            m_sort = sort;
-            m_entries = entries;
-            m_reverseOrder = reverseOrder;
-            m_groupByPriority = groupByPriority;
-            m_learningSkillsFirst = learningSkillsFirst;
-            m_character = character;
-        }
+            public readonly T Item;
 
-        /// <summary>
-        /// Performs the sort
-        /// </summary>
-        /// <param name="startSp"></param>
-        /// <returns></returns>
-        public IEnumerable<PlanEntry> Sort(int startSp)
-        {
-            int initialCount = m_entries.Count();
+            private readonly List<Node<T>> prerequisites = new List<Node<T>>();
+            private readonly List<Node<T>> postrequisites = new List<Node<T>>();
+            private bool inserted;
+            private bool deferred;
 
-            // Apply first pass (learning skills)
-            // We split the entries into a head (learnings) and a tail (non-learnings)
-            PlanScratchpad headPlan = new PlanScratchpad(m_character);
-            List<PlanEntry> tailEntries = new List<PlanEntry>();
-
-            if (m_learningSkillsFirst)
+            public Node(T item)
             {
-                tailEntries.AddRange(m_entries.Where(x => x.Skill.LearningClass == LearningClass.None));
-
-                var learningSkills = m_entries.Where(x => x.Skill.LearningClass != LearningClass.None);
-                headPlan = OptimizeLearningSkills(learningSkills, startSp);
-            }
-            else
-            {
-                tailEntries.AddRange(m_entries);
+                this.Item = item;
             }
 
-
-            // Apply second pass (priorities grouping)
-            // We split the tail into multiple tail groups
-            List<PlanScratchpad> tailEntryPlans = new List<PlanScratchpad>();
-            var scratchpad = new CharacterScratchpad(m_character);
-            scratchpad.Train(headPlan);
-
-            if (m_groupByPriority)
+            public void AddPrerequisite(Node<T> prereq)
             {
-                foreach (var group in tailEntries.GroupBy(x => x.Priority))
+                this.prerequisites.Add(prereq);
+                prereq.postrequisites.Add(this);
+            }
+
+            public bool CanInsert
+            {
+                get
                 {
-                    tailEntryPlans.Add(new PlanScratchpad(scratchpad, group));
+                    foreach (var prereq in prerequisites)
+                    {
+                        if (!prereq.inserted) return false;
+                    }
+                    return true;
                 }
             }
-            else
+
+            public void TryAddTo(List<T> list)
             {
-                tailEntryPlans.Add(new PlanScratchpad(scratchpad, tailEntries));
+                // If not inserted yet
+                if (!this.inserted)
+                {
+                    // If all prereqs have been inserted so far, we can add this skill
+                    if (this.CanInsert)
+                    {
+                        list.Add(this.Item);
+                        this.inserted = true;
+                        this.deferred = false;
+
+                        // We now add every postreq that have been previously tried but were pending because of this very skill
+                        foreach (var postreq in this.postrequisites)
+                        {
+                            if (postreq.deferred) postreq.TryAddTo(list);
+                        }
+                    }
+                    else
+                    {
+                        this.deferred = true;
+                    }
+                }
             }
 
-
-            // Apply third pass (sorts)
-            // We sort every tail group, and merge them once they're sorted.
-            List<PlanEntry> list = new List<PlanEntry>();
-            list.AddRange(headPlan);
-
-            foreach (var tailPlan in tailEntryPlans)
+            public void CleanUp()
             {
-                tailPlan.UpdateStatistics(scratchpad, false, false);
-                tailPlan.SimpleSort(m_sort, m_reverseOrder);
-                list.AddRange(tailPlan);
+                this.prerequisites.Clear();
+                this.postrequisites.Clear();
+            }
+        }
+        #endregion
+
+        #region Static methods
+        public static void PutOrderedLearningSkillsAhead(Plan plan, bool groupByPriority)
+        {
+            Sort(plan, PlanSort.None, false, groupByPriority, true);
+        }
+
+        public static void Sort(Plan plan, PlanSort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst)
+        {
+            Sort(plan, sort, reverseOrder, groupByPriority, learningSkillsFirst, null);
+        }
+
+        public static void Sort(Plan plan, PlanSort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst, List<TimeSpan> timeDifferences)
+        {
+            // Perform the sort
+            var sortedEntries = PlanSorter.Sort(plan.Entries, sort, reverseOrder, groupByPriority, learningSkillsFirst, plan.GrandCharacterInfo.SkillPointTotal, timeDifferences);
+
+            // Update plan
+            plan.SuppressEvents();
+            try
+            {
+                plan.Entries.Clear();
+                foreach (var entry in sortedEntries) plan.Entries.Add(entry);
+            }
+            finally
+            {
+                // Resume, will also refresh the plan
+                plan.ResumeEvents();
+            }
+        }
+
+        public static IEnumerable<Plan.Entry> Sort(IEnumerable<Plan.Entry> entries, PlanSort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst, int startSp, List<TimeSpan> timeDifferences)
+        {
+            var sorter = new PlanSorter(entries, sort, reverseOrder, groupByPriority, learningSkillsFirst, timeDifferences);
+            return sorter.Sort(startSp);
+        }
+        #endregion
+
+        private PlanSort sort;
+        private bool reverseOrder;
+        private bool groupByPriority;
+        private bool learningSkillsFirst;
+        private IEnumerable<Plan.Entry> entries;
+        private Dictionary<Plan.Entry, TimeSpan> timeDifferences = new Dictionary<Plan.Entry,TimeSpan>();
+        private EveAttributeScratchpad scratchPadAfterLearning = new EveAttributeScratchpad();
+        private Dictionary<SkillGroup, TimeSpan> skillGroupsDurations = new Dictionary<SkillGroup,TimeSpan>();
+
+        private PlanSorter(IEnumerable<Plan.Entry> entries, PlanSort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst, List<TimeSpan> timeDifferencesList)
+        {
+            this.sort = sort;
+            this.entries = entries;
+            this.reverseOrder = reverseOrder;
+            this.groupByPriority = groupByPriority;
+            this.learningSkillsFirst = learningSkillsFirst;
+            if (sort == PlanSort.TimeDifference)
+            {
+                if (timeDifferencesList == null) this.sort = PlanSort.None;
+
+                int index = 0;
+                foreach(var entry in entries)
+                {
+                    this.timeDifferences[entry] = timeDifferencesList[index];
+                    index++;
+                }
+            }
+        }
+
+        private IEnumerable<Plan.Entry> Sort(int startSp)
+        {
+            bool ignoreReverse = false;
+            bool ignoreGroupByPriority = false;
+            bool ignoreLearningSkillsFirst = false;
+
+            // First, we apply the required filter
+            List<Plan.Entry> list = new List<Plan.Entry>(entries);
+            int initialCount = list.Count;
+
+            switch (sort)
+            {
+                case PlanSort.Name:
+                    StableSort(list, CompareByName);
+                    break;
+                case PlanSort.Cost:
+                    StableSort(list, CompareByCost);
+                    break;
+                case PlanSort.PrimaryAttribute:
+                    StableSort(list, CompareByPrimaryAttribute);
+                    break;
+                case PlanSort.SecondaryAttribute:
+                    StableSort(list, CompareBySecondaryAttribute);
+                    break;
+                case PlanSort.Priority:
+                    StableSort(list, CompareByPriority);
+                    break;
+                case PlanSort.PlanGroup:
+                    StableSort(list, CompareByPlanGroup);
+                    break;
+                case PlanSort.PercentCompleted:
+                    StableSort(list, CompareByPercentCompleted);
+                    break;
+                case PlanSort.Rank:
+                    StableSort(list, CompareByRank);
+                    break;
+                case PlanSort.Notes:
+                    StableSort(list, CompareByNotes);
+                    break;
+                case PlanSort.PlanType:
+                    StableSort(list, CompareByPlanType);
+                    break;
+                case PlanSort.TimeDifference:
+                    StableSort(list, CompareByTimeDifference);
+                    break;
+                case PlanSort.TrainingTime:
+                    // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
+                    if (!this.learningSkillsFirst) StableSort(list, CompareByTrainingTime);
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
+                    break;
+                case PlanSort.TrainingTimeNatural:
+                    // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
+                    if (!this.learningSkillsFirst) StableSort(list, CompareByTrainingTimeNatural);
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
+                    break;
+                case PlanSort.SkillGroupDuration:
+                    // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
+                    if (!this.learningSkillsFirst) StableSort(list, CompareBySkillGroupDuration);
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
+                    break;
+                case PlanSort.SPPerHour:
+                    // When learning skills are on top, we use the scratchpad they will generate after we optimized them. It's dealt in PutLearningOnTop
+                    if (!this.learningSkillsFirst) StableSort(list, CompareBySPPerHour);
+                    else
+                    {
+                        ignoreReverse = true;
+                        ignoreGroupByPriority = true;
+                    }
+                    break;
+                default:
+                    ignoreReverse = true;
+                    break;
             }
 
-            // This is actually what GroupByPriority should do
-            if (m_groupByPriority) list.StableSort(PlanSorter.CompareByPriority);
+            // Reverse sort order
+            if (reverseOrder && !ignoreReverse) list.Reverse();
 
-            // Fix prerequisites order
-            FixPrerequisitesOrder(list);
+            // Group by priority
+            if (groupByPriority && !ignoreGroupByPriority)
+            {
+                GroupByPriority(list);
+            }
+
+            // Put learning skills first
+            if (learningSkillsFirst && !ignoreLearningSkillsFirst)
+            {
+                PutLearningsOnTop(list, startSp);
+            }
+
+            // Rebuild prerequisites order
+            ReorderPorstrequisites(list);
 
             // Check we didn't mess up anything
             if (initialCount != list.Count)
@@ -132,67 +272,238 @@ namespace EVEMon.Common
             return list;
         }
 
-        /// <summary>
-        /// Ensures the prerequsiites order is correct
-        /// </summary>
-        /// <param name="list"></param>
-        private void FixPrerequisitesOrder(List<PlanEntry> list)
+        private void ReorderPorstrequisites(List<Plan.Entry> list)
         {
-            // Gather prerequisites/postrequisites relationships and use them to connect nodes - O(n²) operation
-            var dependencies = new Dictionary<PlanEntry,List<PlanEntry>>();
+            // Transform the list as another one of disjointed graph nodes
+            List<Node<Plan.Entry>> nodes = new List<Node<Plan.Entry>>();
             foreach (var entry in list)
             {
-                dependencies[entry] = new List<PlanEntry>(list.Where(x => entry.IsDependentOf(x)));
+                nodes.Add(new Node<Plan.Entry>(entry));
             }
 
-
-            // Insert entries
-            var entriesToAdd = new LinkedList<PlanEntry>(list);
-            var set = new SkillLevelSet<PlanEntry>();
-            list.Clear();
-
-            while (entriesToAdd.Count != 0)
+            // Gather prerequisites/postrequisites relationships and use them to connect nodes - O(n²) operation
+            foreach (var node in nodes)
             {
-                // Gets the first entry which has all its prerequisites satisfied.
-                var item = entriesToAdd.First(x => dependencies[x].All(y => set[y.Skill, y.Level] != null));
+                // Scan all items in the tree
+                foreach (var prereqCandidate in nodes)
+                {
+                    if (node != prereqCandidate)
+                    {
+                        int level = node.Item.Level;
+                        if (level == 1)
+                        {
+                            // If it's not, then we test whether it is an immediate prerequisite
+                            int neededLevel;
+                            if (node.Item.Skill.HasAsImmedPrereq(prereqCandidate.Item.Skill, out neededLevel))
+                            {
+                                if (prereqCandidate.Item.Level == neededLevel) node.AddPrerequisite(prereqCandidate);
+                            }
+                        }
+                        else
+                        {
+                            // We test whether the prereq candidate is the previous level
+                            if (node.Item.SkillName == prereqCandidate.Item.SkillName && level == prereqCandidate.Item.Level + 1)
+                            {
+                                node.AddPrerequisite(prereqCandidate);
+                            }
+                        }
+                    }
+                }
+            }
 
-                // Add it to the set and list, and remove it from the entries to add
-                set[item.Skill, item.Level] = item;
-                entriesToAdd.Remove(item);
-                list.Add(item);
+            // Flatten the graph in a tree
+            list.Clear();
+            foreach (var tree in nodes) tree.TryAddTo(list);
+
+            // Clean up to take care of the bidirectionnal mess for the GC
+            foreach (var tree in nodes) tree.CleanUp();
+        }
+
+        private void PutLearningsOnTop(List<Plan.Entry> list, int startSP)
+        {
+            List<Plan.Entry> learningSkills = new List<Plan.Entry>();
+            List<Plan.Entry> nonLearningSkills = new List<Plan.Entry>();
+
+            foreach (var entry in list)
+            {
+                if (entry.Skill.SkillGroup.Name == "Learning") learningSkills.Add(entry);
+                else nonLearningSkills.Add(entry);
+            }
+
+            list.Clear();
+            list.AddRange(OptimizeLearningSkills(learningSkills, startSP));
+            bool did_sorting = false;
+            switch(this.sort)
+            {
+                case PlanSort.TrainingTime:
+                    StableSort(nonLearningSkills, CompareByTrainingTime);
+                    did_sorting = true;
+                    break;
+                case PlanSort.TrainingTimeNatural:
+                    StableSort(nonLearningSkills, CompareByTrainingTimeNatural);
+                    did_sorting = true;
+                    break;
+                case PlanSort.SkillGroupDuration:
+                    StableSort(nonLearningSkills, CompareBySkillGroupDuration);
+                    did_sorting = true;
+                    break;
+                case PlanSort.SPPerHour:
+                    StableSort(nonLearningSkills, CompareBySPPerHour);
+                    did_sorting = true;
+                    break;
+                default:
+                    break;
+            }
+            if (did_sorting)
+            {
+                if (reverseOrder) nonLearningSkills.Reverse();
+                if (groupByPriority) GroupByPriority(nonLearningSkills);
+            }
+            list.AddRange(nonLearningSkills);
+        }
+
+        private static void GroupByPriority(List<Plan.Entry> list)
+        {
+            Dictionary<int, List<Plan.Entry>> dictionary = new Dictionary<int, List<Plan.Entry>>();
+            int min = Int32.MaxValue, max = 0;
+
+            foreach (var entry in list)
+            {
+                min = Math.Min(min, entry.Priority);
+                max = Math.Max(max, entry.Priority);
+
+                if (!dictionary.ContainsKey(entry.Priority))
+                {
+                    dictionary[entry.Priority] = new List<Plan.Entry>(1);
+                }
+                dictionary[entry.Priority].Add(entry);
+            }
+
+            list.Clear();
+            for (int i = min; i <= max; i++)
+            {
+                if (dictionary.ContainsKey(i))
+                {
+                    list.AddRange(dictionary[i]);
+                }
             }
         }
 
-        /// <summary>
-        /// Optimize the learning skills order
-        /// </summary>
-        /// <param name="baseEntries"></param>
-        /// <param name="startSP"></param>
-        /// <returns></returns>
-        private PlanScratchpad OptimizeLearningSkills(IEnumerable<PlanEntry> baseEntries, int startSP)
+
+        #region Learning skills sorting
+        private IEnumerable<Plan.Entry> OptimizeLearningSkills(IEnumerable<Plan.Entry> baseEntries, int startSP)
         {
-            var learningPlan = new PlanScratchpad(m_character);
+            var orderedEntries = new List<Plan.Entry>(55);
             var entries = PrepareLearningSkillsInsertionQueue(baseEntries);
 
-            // Insert all the entries in an optimal order
             while (entries.Count != 0)
             {
                 // Pops the next level when there is one, quit otherwise
-                PlanEntry entry = entries.Dequeue();
-                learningPlan.InsertAtBestPosition(entry.Skill, entry.Level);
+                Plan.Entry entry = entries.Dequeue();
+
+                // Look at prerequisites to search min and max insertion positions
+                int minPosition = 0, maxPosition = orderedEntries.Count;
+                for (int i = 0; i < orderedEntries.Count; i++)
+                {
+                    var insertedEntry = orderedEntries[i];
+                    if (TestPrerequisite(entry, insertedEntry))
+                    {
+                        minPosition = Math.Max(minPosition, i + 1);
+                    }
+                    if (TestPrerequisite(insertedEntry, entry))
+                    {
+                        maxPosition = Math.Min(maxPosition, i);
+                    }
+                }
+
+                // We now search for the best insertion position
+                //if (nextLevel.Skill.Name == "Focus") Console.Write("");
+                TimeSpan bestTime = TimeSpan.MaxValue;
+                int bestCandidatePosition = orderedEntries.Count;
+                for (int index = maxPosition; index >= minPosition; index--)
+                {
+                    // Compute list's training time if the next item was inserted at index
+                    int skillPoint = startSP;
+                    TimeSpan candidateTime = TimeSpan.Zero;
+                    EveAttributeScratchpad scratchpad = new EveAttributeScratchpad();
+
+                    for (int i = 0; i <= orderedEntries.Count; i++)
+                    {
+                        if (i < index) Train(orderedEntries[i], scratchpad, ref candidateTime, ref skillPoint);
+                        else if (i > index) Train(orderedEntries[i - 1], scratchpad, ref candidateTime, ref skillPoint);
+                        else Train(entry, scratchpad, ref candidateTime, ref skillPoint);
+                    }
+
+                    // Is it better with this index ? Then, we retain this as the best candidate
+                    if (bestTime > candidateTime)
+                    {
+                        bestTime = candidateTime;
+                        bestCandidatePosition = index;
+                        if (entries.Count == 0) this.scratchPadAfterLearning = scratchpad;
+                    }
+                }
+
+                // Insert at the best candidate position
+                orderedEntries.Insert(bestCandidatePosition, entry);
             }
 
-            return learningPlan;
+            // Found the best path, gather data
+            return orderedEntries;
         }
 
-        /// <summary>
-        /// To be sorted, the learning skills are inserted each one after the other at the best insertion position. 
-        /// However, to be truly optimal (or near optimal, it's not proven), the algorithm needs to get the skills in a certain order.
-        /// This method collects the entries in the appropriate order.
-        /// </summary>
-        /// <param name="baseEntries"></param>
-        /// <returns></returns>
-        private static Queue<PlanEntry> PrepareLearningSkillsInsertionQueue(IEnumerable<PlanEntry> baseEntries)
+        private static void Train(Plan.Entry entry, EveAttributeScratchpad scratchpad, ref TimeSpan time, ref int sp)
+        {
+            time += entry.Skill.GetTrainingTimeOfLevelOnly(entry.Level, sp, true, scratchpad);
+            sp += entry.Skill.GetPointsForLevelOnly(entry.Level, true);
+            scratchpad.ApplyALevelOf(entry.Skill);
+        }
+
+        private static bool TestPrerequisite(Plan.Entry entry, Plan.Entry prerequisiteCandidate)
+        {
+            int entryFamily = GetLearningFamily(entry.SkillName);
+            int prereqFamily = GetLearningFamily(prerequisiteCandidate.SkillName);
+
+            if (entryFamily == prereqFamily)
+            {
+                if (prerequisiteCandidate.Skill.Rank == entry.Skill.Rank) return prerequisiteCandidate.Level < entry.Level;
+                if (prerequisiteCandidate.Skill.Rank < entry.Skill.Rank) return prerequisiteCandidate.Level <= 4;
+            }
+            return false;
+        }
+
+        private static int GetLearningFamily(string skillName)
+        {
+            switch (skillName)
+            {
+                case "Analytical Mind":
+                case "Logic":
+                    return 0;
+
+                case "Spatial Awareness":
+                case "Clarity":
+                    return 1;
+
+                case "Instant Recall":
+                case "Eidetic Memory":
+                    return 2;
+
+                case "Iron Will":
+                case "Focus":
+                    return 3;
+
+                case "Empathy":
+                case "Presence":
+                    return 4;
+
+                case "Learning":
+                    return 5;
+
+                default:
+                    return -1;
+            }
+        }
+
+        private static Queue<Plan.Entry> PrepareLearningSkillsInsertionQueue(IEnumerable<Plan.Entry> baseEntries)
         {
             // Here is the prerequisites table (attributes benefit | primary / secondary for lower | primary / secondary for upper)
             // INT          MEM/INT     INT/MEM
@@ -236,12 +547,12 @@ namespace EVEMon.Common
             }
 
             // Now retrieve the plan's entries from the queue's pairs
-            var entries = new Queue<PlanEntry>();
+            var entries = new Queue<Plan.Entry>();
             foreach (var pair in queue)
             {
                 foreach (var entry in baseEntries)
                 {
-                    if (pair.A == entry.Skill.Name && pair.B == entry.Level - 1)
+                    if (pair.A == entry.SkillName && pair.B == entry.Level - 1)
                     {
                         entries.Enqueue(entry);
                         break;
@@ -251,104 +562,177 @@ namespace EVEMon.Common
 
             return entries;
         }
+        #endregion
 
 
-        #region Simple sort operators
-        public static int CompareByName(PlanEntry x, PlanEntry y)
+        #region Simple sort operators by category
+        private int CompareByName(Plan.Entry x, Plan.Entry y)
         {
-            int nameDiff = String.CompareOrdinal(x.Skill.Name, y.Skill.Name);
+            int nameDiff = String.CompareOrdinal(x.SkillName, y.SkillName);
             if (nameDiff != 0) return nameDiff;
             return x.Level - y.Level;
         }
 
-        public static int CompareByCost(PlanEntry x, PlanEntry y)
+        private int CompareByCost(Plan.Entry x, Plan.Entry y)
         {
-            long xCost = (x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0);
-            long yCost = (y.Level == 1 && !x.CharacterSkill.IsOwned ? y.Skill.Cost : 0);
-            return xCost.CompareTo(yCost);
+            long xCost = (x.Level == 1 ? x.Skill.Cost : 0);
+            long yCost = (y.Level == 1 ? y.Skill.Cost : 0);
+            if (xCost > yCost) return 1;
+            if (xCost < yCost) return -1;
+            return 0;
         }
 
-        public static int CompareByTrainingTime(PlanEntry x, PlanEntry y)
+        private int CompareByTrainingTime(Plan.Entry x, Plan.Entry y)
         {
-            return x.TrainingTime.CompareTo(y.TrainingTime);
+            // We ignore the newbies' bonus
+            var xDuration = x.Skill.GetTrainingTimeOfLevelOnly(x.Level, EveConstants.NewCharacterTrainingThreshold, true, this.scratchPadAfterLearning, true);
+            var yDuration = y.Skill.GetTrainingTimeOfLevelOnly(y.Level, EveConstants.NewCharacterTrainingThreshold, true, this.scratchPadAfterLearning, true);
+
+            if (xDuration > yDuration) return 1;
+            if (xDuration < yDuration) return -1;
+            return 0;
         }
 
-        public static int CompareByTrainingTimeNatural(PlanEntry x, PlanEntry y)
+        private int CompareByTrainingTimeNatural(Plan.Entry x, Plan.Entry y)
         {
-            return x.NaturalTrainingTime.CompareTo(y.NaturalTrainingTime);
+            // We ignore the newbies' bonus
+            var xDuration = x.Skill.GetTrainingTimeOfLevelOnly(x.Level, EveConstants.NewCharacterTrainingThreshold, true, this.scratchPadAfterLearning, false);
+            var yDuration = y.Skill.GetTrainingTimeOfLevelOnly(y.Level, EveConstants.NewCharacterTrainingThreshold, true, this.scratchPadAfterLearning, false);
+
+            if (xDuration > yDuration) return 1;
+            if (xDuration < yDuration) return -1;
+            return 0;
         }
 
-        public static int CompareBySPPerHour(PlanEntry x, PlanEntry y)
+        private int CompareBySPPerHour(Plan.Entry x, Plan.Entry y)
         {
-            return x.SpPerHour - y.SpPerHour;
+            // We ignore the newbies' bonus
+            var character = x.Plan.GrandCharacterInfo;
+            var xSpeed = character.GetEffectiveAttribute(x.Skill.PrimaryAttribute, this.scratchPadAfterLearning, true, true) * 2 +
+                character.GetEffectiveAttribute(x.Skill.SecondaryAttribute, this.scratchPadAfterLearning, true, true);
+            var ySpeed = character.GetEffectiveAttribute(y.Skill.PrimaryAttribute, this.scratchPadAfterLearning, true, true) * 2 +
+                character.GetEffectiveAttribute(y.Skill.SecondaryAttribute, this.scratchPadAfterLearning, true, true);
+
+            if (xSpeed > ySpeed) return 1;
+            if (xSpeed < ySpeed) return -1;
+            return 0;
         }
 
-        public static int CompareByPrimaryAttribute(PlanEntry x, PlanEntry y)
+        private int CompareByPrimaryAttribute(Plan.Entry x, Plan.Entry y)
         {
             return (int)x.Skill.PrimaryAttribute - (int)y.Skill.PrimaryAttribute;
         }
 
-        public static int CompareBySecondaryAttribute(PlanEntry x, PlanEntry y)
+        private int CompareBySecondaryAttribute(Plan.Entry x, Plan.Entry y)
         {
             return (int)x.Skill.SecondaryAttribute - (int)y.Skill.SecondaryAttribute;
         }
 
-        public static int CompareByPriority(PlanEntry x, PlanEntry y)
+        private int CompareByPriority(Plan.Entry x, Plan.Entry y)
         {
             return x.Priority - y.Priority;
         }
 
-        public static int CompareByPlanGroup(PlanEntry x, PlanEntry y)
+        private int CompareByPlanGroup(Plan.Entry x, Plan.Entry y)
         {
             return String.Compare(x.PlanGroupsDescription, y.PlanGroupsDescription);
         }
 
-        public static int CompareByPlanType(PlanEntry x, PlanEntry y)
+        private int CompareByPlanType(Plan.Entry x, Plan.Entry y)
         {
-            return (int)x.Type - (int)y.Type;
+            return (int)x.EntryType - (int)y.EntryType;
         }
 
-        public static int CompareByNotes(PlanEntry x, PlanEntry y)
+        private int CompareByNotes(Plan.Entry x, Plan.Entry y)
         {
             return String.Compare(x.Notes, y.Notes);
         }
 
-        public static int CompareByTimeDifference(PlanEntry x, PlanEntry y)
+        private int CompareByTimeDifference(Plan.Entry x, Plan.Entry y)
         {
-            var xDuration = x.TrainingTime - x.OldTrainingTime;
-            var yDuration = y.TrainingTime - y.OldTrainingTime;
-            return xDuration.CompareTo(yDuration);
+            var xDuration = this.timeDifferences[x];
+            var yDuration = this.timeDifferences[y];
+
+            if (xDuration > yDuration) return 1;
+            if (xDuration < yDuration) return -1;
+            return 0;
         }
 
-        public static int CompareByPercentCompleted(PlanEntry x, PlanEntry y)
+        private int CompareByPercentCompleted(Plan.Entry x, Plan.Entry y)
         {
-            float xRatio = x.CharacterSkill.FractionCompleted;
-            float yRatio = y.CharacterSkill.FractionCompleted;
-            return xRatio.CompareTo(yRatio);
+            float xRatio = 0.0f, yRatio = 0.0f;
+
+            if (x.Skill.LastConfirmedLvl == 0) xRatio = x.Skill.CurrentSkillPoints / (float)x.Skill.GetPointsRequiredForLevel(x.Level);
+            else xRatio = (x.Skill.CurrentSkillPoints - x.Skill.GetPointsRequiredForLevel(x.Level - 1)) / (float)x.Skill.GetPointsRequiredForLevel(x.Level);
+
+            if (y.Skill.LastConfirmedLvl == 0) yRatio = y.Skill.CurrentSkillPoints / (float)y.Skill.GetPointsRequiredForLevel(y.Level);
+            else yRatio = (y.Skill.CurrentSkillPoints - y.Skill.GetPointsRequiredForLevel(y.Level - 1)) / (float)y.Skill.GetPointsRequiredForLevel(y.Level);
+
+            if (xRatio > yRatio) return 1;
+            else if (xRatio < yRatio) return -1;
+            return 0;
         }
 
-        public static int CompareByRank(PlanEntry x, PlanEntry y)
+
+        private int CompareBySkillGroupDuration(Plan.Entry x, Plan.Entry y)
+        {
+            var xDuration = GetSkillGroupDuration(x.Skill.SkillGroup);
+            var yDuration = GetSkillGroupDuration(y.Skill.SkillGroup);
+
+            if (xDuration > yDuration) return 1;
+            if (xDuration < yDuration) return -1;
+            return 0;
+        }
+
+        private int CompareByRank(Plan.Entry x, Plan.Entry y)
         {
             return x.Skill.Rank - y.Skill.Rank;
         }
 
-        public static int CompareBySkillGroupDuration(PlanEntry x, PlanEntry y, IEnumerable<PlanEntry> entries, Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
-        {
-            var xDuration = GetSkillGroupDuration(x.Skill.Group, entries, skillGroupsDurations);
-            var yDuration = GetSkillGroupDuration(y.Skill.Group, entries, skillGroupsDurations);
-            return xDuration.CompareTo(yDuration);
-        }
-
-        private static TimeSpan GetSkillGroupDuration(StaticSkillGroup group, IEnumerable<PlanEntry> entries, Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
+        private TimeSpan GetSkillGroupDuration(SkillGroup group)
         {
             if (!skillGroupsDurations.ContainsKey(group))
             {
                 TimeSpan time = TimeSpan.Zero;
-                foreach (var entry in entries) time += entry.TrainingTime;
+                foreach (var entry in entries)
+                {
+                    if (entry.Skill.SkillGroup == group)
+                    {
+                        EveAttributeScratchpad scratchpad = (group.Name == "Learning" ? null : this.scratchPadAfterLearning);
+                        time += entry.Skill.GetTrainingTimeOfLevelOnly(entry.Level, EveConstants.NewCharacterTrainingThreshold, true, scratchpad, false);
+                    }
+                }
                 skillGroupsDurations[group] = time;
             }
             
             return skillGroupsDurations[group];
+        }
+
+        /// <summary>
+        /// Uses an insertion sort algorithm to perform a stable sort (keep the initial order of the keys with equal values).
+        /// </summary>
+        /// <remarks>Memory overhead is null, average complexity is O(n.ln(n)), worst-case is O(n²).</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="comparison"></param>
+        private void StableSort<T>(List<T> list, Comparison<T> comparison)
+        {
+            // For every key
+            for (int i = 1; i < list.Count; i++)
+            {
+                var value = list[i];
+                int j = i - 1;
+
+                // Move the key backward while the previous items are lesser than it, shifting those items to thr right
+                while (j >= 0 && comparison(list[j], value) > 0)
+                {
+                    list[j + 1] = list[j];
+                    j--;
+                }
+
+                // Insert at the left of the scrolled sequence, immediately on the right of the first lesser or equal value it found
+                list[j + 1] = value;
+            }
         }
         #endregion
     }
