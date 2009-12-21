@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using EVEMon.Common;
 
@@ -7,63 +8,85 @@ namespace EVEMon.Common
 {
     public static class AttributesOptimizer
     {
-        #region SkillTraining
-        public struct SkillTraining
-        {
-            public int PointsToTrain;
-            public Skill Skill;
-
-            public SkillTraining(Skill skill, int sp)
-            {
-                this.Skill = skill;
-                this.PointsToTrain = sp;
-            }
-        }
-        #endregion
-
         #region Remapping
-        public class Remapping
+        /// <summary>
+        /// Represents the result of a remapping
+        /// </summary>
+        public sealed class RemappingResult
         {
+            private readonly List<ISkillLevel> m_skills = new List<ISkillLevel>();
+            private readonly CharacterScratchpad m_baseScratchpad;
+            private readonly RemappingPoint m_point;
+            private readonly TimeSpan m_startTime;
+
+            private CharacterScratchpad m_bestScratchpad;
+            private TimeSpan m_baseDuration;
+            private TimeSpan m_bestDuration;
+
             /// <summary>
-            /// Gets the list of the trainng after this remap
+            /// Constructor without any remapping point associated 
             /// </summary>
-            public readonly List<SkillTraining> Skills = new List<SkillTraining>();
+            /// <param name="baseScratchpad"></param>
+            public RemappingResult(CharacterScratchpad baseScratchpad)
+            {
+                m_baseScratchpad = baseScratchpad;
+                m_startTime = m_baseScratchpad.TrainingTime;
+            }
+
+            /// <summary>
+            /// Constructor for a result bound to a remapping point
+            /// </summary>
+            /// <param name="point">Associated remapping point, may be null.</param>
+            /// <param name="baseScratchpad"></param>
+            public RemappingResult(RemappingPoint point, CharacterScratchpad baseScratchpad)
+                : this(baseScratchpad)
+            {
+                m_point = point;
+            }
+
+            /// <summary>
+            /// Constructor for a manually edited result from a base result.
+            /// </summary>
+            /// <param name="point">Associated remapping point, may be null.</param>
+            /// <param name="baseScratchpad"></param>
+            /// <param name="bestScratchpad"></param>
+            public RemappingResult(RemappingResult result, CharacterScratchpad bestScratchpad)
+                : this(result.Point, result.BaseScratchpad)
+            {
+                m_skills.AddRange(result.m_skills);
+                m_bestScratchpad = bestScratchpad;
+            }
+
+            /// <summary>
+            /// Gets the optimized plan
+            /// </summary>
+            public List<ISkillLevel> Skills
+            {
+                get { return m_skills; }
+            }
+
             /// <summary>
             /// Gets the remapping point associated with that remapping. May be null if a remapping was automatically added at the beginning of the training
             /// </summary>
-            public readonly Plan.RemappingPoint Point;
-            /// <summary>
-            /// Gets the base scratchpad before the remapping
-            /// </summary>
-            public readonly EveAttributeScratchpad BaseScratchpad;
-
-            private EveAttributeScratchpad bestScratchpad;
-            private TimeSpan bestDuration;
-            private TimeSpan baseDuration;
-            private TimeSpan time;
-            private TimeSpan limit;
-            private int startSp;
-
-            public Remapping(Plan.RemappingPoint point, EveAttributeScratchpad baseScratchpad)
+            public RemappingPoint Point
             {
-                this.Point = point;
-                this.BaseScratchpad = baseScratchpad ?? new EveAttributeScratchpad();
-            }
-
-            /// <summary>
-            /// Gets skillpoints before the remapping
-            /// </summary>
-            public int StartSP
-            {
-                get { return startSp; }
+                get { return m_point; }
             }
 
             /// <summary>
             /// Gets the best scratchpad after the remapping
             /// </summary>
-            public EveAttributeScratchpad BestScratchpad
+            public CharacterScratchpad BaseScratchpad
             {
-                get { return this.bestScratchpad; }
+                get { return this.m_baseScratchpad; }
+            }
+
+            /// <summary>
+            /// Gets the best scratchpad after the remapping
+            /// </summary>
+            public CharacterScratchpad BestScratchpad
+            {
+                get { return this.m_bestScratchpad; }
             }
 
             /// <summary>
@@ -71,7 +94,7 @@ namespace EVEMon.Common
             /// </summary>
             public TimeSpan BestDuration
             {
-                get { return this.bestDuration; }
+                get { return m_bestDuration; }
             }
 
             /// <summary>
@@ -79,92 +102,55 @@ namespace EVEMon.Common
             /// </summary>
             public TimeSpan BaseDuration
             {
-                get { return this.baseDuration; }
+                get { return m_baseDuration; }
             }
 
             /// <summary>
             /// Gets the time when this remapping was done
             /// </summary>
-            public TimeSpan Time
+            public TimeSpan StartTime
             {
-                get { return this.time; }
+                get { return this.m_startTime; }
             }
 
             /// <summary>
-            /// Gets the maximum optimization duration
+            /// Computes an optimized scratchpad, then call <see cref="Update"/>.
             /// </summary>
-            public TimeSpan Limit
+            /// <param name="maxDuration">The max duration to take into account for optimization.</param>
+            /// <returns></returns>
+            public void Optimize(TimeSpan maxDuration)
             {
-                get { return this.limit; }
+                m_bestScratchpad = AttributesOptimizer.Optimize(m_skills, m_baseScratchpad, maxDuration);
+                Update();
             }
 
             /// <summary>
-            /// Computes remapping.
+            /// Updates the times and, when any, the associated remapping point.
             /// </summary>
-            /// <param name="character">Character information</param>
-            /// <param name="time">Time when remapping begins</param>
-            /// <param name="maxDuration">Maximum duration of optimization period</param>
-            /// <param name="startSp">Start skillpoints</param>
-            /// <returns>Training time after remapping</returns>
-            internal TimeSpan Compute(CharacterInfo character, TimeSpan time, TimeSpan maxDuration, int startSp)
+            /// <returns></returns>
+            public void Update()
             {
-                this.time = time;
-                this.limit = maxDuration;
-                this.startSp = startSp;
-                var skills = this.Skills.ToArray();
-                this.bestScratchpad = Optimize(skills, character, this.BaseScratchpad.Clone(), maxDuration, startSp, out this.bestDuration, out this.baseDuration);
-                if (this.Point != null)
-                    this.Point.SetBaseAttributes(character, this.BaseScratchpad, this.BestScratchpad);
-                return this.time + ComputeTotalTime(skills, character, this.bestScratchpad.Clone(), startSp);
+                // Optimize
+                m_baseDuration = m_baseScratchpad.After(m_skills).TrainingTime - m_startTime;
+                m_bestDuration = m_bestScratchpad.After(m_skills).TrainingTime - m_startTime;
+
+                // Update the underlying remapping point
+                if (m_point != null) m_point.SetBaseAttributes(m_bestScratchpad, m_baseScratchpad);
             }
 
             /// <summary>
-            /// Computes remapping from given scratchpad.
-            /// This method allows to make EVEMon.Common.AttributesOptimizer.Remapping object without performing an optimization.
+            /// Gets a string representation of this object.
             /// </summary>
-            /// <param name="character">Character information</param>
-            /// <param name="time">Time at which remapping starts</param>
-            /// <param name="maxDuration">Maximum duration of optimization period</param>
-            /// <param name="startSp">Start skillpoints</param>
-            /// <param name="oldScratchpad">Optimized scratchpad from base remapping</param>
-            /// <param name="newScratchpad">New scratchpad to compute time for</param>
-            /// <returns>Training time after remapping</returns>
-            internal TimeSpan ComputeManually(CharacterInfo character, TimeSpan time, TimeSpan maxDuration, int startSp, EveAttributeScratchpad oldScratchpad, EveAttributeScratchpad newScratchpad)
+            /// <param name="character"></param>
+            /// <returns></returns>
+            public string ToString(Character character)
             {
-                this.time = time;
-                this.limit = maxDuration;
-                this.startSp = startSp;
-                var skills = this.Skills.ToArray();
-                this.bestScratchpad = newScratchpad;
-
-                // Compute time based on provided scratchpads
-                var training = GetSubTraining(skills, character, oldScratchpad.Clone(), startSp, maxDuration);
-                this.baseDuration = ComputeTotalTime(training, character, this.BaseScratchpad.Clone(), startSp);
-                this.bestDuration = ComputeTotalTime(training, character, this.BestScratchpad.Clone(), startSp);
-
-                if (this.Point != null)
-                    this.Point.SetBaseAttributes(character, this.BaseScratchpad, this.BestScratchpad);
-                return this.time + ComputeTotalTime(skills, character, this.bestScratchpad.Clone(), startSp);
-            }
-
-            public int GetBaseAttributeDifference(EveAttribute attrib)
-            {
-                return this.BestScratchpad.GetAttributeBonus(attrib) - this.BaseScratchpad.GetAttributeBonus(attrib);
-            }
-
-            public int GetBaseAttribute(EveAttribute attrib, CharacterInfo character)
-            {
-                return character.GetBaseAttribute(attrib) + GetBaseAttributeDifference(attrib);
-            }
-
-            public string ToString(CharacterInfo character)
-            {
-                StringBuilder builder = new StringBuilder();
-                builder.Append("i").Append(this.GetBaseAttribute(EveAttribute.Intelligence, character).ToString()).
-                    Append(" p").Append(this.GetBaseAttribute(EveAttribute.Perception, character).ToString()).
-                    Append(" c").Append(this.GetBaseAttribute(EveAttribute.Charisma, character).ToString()).
-                    Append(" w").Append(this.GetBaseAttribute(EveAttribute.Willpower, character).ToString()).
-                    Append(" m").Append(this.GetBaseAttribute(EveAttribute.Memory, character).ToString());
+                StringBuilder builder = new StringBuilder().
+                    Append("i").Append(m_bestScratchpad.Intelligence.Base.ToString()).
+                    Append(" p").Append(m_bestScratchpad.Perception.Base.ToString()).
+                    Append(" c").Append(m_bestScratchpad.Charisma.Base.ToString()).
+                    Append(" w").Append(m_bestScratchpad.Willpower.Base.ToString()).
+                    Append(" m").Append(m_bestScratchpad.Memory.Base.ToString());
 
                 return builder.ToString();
             }
@@ -175,311 +161,191 @@ namespace EVEMon.Common
         private const int MaxPerSkill = 10;
 
         /// <summary>
-        /// Extract a trainings range from the given trainings array, starting at the given index, ensuring the total training time will be right above the given duration
-        /// </summary>
-        /// <param name="training"></param>
-        /// <param name="character"></param>
-        /// <param name="scratchpad"></param>
-        /// <param name="startSp"></param>
-        /// <param name="maxDuration"></param>
-        /// <returns></returns>
-        private static SkillTraining[] GetSubTraining(SkillTraining[] training, CharacterInfo character, EveAttributeScratchpad scratchpad, int startSp, TimeSpan maxDuration)
-        {
-            TimeSpan time = TimeSpan.Zero;
-            List<SkillTraining> newTraining = new List<SkillTraining>();
-            int cumulativeSkillTotal = startSp;
-
-            // Scroll through the entries
-            foreach (var entry in training)
-            {
-                // Compute training time
-                time += entry.Skill.GetTimeSpanForPoints(entry.PointsToTrain, cumulativeSkillTotal, scratchpad, true);
-                cumulativeSkillTotal += entry.PointsToTrain;
-                scratchpad.ApplyALevelOf(entry.Skill);
-
-                // Add the entry
-                newTraining.Add(entry);
-
-                // Break if we just went further than the given limit
-                if (time >= maxDuration) break;
-            }
-
-            // Create the plan and return it
-            return newTraining.ToArray();
-        }
-
-        /// <summary>
-        /// Compute the time required to achieve the specified trainings
-        /// </summary>
-        /// <param name="skills"></param>
-        /// <param name="character"></param>
-        /// <param name="scratchpad"></param>
-        /// <param name="startSp"></param>
-        /// <returns></returns>
-        private static TimeSpan ComputeTotalTime(SkillTraining[] skills, CharacterInfo character, EveAttributeScratchpad scratchpad, int startSp)
-        {
-            TimeSpan time = TimeSpan.Zero;
-            int cumulativeSkillTotal = startSp;
-
-            foreach (var training in skills)
-            {
-                time += training.Skill.GetTimeSpanForPoints(training.PointsToTrain, cumulativeSkillTotal, scratchpad, true);
-                cumulativeSkillTotal += training.PointsToTrain;
-                scratchpad.ApplyALevelOf(training.Skill);
-            }
-
-            return time;
-        }
-
-        /// <summary>
         /// Compute the best possible attributes to fulfill the given trainings array
         /// </summary>
         /// <param name="skills"></param>
-        /// <param name="character"></param>
+        /// <param name="baseScratchpad"></param>
         /// <param name="maxDuration"></param>
-        /// <param name="startSp"></param>
-        /// <param name="bestTime"></param>
-        /// <param name="baseTime"></param>
         /// <returns></returns>
-        private static EveAttributeScratchpad Optimize(SkillTraining[] skills, CharacterInfo character, EveAttributeScratchpad baseScratchpad, 
-            TimeSpan maxDuration, int startSp, out TimeSpan bestTime, out TimeSpan baseTime)
+        private static CharacterScratchpad Optimize<T>(IEnumerable<T> skills, CharacterScratchpad baseScratchpad, TimeSpan maxDuration)
+            where T : ISkillLevel
         {
-            baseTime = TimeSpan.MaxValue;
-            bestTime = TimeSpan.MaxValue;
+            CharacterScratchpad bestScratchpad = new CharacterScratchpad(baseScratchpad);
+            CharacterScratchpad tempScratchpad = new CharacterScratchpad(baseScratchpad);
+            TimeSpan baseTime = baseScratchpad.TrainingTime;
+            TimeSpan bestTime = TimeSpan.MaxValue;
+            int bestSkillCount = 0;
 
-            // Get the number of points currently spent into each attribute
-            int memBase = MinPerSkill + baseScratchpad.GetAttributeBonus(EveAttribute.Memory) - character.GetBaseAttribute(EveAttribute.Memory);
-            int chaBase = MinPerSkill + baseScratchpad.GetAttributeBonus(EveAttribute.Charisma) - character.GetBaseAttribute(EveAttribute.Charisma);
-            int wilBase = MinPerSkill + baseScratchpad.GetAttributeBonus(EveAttribute.Willpower) - character.GetBaseAttribute(EveAttribute.Willpower);
-            int perBase = MinPerSkill + baseScratchpad.GetAttributeBonus(EveAttribute.Perception) - character.GetBaseAttribute(EveAttribute.Perception);
-            int intBase = MinPerSkill + baseScratchpad.GetAttributeBonus(EveAttribute.Intelligence) - character.GetBaseAttribute(EveAttribute.Intelligence);
-            int learning = baseScratchpad.LearningLevelBonus;
-
-            // 1. We start with a plan shorter than the given limit. 
-            // 2. Then, we scroll through misc attributes combination to find the best possible attributes.
-            // 3. Since those new attributes make the training faster, we take a bigger plan, still shorter than the given limit and 
-            EveAttributeScratchpad bestScratchpad = baseScratchpad.Clone();
-            var training = GetSubTraining(skills, character, baseScratchpad.Clone(), startSp, maxDuration);
-            while (true)
+            // Now, we have the points to spend, let's perform all the
+            // combinations (less than 11^4 = 14,641)
+            for (int per = 0; per <= MaxPerSkill; per++)
             {
-                // Recompute base time
-                bool foundBetter = false;
-                var tempScratchpad = baseScratchpad.Clone();
-                baseTime = ComputeTotalTime(training, character, tempScratchpad, startSp);
-                bestTime = baseTime;
-
-                // Now, we have the points to spend, let's perform all the
-                // combinations (less than 11^4 = 14,641)
-                for (int per = 0; per <= MaxPerSkill; per++)
+                // WIL
+                int maxWillpower = EveConstants.SpareAttributePointsOnRemap - per;
+                for (int will = 0; will <= maxWillpower && will <= MaxPerSkill; will++)
                 {
-                    // WIL
-                    int maxWillpower = EveConstants.SpareAttributePointsOnRemap - per;
-                    for (int will = 0; will <= maxWillpower && will <= MaxPerSkill; will++)
+                    // INT
+                    int maxIntelligence = maxWillpower - will;
+                    for (int intell = 0; intell <= maxIntelligence && intell <= MaxPerSkill; intell++)
                     {
-                        // INT
-                        int maxIntelligence = maxWillpower - will;
-                        for (int intell = 0; intell <= maxIntelligence && intell <= MaxPerSkill; intell++)
+                        // MEM
+                        int maxMemory = maxIntelligence - intell;
+                        for (int mem = 0; mem <= maxMemory && mem <= MaxPerSkill; mem++)
                         {
-                            // MEM
-                            int maxMemory = maxIntelligence - intell;
-                            for (int mem = 0; mem <= maxMemory && mem <= MaxPerSkill; mem++)
+                            // CHA
+                            int cha = maxMemory - mem;
+
+                            // Reject invalid combinations
+                            if (cha <= MaxPerSkill)
                             {
-                                // CHA
-                                int cha = maxMemory - mem;
+                                // Resets the scratchped
+                                tempScratchpad.Reset();
 
-                                // Reject invalid combinations
-                                if (cha <= MaxPerSkill)
+                                // Set new attributes
+                                tempScratchpad.Memory.Base = mem + MinPerSkill;
+                                tempScratchpad.Charisma.Base = cha + MinPerSkill;
+                                tempScratchpad.Willpower.Base = will + MinPerSkill;
+                                tempScratchpad.Perception.Base = per + MinPerSkill;
+                                tempScratchpad.Intelligence.Base = intell + MinPerSkill;
+
+                                // Train skills
+                                int tempSkillCount = 0;
+                                foreach (var skill in skills)
                                 {
-                                    // Compute plan time
-                                    tempScratchpad.Reset(per + perBase, will + wilBase, intell + intBase, mem + memBase, cha + chaBase, learning);
-                                    TimeSpan tempTime = ComputeTotalTime(training, character, tempScratchpad, startSp);
+                                    tempSkillCount++;
+                                    tempScratchpad.Train(skill);
 
-                                    // Compare it to the best time so far
-                                    if (tempTime < bestTime)
-                                    {
-                                        bestTime = tempTime;
-                                        foundBetter = true;
+                                    // Did it go over max duration ?
+                                    if (tempScratchpad.TrainingTime - baseTime > maxDuration) break;
 
-                                        // Store the attributes for the best time
-                                        bestScratchpad.Reset(per + perBase, will + wilBase, intell + intBase, mem + memBase, cha + chaBase, learning);
-                                    }
+                                    // Did it go over the best time so far without training more skills ?
+                                    if (tempSkillCount <= bestSkillCount && tempScratchpad.TrainingTime > bestTime) break;
+                                }
+
+                                // Did it manage to train more skills before the max duration, 
+                                // or did it train the same number of skills in a lesser time ?
+                                if (tempSkillCount > bestSkillCount || (tempSkillCount == bestSkillCount && tempScratchpad.TrainingTime < bestTime))
+                                {
+                                    bestScratchpad.Reset();
+                                    bestScratchpad.Memory.Base = tempScratchpad.Memory.Base;
+                                    bestScratchpad.Charisma.Base = tempScratchpad.Charisma.Base;
+                                    bestScratchpad.Willpower.Base = tempScratchpad.Willpower.Base;
+                                    bestScratchpad.Perception.Base = tempScratchpad.Perception.Base;
+                                    bestScratchpad.Intelligence.Base = tempScratchpad.Intelligence.Base;
+                                    bestTime = tempScratchpad.TrainingTime;
+                                    bestSkillCount = tempSkillCount;
                                 }
                             }
                         }
                     }
                 }
-
-                // If we didn't find any better combination this time or if the current time was already below one year, no need to gat a longer plan
-                if (!foundBetter) break;
-                if (baseTime < maxDuration) break;
-
-                // We need a bigger plan, still under the max duration
-                int oldTrainingLength = training.Length;
-                training = GetSubTraining(skills, character, bestScratchpad.Clone(), startSp, maxDuration);
-
-                // break if it is not shorter than the previous plan
-                if (training.Length == oldTrainingLength) break;
-                bestScratchpad = baseScratchpad.Clone();
             }
 
             // Return the best scratchpad found
             return bestScratchpad;
         }
 
+
         /// <summary>
-        /// Generate a trainings array from a plan and reampping points
+        /// Generate a trainings array from a plan
         /// </summary>
-        /// <param name="plan">Plan with remapping points</param>
-        /// <param name="bestDuration">Best training time</param>
-        /// <returns>Computed remapping</returns>
-        public static List<Remapping> OptimizeFromPlanAndRemappingPoints(Plan plan, out TimeSpan bestDuration)
+        /// <param name="plan"></param>
+        /// <param name="bestDuration"></param>
+        /// <returns></returns>
+        public static List<RemappingResult> OptimizeFromPlanAndRemappingPoints(BasePlan plan)
         {
-            var time = TimeSpan.Zero;
-            var limit = TimeSpan.MaxValue;
-            var startSp = plan.GrandCharacterInfo.SkillPointTotal;
-            var scratchpad = new EveAttributeScratchpad();
-            var remappingList = new List<Remapping>();
-            var list = new List<SkillTraining>();
-            Remapping remapping = null;
+            var results = GetResultsFromRemappingPoints(plan);
+            foreach (var result in results) result.Optimize(TimeSpan.MaxValue);
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the list of remapping results from a plan.
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <returns></returns>
+        public static List<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
+        {
+            var scratchpad = new CharacterScratchpad(plan.Character);
+            var remappingList = new List<RemappingResult>();
+            var list = new List<ISkillLevel>();
+            RemappingResult remapping = null;
 
             // Scroll through the entries and split it into remappings
-            foreach (var entry in plan.Entries)
+            foreach (var entry in plan)
             {
-                if (entry.Skill != null)
+                // Ends the current remapping and start a new one
+                if (entry.Remapping != null)
                 {
-                    // Ends the current remapping and start a new one
-                    if (entry.Remapping != null)
-                    {
-                        // Updates the previous remapping and starting time
-                        if (remapping != null)
-                        {
-                            time = remapping.Compute(plan.GrandCharacterInfo, time, limit, startSp);
-                            remappingList.Add(remapping);
-                        }
-                        // At the beginning, we had other trainings
-                        else
-                        {
-                            time = ComputeTotalTime(list.ToArray(), plan.GrandCharacterInfo, scratchpad.Clone(), startSp);
-                        }
-
-                        // Updates start sp and learning skills bonuses for the next remapping
-                        foreach (var training in list)
-                        {
-                            startSp += training.PointsToTrain;
-                            scratchpad.ApplyALevelOf(training.Skill);
-                        }
-
-                        // Creates a new remapping
-                        remapping = new Remapping(entry.Remapping, scratchpad.Clone());
-                        list = remapping.Skills;
-                    }
-
-                    // Add this skill to the training list
-                    int sp = entry.Skill.GetPointsForLevelOnly(entry.Level, true);
-                    list.Add(new SkillTraining(entry.Skill, sp));
+                    // Creates a new remapping
+                    remapping = new RemappingResult(entry.Remapping, scratchpad.Clone());
+                    remappingList.Add(remapping);
+                    list = remapping.Skills;
                 }
+
+                // Add this skill to the training list
+                scratchpad.Train(entry);
+                list.Add(entry);
             }
 
-            // Compute the current remapping and adds it to the list
-            if (remapping != null)
-            {
-                time = remapping.Compute(plan.GrandCharacterInfo, time, limit, startSp);
-                remappingList.Add(remapping);
-            }
-
-            bestDuration = time;
+            // Return
             return remappingList;
         }
 
         /// <summary>
         /// Compute the best remapping for the first year of this plan
         /// </summary>
-        /// <param name="plan">Plan with skills for which to optimize</param>
-        /// <returns>Computed remapping</returns>
-        public static Remapping OptimizeFromPlan(Plan plan)
+        /// <param name="plan"></param>
+        /// <returns></returns>
+        public static RemappingResult OptimizeFromFirstYearOfPlan(BasePlan plan)
         {
-            var remapping = new Remapping(null, null);
+            var remapping = new RemappingResult(new CharacterScratchpad(plan.Character));
 
             // Scroll through the entries and split it into remappings
-            foreach (var entry in plan.Entries)
+            foreach (var entry in plan)
             {
-                if (entry.Skill != null)
-                {
-                    // Add this skill to the training list
-                    int sp = entry.Skill.GetPointsForLevelOnly(entry.Level, true);
-                    remapping.Skills.Add(new SkillTraining(entry.Skill, sp));
-                }
+                remapping.Skills.Add(entry);
             }
 
-            remapping.Compute(plan.GrandCharacterInfo, TimeSpan.Zero, TimeSpan.FromDays(365.0), plan.GrandCharacterInfo.SkillPointTotal);
-            return remapping;
-        }
-
-        /// <summary>
-        /// Allows to create EVEMon.Common.AttributesOptimizer.Remapping object for a given attributes set
-        /// </summary>
-        /// <param name="baseRemapping">Optimized remapping on which to base new remapping</param>
-        /// <param name="scratchpad">Scratchpad with attributes</param>
-        /// <returns>Computed remapping</returns>
-        public static Remapping OptimizeManually(CharacterInfo character, Remapping baseRemapping, EveAttributeScratchpad scratchpad)
-        {
-            var remapping = new Remapping(baseRemapping.Point, baseRemapping.BaseScratchpad);
-            remapping.Skills.AddRange(baseRemapping.Skills);
-
-            remapping.ComputeManually(character, baseRemapping.Time, baseRemapping.Limit, baseRemapping.StartSP, baseRemapping.BestScratchpad, scratchpad);
+            // Compute
+            remapping.Optimize(TimeSpan.FromDays(365.0));
             return remapping;
         }
 
         /// <summary>
         /// Generate a trainings array from the skills already know by a character
         /// </summary>
-        /// <param name="character">Character information</param>
-        /// <returns>Computed remapping</returns>
-        public static Remapping OptimizeFromCharacter(CharacterInfo character)
+        /// <param name="character"></param>
+        /// <returns></returns>
+        public static RemappingResult OptimizeFromCharacter(Character character)
         {
+            // Create a character without any skill
+            var scratchpad = new CharacterScratchpad(character);
+            scratchpad.ClearSkills();
+
             // Create a sorted plan for the learning skills
-            var plan = new Plan();
-            plan.GrandCharacterInfo = character;
+            var plan = new Plan(scratchpad);
             foreach (var learning in character.SkillGroups["Learning"])
             {
-                plan.PlanTo(learning, learning.LastConfirmedLvl);
+                plan.PlanTo(learning, learning.Level);
             }
-            PlanSorter.PutOrderedLearningSkillsAhead(plan, false);
+            plan.SortLearningSkills(false);
 
-
-            // Remove bonuses from learning skills and add them to the training list
-            List<SkillTraining> training = new List<SkillTraining>();
-            var scratchpad = new EveAttributeScratchpad();
-            foreach (var entry in plan.Entries) 
+            // Add the non-training skills after that
+            foreach (var skill in character.Skills)
             {
-                if (entry.Skill.Name == "Learning")
+                if (skill.Group.Name != "Learning")
                 {
-                    scratchpad.AdjustLearningLevelBonus(-1);
-                }
-                else if (entry.Skill.IsLearningSkill)
-                {
-                    scratchpad.AdjustAttributeBonus(entry.Skill.AttributeModified, -1);
-                }
-
-                int sp = entry.Skill.GetPointsForLevelOnly(entry.Level, true);
-                training.Add(new SkillTraining(entry.Skill, sp));
-            }
-
-            // Add non-training skills after that
-            var remapping = new Remapping(null, scratchpad);
-            remapping.Skills.AddRange(training);
-            foreach (var group in character.SkillGroups.Values)
-            {
-                if (group.Name != "Learning")
-                {
-                    foreach (var skill in group)
-                    {
-                        remapping.Skills.Add(new SkillTraining(skill, skill.CurrentSkillPoints));
-                    }
+                    plan.PlanTo(skill, skill.Level);
                 }
             }
 
-            remapping.Compute(character, TimeSpan.Zero, TimeSpan.FromDays(365.0), 0);
+            // Add those learning skills to a list
+            var remapping = new RemappingResult(scratchpad);
+            foreach (var entry in plan) remapping.Skills.Add(entry);
+
+            // Optimize
+            remapping.Optimize(TimeSpan.FromDays(365.0));
             return remapping;
         }
     }

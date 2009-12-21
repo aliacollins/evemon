@@ -476,7 +476,7 @@ namespace EVEMon.PieChart
                     int biggest = -1;
                     for (int y = 0; y < values.Length; y++)
                     {
-                        if (tempsp == -1)
+                        if (biggest == -1)
                         {
                             tempsp = values[y];
                             biggest = y;

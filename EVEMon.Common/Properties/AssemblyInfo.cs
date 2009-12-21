@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly : AssemblyTitle("EVEMon.Common")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1379 Local Changes: Yes Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.Common")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1592 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/branches/Foundations/EVEMon.Common")] 
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("EVEMon Development Team")]
 [assembly : AssemblyProduct("EVEMon")]
@@ -28,7 +28,7 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.2.8.1379")]
+[assembly : AssemblyVersion("1.2.8.1592")]
 
 // Friend assembly for unit testing
 [assembly: InternalsVisibleTo("Tests.EVEMon")]

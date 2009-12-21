@@ -159,7 +159,7 @@ namespace Tests.EVEMon.Common.Net
 
             _xmlAsyncCompletedTrigger = new AutoResetEvent(false);
             HttpWebService service = new HttpWebService();
-            service.DownloadXmlAsync("http://www.battleclinic.com", XmlAysncDownloadTestCompleted, null);
+            service.DownloadXmlAsync("http://www.battleclinic.com", null, XmlAysncDownloadTestCompleted, null);
             _xmlAsyncCompletedTrigger.WaitOne();
             if (_xmlAsyncDownloadResult.Error != null)
                 Assert.Fail(_xmlAsyncDownloadResult.Error.Message);

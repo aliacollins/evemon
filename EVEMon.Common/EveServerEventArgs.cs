@@ -2,20 +2,50 @@ using System;
 
 namespace EVEMon.Common
 {
-    public class EveServerEventArgs : EventArgs
+    /// <summary>
+    /// Represents an argument for server changes
+    /// </summary>
+    public sealed class EveServerEventArgs : EventArgs
     {
-        public EveServerEventArgs(string info, System.Windows.Forms.ToolTipIcon icon)
+        private readonly EveServer m_server;
+        private readonly ServerStatus m_status;
+        private readonly ServerStatus m_previousStatus;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="previousStatus"></param>
+        /// <param name="status"></param>
+        public EveServerEventArgs(EveServer server, ServerStatus previousStatus, ServerStatus status)
         {
-            this.info = info;
-            this.icon = icon;
+            m_server = server;
+            m_status = status;
+            m_previousStatus = previousStatus;
         }
 
-        public EveServerEventArgs(string info)
+        /// <summary>
+        /// Gets the updated server
+        /// </summary>
+        public EveServer Server
         {
-            this.info = info;
+            get { return m_server; }
         }
 
-        public string info;
-        public System.Windows.Forms.ToolTipIcon icon;
+        /// <summary>
+        /// Gets the current status
+        /// </summary>
+        public ServerStatus Status
+        {
+            get { return m_status; }
+        }
+
+        /// <summary>
+        /// Gets the previous status
+        /// </summary>
+        public ServerStatus PreviousStatus
+        {
+            get { return m_previousStatus; }
+        }
     }
 }
