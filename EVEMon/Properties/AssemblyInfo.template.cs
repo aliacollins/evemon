@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -12,6 +13,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("Copyright © 2006, Timothy Fries")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// Friend assembly for unit testing
 [assembly: InternalsVisibleTo("Tests.EVEMon")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -29,4 +32,4 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.2.8.$WCREV$")]
+[assembly: AssemblyVersion("1.3.0.$WCREV$")]
