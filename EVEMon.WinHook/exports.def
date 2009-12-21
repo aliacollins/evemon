@@ -1,3 +1,0 @@
-LIBRARY	"EVEMon.WinHook.dll"
-EXPORTS
-CbtHookProc

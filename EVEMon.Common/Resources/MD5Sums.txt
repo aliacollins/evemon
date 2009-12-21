@@ -1,5 +1,0 @@
-00a1de1d78ea894bc4820824265ba3f4 *eve-certificates.xml.gz
-3546e76a0cf286f946053336940b70f6 *eve-implants2.xml.gz
-056a0453bb5200550f75410bd4f0875e *eve-items2.xml.gz
-db2be188b242ce3ed6025a2554bfeed8 *eve-ships2.xml.gz
-2e60556be29ee45f680652778b838296 *eve-skills2.xml.gz
