@@ -309,13 +309,16 @@ namespace EVEMon
 
                 // Color indicator for a queued level
                 CCPCharacter ccpCharacter = m_character as CCPCharacter;
-                SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                foreach (var qskill in skillQueue)
+                if (ccpCharacter != null)
                 {
-                    if ((!skill.IsTraining && skill == qskill.Skill && level == qskill.Level)
-                       || (skill.IsTraining && skill == qskill.Skill && level == qskill.Level && level > skillLevel + 1))
+                    SkillQueue skillQueue = ccpCharacter.SkillQueue;
+                    foreach (var qskill in skillQueue)
                     {
-                        g.FillRectangle(Brushes.RoyalBlue, brect);
+                        if ((!skill.IsTraining && skill == qskill.Skill && level == qskill.Level)
+                           || (skill.IsTraining && skill == qskill.Skill && level == qskill.Level && level > skillLevel + 1))
+                        {
+                            g.FillRectangle(Brushes.RoyalBlue, brect);
+                        }
                     }
                 }
                 

@@ -77,6 +77,7 @@ namespace EVEMon
             {
                 pnlTraining.Visible = false;
                 skillQueuePanel.Visible = false;
+                skillsQueueIcon.Visible = false;
                 ordersIcon.Visible = false;
             }
 
@@ -417,39 +418,43 @@ namespace EVEMon
         /// </summary>
         private void UpdatePageControls()
         {
-            var ccpCharacter = m_character as CCPCharacter;
 
             // Checks if there are skills to display
-            IEnumerable<Skill> skills = ccpCharacter.Skills;
+            IEnumerable<Skill> skills = m_character.Skills;
             var skillsCount = skills.Count();
 
             // Enables/Disables the skill page controls
             if (skillsCount == 0) toggleSkillsIcon.Enabled = false;
             else toggleSkillsIcon.Enabled = true;
 
-            // Checks if there are orders to display
-            IEnumerable<MarketOrder> orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
-            var ordersCount = orders.Count();
-
-            // Enables/Disables the market orders page controls
-            if (ordersCount == 0)
+            // if its a CCPCharacter we display the market orders
+            var ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter != null)
             {
-                ordersGroupMenu.Enabled = false;
-                searchTextBox.Enabled = false;
-                preferencesMenu.Enabled = false;
-            }
-            else
-            {
-                ordersGroupMenu.Enabled = true;
-                searchTextBox.Enabled = true;
-                preferencesMenu.Enabled = true;
-
-                // Saves any changes we've made to the market columns
-                // (I've tried to find a better way to deal with this but failed)
-                if (multiPanel.SelectedPage == ordersPage)
+                // Checks if there are orders to display
+                IEnumerable<MarketOrder> orders = ccpCharacter.MarketOrders;
+                var ordersCount = orders.Count();
+            
+                // Enables/Disables the market orders page controls
+                if (ordersCount == 0)
                 {
-                    Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
-                    m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
+                    ordersGroupMenu.Enabled = false;
+                    searchTextBox.Enabled = false;
+                    preferencesMenu.Enabled = false;
+                }
+                else
+                {
+                    ordersGroupMenu.Enabled = true;
+                    searchTextBox.Enabled = true;
+                    preferencesMenu.Enabled = true;
+
+                    // Saves any changes we've made to the market columns
+                    // (I've tried to find a better way to deal with this but failed)
+                    if (multiPanel.SelectedPage == ordersPage)
+                    {
+                        Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
+                        m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
+                    }
                 }
             }
         }

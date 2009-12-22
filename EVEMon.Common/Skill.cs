@@ -359,6 +359,7 @@ namespace EVEMon.Common
             get
             {
                 CCPCharacter ccpCharacter = m_character as CCPCharacter;
+                if (ccpCharacter == null) return false;
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
                 foreach (var skill in skillQueue)
                 {
