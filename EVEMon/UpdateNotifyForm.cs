@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using System.Text;
 
 namespace EVEMon
 {
@@ -109,20 +110,24 @@ namespace EVEMon
             UpdateInformation();
         }
 
+        /// <summary>
+        /// Initilizes the contents and state of the controls
+        /// </summary>
         private void UpdateInformation()
         {
+            // Set the basic update information
+            StringBuilder labelText = new StringBuilder();
+            labelText.AppendLine("An EVEMon update is available.");
+            labelText.AppendLine();
+            labelText.AppendFormat("Current version: {0}{1}", m_args.CurrentVersion, Environment.NewLine);
+            labelText.AppendFormat("Newest version: {0}{1}", m_args.NewestVersion, Environment.NewLine);
+            labelText.AppendLine("The newest version has the following updates:");
+            label1.Text = labelText.ToString();
+
+            // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;
             updMessage.Replace("\r", "");
             textBox1.Lines = updMessage.Split('\n');
-            label1.Text =
-                String.Format(
-                    @"An EVEMon update is available.
-
-Current version: {0}
-Newest version: {1}
-
-The newest version has the following updates:",
-                    m_args.CurrentVersion, m_args.NewestVersion);
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
         }
