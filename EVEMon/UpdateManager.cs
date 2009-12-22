@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common;
-using System.Collections.Generic;
 using EVEMon.Common.Net;
-using System.IO;
 using EVEMon.Common.Threading;
-using System.Diagnostics;
-
 
 namespace EVEMon
 {
@@ -151,13 +151,23 @@ namespace EVEMon
             bool canAutoInstall = false;
             string installArgs = String.Empty;
             string installUrl = String.Empty;
+            string additionalArgs = String.Empty;
             XmlElement argEl = newestEl.SelectSingleNode("autopatchargs") as XmlElement;
             XmlElement iUrlEl = newestEl.SelectSingleNode("autopatchurl") as XmlElement;
+            XmlElement argAdd = newestEl.SelectSingleNode("additionalargs") as XmlElement;
             if (iUrlEl != null && argEl != null)
             {
                 canAutoInstall = true;
                 installUrl = iUrlEl.InnerText;
                 installArgs = argEl.InnerText;
+                additionalArgs = argAdd.InnerText;
+
+                if (additionalArgs != null && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
+                {
+                    string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+                    installArgs = String.Format("{0} {1}", installArgs, additionalArgs);
+                    installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
+                }
             }
 
             // Is the program out of date ?
