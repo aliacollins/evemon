@@ -1728,10 +1728,12 @@ namespace EVEMon
             if (Settings.Updates.CheckEVEMonVersion)
             {
                 UpdateManager.UpdateAvailable += new UpdateAvailableHandler(OnUpdateAvailable);
+                UpdateManager.DataUpdateAvailable += new DataUpdateAvailableHandler(OnDataUpdateAvailable);
             }
             else
             {
                 UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(OnUpdateAvailable);
+                UpdateManager.DataUpdateAvailable -= new DataUpdateAvailableHandler(OnDataUpdateAvailable);
             }
 
             // IGB Server
