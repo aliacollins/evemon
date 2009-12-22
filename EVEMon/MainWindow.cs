@@ -915,9 +915,12 @@ namespace EVEMon
             }
 
             // Did the user previously choose to ignore this version ?
-            if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpdgrade))
+            if (Settings.Updates.MostRecentDeniedUpdgrade != null)
             {
-                return;
+                if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpdgrade))
+                {
+                    return;
+                }
             }
 
             // Notify the user and prompt him
@@ -1721,6 +1724,15 @@ namespace EVEMon
 
             // Updates manager.
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
+
+            if (Settings.Updates.CheckEVEMonVersion)
+            {
+                UpdateManager.UpdateAvailable += new UpdateAvailableHandler(OnUpdateAvailable);
+            }
+            else
+            {
+                UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(OnUpdateAvailable);
+            }
 
             // IGB Server
             if (Settings.IGB.IGBServerEnabled)

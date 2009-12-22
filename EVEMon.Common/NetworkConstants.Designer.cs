@@ -169,7 +169,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://EVEMon.battleclinic.com/patch.xml.
+        ///   Looks up a localized string similar to http://evemon.battleclinic.com/builds/patch.bis.xml.
         /// </summary>
         public static string BattleclinicUpdates {
             get {

@@ -145,7 +145,7 @@
     <value>http://forum.battleclinic.com/index.php/topic,{0}.0.html</value>
   </data>
   <data name="BattleclinicUpdates" xml:space="preserve">
-    <value>http://EVEMon.battleclinic.com/patch.xml</value>
+    <value>http://evemon.battleclinic.com/builds/patch.bis.xml</value>
   </data>
   <data name="CCPIcons" xml:space="preserve">
     <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>
