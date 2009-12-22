@@ -670,6 +670,18 @@ namespace EVEMon.XmlImporter
         {
             var allItems = new List<SerializableItem>();
             var groups = new Dictionary<int, SerializableMarketGroup>();
+            var injectedMarketGroups = new List<InvMarketGroup>();
+
+            // Create some market groups that don't exist in EVE
+            injectedMarketGroups.Add(
+                new InvMarketGroup()
+                {
+                    Name = "Unique Designs",
+                    Description = "Ships and modules of a unique design",
+                    ID = 10001,
+                    ParentID = 4,
+                    GraphicID = 2703
+                });
 
             // Inject the missing ships that are missing from the output because their MarketGroupID is NULL
             foreach (var srcItem in s_types.Where(x => x.Published != 0 && x.MarketGroupID == null))
@@ -689,15 +701,16 @@ namespace EVEMon.XmlImporter
                     case 17720: srcItem.MarketGroupID = 73; srcItem.RaceID = 32; break; // Cynabal
                     case 17922: srcItem.MarketGroupID = 74; srcItem.RaceID = 32; break; // Ashimmu
                     case 17718: srcItem.MarketGroupID = 74; srcItem.RaceID = 32; break; // Phantasm
-                    //case 29266: srcItem.MarketGroupID = 394; srcItem.RaceID = 32; break; // Apotheosis
                     case 21097: srcItem.MarketGroupID = 396; srcItem.RaceID = 32; break; // Goru's Shuttle
                     case 21628: srcItem.MarketGroupID = 396; srcItem.RaceID = 32; break; // Guristas Shuttle
                     case 30842: srcItem.MarketGroupID = 395; srcItem.RaceID = 32; break; // Interbus Shuttle
+                    case 29266: srcItem.MarketGroupID = 10001; srcItem.RaceID = 32; break; // Apotheosis
+                    case 2078: srcItem.MarketGroupID = 10001; srcItem.RaceID = 32; break; // Zephyr
                 }
             }
             
             // Create the market groups
-            foreach (var srcGroup in s_marketGroups)
+            foreach (var srcGroup in s_marketGroups.Concat(injectedMarketGroups))
             {
                 var group = new SerializableMarketGroup { ID = srcGroup.ID, Name = srcGroup.Name };
                 groups[srcGroup.ID] = group;
@@ -734,7 +747,7 @@ namespace EVEMon.XmlImporter
             // Create the parent-children groups relations
             foreach (var group in groups.Values)
             {
-                var children = s_marketGroups.Where(x => x.ParentID.GetValueOrDefault() == group.ID).Select(x => groups[x.ID]);
+                var children = s_marketGroups.Concat(injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID).Select(x => groups[x.ID]);
                 group.SubGroups = children.OrderBy(x => x.Name).ToArray();
             }
 
@@ -746,7 +759,7 @@ namespace EVEMon.XmlImporter
             SetItemFamilyByMarketGroup(groups[477], ItemFamily.StarbaseStructure);
 
             // Sort groups
-            var rootGroups = s_marketGroups.Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID]).OrderBy(x => x.Name);
+            var rootGroups = s_marketGroups.Concat(injectedMarketGroups).Where(x => !x.ParentID.HasValue).Select(x => groups[x.ID]).OrderBy(x => x.Name);
             
             // Serialize
             ItemsDatafiles datafile = new ItemsDatafiles();
