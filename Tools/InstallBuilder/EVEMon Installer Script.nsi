@@ -74,145 +74,145 @@ Function .onInit
 	UAC_Success:
 
 	# fix it so it only computes the space needed for EVEMon itself if >net is not installed
-  SectionSetSize 0 0
-  Call GetDotNETVersion
-  Pop $0
-  StrCmp $0 "not found" 0 isInstalled
+	SectionSetSize 0 0
+	Call GetDotNETVersion
+	Pop $0
+	StrCmp $0 "not found" 0 isInstalled
 		SectionSetSize 0 153600
 
-  isInstalled:     
-  StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
-  StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
-  Goto noCheckForExeInDir
+	isInstalled:		 
+	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
+	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
+	Goto noCheckForExeInDir
 
-  checkForExeInDir:
-  IfFileExists "$EXEDIR\EVEMon.exe" 0 noCheckForExeInDir
-  StrCpy $INSTDIR "$EXEDIR"
+	checkForExeInDir:
+	IfFileExists "$EXEDIR\EVEMon.exe" 0 noCheckForExeInDir
+	StrCpy $INSTDIR "$EXEDIR"
 
-  noCheckForExeInDir:
+	noCheckForExeInDir:
 FunctionEnd
 
 Function EnsureNotRunning
-  IfFileExists "$INSTDIR\EVEMon.exe" 0 lbl_Done
-  IntOp $1 0 + 0
-  lbl_tryAgain:
-  ClearErrors
-  FileOpen $0 "$INSTDIR\EVEMon.exe" a
-  IfErrors lbl_failedOpen
-  FileClose $0
-  goto lbl_Done
+	IfFileExists "$INSTDIR\EVEMon.exe" 0 lbl_Done
+	IntOp $1 0 + 0
+	lbl_tryAgain:
+	ClearErrors
+	FileOpen $0 "$INSTDIR\EVEMon.exe" a
+	IfErrors lbl_failedOpen
+	FileClose $0
+	goto lbl_Done
 
-  lbl_failedOpen:
-  IfSilent lbl_waitForIt
-  MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
-      "Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
-  goto lbl_tryAgain
+	lbl_failedOpen:
+	IfSilent lbl_waitForIt
+	MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
+			"Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
+	goto lbl_tryAgain
 
-  lbl_waitForIt:
-  IntOp $1 $1 + 1
-  IntCmp $1 10 0 0 lbl_failedToClose
-  Sleep 500
-  goto lbl_tryAgain
+	lbl_waitForIt:
+	IntOp $1 $1 + 1
+	IntCmp $1 10 0 0 lbl_failedToClose
+	Sleep 500
+	goto lbl_tryAgain
 
-  lbl_failedToClose:
-  Abort "EVEMon failed to close."
+	lbl_failedToClose:
+	Abort "EVEMon failed to close."
 
-  lbl_abort:
-  Abort "Operation cancelled by user."
+	lbl_abort:
+	Abort "Operation cancelled by user."
  
-  lbl_Done:
+	lbl_Done:
 FunctionEnd
 
 Function un.EnsureNotRunning
-  IntOp $1 0 + 0
-  lbl_tryAgain:
-  ClearErrors
-  FileOpen $0 "$INSTDIR\EVEMon.exe" a
-  IfErrors lbl_failedOpen
-  FileClose $0
-  goto lbl_Done
+	IntOp $1 0 + 0
+	lbl_tryAgain:
+	ClearErrors
+	FileOpen $0 "$INSTDIR\EVEMon.exe" a
+	IfErrors lbl_failedOpen
+	FileClose $0
+	goto lbl_Done
 
-  lbl_failedOpen:
-  IfSilent lbl_waitForIt
-  MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
-      "Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
-  goto lbl_tryAgain
+	lbl_failedOpen:
+	IfSilent lbl_waitForIt
+	MessageBox MB_RETRYCANCEL|MB_DEFBUTTON1|MB_ICONEXCLAMATION \
+			"Please close EVEMon before continuing." /SD IDCANCEL IDRETRY lbl_tryAgain IDCANCEL lbl_abort
+	goto lbl_tryAgain
 
-  lbl_waitForIt:
-  IntOp $1 $1 + 1
-  IntCmp $1 10 0 0 lbl_failedToClose
-  Sleep 500
-  goto lbl_tryAgain
+	lbl_waitForIt:
+	IntOp $1 $1 + 1
+	IntCmp $1 10 0 0 lbl_failedToClose
+	Sleep 500
+	goto lbl_tryAgain
 
-  lbl_failedToClose:
-  Abort "EVEMon failed to close."
+	lbl_failedToClose:
+	Abort "EVEMon failed to close."
 
-  lbl_abort:
-  Abort "Operation cancelled by user."
+	lbl_abort:
+	Abort "Operation cancelled by user."
  
-  lbl_Done:
+	lbl_Done:
 FunctionEnd
 
  ; StrStr
  ; input, top of stack = string to search for
- ;        top of stack-1 = string to search in
+ ;				top of stack-1 = string to search in
  ; output, top of stack (replaces with the portion of the string remaining)
  ; modifies no other variables.
  ;
  ; Usage:
- ;   Push "this is a long ass string"
- ;   Push "ass"
- ;   Call StrStr
- ;   Pop $R0
- ;  ($R0 at this point is "ass string")
+ ;	 Push "this is a long ass string"
+ ;	 Push "ass"
+ ;	 Call StrStr
+ ;	 Pop $R0
+ ;	($R0 at this point is "ass string")
 
  Function StrStr
-   Exch $R1 ; st=haystack,old$R1, $R1=needle
-   Exch    ; st=old$R1,haystack
-   Exch $R2 ; st=old$R1,old$R2, $R2=haystack
-   Push $R3
-   Push $R4
-   Push $R5
-   StrLen $R3 $R1
-   StrCpy $R4 0
-   ; $R1=needle
-   ; $R2=haystack
-   ; $R3=len(needle)
-   ; $R4=cnt
-   ; $R5=tmp
-   loop:
-     StrCpy $R5 $R2 $R3 $R4
-     StrCmp $R5 $R1 done
-     StrCmp $R5 "" done
-     IntOp $R4 $R4 + 1
-     Goto loop
+	 Exch $R1 ; st=haystack,old$R1, $R1=needle
+	 Exch		; st=old$R1,haystack
+	 Exch $R2 ; st=old$R1,old$R2, $R2=haystack
+	 Push $R3
+	 Push $R4
+	 Push $R5
+	 StrLen $R3 $R1
+	 StrCpy $R4 0
+	 ; $R1=needle
+	 ; $R2=haystack
+	 ; $R3=len(needle)
+	 ; $R4=cnt
+	 ; $R5=tmp
+	 loop:
+		 StrCpy $R5 $R2 $R3 $R4
+		 StrCmp $R5 $R1 done
+		 StrCmp $R5 "" done
+		 IntOp $R4 $R4 + 1
+		 Goto loop
  done:
-   StrCpy $R1 $R2 "" $R4
-   Pop $R5
-   Pop $R4
-   Pop $R3
-   Pop $R2
-   Exch $R1
+	 StrCpy $R1 $R2 "" $R4
+	 Pop $R5
+	 Pop $R4
+	 Pop $R3
+	 Pop $R2
+	 Exch $R1
  FunctionEnd
 
 Function .onInstSuccess
 	; delete the UAC.dll from the users %TEMP%
 	UAC::Unload ;Must call unload!
 
-  ; skip if not in silent mode
-  IfSilent 0 lbl_skipRun
+	; skip if not in silent mode
+	IfSilent 0 lbl_skipRun
 
-  ; search for /AUTORUN on commandline and skip if not found
-  Push $CMDLINE
-  Push "/AUTORUN"
-  Call StrStr
-  Pop $0
-  StrCmp $0 "" lbl_skipRun
+	; search for /AUTORUN on commandline and skip if not found
+	Push $CMDLINE
+	Push "/AUTORUN"
+	Call StrStr
+	Pop $0
+	StrCmp $0 "" lbl_skipRun
 
-  ; Autorun if in silent mode and /AUTORUN is specified
-  Exec "$INSTDIR\EVEMon.exe"
+	; Autorun if in silent mode and /AUTORUN is specified
+	Exec "$INSTDIR\EVEMon.exe"
 
-  lbl_skipRun:
+	lbl_skipRun:
 FunctionEnd
 
 Function .OnInstFailed
@@ -221,96 +221,96 @@ FunctionEnd
 
 Section "Installer Section" 
 
-  Call EnsureNotRunning
+	Call EnsureNotRunning
 
-  ClearErrors
-  ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{B3C090CF-5539-42EA-90EB-8648A79C7F8B}" \
-        "UninstallString"
-  IfErrors lbl_NoLegacyUninstall
-  ExecWait "MsiExec.exe /quiet /x {B3C090CF-5539-42EA-90EB-8648A79C7F8B}"
+	ClearErrors
+	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{B3C090CF-5539-42EA-90EB-8648A79C7F8B}" \
+				"UninstallString"
+	IfErrors lbl_NoLegacyUninstall
+	ExecWait "MsiExec.exe /quiet /x {B3C090CF-5539-42EA-90EB-8648A79C7F8B}"
 
-  lbl_noLegacyUninstall:
-  SetOutPath "$INSTDIR"
+	lbl_noLegacyUninstall:
+	SetOutPath "$INSTDIR"
 ## INSTALLBUILDER: INSERT FILES HERE ##
-  File /r /x *vshost* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
-  File "..\..\..\..\..\EVEMon\EVEMon.ico"
-  File "..\..\..\..\..\EVEMon\EVEMon.ico"
-  SetOutPath "$INSTDIR"
+	File /r /x *vshost* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
+	File "..\..\..\..\..\EVEMon\EVEMon.ico"
+	File "..\..\..\..\..\EVEMon\EVEMon.ico"
+	SetOutPath "$INSTDIR"
  
-  WriteUninstaller "$INSTDIR\uninstall.exe"
+	WriteUninstaller "$INSTDIR\uninstall.exe"
 
-  !insertmacro MUI_STARTMENU_WRITE_BEGIN EVEMon
+	!insertmacro MUI_STARTMENU_WRITE_BEGIN EVEMon
 	 SetShellVarContext current
-     CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
-     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk" "$INSTDIR\EVEMon.exe"
-     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk" "$INSTDIR\uninstall.exe"
-  !insertmacro MUI_STARTMENU_WRITE_END
+		 CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
+		 CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk" "$INSTDIR\EVEMon.exe"
+		 CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk" "$INSTDIR\uninstall.exe"
+	!insertmacro MUI_STARTMENU_WRITE_END
 
-  # Add entry for Add/Remove Programs
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "DisplayName" "EVEMon"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "UninstallString" "$INSTDIR\uninstall.exe"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "DisplayIcon" "$INSTDIR\EVEMon.ico"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "Publisher" "battleclinic.com"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "URLUpdateInfo" "http://EVEMon.battleclinic.com/"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "URLInfoAbout" "http://EVEMon.battleclinic.com/"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "DisplayVersion" "${VERSION}"
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-         "NoRepair" 1
+	# Add entry for Add/Remove Programs
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "DisplayName" "EVEMon"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "UninstallString" "$INSTDIR\uninstall.exe"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "DisplayIcon" "$INSTDIR\EVEMon.ico"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "Publisher" "battleclinic.com"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "URLUpdateInfo" "http://EVEMon.battleclinic.com/"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "URLInfoAbout" "http://EVEMon.battleclinic.com/"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "DisplayVersion" "${VERSION}"
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "NoModify" 1
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
+				 "NoRepair" 1
 SectionEnd
 
 Section "un.Uninstaller Section"
-  Call un.EnsureNotRunning
-  SetShellVarContext current
-  Delete "$INSTDIR\Debugging Tools\EVEMon (with network logging).lnk"
-  RMDir "$INSTDIR\Debugging Tools"
+	Call un.EnsureNotRunning
+	SetShellVarContext current
+	Delete "$INSTDIR\Debugging Tools\EVEMon (with network logging).lnk"
+	RMDir "$INSTDIR\Debugging Tools"
 ## INSTALLBUILDER: INSERT DELETES HERE ##
-  Delete "$INSTDIR\EVEMon.ico"
-  Delete "$INSTDIR\EVEMon-all.ico"
-  Delete "$INSTDIR\uninstall.exe"
-  SetShellVarContext all
-  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk"
-  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
-  RmDir "$SMPROGRAMS\$STARTMENU_FOLDER"
-  RmDir /R "$INSTDIR\Resources"
-  RmDir /R "$INSTDIR\Microsoft.VC90.CRT"
-  
-  ; Just to be sure it gets cleaned up if it was locked...
-  Delete /REBOOTOK "$INSTDIR\EVEMon.WinHook.dll"
-  IfRebootFlag rmDirWithReboot rmDirWithoutReboot
+	Delete "$INSTDIR\EVEMon.ico"
+	Delete "$INSTDIR\EVEMon-all.ico"
+	Delete "$INSTDIR\uninstall.exe"
+	SetShellVarContext all
+	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk"
+	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
+	RmDir "$SMPROGRAMS\$STARTMENU_FOLDER"
+	RmDir /R "$INSTDIR\Resources"
+	RmDir /R "$INSTDIR\Microsoft.VC90.CRT"
+	
+	; Just to be sure it gets cleaned up if it was locked...
+	Delete /REBOOTOK "$INSTDIR\EVEMon.WinHook.dll"
+	IfRebootFlag rmDirWithReboot rmDirWithoutReboot
 
-  rmDirWithoutReboot:
-  RMDir $INSTDIR
-  Goto afterRmDir
+	rmDirWithoutReboot:
+	RMDir $INSTDIR
+	Goto afterRmDir
 
-  rmDirWithReboot:
-  RMDir /REBOOTOK $INSTDIR
-  Goto afterRmDir
+	rmDirWithReboot:
+	RMDir /REBOOTOK $INSTDIR
+	Goto afterRmDir
 
-  afterRmDir:
+	afterRmDir:
 
-  !insertmacro MUI_STARTMENU_GETFOLDER EVEMon $MUI_TEMP
-  Delete "$SMPROGRAMS\$MUI_TEMP\EVEMon.lnk"
-  Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall EVEMon.lnk"
+	!insertmacro MUI_STARTMENU_GETFOLDER EVEMon $MUI_TEMP
+	Delete "$SMPROGRAMS\$MUI_TEMP\EVEMon.lnk"
+	Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall EVEMon.lnk"
 
-  StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
+	StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
 
-  startMenuDeleteLoop:
-     ClearErrors
-     RMDir $MUI_TEMP
-     GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
-     IfErrors startMenuDeleteLoopDone
-     StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
-  startMenuDeleteLoopDone:
+	startMenuDeleteLoop:
+		 ClearErrors
+		 RMDir $MUI_TEMP
+		 GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
+		 IfErrors startMenuDeleteLoopDone
+		 StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
+	startMenuDeleteLoopDone:
 
-  DeleteRegKey /ifempty HKLM "Software\EVEMon"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon"
+	DeleteRegKey /ifempty HKLM "Software\EVEMon"
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon"
 SectionEnd
