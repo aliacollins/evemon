@@ -419,7 +419,7 @@ namespace EVEMon.SettingsUI
             this.cbShowSkillQueueFreeRoom.Size = new System.Drawing.Size(162, 17);
             this.cbShowSkillQueueFreeRoom.TabIndex = 35;
             this.cbShowSkillQueueFreeRoom.Text = "Show Skill Queue Free Room";
-            this.ttHelp.SetToolTip(this.cbShowSkillQueueFreeRoom, "When enabled, shows the character\'s wallet balance");
+            this.ttHelp.SetToolTip(this.cbShowSkillQueueFreeRoom, "When enabled, shows the character\'s skill queue free room");
             this.cbShowSkillQueueFreeRoom.UseVisualStyleBackColor = true;
             // 
             // TrayPopupConfigForm
