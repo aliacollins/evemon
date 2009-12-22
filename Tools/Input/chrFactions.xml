@@ -16,7 +16,7 @@
 		<key Table="chrFactions" Non_unique="1" Key_name="solarSystemID" Seq_in_index="1" Column_name="solarSystemID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="chrFactions" Non_unique="1" Key_name="corporationID" Seq_in_index="1" Column_name="corporationID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="chrFactions" Non_unique="1" Key_name="militiaCorporationID" Seq_in_index="1" Column_name="militiaCorporationID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="chrFactions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="20" Avg_row_length="718" Data_length="14368" Max_data_length="281474976710655" Index_length="5120" Data_free="0" Create_time="2009-11-25 22:00:05" Update_time="2009-11-25 22:00:05" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="chrFactions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="20" Avg_row_length="718" Data_length="14364" Max_data_length="281474976710655" Index_length="5120" Data_free="0" Create_time="2009-12-22 16:19:12" Update_time="2009-12-22 16:19:12" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="chrFactions">
 	<row>
@@ -190,7 +190,7 @@
 	<row>
 		<field name="factionID">500015</field>
 		<field name="factionName">Thukker Tribe</field>
-		<field name="description">The Thukker tribe is one of the seven original Minmatar tribes. After the Minmtar Rebellion the Thukkers left Minmatar space and took up the nomadic lifestyles of their ancestors, only this time in space. The closest thing they've got to home is the Great Wildlands region, where they are very numerous, but the Thukkers like to be on the move, constantly going from one solar system to another in their huge caravans, trading and scavenging. Respectable citizens of EVE frown upon the Thukkers, considering them to be nothing but scoundrels and thiefs. Indeed, the Thukkers often operate on the shadier side of the law, but their resourcefulness and diligence count a lot more for their success than their criminal activities.</field>
+		<field name="description">The Thukker tribe is one of the seven original Minmatar tribes. After the Minmatar Rebellion the Thukkers left Minmatar space and took up the nomadic lifestyles of their ancestors, only this time in space. The closest thing they've got to home is the Great Wildlands region, where they are very numerous, but the Thukkers like to be on the move, constantly going from one solar system to another in their huge caravans, trading and scavenging. Respectable citizens of EVE frown upon the Thukkers, considering them to be nothing but scoundrels and thiefs. Indeed, the Thukkers often operate on the shadier side of the law, but their resourcefulness and diligence count a lot more for their success than their criminal activities.</field>
 		<field name="raceIDs">2</field>
 		<field name="solarSystemID">30000905</field>
 		<field name="corporationID">1000163</field>
@@ -238,7 +238,7 @@
 	<row>
 		<field name="factionID">500019</field>
 		<field name="factionName">Sansha's Nation</field>
-		<field name="description">Sansha's Nation was founded more than a century ago, shortly after all the empires had come into contact, just when space exploration and colonization was taking off. Sansha was a Caldari tycoon that carved out a sizeable piece of space for himself. There, he set out to create an utopian state. His vision and charm attracted thousands of people and for some time the Nation flourished. But Sansha became ever more warped as his success increased. He started experiments, combining capsule technology with the human mind, creating a zombie like creatures that had the cold, calculating mind of a computer, but the ingenuinity of humans. When this became public knowledge Sansha was condemned and the other empires joined forces to bring him down. His forces were decimated and scattered to the winds. Remnants still remain far in the outer regions, but the once glorious Nation has been reduced to pirates and pillagers.</field>
+		<field name="description">Sansha's Nation was founded more than a century ago, shortly after all the empires had come into contact, just when space exploration and colonization was taking off. Sansha was a Caldari tycoon that carved out a sizeable piece of space for himself. There, he set out to create an utopian state. His vision and charm attracted thousands of people and for some time the Nation flourished. But Sansha became ever more warped as his success increased. He started experiments, combining capsule technology with the human mind, creating zombie-like creatures that had the cold, calculating mind of a computer, but the ingenuity of humans. When this became public knowledge Sansha was condemned and the other empires joined forces to bring him down. His forces were decimated and scattered to the winds. Remnants still remain far in the outer regions, but the once glorious Nation has been reduced to pirates and pillagers.</field>
 		<field name="raceIDs">15</field>
 		<field name="solarSystemID">30001868</field>
 		<field name="corporationID">1000162</field>

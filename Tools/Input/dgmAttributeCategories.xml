@@ -6,7 +6,7 @@
 		<field Field="categoryName" Type="varchar(50)" Null="YES" Key="" Extra="" />
 		<field Field="categoryDescription" Type="varchar(200)" Null="YES" Key="" Extra="" />
 		<key Table="dgmAttributeCategories" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="categoryID" Collation="A" Cardinality="10" Null="" Index_type="BTREE" Comment="" />
-		<options Name="dgmAttributeCategories" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="10" Avg_row_length="46" Data_length="460" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Create_time="2009-11-25 21:59:59" Update_time="2009-11-25 21:59:59" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="dgmAttributeCategories" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="10" Avg_row_length="46" Data_length="460" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Create_time="2009-12-22 16:17:20" Update_time="2009-12-22 16:17:20" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="dgmAttributeCategories">
 	<row>

@@ -13,7 +13,7 @@
 		<key Table="crtCertificates" Non_unique="1" Key_name="crtCertificates_IX_category" Seq_in_index="1" Column_name="categoryID" Collation="A" Cardinality="12" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="crtCertificates" Non_unique="1" Key_name="crtCertificates_IX_class" Seq_in_index="1" Column_name="classID" Collation="A" Cardinality="129" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="crtCertificates" Non_unique="1" Key_name="corpID" Seq_in_index="1" Column_name="corpID" Collation="A" Cardinality="14" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="crtCertificates" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="389" Avg_row_length="381" Data_length="148392" Max_data_length="281474976710655" Index_length="23552" Data_free="0" Create_time="2009-11-25 22:00:07" Update_time="2009-11-25 22:00:07" Check_time="2009-11-25 22:00:07" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="crtCertificates" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="389" Avg_row_length="381" Data_length="148392" Max_data_length="281474976710655" Index_length="23552" Data_free="0" Create_time="2009-12-22 16:19:14" Update_time="2009-12-22 16:19:14" Check_time="2009-12-22 16:19:14" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="crtCertificates">
 	<row>

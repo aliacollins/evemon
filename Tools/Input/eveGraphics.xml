@@ -11,9 +11,9 @@
 		<field Field="icon" Type="varchar(100)" Null="YES" Key="" Extra="" />
 		<field Field="urlSound" Type="varchar(100)" Null="YES" Key="" Extra="" />
 		<field Field="explosionID" Type="smallint(6)" Null="YES" Key="MUL" Extra="" />
-		<key Table="eveGraphics" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="4353" Null="" Index_type="BTREE" Comment="" />
-		<key Table="eveGraphics" Non_unique="1" Key_name="explosionID" Seq_in_index="1" Column_name="explosionID" Collation="A" Cardinality="4353" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="eveGraphics" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="4353" Avg_row_length="69" Data_length="302344" Max_data_length="281474976710655" Index_length="70656" Data_free="0" Create_time="2009-11-25 22:00:09" Update_time="2009-11-25 22:00:09" Check_time="2009-11-25 22:00:09" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<key Table="eveGraphics" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="4355" Null="" Index_type="BTREE" Comment="" />
+		<key Table="eveGraphics" Non_unique="1" Key_name="explosionID" Seq_in_index="1" Column_name="explosionID" Collation="A" Cardinality="4355" Null="YES" Index_type="BTREE" Comment="" />
+		<options Name="eveGraphics" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="4355" Avg_row_length="69" Data_length="302588" Max_data_length="281474976710655" Index_length="70656" Data_free="0" Create_time="2009-12-22 16:19:17" Update_time="2009-12-22 16:19:17" Check_time="2009-12-22 16:19:17" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="eveGraphics">
 	<row>
@@ -24119,7 +24119,7 @@
 	</row>
 	<row>
 		<field name="graphicID">2240</field>
-		<field name="url3D">res:/Model/Ship/Amarr/ab2/ab2_v2.blue</field>
+		<field name="url3D">res:/Model/ship/amarr/BattleShip/ab2/Imperial/AB2_T1_Imperial.blue</field>
 		<field name="urlWeb">ab2_v2</field>
 		<field name="description"></field>
 		<field name="published">1</field>
@@ -47899,6 +47899,28 @@
 		<field name="icon"></field>
 		<field name="urlSound"></field>
 		<field name="explosionID" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="graphicID">4515</field>
+		<field name="url3D">res:/Model/ship/amarr/BattleShip/ab1/Imperial/AB1_T1_Imperial.blue</field>
+		<field name="urlWeb">Imperial Apocalypse</field>
+		<field name="description"></field>
+		<field name="published">1</field>
+		<field name="obsolete">0</field>
+		<field name="icon"></field>
+		<field name="urlSound"></field>
+		<field name="explosionID" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="graphicID">4517</field>
+		<field name="url3D">res:/Model/Ship/Special/Science/Pes1/Pes1.blue</field>
+		<field name="urlWeb">Zephyr</field>
+		<field name="description">Exploration ship created for Christmas 2009</field>
+		<field name="published">1</field>
+		<field name="obsolete">0</field>
+		<field name="icon"></field>
+		<field name="urlSound"></field>
+		<field name="explosionID">2026</field>
 	</row>
 	</table_data>
 </database>

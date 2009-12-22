@@ -11,7 +11,7 @@
 		<key Table="invMarketGroups" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="marketGroupID" Collation="A" Cardinality="998" Null="" Index_type="BTREE" Comment="" />
 		<key Table="invMarketGroups" Non_unique="1" Key_name="parentGroupID" Seq_in_index="1" Column_name="parentGroupID" Collation="A" Cardinality="199" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="invMarketGroups" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="998" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="invMarketGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="998" Avg_row_length="65" Data_length="65680" Max_data_length="281474976710655" Index_length="29696" Data_free="0" Create_time="2009-11-25 22:00:17" Update_time="2009-11-25 22:00:17" Check_time="2009-11-25 22:00:17" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="invMarketGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="998" Avg_row_length="65" Data_length="65680" Max_data_length="281474976710655" Index_length="29696" Data_free="0" Create_time="2009-12-22 16:19:24" Update_time="2009-12-22 16:19:24" Check_time="2009-12-22 16:19:24" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="invMarketGroups">
 	<row>

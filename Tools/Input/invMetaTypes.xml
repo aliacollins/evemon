@@ -8,7 +8,7 @@
 		<key Table="invMetaTypes" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="typeID" Collation="A" Cardinality="3963" Null="" Index_type="BTREE" Comment="" />
 		<key Table="invMetaTypes" Non_unique="1" Key_name="parentTypeID" Seq_in_index="1" Column_name="parentTypeID" Collation="A" Cardinality="792" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="invMetaTypes" Non_unique="1" Key_name="metaGroupID" Seq_in_index="1" Column_name="metaGroupID" Collation="A" Cardinality="7" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="invMetaTypes" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="3963" Avg_row_length="7" Data_length="27741" Max_data_length="1970324836974591" Index_length="110592" Data_free="0" Create_time="2009-11-25 22:00:18" Update_time="2009-11-25 22:00:18" Check_time="2009-11-25 22:00:18" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="invMetaTypes" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="3963" Avg_row_length="7" Data_length="27741" Max_data_length="1970324836974591" Index_length="110592" Data_free="0" Create_time="2009-12-22 16:19:24" Update_time="2009-12-22 16:19:24" Check_time="2009-12-22 16:19:24" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="invMetaTypes">
 	<row>

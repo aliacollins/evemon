@@ -17,7 +17,7 @@
 		<field Field="radius" Type="double" Null="YES" Key="" Extra="" />
 		<key Table="mapRegions" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="regionID" Collation="A" Cardinality="97" Null="" Index_type="BTREE" Comment="" />
 		<key Table="mapRegions" Non_unique="1" Key_name="factionID" Seq_in_index="1" Column_name="factionID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="mapRegions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="97" Avg_row_length="102" Data_length="9976" Max_data_length="281474976710655" Index_length="3072" Data_free="0" Create_time="2009-11-25 22:01:09" Update_time="2009-11-25 22:01:09" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="mapRegions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="97" Avg_row_length="102" Data_length="9976" Max_data_length="281474976710655" Index_length="3072" Data_free="0" Create_time="2009-12-22 16:20:15" Update_time="2009-12-22 16:20:15" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="mapRegions">
 	<row>

@@ -6,7 +6,7 @@
 		<field Field="description" Type="varchar(500)" Null="YES" Key="" Extra="" />
 		<field Field="categoryName" Type="varchar(256)" Null="YES" Key="" Extra="" />
 		<key Table="crtCategories" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="categoryID" Collation="A" Cardinality="12" Null="" Index_type="BTREE" Comment="" />
-		<options Name="crtCategories" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="12" Avg_row_length="30" Data_length="368" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Create_time="2009-11-25 22:00:00" Update_time="2009-11-25 22:00:00" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="crtCategories" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="12" Avg_row_length="30" Data_length="368" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Create_time="2009-12-22 16:17:21" Update_time="2009-12-22 16:17:21" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="crtCategories">
 	<row>
