@@ -5,6 +5,7 @@ using EVEMon.Common;
 using System.Text;
 using EVEMon.Common.Net;
 using EVEMon.Common.SettingsObjects;
+using System.ComponentModel;
 
 namespace EVEMon.Common
 {
@@ -103,6 +104,28 @@ namespace EVEMon.Common
 		}
 
         /// <summary>
+        /// Triggers on when a SMTP client has finished (sucess or failure)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void SendCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                EveClient.Trace("Emailer.SendCompleted - The last message was cancelled");
+            }
+            if (e.Error != null)
+            {
+                EveClient.Trace("Emailer.SendCompleted - An error occured");
+                ExceptionHandler.LogException(e.Error, false);
+            }
+            else
+            {
+                Console.WriteLine("Emailer.SendCompleted - Message sent.");
+            }
+        }
+
+        /// <summary>
         /// Performs the sending fo the mail
         /// </summary>
         /// <param name="settings"></param>
@@ -133,6 +156,7 @@ namespace EVEMon.Common
 
                 // SSL
                 client.EnableSsl = settings.EmailServerRequiresSSL;
+                client.SendCompleted += new SendCompletedEventHandler(SendCompleted);
 
                 // Send message
 				client.SendAsync(msg, null);
