@@ -7,6 +7,12 @@ namespace EVEMon.Common.SettingsObjects
 {
     public sealed class ShipBrowserSettings
     {
+        public ShipBrowserSettings()
+        {
+            UsabilityFilter = ObjectUsabilityFilter.All;
+            RacesFilter = Race.All;
+        }
+
         [XmlElement("usabilityFilter")]
         public ObjectUsabilityFilter UsabilityFilter
         {
