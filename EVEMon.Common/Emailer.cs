@@ -149,6 +149,7 @@ namespace EVEMon.Common
                 // Enter crendtials
                 if (settings.EmailAuthenticationRequired)
 				{
+                    client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential(
                         settings.EmailAuthenticationUserName,
                         settings.EmailAuthenticationPassword);
