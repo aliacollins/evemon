@@ -1322,6 +1322,7 @@ namespace EVEMon
             // Prompt the user for the plan name
             using (NewPlanWindow npw = new NewPlanWindow())
             {
+                npw.PlanName = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
                 DialogResult xdr = npw.ShowDialog();
                 if (xdr == DialogResult.Cancel) return;
 
