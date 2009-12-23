@@ -43,16 +43,15 @@ namespace EVEMon
             slPriority.Add("03", "Developers");
             slPriority.Add("04", "Developers (Retired)");
             slPriority.Add("05", "Contributors");
-
             
             // list of developers by heading
             slDevelopers = new SortedList();
             
             // EVEMon Guru
-            slDevelopers.Add("Araan Sunn", "01");
             slDevelopers.Add("Richard Slater", "01");
 
             // Guru (Retired)
+            slDevelopers.Add("Araan Sunn", "02");
             slDevelopers.Add("Six Anari", "02");
             slDevelopers.Add("Anders Chydenius", "02");
             slDevelopers.Add("Brad Stone", "02");
@@ -60,6 +59,8 @@ namespace EVEMon
 
             // Developers
             slDevelopers.Add("MrCue", "03");
+            slDevelopers.Add("DonQuiche", "03");
+            slDevelopers.Add("Jimi", "03");
 
             // Developers (Retired)
             slDevelopers.Add("Collin Grady", "04");
@@ -86,7 +87,6 @@ namespace EVEMon
             slDevelopers.Add("CrazyMahone", "05");
             slDevelopers.Add("cybertech", "05");
             slDevelopers.Add("Dariana", "05");
-            slDevelopers.Add("DonQuiche", "05");
             slDevelopers.Add("Eviro", "05");
             slDevelopers.Add("exi", "05");
             slDevelopers.Add("FangVV", "05");
@@ -97,7 +97,6 @@ namespace EVEMon
             slDevelopers.Add("gavinl", "05");
             slDevelopers.Add("GoneWacko", "05");
             slDevelopers.Add("happyslinky", "05");
-            slDevelopers.Add("Jimi", "05");
             slDevelopers.Add("jdread", "05");
             slDevelopers.Add("Jeff Zellner", "05");
             slDevelopers.Add("jthiesen", "05");            
@@ -264,29 +263,6 @@ namespace EVEMon
         private void llHomePage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(NetworkConstants.EVEMonMainPage);
-        }
-
-        /// <summary>
-        /// Handles the DrawItem event of the lstDevelopers control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
-        private void lstDevelopers_DrawItem(object sender,
-        System.Windows.Forms.DrawItemEventArgs e)
-        {
-            if (e.Index > -1)
-            {
-                string sLine = slOutput.GetByIndex(e.Index).ToString();
-                if (sLine.Contains(":"))
-                {
-                    e.Graphics.DrawString(sLine, myFontbold, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
-                }
-                else
-                {
-                    sLine = "  " + sLine;
-                    e.Graphics.DrawString(sLine, myFont, Brushes.Black, new Point(e.Bounds.X, e.Bounds.Y));
-                }
-            }
         }
 
         /// <summary>
