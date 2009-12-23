@@ -31,7 +31,7 @@ namespace EVEMon
         private const int LowerBoxHeight = 8;
         private const int BoxHPad = 6;
         private const int BoxVPad = 2;
-        private const int SkillDetailHeight = 39;
+        private const int MinimumHeight = 39;
 
         // Skills drawing - Font & brushes
         private readonly Font m_skillsQueueFont;
@@ -102,7 +102,7 @@ namespace EVEMon
         {
             get
             {
-                return Math.Max(m_skillsQueueFont.Height * 2 + PadTop + LineVPad + PadTop, SkillDetailHeight);
+                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop + LineVPad + PadTop + LowerBoxHeight, MinimumHeight);
             }
         }
 
@@ -322,11 +322,11 @@ namespace EVEMon
                                             e.Bounds.Top + PadTop + levelTextSize.Height + LineVPad), Color.Black);
 
             // Draw skill queue color bar
-            Rectangle qBarRect = new Rectangle(e.Bounds.Left, e.Bounds.Top + PadTop + skillNameSize.Height + pctTextSize.Height + BoxVPad, e.Bounds.Width, LowerBoxHeight);
+            Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
             Rectangle skillRect = GetSkillRect(item, qBarRect.Width, LowerBoxHeight - 1);
             g.FillRectangle(Brushes.CornflowerBlue,
-                new Rectangle(skillRect.X, skillRect.Y + PadTop + skillNameSize.Height + pctTextSize.Height + BoxVPad, skillRect.Width, skillRect.Height));
+                new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
         }
 
         /// <summary>
