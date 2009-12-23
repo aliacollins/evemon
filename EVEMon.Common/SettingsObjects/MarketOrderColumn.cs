@@ -54,20 +54,20 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Duration")]
         Duration = 10,
 
-        [Header("Volume")]
-        [Description("Volume (Remaining / Initial)")]
+        [Header("Quantity")]
+        [Description("Quantity (Remaining / Initial)")]
         Volume = 11,
 
         [Header("Min")]
-        [Description("Volume (Minimum)")]
+        [Description("Quantity (Minimum)")]
         MinimumVolume = 12,
 
         [Header("Rem")]
-        [Description("Volume (Remaining)")]
+        [Description("Quantity (Remaining)")]
         RemainingVolume = 13,
 
         [Header("Initial")]
-        [Description("Volume (Initial)")]
+        [Description("Quantity (Initial)")]
         InitialVolume = 14,
 
         [Header("Last Change")]
