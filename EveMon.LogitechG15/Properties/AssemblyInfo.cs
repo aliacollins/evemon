@@ -1,21 +1,22 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly : AssemblyTitle("EVEMon.LogitechG15")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1591 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/branches/Foundations/EveMon.LogitechG15")] 
-[assembly : AssemblyConfiguration("")]
-[assembly : AssemblyCompany("EVEMon Development Team")]
-[assembly : AssemblyProduct("EVEMon")]
+[assembly: AssemblyTitle("EVEMon.LogitechG15")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1857 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EveMon.LogitechG15")] 
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("EVEMon Development Team")]
+[assembly: AssemblyProduct("EVEMon")]
 [assembly: AssemblyCopyright("Copyright © 2006, Timothy Fries")]
-[assembly : AssemblyTrademark("")]
-[assembly : AssemblyCulture("")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
-[assembly : ComVisible(false)]
+[assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e910b4d6-3a95-4484-8084-bee973f2ef89")]
@@ -27,4 +28,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly : AssemblyVersion("1.2.8.1591")]
+[assembly: AssemblyVersion("1.3.0.1857")]

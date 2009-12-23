@@ -1,17 +1,20 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1591 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/branches/Foundations/EVEMon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1877 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
 [assembly: AssemblyCopyright("Copyright © 2006, Timothy Fries")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// Friend assembly for unit testing
 [assembly: InternalsVisibleTo("Tests.EVEMon")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -29,4 +32,4 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.2.8.1591")]
+[assembly: AssemblyVersion("1.3.0.1877")]
