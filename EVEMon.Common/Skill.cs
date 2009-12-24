@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Collections;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Serialization.Settings;
+using System.Text;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
@@ -284,12 +279,14 @@ namespace EVEMon.Common
             {
                 m_skillLevel = m_lastConfirmedLvl;
                 int skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(m_lastConfirmedLvl + 1, 5));
-                for (int i = 0; SkillPoints >= skillPointsToNextLevel && m_skillLevel < 5; i++)
+
+                for (int i = 0; m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5; i++)
                 {
                     m_skillLevel++;
                     skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(m_skillLevel + 1, 5));
                 }
-                return m_skillLevel; 
+
+                return m_skillLevel;
             }
         }
 
@@ -734,8 +731,4 @@ namespace EVEMon.Common
         }
         #endregion
     }
-
-
-
-
 }
