@@ -84,11 +84,6 @@ namespace EVEMon.Common.Data
             return m_items.Values.GetEnumerator();
         }
 
-        /*
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }*/
         #endregion
     }
 }
