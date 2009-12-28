@@ -99,7 +99,6 @@ namespace EVEMon.Common.Data
                 }
             }
 
-
             // Visibility in ships browser
             m_propertiesByName["Base Price"].AlwaysVisibleForShips = true;
             m_propertiesByID[48].AlwaysVisibleForShips = true; // CPU
