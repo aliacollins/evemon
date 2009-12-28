@@ -68,10 +68,24 @@ namespace EVEMon.Common.Serialization.Battleclinic
         }
 
         [XmlAttribute("date")]
-        public string SubmissionDate
+        public string SubmissionDateString
         {
             get;
             set;
+        }
+
+        [XmlIgnore()]
+        public DateTime SubmissionDate
+        {
+            get
+            {
+                DateTime parsedDate;
+                if (DateTime.TryParse(SubmissionDateString, out parsedDate))
+                {
+                    return parsedDate;
+                }
+                return DateTime.MinValue;
+            }
         }
 
         [XmlAttribute("topic")]

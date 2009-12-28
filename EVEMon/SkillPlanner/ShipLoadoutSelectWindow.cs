@@ -190,7 +190,7 @@ namespace EVEMon.SkillPlanner
                 lvi.Text = loadout.LoadoutName;
                 lvi.SubItems.Add(loadout.Author);
                 lvi.SubItems.Add(loadout.rating.ToString());
-                lvi.SubItems.Add(loadout.SubmissionDate);
+                lvi.SubItems.Add(loadout.SubmissionDateString);
                 lvi.Tag = loadout;
                 lvLoadouts.Items.Add(lvi);
             }
@@ -221,7 +221,7 @@ namespace EVEMon.SkillPlanner
             // Set the headings
             lblName.Text = m_selectedLoadout.LoadoutName;
             lblAuthor.Text = m_selectedLoadout.Author;
-            lbDate.Text = m_selectedLoadout.SubmissionDate;
+            lbDate.Text = m_selectedLoadout.SubmissionDateString;
 
             // Download the loadout details
             string url = string.Format(NetworkConstants.BattleclinicLoadoutDetails, m_selectedLoadout.LoadoutId.ToString());
