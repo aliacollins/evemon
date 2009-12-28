@@ -45,15 +45,6 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On visibility, we may need to refresh the display.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (this.Visible) UpdateContent();
-        }
-
-        /// <summary>
         /// On load, restore settings and update the content
         /// </summary>
         /// <param name="sender"></param>
