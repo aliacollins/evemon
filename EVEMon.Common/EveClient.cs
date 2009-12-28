@@ -626,7 +626,6 @@ namespace EVEMon.Common
             string timeStr = String.Format("{0:#0}h {1:00}m {2:00}s > ", time.Hours, time.Minutes, time.Seconds);
             System.Diagnostics.Trace.WriteLine(timeStr + message);
         }
-        #endregion
 
         /// <summary>
         /// Sends a message to the trace with the prepended time since
@@ -634,18 +633,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="format"></param>
         /// <param name="arg0"></param>
-        public static void Trace(string format, object arg0)
+        public static void Trace(string format, params object[] args)
         {
-            Trace(String.Format(format, arg0));
-        }
-
-
-        /// <summary>
-        /// Apply some settings changes
-        /// </summary>
-        private static void UpdateSettings()
-        {
-            s_httpWebService.State.Proxy = Settings.Proxy;
+            Trace(String.Format(format, args));
         }
 
         /// <summary>
@@ -668,5 +658,16 @@ namespace EVEMon.Common
             s_traceListener.Close();
             s_traceStream.Close();
         }
+
+        #endregion
+
+        /// <summary>
+        /// Apply some settings changes
+        /// </summary>
+        private static void UpdateSettings()
+        {
+            s_httpWebService.State.Proxy = Settings.Proxy;
+        }
+
     }
 }
