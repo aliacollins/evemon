@@ -148,14 +148,27 @@ namespace EVEMon.Common
             // Gets the full path
             string path = Datafile.GetFullPath(filename);
 
-            // Deserializes
-            using (var s = FileHelper.OpenRead(path, false))
+            try
             {
-                using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
+                // Deserializes
+                using (var s = FileHelper.OpenRead(path, false))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
-                    return (T)xs.Deserialize(zs);
+                    using (GZipStream zs = new GZipStream(s, CompressionMode.Decompress))
+                    {
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        return (T)xs.Deserialize(zs);
+                    }
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                String message = String.Format("An error occured decompressing {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                throw new ApplicationException(message, ex);
+            }
+            catch (XmlException ex)
+            {
+                String message = String.Format("An error occured reading the XML from {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                throw new ApplicationException(message, ex);
             }
         }
 
