@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
 using Windows7.DesktopIntegration;
+using System.Text;
 
 namespace EVEMon
 {
@@ -14,6 +15,7 @@ namespace EVEMon
         private static bool s_exitRequested;
         private static bool s_showWindowOnError = true;
         private static MainWindow s_mainWindow;
+        private static bool s_isDebugBuild = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -21,17 +23,22 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
-            // Quits if another instance already exists
-            if (!EnsureInstanceUnicity()) return;
+            // Sets isDebugBuild variable to true if this is a debug build
+            CheckIsDebug();
+
+            // Quits non-debug builds if another instance already exists
+            if (!s_isDebugBuild && !IsInstanceUnique) return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Application.ApplicationExit += new EventHandler(ApplicationExitCallback);
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ApplicationExit += new EventHandler(ApplicationExitCallback);
+
+            // Find our files
+            EveClient.InitializeFileSystemPaths();
 
             // Creates a trace file
-            EveClient.InitializeFileSystemPaths();
             EveClient.StartTraceLogging();
             EveClient.Trace("Starting up");
 
@@ -65,6 +72,7 @@ namespace EVEMon
         }
 
         #region Properties
+
         /// <summary>
         /// The main window of the application
         /// </summary>
@@ -73,6 +81,25 @@ namespace EVEMon
             get { return s_mainWindow; }
             set { s_mainWindow = value; }
         }
+
+        /// <summary>
+        /// Ensures that only one instance of EVEMon is ran at once
+        /// </summary>
+        private static bool IsInstanceUnique
+        {
+            get
+            {
+                InstanceManager im = InstanceManager.GetInstance();
+                if (!im.CreatedNew)
+                {
+                    im.Signal();
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         #endregion
 
 
@@ -86,8 +113,13 @@ namespace EVEMon
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Windows7Taskbar.SetCurrentProcessAppId("EVEMon");
-                SetDebugAppID();
+
+                String appId = "EVEMon";
+                if (s_isDebugBuild)
+                {
+                    appId = String.Format("{0}-DEBUG", appId);
+                }
+                Windows7Taskbar.SetCurrentProcessAppId(appId);
             }
             catch (Exception ex)
             {
@@ -97,29 +129,14 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Sets the process AppId to EVEMon-DEBUG
+        /// Will only execute if DEBUG is set, thus lets us avoid #IFDEF
         /// </summary>
         [Conditional("DEBUG")]
-        private static void SetDebugAppID()
+        private static void CheckIsDebug()
         {
-            Windows7Taskbar.SetCurrentProcessAppId("EVEMon-DEBUG");
+            s_isDebugBuild = true;
         }
 
-        /// <summary>
-        /// Ensures that only one instance of EVEMon is ran at once
-        /// </summary>
-        private static bool EnsureInstanceUnicity()
-        {
-#if !DEBUG
-            InstanceManager im = InstanceManager.GetInstance();
-            if (!im.CreatedNew)
-            {
-                im.Signal();
-                return false;
-            }
-#endif        
-            return true;
-        }
         #endregion
 
 
@@ -136,7 +153,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occurs when an exception reach the entry point of the application. We then display our custom crash box.
+        /// Occurs when an exception reach the entry point of the
+        /// application. We then display our custom crash box.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -146,7 +164,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles exceptions in 
+        /// Handles exceptions in WinForms threads, such exceptions
+        /// would never reach the entry point of the application, 
+        /// generally causing a CTD or trigger WER. We display our
+        /// custom crash box
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -169,11 +190,26 @@ namespace EVEMon
 
                     // Shutdown EveClient timer incase that was causing the crash
                     // so we don't get multiple crashes
-                    EveClient.Shutdown();
-                    using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
+                    try
                     {
-                        f.ShowDialog(s_mainWindow);
+                        EveClient.Shutdown();
+                        using (UnhandledExceptionWindow f = new UnhandledExceptionWindow(ex))
+                        {
+                            f.ShowDialog(s_mainWindow);
+                        }
                     }
+                    catch
+                    {
+                        StringBuilder MessageBuilder = new StringBuilder();
+                        MessageBuilder.AppendLine("An error occured and EVEMon was unable to handle the error message gracefully");
+                        MessageBuilder.AppendLine();
+                        MessageBuilder.AppendFormat("The exception encountered was '{0}'.", ex.Message);
+                        MessageBuilder.AppendLine();
+                        MessageBuilder.AppendLine();
+                        MessageBuilder.AppendLine("Please report this on the EVEMon forums.");
+                        MessageBox.Show(MessageBuilder.ToString(), "EVEMon Error Occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
                     Environment.Exit(1);
                 }
             }
