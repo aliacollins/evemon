@@ -61,7 +61,6 @@ namespace EVEMon.SkillPlanner
         }
         #endregion
 
-
         #region Cell
         /// <summary>
         /// Helper class to store layout informations about a skill
@@ -89,7 +88,8 @@ namespace EVEMon.SkillPlanner
                 foreach (var prereq in skill.Prerequisites)
                 {
                     // Ignore recursive prereqs, happens with non-public skills like Polaris
-                    if (prereq.Skill == skill) continue;
+                    if (prereq.Skill == skill)
+                        continue;
 
                     Cells.Add(new Cell(prereq, rows, 1));
                 }
@@ -115,6 +115,10 @@ namespace EVEMon.SkillPlanner
                 // Create the children
                 foreach (var childPrereq in prereq.Skill.Prerequisites)
                 {
+                    // Ignore recursive prereqs, happens with non-public skills like Polaris
+                    if (childPrereq.Skill == prereq.Skill)
+                        continue;
+
                     Cells.Add(new Cell(childPrereq, rows, level + 1));
                 }
             }
