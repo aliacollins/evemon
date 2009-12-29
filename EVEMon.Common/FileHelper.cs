@@ -23,8 +23,14 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    if (!File.Exists(filename)) return null;
-                    return new MemoryStream(File.ReadAllBytes(filename));
+                    string normalizedFilename = filename;
+                    if (filename.StartsWith("file:///"))
+                    {
+                        normalizedFilename = filename.Remove(0, 8);
+                    }
+                    FileInfo fi = new FileInfo(normalizedFilename);
+                    if (!fi.Exists) return null;
+                    return new MemoryStream(File.ReadAllBytes(normalizedFilename));
                 }
                 catch (UnauthorizedAccessException exc)
                 {
