@@ -31,7 +31,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserialization onstructor
+        /// Deserialization constructor
         /// </summary>
         /// <param name="identity"></param>
         /// <param name="serial"></param>

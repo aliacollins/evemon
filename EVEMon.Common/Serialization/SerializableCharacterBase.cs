@@ -20,7 +20,6 @@ namespace EVEMon.Common.Serialization
             this.Certificates = new List<SerializableCharacterCertificate>();
         }
 
-
         [XmlElement("characterID")]
         public long ID
         {
