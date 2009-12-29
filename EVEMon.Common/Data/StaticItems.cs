@@ -106,7 +106,7 @@ namespace EVEMon.Common.Data
             }
 
             // Deserialize the items datafile
-            var datafile = Util.DeserializeDatafile<ItemsDatafiles>("eve-items.xml.gz");
+            var datafile = Util.DeserializeDatafile<ItemsDatafiles>(DatafileConstants.ItemsDatafile);
             s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
 
             // Gather the items into a by-ID dictionary.
@@ -145,7 +145,7 @@ namespace EVEMon.Common.Data
         internal static bool EnsureReprocessingInitialized()
         {
             if (s_reprocessingInitialized) return false;
-            var datafile = Util.DeserializeDatafile<ReprocessingDatafile>("eve-reprocessing.xml.gz");
+            var datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
 
             foreach (var itemMaterials in datafile.Items)
             {

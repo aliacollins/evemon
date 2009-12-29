@@ -46,7 +46,7 @@ namespace EVEMon.Common
             m_state = GetState(src);
             m_orderID = src.OrderID;
             m_item = StaticItems.GetItem(src.ItemID);
-            m_station = Geography.GetStation(src.StationID);
+            m_station = StaticGeography.GetStation(src.StationID);
             m_unitaryPrice = src.UnitaryPrice;
             m_initialVolume = src.InitialVolume;
             m_remainingVolume = src.RemainingVolume;
@@ -66,7 +66,7 @@ namespace EVEMon.Common
             m_orderID = src.OrderID;
             m_state = src.State;
             m_item = StaticItems.FindItem(src.Item);
-            m_station = Geography.GetStation(src.StationID);
+            m_station = StaticGeography.GetStation(src.StationID);
             m_unitaryPrice = src.UnitaryPrice;
             m_initialVolume = src.InitialVolume;
             m_remainingVolume = src.RemainingVolume;

@@ -235,7 +235,7 @@
     <Compile Include="Data\EveProperty.cs" />
     <Compile Include="Data\EvePropertyCategory.cs" />
     <Compile Include="Data\EvePropertyValue.cs" />
-    <Compile Include="Data\Geography.cs" />
+    <Compile Include="Data\StaticGeography.cs" />
     <Compile Include="Data\Implant.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="Data\MarketGroup.cs" />
@@ -320,6 +320,11 @@
     <Compile Include="Serialization\API\IAPIResult.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
+    <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DatafileConstants.resx</DependentUpon>
+    </Compile>
     <Compile Include="Serialization\Datafiles\GeoDatafile.cs" />
     <Compile Include="Serialization\Datafiles\PropertiesDatafile.cs" />
     <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
@@ -420,26 +425,8 @@
     <None Include="Diagrams\Items.cd" />
     <None Include="Diagrams\Plan.cd" />
     <None Include="ForceSgen.cmd" />
-    <None Include="Resources\eve-certificates.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\eve-geography.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Diagrams\SkillLevel.cd" />
     <None Include="Diagrams\Skills.cd" />
-    <None Include="Resources\eve-items.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\eve-properties.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\eve-reprocessing.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\eve-skills.xml.gz">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NetworkConstants.resx">
@@ -508,6 +495,10 @@
       <DependentUpon>MsgBoxCustom.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt" />
+    <EmbeddedResource Include="Serialization\Datafiles\DatafileConstants.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DatafileConstants.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LinqBridge\LinqBridge.csproj">
@@ -516,6 +507,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\eve-certificates-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-geography-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-items-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-properties-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-reprocessing-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-skills-en-US.xml.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\MD5Sums.txt" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />

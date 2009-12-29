@@ -91,7 +91,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            var datafile = Util.DeserializeDatafile<CertificatesDatafile>("eve-certificates.xml.gz");
+            var datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
 
             foreach (var srcCat in datafile.Categories)
             {

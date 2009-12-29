@@ -269,7 +269,7 @@ namespace EVEMon.XmlImporter
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
             datafile.Categories = listOfCertCategories.ToArray();
-            Util.SerializeXML(datafile, "eve-certificates.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace EVEMon.XmlImporter
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
             datafile.Groups = listOfSkillGroups.ToArray();
-            Util.SerializeXML(datafile, "eve-skills.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
 
         private static EveAttribute IntToEveAttribute(int attributeValue)
@@ -567,7 +567,7 @@ namespace EVEMon.XmlImporter
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
             datafile.Categories = categories.OrderBy(x => Array.IndexOf(orderedGroupNames, String.Intern(x.Name))).ToArray();
-            Util.SerializeXML(datafile, "eve-properties.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
 
         #endregion
@@ -656,7 +656,7 @@ namespace EVEMon.XmlImporter
             GeoDatafile datafile = new GeoDatafile();
             datafile.Regions = regions.OrderBy(x => x.Name).ToArray();
             datafile.Jumps = jumps.ToArray();
-            Util.SerializeXML(datafile, "eve-geography.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }
 
         #endregion
@@ -764,7 +764,7 @@ namespace EVEMon.XmlImporter
             // Serialize
             ItemsDatafiles datafile = new ItemsDatafiles();
             datafile.MarketGroups = rootGroups.ToArray();
-            Util.SerializeXML(datafile, "eve-items.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
 
         /// <summary>
@@ -1122,7 +1122,7 @@ namespace EVEMon.XmlImporter
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
             datafile.Items = types.ToArray();
-            Util.SerializeXML(datafile, "eve-reprocessing.xml.gz");
+            Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
 
         #endregion

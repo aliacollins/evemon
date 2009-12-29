@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using System.Xml.Xsl;
 using System.Xml.Serialization;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.IO.Compression;
-using System.Diagnostics;
-using EVEMon.XmlImporter.Zofu;
+using System.Xml.Xsl;
 using EVEMon.XmlGenerator.Zofu;
+using EVEMon.XmlImporter.Zofu;
 
 namespace EVEMon.XmlImporter
 {
@@ -145,45 +144,49 @@ namespace EVEMon.XmlImporter
             Console.WriteLine();
         }
 
-        internal static void CreateMD5SumsFile(string filename )
+        /// <summary>
+        /// Creates one file alongside the resources file containing
+        /// the MD5 sums for each resource
+        /// </summary>
+        /// <param name="filename">Filename of resource .xml.gz</param>
+        internal static void CreateMD5SumsFile(string filename)
         {
             StreamWriter MD5file;
-            string path = @"..\..\..\..\EVEMon.Common\Resources",
-                   file = String.Format("{0}{1}{2}", path, Path.DirectorySeparatorChar, filename);
+            string path = @"..\..\..\..\EVEMon.Common\Resources";
+            string file = Path.Combine(path, filename);
 
             MD5file = File.CreateText(file);
-            MD5file.WriteLine(CreateMD5From("eve-certificates.xml.gz"));
-            MD5file.WriteLine(CreateMD5From("eve-geography.xml.gz"));
-            MD5file.WriteLine(CreateMD5From("eve-items.xml.gz"));
-            MD5file.WriteLine(CreateMD5From("eve-properties.xml.gz"));
-            MD5file.WriteLine(CreateMD5From("eve-reprocessing.xml.gz"));
-            MD5file.WriteLine(CreateMD5From("eve-skills.xml.gz"));
-            MD5file.Close();
 
+            foreach (var datafile in Directory.GetFiles(path, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            {
+                MD5file.WriteLine(CreateMD5From(datafile));
+            }
+            
+            MD5file.Close();
+                
             Console.WriteLine("MD5Sums File Created Successfully");
             Console.WriteLine();
         }
 
         /// <summary>
-        // Creates a MD5Sum from datafile
+        /// Creates a MD5Sum from datafile
         /// </summary>
-        private static string CreateMD5From(string datafile)
+        private static string CreateMD5From(string filename)
         {
-            string path = @"..\..\..\..\EVEMon.Common\Resources",
-                   filename = String.Format("{0}{1}{2}", path, Path.DirectorySeparatorChar, datafile);
-
-            StringBuilder sb = new StringBuilder();
-            if (File.Exists(filename))
+            FileInfo datafile = new FileInfo(filename);
+            if (datafile.Exists)
             {
+                StringBuilder sb = new StringBuilder();
+
                 MD5 md5 = MD5.Create();
-                using (FileStream fs = File.Open(filename, FileMode.Open))
+                using (FileStream fs = File.Open(datafile.FullName, FileMode.Open))
                 {
                     foreach (byte b in md5.ComputeHash(fs))
                         sb.Append(b.ToString("x2").ToLower());
                 }
 
                 // Constract the fileline
-                string fileline = String.Concat(sb.ToString(), " *", datafile);
+                string fileline = String.Format("{0} *{1}", sb, datafile.Name);
 
                 return fileline;
             }
@@ -191,10 +194,10 @@ namespace EVEMon.XmlImporter
         }
 
         /// <summary>
-        /// 
+        /// Copies a file from source to destination
         /// </summary>
-        /// <param name="srcFile"></param>
-        /// <param name="destFile"></param>
+        /// <param name="srcFile">Fully qualified source filename</param>
+        /// <param name="destFile">Fully quallified destination filename</param>
         private static void Copy(string srcFile, string destFile)
         {
             try
@@ -204,7 +207,7 @@ namespace EVEMon.XmlImporter
                 if (fi.Directory.Exists)
                 {
                     File.Copy(srcFile, destFile, true);
-                    Console.WriteLine("*** " + destFile);
+                    Console.WriteLine(String.Format(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name, fi.Directory.Name));
                 }
                 else
                 {

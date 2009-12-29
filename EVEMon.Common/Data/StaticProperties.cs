@@ -83,7 +83,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            PropertiesDatafile datafile = Util.DeserializeDatafile<PropertiesDatafile>("eve-properties.xml.gz");
+            PropertiesDatafile datafile = Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
 
             // Fetch deserialized data
             foreach (var srcCategory in datafile.Categories)

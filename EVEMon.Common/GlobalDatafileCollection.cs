@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common
 {
@@ -25,14 +26,14 @@ namespace EVEMon.Common
             try
             {
                 m_items.Clear();
-                m_items.Add(new Datafile("eve-properties.xml.gz"));
-                m_items.Add(new Datafile("eve-items.xml.gz"));
-                m_items.Add(new Datafile("eve-skills.xml.gz"));
-                m_items.Add(new Datafile("eve-certificates.xml.gz"));
-                m_items.Add(new Datafile("eve-geography.xml.gz"));
-                m_items.Add(new Datafile("eve-reprocessing.xml.gz"));
+                m_items.Add(new Datafile(DatafileConstants.PropertiesDatafile));
+                m_items.Add(new Datafile(DatafileConstants.ItemsDatafile));
+                m_items.Add(new Datafile(DatafileConstants.SkillsDatafile));
+                m_items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
+                m_items.Add(new Datafile(DatafileConstants.GeographyDatafile));
+                m_items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
             }
-            // Don't worry if we cant create MD5  maybe they have FIPS enforced.
+            // Don't worry if we cant create MD5 maybe they have FIPS enforced.
             catch (Exception)
             {
                 System.Diagnostics.Trace.Write("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");

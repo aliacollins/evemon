@@ -8,7 +8,7 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Stores all the data regarding geography.
     /// </summary>
-    public static class Geography
+    public static class StaticGeography
     {
         private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
         private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
@@ -71,7 +71,7 @@ namespace EVEMon.Common.Data
         public static void EnsureInitialized()
         {
             if (m_initialized) return;
-            var datafile = Util.DeserializeDatafile<GeoDatafile>("eve-geography.xml.gz");
+            var datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
 
             // Generate the nodes
             foreach (var srcRegion in datafile.Regions)

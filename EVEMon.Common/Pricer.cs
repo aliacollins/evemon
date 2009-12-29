@@ -20,7 +20,7 @@ namespace EVEMon.Common
         {
             get 
             {
-                foreach(var station in Geography.AllSystems.First(x => x.Name == "Jita").Constellation)
+                foreach(var station in StaticGeography.AllSystems.First(x => x.Name == "Jita").Constellation)
                 {
                     yield return new SellOrder(new SerializableAPIOrder 
                     { 

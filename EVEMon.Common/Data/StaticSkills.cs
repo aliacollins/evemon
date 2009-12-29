@@ -170,7 +170,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>("eve-skills.xml.gz");
+            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile);
 
             // Fetch deserialized data
             m_arrayIndicesCount = 0;
