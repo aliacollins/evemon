@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using System.Reflection;
-using System.Diagnostics;
-using System.Globalization;
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.SkillPlanner;
-
 
 namespace EVEMon
 {
@@ -42,11 +34,11 @@ namespace EVEMon
         private Character m_character;
         private QueuedSkill item;
         private Skill m_skill;
+        private QueuedSkill[] m_skillQueue;
 
         private bool m_requireRefresh;
         private int count = 0;
-
-
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -105,8 +97,7 @@ namespace EVEMon
                 return Math.Max((m_skillsQueueFont.Height * 2) + PadTop + LineVPad + PadTop + LowerBoxHeight, MinimumHeight);
             }
         }
-
-
+        
         #region Inherited events
         /// <summary>
         /// On load, we update the content
@@ -152,24 +143,31 @@ namespace EVEMon
                 lbSkillsQueue.Items.Clear();
                 return;
             }
+            
+            ccpCharacter = m_character as CCPCharacter;
+            
+            // When the skill queue hasn't changed don't do anything
+            if (!QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+            {
+                return;
+            }
+
+            m_skillQueue = ccpCharacter.SkillQueue.ToArray();
 
             // Update the skills queue list
             lbSkillsQueue.BeginUpdate();
             try
             {
-                ccpCharacter = m_character as CCPCharacter;
-                IEnumerable<QueuedSkill> qskills = ccpCharacter.SkillQueue;
-                
                 // Add items in the list
                 lbSkillsQueue.Items.Clear();
-                foreach (var skill in qskills)
+                foreach (var skill in ccpCharacter.SkillQueue)
                 {
                     lbSkillsQueue.Items.Add(skill);
                 }
 
                 // Display or hide the "no queue skills" label.
-                noSkillsQueueLabel.Visible = qskills.IsEmpty();
-                lbSkillsQueue.Visible = !qskills.IsEmpty();
+                noSkillsQueueLabel.Visible = ccpCharacter.SkillQueue.IsEmpty();
+                lbSkillsQueue.Visible = !ccpCharacter.SkillQueue.IsEmpty();
 
                 // Invalidate display
                 lbSkillsQueue.Invalidate();
@@ -179,6 +177,23 @@ namespace EVEMon
                 lbSkillsQueue.EndUpdate();
                 m_requireRefresh = false;
             }
+        }
+
+        private bool QueueHasChanged(QueuedSkill[] queue)
+        {
+            if (m_skillQueue == null)
+                return true;
+            
+            if (queue.Length != m_skillQueue.Length)
+                return true;
+
+            for (var i = 0; i < queue.Length; i++)
+            {
+                if (queue[i] != m_skillQueue[i])
+                    return true;
+            }
+
+            return false;
         }
         #endregion
 
