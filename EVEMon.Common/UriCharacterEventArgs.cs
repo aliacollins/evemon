@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -11,17 +13,46 @@ namespace EVEMon.Common
     public sealed class UriCharacterEventArgs : EventArgs
     {
         private Uri m_uri;
-        private APIResult<SerializableAPICharacter> m_result;
+        private APIResult<SerializableAPICharacter> m_apiResult;
+        private SerializableCharacterBase m_result;
 
         /// <summary>
-        /// Constructor
+        /// Constructor for API Characters
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="error"></param>
+        /// <param name="uri">URI of the character</param>
+        /// <param name="result">API Result</param>
         public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacter> result)
         {
             m_uri = uri;
+            m_apiResult = result;
+            m_result = m_apiResult.Result;
+            HasError = m_apiResult.HasError;
+            Error = m_apiResult.ErrorMessage;
+        }
+
+        /// <summary>
+        /// Constructor for CCP Characters
+        /// </summary>
+        /// <param name="uri">URI of the character</param>
+        /// <param name="result">Serialized Result</param>
+        public UriCharacterEventArgs(Uri uri, SerializableCCPCharacter result)
+        {
+            m_uri = uri;
             m_result = result;
+            HasError = false;
+            Error = String.Empty;
+        }
+
+        /// <summary>
+        /// Constructor for characters that throw errors
+        /// </summary>
+        /// <param name="uri">URI of the chracter</param>
+        /// <param name="error"></param>
+        public UriCharacterEventArgs(Uri uri, string error)
+        {
+            m_uri = uri;
+            HasError = true;
+            Error = error;
         }
 
         /// <summary>
@@ -37,7 +68,8 @@ namespace EVEMon.Common
         /// </summary>
         public bool HasError
         {
-            get { return m_result.HasError; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -45,7 +77,8 @@ namespace EVEMon.Common
         /// </summary>
         public string Error
         {
-            get { return m_result.ErrorMessage; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -53,7 +86,7 @@ namespace EVEMon.Common
         /// </summary>
         public string CharacterName
         {
-            get { return m_result.Result.Name; }
+            get { return m_result.Name; }
         }
 
         /// <summary>
@@ -61,15 +94,20 @@ namespace EVEMon.Common
         /// </summary>
         public UriCharacter CreateCharacter()
         {
-            // Retrieve the identity and create one if needed
-            var identity = EveClient.CharacterIdentities[m_result.Result.ID];
-            if (identity == null)
-            {
-                identity = EveClient.CharacterIdentities.Add(m_result.Result.ID, m_result.Result.Name);
-            }
+            var identity = GetIdentity(m_result);
 
             // Instantiates characters, adds, notify
-            var uriCharacter = new UriCharacter(identity, m_uri, m_result);
+            UriCharacter uriCharacter;
+            if (m_apiResult != null)
+            {
+                uriCharacter = new UriCharacter(identity, m_uri, m_apiResult);
+            }
+            else
+            {
+                var ccpCharacter = m_result as SerializableCCPCharacter;
+                uriCharacter = new UriCharacter(identity, m_uri, ccpCharacter);
+            }
+
             EveClient.Characters.Add(uriCharacter, true);
             return uriCharacter;
         }
@@ -80,15 +118,29 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public void UpdateCharacter(UriCharacter character)
         {
-            // Retrieve the identity and create one if needed
-            var identity = EveClient.CharacterIdentities[m_result.Result.ID];
-            if (identity == null)
-            {
-                identity = EveClient.CharacterIdentities.Add(m_result.Result.ID, m_result.Result.Name);
-            }
+            var identity = GetIdentity(m_result);
 
             // Updates
-            character.Update(identity, m_uri, m_result);
+            if (m_apiResult != null)
+            {
+                character.Update(identity, m_uri, m_apiResult);
+            }
+            else
+            {
+                var ccpCharacter = m_result as SerializableCCPCharacter;
+                character.Update(identity, m_uri, ccpCharacter);
+            }
+        }
+
+        private CharacterIdentity GetIdentity(SerializableCharacterBase character)
+        {
+            // Retrieve the identity and create one if needed
+            var identity = EveClient.CharacterIdentities[character.ID];
+            if (identity == null)
+            {
+                identity = EveClient.CharacterIdentities.Add(character.ID, character.Name);
+            }
+            return identity;
         }
     }
 }

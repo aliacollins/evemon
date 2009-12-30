@@ -89,8 +89,24 @@ namespace EVEMon.Common
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {
-                var result = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);
-                callback(null, new UriCharacterEventArgs(uri, result));
+                var apiResult = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);
+
+                if (!apiResult.HasError)
+                {
+                    callback(null, new UriCharacterEventArgs(uri, apiResult));
+                    return;
+                }
+
+                try
+                {
+                    var ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
+                    callback(null, new UriCharacterEventArgs(uri, ccpResult));
+                }
+                catch (NullReferenceException ex)
+                {
+                    callback(null, new UriCharacterEventArgs(uri, String.Format("Format not recognized ({0})", ex.Message)));
+                }
+
             }
             // So, it's a web address, let's do it in an async way.
             else
