@@ -521,5 +521,34 @@ namespace EVEMon.Common
             }
             return tempFile;
         }
+
+        /// <summary>
+        /// Gets the XML Root Element for the specified XML File
+        /// </summary>
+        /// <remarks>
+        /// After doing some testing, this is the fastest robust
+        /// mechanism for getting the root node. This takes 480 ticks
+        /// as opposed to > 900 for XmlDocument methods.
+        /// </remarks>
+        /// <param name="filename">Filename of an XmlDocument</param>
+        /// <returns>Text representation of the root node</returns>
+        static string GetXmlRootElement(string filename)
+        {
+            if (!File.Exists(filename))
+                throw new FileNotFoundException("Document not found", filename);
+
+            XmlTextReader reader = new XmlTextReader(filename);
+            reader.XmlResolver = null;
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    return reader.Name;
+                }
+            }
+
+            return null;
+        }
     }
 }
