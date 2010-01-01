@@ -98,6 +98,7 @@
     <None Include="Resources\testimage.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CCPAPIDom103.xml" />
     <Content Include="EVEMon128.xml" />
     <Content Include="EVEMon130.xml" />
     <Content Include="TestResult.xml" />
