@@ -532,7 +532,7 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="filename">Filename of an XmlDocument</param>
         /// <returns>Text representation of the root node</returns>
-        static string GetXmlRootElement(string filename)
+        public static string GetXmlRootElement(string filename)
         {
             if (!File.Exists(filename))
                 throw new FileNotFoundException("Document not found", filename);

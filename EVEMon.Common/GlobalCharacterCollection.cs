@@ -89,24 +89,32 @@ namespace EVEMon.Common
             // We have a file, let's just deserialize it synchronously
             if (uri.IsFile)
             {
-                var apiResult = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);
+                string format = Util.GetXmlRootElement(uri.LocalPath);
 
-                if (!apiResult.HasError)
+                switch (format.ToLower())
                 {
-                    callback(null, new UriCharacterEventArgs(uri, apiResult));
-                    return;
+                    case "eveapi":
+                        var apiResult = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);
+                        callback(null, new UriCharacterEventArgs(uri, apiResult));
+                        break;
+                    case "serializableccpcharacter":
+                        try
+                        {
+                            var ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
+                            callback(null, new UriCharacterEventArgs(uri, ccpResult));
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            callback(null, new UriCharacterEventArgs(uri, String.Format("Format not recognized ({0})", ex.Message)));
+                        }
+                        break;
+                    case "character":
+                        callback(null, new UriCharacterEventArgs(uri, "1.2.8 Format Not Supported (Yet™)"));
+                        break;
+                    default:
+                        callback(null, new UriCharacterEventArgs(uri, "Format Not Recognized"));
+                        break;
                 }
-
-                try
-                {
-                    var ccpResult = Util.DeserializeXML<SerializableCCPCharacter>(uri.ToString());
-                    callback(null, new UriCharacterEventArgs(uri, ccpResult));
-                }
-                catch (NullReferenceException ex)
-                {
-                    callback(null, new UriCharacterEventArgs(uri, String.Format("Format not recognized ({0})", ex.Message)));
-                }
-
             }
             // So, it's a web address, let's do it in an async way.
             else
