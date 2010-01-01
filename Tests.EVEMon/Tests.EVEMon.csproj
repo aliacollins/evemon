@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -96,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\testimage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EVEMon128.xml" />
+    <Content Include="EVEMon130.xml" />
+    <Content Include="TestResult.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
