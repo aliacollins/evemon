@@ -39,7 +39,7 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.pbProgress.Location = new System.Drawing.Point(12, 12);
             this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(307, 18);
+            this.pbProgress.Size = new System.Drawing.Size(388, 18);
             this.pbProgress.TabIndex = 0;
             // 
             // label1
@@ -54,7 +54,7 @@ namespace EVEMon
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(244, 52);
+            this.button1.Location = new System.Drawing.Point(325, 52);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -65,7 +65,7 @@ namespace EVEMon
             // UpdateDownloadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(331, 87);
+            this.ClientSize = new System.Drawing.Size(412, 87);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pbProgress);

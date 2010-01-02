@@ -48,7 +48,7 @@ namespace EVEMon
         {
             if (e.TotalBytesToReceive > 0)
             {
-                label1.Text = String.Format("Downloading update ({0}%, {1} of {2} bytes received)...",
+                label1.Text = String.Format("Downloading update ({0}%, {1:n} of {2:n} bytes received)...",
                                             e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
