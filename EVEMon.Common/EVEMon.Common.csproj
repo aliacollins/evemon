@@ -330,7 +330,17 @@
     <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
     <Compile Include="Serialization\Exportation\OutputPlan.cs" />
     <Compile Include="Serialization\Exportation\OutputSkillGroup.cs" />
+    <Compile Include="Serialization\Importation\OldSettingsPlan.cs" />
+    <Compile Include="Serialization\Importation\OldSettingsCharacter.cs" />
+    <Compile Include="Serialization\Importation\OldExportedAttributeAdjustment.cs" />
+    <Compile Include="Serialization\Importation\OldExportedAttributeBonus.cs" />
+    <Compile Include="Serialization\Importation\OldExportedAttributeEnhancers.cs" />
+    <Compile Include="Serialization\Importation\OldExportedCertificate.cs" />
+    <Compile Include="Serialization\Importation\OldExportedCharacter.cs" />
+    <Compile Include="Serialization\Importation\OldExportedCharacterAttributes.cs" />
     <Compile Include="Serialization\Importation\OldSettings.cs" />
+    <Compile Include="Serialization\Importation\OldExportedSkill.cs" />
+    <Compile Include="Serialization\Importation\OldExportedSkillGroup.cs" />
     <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />

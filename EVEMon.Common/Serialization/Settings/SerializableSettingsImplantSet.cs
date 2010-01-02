@@ -16,7 +16,6 @@ namespace EVEMon.Common.Serialization.Settings
             API = new SerializableSettingsImplantSet();
             OldAPI = new SerializableSettingsImplantSet();
             CustomSets = new List<SerializableSettingsImplantSet>();
-
         }
 
         [XmlElement("api")]

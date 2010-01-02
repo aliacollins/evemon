@@ -12,35 +12,29 @@ namespace EVEMon.Common.Serialization.Importation
     /// These changes were released early 2010, it is safe to assume
     /// that they can be removed from the project early 2012.
     /// </remarks>
-    [XmlRoot("OldSettings")]
-    public sealed class OldSettings
+    public sealed class OldSettingsPlan
     {
-        public OldSettings()
+        public OldSettingsPlan()
         {
-            Accounts = new List<SerializableAccount>();
-            Characters = new List<OldSettingsCharacter>();
-            Plans = new List<OldSettingsPlan>();
+            Entries = new List<SerializablePlanEntry>();
         }
 
-        [XmlArray("accounts")]
-        [XmlArrayItem("account")]
-        public List<SerializableAccount> Accounts
+        [XmlAttribute("character")]
+        public string Owner
         {
             get;
             set;
         }
 
-        [XmlArray("characters")]
-        [XmlArrayItem("character")]
-        public List<OldSettingsCharacter> Characters
+        [XmlAttribute("name")]
+        public string Name
         {
             get;
             set;
         }
 
-        [XmlArray("plans")]
-        [XmlArrayItem("plan")]
-        public List<OldSettingsPlan> Plans
+        [XmlElement("entry")]
+        public List<SerializablePlanEntry> Entries
         {
             get;
             set;

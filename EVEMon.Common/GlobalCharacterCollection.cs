@@ -5,6 +5,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Threading;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Importation;
 
 namespace EVEMon.Common
 {
@@ -105,11 +106,20 @@ namespace EVEMon.Common
                         }
                         catch (NullReferenceException ex)
                         {
-                            callback(null, new UriCharacterEventArgs(uri, String.Format("Format not recognized ({0})", ex.Message)));
+                            callback(null, new UriCharacterEventArgs(uri, String.Format("Unable to load file (SerializableCCPCharacter). ({0})", ex.Message)));
                         }
                         break;
                     case "character":
-                        callback(null, new UriCharacterEventArgs(uri, "1.2.8 Format Not Supported (Yet™)"));
+                        try
+                        {
+                            var oldCharacterResult = Util.DeserializeXML<OldExportedCharacter>(uri.ToString());
+                            var ccpCharacterResult = oldCharacterResult.ToSerializableCCPCharacter();
+                            callback(null, new UriCharacterEventArgs(uri, ccpCharacterResult));
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            callback(null, new UriCharacterEventArgs(uri, String.Format("Unable to load file (Character). ({0})", ex.Message)));
+                        }
                         break;
                     default:
                         callback(null, new UriCharacterEventArgs(uri, "Format Not Recognized"));

@@ -8,7 +8,7 @@ namespace EVEMon.Common.Serialization.Exportation
     /// <summary>
     /// A serialization class designed for HTML exportation.
     /// </summary>
-    [XmlRoot("character")]
+    [XmlRoot("outputCharacter")]
     public sealed class OutputCharacter
     {
         public OutputCharacter()

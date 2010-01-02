@@ -166,7 +166,6 @@ namespace EVEMon.Common
 
             // Serializes to XML and apply a XSLT to generate the HTML doc.
             var doc = Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
-            //System.IO.File.WriteAllText("c:\\truc.xml", Util.GetXMLStringRepresentation(doc));
 
             var xslt = Util.LoadXSLT(Properties.Resources.XmlToHtmlXslt);
             var htmlDoc = Util.Transform(doc, xslt);

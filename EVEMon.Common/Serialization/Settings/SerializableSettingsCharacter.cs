@@ -108,5 +108,4 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
     }
-
 }
