@@ -537,6 +537,9 @@ namespace EVEMon.SkillPlanner
                         else labelsArray[i] = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
                     }
 
+                    skills = skillsArray;
+                    labels = labelsArray;
+
                     return "Time to V";
 
                 // Skill rank
