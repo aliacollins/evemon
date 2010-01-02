@@ -467,18 +467,28 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the user double-click an item, we open the items browser.
+        /// When the user double-click an item or uses the "Show
+        /// in item browser" context menu item, we open the items
+        /// browser.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tvLoadout_DoubleClick(object sender, EventArgs e)
         {
-            if (tvLoadout.SelectedNode != null)
-            {
-                Item item = tvLoadout.SelectedNode.Tag as Item;
-                PlanWindow w = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                w.ShowItemInBrowser(item);
-            }
+            // user double clicked an area that isn't a node
+            if (tvLoadout.SelectedNode == null)
+                return;
+
+            Item item = tvLoadout.SelectedNode.Tag as Item;
+
+            // if the loadout node isn't tagged or we couldn't cast it
+            // to an Item return
+            if (item == null)
+                return;
+
+            PlanWindow window = WindowsFactory<PlanWindow>.ShowByTag(m_plan);
+
+            window.ShowItemInBrowser(item);
         }
 
         /// <summary>
