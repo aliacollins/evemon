@@ -48,7 +48,7 @@ namespace EVEMon
         {
             if (e.TotalBytesToReceive > 0)
             {
-                label1.Text = String.Format("Downloading update ({0}%, {1:n} of {2:n} bytes received)...",
+                label1.Text = String.Format(CultureConstants.TidyInteger, "Downloading update ({0}%, {1:n} of {2:n} bytes received)...",
                                             e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
@@ -57,7 +57,7 @@ namespace EVEMon
             }
             else
             {
-                label1.Text = String.Format("Downloading update ({0} bytes received)...",
+                label1.Text = String.Format(CultureConstants.TidyInteger, "Downloading update ({0:n} bytes received)...",
                                             e.BytesReceived);
                 if (pbProgress.Style != ProgressBarStyle.Marquee)
                 {
