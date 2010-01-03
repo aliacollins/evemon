@@ -46,10 +46,10 @@ namespace EVEMon.Common.Data
 
             switch (m_id)
             {
-                case DBConstants.CPUOutputPropertyID:
+                case DBConstants.CPUNeedPropertyID:
                     s_cpuProperty = this;
                     break;
-                case DBConstants.PGOutputPropertyID:
+                case DBConstants.PGNeedPropertyID:
                     s_powergridProperty = this;
                     break;
             }

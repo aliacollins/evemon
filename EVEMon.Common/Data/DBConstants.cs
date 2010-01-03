@@ -47,6 +47,9 @@ namespace EVEMon.Common.Data
         public const int CPUOutputPropertyID = 48;
         public const int PGOutputPropertyID = 11;
 
+        public const int CPUNeedPropertyID = 50;
+        public const int PGNeedPropertyID = 30;
+
         public const int ReprocessingSkillPropertyID = 790;
         public const int ScrapMetalProcessingSkillID = 12196;
     }

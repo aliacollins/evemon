@@ -268,6 +268,7 @@ namespace EVEMon.SkillPlanner
         private void numCPU_ValueChanged(object sender, EventArgs e)
         {
             this.UpdateFittingPredicate();
+            this.UpdateContent();
         }
 
         /// <summary>
@@ -278,6 +279,7 @@ namespace EVEMon.SkillPlanner
         private void numPowergrid_ValueChanged(object sender, EventArgs e)
         {
             this.UpdateFittingPredicate();
+            this.UpdateContent();
         }
 
         /// <summary>
