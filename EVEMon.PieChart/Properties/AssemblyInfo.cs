@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon.PieChart")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1894 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.PieChart")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 1903 Local Changes: No Repository URL: svn://evemon.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.PieChart")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -28,4 +28,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.3.0.1894")]
+[assembly: AssemblyVersion("1.3.0.1903")]
