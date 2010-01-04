@@ -389,6 +389,9 @@ namespace EVEMon
         /// </summary>
         private void UpdateServerStatusLabel()
         {
+            if (m_serverStatusLabel == null)
+                return;
+            
             if (!Settings.UI.SystemTrayPopup.ShowTQStatus)
             {
                 m_serverStatusLabel.Text = "";
