@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.cbSkillFilter.Location = new System.Drawing.Point(45, 3);
             this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.cbSkillFilter.Size = new System.Drawing.Size(218, 21);
+            this.cbSkillFilter.Size = new System.Drawing.Size(179, 21);
             this.cbSkillFilter.TabIndex = 1;
             this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
@@ -60,7 +60,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tbSearchText.Location = new System.Drawing.Point(33, 138);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
-            this.tbSearchText.Size = new System.Drawing.Size(230, 20);
+            this.tbSearchText.Size = new System.Drawing.Size(191, 20);
             this.tbSearchText.TabIndex = 10;
             // 
             // tvItems
