@@ -138,10 +138,10 @@ namespace EVEMon.Common
                 if (!String.IsNullOrEmpty(s_settingsFile)) return;
 
 #if DEBUG
-                s_settingsFile = "settings-debug.bis.xml";
+                s_settingsFile = "settings-debug.xml";
                 s_traceFile = "trace-debug.txt";
 #else
-                s_settingsFile = "settings.bis.xml";
+                s_settingsFile = "settings.xml";
                 s_traceFile = "trace.txt";
 #endif
 
