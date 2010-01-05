@@ -93,11 +93,17 @@ namespace EVEMon
                 this.Visible = this.ShowInTaskbar;
             }
 
-            // Forces cleanup, we will jump from 50MB to less than 10MB.
-            AutoShrink.Dirty(TimeSpan.FromSeconds(5));
+            TriggerAutoShrink();
         }
 
-
+        /// <summary>
+        /// Forces cleanup, we will jump from 50MB to less than 10MB.
+        /// </summary>
+        private void TriggerAutoShrink()
+        {
+            AutoShrink.Dirty(TimeSpan.FromSeconds(5));
+        }
+        
         #region Loading, closing, resizing, etc
         /// <summary>
         /// Once the window is loaded, we complete initialization
@@ -258,7 +264,7 @@ namespace EVEMon
             // Only cleanup if we're deactivating to the minimized state (e.g. systray)
             if (this.WindowState == FormWindowState.Minimized)
             {
-                AutoShrink.Dirty(TimeSpan.FromSeconds(5)); // Clean up after 5s
+                TriggerAutoShrink();
             }
         }
 
@@ -1662,6 +1668,7 @@ namespace EVEMon
                 m_trayPopup.Close();
                 m_trayPopup = null;
             }
+            TriggerAutoShrink();
         }
 
         /// <summary>
