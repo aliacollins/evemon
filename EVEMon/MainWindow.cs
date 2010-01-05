@@ -1608,6 +1608,18 @@ namespace EVEMon
 
         #region Tray icon
         /// <summary>
+        /// Remove the popup if its showing
+        /// </summary>
+        private void HidePopup()
+        {
+            if (m_trayPopup != null)
+            {
+                m_trayPopup.Close();
+                m_trayPopup = null;
+            }
+        }
+
+        /// <summary>
         /// Occurs when the user click the tray icon.
         /// If it's not a right click button, we restore the window.
         /// </summary>
@@ -1626,11 +1638,7 @@ namespace EVEMon
 
             // Update the tray icon's visibility
             this.trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
-            if (m_trayPopup != null)
-            {
-                m_trayPopup.Close();
-                m_trayPopup = null;
-            }
+            HidePopup();
         }
 
         /// <summary>
@@ -1662,12 +1670,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIcon_MouseLeave(object sender, EventArgs e)
         {
-            // Remove the popup if its showing
-            if (m_trayPopup != null)
-            {
-                m_trayPopup.Close();
-                m_trayPopup = null;
-            }
+            HidePopup();
             TriggerAutoShrink();
         }
 
@@ -1679,12 +1682,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIconToolStrip_Opening(object sender, CancelEventArgs e)
         {
-            // Hide the tray popup if its showing
-            if (m_trayPopup != null)
-            {
-                m_trayPopup.Close();
-                m_trayPopup = null;
-            }
+            HidePopup();
 
             // Scroll through characters
             List<Character> characters = new List<Character>(EveClient.MonitoredCharacters);
