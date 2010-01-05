@@ -271,7 +271,9 @@ namespace EVEMon
             string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", Math.Floor(percentComplete * 100));
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, format);
+            Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsFont, Size.Empty, format);
             Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsFont, Size.Empty, format);
+            Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsFont, Size.Empty, format);
             Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsFont, Size.Empty, format);
 
 
@@ -283,10 +285,12 @@ namespace EVEMon
             if (Settings.UI.MainWindow.HighlightPartialSkills && skill.IsPartiallyTrained && !skill.IsTraining) highlightColor = Color.Green;
             if (Settings.UI.MainWindow.HighlightQueuedSkills && skill.IsQueued && !skill.IsTraining) highlightColor = Color.RoyalBlue;
 
-            TextRenderer.DrawText(g, skill.Name, m_boldSkillsFont, new Point(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop), highlightColor);
-            TextRenderer.DrawText(g, rankText, m_skillsFont, new Point(e.Bounds.Left + PadLeft + skillNameSize.Width, e.Bounds.Top + PadTop), highlightColor);
+            TextRenderer.DrawText(g, skill.Name, m_boldSkillsFont,
+                new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop, skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
+            TextRenderer.DrawText(g, rankText, m_skillsFont,
+                new Rectangle(e.Bounds.Left + PadLeft + skillNameSize.Width, e.Bounds.Top + PadTop, rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, spText, m_skillsFont,
-                new Point(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop + skillNameSize.Height + LineVPad), highlightColor);
+                new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop + skillNameSize.Height + LineVPad, spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
 
 
             // Boxes
@@ -349,13 +353,13 @@ namespace EVEMon
 
 
             // Draw level and percent texts
-            TextRenderer.DrawText(g, levelText, m_skillsFont, new Point(
+            TextRenderer.DrawText(g, levelText, m_skillsFont, new Rectangle(
                                       e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
-                                      e.Bounds.Top + PadTop), Color.Black);
+                                      e.Bounds.Top + PadTop, levelTextSize.Width + PadRight, levelTextSize.Height), Color.Black);
 
-            TextRenderer.DrawText(g, pctText, m_skillsFont,
-                                  new Point(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
-                                            e.Bounds.Top + PadTop + levelTextSize.Height + LineVPad), Color.Black);
+            TextRenderer.DrawText(g, pctText, m_skillsFont, new Rectangle(
+                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
+                                      e.Bounds.Top + PadTop + levelTextSize.Height + LineVPad, pctTextSize.Width + PadRight, pctTextSize.Height), Color.Black);
         }
 
         /// <summary>
@@ -379,8 +383,8 @@ namespace EVEMon
 
             // Draw the header
             Size titleSizeInt = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-            Point titleTopLeftInt = new Point(e.Bounds.Left + 3, e.Bounds.Top + ((e.Bounds.Height / 2) - (titleSizeInt.Height / 2)));
-            Point detailTopLeftInt = new Point(titleTopLeftInt.X + titleSizeInt.Width, titleTopLeftInt.Y);
+            Rectangle titleTopLeftInt = new Rectangle(
+                e.Bounds.Left + 3, e.Bounds.Top + ((e.Bounds.Height / 2) - (titleSizeInt.Height / 2)), titleSizeInt.Width + PadRight, titleSizeInt.Height);
 
             string skillInTrainingSuffix = "";
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
@@ -395,6 +399,9 @@ namespace EVEMon
                                               group.Count(x => x.IsPublic),
                                               group.TotalSP,
                                               skillInTrainingSuffix);
+
+            Size detailSizeInt = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+            Rectangle detailTopLeftInt = new Rectangle(titleTopLeftInt.X + titleSizeInt.Width + 4, titleTopLeftInt.Y, detailSizeInt.Width, detailSizeInt.Height);
 
             TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, titleTopLeftInt, Color.White);
             TextRenderer.DrawText(g, detailText, m_skillsFont, detailTopLeftInt, Color.White);
