@@ -281,7 +281,7 @@ namespace EVEMon.SkillPlanner
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 string searchText = tbSearchText.Text.ToLower().Trim();
-                skills = skills.Where(x => x.Name.ToLower().Contains(searchText));
+                skills = skills.Where(x => (x.Name.ToLower().Contains(searchText) || x.Description.ToLower().Contains(searchText)));
             }
             // When sorting by "time to...", remove lv5 skills
             if (cbSorting.SelectedIndex == (int)SkillSort.TimeToLevel5 || cbSorting.SelectedIndex == (int)SkillSort.TimeToNextLevel)
