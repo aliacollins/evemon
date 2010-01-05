@@ -566,6 +566,7 @@ namespace EVEMon
             lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
             lblCharName.Location = new Point(left, top);
             if (lblCharName.PreferredWidth + right > labelWidth) labelWidth = lblCharName.PreferredWidth + right;
+            labelHeight = Math.Max (labelHeight, lblCharName.Font.Height);
             lblCharName.Size = new Size(labelWidth, labelHeight);
             top += labelHeight;
 
@@ -574,6 +575,7 @@ namespace EVEMon
                 lblBalance.Font = FontFactory.GetFont(lblBalance.Font.FontFamily, mediumFontSize, lblBalance.Font.Style);
                 lblBalance.Location = new Point(left, top);
                 if (lblBalance.PreferredWidth + right > labelWidth) labelWidth = lblBalance.PreferredWidth + right;
+                labelHeight = Math.Max(labelHeight, lblBalance.Font.Height);
                 lblBalance.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
             }
@@ -588,6 +590,7 @@ namespace EVEMon
                 lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize, lblRemainingTime.Font.Style);
                 lblRemainingTime.Location = new Point(left, top);
                 if (lblRemainingTime.PreferredWidth + right > labelWidth) labelWidth = lblRemainingTime.PreferredWidth + right;
+                labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
                 lblRemainingTime.Size = new Size(labelWidth, labelHeight); ;
                 top += labelHeight;
             }
@@ -596,6 +599,7 @@ namespace EVEMon
             {
                 lblSkillInTraining.Location = new Point(left, top);
                 if (lblSkillInTraining.PreferredWidth + right > labelWidth) labelWidth = lblSkillInTraining.PreferredWidth + right;
+                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillInTraining.Font.Height);
                 lblSkillInTraining.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
@@ -604,6 +608,7 @@ namespace EVEMon
             {
                 lblCompletionTime.Location = new Point(left, top);
                 if (lblCompletionTime.PreferredWidth + right > labelWidth) labelWidth = lblCompletionTime.PreferredWidth + right;
+                smallLabelHeight = Math.Max(smallLabelHeight, lblCompletionTime.Font.Height);
                 lblCompletionTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
@@ -612,6 +617,7 @@ namespace EVEMon
             {
                 lblSkillQueueFreeRoom.Location = new Point(left, top);
                 if (lblSkillQueueFreeRoom.PreferredWidth + right > labelWidth) labelWidth = lblSkillQueueFreeRoom.PreferredWidth + right;
+                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueFreeRoom.Font.Height);
                 lblSkillQueueFreeRoom.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
