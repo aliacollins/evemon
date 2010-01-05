@@ -1679,9 +1679,6 @@ namespace EVEMon
                 m_trayPopup = null;
             }
 
-            // Clear the existing items
-            planToolStripMenuItem.DropDownItems.Clear();
-
             // Scroll through characters
             List<Character> characters = new List<Character>(EveClient.MonitoredCharacters);
             characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
@@ -1692,6 +1689,17 @@ namespace EVEMon
 
                 character.Plans.AddTo(characterItem.DropDownItems, InitializePlanItem);
             }
+        }
+
+        /// <summary>
+        /// Clear the menu items for characters plans. Rebuild on opening anyway.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trayIconToolStrip_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            // Clear the existing items
+            planToolStripMenuItem.DropDownItems.Clear();
         }
         #endregion
 
