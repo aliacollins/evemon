@@ -33,15 +33,6 @@ namespace EVEMon.SkillPlanner
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Equals("-"))
-            {
-                MessageBox.Show("You cannot choose \"-\" as your plan name!","Bad Plan Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // TODO : Add plan and open
-
-
             m_result = textBox1.Text;
             DialogResult = DialogResult.OK;
             this.Close();

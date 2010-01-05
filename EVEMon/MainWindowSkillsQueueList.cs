@@ -487,13 +487,11 @@ namespace EVEMon
                 {
                     ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureInfo.CurrentCulture, "Level {0} to", Skill.GetRomanForInt(level)));
                     tm.DropDownItems.Add(menuLevel);
-                    foreach (var plan in m_character.Plans)
-                    {
-                        ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan.Name);
-                        menuPlanItem.Click += new EventHandler(menuPlanItem_Click);
-                        menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan, new SkillLevel(m_skill, level));
-                        menuLevel.DropDownItems.Add(menuPlanItem);
-                    }
+
+                    m_character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) => {
+                            menuPlanItem.Click += new EventHandler(menuPlanItem_Click);
+                            menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan, new SkillLevel(m_skill, level));
+                        });
                 }
 
                 // Add to the context menu and display

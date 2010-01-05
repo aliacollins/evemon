@@ -1134,6 +1134,17 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Initializes tool strip menu item for the plan.
+        /// </summary>
+        /// <param name="planItem"></param>
+        /// <param name="plan"></param>
+        private void InitializePlanItem(ToolStripItem planItem, Plan plan)
+        {
+            planItem.Tag = plan;
+            planItem.Click += planItem_Click;
+        }
+
+        /// <summary>
         /// Plans > Name of the plan.
         /// Open the plan.
         /// </summary>
@@ -1284,14 +1295,7 @@ namespace EVEMon
 
             // Add new entries
             if (character == null) return;
-            foreach (var plan in character.Plans)
-            {
-                ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan.Name);
-                menuPlanItem.Click += planItem_Click;
-                menuPlanItem.Tag = plan;
-
-                plansToolStripMenuItem.DropDownItems.Add(menuPlanItem);
-            }
+            character.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
         }
         
         /// <summary>
@@ -1452,14 +1456,8 @@ namespace EVEMon
 
             // Clear the menu items and rebuild them
             plansTbMenu.DropDownItems.Clear();
-            foreach (var plan in character.Plans)
-            {
-                ToolStripMenuItem menuPlanItem = new ToolStripMenuItem(plan.Name);
-                menuPlanItem.Tag = plan;
-                menuPlanItem.Click += planItem_Click;
-
-                plansTbMenu.DropDownItems.Add(menuPlanItem);
-            }
+            
+            character.Plans.AddTo(plansTbMenu.DropDownItems, InitializePlanItem);
         }
 
         /// <summary>
@@ -1692,15 +1690,7 @@ namespace EVEMon
                 ToolStripMenuItem characterItem = new ToolStripMenuItem(character.Name);
                 planToolStripMenuItem.DropDownItems.Add(characterItem);
 
-                //Scroll through plans
-                foreach (var plan in character.Plans)
-                {
-                    ToolStripMenuItem planItem = new ToolStripMenuItem(plan.Name);
-                    planItem.Click += new EventHandler(planItem_Click);
-                    planItem.Tag = plan;
-
-                    characterItem.DropDownItems.Add(planItem);
-                }
+                character.Plans.AddTo(characterItem.DropDownItems, InitializePlanItem);
             }
         }
         #endregion

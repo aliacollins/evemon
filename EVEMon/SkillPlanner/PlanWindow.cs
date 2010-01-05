@@ -397,32 +397,20 @@ namespace EVEMon.SkillPlanner
             tsddbPlans.DropDownItems.Clear();
             tsddbPlans.DropDownItems.Add("<New Plan>");
 
-            // Add items for every plan
-            foreach (var plan in this.Character.Plans)
-            {
-                try
-                {
-                    ToolStripDropDownItem tsddiTemp = (ToolStripDropDownItem)tsddbPlans.DropDownItems.Add(plan.Name);
-                    tsddiTemp.Tag = plan;
+            Character.Plans.AddTo(tsddbPlans.DropDownItems, (menuPlanItem, plan) => {
+                    menuPlanItem.Tag = plan;
 
                     // Put current plan to bold
                     if (plan == m_plan)
                     {
-                        tsddiTemp.Enabled = false;
+                        menuPlanItem.Enabled = false;
                     }
                     // Is it already opened in another plan ?
                     else if (WindowsFactory<PlanWindow>.GetByTag(plan) != null)
                     {
-                        tsddiTemp.Font = FontFactory.GetFont(tsddiTemp.Font, FontStyle.Italic);
+                        menuPlanItem.Font = FontFactory.GetFont(menuPlanItem.Font, FontStyle.Italic);
                     }
-                }
-                catch (InvalidCastException)
-                {
-                    // Visual studio cannot set the text of a
-                    // TooStripDropDownItem to "-" because that is the
-                    // placeholder for a seperator.
-                }
-            }
+                });
         }
 
         /// <summary>

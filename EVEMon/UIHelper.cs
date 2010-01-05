@@ -195,5 +195,22 @@ namespace EVEMon
                 }
             }
         }
+
+        /// <summary>
+        /// Adds the plans as tool strip items to the list.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="list"></param>
+        /// <param name="initialize"></param>
+        public static void AddTo(this PlanCollection plans, ToolStripItemCollection list, Action<ToolStripMenuItem, Plan> initialize)
+        {
+            //Scroll through plans
+            foreach (var plan in plans)
+            {
+                ToolStripMenuItem planItem = new ToolStripMenuItem(plan.Name);
+                initialize(planItem, plan);
+                list.Add(planItem);
+            }
+        }
     }
 }
