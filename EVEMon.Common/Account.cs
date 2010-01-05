@@ -21,7 +21,7 @@ namespace EVEMon.Common
         private CredentialsLevel m_keyLevel;
 
         private readonly AccountIgnoreList m_ignoreList;
-        private readonly AccountQueryMonitor<SerializableCharacterList> m_chractersListMonitor;
+        private readonly AccountQueryMonitor<SerializableCharacterList> m_charactersListMonitor;
 
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
 
@@ -30,8 +30,8 @@ namespace EVEMon.Common
         /// </summary>
         private Account()
         {
-            m_chractersListMonitor = new AccountQueryMonitor<SerializableCharacterList>(this, APIMethods.CharacterList);
-            m_chractersListMonitor.Updated += new QueryCallback<SerializableCharacterList>(OnCharactersListUpdated);
+            m_charactersListMonitor = new AccountQueryMonitor<SerializableCharacterList>(this, APIMethods.CharacterList);
+            m_charactersListMonitor.Updated += new QueryCallback<SerializableCharacterList>(OnCharactersListUpdated);
 
             m_ignoreList = new AccountIgnoreList(this);
         }
@@ -47,8 +47,6 @@ namespace EVEMon.Common
             m_apiKey = serial.Key;
             m_keyLevel = serial.KeyLevel;
             m_ignoreList.Import(serial.IgnoreList);
-            m_chractersListMonitor.Reset(serial.LastCharacterListUpdate);
-            m_chractersListMonitor.ForceUpdate(true);
         }
 
         /// <summary>
@@ -154,7 +152,7 @@ namespace EVEMon.Common
         /// </summary>
         internal void UpdateOnOneSecondTick()
         {
-            m_chractersListMonitor.UpdateOnOneSecondTick();
+            m_charactersListMonitor.UpdateOnOneSecondTick();
 
             // While the key status is unknown, every ten minutes, we try to update it.
             if (m_keyLevel == CredentialsLevel.Unknown && DateTime.UtcNow >= m_lastKeyLevelUpdate.AddMinutes(5))
@@ -299,7 +297,7 @@ namespace EVEMon.Common
         {
             m_apiKey = apiKey;
             m_keyLevel = keyLevel;
-            m_chractersListMonitor.UpdateWith(queryResult);
+            m_charactersListMonitor.UpdateWith(queryResult);
 
             // Clear the account for the currently associated identities
             foreach (var id in EveClient.CharacterIdentities)
@@ -336,7 +334,7 @@ namespace EVEMon.Common
                 ID = m_userId, 
                 Key = m_apiKey, 
                 KeyLevel = m_keyLevel, 
-                LastCharacterListUpdate = m_chractersListMonitor.LastUpdate,
+                LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
                 IgnoreList = m_ignoreList.Export() 
             };
         }
