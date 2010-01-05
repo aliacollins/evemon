@@ -241,7 +241,7 @@
             this.groupBox1.Size = new System.Drawing.Size(479, 118);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Charcters found on this account";
+            this.groupBox1.Text = "Characters found on this account";
             // 
             // removalWarningLabel
             // 
