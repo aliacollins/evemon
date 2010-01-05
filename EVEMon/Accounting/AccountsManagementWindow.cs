@@ -144,6 +144,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         private void editAccountMenu_Click(object sender, EventArgs e)
         {
+            if (accountsListBox.SelectedIndex == -1)
+                return;
+
             var account = accountsListBox.Accounts.ElementAt(accountsListBox.SelectedIndex);
             using (var window = new AccountUpdateOrAdditionWindow(account))
             {
@@ -179,6 +182,8 @@ namespace EVEMon.Accounting
             {
                 window.ShowDialog(this);
             }
+            deleteAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
+            editAccountMenu.Enabled = (accountsListBox.SelectedIndex != -1);
         }
 
         /// <summary>
