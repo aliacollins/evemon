@@ -29,6 +29,7 @@ namespace EVEMon
     {
         private readonly Character m_character;
         private bool m_pendingUpdate;
+        private bool m_loaded;
 
         /// <summary>
         /// Design-time constructor
@@ -122,6 +123,7 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            m_loaded = false;
             base.OnLoad(e);
 
             // Picks the last selected page
@@ -133,6 +135,7 @@ namespace EVEMon
             // Updates the rest of the control
             EveClient_SettingsChanged(null, null);
             UpdateContent();
+            m_loaded = true;
         }
 
         /// <summary>
@@ -381,7 +384,7 @@ namespace EVEMon
         private void UpdateWarningLabel()
         {
             var account = m_character.Identity.Account;
-            if (account == null)
+            if (m_loaded && account == null)
             {
                 warningLabel.Text = "This character has no associated account, data won't be updated.";
                 warningLabel.Visible = true;
