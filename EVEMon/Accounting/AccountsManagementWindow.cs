@@ -256,8 +256,7 @@ namespace EVEMon.Accounting
                 List<Character> oldSelection = new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag as Character));
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();
-
-
+                
                 // Grouping (no account, account #1, account #2, character files, character urls)
                 bool isGrouping = groupingMenu.Checked;
                 ListViewGroup noAccountsGroup = new ListViewGroup("No account");
@@ -300,9 +299,7 @@ namespace EVEMon.Accounting
                     if (hasFileChars) charactersListView.Groups.Add(fileGroup);
                     if (hasUrlChars) charactersListView.Groups.Add(urlGroup);
                 }
-
-
-
+                
                 // Add items
                 foreach (var character in EveClient.Characters.OrderBy(x => x.Name))
                 {
@@ -372,7 +369,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         void charactersListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (m_refreshingCharactersCounter != 0) return;
+            if (m_refreshingCharactersCounter != 0)
+                return;
+
             var character = (Character)e.Item.Tag;
             character.Monitored = e.Item.Checked;
         }
@@ -486,7 +485,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         private void groupingMenu_Click(object sender, EventArgs e)
         {
+            m_refreshingCharactersCounter++;
             UpdateCharactersListContent();
+            m_refreshingCharactersCounter--;
         }
         #endregion
 
