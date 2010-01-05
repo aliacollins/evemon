@@ -148,7 +148,15 @@ namespace EVEMon.Common
             m_items.Clear();
             foreach (var serialAccount in serial)
             {
-                m_items.Add(serialAccount.ID, new Account(serialAccount));
+                try
+                {
+                    m_items.Add(serialAccount.ID, new Account(serialAccount));
+                }
+                catch (ArgumentException ex)
+                {
+                    EveClient.Trace("GlobalAccountCollection.Import - An account with id {0} already existed; additional instance ignored.", serialAccount.ID);
+                    ExceptionHandler.LogException(ex, true);
+                }
             }
 
             EveClient.OnAccountCollectionChanged();
