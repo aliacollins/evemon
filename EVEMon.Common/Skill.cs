@@ -94,6 +94,7 @@ namespace EVEMon.Common
         {
             var dest = new SerializableCharacterSkill();
             dest.ID = m_staticData.ID;
+            dest.Name = m_staticData.Name;
             dest.Level = m_level;
             dest.Skillpoints = m_currentSkillPoints;
             dest.OwnsBook = m_owned;

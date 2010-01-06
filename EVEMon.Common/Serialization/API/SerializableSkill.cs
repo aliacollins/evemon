@@ -18,6 +18,13 @@ namespace EVEMon.Common.Serialization.API
             set;
         }
 
+        [XmlAttribute("name")]
+        public string Name
+        {
+            get;
+            set;
+        }
+
         [XmlAttribute("level")]
         public int Level
         {
