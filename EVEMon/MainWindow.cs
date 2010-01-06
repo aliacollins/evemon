@@ -337,41 +337,29 @@ namespace EVEMon
                     Object currentTag = (currentPage != null ? currentPage.Tag : null);
 
                     // Does the page match with the character ?
-                    if (currentTag == character)
+                    if (currentTag != character)
                     {
-                        pages.Remove(character);
-                        index++;
-                        continue;
-                    }
-
-                    // Retrieve the page when it was previously created
-                    TabPage page = null;
-                    pages.TryGetValue(character, out page);
-
-                    // Is the character later in the collection ?
-                    if (pages != null && tcCharacterTabs.Contains(page))
-                    {
-                        // Remove all the pages before the one we want
-                        while (index < tcCharacterTabs.TabCount && tcCharacterTabs.TabPages[index] != page)
+                        // Retrieve the page when it was previously created
+                        TabPage page = null;
+                        // Is the character later in the collection ?
+                        if (pages.TryGetValue(character, out page))
                         {
-                            tcCharacterTabs.TabPages.RemoveAt(index);
+                            // Remove the page from old location
+                            tcCharacterTabs.TabPages.Remove(page);
                         }
-
-                        // Remove it from the dictionary and move forward.
-                        pages.Remove(character);
-                        index++;
-                    }
-                    // So we need to inserts it now
-                    else
-                    {
-                        // Creates a new page or remove the page from the dictionary before we inserts it
-                        if (page != null) pages.Remove(character);
-                        else page = CreateTab(character);
-
+                        // So we need to inserts it now
+                        else
+                        {
+                            // Creates a new page
+                            page = CreateTab(character);
+                        }
                         // Inserts the page
                         tcCharacterTabs.TabPages.Insert(index, page);
-                        index++;
                     }
+
+                    // Remove processed character from the dictionary and move forward.
+                    pages.Remove(character);
+                    index++;
                 }
 
                 // Ensures the overview has been added when necessary
