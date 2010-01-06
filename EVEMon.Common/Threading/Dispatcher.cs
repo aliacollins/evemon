@@ -68,8 +68,14 @@ namespace EVEMon.Common.Threading
         public static void Invoke(Action action)
         {
             var actor = m_actor;
-            if (actor == null) action();
-            else actor.Invoke(action);
+            if (HasAccess || (actor == null))
+            {
+                action();
+            }
+            else
+            {
+                actor.Invoke(action);
+            }
         }
 
         /// <summary>
@@ -80,8 +86,14 @@ namespace EVEMon.Common.Threading
         public static void BeginInvoke(Action action)
         {
             var actor = m_actor;
-            if (actor == null) action();
-            else actor.BeginInvoke(action);
+            if (HasAccess || (actor == null))
+            {
+                action();
+            }
+            else
+            {
+                actor.BeginInvoke(action);
+            }
         }
 
         /// <summary>
