@@ -25,6 +25,7 @@ namespace EVEMon
         private bool m_hovered;
         private bool m_pressed = false;
         private bool m_pendingUpdate;
+        private bool m_loading;
         private int m_preferredWidth = 1;
         private int m_preferredHeight = 1;
 
@@ -153,6 +154,7 @@ namespace EVEMon
             // Character Name
             PerformCustomLayout(m_tooltip);
             UpdateContent();
+            m_loading = true;
 
             base.OnLoad(e);
         }
@@ -280,6 +282,8 @@ namespace EVEMon
             {
                 var remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
                 lblRemainingTime.Text = Skill.TimeSpanToDescriptiveText(remainingTime, DescriptiveTextOptions.IncludeCommas);
+                if (m_loading) UpdateContent();
+                m_loading = false;
             }
         }
 
