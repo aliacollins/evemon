@@ -191,10 +191,12 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         public static string ExportAsBBCode(Character character)
         {
+            // TODO : Switch formatting to Localizable String.Format style formatting.
+
             StringBuilder result = new StringBuilder();
 
-            result.AppendLine("[b]" + character.Name + "[/b]");
-            result.AppendLine("");
+            result.AppendLine(String.Format("[b]{0}[/b]", character.Name));
+            result.AppendLine();
             result.AppendLine("[b]Attributes[/b]");
             result.AppendLine("Intelligence: " + character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5));
             result.AppendLine("Perception: " + character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5));
@@ -204,22 +206,33 @@ namespace EVEMon.Common
 
             foreach (var skillGroup in character.SkillGroups)
             {
-                result.AppendLine("");
-                result.AppendLine("[b]" + skillGroup.Name + "[/b]");
-
+                var skillGroupAppended = false;
                 foreach (var skill in skillGroup)
                 {
-                    string url = String.Format("[img]{0}{1}.gif[/img]", NetworkConstants.MyEVELevelImage, skill.Level);
-                    result.AppendLine(String.Format("{0} {1}", url, skill.Name));
+                    if (skill.Level > 0)
+                    {
+                        if (!skillGroupAppended)
+                        {
+                            result.AppendLine();
+                            result.AppendLine(String.Format("[b]{0}[/b]", skillGroup.Name));
+
+                            skillGroupAppended = true;
+                        }
+
+                        result.AppendLine(String.Format("[img]{0}{1}.gif[/img] {2}", NetworkConstants.MyEVELevelImage, skill.Level, skill.Name));
+                    }
                 }
 
-                result.AppendLine("Total Skillpoints in Group: " + skillGroup.TotalSP.ToString("#,##0"));
+                if (skillGroupAppended)
+                {
+                    result.AppendLine("Total Skillpoints in Group: " + skillGroup.TotalSP.ToString("#,##0"));
+                }
             }
 
-            result.AppendLine("");
+            result.AppendLine();
             result.AppendLine("Total Skillpoints: " + character.SkillPoints.ToString("#,##0"));
             result.AppendLine("Total Number of Skills: " + character.KnownSkillCount.ToString());
-            result.AppendLine("");
+            result.AppendLine();
             result.AppendLine("Skills at Level 1: " + character.GetSkillCountAtLevel(1).ToString());
             result.AppendLine("Skills at Level 2: " + character.GetSkillCountAtLevel(2).ToString());
             result.AppendLine("Skills at Level 3: " + character.GetSkillCountAtLevel(3).ToString());
