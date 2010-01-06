@@ -45,7 +45,6 @@ namespace EVEMon
         private bool m_requireRefresh;
         private int count = 0;
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -64,20 +63,7 @@ namespace EVEMon
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             this.Disposed += new EventHandler(OnDisposed);
         }
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            this.Disposed -= new EventHandler(OnDisposed);
-        }
-
+        
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
@@ -85,38 +71,21 @@ namespace EVEMon
         {
             get { return m_character; }
             set 
-            { 
+            {
                 m_character = value;
                 UpdateContent();
             }
         }
 
-        /// <summary>
-        /// On load, we update the content
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            UpdateContent();
-        }
 
-        /// <summary>
-        /// When the control becomes visible again, checks whether a refresh is required.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (this.Visible && m_requireRefresh) UpdateContent();
-            base.OnVisibleChanged(e);
-        }
+        #region Content Management
 
         /// <summary>
         /// Updates all the content
         /// </summary>
-        /// <remarks>Another high-complexity method for us to look at.</remarks>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.SkillChangedEventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// Another high-complexity method for us to look at.
+        /// </remarks>
         private void UpdateContent()
         {
             // Returns if not visible
@@ -140,14 +109,7 @@ namespace EVEMon
             lbSkills.BeginUpdate();
             try
             {
-                IEnumerable<Skill> skills = m_character.Skills;
-                if (Settings.UI.MainWindow.ShowPrereqMetSkills) skills = skills.Where(x => (x.ArePrerequisitesMet && x.IsPublic) || x.IsKnown);
-                else
-                {
-                    if (Settings.UI.MainWindow.ShowNonPublicSkills) skills = m_character.Skills;
-                    else if (Settings.UI.MainWindow.ShowAllPublicSkills) skills = skills.Where(x => x.IsPublic || x.IsKnown);
-                    else skills = skills.Where(x => x.IsKnown);
-                }
+                IEnumerable<Skill> skills = GetCharacterSkills();
                 var groups = skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name);
 
                 // Scroll through groups
@@ -180,6 +142,26 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Gets a characters skills, filtered by MainWindow settings
+        /// </summary>
+        /// <returns>IEnumerable of <see cref="Skill"/>Skill</see></returns>
+        private IEnumerable<Skill> GetCharacterSkills()
+        {
+            IEnumerable<Skill> skills = m_character.Skills;
+            if (Settings.UI.MainWindow.ShowPrereqMetSkills) skills = skills.Where(x => (x.ArePrerequisitesMet && x.IsPublic) || x.IsKnown);
+            else
+            {
+                if (Settings.UI.MainWindow.ShowNonPublicSkills) skills = m_character.Skills;
+                else if (Settings.UI.MainWindow.ShowAllPublicSkills) skills = skills.Where(x => x.IsPublic || x.IsKnown);
+                else skills = skills.Where(x => x.IsKnown);
+            }
+            return skills;
+        }
+
+        #endregion
+
+
         #region Drawing
         /// <summary>
         /// Handles the DrawItem event of the lbSkills control.
@@ -188,7 +170,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lbSkills_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0) return;
+            if (e.Index < 0)
+                return;
 
             object item = lbSkills.Items[e.Index];
             if (item is SkillGroup) DrawItem(item as SkillGroup, e);
@@ -246,28 +229,20 @@ namespace EVEMon
                 // Not in training - even
                 g.FillRectangle(Brushes.LightGray, e.Bounds);
             }
-
-
+            
             // Measure texts
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            int skillLevel = skill.Level;
             int skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
-            for (int i = 0; skill.SkillPoints >= skillPointsToNextLevel && skillLevel < 5; i++ )
-            {
-                skillLevel++;
-                skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skillLevel + 1, 5));
-            }
-
-            float percentComplete = skill.FractionCompleted;
-            for (int i = 0; percentComplete >= 1; i++)
-            {
-                percentComplete--;
-            }
-
+            
+            // in the event that the fraction completed is more than
+            // 1.0 (how?) drop it down below 1 maintaining the
+            // fractional part.
+            float percentComplete = skill.FractionCompleted - (float)(Math.Ceiling(skill.FractionCompleted) - 1);
+            
             string rankText = String.Format(CultureInfo.CurrentCulture, " (Rank {0})", skill.Rank);
             string spText = String.Format(CultureInfo.CurrentCulture, "SP: {0:#,##0}/{1:#,##0}", skill.SkillPoints, skillPointsToNextLevel);
-            string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skillLevel);
+            string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", Math.Floor(percentComplete * 100));
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Name, m_boldSkillsFont, Size.Empty, format);
@@ -302,7 +277,7 @@ namespace EVEMon
                 Rectangle brect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (levelBoxWidth * (level - 1)) + (level - 1),
                                   e.Bounds.Top + PadTop + 2, levelBoxWidth, BoxHeight - 3);
 
-                if (level <= skillLevel)
+                if (level <= skill.Level)
                 {
                     g.FillRectangle(Brushes.Black, brect);
                 }
@@ -319,7 +294,7 @@ namespace EVEMon
                     foreach (var qskill in skillQueue)
                     {
                         if ((!skill.IsTraining && skill == qskill.Skill && level == qskill.Level)
-                           || (skill.IsTraining && skill == qskill.Skill && level == qskill.Level && level > skillLevel + 1))
+                           || (skill.IsTraining && skill == qskill.Skill && level == qskill.Level && level > skill.Level + 1))
                         {
                             g.FillRectangle(Brushes.RoyalBlue, brect);
                         }
@@ -327,7 +302,7 @@ namespace EVEMon
                 }
                 
                 // Blinking indicator of skill in training level
-                if (skill.IsTraining && level == skillLevel + 1)
+                if (skill.IsTraining && level == skill.Level + 1)
                 {
                     if (count == 0) g.FillRectangle(Brushes.White, brect);
                     if (count == 1) count = -1;
@@ -489,6 +464,40 @@ namespace EVEMon
 
 
         #region Local events
+
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
+            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
+            this.Disposed -= new EventHandler(OnDisposed);
+        }
+
+        /// <summary>
+        /// On load, we update the content
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// When the control becomes visible again, checks whether a refresh is required.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (this.Visible && m_requireRefresh) UpdateContent();
+            base.OnVisibleChanged(e);
+        }
+
         /// <summary>
         /// Handles the MouseWheel event of the lbSkills control.
         /// </summary>
