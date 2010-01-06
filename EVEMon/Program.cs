@@ -214,23 +214,6 @@ namespace EVEMon
                 }
             }
         }
-
-        /// <summary>
-        /// At the beginning of the program, we may check (according to the options) the local clock against Battleclinic's clock.
-        /// </summary>
-        /// <param name="isSynchronised"></param>
-        /// <param name="serverTime"></param>
-        /// <param name="localTime"></param>
-        private static void TimeCheckCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime)
-        {
-            if (isSynchronised == false)
-            {
-                using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
-                {
-                    timeDialog.ShowDialog();
-                }
-            }
-        }
         #endregion
     }
 }
