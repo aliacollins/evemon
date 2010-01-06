@@ -458,7 +458,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return Math.Floor(FractionCompleted * 100);
+                return Math.Round(FractionCompleted * 100);
             }
         }
 
