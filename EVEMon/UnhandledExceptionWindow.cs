@@ -129,12 +129,15 @@ namespace EVEMon
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
+                string exceptionString = m_exception.ToString();
+                exceptionString = exceptionString.Replace("D:\\EVEMon\\", "");
+
                 exceptionReport.AppendLine(String.Format("EVEMon Version: {0}", Application.ProductVersion));
                 exceptionReport.AppendLine(String.Format(".NET Runtime Version: {0}", System.Environment.Version));
                 exceptionReport.AppendLine(String.Format("Operating System: {0}", os.VersionString));
                 exceptionReport.AppendLine(String.Format("Executable Path: {0}", System.Environment.CommandLine));
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine(m_exception.ToString());
+                exceptionReport.AppendLine(exceptionString);
                 exceptionReport.AppendLine();
                 exceptionReport.AppendLine(datafileReport.ToString());
                 exceptionReport.AppendLine();
