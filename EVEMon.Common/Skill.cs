@@ -436,13 +436,29 @@ namespace EVEMon.Common
                 if (m_level == 5) return 1.0f;
 
                 // Not partially trained ? Then it's 1.0
-                var sp = this.SkillPoints;
                 var levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
-                if (sp <= levelSp) return 0.0f;
+                if (this.SkillPoints <= levelSp) return 0.0f;
 
                 // Partially trained, let's compute the difference with the previous level
                 float nextLevelSp = (float)m_staticData.GetPointsRequiredForLevel(m_level + 1);
-                return (sp - levelSp) / (nextLevelSp - levelSp);
+                float fraction = (this.SkillPoints - levelSp) / (nextLevelSp - levelSp);
+
+                if (fraction <= 1)
+                {
+                    return fraction;
+                }
+                else
+                {
+                    return fraction % 1;
+                }
+            }
+        }
+
+        public double PercentCompleted
+        {
+            get
+            {
+                return Math.Floor(FractionCompleted * 100);
             }
         }
 

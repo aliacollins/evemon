@@ -630,7 +630,7 @@ namespace EVEMon.SkillPlanner
                     return entry.EndTime.ToString("ddd ") + entry.EndTime.ToString();
 
                 case PlanColumn.PercentComplete:
-                    return entry.PercentageDone.ToString("0%");
+                    return entry.FractionCompleted.ToString("0%");
 
                 case PlanColumn.SkillRank:
                     return entry.Skill.Rank.ToString();

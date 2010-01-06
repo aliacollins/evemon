@@ -292,16 +292,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Represents the progress towards completion
         /// </summary>
-        public float PercentageDone
+        public float FractionCompleted
         {
             get
             {
-                //If skill partially trained compute percentage done
-                float fractionDone = CharacterSkill.FractionCompleted;
-                double percent = Math.Floor(fractionDone * 100);
-                
                 if (m_level == (CharacterSkill.Level + 1))
-                    return (float) percent / 100;
+                    return (float) CharacterSkill.FractionCompleted;
 
                 //Not partially trained? Then it's 0.0
                 return 0.0f;
