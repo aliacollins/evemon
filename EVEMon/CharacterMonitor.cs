@@ -393,6 +393,9 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == ordersPage)
             {
+                if (account == null)
+                    return;
+
                 switch(account.KeyLevel)
                 {
                     case CredentialsLevel.Limited:
