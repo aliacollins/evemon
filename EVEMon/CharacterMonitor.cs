@@ -134,6 +134,7 @@ namespace EVEMon
 
             // Updates the rest of the control
             EveClient_SettingsChanged(null, null);
+            warningLabel.Visible = false;
             UpdateContent();
             m_loaded = true;
         }
@@ -553,7 +554,10 @@ namespace EVEMon
 
             // Update the throbber
             UpdateThrobberState();
-            
+
+            // Update the warning label
+            UpdateWarningLabel();
+
             // Update the page controls
             UpdatePageControls();
 
