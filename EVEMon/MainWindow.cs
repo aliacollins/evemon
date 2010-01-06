@@ -196,6 +196,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void MainWindow_Resize(object sender, EventArgs e)
         {
+            UpdateStatusLabel();
+            UpdateWindowTitle();
+            
             // Updates tray icon visibility
             if (this.WindowState == FormWindowState.Minimized && Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
             {
@@ -781,6 +784,9 @@ namespace EVEMon
         /// </summary>
         private void UpdateStatusLabel()
         {
+            if (this.WindowState == FormWindowState.Minimized)
+                return;
+
             DateTime now = DateTime.Now.ToUniversalTime();
             lblStatus.Text = String.Format(CultureInfo.CurrentCulture, "EVE Time: {0:HH:mm}", now);
         }
@@ -792,6 +798,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void UpdateWindowTitle()
         {
+            if (!this.Visible)
+                return;
+
             StringBuilder builder = new StringBuilder();
 
             // If character's trainings must be displayed in title
