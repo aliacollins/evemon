@@ -31,17 +31,10 @@ namespace EVEMon
 {
     public partial class MainWindow : EVEMonForm
     {
-        /// <summary>
-        /// A special tag we set on the "Overview" tab
-        /// </summary>
-        private const string OverviewTabTag = "Overview Tab";
-
         private Form m_trayPopup;
         private IgbServer m_igbServer;
-        private List<PlanWindow> m_planWindows = new List<PlanWindow>();
 
         private bool m_startMinimized;
-        private string m_currentDirectory = "";
 
         private bool m_isUpdating;
         private bool m_isUpdatingData;
@@ -1210,14 +1203,14 @@ namespace EVEMon
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save current directory
-            m_currentDirectory = Directory.GetCurrentDirectory();
+            var currentDirectory = Directory.GetCurrentDirectory();
 
             // Prompts the user for a location
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
             var result = saveFileDialog.ShowDialog();
 
             // Restore current directory
-            Directory.SetCurrentDirectory(m_currentDirectory);
+            Directory.SetCurrentDirectory(currentDirectory);
 
             // Copy settings if OK
             if (result != DialogResult.OK) return;
@@ -1232,14 +1225,14 @@ namespace EVEMon
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save current directory
-            m_currentDirectory = Directory.GetCurrentDirectory();
+            var currentDirectory = Directory.GetCurrentDirectory();
 
             // Prompts the user for a location
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString();
             var result = openFileDialog.ShowDialog();
 
             // Restore current directory
-            Directory.SetCurrentDirectory(m_currentDirectory);
+            Directory.SetCurrentDirectory(currentDirectory);
 
             // Load settings if OK
             if (result != DialogResult.OK) return;
