@@ -163,6 +163,12 @@
     <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillCompletionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SkillCompletionWindow.Designer.cs">
+      <DependentUpon>SkillCompletionWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImplantControls\ImplantTooltip.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1001,6 +1007,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillCompletionWindow.resx">
+      <DependentUpon>SkillCompletionWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ExternalCalendar\ExternalCalendarWindow.resx">

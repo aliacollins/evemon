@@ -275,12 +275,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a character finished training a skill.
         /// </summary>
-        /// <param name="account"></param>
-        internal void NotifySkillCompletion(CCPCharacter character, QueuedSkill skill)
+        /// <param name="character"></param>
+        /// <param name="skillsCompleted"></param>
+        internal void NotifySkillCompletion(CCPCharacter character, List<QueuedSkill> skillsCompleted)
         {
-            var notification = new Notification(NotificationCategory.SkillCompletion, character);
-            notification.Description = String.Format("{0} {1} completed.", skill.Skill.Name, Skill.GetRomanForInt(skill.Level));
-            notification.Behaviour = NotificationBehaviour.Cohabitate;
+            var notification = new SkillCompletionNotification(character, skillsCompleted);
+            notification.Behaviour = NotificationBehaviour.Merge;
             notification.Priority = NotificationPriority.Information;
             Notify(notification);
         }

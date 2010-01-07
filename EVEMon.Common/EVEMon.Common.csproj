@@ -282,6 +282,7 @@
     <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
     <Compile Include="IPlanOperation.cs" />
     <Compile Include="Notifications\APIErrorNotification.cs" />
+    <Compile Include="Notifications\SkillCompletionNotification.cs" />
     <Compile Include="Notifications\MarketOrdersNotification.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationBehaviour.cs" />

@@ -289,6 +289,14 @@ namespace EVEMon
                 return;
             }
 
+            // Skills Completion ?
+            if (notification is SkillCompletionNotification)
+            {
+                var window = WindowsFactory<SkillCompletionWindow>.ShowUnique();
+                window.Notification = (SkillCompletionNotification)notification;
+                return;
+            }
+
             // Market orders ?
             if (notification is MarketOrdersNotification)
             {
@@ -318,6 +326,20 @@ namespace EVEMon
             {
                 var errorNotification = (APIErrorNotification)notification;
                 toolTip.SetToolTip(listBox, errorNotification.Result.ErrorMessage);
+                toolTip.Active = true;
+                return;
+            }
+
+            // Skills Completion ?
+            if (notification is SkillCompletionNotification)
+            {
+                var skillNotifications = (SkillCompletionNotification)notification;
+                StringBuilder builder = new StringBuilder();
+                foreach (var skill in skillNotifications.Skills.Reverse())
+                {
+                    builder.AppendLine(String.Format("{0} {1} completed.", skill.Skill.Name, Skill.GetRomanForInt(skill.Level)));
+                }
+                toolTip.SetToolTip(listBox, builder.ToString());    
                 toolTip.Active = true;
                 return;
             }

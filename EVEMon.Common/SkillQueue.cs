@@ -113,7 +113,7 @@ namespace EVEMon.Common
                 }
 
                 // Sends a notification
-                EveClient.Notifications.NotifySkillCompletion(m_character, skill);
+                EveClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
             }
 
             // At least one skill completed ?
