@@ -247,15 +247,15 @@ namespace EVEMon
             // Measure texts
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            double percentComplete = 0;
+            float percentComplete = 0;
             int skillPoints = skill.Skill.SkillPoints;
             int skillPointsToNextLevel = skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentComplete = skill.Skill.PercentCompleted;
+            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentComplete = skill.Skill.FractionCompleted;
             if (skill.Level > skill.Skill.LastConfirmedLvl + 1) skillPoints = skill.CurrentSP;
             string rankText = String.Format(CultureInfo.CurrentCulture, " (Rank {0})", skill.Skill.Rank);
             string spText = String.Format(CultureInfo.CurrentCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skill.Level);
-            string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", percentComplete);
+            string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", percentComplete * 100);
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Skill.Name, m_boldSkillsQueueFont, Size.Empty, format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsQueueFont, Size.Empty, format);
@@ -299,7 +299,7 @@ namespace EVEMon
                 {
                     if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
                        || (skill == qskill && level <= qskill.Level && level > skill.Skill.LastConfirmedLvl && percentComplete == 0.0))
-                                                                                                     
+
                     {
                         g.FillRectangle(Brushes.RoyalBlue, brect);
                     }
@@ -323,7 +323,7 @@ namespace EVEMon
                                                  BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * (percentComplete / 100));
+            int fillWidth = (int)(pctBarRect.Width * (percentComplete));
             if (fillWidth > 0)
             {
                 Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
