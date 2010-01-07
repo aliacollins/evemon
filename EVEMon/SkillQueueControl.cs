@@ -16,6 +16,7 @@ namespace EVEMon
     public partial class SkillQueueControl : Control
     {
         private DateTime m_nextRepainting = DateTime.MinValue;
+        private DateTime m_paintTime = DateTime.MinValue;
 
 
         #region Constructors, disposing, global events
@@ -205,6 +206,8 @@ namespace EVEMon
             int width = this.Width;
             int height = this.Height;
 
+            m_paintTime = DateTime.UtcNow;
+
             // If we are in DesignMode we just paint a dummy queue
             if (DesignMode)
             {
@@ -380,7 +383,7 @@ namespace EVEMon
                 }
 
                 // if there are more than 24 hours in the queue show the point
-                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(24))
+                if (m_skillQueue.EndTime > m_paintTime.AddHours(24))
                 {
                     PaintPoint(g, width, height);
                 }
@@ -421,8 +424,8 @@ namespace EVEMon
         /// </returns>
         private Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
         {
-            TimeSpan relativeStart = skill.StartTime - DateTime.UtcNow;
-            TimeSpan relativeFinish = skill.EndTime - DateTime.UtcNow;
+            TimeSpan relativeStart = skill.StartTime - m_paintTime;
+            TimeSpan relativeFinish = skill.EndTime - m_paintTime;
 
             int TotalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
             
@@ -473,7 +476,7 @@ namespace EVEMon
             var emptyRect = new Rectangle(lastX, 0, this.Width - lastX, this.Height);
             if (emptyRect.Contains(e.Location))
             {
-                var leftTime = DateTime.UtcNow.AddHours(24) - m_skillQueue.EndTime;
+                var leftTime = m_paintTime.AddHours(24) - m_skillQueue.EndTime;
                 var text = "Free room:" + Skill.TimeSpanToDescriptiveText(leftTime, DescriptiveTextOptions.SpaceBetween, false);
                 Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2, e.Location.Y);
                 m_toolTip.Display(text, tipPoint);
