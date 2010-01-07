@@ -34,8 +34,7 @@ namespace EVEMon.Common
         private DateTime m_endTime;
         private int m_spPerHour;
         private int m_totalSP;
-
-
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -73,7 +72,7 @@ namespace EVEMon.Common
         {
             m_owner = owner;
             m_entryType = serial.Type;
-            m_skill = StaticSkills.GetSkillByName(serial.SkillName);
+            m_skill = GetSkill(serial);
             m_level = serial.Level;
             m_notes = serial.Notes;
             m_priority = serial.Priority;
@@ -220,6 +219,24 @@ namespace EVEMon.Common
                 }
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Gets a skill by its ID or its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static StaticSkill GetSkill(SerializablePlanEntry serial)
+        {
+            StaticSkill skill = null;
+
+            // Try get skill by its ID
+            skill = StaticSkills.GetSkillById(serial.ID);
+
+            // We failed? Try get skill by its name
+            if(skill == null) skill = StaticSkills.GetSkillByName(serial.SkillName);
+            
+            return skill;
         }
 
         /// <summary>

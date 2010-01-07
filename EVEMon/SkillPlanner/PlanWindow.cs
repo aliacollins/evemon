@@ -166,6 +166,9 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == value) return;
                 m_plan = value;
 
+                // Check to see if one or more invalid entries were found.
+                CheckInvalidEntries();
+
                 // The tag is used by WindowsFactory.ShowByTag
                 this.Tag = value;
 
@@ -185,6 +188,32 @@ namespace EVEMon.SkillPlanner
                 // Update controls
                 this.Text = this.Character.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
                 planEditor.UpdateListColumns();
+            }
+        }
+
+        /// <summary>
+        /// Identifies if there are invalid entries in the skill plan,
+        /// displays message if required.
+        /// </summary>
+        private void CheckInvalidEntries()
+        {
+            if (m_plan.ContainsInvalidEntries)
+            {
+                StringBuilder message = new StringBuilder();
+
+                message.AppendLine("When loading the plan one or more skills were not found in the data files:");
+                message.AppendLine();
+
+                foreach (var entry in m_plan.InvalidEntries)
+                {
+                    message.AppendFormat("{0} planned to {1}", entry.SkillName, entry.PlannedLevel);
+                    message.AppendLine();
+                }
+
+                message.AppendLine();
+                message.AppendLine("Just so you know... we respect you and al'.");
+
+                MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 

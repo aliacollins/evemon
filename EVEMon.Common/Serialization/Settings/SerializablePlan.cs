@@ -15,6 +15,7 @@ namespace EVEMon.Common.Serialization.Settings
         public SerializablePlan()
         {
             Entries = new List<SerializablePlanEntry>();
+            InvalidEntries = new List<SerializableInvalidPlanEntry>();
             SortingPreferences = new PlanSorting();
         }
 
@@ -46,6 +47,13 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlElement("invalidEntry")]
+        public List<SerializableInvalidPlanEntry> InvalidEntries
+        {
+            get;
+            set;
+        }
+  
         internal SerializablePlan Clone()
         {
             var clone = new SerializablePlan();
@@ -53,6 +61,39 @@ namespace EVEMon.Common.Serialization.Settings
             clone.Owner = this.Owner;
             clone.SortingPreferences = this.SortingPreferences.Clone();
             clone.Entries.AddRange(this.Entries.Select(x => x.Clone()));
+            clone.InvalidEntries.AddRange(this.InvalidEntries.Select(x => x.Clone()));
+            return clone;
+        }
+    }
+
+    /// <summary>
+    /// Represents a plan entry
+    /// </summary>
+    public sealed class SerializableInvalidPlanEntry
+    {
+        [XmlAttribute("skill")]
+        public string SkillName
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("level")]
+        public int PlannedLevel
+        {
+            get;
+            set;
+        }
+
+        internal SerializableInvalidPlanEntry Clone()
+        {
+            // We need a skill for the plan's character
+            SerializableInvalidPlanEntry clone = new SerializableInvalidPlanEntry()
+            {
+                SkillName = SkillName,
+                PlannedLevel = PlannedLevel
+            };
+
             return clone;
         }
     }
@@ -66,6 +107,13 @@ namespace EVEMon.Common.Serialization.Settings
         {
             this.PlanGroups = new List<string>();
             Priority = 3;
+        }
+
+        [XmlAttribute("skillID")]
+        public int ID
+        {
+            get;
+            set;
         }
 
         [XmlAttribute("skill")]

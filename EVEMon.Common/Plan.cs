@@ -253,6 +253,7 @@ namespace EVEMon.Common
         private int m_changedNotificationSuppressions;
         private PlanChange m_change;
         private PlanSorting m_sortingPreferences;
+        private InvalidPlanEntry[] m_invalidEntries;
 
         #region Construction, importation, exportation
         /// <summary>
@@ -288,11 +289,42 @@ namespace EVEMon.Common
 
             // Update entries
             List<PlanEntry> entries = new List<PlanEntry>();
+            List<InvalidPlanEntry> invalidEntries = new List<InvalidPlanEntry>();
             foreach (var serialEntry in serial.Entries)
             {
-                entries.Add(new PlanEntry(this, serialEntry));
+                PlanEntry entry = new PlanEntry(this, serialEntry);
+
+                if (entry.Skill != null)
+                {
+                    entries.Add(entry);
+                }
+                // There are buggy entries in the plan
+                else 
+                {
+                    var invalidEntry = new InvalidPlanEntry()
+                    {
+                        SkillName = serialEntry.SkillName,
+                        PlannedLevel = serialEntry.Level
+                    };
+
+                    invalidEntries.Add(invalidEntry);
+                }
             }
+
             RebuildPlanFrom(entries);
+
+            foreach (var serialInvalidEntry in serial.InvalidEntries)
+            {
+                var invalidEntry = new InvalidPlanEntry()
+                {
+                    SkillName = serialInvalidEntry.SkillName,
+                    PlannedLevel = serialInvalidEntry.PlannedLevel
+                };
+
+                invalidEntries.Add(invalidEntry);
+            }
+
+            m_invalidEntries = invalidEntries.ToArray();
 
             // Notify name change
             if (m_isConnected) EveClient.OnPlanNameChanged(this);
@@ -313,6 +345,7 @@ namespace EVEMon.Common
             {
                 var serialEntry = new SerializablePlanEntry
                 {
+                    ID = entry.Skill.ID,
                     SkillName = entry.Skill.Name,
                     Level = entry.Level,
                     Type = entry.Type,
@@ -333,6 +366,17 @@ namespace EVEMon.Common
                 }
 
                 serial.Entries.Add(serialEntry);
+            }
+
+            foreach (var entry in InvalidEntries)
+            {
+                var serialEntry = new SerializableInvalidPlanEntry
+                {
+                    SkillName = entry.SkillName,
+                    PlannedLevel = entry.PlannedLevel
+                };
+
+                serial.InvalidEntries.Add(serialEntry);
             }
 
             return serial;
@@ -359,6 +403,28 @@ namespace EVEMon.Common
             { 
                 m_name = value;
                 if (m_isConnected) EveClient.OnPlanNameChanged(this);
+            }
+        }
+
+        /// <summary>
+        /// List of invalid entries in the plan
+        /// </summary>
+        public IEnumerable<InvalidPlanEntry> InvalidEntries
+        {
+            get
+            {
+                return m_invalidEntries.AsEnumerable();
+            }
+        }
+
+        /// <summary>
+        /// Does the plan contain one or more invalid entries
+        /// </summary>
+        public bool ContainsInvalidEntries
+        {
+            get
+            {
+                return m_invalidEntries.Length != 0;
             }
         }
 
