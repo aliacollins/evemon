@@ -684,7 +684,6 @@ namespace EVEMon
         {
             int sp = s.SkillPoints;
             int nextLevel = Math.Min(5, s.Level + 1);
-            double percentDone = s.PercentCompleted;
             int nextLevelSP = s.StaticData.GetPointsRequiredForLevel(nextLevel);
             int pointsLeft = s.GetLeftPointsRequiredToLevel(nextLevel);
 
@@ -694,7 +693,7 @@ namespace EVEMon
             {
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
-                untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Not yet trained to Level I ({0}%)\n", percentDone);
+                untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Not yet trained to Level I ({0}%)\n", s.PercentCompleted);
                 untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Next level I: {0:#,##0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(untrainedToolTip, s);
@@ -706,7 +705,7 @@ namespace EVEMon
             if (s.IsPartiallyTrained)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", percentDone);
+                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", s.PercentCompleted);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training to level {0}: {1:#,##0} skill points remaining\n", Skill.GetRomanForInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(partiallyTrainedToolTip, s);

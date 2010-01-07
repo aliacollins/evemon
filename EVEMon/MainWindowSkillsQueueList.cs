@@ -247,15 +247,15 @@ namespace EVEMon
             // Measure texts
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            float percentComplete = 0;
+            double percentComplete = 0;
             int skillPoints = skill.Skill.SkillPoints;
             int skillPointsToNextLevel = skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentComplete = skill.FractionCompleted;
+            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentComplete = skill.Skill.PercentCompleted;
             if (skill.Level > skill.Skill.LastConfirmedLvl + 1) skillPoints = skill.CurrentSP;
             string rankText = String.Format(CultureInfo.CurrentCulture, " (Rank {0})", skill.Skill.Rank);
             string spText = String.Format(CultureInfo.CurrentCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skill.Level);
-            string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", Math.Floor(percentComplete * 100));
+            string pctText = String.Format(CultureInfo.CurrentCulture, "{0:0}% Done", percentComplete);
 
             Size skillNameSize = TextRenderer.MeasureText(g, skill.Skill.Name, m_boldSkillsQueueFont, Size.Empty, format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsQueueFont, Size.Empty, format);
@@ -323,7 +323,7 @@ namespace EVEMon
                                                  BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
-            int fillWidth = (int)(pctBarRect.Width * percentComplete);
+            int fillWidth = (int)(pctBarRect.Width * (percentComplete / 100));
             if (fillWidth > 0)
             {
                 Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
@@ -563,7 +563,7 @@ namespace EVEMon
             {
                 // Training hasn't got past level 1 yet
                 StringBuilder untrainedToolTip = new StringBuilder();
-                untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Not yet trained to Level I ({0}%)\n", Math.Floor(percentDone * 100));
+                untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Not yet trained to Level I ({0}%)\n", skill.Skill.PercentCompleted);
                 untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Next level I: {0:#,##0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(untrainedToolTip, skill.Skill);
@@ -575,7 +575,7 @@ namespace EVEMon
             if (skill.Skill.IsTraining && percentDone != 0)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", Math.Floor(percentDone * 100));
+                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", skill.Skill.PercentCompleted);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training to level {0}: {1:#,##0} skill points remaining\n", Skill.GetRomanForInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill.Skill);
@@ -597,7 +597,7 @@ namespace EVEMon
             if (skill.Skill.IsPartiallyTrained && !skill.Skill.IsTraining)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
-                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", Math.Floor(percentDone * 100));
+                partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Partially Completed ({0}%)\n", skill.Skill.PercentCompleted);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Queued to level {0}: {1:#,##0} skill points remaining\n", Skill.GetRomanForInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureInfo.CurrentCulture, "Training time remaining: {0}", remainingTimeText);
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill.Skill);
