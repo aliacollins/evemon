@@ -109,7 +109,7 @@ namespace EVEMon.Common
                 // Sends an email alert
                 if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
                 {
-                    Emailer.SendSkillCompletionMail(skill.Level, skill.SkillName, m_character);
+                    Emailer.SendSkillCompletionMail(skill, m_character);
                 }
 
                 // Sends a notification

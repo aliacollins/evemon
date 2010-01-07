@@ -28,23 +28,31 @@ namespace EVEMon.Common
         /// <param name="skillName"></param>
         /// <param name="character"></param>
         /// <returns></returns>
-		public static bool SendSkillCompletionMail(int skillLevel, string skillName, Character character)
+		public static bool SendSkillCompletionMail(QueuedSkill skill, Character character)
 		{
-			string charName = character.Name;
-			string skillLevelString = Skill.GetRomanForInt(skillLevel);
+            string charName = character.Name;
+            string skillName = skill.SkillName;
+            string skillLevelString = Skill.GetRomanForInt(skill.Level);
+			
+            CCPCharacter CCPCharacter = character as CCPCharacter;
+            bool freeTime = CCPCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - CCPCharacter.SkillQueue.EndTime;
+            string timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
 
             // Message's first line
             StringBuilder messageText = new StringBuilder();
-            messageText.Append(charName + " has finished training " + skillName + " ");
+            messageText.AppendFormat("{0} has finished training {1} {2}",charName, skillName, skillLevelString).AppendLine();
 
+            if (freeTime) messageText.AppendFormat("There is also {0} free room in skill queue", timeLeftText).AppendLine(); 
+            
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
             {
-                return SendMail(Settings.Notifications, "[STC] " + charName + " :: " + skillName + " " + skillLevelString, messageText.ToString());
+                return SendMail(Settings.Notifications, String.Format("[STC] {0} :: {1} {2}",charName, skillName, skillLevelString), messageText.ToString());
             }
 
             // Long format
-			messageText.Append("\r\n\r\nNext skills listed in plans:\r\n\r\n");
+			messageText.Append("Next skills listed in plans:\r\n\r\n");
 
             foreach (var plan in character.Plans)
 			{
