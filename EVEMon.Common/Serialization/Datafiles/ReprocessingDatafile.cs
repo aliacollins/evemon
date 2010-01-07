@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Data
+namespace EVEMon.Common.Serialization.Datafiles
 {
     [XmlRoot("reprocessingDatafile")]
     public sealed class ReprocessingDatafile

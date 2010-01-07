@@ -242,7 +242,6 @@
     <Compile Include="Data\Material.cs" />
     <Compile Include="Data\PathFinder.cs" />
     <Compile Include="Data\Region.cs" />
-    <Compile Include="Data\ReprocessingDatafile.cs" />
     <Compile Include="Data\Ship.cs" />
     <Compile Include="Data\SolarSystem.cs" />
     <Compile Include="Data\SolarSystemRange.cs" />
@@ -328,6 +327,7 @@
     </Compile>
     <Compile Include="Serialization\Datafiles\GeoDatafile.cs" />
     <Compile Include="Serialization\Datafiles\PropertiesDatafile.cs" />
+    <Compile Include="Serialization\Datafiles\ReprocessingDatafile.cs" />
     <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
     <Compile Include="Serialization\Exportation\OutputPlan.cs" />
     <Compile Include="Serialization\Exportation\OutputSkillGroup.cs" />
