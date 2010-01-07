@@ -22,10 +22,9 @@ namespace EVEMon.Common
 		}
 
         /// <summary>
-        /// Sens a mail alert for a skill completion
+        /// Sends a mail alert for a skill completion
         /// </summary>
-        /// <param name="skillLevel"></param>
-        /// <param name="skillName"></param>
+        /// <param name="skill"></param>
         /// <param name="character"></param>
         /// <returns></returns>
 		public static bool SendSkillCompletionMail(QueuedSkill skill, Character character)
