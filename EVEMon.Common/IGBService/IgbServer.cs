@@ -9,6 +9,7 @@ using System.Web;
 
 using EVEMon.Common;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.IgbService
 {
@@ -305,7 +306,7 @@ namespace EVEMon.Common.IgbService
             }
 
             Character ci = EveClient.MonitoredCharacters.FirstOrDefault(x => x.Name == headers["eve_charname"]);
-            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/"))
+            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
             {
                 GeneratePlanOrShoppingOutput(requestUrl, sw, ci);
             }
@@ -404,42 +405,85 @@ namespace EVEMon.Common.IgbService
         /// <param name="ci">character to use</param>
         private static void GeneratePlanOrShoppingOutput(string requestUrl, StreamWriter sw, Character ci)
         {
-            // strip off the bad trailing / added by IGB (Trac ticket #425)
-            if (requestUrl.EndsWith("/"))
-            {
-                requestUrl = requestUrl.Substring(0, requestUrl.Length - 1);
-            }
-            bool shopping = requestUrl.StartsWith("/shopping/");
-            string planName = HttpUtility.UrlDecode(requestUrl.Substring(
-                    shopping ? "/shopping/".Length : "/plan/".Length
-                ));
-            sw.WriteLine("<html><head><title>Plan</title></head><body>");
-            sw.WriteLine(String.Format("<h1>Plan: {0}</h1>",
-                                       HttpUtility.HtmlEncode(planName)));
-            sw.WriteLine("<hr><a href=\"/\">Back</a></hr></br></br>");
+            var regex = new Regex(@"\/(owned\/(?'skillId'[^\/]+)\/(?'markOwned'[^\/]+)\/)?(?'requestType'shopping|plan)\/(?'planName'[^\/]+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            var match = regex.Match(requestUrl);
 
-            Plan p = ci.Plans[planName];
-            if (p == null)
+            if (match.Success)
             {
-                sw.WriteLine("non-existant plan name");
+                var requestType = match.Groups["requestType"].Value;
+                var shopping = requestType.Equals("shopping", StringComparison.OrdinalIgnoreCase);
+                var planName = HttpUtility.UrlDecode(match.Groups["planName"].Value);
+
+                sw.WriteLine("<html><head><title>Plan</title></head><body>");
+                int skillId;
+                bool setAsOwned;
+                if (match.Groups["skillId"].Success &&
+                    match.Groups["markOwned"].Success &&
+                    Int32.TryParse(match.Groups["skillId"].Value, out skillId) &&
+                    Boolean.TryParse(match.Groups["markOwned"].Value, out setAsOwned))
+                {
+                    var skill = ci.Skills.FirstOrDefault(x => x.ID == skillId);
+                    if (skill != null)
+                    {
+                        sw.WriteLine("<h2>Skillbook shopping result</h2>");
+                        Dispatcher.Invoke(() => skill.IsOwned = setAsOwned);
+                        if (skill.IsOwned)
+                        {
+                            sw.WriteLine("Congratulations, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as owned.", skill.ID, skill.Name);
+                        }
+                        else
+                        {
+                            sw.WriteLine("Sorry, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as not owned.", skill.ID, skill.Name);
+                        }
+                        sw.WriteLine("<hr/>");
+                    }
+                    else
+                    {
+                        // maybe we should do nothing in this case?
+                        sw.WriteLine("skill with id '{0}' could not be found", skillId);
+                    }
+                }
+
+                sw.WriteLine("<h2>Plan: {0}</h2>", HttpUtility.HtmlEncode(planName));
+                sw.WriteLine("<hr/><a href=\"/\">Back</a><br/><br/>");
+
+                Plan p = ci.Plans[planName];
+                if (p == null)
+                {
+                    sw.WriteLine("non-existant plan name");
+                }
+                else
+                {
+                    PlanExportSettings x = new PlanExportSettings();
+                    x.EntryTrainingTimes = !shopping; // only if not shopping
+                    x.EntryStartDate = !shopping; // only if not shopping
+                    x.EntryFinishDate = !shopping; // only if not shopping
+                    x.FooterTotalTime = !shopping; // only if not shopping
+                    x.FooterCount = true;
+                    x.FooterDate = !shopping; // only if not shopping
+                    x.ShoppingList = shopping;
+                    x.EntryCost = true;
+                    x.FooterCost = true;
+                    x.Markup = MarkupType.Html;
+                    sw.Write(PlanExporter.ExportAsText(p, x, (builder, entry, settings) =>
+                    {
+                        if (settings.Markup != MarkupType.Html)
+                            return;
+
+                        // skill is known
+                        if (entry.CharacterSkill.IsKnown || entry.Level != 1)
+                            return;
+
+                        builder.AppendFormat("<a href='/owned/{0}/{1}/{3}/{4}'>{2}</a>", entry.Skill.ID, !entry.CharacterSkill.IsOwned, !entry.CharacterSkill.IsOwned ? "Mark as owned" : "Mark as not owned", requestType, planName);
+                    }));
+                }
             }
             else
             {
-                PlanExportSettings x = new PlanExportSettings();
-                x.EntryTrainingTimes = !shopping; // only if not shopping
-                x.EntryStartDate = !shopping; // only if not shopping
-                x.EntryFinishDate = !shopping; // only if not shopping
-                x.FooterTotalTime = !shopping; // only if not shopping
-                x.FooterCount = true;
-                x.FooterDate = !shopping; // only if not shopping
-                x.ShoppingList = shopping;
-                x.EntryCost = true;
-                x.FooterCost = true;
-                x.Markup = MarkupType.Html;
-                sw.Write(PlanExporter.ExportAsText(p, x));
+                sw.WriteLine("invalid request");
             }
 
-            sw.WriteLine("<hr><a href=\"/\">Back</a></hr>");
+            sw.WriteLine("<hr/><a href=\"/\">Back</a>");
             sw.WriteLine("</body></html>");
         }
 

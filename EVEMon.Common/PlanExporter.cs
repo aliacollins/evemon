@@ -21,6 +21,8 @@ namespace EVEMon.Common
 
     public static class PlanExporter
     {
+        public delegate void ExportPlanEntryActions(StringBuilder builder, PlanEntry entry, PlanExportSettings settings);
+
         /// <summary>
         /// Exports the plan under a text format.
         /// </summary>
@@ -28,6 +30,18 @@ namespace EVEMon.Common
         /// <param name="settings"></param>
         /// <returns></returns>
         public static string ExportAsText(Plan planToExport, PlanExportSettings settings)
+        {
+            return ExportAsText(planToExport, settings, null);
+        }
+
+        /// <summary>
+        /// Exports the plan under a text format.
+        /// </summary>
+        /// <param name="planToExport"></param>
+        /// <param name="settings"></param>
+        /// <param name="exportActions"></param>
+        /// <returns></returns>
+        public static string ExportAsText(Plan planToExport, PlanExportSettings settings, ExportPlanEntryActions exportActions)
         {
             var plan = new PlanScratchpad(planToExport.Character, planToExport);
             plan.Sort(planToExport.SortingPreferences);
@@ -147,6 +161,10 @@ namespace EVEMon.Common
 
                     builder.Append(')');
                 }
+
+                if (exportActions != null)
+                    exportActions(builder, entry, settings);
+
                 builder.AppendLine(lineFeed);
 
                 // End time
