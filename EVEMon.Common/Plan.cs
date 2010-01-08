@@ -749,6 +749,14 @@ namespace EVEMon.Common
         {
             m_invalidEntries.ForEach(x => x.Acknowledged = true);
         }
+
+        /// <summary>
+        /// Removes all Invalid Entries that have yet to be Acknowledged
+        /// </summary>
+        public void ClearInvalidEntries()
+        {
+            m_invalidEntries = m_invalidEntries.Where(x => x.Acknowledged == true).ToArray();
+        }
     }
 
     /// <summary>

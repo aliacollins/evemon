@@ -202,6 +202,7 @@ namespace EVEMon.SkillPlanner
                 StringBuilder message = new StringBuilder();
 
                 message.AppendLine("When loading the plan one or more skills were not found. This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
+                message.AppendLine();
 
                 foreach (var entry in m_plan.InvalidEntries)
                 {
@@ -209,11 +210,18 @@ namespace EVEMon.SkillPlanner
                 }
 
                 message.AppendLine();
-                message.AppendLine("These entries will be hidden from the plan.");
+                message.AppendLine("Do you wish to keep these entries? If you select Yes these entries will be hidden from the plan and stored in the settings. If you select No the above plan entries will be discarded.");
 
-                MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                var result = MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
-                m_plan.AcknoledgeInvalidEntries();
+                if (result == DialogResult.No)
+                {
+                    m_plan.ClearInvalidEntries();
+                }
+                else if (result == DialogResult.Yes)
+                {
+                    m_plan.AcknoledgeInvalidEntries();
+                }
             }
         }
 
