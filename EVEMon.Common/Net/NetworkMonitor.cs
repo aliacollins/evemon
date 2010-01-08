@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net.NetworkInformation;
+using System.Net;
 
 namespace EVEMon.Common.Net
 {
@@ -38,7 +39,25 @@ namespace EVEMon.Common.Net
 
                 // Subscribe to network changes
                 s_subscribers = new List<WeakReference<INetworkChangeSubscriber>>();
-                s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
+                try
+                {
+                    s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
+                }
+                catch (ArgumentException ex)
+                {
+                    // GetIsNetworkAvailable dosn't seem to work on every system (f.ex. Mac OSX/Darwine)
+                    ExceptionHandler.LogException(ex, true);
+                    
+                    // Send a ping to www.google.com
+                    Ping pingSender = new Ping();
+                    PingOptions options = new PingOptions(50, false);
+                    byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
+                    int timeout = 120;
+                    string host = "www.google.com";
+                    PingReply reply = pingSender.Send(host, timeout, buffer, options);
+
+                    s_networkAvailable = reply.Status == IPStatus.Success;
+                }
                 NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(OnNetworkAvailabilityChanged);
             }
         }
