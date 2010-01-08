@@ -19,6 +19,7 @@ namespace EVEMon.SettingsUI
         {
             m_proxySetting = settings;
             InitializeComponent();
+            UpdateFields();
         }
 
         private void UpdateFields()

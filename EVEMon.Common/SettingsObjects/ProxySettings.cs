@@ -20,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("post")]
+        [XmlElement("port")]
         public int Port
         {
             get;
