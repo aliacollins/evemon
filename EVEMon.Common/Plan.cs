@@ -264,6 +264,7 @@ namespace EVEMon.Common
             : base(character)
         {
             m_sortingPreferences = new PlanSorting();
+            m_invalidEntries = new InvalidPlanEntry[0];
         }
 
         /// <summary>
@@ -368,7 +369,7 @@ namespace EVEMon.Common
                 serial.Entries.Add(serialEntry);
             }
 
-            foreach (var entry in InvalidEntries)
+            foreach (var entry in m_invalidEntries)
             {
                 var serialEntry = new SerializableInvalidPlanEntry
                 {
