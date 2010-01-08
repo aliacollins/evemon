@@ -471,8 +471,8 @@ namespace EVEMon.XmlImporter
             s_attributes[908].CategoryID = 4; // Ship Maintenance Bay Capacity
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
-            s_attributes[30].HigherIsBetter = false; // CPU
-            s_attributes[50].HigherIsBetter = false; // PG
+            s_attributes[30].HigherIsBetter = false; // CPU usage
+            s_attributes[50].HigherIsBetter = false; // PG usage
             s_attributes[161].HigherIsBetter = false; // Volume
 
             // Export attribute categories
