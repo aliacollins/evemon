@@ -319,7 +319,8 @@ namespace EVEMon.Common
                 var invalidEntry = new InvalidPlanEntry()
                 {
                     SkillName = serialInvalidEntry.SkillName,
-                    PlannedLevel = serialInvalidEntry.PlannedLevel
+                    PlannedLevel = serialInvalidEntry.PlannedLevel,
+                    Acknowledged = serialInvalidEntry.Acknowledged
                 };
 
                 invalidEntries.Add(invalidEntry);
@@ -374,7 +375,8 @@ namespace EVEMon.Common
                 var serialEntry = new SerializableInvalidPlanEntry
                 {
                     SkillName = entry.SkillName,
-                    PlannedLevel = entry.PlannedLevel
+                    PlannedLevel = entry.PlannedLevel,
+                    Acknowledged = entry.Acknowledged
                 };
 
                 serial.InvalidEntries.Add(serialEntry);
@@ -414,7 +416,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_invalidEntries.AsEnumerable();
+                return m_invalidEntries.Where(x => !x.Acknowledged);
             }
         }
 
@@ -425,7 +427,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_invalidEntries.Length != 0;
+                return m_invalidEntries.Where(x => !x.Acknowledged).Count() != 0;
             }
         }
 
@@ -738,6 +740,14 @@ namespace EVEMon.Common
         public Plan Clone()
         {
             return Clone(m_character);
+        }
+
+        /// <summary>
+        /// Marks all Invalid Entries in the plan as Acknowledged
+        /// </summary>
+        public void AcknoledgeInvalidEntries()
+        {
+            m_invalidEntries.ForEach(x => x.Acknowledged = true);
         }
     }
 

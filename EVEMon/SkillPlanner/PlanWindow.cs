@@ -201,19 +201,19 @@ namespace EVEMon.SkillPlanner
             {
                 StringBuilder message = new StringBuilder();
 
-                message.AppendLine("When loading the plan one or more skills were not found in the data files:");
-                message.AppendLine();
+                message.AppendLine("When loading the plan one or more skills were not found. This can be caused by loading a plan from a previous version of EVEMon or CCP have renamed a skill.");
 
                 foreach (var entry in m_plan.InvalidEntries)
                 {
-                    message.AppendFormat("{0} planned to {1}", entry.SkillName, entry.PlannedLevel);
-                    message.AppendLine();
+                    message.AppendFormat(" - {0} planned to {1}{2}", entry.SkillName, entry.PlannedLevel, Environment.NewLine);
                 }
 
                 message.AppendLine();
-                message.AppendLine("Just so you know... we respect you and al'.");
+                message.AppendLine("These entries will be hidden from the plan.");
 
                 MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                m_plan.AcknoledgeInvalidEntries();
             }
         }
 

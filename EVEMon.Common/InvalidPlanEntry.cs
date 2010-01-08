@@ -12,7 +12,15 @@ namespace EVEMon.Common
     public sealed class InvalidPlanEntry
     {
         /// <summary>
-        /// Name of the skill that can not be identified
+        /// Constructor
+        /// </summary>
+        public InvalidPlanEntry()
+        {
+            Acknowledged = false;
+        }
+
+        /// <summary>
+        /// Name of the skill that can not be identified.
         /// </summary>
         public string SkillName
         {
@@ -21,9 +29,18 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Planned level
+        /// Planned level.
         /// </summary>
         public int PlannedLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Has the user been notified that this entry has been marked as invalid.
+        /// </summary>
+        public bool Acknowledged
         {
             get;
             set;

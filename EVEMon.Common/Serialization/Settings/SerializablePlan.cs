@@ -85,13 +85,21 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlAttribute("acknowledged")]
+        public bool Acknowledged
+        {
+            get;
+            set;
+        }
+
         internal SerializableInvalidPlanEntry Clone()
         {
             // We need a skill for the plan's character
             SerializableInvalidPlanEntry clone = new SerializableInvalidPlanEntry()
             {
                 SkillName = SkillName,
-                PlannedLevel = PlannedLevel
+                PlannedLevel = PlannedLevel,
+                Acknowledged = Acknowledged
             };
 
             return clone;
