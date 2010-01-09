@@ -345,7 +345,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Paints the current character's training informations, this is the regular painting operation.
         /// </summary>
-        private void PaintsCharacter() 
+        private void PaintsCharacter()
         {
             if (String.IsNullOrEmpty(m_currentSkillTraining)) m_currentSkillTraining = "No skill in training";
 
@@ -358,9 +358,16 @@ namespace EVEMon.LogitechG15
                     m_showingCompletionTime = !m_showingCompletionTime;
                 }
             }
+
+            CCPCharacter ccpCharacter = m_characters[m_currentCharacterIndex] as CCPCharacter;
+
             if (m_showingCompletionTime)
             {
                 tmpTxt = string.Format(m_formatStringConverted, CurrentCharacterName, m_currentSkillTraining, String.Format("Finishes {0}", DateTime.Now + m_timeToSkillComplete));
+            }
+            else if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
+            {
+                tmpTxt = string.Format(m_formatStringConverted, CurrentCharacterName, m_currentSkillTraining, "Skill Queue Paused");
             }
             else
             {
@@ -368,7 +375,7 @@ namespace EVEMon.LogitechG15
             }
 
             string[] tmpLines = tmpTxt.Split("\n".ToCharArray());
-            if (tmpLines.Length == 3) 
+            if (tmpLines.Length == 3)
             {
                 m_lines[0] = tmpLines[0];
                 m_lines[1] = tmpLines[1];
@@ -393,7 +400,9 @@ namespace EVEMon.LogitechG15
                 offset = 61f;
             }
             recLine4.Offset(offset, recLine3.Bottom - 1);
+
             string perc = m_currentPerc.ToString("P2");
+
             m_lcdGraphics.DrawString(m_lines[0], m_defaultFont, m_defBrush, recLine1);
             m_lcdGraphics.DrawString(m_lines[1], m_defaultFont, m_defBrush, recLine2);
             m_lcdGraphics.DrawString(m_lines[2], m_defaultFont, m_defBrush, recLine3);
@@ -408,8 +417,6 @@ namespace EVEMon.LogitechG15
                 m_lcdGraphics.DrawString(curTime, m_defaultFont, m_defBrush, timeLine);
             }
 
-            //Pen test = ;
-            //_lcdGraphics.DrawRectangle(test, 0, 0, 159, 10);
             m_lcdGraphics.DrawRectangle(m_defPen, 1, (recLine3.Bottom + 1), 158, 8);
             m_lcdGraphics.FillRectangle(m_defBrush, 2, (recLine3.Bottom + 2), len, 7);
             UpdateLcdDisplay();
