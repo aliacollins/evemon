@@ -233,10 +233,8 @@ namespace EVEMon.SkillPlanner
                         if (!visibleProperty) visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
 
                         // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
-                        if (m_selectControl.SelectedObject.Properties[prop].HasValue && prop.HideIfDefault)
-                        {   
-                            visibleProperty = (prop.DefaultValue != m_selectControl.SelectedObject.Properties[prop].Value.Value);
-                        }
+                        if (prop.HideIfDefault)
+                            visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
 
                         // Jump to next property if not visible
                         if (!visibleProperty) continue;
