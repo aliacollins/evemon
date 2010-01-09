@@ -808,13 +808,13 @@ namespace EVEMon.SkillPlanner
             long sbcost = SkillBooksCost;
             long nksbcost = NotKnownSkillBooksCost;
 
-                // We compute the training time
-                foreach (var entry in SelectedEntries)
-                {
-                    selectedTrainTime += entry.CharacterSkill.GetLeftTrainingTimeForLevelOnly(entry.Level);
-                    selectedTimeWithLearning += entry.TrainingTime;
-                    entriesCount++;
-                }
+            // We compute the training time
+            foreach (var entry in SelectedEntries)
+            {
+                selectedTrainTime += entry.CharacterSkill.GetLeftTrainingTimeForLevelOnly(entry.Level);
+                selectedTimeWithLearning += entry.TrainingTime;
+                entriesCount++;
+            }
 
             // Appends the string to display in the status bar.
             String sb = String.Format("{0} Skill{1} selected ({2} Unique Skill{3}). Training time: {4}. ", 

@@ -9,6 +9,7 @@ using lgLcdClassLibrary;
 using EVEMon.Common;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace EVEMon.LogitechG15
 {
@@ -56,11 +57,6 @@ namespace EVEMon.LogitechG15
 
             m_lines = new string[3] { "", "", "" };
             m_formatStringConverted = FORMAT_CHAR_SKILL_TIME_STRING.Replace("[c]", "{0}").Replace("[s]", "{1}").Replace("[t]", "{2}");
-
-            using (Stream strm = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.LogitechG15.EVEMon-all.ico"))
-            {
-                m_EVEMonSplash = new Icon(strm);
-            }
 
             m_lcd = new LCDInterface();
             m_buttonDelegate = new ButtonDelegate(this.OnButtonsPressed);
@@ -134,7 +130,6 @@ namespace EVEMon.LogitechG15
         private Graphics m_lcdGraphicsX;
         private Color m_backColor;
         private string m_formatStringConverted;
-        private Icon m_EVEMonSplash;
         private int m_currentCharacterIndex;
         private string m_currentSkillTraining;
         private double m_currentPerc;
@@ -580,9 +575,21 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintSplash() 
         {
+            // Load the icon from the assembly
+            Bitmap splashLogo;
+            using (Stream strm = Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.LogitechG15.LCDSplash.bmp"))
+            {
+                splashLogo = new Bitmap(strm);
+            }
+
+            // Clear the graphics
             m_lcdGraphics.Clear(m_backColor);
             m_lcdGraphicsX.Clear(m_backColor);
-            m_lcdGraphics.DrawIcon(m_EVEMonSplash, new Rectangle(64, 5, 32, 32));
+            
+            // Display the splash logo
+            int left = (int)((160 / 2) - (splashLogo.Width / 2));
+            int top = (int)((43 /2) - (splashLogo.Height / 2));
+            m_lcdGraphics.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
             UpdateLcdDisplay(LcdisplayPriority.Alert);
         }
 
