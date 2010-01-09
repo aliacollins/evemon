@@ -1,73 +1,84 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using EVEMon.Common.Collections;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-	public static class Emailer
+	/// <summary>
+	/// Provides SMTP based e-mail services taylored to Skill Completion.
+	/// </summary>
+    public static class Emailer
 	{
         /// <summary>
         /// Sends a test mail
         /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
+        /// <param name="settings">NotificationSettings object</param>
+        /// <remarks>
+        /// A notification settings object is required, as this function
+        /// is called from the Settings Window, and assumibly the user
+        /// is changing settings.
+        /// </remarks>
+        /// <returns>False if an exception was thrown, otherwise True.</returns>
 		public static bool SendTestMail(NotificationSettings settings)
 		{
-            return SendMail(settings, "EVE Character Monitor Test Mail", "This is a test email sent by EVE Character Monitor");
+            return SendMail(settings, "EVEMon Test Mail", "This is a test email sent by EVEMon");
 		}
 
         /// <summary>
         /// Sends a mail alert for a skill completion
         /// </summary>
-        /// <param name="queueList"></param>
-        /// <param name="skill"></param>
-        /// <param name="character"></param>
+        /// <param name="queueList">Current Skill Queue</param>
+        /// <param name="skill">Skill that has just completed</param>
+        /// <param name="character">Character affected</param>
         /// <returns></returns>
-		public static bool SendSkillCompletionMail(FastList<QueuedSkill>  queueList, QueuedSkill skill, Character character)
+		public static bool SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
 		{
+            CCPCharacter CCPCharacter = character as CCPCharacter;
+            if (character == null)
+                return false;
+            
             string charName = character.Name;
             string skillName = skill.SkillName;
             string skillLevelString = Skill.GetRomanForInt(skill.Level);
 			
-            CCPCharacter CCPCharacter = character as CCPCharacter;
             bool freeTime = CCPCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - CCPCharacter.SkillQueue.EndTime;
             string timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
 
             // Message's first line
-            StringBuilder messageText = new StringBuilder();
-            messageText.AppendFormat("{0} has finished training {1} {2}.\r\n", charName, skillName, skillLevelString).AppendLine();
+            StringBuilder body = new StringBuilder();
+            body.AppendFormat(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}.{3}{3}", charName, skillName, skillLevelString, Environment.NewLine);
             
             // Next skills in queue
             if (queueList[0] != null)
             {
-                messageText.AppendFormat("Next skill{0} in queue:\r\n", (queueList.Count > 1 ? "s" : ""));
+                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}", (queueList.Count > 1 ? "s" : ""), Environment.NewLine);
                 foreach (var qskill in queueList)
                 {
-                    messageText.AppendFormat("{0}\r\n", qskill);
+                    body.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}", qskill, Environment.NewLine);
                 }
-                messageText.AppendLine();
+                body.AppendLine();
             }
             else
             {
-                messageText.Append("Character is not training.\r\n").AppendLine();
+                body.Append("Character is not training.");
             }
 
             // Free room in skill queue
-            if (freeTime) messageText.AppendFormat("There is also {0} free room in skill queue.\r\n", timeLeftText).AppendLine();
+            if (freeTime) body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText, Environment.NewLine);
 
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
             {
-                return SendMail(Settings.Notifications, String.Format("[STC] {0} :: {1} {2}",charName, skillName, skillLevelString), messageText.ToString());
+                return SendMail(Settings.Notifications, String.Format(CultureConstants.DefaultCulture, "[STC] {0} :: {1} {2}", charName, skillName, skillLevelString), body.ToString());
             }
 
             // Long format
-            if (character.Plans.Count > 0) messageText.Append("Next skills listed in plans:\r\n\r\n");
+            if (character.Plans.Count > 0) body.AppendFormat(CultureConstants.DefaultCulture, "Next skills listed in plans:{0}{0}", Environment.NewLine);
 
             foreach (var plan in character.Plans)
 			{
@@ -75,7 +86,7 @@ namespace EVEMon.Common
 				{
                     // Print plan name
                     CharacterScratchpad scratchpad = new CharacterScratchpad(character);
-					messageText.Append(plan.Name + ":\r\n");
+                    body.AppendFormat(CultureConstants.DefaultCulture, "{0}:{1}", plan.Name, Environment.NewLine);
 
                     // Scroll through entries
 					int i = 0;
@@ -84,7 +95,8 @@ namespace EVEMon.Common
 					{
 						TimeSpan trainTime = scratchpad.GetTrainingTime(entry.Skill, entry.Level, TrainingOrigin.FromPreviousLevelOrCurrent);
 
-						// Only print the first three skills, and the very long skills (first limit is one day, then we add skills duration
+						// Only print the first three skills, and the very long skills
+                        // (first limit is one day, then we add skills duration)
 						if (++i <= 3 || trainTime.Days > minDays)
 						{
 							if (i > 3)
@@ -92,38 +104,38 @@ namespace EVEMon.Common
 								// Print long message once
 								if (minDays == 1)
 								{
-									messageText.Append("\r\n" + "Longer skills from " + plan.Name + ":\r\n");
+                                    body.AppendFormat(CultureConstants.DefaultCulture, "{1}Longer skills from {0}:{1}", plan.Name, Environment.NewLine);
 								}
 
 								minDays = trainTime.Days + minDays;
 							}
-							messageText.Append("\t" + entry.ToString());
+                            body.AppendFormat(CultureConstants.DefaultCulture, "\t{0}", entry);
 
                             // Notes
 							if (entry.Notes != null && entry.Notes.Length > 0)
 							{
-								messageText.Append(" (" + entry.Notes + ")");
+                                body.AppendFormat(CultureConstants.DefaultCulture, " ({0})", entry.Notes);
 							}
 
                             // Training time
-							string timeText = String.Format("{0:00}:{1:00}:{2:00}", trainTime.Hours, trainTime.Minutes, trainTime.Seconds);
 							if (trainTime.Days > 0)
 							{
-								messageText.Append(" - " + trainTime.Days + "d, " + timeText);
+                                body.AppendFormat(CultureConstants.DefaultCulture, " - {0}d, {1}", trainTime.Days, trainTime);
 							}
 							else
 							{
-								messageText.Append(" - " + timeText);
+                                body.AppendFormat(CultureConstants.DefaultCulture, " - {0}", trainTime);
 							}
 
-							messageText.Append("\r\n");
+							body.AppendLine();
 						}
 					}
-					messageText.Append("\r\n");
+					body.AppendLine();
 				}
 			}
 
-			return SendMail(Settings.Notifications, charName + " has finished training " + skillName + " " + skillLevelString, messageText.ToString());
+            string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName, skillName, skillLevelString);
+			return SendMail(Settings.Notifications, subject, body.ToString());
 		}
 
         /// <summary>
@@ -144,17 +156,23 @@ namespace EVEMon.Common
             }
             else
             {
-                Console.WriteLine("Emailer.SendCompleted - Message sent.");
+                EveClient.Trace("Emailer.SendCompleted - Message sent.");
             }
         }
 
         /// <summary>
         /// Performs the sending fo the mail
         /// </summary>
-        /// <param name="settings"></param>
-        /// <param name="subject"></param>
-        /// <param name="body"></param>
-        /// <returns></returns>
+        /// <param name="settings">Settings object to use when sending</param>
+        /// <param name="subject">Subject of the message</param>
+        /// <param name="body">Body of the message</param>
+        /// <returns>True if no exceptions thrown, otherwise false</returns>
+        /// <remarks>
+        /// NotificationSettings object is required to support
+        /// alternative settings from Tols -> Options. Use
+        /// Settings.Notifications unless using an alternative
+        /// configuration.
+        /// </remarks>
 		private static bool SendMail(NotificationSettings settings, string subject, string body)
 		{
 			try
@@ -164,6 +182,7 @@ namespace EVEMon.Common
 
                 // Set up client
                 SmtpClient client = new SmtpClient(settings.EmailSmtpServer);
+                client.SendCompleted += new SendCompletedEventHandler(SendCompleted); 
                 if (settings.EmailPortNumber > 0)
 				{
                     client.Port = settings.EmailPortNumber;
@@ -180,8 +199,7 @@ namespace EVEMon.Common
 
                 // SSL
                 client.EnableSsl = settings.EmailServerRequiresSSL;
-                client.SendCompleted += new SendCompletedEventHandler(SendCompleted);
-
+                
                 // Send message
 				client.SendAsync(msg, null);
 				return true;
