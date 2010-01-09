@@ -88,7 +88,13 @@ namespace EVEMon.SkillPlanner
             get { return m_skill; }
             set
             {
-                if (m_skill == value) return;
+                if (m_skill == value)
+                    return;
+                
+                // we can't unset a skill
+                if (value == null)
+                    return;
+
                 m_character = value.Character;
                 m_skill = value;
 
@@ -120,7 +126,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
          private void UpdatePlanName()
         {
-            grpPlanName.Text = m_character.Name + " - " + m_planWindow.Plan.Name;
+            grpPlanName.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_character.Name, m_planWindow.Plan.Name);
         }
 
         /// <summary>
@@ -131,14 +137,14 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateHeader()
         {
-            StringBuilder sb = new StringBuilder(m_skill.Name);
-            if (m_skill.IsTraining) sb.Append(" - In Training");
+            StringBuilder sb = new StringBuilder();
+            if (m_skill.IsTraining) sb.AppendFormat(CultureConstants.DefaultCulture, "{0} - In Training", m_skill.Name);
 
             sb.Append(" (");
             if (m_skill.IsKnown)
             {
-                sb.Append("Trained to level " + m_skill.Level + " with ");
-                if (m_skill.SkillPoints > 0) sb.Append(String.Format("{0:0,0,0} sp)", m_skill.SkillPoints));
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with ", m_skill.Level);
+                if (m_skill.SkillPoints > 0) sb.AppendFormat(CultureConstants.DefaultCulture, "{0:0,0,0} sp)", m_skill.SkillPoints);
                 else sb.Append(" 0 sp)");
             }
             else
@@ -205,12 +211,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateSkillsTree()
         {
-
             tvSkills.BeginUpdate();
             try
             {
                 tvSkills.Nodes.Clear();
-                if (m_skill == null) return;
+                if (m_skill == null)
+                    return;
 
                 for (int i = 1; i <= 5; i++)
                 {
@@ -344,14 +350,12 @@ namespace EVEMon.SkillPlanner
                     levelNode.Expand();
                     tvEntity.Nodes.Add(levelNode);
                 }
-
-
+                
                 // No enabled skill found for any level ?
                 if (tvEntity.Nodes.Count == 0)
                 {
                     tvEntity.Nodes.Add(new TreeNode("No ships or items enabled by this skill"));
                 }
-
             }
             finally
             {
@@ -402,7 +406,6 @@ namespace EVEMon.SkillPlanner
             // When all prereqs satisifed, keep the default color
             if (prerequisites.All(x => x.IsKnown)) return skillNode;
 
-
             // Are all other prerequisites known ?
             if (prerequisites.All(x => x.IsKnown || x.Skill == m_skill))
             {
@@ -442,7 +445,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
+
             UpdateContent();
         }
 
@@ -459,6 +464,18 @@ namespace EVEMon.SkillPlanner
 
 
         #region Skills context Menu
+        /// <summary>
+        /// Returns the currently selected skill or null if non is selected.
+        /// </summary>
+        /// <returns></returns>
+        private Skill GetSelectedSkill()
+        {
+            if (tvSkills.SelectedNode == null)
+                return null;
+
+            return tvSkills.SelectedNode.Tag as Skill;
+        }
+
         /// <summary>
         /// When the user clicks the node, we select it and checks whether we must display the context menu.
         /// </summary>
@@ -518,7 +535,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsSwitch_Click(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tvSkills.SelectedNode.Tag;
+            var skill = GetSelectedSkill();
+            if (skill == null)
+                return;
             this.Skill = skill;
         }
 
@@ -529,7 +548,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsShowInBrowser_Click(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tvSkills.SelectedNode.Tag;
+            var skill = GetSelectedSkill();
+            if (skill == null)
+                return;
             m_planWindow.ShowSkillInBrowser(skill);
         }
 
@@ -540,7 +561,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsShowPrereqs_Click(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tvSkills.SelectedNode.Tag;
+            var skill = GetSelectedSkill();
+            if (skill == null)
+                return;
 
             int index = 0;
             StringBuilder sb = new StringBuilder();
@@ -569,16 +592,15 @@ namespace EVEMon.SkillPlanner
                 if (!prereq.IsKnown)
                 {
                     index++;
-                    //sb.AppendLine(String.Format("{0}. {1} (Known to level {2})\n", index, prereq.Skill.Name, prereq.Skill.RomanLevel));
-                    sb.AppendLine(String.Format("{0}. {1} {2}\n", index, prereq.Skill.Name,
-                        (prereq.Skill.Level > 1 ? String.Format("(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)")));
+                    string level = prereq.Skill.Level > 1 ? String.Format("(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
+                    sb.AppendFormat("{0}. {1} {2}\n", index, prereq.Skill.Name, level);
                 }
                 return;
             }
 
             // We don't know this prereq at all
             index++;
-            sb.Append(String.Format("{0}. {1}", index, prereq.Skill.Name));
+            sb.AppendFormat("{0}. {1}", index, prereq.Skill.Name);
             sb.Append(" (");
             sb.Append("Prereqs ");
 
@@ -595,6 +617,18 @@ namespace EVEMon.SkillPlanner
 
         #region Items and ships context menu
         /// <summary>
+        /// Returns the currently selected item or null if non is selected.
+        /// </summary>
+        /// <returns></returns>
+        private Item GetSelectedItem()
+        {
+            if (tvEntity.SelectedNode == null)
+                return null;
+
+            return tvEntity.SelectedNode.Tag as Item;
+        }
+
+        /// <summary>
         /// When the user clicks the node, we select it and checks whether we must display the context menu.
         /// </summary>
         /// <param name="sender"></param>
@@ -602,11 +636,13 @@ namespace EVEMon.SkillPlanner
         void tvEntity_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             tvEntity.SelectedNode = e.Node;
-            if (e.Button != MouseButtons.Right) return;
+            if (e.Button != MouseButtons.Right)
+                return;
 
             // Display menu only for items or ships nodes (not market groups and level nodes)
             var entity = e.Node.Tag as Item;
-            if (entity == null) return;
+            if (entity == null)
+                return;
 
             // Updates selection
             tvEntity.SelectedNode = e.Node;
@@ -618,7 +654,7 @@ namespace EVEMon.SkillPlanner
             tsAddObjectToPlan.Enabled = canPlan;
 
             // Other menus
-            tsShowObjectInBrowser.Text = "Show " + entity.Name + " In Browser";
+            tsShowObjectInBrowser.Text = String.Format(CultureConstants.DefaultCulture, "Show {0} In Browser", entity.Name);
 
             // Show menu
             cmEntity.Show(tvEntity, e.Location);
@@ -631,7 +667,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsAddEntityToPlan_Click(object sender, EventArgs e)
         {
-            var entity = (Item)tvEntity.SelectedNode.Tag;
+            var entity = GetSelectedItem();
+        
+            if (entity == null)
+                return;
+            
             var operation = m_planWindow.Plan.TryAddSet(entity.Prerequisites, entity.Name);
             PlanHelper.Perform(operation);
         }
@@ -645,7 +685,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsShowShipPrereqs_Click(object sender, EventArgs e)
         {
-            var entity = (Item)tvEntity.SelectedNode.Tag;
+            var entity = GetSelectedItem();
+            if (entity == null)
+                return;
 
             int index = 0;
             StringBuilder sb = new StringBuilder();
@@ -655,7 +697,6 @@ namespace EVEMon.SkillPlanner
             }
 
             MessageBox.Show(sb.ToString(), "Untrained Prerequisites for " + entity.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
         }
         #endregion
 
@@ -699,10 +740,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvEntity_DoubleClick(object sender, EventArgs e)
         {
-            if (tvEntity.SelectedNode == null) return;
-
-            Item ship = tvEntity.SelectedNode.Tag as Ship;
-            Item item = tvEntity.SelectedNode.Tag as Item;
+            var item = GetSelectedItem();
+            if (item == null)
+                return;
+            
+            Item ship = item as Ship;
 
             if (ship != null) m_planWindow.ShowShipInBrowser(ship);
             else if (item != null) m_planWindow.ShowItemInBrowser(item);
@@ -715,7 +757,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvSkills_DoubleClick(object sender, EventArgs e)
         {
-            Skill skill = (Skill)tvSkills.SelectedNode.Tag;
+            var skill = GetSelectedSkill();
+            if (skill == null)
+                return;
+
             this.Skill = skill;
         }
 
@@ -730,6 +775,5 @@ namespace EVEMon.SkillPlanner
             this.Skill = m_character.Skills[skillName];
         }
         #endregion 
-
     }
 }
