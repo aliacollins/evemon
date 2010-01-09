@@ -1,11 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
-using EVEMon.Common;
 using System.Text;
-using EVEMon.Common.Net;
+using EVEMon.Common.Collections;
 using EVEMon.Common.SettingsObjects;
-using System.ComponentModel;
 
 namespace EVEMon.Common
 {
@@ -18,16 +17,17 @@ namespace EVEMon.Common
         /// <returns></returns>
 		public static bool SendTestMail(NotificationSettings settings)
 		{
-			return SendMail(settings, "EVE Character Monitor Test Mail", "This is a test email sent by EVE Character Monitor");
+            return SendMail(settings, "EVE Character Monitor Test Mail", "This is a test email sent by EVE Character Monitor");
 		}
 
         /// <summary>
         /// Sends a mail alert for a skill completion
         /// </summary>
+        /// <param name="queueList"></param>
         /// <param name="skill"></param>
         /// <param name="character"></param>
         /// <returns></returns>
-		public static bool SendSkillCompletionMail(QueuedSkill skill, Character character)
+		public static bool SendSkillCompletionMail(FastList<QueuedSkill>  queueList, QueuedSkill skill, Character character)
 		{
             string charName = character.Name;
             string skillName = skill.SkillName;
@@ -40,10 +40,26 @@ namespace EVEMon.Common
 
             // Message's first line
             StringBuilder messageText = new StringBuilder();
-            messageText.AppendFormat("{0} has finished training {1} {2}",charName, skillName, skillLevelString).AppendLine();
-
-            if (freeTime) messageText.AppendFormat("There is also {0} free room in skill queue", timeLeftText).AppendLine(); 
+            messageText.AppendFormat("{0} has finished training {1} {2}.\r\n", charName, skillName, skillLevelString).AppendLine();
             
+            // Next skills in queue
+            if (queueList[0] != null)
+            {
+                messageText.AppendFormat("Next skill{0} in queue:\r\n", (queueList.Count > 1 ? "s" : ""));
+                foreach (var qskill in queueList)
+                {
+                    messageText.AppendFormat("{0}\r\n", qskill);
+                }
+                messageText.AppendLine();
+            }
+            else
+            {
+                messageText.Append("Character is not training.\r\n").AppendLine();
+            }
+
+            // Free room in skill queue
+            if (freeTime) messageText.AppendFormat("There is also {0} free room in skill queue.\r\n", timeLeftText).AppendLine();
+
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
             {
@@ -51,7 +67,7 @@ namespace EVEMon.Common
             }
 
             // Long format
-			messageText.Append("Next skills listed in plans:\r\n\r\n");
+            if (character.Plans.Count > 0) messageText.Append("Next skills listed in plans:\r\n\r\n");
 
             foreach (var plan in character.Plans)
 			{
