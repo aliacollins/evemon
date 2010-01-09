@@ -36,6 +36,7 @@ namespace EVEMon.Common.Data
         public const int PerceptionModifierPropertyID = 178;
         public const int WillpowerModifierPropertyID = 179;
 
+        public const int SkillGroupID = 150;
         public const int ShipsGroupID = 4;
         public const int DronesGroupID = 157;
         public const int ShipEquipmentGroupID = 9;

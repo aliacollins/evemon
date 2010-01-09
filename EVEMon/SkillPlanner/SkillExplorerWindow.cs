@@ -287,7 +287,7 @@ namespace EVEMon.SkillPlanner
                 if (m_skill == null) return;
 
                 List<Item> items = new List<Item>(StaticItems.AllItems.
-                    Where(x => x.MarketGroup.ParentGroup.ID != 150). // exclude skills
+                    Where(x => x.MarketGroup.ParentGroup.ID != DBConstants.SkillGroupID). // exclude skills
                     Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData)).
                     Where(x => !cbShowBaseOnly.Checked || x.MetaGroup == ItemMetaGroup.T1 || x.MetaGroup == ItemMetaGroup.T2));
 
