@@ -390,7 +390,24 @@ namespace EVEMon.SkillPlanner
             WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
 
             // Remove the plan
+            var i = Character.Plans.IndexOf(m_plan);
             Character.Plans.Remove(m_plan);
+
+            // Choose which plan to show next
+            // By default we choose the next one,
+            // if it was the last in the list we select the previous one
+            if (i > Character.Plans.Count - 1) i--;
+            
+            // When no plans exists after deletion we close the window
+            if (i < 0)
+            {
+                this.Close();
+                return;
+            }
+
+            // New plan to show
+            var newplan = Character.Plans[i];
+            this.Plan = newplan;
         }
 
         /// <summary>
