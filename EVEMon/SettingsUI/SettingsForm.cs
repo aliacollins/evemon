@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Security;
 using Microsoft.Win32;
 
 using EVEMon.Common.Controls;
@@ -256,7 +257,20 @@ namespace EVEMon.SettingsUI
             dtpLateReminder.Value = m_settings.Calendar.LateReminding;
 
             // Run at system startup
-            RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
+            RegistryKey rk = null;
+            try
+            {
+                rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
+            }
+            catch (SecurityException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
+
             if (rk == null)
             {
                 // No writing rights
