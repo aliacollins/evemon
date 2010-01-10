@@ -59,13 +59,13 @@ namespace EVEMon.Common
                 body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}", (queueList.Count > 1 ? "s" : ""), Environment.NewLine);
                 foreach (var qskill in queueList)
                 {
-                    body.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}", qskill, Environment.NewLine);
+                    body.AppendFormat(CultureConstants.DefaultCulture, "- {0}{1}", qskill, Environment.NewLine);
                 }
                 body.AppendLine();
             }
             else
             {
-                body.Append("Character is not training.");
+                body.AppendFormat(CultureConstants.DefaultCulture, "Character is not training.{0}{0}", Environment.NewLine);
             }
 
             // Free room in skill queue
@@ -139,7 +139,7 @@ namespace EVEMon.Common
 		}
 
         /// <summary>
-        /// Triggers on when a SMTP client has finished (sucess or failure)
+        /// Triggers on when a SMTP client has finished (success or failure)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -161,7 +161,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs the sending fo the mail
+        /// Performs the sending of the mail
         /// </summary>
         /// <param name="settings">Settings object to use when sending</param>
         /// <param name="subject">Subject of the message</param>
