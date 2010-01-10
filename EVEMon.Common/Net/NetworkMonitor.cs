@@ -42,6 +42,7 @@ namespace EVEMon.Common.Net
                 try
                 {
                     s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
+                    NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(OnNetworkAvailabilityChanged);
                 }
                 catch (ArgumentException ex)
                 {
@@ -58,7 +59,6 @@ namespace EVEMon.Common.Net
 
                     s_networkAvailable = reply.Status == IPStatus.Success;
                 }
-                NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(OnNetworkAvailabilityChanged);
             }
         }
 
