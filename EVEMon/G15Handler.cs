@@ -89,7 +89,7 @@ namespace EVEMon
             try
             {
                 m_lcd = Lcdisplay.Instance();
-                m_lcd.SwitchState(Lcdisplay.STATE_SPLASH);
+                m_lcd.SwitchState(LogitechG15.LcdState.SplashScreen);
                 m_running = true;
             }
             catch
@@ -122,7 +122,14 @@ namespace EVEMon
             m_lcd.ShowTime = Settings.G15.ShowSystemTime;
 
             // Characters names
-            m_lcd.Characters = EveClient.MonitoredCharacters.ToArray();
+            List<CCPCharacter> lcdCharacters = new List<CCPCharacter>();
+
+            foreach (Character character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            {
+                lcdCharacters.Add(character as CCPCharacter);
+            }
+
+            m_lcd.Characters = lcdCharacters.ToArray();
 
             // First character to complete a skill
             var nextChar = EveClient.MonitoredCharacters.Where(x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
@@ -164,25 +171,12 @@ namespace EVEMon
             {
                 if (e.CompletedSkills.Count == 1)
                 {
-                    var skill = e.CompletedSkills.First();
-
-                    StringBuilder completionText = new StringBuilder();
-                    completionText.AppendLine(e.Character.Name);
-                    completionText.AppendLine("has finished learning skill");
-                    completionText.Append(skill.Skill.Name);
-                    
-                    m_lcd.CompletionString = completionText.ToString();
+                    m_lcd.SkillCompleted(e.Character, e.CompletedSkills.First());
                 }
                 else
                 {
-                    StringBuilder completionText = new StringBuilder();
-                    completionText.AppendLine(e.Character.Name);
-                    completionText.AppendLine("has finished learning");
-                    completionText.AppendFormat(CultureConstants.DefaultCulture, "{0} Skills", e.CompletedSkills.Count);
-                    
-                    m_lcd.CompletionString = completionText.ToString();
+                    m_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
                 }
-                m_lcd.SkillCompleted();
             }
         }
 

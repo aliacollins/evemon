@@ -425,7 +425,6 @@ namespace EVEMon
         /// </summary>
         private void UpdatePageControls()
         {
-
             // Checks if there are skills to display
             IEnumerable<Skill> skills = m_character.Skills;
             var skillsCount = skills.Count();

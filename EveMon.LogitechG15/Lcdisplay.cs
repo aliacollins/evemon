@@ -10,6 +10,7 @@ using EVEMon.Common;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Drawing.Text;
 
 namespace EVEMon.LogitechG15
 {
@@ -35,28 +36,21 @@ namespace EVEMon.LogitechG15
         public static event CharAutoCycleHandler AutoCycleChanged;
 
 
+        private List<ILcdLine> m_lcdLines = new List<ILcdLine>();
+
         private Lcdisplay() 
         {
             m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
-            m_bufferOut = new byte[6880];
 
-            // using standard brushes in a multithreaded app is bad mkay ?
-            m_defBrush = new SolidBrush(Color.Black);
-            m_backColor = Color.White;
-            m_defPen = new Pen(m_defBrush);
+            m_bmpLCD = new Bitmap(G15Constants.G15Width, G15Constants.G15Height, PixelFormat.Format24bppRgb);
+            m_bmpLCD.SetResolution(G15Constants.G15DpiX, G15Constants.G15DpiY);
+            m_lcdCanvas = Graphics.FromImage(m_bmpLCD);
+            m_lcdCanvas.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
-            m_bmpLCD = new Bitmap(160, 43, PixelFormat.Format24bppRgb);
-            m_bmpLCD.SetResolution(46f, 46f);
-            m_lcdGraphics = Graphics.FromImage(m_bmpLCD);
-            m_lcdGraphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-
-            m_bmpLCDX = new Bitmap(160, 43, PixelFormat.Format24bppRgb);
-            m_bmpLCDX.SetResolution(46f, 46f);
-            m_lcdGraphicsX = Graphics.FromImage(m_bmpLCDX);
-            m_lcdGraphicsX.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-
-            m_lines = new string[3] { "", "", "" };
-            m_formatStringConverted = FORMAT_CHAR_SKILL_TIME_STRING.Replace("[c]", "{0}").Replace("[s]", "{1}").Replace("[t]", "{2}");
+            m_bmpLCDX = new Bitmap(G15Constants.G15Width, G15Constants.G15Height, PixelFormat.Format24bppRgb);
+            m_bmpLCDX.SetResolution(G15Constants.G15DpiX, G15Constants.G15DpiY);
+            m_lcdOverlay = Graphics.FromImage(m_bmpLCDX);
+            m_lcdOverlay.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
             m_lcd = new LCDInterface();
             m_buttonDelegate = new ButtonDelegate(this.OnButtonsPressed);
@@ -69,13 +63,13 @@ namespace EVEMon.LogitechG15
             m_showTime = false;
             m_cycleCompletionTime = false;
             m_showingCompletionTime = false;
-            m_completionString = "Hotaru Nakayoshi\nhas finished learning skill\nHull Upgrades V";
             m_leasttime = TimeSpan.FromTicks(DateTime.Now.Ticks);
         }
 
         #region Cleanup
 
         private bool m_disposed = false;
+
         ~Lcdisplay()
         {
             Dispose(false);
@@ -86,6 +80,7 @@ namespace EVEMon.LogitechG15
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         private void Dispose(bool isDisposing)
         {
             if (!this.m_disposed)
@@ -105,45 +100,25 @@ namespace EVEMon.LogitechG15
         public const uint BUTTON2_VALUE = 2;
         public const uint BUTTON3_VALUE = 4;
         public const uint BUTTON4_VALUE = 8;
-
-        public const int STATE_SPLASH = 1;
-        public const int STATE_CLIST = 2;
-        public const int STATE_SKILLC = 3;
-        public const int STATE_CHARS = 4;
-        public const int STATE_S_CYCLE = 5;
-        public const int STATE_S_REFRESH = 6;
-
-        /// <summary>
-        /// Format for Character / Skill / Time mode. 
-        /// Use [c] for character, [s] for skill name, and [t] for Time String
-        /// </summary>
-        const string FORMAT_CHAR_SKILL_TIME_STRING = "[c]:\n[s]\n[t]";     
    
         private static Lcdisplay s_singleInstance;
         private LCDInterface m_lcd;
         private Font m_defaultFont;
-        private Brush m_defBrush;
-        private Pen m_defPen;
         private Bitmap m_bmpLCD;
         private Bitmap m_bmpLCDX;
-        private Graphics m_lcdGraphics;
-        private Graphics m_lcdGraphicsX;
-        private Color m_backColor;
-        private string m_formatStringConverted;
+        private Graphics m_lcdCanvas;
+        private Graphics m_lcdOverlay;
         private int m_currentCharacterIndex;
         private string m_currentSkillTraining;
         private double m_currentPerc;
         private TimeSpan m_timeToSkillComplete;
         private Character m_firstCharacterToComplete;
         private TimeSpan m_leasttime;
-        private string[] m_lines;
-        private Byte[] m_bufferOut;
-        private Character[] m_characters;
         private uint m_oldButtonState;
         private DateTime m_buttonStateHld;
         private DateTime m_paintTime;
         private DateTime m_holdTime;
-        private int m_state;
+        private LcdState m_state;
         private bool m_cycle;
         private int m_cycleInterval;
         private DateTime m_cycleTime;
@@ -153,110 +128,185 @@ namespace EVEMon.LogitechG15
         private bool m_showingCompletionTime;
         private bool m_showTime;
         private Character m_refreshCharacter;
-        private bool m_skillCchg;
         private ButtonDelegate m_buttonDelegate;
-        private string m_completionString;
-
-        public string CompletionString
-        {
-            get { return m_completionString; }
-            set { m_completionString = value; }
-        }
 
         public bool Cycle 
         {
-            get { return m_cycle; }
-            set { m_cycle = value; }
+            get 
+            {
+                return m_cycle;
+            }
+            set
+            {
+                m_cycle = value;
+            }
         }
+
         public int CycleInterval 
         {
-            get { return m_cycleInterval; }
-            set { m_cycleInterval = value; }
+            get
+            {
+                return m_cycleInterval;
+            }
+            set
+            {
+                m_cycleInterval = value;
+            }
         }
+
         public bool ShowTime
         {
-            get { return m_showTime; }
-            set { m_showTime = value; }
+            get
+            {
+                return m_showTime;
+            }
+            set
+            {
+                m_showTime = value;
+            }
         }
+        
         public bool CycleCompletionTime
         {
-            get { return m_cycleCompletionTime; }
-            set { m_cycleCompletionTime = value; }
+            get
+            {
+                return m_cycleCompletionTime;
+            }
+            set 
+            {
+                m_cycleCompletionTime = value;
+            }
         }
+
         public int CycleCompletionInterval
         {
-            get { return m_cycleCompletionTimeInterval; }
-            set { m_cycleCompletionTimeInterval = value; }
+            get
+            {
+                return m_cycleCompletionTimeInterval;
+            }
+            set
+            {
+                m_cycleCompletionTimeInterval = value;
+            }
         }
+
         public Character RefreshCharacter
         {
-            get { return m_refreshCharacter; }
-            set { m_refreshCharacter = value; }
+            get
+            {
+                return m_refreshCharacter;
+            }
+            set
+            {
+                m_refreshCharacter = value;
+            }
         }
 
         public int CurrentCharacterIndex
         {
-            get { return m_currentCharacterIndex; }
+            get
+            {
+                return m_currentCharacterIndex;
+            }
         }
 
         public string CurrentCharacterName 
         {
             get 
             {
-                if (m_currentCharacterIndex < 0 || m_characters == null || m_currentCharacterIndex >= m_characters.Length)
+                if (m_currentCharacterIndex >= Characters.Length)
+                {
+                    m_currentCharacterIndex = Characters.Length - 1;
+                }
+
+                if (m_currentCharacterIndex < 0 || Characters == null)
                 {
                     return "No character";
                 }
-                return m_characters[m_currentCharacterIndex].AdornedName;
+                return Characters[m_currentCharacterIndex].AdornedName;
             }
         }
 
-        public Character CurrentCharacter
+        public CCPCharacter CurrentCharacter
         {
             get
             {
-                if (m_currentCharacterIndex < 0 || m_characters == null || m_currentCharacterIndex >= m_characters.Length)
+                if (m_currentCharacterIndex < 0 || Characters == null || m_currentCharacterIndex >= Characters.Length)
                 {
                     return null;
                 }
-                return m_characters[m_currentCharacterIndex];
+                return Characters[m_currentCharacterIndex];
             }
             set
             {
-                m_currentCharacterIndex = Array.IndexOf(m_characters, value);
+                m_currentCharacterIndex = Array.IndexOf(Characters, value);
                 if (m_currentCharacterIndex == -1) m_currentCharacterIndex = 0;
             }
         }
 
         public string CurrentSkillTrainingText 
         {
-            get { return m_currentSkillTraining; }
-            set { m_currentSkillTraining = value; }
+            get
+            {
+                return m_currentSkillTraining;
+            }
+            set
+            {
+                m_currentSkillTraining = value;
+            }
         }
+
         public TimeSpan TimeToComplete 
         {
-            get { return m_timeToSkillComplete; }
-            set { m_timeToSkillComplete = value; }
+            get
+            {
+                return m_timeToSkillComplete;
+            }
+            set
+            {
+                m_timeToSkillComplete = value;
+            }
         }
+
         public Character FirstCharacterToCompleteSkill 
         {
-            get { return m_firstCharacterToComplete; }
-            set { m_firstCharacterToComplete = value; }
+            get
+            {
+                return m_firstCharacterToComplete;
+            }
+            set
+            {
+                m_firstCharacterToComplete = value;
+            }
         }
+
         public TimeSpan FirstSkillCompletionRemaingTime
         {
-            get { return m_leasttime; }
-            set { m_leasttime = value; }
+            get
+            {
+                return m_leasttime;
+            }
+            set
+            {
+                m_leasttime = value;
+            }
         }
         public double CurrentCharacterTrainingProgression 
         {
-            get { return m_currentPerc; }
-            set { m_currentPerc = value; }
+            get
+            {
+                return m_currentPerc;
+            }
+            set
+            {
+                m_currentPerc = value;
+            }
         }
-        public Character[] Characters 
+
+        public CCPCharacter[] Characters
         {
-            get { return m_characters; }
-            set { m_characters = value; }
+            get;
+            set;
         }
 
         public static Lcdisplay Instance() 
@@ -278,30 +328,30 @@ namespace EVEMon.LogitechG15
             if (test.TotalMilliseconds > 0) return;
 
             TimeSpan now = TimeSpan.FromTicks(DateTime.Now.Ticks - m_holdTime.Ticks);
-            if (m_state == STATE_SPLASH && now.TotalSeconds > 4)
+            if (m_state == LcdState.SplashScreen && now.TotalSeconds > 4)
             {
-                SwitchState(STATE_CHARS);
+                SwitchState(LcdState.Character);
             }
-            if (m_state == STATE_CLIST && now.TotalMilliseconds > 2000)
+            if (m_state == LcdState.CharacterList && now.TotalMilliseconds > 2000)
             {
-                SwitchState(STATE_CHARS);
+                SwitchState(LcdState.Character);
             }
-            if (m_state == STATE_SKILLC && now.TotalSeconds > 14)
+            if (m_state == LcdState.SkillComplete && now.TotalSeconds > 14)
             {
-                SwitchState(STATE_CHARS);
+                SwitchState(LcdState.Character);
             }
-            if ((m_state == STATE_S_CYCLE || m_state == STATE_S_REFRESH) && now.TotalSeconds > 2)
+            if ((m_state == LcdState.CycleSettings || m_state == LcdState.Refreshing) && now.TotalSeconds > 2)
             {
-                SwitchState(STATE_CHARS);
+                SwitchState(LcdState.Character);
             }
             
             switch (m_state) 
             {
-                case STATE_SPLASH:
+                case LcdState.SplashScreen:
                     m_paintTime = m_paintTime.AddSeconds(2);
                     PaintSplash();
                     return;
-                case STATE_CHARS:
+                case LcdState.Character:
                     if (m_cycle)
                     {
                         if (TimeSpan.FromTicks(DateTime.Now.Ticks-m_cycleTime.Ticks).TotalSeconds > m_cycleInterval)
@@ -313,19 +363,19 @@ namespace EVEMon.LogitechG15
                     m_paintTime = m_paintTime.AddSeconds(1);
                     PaintsCharacter();
                     return;
-                case STATE_CLIST:
+                case LcdState.CharacterList:
                     m_paintTime = m_paintTime.AddSeconds(2);
                     PaintCharactersList();
                     return;
-                case STATE_SKILLC:
+                case LcdState.SkillComplete:
                     m_paintTime = m_paintTime.AddMilliseconds(800);
                     PaintSkillCompletionMessage();
                     return;
-                case STATE_S_CYCLE:
+                case LcdState.CycleSettings:
                     m_paintTime = m_paintTime.AddSeconds(2);
                     PaintCycleSettings();
                     return;
-                case STATE_S_REFRESH:
+                case LcdState.Refreshing:
                     if (m_refreshCharacter != null)
                     {
                         m_paintTime = m_paintTime.AddSeconds(2);
@@ -342,9 +392,8 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintsCharacter()
         {
-            if (String.IsNullOrEmpty(m_currentSkillTraining)) m_currentSkillTraining = "No skill in training";
+            m_lcdLines.Clear();
 
-            string tmpTxt = "";
             if (m_cycleCompletionTime)
             {
                 if (TimeSpan.FromTicks(DateTime.Now.Ticks - m_cycleCompletionTimeTime.Ticks).TotalSeconds > m_cycleCompletionTimeInterval)
@@ -354,67 +403,61 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            CCPCharacter ccpCharacter = m_characters[m_currentCharacterIndex] as CCPCharacter;
+            string charLine = String.Format("{0} - {1} queued skill{2}", CurrentCharacter.AdornedName, CurrentCharacter.SkillQueue.Count, CurrentCharacter.SkillQueue.Count == 1 ? "" : "s" );
+            m_lcdLines.Add(new TextLine(charLine, m_defaultFont));
 
-            if (m_showingCompletionTime)
+            if (CurrentCharacter.IsTraining)
             {
-                tmpTxt = string.Format(m_formatStringConverted, CurrentCharacterName, m_currentSkillTraining, String.Format("Finishes {0}", DateTime.Now + m_timeToSkillComplete));
-            }
-            else if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
-            {
-                tmpTxt = string.Format(m_formatStringConverted, CurrentCharacterName, m_currentSkillTraining, "Skill Queue Paused");
+                m_lcdLines.Add(new TextLine(CurrentCharacter.SkillQueue.CurrentlyTraining.SkillName, m_defaultFont));
             }
             else
             {
-                tmpTxt = string.Format(m_formatStringConverted, CurrentCharacterName, m_currentSkillTraining, FormatTimeSpan(m_timeToSkillComplete));
+                m_lcdLines.Add(new TextLine("No Skill Trianing", m_defaultFont));
             }
-
-            string[] tmpLines = tmpTxt.Split("\n".ToCharArray());
-            if (tmpLines.Length == 3)
+            
+            if (CurrentCharacter.SkillQueue.IsPaused)
             {
-                m_lines[0] = tmpLines[0];
-                m_lines[1] = tmpLines[1];
-                m_lines[2] = tmpLines[2];
+                m_lcdLines.Add(new TextLine("Skill Queue Paused", m_defaultFont));
             }
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
-
-            RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[0], m_defaultFont));
-            RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[1], m_defaultFont));
-            RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[2], m_defaultFont));
-            RectangleF recLine4 = new RectangleF(new PointF(0f, 0f), new SizeF(40f, 10f));
-            recLine1.Offset(0f, -1f);
-            recLine2.Offset(0f, recLine1.Bottom);
-            recLine3.Offset(0f, recLine2.Bottom);
-
-            int len = Convert.ToInt16(m_currentPerc * 157);
-            float offset = 66f;
-            if (m_timeToSkillComplete.Ticks == 0)
+            else if (m_showingCompletionTime)
             {
-                m_currentPerc = 1;
-                offset = 61f;
+                m_lcdLines.Add(new TextLine(String.Format("Finishes {0}", DateTime.Now + TimeToComplete), m_defaultFont));
             }
-            recLine4.Offset(offset, recLine3.Bottom - 1);
+            else
+            {
+                m_lcdLines.Add(new TextLine(Skill.TimeSpanToDescriptiveText(TimeToComplete, DescriptiveTextOptions.SpaceBetween, true), m_defaultFont));
+            }
 
-            string perc = m_currentPerc.ToString("P2");
+            m_lcdLines.Add(new ProgressLine(CurrentCharacterTrainingProgression, m_defaultFont));
 
-            m_lcdGraphics.DrawString(m_lines[0], m_defaultFont, m_defBrush, recLine1);
-            m_lcdGraphics.DrawString(m_lines[1], m_defaultFont, m_defBrush, recLine2);
-            m_lcdGraphics.DrawString(m_lines[2], m_defaultFont, m_defBrush, recLine3);
-            m_lcdGraphicsX.DrawString(perc, m_defaultFont, m_defBrush, recLine4);
+            RenderLines();
+            RenderTime();
+            UpdateLcdDisplay();
+        }
 
+        private void RenderLines()
+        {
+            ClearGraphics();
+
+            float offset = 0;
+
+            foreach (var lcdLine in m_lcdLines)
+            {
+                lcdLine.Render(m_lcdCanvas, m_lcdOverlay, offset);
+                offset += lcdLine.Height;
+            }
+        }
+
+        private void RenderTime()
+        {
             if (m_showTime)
             {
                 string curTime = DateTime.Now.ToString("T");
-                SizeF size = m_lcdGraphics.MeasureString(curTime, m_defaultFont);
+                SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(160f - size.Width, 0f), size);
                 timeLine.Offset(0f, -1f);
-                m_lcdGraphics.DrawString(curTime, m_defaultFont, m_defBrush, timeLine);
+                m_lcdCanvas.DrawString(curTime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
             }
-
-            m_lcdGraphics.DrawRectangle(m_defPen, 1, (recLine3.Bottom + 1), 158, 8);
-            m_lcdGraphics.FillRectangle(m_defBrush, 2, (recLine3.Bottom + 2), len, 7);
-            UpdateLcdDisplay();
         }
 
         /// <summary>
@@ -422,46 +465,14 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintSkillCompletionMessage() 
         {
-            string[] tmpLines = m_completionString.Split("\n".ToCharArray());
-            if (tmpLines.Length == 3)
-            {
-                m_lines[0] = tmpLines[0];
-                m_lines[1] = tmpLines[1];
-                m_lines[2] = tmpLines[2];
-            }
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
-            RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[0], m_defaultFont));
-            RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[1], m_defaultFont));
-            RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[2], m_defaultFont));
-            
-            float offset = (159 - recLine1.Width) / 2;
-            recLine1.Offset(offset, -1f);
-            offset = (159 - recLine2.Width) / 2;
-            recLine2.Offset(offset, recLine1.Bottom);
-            offset = (159 - recLine3.Width) / 2;
-            recLine3.Offset(offset, recLine2.Bottom);
+            m_lcdLines.Clear();
+            m_lcdLines.Add(new TextLine(CurrentCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new TextLine("Has finished training", m_defaultFont));
+            m_lcdLines.Add(new TextLine(CurrentCharacter.SkillQueue.CurrentlyTraining.SkillName, m_defaultFont));
+            m_lcdLines.Add(new TextLine(String.Format("{0} more skills in queue", CurrentCharacter.SkillQueue.Count), m_defaultFont));
 
-            m_lcdGraphics.DrawString(m_lines[0], m_defaultFont, m_defBrush, recLine1);
-            m_lcdGraphics.DrawString(m_lines[1], m_defaultFont, m_defBrush, recLine2);
-            m_lcdGraphics.DrawString(m_lines[2], m_defaultFont, m_defBrush, recLine3);
-
-             if (m_skillCchg)
-            {
-                double tmp = 1;
-                string perc = tmp.ToString("P2");
-                RectangleF recLine4 = new RectangleF(new PointF(0f, 0f), new SizeF(40f, 10f));
-
-                recLine4.Offset(61f, recLine3.Bottom - 1);
-                m_lcdGraphics.DrawRectangle(m_defPen, 1, (recLine3.Bottom + 1), 158, 8);
-                m_lcdGraphics.FillRectangle(m_defBrush, 2, (recLine3.Bottom + 2), 157, 7);
-                m_lcdGraphicsX.DrawString(perc, m_defaultFont, m_defBrush, recLine4);
-                m_skillCchg = false;
-            }
-            else
-            {
-                m_skillCchg = true;
-            }
+            RenderLines();
+            RenderTime();
             UpdateLcdDisplay(LcdisplayPriority.Alert);
         }
 
@@ -470,45 +481,43 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintCharactersList() 
         {
-            // Creates a reordered list with the selected character on top
-            List<Character> nlist = new List<Character>();
-
-            for (int i = m_currentCharacterIndex; i < m_characters.Length; i++)
+            m_lcdLines.Clear();
+            
+            if (Characters.Length == 0)
             {
-                nlist.Add(m_characters[i]);
+                m_lcdLines.Add(new TextLine("No Characters", m_defaultFont));
+                UpdateLcdDisplay();
+                return;
+            }
+
+            // Creates a reordered list with the selected character on top
+            List<CCPCharacter> charList = new List<CCPCharacter>();
+
+            for (int i = m_currentCharacterIndex; i < Characters.Length; i++)
+            {
+                charList.Add(Characters[i]);
             }
             for (int i = 0; i < m_currentCharacterIndex; i++)
             {
-                nlist.Add(m_characters[i]);
+                charList.Add(Characters[i]);
+            }
+                        
+            // Perform the painting
+            ClearGraphics();
+            
+            foreach (var character in charList)
+            {
+                m_lcdLines.Add(new TextLine(character.AdornedName, m_defaultFont));
             }
 
-            // Creates the four lines rectangles
-            RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
-            RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
-            RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
-            RectangleF recLine4 = new RectangleF(new PointF(0f, 0f), new SizeF(158f, 11f));
-            recLine1.Offset(0f, -1f);
-            recLine2.Offset(0f, recLine1.Bottom);
-            recLine3.Offset(0f, recLine2.Bottom);
-            recLine4.Offset(0f, recLine3.Bottom);
-
-            // Perform the painting
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
-
-            if (nlist.Count == 0)
-                m_lcdGraphicsX.DrawString("No character", m_defaultFont, m_defBrush, recLine1);
-            if (nlist.Count > 0)
-                m_lcdGraphicsX.DrawString(nlist[0].AdornedName, m_defaultFont, m_defBrush, recLine1);
-            if (nlist.Count > 1)
-                m_lcdGraphics.DrawString(nlist[1].AdornedName, m_defaultFont, m_defBrush, recLine2);
-            if (nlist.Count > 2)
-                m_lcdGraphics.DrawString(nlist[2].AdornedName, m_defaultFont, m_defBrush, recLine3);
-            if (nlist.Count > 3)
-                m_lcdGraphics.DrawString(nlist[3].AdornedName, m_defaultFont, m_defBrush, recLine4);
-
-            m_lcdGraphics.FillRectangle(m_defBrush, 0, 0, 159, 11);
+            RenderLines();
+            RenderSelector();
             UpdateLcdDisplay();
+        }
+
+        private void RenderSelector()
+        {
+            m_lcdOverlay.FillRectangle(new SolidBrush(Color.Black), 0, 0, G15Constants.G15Width, 11);
         }
 
         /// <summary>
@@ -516,28 +525,17 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintCycleSettings()
         {
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
-            string[] _line = new string[2];
+            ClearGraphics();
+            m_lcdLines.Clear();
+            
+            string status = m_cycle ? "on" : "off";
+            string statusMsg = String.Format(CultureConstants.DefaultCulture, "Autocycle is now {0}", status);
+            m_lcdLines.Add(new TextLine(statusMsg, m_defaultFont));
+            
+            string cycleMsg = String.Format("Cycle Time is: {0}s", m_cycleInterval);
+            m_lcdLines.Add(new TextLine(cycleMsg, m_defaultFont));
 
-            _line[0] = "Autocycle is now ";
-            if (m_cycle)
-                _line[0] += "on";
-            else
-                _line[0] += "off";
-
-            _line[1] = "Cycle Time is: " + m_cycleInterval + "s";
-
-            RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(_line[0], m_defaultFont));
-            RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(_line[1], m_defaultFont));
-
-            float offset = (159 - recLine1.Width) / 2;
-            recLine1.Offset(offset, -1f);
-            offset = (159 - recLine2.Width) / 2;
-            recLine2.Offset(offset, recLine1.Bottom);
-
-            m_lcdGraphics.DrawString(_line[0], m_defaultFont, m_defBrush, recLine1);
-            m_lcdGraphics.DrawString(_line[1], m_defaultFont, m_defBrush, recLine2);
+            RenderLines();
             UpdateLcdDisplay();
         }
 
@@ -546,27 +544,14 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintRefreshingMessage()
         {
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
+            ClearGraphics();
+            m_lcdLines.Clear();
 
-            m_lines[0] = "Refreshing Character Information";
-            m_lines[1] = "of";
-            m_lines[2] = m_refreshCharacter.AdornedName;
+            m_lcdLines.Add(new TextLine("Refreshing Character Information", m_defaultFont));
+            m_lcdLines.Add(new TextLine("of", m_defaultFont));
+            m_lcdLines.Add(new TextLine(m_refreshCharacter.AdornedName, m_defaultFont));
 
-            RectangleF recLine1 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[0], m_defaultFont));
-            RectangleF recLine2 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[1], m_defaultFont));
-            RectangleF recLine3 = new RectangleF(new PointF(0f, 0f), m_lcdGraphics.MeasureString(m_lines[2], m_defaultFont));
-
-            float offset = (159 - recLine1.Width) / 2;
-            recLine1.Offset(offset, -1f);
-            offset = (159 - recLine2.Width) / 2;
-            recLine2.Offset(offset, recLine1.Bottom);
-            offset = (159 - recLine3.Width) / 2;
-            recLine3.Offset(offset, recLine2.Bottom);
-            m_lcdGraphics.DrawString(m_lines[0], m_defaultFont, m_defBrush, recLine1);
-            m_lcdGraphics.DrawString(m_lines[1], m_defaultFont, m_defBrush, recLine2);
-            m_lcdGraphics.DrawString(m_lines[2], m_defaultFont, m_defBrush, recLine3);
-
+            RenderLines();
             UpdateLcdDisplay();
         }
 
@@ -583,14 +568,19 @@ namespace EVEMon.LogitechG15
             }
 
             // Clear the graphics
-            m_lcdGraphics.Clear(m_backColor);
-            m_lcdGraphicsX.Clear(m_backColor);
+            ClearGraphics();
             
             // Display the splash logo
-            int left = (int)((160 / 2) - (splashLogo.Width / 2));
-            int top = (int)((43 /2) - (splashLogo.Height / 2));
-            m_lcdGraphics.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
+            int left = (int)((G15Constants.G15Width / 2) - (splashLogo.Width / 2));
+            int top = (int)((G15Constants.G15Height /2) - (splashLogo.Height / 2));
+            m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
             UpdateLcdDisplay(LcdisplayPriority.Alert);
+        }
+
+        private void ClearGraphics()
+        {
+            m_lcdCanvas.Clear(Color.White);
+            m_lcdOverlay.Clear(Color.White);
         }
 
         /// <summary>
@@ -612,6 +602,7 @@ namespace EVEMon.LogitechG15
             {
                 int width = m_bmpLCD.Width;
                 int height = m_bmpLCD.Height;
+                byte[] buffer = new byte[6880];
                 Rectangle rect = new Rectangle(0, 0, width, height);
 
                 BitmapData bmData = m_bmpLCD.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCD.PixelFormat);
@@ -627,7 +618,7 @@ namespace EVEMon.LogitechG15
 
                         // Copy the content of the bitmp to our buffers 
                         // Unsafe code removes the boundaries checks - a lot faster.
-                        fixed (byte* buffer0 = m_bufferOut)
+                        fixed (byte* buffer0 = buffer)
                         {
                             byte* output = buffer0;
                             byte* inputX = (byte*)bmDataX.Scan0.ToPointer();
@@ -656,7 +647,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 // Fetches the buffer to the LCD screen
-                m_lcd.DisplayBitmap(ref m_bufferOut[0], (int)priority);
+                m_lcd.DisplayBitmap(ref buffer[0], (int)priority);
             }
         }
         #endregion
@@ -687,25 +678,37 @@ namespace EVEMon.LogitechG15
             if ((press & BUTTON2_VALUE) != 0)
             {
                 // Select next skill ready char
-                if (m_firstCharacterToComplete != null)
-                {
-                    m_currentCharacterIndex = Array.IndexOf(m_characters, m_firstCharacterToComplete);
-                    if (CurrentCharacterChanged != null) CurrentCharacterChanged(m_firstCharacterToComplete);
-                    m_cycle = false;
+                if (Characters == null)
+                    return 0;
 
-                    if (AutoCycleChanged != null) AutoCycleChanged(m_cycle);
-                    SwitchState(STATE_CHARS);
+                DateTime timeToComplete = DateTime.MaxValue;
+                CCPCharacter firstComplete = null;
+                foreach (CCPCharacter character in Characters)
+                {
+                    if (character.IsTraining && character.SkillQueue.EndTime < timeToComplete)
+                    {
+                        timeToComplete = character.SkillQueue.EndTime;
+                        firstComplete = character;
+                    }
                 }
+
+                if (firstComplete != null)
+                {
+                    CurrentCharacter = firstComplete;
+                }
+
+                if (AutoCycleChanged != null) AutoCycleChanged(false);
+                SwitchState(LcdState.Character);
             }
 
             // Forces a refresh from CCP
             if ((press & BUTTON3_VALUE) != 0)
             {
-                if (m_state == STATE_CHARS || m_state == STATE_CLIST)
+                if (m_state == LcdState.Character || m_state == LcdState.CharacterList)
                 {
                     m_refreshCharacter = CurrentCharacter;
                     if (APIUpdateRequested != null) APIUpdateRequested(m_refreshCharacter);
-                    SwitchState(STATE_S_REFRESH);
+                    SwitchState(LcdState.Refreshing);
                 }
             }
 
@@ -715,7 +718,7 @@ namespace EVEMon.LogitechG15
                 // switch autocycle on/off
                 SwitchCycle();
                 if (AutoCycleChanged != null) AutoCycleChanged(m_cycle);
-                SwitchState(STATE_S_CYCLE);
+                SwitchState(LcdState.CycleSettings);
                 m_cycleTime = DateTime.Now;
             }
 
@@ -729,11 +732,11 @@ namespace EVEMon.LogitechG15
         /// <param name="nextchar"></param>
         private void MoveToNextChar()
         {
-            if (m_characters == null) return;
+            if (Characters == null) return;
 
             // Move to next char
             m_currentCharacterIndex++;
-            if (m_currentCharacterIndex >= m_characters.Length) m_currentCharacterIndex = 0;
+            if (m_currentCharacterIndex >= Characters.Length) m_currentCharacterIndex = 0;
 
             // Requests new data
             if (CurrentCharacterChanged != null) CurrentCharacterChanged(CurrentCharacter);
@@ -743,9 +746,9 @@ namespace EVEMon.LogitechG15
         /// Swutches the state and updates some of the internal times variables.
         /// </summary>
         /// <param name="state"></param>
-        public void SwitchState(int state)
+        public void SwitchState(LcdState newState)
         {
-            m_state = state;
+            m_state = newState;
             m_paintTime = DateTime.Now;
             m_holdTime = DateTime.Now;
         }
@@ -764,15 +767,23 @@ namespace EVEMon.LogitechG15
                 MoveToNextChar();
             }
 
-            SwitchState(STATE_CLIST);
+            SwitchState(LcdState.CharacterList);
         }
 
         /// <summary>
         /// On skill completion, switch to the display of the proper message.
         /// </summary>
-        public void SkillCompleted()
+        public void SkillCompleted(Character character, QueuedSkill skill)
         {
-            SwitchState(STATE_SKILLC);
+            SwitchState(LcdState.SkillComplete);
+        }
+
+        /// <summary>
+        /// On skill completion, switch to the display of the proper message.
+        /// </summary>
+        public void SkillCompleted(Character character, int skillCount)
+        {
+            SwitchState(LcdState.SkillComplete);
         }
 
         /// <summary>
@@ -783,39 +794,5 @@ namespace EVEMon.LogitechG15
             m_cycle = !m_cycle;
         }
         #endregion
-
-
-        /// <summary>
-        /// Formats the tumespan to formats such as "3h 21m 4s", "4d 3h 21m 4s", etc...
-        /// </summary>
-        /// <param name="timespan"></param>
-        /// <returns></returns>
-        static string FormatTimeSpan(TimeSpan timespan) 
-        {
-            string rtn = "";
-            if (timespan.TotalDays >= 1) 
-                rtn += timespan.Days.ToString() + "d ";
-
-            if (timespan.Hours < 10)
-                rtn += "0";
-            rtn += timespan.Hours.ToString() + "h ";
-            if (timespan.Minutes < 10)
-                rtn += "0";
-            rtn += timespan.Minutes.ToString() + "m ";
-            if (timespan.Seconds < 10)
-                rtn += "0";
-            rtn += timespan.Seconds.ToString() + "s";
-            if (timespan.Ticks == 0)
-                rtn = "Done";
-            return rtn;
-        }
-    }
-
-    public enum LcdisplayPriority
-    {
-        Alert = lgLcdClassLibrary.LCDInterface.lglcd_PRIORITY_ALERT,
-        Normal = lgLcdClassLibrary.LCDInterface.lglcd_PRIORITY_NORMAL,
-        Background = lgLcdClassLibrary.LCDInterface.lglcd_PRIORITY_BACKGROUND,
-        Idle = lgLcdClassLibrary.LCDInterface.lglcd_PRIORITY_IDLE_NO_SHOW
     }
 }
