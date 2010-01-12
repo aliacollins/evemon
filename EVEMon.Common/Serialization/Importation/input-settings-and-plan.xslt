@@ -74,9 +74,11 @@
       <xsl:attribute name="level">
         <xsl:value-of select="Level"/>
       </xsl:attribute>
-      <xsl:attribute name="priority">
-        <xsl:value-of select="Priority"/>
-      </xsl:attribute>
+      <xsl:if test="Priority">
+        <xsl:attribute name="priority">
+          <xsl:value-of select="Priority"/>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:attribute name="type">
         <xsl:value-of select="EntryType"/>
       </xsl:attribute>
