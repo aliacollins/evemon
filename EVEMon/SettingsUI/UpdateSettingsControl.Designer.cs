@@ -39,21 +39,21 @@
             this.labelPeriod.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPeriod.Location = new System.Drawing.Point(169, 0);
             this.labelPeriod.Name = "labelPeriod";
-            this.labelPeriod.Size = new System.Drawing.Size(173, 23);
+            this.labelPeriod.Size = new System.Drawing.Size(173, 18);
             this.labelPeriod.TabIndex = 2;
             this.labelPeriod.Text = "Automatic Updates Intervals";
-            this.labelPeriod.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.toolTip.SetToolTip(this.labelPeriod, "The frequency at chich those data will be queried.");
+            this.labelPeriod.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.toolTip.SetToolTip(this.labelPeriod, "The frequency at which those data will be queried.");
             // 
             // labelMethod
             // 
             this.labelMethod.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMethod.Location = new System.Drawing.Point(20, 0);
             this.labelMethod.Name = "labelMethod";
-            this.labelMethod.Size = new System.Drawing.Size(143, 23);
+            this.labelMethod.Size = new System.Drawing.Size(143, 18);
             this.labelMethod.TabIndex = 3;
             this.labelMethod.Text = "CCP Query";
-            this.labelMethod.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelMethod.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             this.toolTip.SetToolTip(this.labelMethod, "The name of the query to CCP.");
             // 
             // UpdateSettingsControl

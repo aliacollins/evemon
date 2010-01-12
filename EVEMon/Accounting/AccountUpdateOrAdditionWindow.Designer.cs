@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.LinkLabel featuresLinkLabel;
             System.Windows.Forms.LinkLabel ccpLinkLabel;
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label4;
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Ali Baba");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
-            System.Windows.Forms.LinkLabel featuresLinkLabel;
             this.nextButton = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -47,23 +47,38 @@
             this.waitingPage = new EVEMon.Controls.MultiPanelPage();
             this.throbber = new EVEMon.Controls.Throbber();
             this.resultPage = new EVEMon.Controls.MultiPanelPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.keyPicture = new System.Windows.Forms.PictureBox();
+            this.keyLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.removalWarningLabel = new System.Windows.Forms.Label();
             this.charactersListView = new System.Windows.Forms.ListView();
-            this.keyLabel = new System.Windows.Forms.Label();
-            this.keyPicture = new System.Windows.Forms.PictureBox();
+            featuresLinkLabel = new System.Windows.Forms.LinkLabel();
             ccpLinkLabel = new System.Windows.Forms.LinkLabel();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
-            featuresLinkLabel = new System.Windows.Forms.LinkLabel();
             this.multiPanel.SuspendLayout();
             this.credentialsPage.SuspendLayout();
             this.waitingPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.resultPage.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.keyPicture)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // featuresLinkLabel
+            // 
+            featuresLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(65, 15);
+            featuresLinkLabel.Location = new System.Drawing.Point(15, 40);
+            featuresLinkLabel.Name = "featuresLinkLabel";
+            featuresLinkLabel.Size = new System.Drawing.Size(476, 18);
+            featuresLinkLabel.TabIndex = 6;
+            featuresLinkLabel.TabStop = true;
+            featuresLinkLabel.Text = "To choose between a limited or a full API key, check the list of EVEMon features." +
+                "";
+            featuresLinkLabel.UseCompatibleTextRendering = true;
+            featuresLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.featuresLinkLabel_LinkClicked);
             // 
             // ccpLinkLabel
             // 
@@ -90,6 +105,8 @@
             // 
             // label4
             // 
+            label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             label4.Location = new System.Drawing.Point(6, 17);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(284, 61);
@@ -142,7 +159,7 @@
             this.multiPanel.Controls.Add(this.resultPage);
             this.multiPanel.Location = new System.Drawing.Point(0, 0);
             this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.credentialsPage;
+            this.multiPanel.SelectedPage = this.resultPage;
             this.multiPanel.Size = new System.Drawing.Size(503, 171);
             this.multiPanel.TabIndex = 0;
             // 
@@ -221,15 +238,44 @@
             // 
             // resultPage
             // 
+            this.resultPage.Controls.Add(this.panel1);
             this.resultPage.Controls.Add(this.groupBox1);
-            this.resultPage.Controls.Add(this.keyLabel);
-            this.resultPage.Controls.Add(this.keyPicture);
             this.resultPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resultPage.Location = new System.Drawing.Point(0, 0);
             this.resultPage.Name = "resultPage";
             this.resultPage.Size = new System.Drawing.Size(503, 171);
             this.resultPage.TabIndex = 2;
             this.resultPage.Text = "resultPage";
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.keyPicture);
+            this.panel1.Controls.Add(this.keyLabel);
+            this.panel1.Location = new System.Drawing.Point(12, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(479, 38);
+            this.panel1.TabIndex = 4;
+            // 
+            // keyPicture
+            // 
+            this.keyPicture.Image = global::EVEMon.Properties.Resources.APIKeyWrong;
+            this.keyPicture.Location = new System.Drawing.Point(3, 3);
+            this.keyPicture.Name = "keyPicture";
+            this.keyPicture.Size = new System.Drawing.Size(32, 32);
+            this.keyPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.keyPicture.TabIndex = 0;
+            this.keyPicture.TabStop = false;
+            // 
+            // keyLabel
+            // 
+            this.keyLabel.AutoSize = true;
+            this.keyLabel.Location = new System.Drawing.Point(41, 13);
+            this.keyLabel.Name = "keyLabel";
+            this.keyLabel.Size = new System.Drawing.Size(122, 13);
+            this.keyLabel.TabIndex = 1;
+            this.keyLabel.Text = "This is a limited API key.";
+            this.keyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox1
             // 
@@ -248,10 +294,10 @@
             this.removalWarningLabel.ForeColor = System.Drawing.Color.DarkRed;
             this.removalWarningLabel.Location = new System.Drawing.Point(6, 82);
             this.removalWarningLabel.Name = "removalWarningLabel";
-            this.removalWarningLabel.Size = new System.Drawing.Size(284, 33);
+            this.removalWarningLabel.Size = new System.Drawing.Size(467, 16);
             this.removalWarningLabel.TabIndex = 4;
-            this.removalWarningLabel.Text = "Beware! When you remove characters, all their data and plans will be defintely lo" +
-                "st !";
+            this.removalWarningLabel.Text = "Beware! When you remove characters, all their data and plans will be definitely l" +
+                "ost !";
             // 
             // charactersListView
             // 
@@ -272,37 +318,6 @@
             this.charactersListView.TabIndex = 2;
             this.charactersListView.UseCompatibleStateImageBehavior = false;
             this.charactersListView.View = System.Windows.Forms.View.List;
-            // 
-            // keyLabel
-            // 
-            this.keyLabel.Location = new System.Drawing.Point(50, 12);
-            this.keyLabel.Name = "keyLabel";
-            this.keyLabel.Size = new System.Drawing.Size(441, 32);
-            this.keyLabel.TabIndex = 1;
-            this.keyLabel.Text = "This is a limited API key.";
-            this.keyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // keyPicture
-            // 
-            this.keyPicture.Image = global::EVEMon.Properties.Resources.APIKeyWrong;
-            this.keyPicture.Location = new System.Drawing.Point(12, 12);
-            this.keyPicture.Name = "keyPicture";
-            this.keyPicture.Size = new System.Drawing.Size(32, 32);
-            this.keyPicture.TabIndex = 0;
-            this.keyPicture.TabStop = false;
-            // 
-            // featuresLinkLabel
-            // 
-            featuresLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(65, 15);
-            featuresLinkLabel.Location = new System.Drawing.Point(15, 40);
-            featuresLinkLabel.Name = "featuresLinkLabel";
-            featuresLinkLabel.Size = new System.Drawing.Size(476, 18);
-            featuresLinkLabel.TabIndex = 6;
-            featuresLinkLabel.TabStop = true;
-            featuresLinkLabel.Text = "To choose between a limited or a full API key, check the list of EVEMon features." +
-                "";
-            featuresLinkLabel.UseCompatibleTextRendering = true;
-            featuresLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.featuresLinkLabel_LinkClicked);
             // 
             // AccountUpdateOrAdditionWindow
             // 
@@ -329,8 +344,11 @@
             this.waitingPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.resultPage.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            this.resultPage.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.keyPicture)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -349,10 +367,11 @@
         private EVEMon.Controls.MultiPanelPage waitingPage;
         private EVEMon.Controls.Throbber throbber;
         private EVEMon.Controls.MultiPanelPage resultPage;
-        private System.Windows.Forms.Label keyLabel;
         private System.Windows.Forms.PictureBox keyPicture;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListView charactersListView;
         private System.Windows.Forms.Label removalWarningLabel;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label keyLabel;
     }
 }

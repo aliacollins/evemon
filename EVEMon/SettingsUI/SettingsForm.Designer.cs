@@ -77,9 +77,9 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.Label lblEarlyReminder;
             System.Windows.Forms.Label lblLateReminder;
             System.Windows.Forms.Label label25;
+            System.Windows.Forms.Label label14;
+            System.Windows.Forms.Label label9;
             System.Windows.Forms.Label label27;
-            System.Windows.Forms.Label label17;
-            System.Windows.Forms.Label label28;
             System.Windows.Forms.Label label30;
             System.Windows.Forms.Label label23;
             System.Windows.Forms.FlowLayoutPanel flowLayoutPanel28;
@@ -165,8 +165,8 @@ namespace EVEMon.SettingsUI
             this.ProxyServerGroupBox = new System.Windows.Forms.GroupBox();
             this.customProxyCheckBox = new System.Windows.Forms.CheckBox();
             this.customProxyPanel = new System.Windows.Forms.Panel();
-            this.proxyAuthenticationButton = new System.Windows.Forms.Button();
             this.proxyPortTextBox = new System.Windows.Forms.TextBox();
+            this.proxyAuthenticationButton = new System.Windows.Forms.Button();
             this.proxyHttpHostTextBox = new System.Windows.Forms.TextBox();
             this.emailNotificationsPage = new EVEMon.Controls.MultiPanelPage();
             this.mailNotificationPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -226,14 +226,14 @@ namespace EVEMon.SettingsUI
             this.externalCalendarCheckbox = new System.Windows.Forms.CheckBox();
             this.g15Page = new EVEMon.Controls.MultiPanelPage();
             this.g15CheckBox = new System.Windows.Forms.CheckBox();
-            this.g15FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbG15ACycle = new System.Windows.Forms.CheckBox();
-            this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
-            this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+            this.g15Panel = new System.Windows.Forms.Panel();
+            this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.cbG15CycleTimes = new System.Windows.Forms.CheckBox();
             this.ACycleTimesInterval = new System.Windows.Forms.NumericUpDown();
-            this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.cbG15ACycle = new System.Windows.Forms.CheckBox();
+            this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.igbServerPage = new EVEMon.Controls.MultiPanelPage();
             this.igbCheckBox = new System.Windows.Forms.CheckBox();
             this.igbFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -270,9 +270,9 @@ namespace EVEMon.SettingsUI
             lblEarlyReminder = new System.Windows.Forms.Label();
             lblLateReminder = new System.Windows.Forms.Label();
             label25 = new System.Windows.Forms.Label();
+            label14 = new System.Windows.Forms.Label();
+            label9 = new System.Windows.Forms.Label();
             label27 = new System.Windows.Forms.Label();
-            label17 = new System.Windows.Forms.Label();
-            label28 = new System.Windows.Forms.Label();
             label30 = new System.Windows.Forms.Label();
             label23 = new System.Windows.Forms.Label();
             flowLayoutPanel28 = new System.Windows.Forms.FlowLayoutPanel();
@@ -312,11 +312,11 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPanel.SuspendLayout();
             this.gbGoogle.SuspendLayout();
             this.g15Page.SuspendLayout();
-            this.g15FlowPanel.SuspendLayout();
-            this.flowLayoutPanel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
-            this.flowLayoutPanel8.SuspendLayout();
+            this.g15Panel.SuspendLayout();
+            this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.igbServerPage.SuspendLayout();
             this.igbFlowPanel.SuspendLayout();
             this.flowLayoutPanel27.SuspendLayout();
@@ -625,7 +625,8 @@ namespace EVEMon.SettingsUI
             // 
             // label11
             // 
-            label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             label11.Location = new System.Drawing.Point(221, 8);
             label11.Name = "label11";
             label11.Size = new System.Drawing.Size(39, 13);
@@ -883,35 +884,35 @@ namespace EVEMon.SettingsUI
             label25.Text = "EVEMon can import scheduler entries from Outlook or Google calendars to emphasize" +
                 " the skills that will complete at times you won\'t be available.";
             // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new System.Drawing.Point(273, 6);
+            label14.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(46, 13);
+            label14.TabIndex = 9;
+            label14.Text = "seconds";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(166, 6);
+            label9.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(46, 13);
+            label9.TabIndex = 6;
+            label9.Text = "seconds";
+            // 
             // label27
             // 
             label27.AutoSize = true;
             label27.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             label27.Location = new System.Drawing.Point(3, 40);
             label27.Name = "label27";
-            label27.Size = new System.Drawing.Size(316, 13);
+            label27.Size = new System.Drawing.Size(339, 13);
             label27.TabIndex = 5;
-            label27.Text = "EVEMon supports the LCD display of the Logitech G15 keyboard.";
-            // 
-            // label17
-            // 
-            label17.AutoSize = true;
-            label17.Location = new System.Drawing.Point(167, 6);
-            label17.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            label17.Name = "label17";
-            label17.Size = new System.Drawing.Size(46, 13);
-            label17.TabIndex = 3;
-            label17.Text = "seconds";
-            // 
-            // label28
-            // 
-            label28.AutoSize = true;
-            label28.Location = new System.Drawing.Point(273, 6);
-            label28.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            label28.Name = "label28";
-            label28.Size = new System.Drawing.Size(46, 13);
-            label28.TabIndex = 6;
-            label28.Text = "seconds";
+            label27.Text = "EVEMon supports the LCD display of the Logitech G15/G19 keyboard.";
             // 
             // label30
             // 
@@ -928,11 +929,13 @@ namespace EVEMon.SettingsUI
             // 
             // label23
             // 
+            label23.AutoSize = true;
+            label23.Dock = System.Windows.Forms.DockStyle.Left;
             label23.Location = new System.Drawing.Point(3, 0);
             label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(53, 24);
+            label23.Size = new System.Drawing.Size(51, 27);
             label23.TabIndex = 6;
-            label23.Text = "IGB Port";
+            label23.Text = "IGB Port:";
             label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // flowLayoutPanel28
@@ -1204,7 +1207,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.trayIconPage;
+            this.multiPanel.SelectedPage = this.g15Page;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1515,16 +1518,25 @@ namespace EVEMon.SettingsUI
             // 
             this.customProxyPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.customProxyPanel.Controls.Add(this.proxyPortTextBox);
             this.customProxyPanel.Controls.Add(label12);
             this.customProxyPanel.Controls.Add(this.proxyAuthenticationButton);
             this.customProxyPanel.Controls.Add(label11);
-            this.customProxyPanel.Controls.Add(this.proxyPortTextBox);
             this.customProxyPanel.Controls.Add(label10);
             this.customProxyPanel.Controls.Add(this.proxyHttpHostTextBox);
             this.customProxyPanel.Location = new System.Drawing.Point(17, 97);
             this.customProxyPanel.Name = "customProxyPanel";
             this.customProxyPanel.Size = new System.Drawing.Size(369, 54);
             this.customProxyPanel.TabIndex = 6;
+            // 
+            // proxyPortTextBox
+            // 
+            this.proxyPortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.proxyPortTextBox.Location = new System.Drawing.Point(222, 24);
+            this.proxyPortTextBox.Name = "proxyPortTextBox";
+            this.proxyPortTextBox.Size = new System.Drawing.Size(38, 21);
+            this.proxyPortTextBox.TabIndex = 2;
+            this.proxyPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.proxyPortTextBox_Validating);
             // 
             // proxyAuthenticationButton
             // 
@@ -1538,15 +1550,6 @@ namespace EVEMon.SettingsUI
             this.proxyAuthenticationButton.Text = "Authentication...";
             this.proxyAuthenticationButton.UseVisualStyleBackColor = true;
             this.proxyAuthenticationButton.Click += new System.EventHandler(this.proxyAuthenticationButton_Click);
-            // 
-            // proxyPortTextBox
-            // 
-            this.proxyPortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.proxyPortTextBox.Location = new System.Drawing.Point(222, 24);
-            this.proxyPortTextBox.Name = "proxyPortTextBox";
-            this.proxyPortTextBox.Size = new System.Drawing.Size(38, 21);
-            this.proxyPortTextBox.TabIndex = 2;
-            this.proxyPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.proxyPortTextBox_Validating);
             // 
             // proxyHttpHostTextBox
             // 
@@ -2230,7 +2233,7 @@ namespace EVEMon.SettingsUI
             // 
             this.g15Page.Controls.Add(this.g15CheckBox);
             this.g15Page.Controls.Add(label27);
-            this.g15Page.Controls.Add(this.g15FlowPanel);
+            this.g15Page.Controls.Add(this.g15Panel);
             this.g15Page.Dock = System.Windows.Forms.DockStyle.Fill;
             this.g15Page.Location = new System.Drawing.Point(5, 5);
             this.g15Page.Name = "g15Page";
@@ -2250,74 +2253,38 @@ namespace EVEMon.SettingsUI
             this.g15CheckBox.UseVisualStyleBackColor = true;
             this.g15CheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // g15FlowPanel
+            // g15Panel
             // 
-            this.g15FlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.g15FlowPanel.Controls.Add(this.flowLayoutPanel7);
-            this.g15FlowPanel.Controls.Add(this.flowLayoutPanel8);
-            this.g15FlowPanel.Controls.Add(this.cbG15ShowTime);
-            this.g15FlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.g15FlowPanel.Location = new System.Drawing.Point(6, 125);
-            this.g15FlowPanel.Name = "g15FlowPanel";
-            this.g15FlowPanel.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.g15FlowPanel.Size = new System.Drawing.Size(356, 82);
-            this.g15FlowPanel.TabIndex = 4;
+            this.g15Panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.g15Panel.Controls.Add(this.cbG15ShowTime);
+            this.g15Panel.Controls.Add(this.panel3);
+            this.g15Panel.Controls.Add(this.panel1);
+            this.g15Panel.Location = new System.Drawing.Point(6, 125);
+            this.g15Panel.Margin = new System.Windows.Forms.Padding(0);
+            this.g15Panel.Name = "g15Panel";
+            this.g15Panel.Size = new System.Drawing.Size(399, 112);
+            this.g15Panel.TabIndex = 7;
             // 
-            // flowLayoutPanel7
+            // cbG15ShowTime
             // 
-            this.flowLayoutPanel7.Controls.Add(this.cbG15ACycle);
-            this.flowLayoutPanel7.Controls.Add(this.ACycleInterval);
-            this.flowLayoutPanel7.Controls.Add(label17);
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(9, 0);
-            this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(236, 27);
-            this.flowLayoutPanel7.TabIndex = 6;
+            this.cbG15ShowTime.AutoSize = true;
+            this.cbG15ShowTime.Location = new System.Drawing.Point(10, 59);
+            this.cbG15ShowTime.Name = "cbG15ShowTime";
+            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
+            this.cbG15ShowTime.TabIndex = 8;
+            this.cbG15ShowTime.Text = "Show System Time";
+            this.cbG15ShowTime.UseVisualStyleBackColor = true;
             // 
-            // cbG15ACycle
+            // panel3
             // 
-            this.cbG15ACycle.AutoSize = true;
-            this.cbG15ACycle.Location = new System.Drawing.Point(3, 5);
-            this.cbG15ACycle.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
-            this.cbG15ACycle.Name = "cbG15ACycle";
-            this.cbG15ACycle.Size = new System.Drawing.Size(114, 17);
-            this.cbG15ACycle.TabIndex = 1;
-            this.cbG15ACycle.Text = "Cycle Chars every";
-            this.cbG15ACycle.UseVisualStyleBackColor = true;
-            // 
-            // ACycleInterval
-            // 
-            this.ACycleInterval.Location = new System.Drawing.Point(117, 3);
-            this.ACycleInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.ACycleInterval.Maximum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.ACycleInterval.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ACycleInterval.Name = "ACycleInterval";
-            this.ACycleInterval.Size = new System.Drawing.Size(47, 21);
-            this.ACycleInterval.TabIndex = 2;
-            this.ACycleInterval.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // flowLayoutPanel8
-            // 
-            this.flowLayoutPanel8.Controls.Add(this.cbG15CycleTimes);
-            this.flowLayoutPanel8.Controls.Add(this.ACycleTimesInterval);
-            this.flowLayoutPanel8.Controls.Add(label28);
-            this.flowLayoutPanel8.Location = new System.Drawing.Point(9, 27);
-            this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel8.Name = "flowLayoutPanel8";
-            this.flowLayoutPanel8.Size = new System.Drawing.Size(331, 27);
-            this.flowLayoutPanel8.TabIndex = 7;
+            this.panel3.AutoSize = true;
+            this.panel3.Controls.Add(this.cbG15CycleTimes);
+            this.panel3.Controls.Add(this.ACycleTimesInterval);
+            this.panel3.Controls.Add(label14);
+            this.panel3.Location = new System.Drawing.Point(7, 29);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(332, 28);
+            this.panel3.TabIndex = 7;
             // 
             // cbG15CycleTimes
             // 
@@ -2326,13 +2293,15 @@ namespace EVEMon.SettingsUI
             this.cbG15CycleTimes.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
             this.cbG15CycleTimes.Name = "cbG15CycleTimes";
             this.cbG15CycleTimes.Size = new System.Drawing.Size(220, 17);
-            this.cbG15CycleTimes.TabIndex = 4;
+            this.cbG15CycleTimes.TabIndex = 7;
             this.cbG15CycleTimes.Text = "Cycle training and completion time every";
             this.cbG15CycleTimes.UseVisualStyleBackColor = true;
+            this.cbG15CycleTimes.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
             // ACycleTimesInterval
             // 
-            this.ACycleTimesInterval.Location = new System.Drawing.Point(223, 3);
+            this.ACycleTimesInterval.AutoSize = true;
+            this.ACycleTimesInterval.Location = new System.Drawing.Point(229, 4);
             this.ACycleTimesInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ACycleTimesInterval.Maximum = new decimal(new int[] {
             120,
@@ -2345,23 +2314,60 @@ namespace EVEMon.SettingsUI
             0,
             0});
             this.ACycleTimesInterval.Name = "ACycleTimesInterval";
-            this.ACycleTimesInterval.Size = new System.Drawing.Size(47, 21);
-            this.ACycleTimesInterval.TabIndex = 5;
+            this.ACycleTimesInterval.Size = new System.Drawing.Size(41, 21);
+            this.ACycleTimesInterval.TabIndex = 8;
             this.ACycleTimesInterval.Value = new decimal(new int[] {
             10,
             0,
             0,
             0});
             // 
-            // cbG15ShowTime
+            // panel1
             // 
-            this.cbG15ShowTime.AutoSize = true;
-            this.cbG15ShowTime.Location = new System.Drawing.Point(12, 57);
-            this.cbG15ShowTime.Name = "cbG15ShowTime";
-            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
-            this.cbG15ShowTime.TabIndex = 7;
-            this.cbG15ShowTime.Text = "Show System Time";
-            this.cbG15ShowTime.UseVisualStyleBackColor = true;
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.cbG15ACycle);
+            this.panel1.Controls.Add(this.ACycleInterval);
+            this.panel1.Controls.Add(label9);
+            this.panel1.Location = new System.Drawing.Point(7, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(223, 28);
+            this.panel1.TabIndex = 6;
+            // 
+            // cbG15ACycle
+            // 
+            this.cbG15ACycle.AutoSize = true;
+            this.cbG15ACycle.Location = new System.Drawing.Point(3, 5);
+            this.cbG15ACycle.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
+            this.cbG15ACycle.Name = "cbG15ACycle";
+            this.cbG15ACycle.Size = new System.Drawing.Size(114, 17);
+            this.cbG15ACycle.TabIndex = 4;
+            this.cbG15ACycle.Text = "Cycle Chars every";
+            this.cbG15ACycle.UseVisualStyleBackColor = true;
+            this.cbG15ACycle.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // ACycleInterval
+            // 
+            this.ACycleInterval.AutoSize = true;
+            this.ACycleInterval.Location = new System.Drawing.Point(122, 4);
+            this.ACycleInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ACycleInterval.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            this.ACycleInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ACycleInterval.Name = "ACycleInterval";
+            this.ACycleInterval.Size = new System.Drawing.Size(41, 21);
+            this.ACycleInterval.TabIndex = 5;
+            this.ACycleInterval.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // igbServerPage
             // 
@@ -2413,13 +2419,11 @@ namespace EVEMon.SettingsUI
             // 
             // igbPortTextBox
             // 
-            this.igbPortTextBox.Location = new System.Drawing.Point(62, 3);
+            this.igbPortTextBox.Location = new System.Drawing.Point(60, 3);
             this.igbPortTextBox.Name = "igbPortTextBox";
-            this.igbPortTextBox.Size = new System.Drawing.Size(55, 21);
-            this.igbPortTextBox.TabIndex = 5;
+            this.igbPortTextBox.Size = new System.Drawing.Size(35, 21);
+            this.igbPortTextBox.TabIndex = 8;
             this.igbPortTextBox.Text = "80";
-            this.igbPortTextBox.TextChanged += new System.EventHandler(this.igbPortTextBox_TextChanged);
-            this.igbPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.igbPortTextBox_Validating);
             // 
             // cbIGBPublic
             // 
@@ -2514,14 +2518,14 @@ namespace EVEMon.SettingsUI
             this.gbGoogle.PerformLayout();
             this.g15Page.ResumeLayout(false);
             this.g15Page.PerformLayout();
-            this.g15FlowPanel.ResumeLayout(false);
-            this.g15FlowPanel.PerformLayout();
-            this.flowLayoutPanel7.ResumeLayout(false);
-            this.flowLayoutPanel7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
-            this.flowLayoutPanel8.ResumeLayout(false);
-            this.flowLayoutPanel8.PerformLayout();
+            this.g15Panel.ResumeLayout(false);
+            this.g15Panel.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
             this.igbServerPage.ResumeLayout(false);
             this.igbServerPage.PerformLayout();
             this.igbFlowPanel.ResumeLayout(false);
@@ -2573,10 +2577,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox runAtStartupComboBox;
         private System.Windows.Forms.CheckBox cbTitleToTime;
         private System.Windows.Forms.ComboBox cbWindowsTitleList;
-        private System.Windows.Forms.CheckBox cbG15ACycle;
-        private System.Windows.Forms.FlowLayoutPanel g15FlowPanel;
         private System.Windows.Forms.CheckBox g15CheckBox;
-        private System.Windows.Forms.NumericUpDown ACycleInterval;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsNever;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsMinimized;
         private System.Windows.Forms.RadioButton rbSystemTrayOptionsAlways;
@@ -2585,7 +2586,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox igbCheckBox;
         private System.Windows.Forms.CheckBox cbIGBPublic;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel27;
-        private System.Windows.Forms.TextBox igbPortTextBox;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.CheckBox cbSkillInTitle;
@@ -2598,7 +2598,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel panelColorSingle2;
         private System.Windows.Forms.Panel panelColorSingle1;
         private System.Windows.Forms.Panel panelColorText;
-        private System.Windows.Forms.CheckBox cbG15ShowTime;
         private System.Windows.Forms.Button trayTooltipButton;
         private System.Windows.Forms.CheckBox externalCalendarCheckbox;
         private System.Windows.Forms.TextBox tbReminder;
@@ -2619,10 +2618,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnAddAPIServer;
         private System.Windows.Forms.Button btnEditAPIServer;
         private System.Windows.Forms.Button btnDeleteAPIServer;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
-        private System.Windows.Forms.CheckBox cbG15CycleTimes;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
-        private System.Windows.Forms.NumericUpDown ACycleTimesInterval;
         private System.Windows.Forms.CheckBox cbCheckTimeOnStartup;
         private System.Windows.Forms.GroupBox ApiProxyGroupBox;
         private System.Windows.Forms.CheckBox cbShowOverViewTab;
@@ -2670,5 +2665,14 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbColorQueuedSkills;
         private System.Windows.Forms.CheckBox cbHighlightQueuedSiklls;
         private System.Windows.Forms.CheckBox overviewShowSkillQueueFreeRoomCheckBox;
+        private System.Windows.Forms.TextBox igbPortTextBox;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox cbG15ACycle;
+        private System.Windows.Forms.NumericUpDown ACycleInterval;
+        private System.Windows.Forms.Panel g15Panel;
+        private System.Windows.Forms.CheckBox cbG15ShowTime;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox cbG15CycleTimes;
+        private System.Windows.Forms.NumericUpDown ACycleTimesInterval;
     }
 }

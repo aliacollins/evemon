@@ -187,12 +187,14 @@ namespace EVEMon.SkillPlanner
         private void UpdateLevelLabel(Label label, int level)
         {
             // "Level III :"
-            StringBuilder sb = new StringBuilder().Append("Level ").Append(Skill.GetRomanForInt(level)).Append(": ");
+            StringBuilder sb = new StringBuilder();
 
-            // Is it already known ?
+            sb.AppendFormat("Level {0}: ",Skill.GetRomanForInt(level));
+
+            // Is it already trained ?
             if (m_selectedSkill.Level >= level)
             {
-                label.Text = sb.Append("Already known").ToString();
+                label.Text = sb.Append("Already trained").ToString();
                 return;
             }
 
@@ -206,7 +208,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1) + timeForPrereqs;
             if (totalPrereqTime > TimeSpan.Zero)
             {
-                sb.Append(" (plus ").Append(Skill.TimeSpanToDescriptiveText(totalPrereqTime, DescriptiveTextOptions.IncludeCommas)).Append(")");
+                sb.AppendFormat(" (plus {0})", Skill.TimeSpanToDescriptiveText(totalPrereqTime, DescriptiveTextOptions.IncludeCommas));
             }
             else
             {
@@ -214,7 +216,7 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level != 5)
                 {
                     float percentDone = m_selectedSkill.FractionCompleted;
-                    sb.Append(String.Format(" ({0} complete)", percentDone.ToString("P0")));
+                    sb.AppendFormat(" ({0} complete)", percentDone.ToString("P0"));
                 }
             }
 

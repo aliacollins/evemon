@@ -53,12 +53,10 @@ namespace EVEMon.SkillPlanner
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSearchText.Location = new System.Drawing.Point(31, 29);
-            this.tbSearchText.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.tbSearchText.Location = new System.Drawing.Point(45, 29);
+            this.tbSearchText.Margin = new System.Windows.Forms.Padding(0);
             this.tbSearchText.Name = "tbSearchText";
-            this.tbSearchText.Size = new System.Drawing.Size(152, 20);
+            this.tbSearchText.Size = new System.Drawing.Size(140, 20);
             this.tbSearchText.TabIndex = 21;
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
             this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
@@ -67,12 +65,13 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchTextHint
             // 
-            this.lbSearchTextHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbSearchTextHint.AutoSize = true;
             this.lbSearchTextHint.BackColor = System.Drawing.SystemColors.Window;
             this.lbSearchTextHint.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbSearchTextHint.Location = new System.Drawing.Point(32, 31);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(47, 32);
+            this.lbSearchTextHint.Margin = new System.Windows.Forms.Padding(0);
             this.lbSearchTextHint.Name = "lbSearchTextHint";
-            this.lbSearchTextHint.Size = new System.Drawing.Size(68, 14);
+            this.lbSearchTextHint.Size = new System.Drawing.Size(65, 13);
             this.lbSearchTextHint.TabIndex = 23;
             this.lbSearchTextHint.Text = "Search Text";
             this.lbSearchTextHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -80,16 +79,14 @@ namespace EVEMon.SkillPlanner
             // 
             // lbNoMatches
             // 
-            this.lbNoMatches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbNoMatches.AutoSize = true;
             this.lbNoMatches.BackColor = System.Drawing.SystemColors.Window;
+            this.lbNoMatches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbNoMatches.Location = new System.Drawing.Point(17, 18);
-            this.lbNoMatches.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbNoMatches.Location = new System.Drawing.Point(0, 0);
+            this.lbNoMatches.Margin = new System.Windows.Forms.Padding(0);
             this.lbNoMatches.Name = "lbNoMatches";
-            this.lbNoMatches.Size = new System.Drawing.Size(141, 13);
+            this.lbNoMatches.Padding = new System.Windows.Forms.Padding(4, 30, 4, 4);
+            this.lbNoMatches.Size = new System.Drawing.Size(185, 344);
             this.lbNoMatches.TabIndex = 24;
             this.lbNoMatches.Text = "No ships match your search.";
             this.lbNoMatches.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -100,7 +97,7 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.FormattingEnabled = true;
             this.lbSearchList.IntegralHeight = false;
             this.lbSearchList.Location = new System.Drawing.Point(0, 0);
-            this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
+            this.lbSearchList.Margin = new System.Windows.Forms.Padding(0);
             this.lbSearchList.Name = "lbSearchList";
             this.lbSearchList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbSearchList.Size = new System.Drawing.Size(185, 344);
@@ -156,31 +153,30 @@ namespace EVEMon.SkillPlanner
             this.panel1.Controls.Add(this.pbSearchImage);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(185, 54);
             this.panel1.TabIndex = 26;
             // 
             // cbSkillFilter
             // 
-            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSkillFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSkillFilter.FormattingEnabled = true;
             this.cbSkillFilter.Items.AddRange(new object[] {
             "All",
             "Can",
             "Can not"});
-            this.cbSkillFilter.Location = new System.Drawing.Point(31, 3);
-            this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.cbSkillFilter.Location = new System.Drawing.Point(45, 3);
+            this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(0);
             this.cbSkillFilter.Name = "cbSkillFilter";
-            this.cbSkillFilter.Size = new System.Drawing.Size(152, 21);
+            this.cbSkillFilter.Size = new System.Drawing.Size(140, 21);
             this.cbSkillFilter.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 6);
+            this.label1.Location = new System.Drawing.Point(6, 6);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(32, 13);
             this.label1.TabIndex = 24;
@@ -188,11 +184,10 @@ namespace EVEMon.SkillPlanner
             // 
             // pbSearchImage
             // 
-            this.pbSearchImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pbSearchImage.Image = ((System.Drawing.Image)(resources.GetObject("pbSearchImage.Image")));
             this.pbSearchImage.InitialImage = null;
-            this.pbSearchImage.Location = new System.Drawing.Point(7, 29);
-            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(2);
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 30);
+            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(0);
             this.pbSearchImage.Name = "pbSearchImage";
             this.pbSearchImage.Size = new System.Drawing.Size(20, 20);
             this.pbSearchImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -217,7 +212,7 @@ namespace EVEMon.SkillPlanner
             this.tvItems.ContextMenuStrip = this.contextMenu;
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.Location = new System.Drawing.Point(0, 0);
-            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
+            this.tvItems.Margin = new System.Windows.Forms.Padding(0);
             this.tvItems.Name = "tvItems";
             this.tvItems.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.MultiSelect;
@@ -227,12 +222,12 @@ namespace EVEMon.SkillPlanner
             // 
             // EveObjectSelectControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EveObjectSelectControl";
             this.Size = new System.Drawing.Size(185, 398);
             this.Load += new System.EventHandler(this.EveObjectSelectControl_Load);
@@ -241,7 +236,6 @@ namespace EVEMon.SkillPlanner
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,7 +243,6 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        protected System.Windows.Forms.ComboBox cbSkillFilter;
         protected System.Windows.Forms.TextBox tbSearchText;
         protected EVEMon.Common.Controls.TreeView tvItems;
         protected System.Windows.Forms.Label lbNoMatches;
@@ -264,5 +257,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
+        protected System.Windows.Forms.ComboBox cbSkillFilter;
     }
 }

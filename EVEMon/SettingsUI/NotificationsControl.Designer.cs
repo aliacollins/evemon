@@ -38,37 +38,37 @@
             this.labelBehaviour.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBehaviour.Location = new System.Drawing.Point(154, 0);
             this.labelBehaviour.Name = "labelBehaviour";
-            this.labelBehaviour.Size = new System.Drawing.Size(131, 23);
+            this.labelBehaviour.Size = new System.Drawing.Size(131, 18);
             this.labelBehaviour.TabIndex = 2;
             this.labelBehaviour.Text = "System Tray Tooltip";
-            this.labelBehaviour.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelBehaviour.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // labelNotification
             // 
             this.labelNotification.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNotification.Location = new System.Drawing.Point(0, 0);
             this.labelNotification.Name = "labelNotification";
-            this.labelNotification.Size = new System.Drawing.Size(136, 23);
+            this.labelNotification.Size = new System.Drawing.Size(136, 18);
             this.labelNotification.TabIndex = 3;
             this.labelNotification.Text = "Notification";
-            this.labelNotification.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelNotification.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // labelMainWindow
             // 
             this.labelMainWindow.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMainWindow.Location = new System.Drawing.Point(307, 0);
             this.labelMainWindow.Name = "labelMainWindow";
-            this.labelMainWindow.Size = new System.Drawing.Size(89, 23);
+            this.labelMainWindow.Size = new System.Drawing.Size(89, 18);
             this.labelMainWindow.TabIndex = 4;
             this.labelMainWindow.Text = "Main Window";
-            this.labelMainWindow.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelMainWindow.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // NotificationsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.labelMainWindow);
             this.Controls.Add(this.labelBehaviour);
+            this.Controls.Add(this.labelMainWindow);
             this.Controls.Add(this.labelNotification);
             this.Name = "NotificationsControl";
             this.Size = new System.Drawing.Size(416, 404);

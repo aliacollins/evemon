@@ -38,10 +38,14 @@ namespace EVEMon.SkillPlanner
             this.lblBeforeTime = new System.Windows.Forms.Label();
             this.lblAfterTime = new System.Windows.Forms.Label();
             this.lblDiffTime = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(267, 31);
@@ -51,9 +55,10 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSkills
             // 
+            this.lbSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbSkills.FormattingEnabled = true;
             this.lbSkills.IntegralHeight = false;
-            this.lbSkills.Location = new System.Drawing.Point(15, 43);
+            this.lbSkills.Location = new System.Drawing.Point(0, 0);
             this.lbSkills.Name = "lbSkills";
             this.lbSkills.Size = new System.Drawing.Size(264, 131);
             this.lbSkills.TabIndex = 1;
@@ -110,6 +115,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblBeforeTime
             // 
+            this.lblBeforeTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lblBeforeTime.AutoSize = true;
             this.lblBeforeTime.Location = new System.Drawing.Point(129, 186);
             this.lblBeforeTime.Name = "lblBeforeTime";
@@ -119,6 +126,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblAfterTime
             // 
+            this.lblAfterTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lblAfterTime.AutoSize = true;
             this.lblAfterTime.Location = new System.Drawing.Point(129, 199);
             this.lblAfterTime.Name = "lblAfterTime";
@@ -128,12 +137,24 @@ namespace EVEMon.SkillPlanner
             // 
             // lblDiffTime
             // 
+            this.lblDiffTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDiffTime.AutoSize = true;
             this.lblDiffTime.Location = new System.Drawing.Point(129, 222);
             this.lblDiffTime.Name = "lblDiffTime";
             this.lblDiffTime.Size = new System.Drawing.Size(35, 13);
             this.lblDiffTime.TabIndex = 9;
             this.lblDiffTime.Text = "label7";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.lbSkills);
+            this.panel1.Location = new System.Drawing.Point(12, 43);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(264, 131);
+            this.panel1.TabIndex = 10;
             // 
             // SuggestionWindow
             // 
@@ -142,6 +163,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(292, 286);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblDiffTime);
             this.Controls.Add(this.lblAfterTime);
             this.Controls.Add(this.lblBeforeTime);
@@ -150,7 +172,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.lbSkills);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -159,6 +180,7 @@ namespace EVEMon.SkillPlanner
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Plan Suggestion";
             this.Load += new System.EventHandler(this.SuggestionWindow_Load);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,5 +198,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblBeforeTime;
         private System.Windows.Forms.Label lblAfterTime;
         private System.Windows.Forms.Label lblDiffTime;
+        private System.Windows.Forms.Panel panel1;
     }
 }

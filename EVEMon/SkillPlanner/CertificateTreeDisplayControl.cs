@@ -41,6 +41,7 @@ namespace EVEMon.SkillPlanner
             cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
             m_boldFont = FontFactory.GetFont(this.Font, FontStyle.Bold);
             this.treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            this.treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
             EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
             this.Disposed += new EventHandler(OnDisposed);
@@ -417,6 +418,7 @@ namespace EVEMon.SkillPlanner
             using (var foreground = new SolidBrush(foreColor))
             {
                 var left = e.Bounds.Left + this.imageList.ImageSize.Width + 2;
+                Size line1Size = TextRenderer.MeasureText(line1, m_boldFont);
 
                 if (!String.IsNullOrEmpty(line2))
                 {
@@ -424,7 +426,7 @@ namespace EVEMon.SkillPlanner
 
                     using (var lightForeground = new SolidBrush(lightForeColor))
                     {
-                        e.Graphics.DrawString(line2, this.Font, lightForeground, new PointF(left, e.Bounds.Top + 16.0f));
+                        e.Graphics.DrawString(line2, this.Font, lightForeground, new PointF(left, e.Bounds.Top + line1Size.Height));
                     }
                 }
                 else

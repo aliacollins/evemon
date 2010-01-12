@@ -171,7 +171,7 @@ namespace EVEMon.SkillPlanner
             this.tsbPrintPlan.Name = "tsbPrintPlan";
             this.tsbPrintPlan.Size = new System.Drawing.Size(61, 22);
             this.tsbPrintPlan.Text = "Print...";
-            this.tsbPrintPlan.ToolTipText = "Print this plan.";
+            this.tsbPrintPlan.ToolTipText = "Print this plan";
             this.tsbPrintPlan.Click += new System.EventHandler(this.tsbPrintPlan_Click);
             // 
             // tsbCopyForum

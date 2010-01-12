@@ -210,7 +210,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 message.AppendLine();
-                message.AppendLine("Do you wish to keep these entries? If you select Yes these entries will be hidden from the plan and stored in the settings. If you select No the above plan entries will be discarded.");
+                message.AppendLine("Do you wish to keep these entries?\r\n- If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- If you select \"No\" the entries will be discarded.");
 
                 var result = MessageBox.Show(message.ToString(), "Invalid Entries Detected", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 

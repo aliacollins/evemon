@@ -123,6 +123,11 @@ namespace EVEMon.SkillPlanner
                 lblTimeRequired.Text = Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
             }
 
+            // Set minimun control size
+            Size timeRequiredTextSize = TextRenderer.MeasureText(lblTimeRequired.Text, Font);
+            Size newMinimumSize = new Size(timeRequiredTextSize.Width + btnAddSkills.Width, 0);
+            if (this.MinimumSize.Width < newMinimumSize.Width) this.MinimumSize = newMinimumSize;
+
             // Enable / disable button
             btnAddSkills.Enabled = skillsUnplanned;
         }

@@ -29,8 +29,8 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node0");
             this.grpPlanName = new System.Windows.Forms.GroupBox();
             this.lblSkill = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
@@ -119,10 +119,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.btnClose);
             this.panel1.Location = new System.Drawing.Point(12, 423);
@@ -152,7 +152,7 @@ namespace EVEMon.SkillPlanner
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(202, 9);
+            this.label7.Location = new System.Drawing.Point(204, 9);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(143, 13);
             this.label7.TabIndex = 7;
@@ -238,10 +238,10 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvSkills.Location = new System.Drawing.Point(-1, 17);
             this.tvSkills.Name = "tvSkills";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "Node0";
+            treeNode3.Name = "Node0";
+            treeNode3.Text = "Node0";
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode3});
             this.tvSkills.ShowNodeToolTips = true;
             this.tvSkills.Size = new System.Drawing.Size(206, 283);
             this.tvSkills.TabIndex = 0;
@@ -275,10 +275,10 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvEntity.Location = new System.Drawing.Point(-1, 17);
             this.tvEntity.Name = "tvEntity";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "Node0";
+            treeNode4.Name = "Node0";
+            treeNode4.Text = "Node0";
             this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode4});
             this.tvEntity.ShowNodeToolTips = true;
             this.tvEntity.Size = new System.Drawing.Size(342, 282);
             this.tvEntity.TabIndex = 0;
@@ -293,7 +293,7 @@ namespace EVEMon.SkillPlanner
             this.tsShowInBrowser,
             this.tsShowPrereqs});
             this.cmSkills.Name = "cmSkills";
-            this.cmSkills.Size = new System.Drawing.Size(233, 92);
+            this.cmSkills.Size = new System.Drawing.Size(242, 92);
             // 
             // tsAddPlan
             // 
@@ -304,62 +304,62 @@ namespace EVEMon.SkillPlanner
             this.tsAddL4,
             this.tsAddL5});
             this.tsAddPlan.Name = "tsAddPlan";
-            this.tsAddPlan.Size = new System.Drawing.Size(232, 22);
+            this.tsAddPlan.Size = new System.Drawing.Size(241, 22);
             this.tsAddPlan.Text = "Plan To...";
             // 
             // tsAddL1
             // 
             this.tsAddL1.Name = "tsAddL1";
-            this.tsAddL1.Size = new System.Drawing.Size(119, 22);
+            this.tsAddL1.Size = new System.Drawing.Size(110, 22);
             this.tsAddL1.Text = "Level 1";
             this.tsAddL1.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL2
             // 
             this.tsAddL2.Name = "tsAddL2";
-            this.tsAddL2.Size = new System.Drawing.Size(119, 22);
+            this.tsAddL2.Size = new System.Drawing.Size(110, 22);
             this.tsAddL2.Text = "Level 2";
             this.tsAddL2.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL3
             // 
             this.tsAddL3.Name = "tsAddL3";
-            this.tsAddL3.Size = new System.Drawing.Size(119, 22);
+            this.tsAddL3.Size = new System.Drawing.Size(110, 22);
             this.tsAddL3.Text = "Level 3";
             this.tsAddL3.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL4
             // 
             this.tsAddL4.Name = "tsAddL4";
-            this.tsAddL4.Size = new System.Drawing.Size(119, 22);
+            this.tsAddL4.Size = new System.Drawing.Size(110, 22);
             this.tsAddL4.Text = "Level 4";
             this.tsAddL4.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsAddL5
             // 
             this.tsAddL5.Name = "tsAddL5";
-            this.tsAddL5.Size = new System.Drawing.Size(119, 22);
+            this.tsAddL5.Size = new System.Drawing.Size(110, 22);
             this.tsAddL5.Text = "Level 5";
             this.tsAddL5.Click += new System.EventHandler(this.tsAddLevel_Click);
             // 
             // tsSwitch
             // 
             this.tsSwitch.Name = "tsSwitch";
-            this.tsSwitch.Size = new System.Drawing.Size(232, 22);
+            this.tsSwitch.Size = new System.Drawing.Size(241, 22);
             this.tsSwitch.Text = "Show me what this skill unlocks";
             this.tsSwitch.Click += new System.EventHandler(this.tsSwitch_Click);
             // 
             // tsShowInBrowser
             // 
             this.tsShowInBrowser.Name = "tsShowInBrowser";
-            this.tsShowInBrowser.Size = new System.Drawing.Size(232, 22);
+            this.tsShowInBrowser.Size = new System.Drawing.Size(241, 22);
             this.tsShowInBrowser.Text = "Show Skill In Browser";
             this.tsShowInBrowser.Click += new System.EventHandler(this.tsShowInBrowser_Click);
             // 
             // tsShowPrereqs
             // 
             this.tsShowPrereqs.Name = "tsShowPrereqs";
-            this.tsShowPrereqs.Size = new System.Drawing.Size(232, 22);
+            this.tsShowPrereqs.Size = new System.Drawing.Size(241, 22);
             this.tsShowPrereqs.Text = "Show Untrained Preqresites";
             this.tsShowPrereqs.Click += new System.EventHandler(this.tsShowPrereqs_Click);
             // 
@@ -370,26 +370,26 @@ namespace EVEMon.SkillPlanner
             this.tsAddObjectToPlan,
             this.tsShowObjectPrereqs});
             this.cmEntity.Name = "cmShips";
-            this.cmEntity.Size = new System.Drawing.Size(227, 92);
+            this.cmEntity.Size = new System.Drawing.Size(229, 70);
             // 
             // tsShowObjectInBrowser
             // 
             this.tsShowObjectInBrowser.Name = "tsShowObjectInBrowser";
-            this.tsShowObjectInBrowser.Size = new System.Drawing.Size(226, 22);
+            this.tsShowObjectInBrowser.Size = new System.Drawing.Size(228, 22);
             this.tsShowObjectInBrowser.Text = "Show In Browser";
             this.tsShowObjectInBrowser.Click += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // tsAddObjectToPlan
             // 
             this.tsAddObjectToPlan.Name = "tsAddObjectToPlan";
-            this.tsAddObjectToPlan.Size = new System.Drawing.Size(226, 22);
+            this.tsAddObjectToPlan.Size = new System.Drawing.Size(228, 22);
             this.tsAddObjectToPlan.Text = "Add To Plan...";
             this.tsAddObjectToPlan.Click += new System.EventHandler(this.tsAddEntityToPlan_Click);
             // 
             // tsShowObjectPrereqs
             // 
             this.tsShowObjectPrereqs.Name = "tsShowObjectPrereqs";
-            this.tsShowObjectPrereqs.Size = new System.Drawing.Size(226, 22);
+            this.tsShowObjectPrereqs.Size = new System.Drawing.Size(228, 22);
             this.tsShowObjectPrereqs.Text = "Show Untrained Prerequisites";
             this.tsShowObjectPrereqs.Click += new System.EventHandler(this.tsShowShipPrereqs_Click);
             // 

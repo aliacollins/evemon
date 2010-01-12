@@ -14,6 +14,7 @@ namespace EVEMon.SkillPlanner
     public partial class CertificateBrowserControl : UserControl
     {
         private Plan m_plan = null;
+        private const int HPad = 40;
 
         /// <summary>
         /// Constructor
@@ -133,6 +134,7 @@ namespace EVEMon.SkillPlanner
             List<Control> newItems = new List<Control>();
             Label[] labels = new Label[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
             int lbIndex = 0;
+            var rSplCont = this.rightSplitContainer;
             foreach (var cert in certClass)
             {
                 var label = labels[lbIndex];
@@ -149,11 +151,18 @@ namespace EVEMon.SkillPlanner
                 if (ships.Count != 0)
                 {
                     Label tsl = new Label();
+                    tsl.AutoSize = true;
                     tsl.Dock = DockStyle.Top;
                     tsl.Text = "Recommends " + cert.Grade.ToString() + ":";
                     tsl.Font = new Font(tsl.Font, FontStyle.Bold);
                     tsl.Padding = new Padding(5);
                     newItems.Add(tsl);
+
+                    Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                    int panelMinSize = rSplCont.Panel2MinSize;
+                    rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad ?
+                                                                panelMinSize : tslTextSize.Width + HPad);
+                    rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
 
                     foreach (Item s in ships.Values)
                     {
@@ -172,7 +181,7 @@ namespace EVEMon.SkillPlanner
             if (newItems.Count != 0)
             {
                 newItems.Reverse();
-                this.rightSplitContainer.Panel2.Controls.AddRange(newItems.ToArray());
+                rSplCont.Panel2.Controls.AddRange(newItems.ToArray());
             }
             else
             {
@@ -181,7 +190,11 @@ namespace EVEMon.SkillPlanner
                 tsl.Text = "No Recommendations";
                 tsl.Enabled = false;
                 tsl.TextAlign = ContentAlignment.MiddleCenter;
-                this.rightSplitContainer.Panel2.Controls.Add(tsl);
+                rSplCont.Panel2.Controls.Add(tsl);
+
+                Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                rSplCont.Panel2MinSize = tslTextSize.Width + HPad;
+                rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
             }
 
             // Hides the other labels

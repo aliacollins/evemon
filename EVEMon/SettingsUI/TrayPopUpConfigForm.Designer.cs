@@ -47,6 +47,7 @@ namespace EVEMon.SettingsUI
             this.lblDisplayOrder2 = new System.Windows.Forms.Label();
             this.cbDisplayOrder1 = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbShowSkillQueueFreeRoom = new System.Windows.Forms.CheckBox();
             this.cbHighLightConflicts = new System.Windows.Forms.CheckBox();
             this.cbShowSkill = new System.Windows.Forms.CheckBox();
             this.cbShowCompletionTime = new System.Windows.Forms.CheckBox();
@@ -61,7 +62,6 @@ namespace EVEMon.SettingsUI
             this.cbShowTQStatus = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ttHelp = new System.Windows.Forms.ToolTip(this.components);
-            this.cbShowSkillQueueFreeRoom = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tpGeneral.SuspendLayout();
@@ -165,9 +165,9 @@ namespace EVEMon.SettingsUI
             // 
             this.cbGroupBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGroupBy.FormattingEnabled = true;
-            this.cbGroupBy.Location = new System.Drawing.Point(139, 45);
+            this.cbGroupBy.Location = new System.Drawing.Point(132, 45);
             this.cbGroupBy.Name = "cbGroupBy";
-            this.cbGroupBy.Size = new System.Drawing.Size(201, 21);
+            this.cbGroupBy.Size = new System.Drawing.Size(221, 21);
             this.cbGroupBy.TabIndex = 18;
             this.ttHelp.SetToolTip(this.cbGroupBy, resources.GetString("cbGroupBy.ToolTip"));
             this.cbGroupBy.SelectedIndexChanged += new System.EventHandler(this.cbGroupBy_SelectedIndexChanged);
@@ -175,11 +175,12 @@ namespace EVEMon.SettingsUI
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 48);
+            this.label1.Location = new System.Drawing.Point(15, 48);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(111, 13);
             this.label1.TabIndex = 17;
             this.label1.Text = "Group Characters by:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbHideNotTraining
             // 
@@ -218,21 +219,23 @@ namespace EVEMon.SettingsUI
             // 
             // lblDisplayOrder1
             // 
-            this.lblDisplayOrder1.Location = new System.Drawing.Point(4, 23);
+            this.lblDisplayOrder1.AutoSize = true;
+            this.lblDisplayOrder1.Location = new System.Drawing.Point(12, 23);
             this.lblDisplayOrder1.Name = "lblDisplayOrder1";
-            this.lblDisplayOrder1.Size = new System.Drawing.Size(122, 13);
+            this.lblDisplayOrder1.Size = new System.Drawing.Size(114, 13);
             this.lblDisplayOrder1.TabIndex = 19;
             this.lblDisplayOrder1.Text = "Characters in training:";
-            this.lblDisplayOrder1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblDisplayOrder1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDisplayOrder2
             // 
+            this.lblDisplayOrder2.AutoSize = true;
             this.lblDisplayOrder2.Location = new System.Drawing.Point(4, 51);
             this.lblDisplayOrder2.Name = "lblDisplayOrder2";
             this.lblDisplayOrder2.Size = new System.Drawing.Size(122, 13);
             this.lblDisplayOrder2.TabIndex = 21;
             this.lblDisplayOrder2.Text = "Characters not training:";
-            this.lblDisplayOrder2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblDisplayOrder2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbDisplayOrder1
             // 
@@ -266,6 +269,17 @@ namespace EVEMon.SettingsUI
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Character Details";
+            // 
+            // cbShowSkillQueueFreeRoom
+            // 
+            this.cbShowSkillQueueFreeRoom.AutoSize = true;
+            this.cbShowSkillQueueFreeRoom.Location = new System.Drawing.Point(9, 88);
+            this.cbShowSkillQueueFreeRoom.Name = "cbShowSkillQueueFreeRoom";
+            this.cbShowSkillQueueFreeRoom.Size = new System.Drawing.Size(162, 17);
+            this.cbShowSkillQueueFreeRoom.TabIndex = 35;
+            this.cbShowSkillQueueFreeRoom.Text = "Show Skill Queue Free Room";
+            this.ttHelp.SetToolTip(this.cbShowSkillQueueFreeRoom, "When enabled, shows the character\'s skill queue free room");
+            this.cbShowSkillQueueFreeRoom.UseVisualStyleBackColor = true;
             // 
             // cbHighLightConflicts
             // 
@@ -411,17 +425,6 @@ namespace EVEMon.SettingsUI
             this.flowLayoutPanel1.Size = new System.Drawing.Size(0, 0);
             this.flowLayoutPanel1.TabIndex = 17;
             // 
-            // cbShowSkillQueueFreeRoom
-            // 
-            this.cbShowSkillQueueFreeRoom.AutoSize = true;
-            this.cbShowSkillQueueFreeRoom.Location = new System.Drawing.Point(9, 88);
-            this.cbShowSkillQueueFreeRoom.Name = "cbShowSkillQueueFreeRoom";
-            this.cbShowSkillQueueFreeRoom.Size = new System.Drawing.Size(162, 17);
-            this.cbShowSkillQueueFreeRoom.TabIndex = 35;
-            this.cbShowSkillQueueFreeRoom.Text = "Show Skill Queue Free Room";
-            this.ttHelp.SetToolTip(this.cbShowSkillQueueFreeRoom, "When enabled, shows the character\'s skill queue free room");
-            this.cbShowSkillQueueFreeRoom.UseVisualStyleBackColor = true;
-            // 
             // TrayPopupConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +445,7 @@ namespace EVEMon.SettingsUI
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);

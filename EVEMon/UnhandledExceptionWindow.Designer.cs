@@ -29,6 +29,9 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.MainPanel = new System.Windows.Forms.Panel();
+            this.TechnicalDetailsPanel = new System.Windows.Forms.Panel();
+            this.TechnicalDetailsTextBox = new System.Windows.Forms.TextBox();
+            this.BugPictureBox = new System.Windows.Forms.PictureBox();
             this.DescriptionLabel = new System.Windows.Forms.Label();
             this.WhatCanYouDoTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.KnownProblemsLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -38,19 +41,18 @@ namespace EVEMon
             this.LatestBinariesPictureBox = new System.Windows.Forms.PictureBox();
             this.ReportPictureBox = new System.Windows.Forms.PictureBox();
             this.WhatCanYouDoLabel = new System.Windows.Forms.Label();
-            this.BugPictureBox = new System.Windows.Forms.PictureBox();
             this.CopyDetailsLinkLabel = new System.Windows.Forms.LinkLabel();
             this.TitleLabel = new System.Windows.Forms.Label();
-            this.TechnicalDetailsTextBox = new System.Windows.Forms.TextBox();
             this.TechnicalDetailsLabel = new System.Windows.Forms.Label();
             this.ResetButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
             this.MainPanel.SuspendLayout();
+            this.TechnicalDetailsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).BeginInit();
             this.WhatCanYouDoTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KnownProblemsPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LatestBinariesPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReportPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // MainPanel
@@ -59,13 +61,13 @@ namespace EVEMon
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.MainPanel.BackColor = System.Drawing.Color.White;
+            this.MainPanel.Controls.Add(this.TechnicalDetailsPanel);
+            this.MainPanel.Controls.Add(this.BugPictureBox);
             this.MainPanel.Controls.Add(this.DescriptionLabel);
             this.MainPanel.Controls.Add(this.WhatCanYouDoTableLayoutPanel);
             this.MainPanel.Controls.Add(this.WhatCanYouDoLabel);
-            this.MainPanel.Controls.Add(this.BugPictureBox);
             this.MainPanel.Controls.Add(this.CopyDetailsLinkLabel);
             this.MainPanel.Controls.Add(this.TitleLabel);
-            this.MainPanel.Controls.Add(this.TechnicalDetailsTextBox);
             this.MainPanel.Controls.Add(this.TechnicalDetailsLabel);
             this.MainPanel.ForeColor = System.Drawing.Color.Black;
             this.MainPanel.Location = new System.Drawing.Point(0, 0);
@@ -73,11 +75,44 @@ namespace EVEMon
             this.MainPanel.Size = new System.Drawing.Size(583, 465);
             this.MainPanel.TabIndex = 0;
             // 
+            // TechnicalDetailsPanel
+            // 
+            this.TechnicalDetailsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TechnicalDetailsPanel.AutoSize = true;
+            this.TechnicalDetailsPanel.Controls.Add(this.TechnicalDetailsTextBox);
+            this.TechnicalDetailsPanel.Location = new System.Drawing.Point(12, 104);
+            this.TechnicalDetailsPanel.Name = "TechnicalDetailsPanel";
+            this.TechnicalDetailsPanel.Size = new System.Drawing.Size(559, 205);
+            this.TechnicalDetailsPanel.TabIndex = 13;
+            // 
+            // TechnicalDetailsTextBox
+            // 
+            this.TechnicalDetailsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TechnicalDetailsTextBox.Location = new System.Drawing.Point(0, 0);
+            this.TechnicalDetailsTextBox.Multiline = true;
+            this.TechnicalDetailsTextBox.Name = "TechnicalDetailsTextBox";
+            this.TechnicalDetailsTextBox.ReadOnly = true;
+            this.TechnicalDetailsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TechnicalDetailsTextBox.Size = new System.Drawing.Size(559, 205);
+            this.TechnicalDetailsTextBox.TabIndex = 1;
+            // 
+            // BugPictureBox
+            // 
+            this.BugPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BugPictureBox.Location = new System.Drawing.Point(487, 13);
+            this.BugPictureBox.Name = "BugPictureBox";
+            this.BugPictureBox.Size = new System.Drawing.Size(81, 65);
+            this.BugPictureBox.TabIndex = 2;
+            this.BugPictureBox.TabStop = false;
+            // 
             // DescriptionLabel
             // 
+            this.DescriptionLabel.AutoSize = true;
             this.DescriptionLabel.Location = new System.Drawing.Point(13, 35);
             this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(468, 33);
+            this.DescriptionLabel.Size = new System.Drawing.Size(422, 26);
             this.DescriptionLabel.TabIndex = 12;
             this.DescriptionLabel.Text = "I think Little Fluffy is dead, Jimmy. \r\nEVEMon will be shut down. Restart and try" +
                 " again to test whether the problem repeats.";
@@ -197,15 +232,6 @@ namespace EVEMon
             this.WhatCanYouDoLabel.TabIndex = 9;
             this.WhatCanYouDoLabel.Text = "What can you do ?";
             // 
-            // BugPictureBox
-            // 
-            this.BugPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BugPictureBox.Location = new System.Drawing.Point(487, 13);
-            this.BugPictureBox.Name = "BugPictureBox";
-            this.BugPictureBox.Size = new System.Drawing.Size(81, 65);
-            this.BugPictureBox.TabIndex = 2;
-            this.BugPictureBox.TabStop = false;
-            // 
             // CopyDetailsLinkLabel
             // 
             this.CopyDetailsLinkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -226,19 +252,6 @@ namespace EVEMon
             this.TitleLabel.Size = new System.Drawing.Size(231, 13);
             this.TitleLabel.TabIndex = 0;
             this.TitleLabel.Text = "EVEMon has encountered an unexpected error";
-            // 
-            // TechnicalDetailsTextBox
-            // 
-            this.TechnicalDetailsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.TechnicalDetailsTextBox.Location = new System.Drawing.Point(12, 104);
-            this.TechnicalDetailsTextBox.Multiline = true;
-            this.TechnicalDetailsTextBox.Name = "TechnicalDetailsTextBox";
-            this.TechnicalDetailsTextBox.ReadOnly = true;
-            this.TechnicalDetailsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TechnicalDetailsTextBox.Size = new System.Drawing.Size(559, 190);
-            this.TechnicalDetailsTextBox.TabIndex = 1;
             // 
             // TechnicalDetailsLabel
             // 
@@ -290,12 +303,14 @@ namespace EVEMon
             this.Load += new System.EventHandler(this.UnhandledExceptionWindow_Load);
             this.MainPanel.ResumeLayout(false);
             this.MainPanel.PerformLayout();
+            this.TechnicalDetailsPanel.ResumeLayout(false);
+            this.TechnicalDetailsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).EndInit();
             this.WhatCanYouDoTableLayoutPanel.ResumeLayout(false);
             this.WhatCanYouDoTableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KnownProblemsPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LatestBinariesPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReportPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -319,5 +334,6 @@ namespace EVEMon
         private System.Windows.Forms.PictureBox KnownProblemsPictureBox;
         private System.Windows.Forms.PictureBox LatestBinariesPictureBox;
         private System.Windows.Forms.PictureBox ReportPictureBox;
+        private System.Windows.Forms.Panel TechnicalDetailsPanel;
     }
 }

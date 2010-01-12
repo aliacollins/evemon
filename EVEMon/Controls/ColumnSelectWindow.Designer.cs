@@ -34,23 +34,25 @@ namespace EVEMon.Controls
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // clbColumns
             // 
-            this.clbColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.clbColumns.CheckOnClick = true;
+            this.clbColumns.Dock = System.Windows.Forms.DockStyle.Fill;
             this.clbColumns.FormattingEnabled = true;
             this.clbColumns.IntegralHeight = false;
-            this.clbColumns.Location = new System.Drawing.Point(12, 25);
+            this.clbColumns.Location = new System.Drawing.Point(0, 0);
             this.clbColumns.Name = "clbColumns";
             this.clbColumns.Size = new System.Drawing.Size(295, 314);
             this.clbColumns.TabIndex = 0;
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
@@ -104,6 +106,14 @@ namespace EVEMon.Controls
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.clbColumns);
+            this.panel1.Location = new System.Drawing.Point(12, 25);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(295, 314);
+            this.panel1.TabIndex = 4;
+            // 
             // ColumnSelectWindow
             // 
             this.AcceptButton = this.btnOk;
@@ -111,8 +121,8 @@ namespace EVEMon.Controls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(319, 431);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnReset);
-            this.Controls.Add(this.clbColumns);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -123,6 +133,7 @@ namespace EVEMon.Controls
             this.Name = "ColumnSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select Columns";
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,6 +147,7 @@ namespace EVEMon.Controls
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }

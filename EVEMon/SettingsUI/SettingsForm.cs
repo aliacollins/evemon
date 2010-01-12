@@ -574,7 +574,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateDisables()
         {
-            g15FlowPanel.Enabled = g15CheckBox.Checked;
+            g15Panel.Enabled = g15CheckBox.Checked;
+            ACycleInterval.Enabled = cbG15ACycle.Checked;
+            ACycleTimesInterval.Enabled = cbG15CycleTimes.Checked;
             igbFlowPanel.Enabled = igbCheckBox.Checked;
             trayIconPopupGroupBox.Enabled = !rbSystemTrayOptionsNever.Checked;
             mailNotificationPanel.Enabled = mailNotificationCheckBox.Checked;

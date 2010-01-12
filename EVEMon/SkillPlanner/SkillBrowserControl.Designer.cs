@@ -234,12 +234,12 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.descriptionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.descriptionTextBox.Location = new System.Drawing.Point(296, 19);
+            this.descriptionTextBox.Location = new System.Drawing.Point(305, 19);
             this.descriptionTextBox.Multiline = true;
             this.descriptionTextBox.Name = "descriptionTextBox";
             this.descriptionTextBox.ReadOnly = true;
             this.descriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.descriptionTextBox.Size = new System.Drawing.Size(338, 81);
+            this.descriptionTextBox.Size = new System.Drawing.Size(329, 81);
             this.descriptionTextBox.TabIndex = 17;
             this.descriptionTextBox.Text = "Description of the skill";
             // 

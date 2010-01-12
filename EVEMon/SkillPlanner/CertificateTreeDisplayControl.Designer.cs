@@ -53,7 +53,7 @@ namespace EVEMon.SkillPlanner
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.imageList;
             this.treeView.Indent = 27;
-            this.treeView.ItemHeight = 32;
+            this.treeView.ItemHeight = 1;
             this.treeView.Location = new System.Drawing.Point(0, 10);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;

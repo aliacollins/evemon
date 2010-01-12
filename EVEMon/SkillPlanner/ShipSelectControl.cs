@@ -20,9 +20,6 @@ namespace EVEMon.SkillPlanner
         public ShipSelectControl()
         {
             InitializeComponent();
-            this.cbSkillFilter.Items[0] = "All Ships";
-            this.cbSkillFilter.Items[1] = "Ships I can fly";
-            this.cbSkillFilter.Items[2] = "Ships I cannot fly";
         }
 
         /// <summary>
@@ -40,6 +37,11 @@ namespace EVEMon.SkillPlanner
 
             // Build the ships tree
             BuildTreeView();
+
+            // Initialize the "skills" combo box
+            this.cbSkillFilter.Items[0] = "All Ships";
+            this.cbSkillFilter.Items[1] = "Ships I can fly";
+            this.cbSkillFilter.Items[2] = "Ships I cannot fly";
 
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)

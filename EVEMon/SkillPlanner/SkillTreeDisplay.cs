@@ -20,6 +20,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private sealed class Row : List<Cell>
         {
+            private SkillTreeDisplay m_std = new SkillTreeDisplay();
+
             /// <summary>
             /// Constructor
             /// </summary>
@@ -33,7 +35,7 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             public int Width
             {
-                get { return this.Count * SKILLBOX_WIDTH + (this.Count - 1) * SKILLBOX_MARGIN_LR; }
+                get { return this.Count * m_std.CellWidth + (this.Count - 1) * SKILLBOX_MARGIN_LR; }
             }
 
             /// <summary>
@@ -71,6 +73,8 @@ namespace EVEMon.SkillPlanner
             public List<Cell> Cells = new List<Cell>();
             public Rectangle Rectangle = Rectangle.Empty;
             public int RequiredLevel = -1;
+
+            private SkillTreeDisplay m_std = new SkillTreeDisplay();
 
             /// <summary>
             /// Constructor for root
@@ -132,17 +136,17 @@ namespace EVEMon.SkillPlanner
             private void FirstPassLayout(int left, int top)
             {
                 // Layout this cell
-                Rectangle = new Rectangle(left - SKILLBOX_WIDTH / 2, top, SKILLBOX_WIDTH, SKILLBOX_HEIGHT);
+                Rectangle = new Rectangle(left - m_std.CellWidth / 2, top, m_std.CellWidth, m_std.CellHeight);
 
                 // Layout the children
-                int childrenTop = top + SKILLBOX_HEIGHT + SKILLBOX_MARGIN_UD;
-                int childrenWidth = this.Cells.Count * SKILLBOX_WIDTH + (this.Cells.Count - 1) * SKILLBOX_MARGIN_LR;
+                int childrenTop = top + m_std.CellHeight + SKILLBOX_MARGIN_UD;
+                int childrenWidth = this.Cells.Count * m_std.CellWidth +(this.Cells.Count - 1) * SKILLBOX_MARGIN_LR;
 
-                left += (SKILLBOX_WIDTH - childrenWidth) / 2;
+                left += (m_std.CellWidth - childrenWidth) / 2;
                 foreach (var cell in Cells)
                 {
                     cell.FirstPassLayout(left, childrenTop);
-                    left += SKILLBOX_WIDTH + SKILLBOX_MARGIN_LR;
+                    left += m_std.CellWidth + SKILLBOX_MARGIN_LR;
                 }
             }
 
@@ -250,8 +254,6 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        private const int SKILLBOX_WIDTH = 230;
-        private const int SKILLBOX_HEIGHT = 73;
         private const int SKILLBOX_MARGIN_UD = 20;
         private const int SKILLBOX_MARGIN_LR = 10;
         private const DescriptiveTextOptions TimeFormat = DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
@@ -270,6 +272,16 @@ namespace EVEMon.SkillPlanner
         public SkillTreeDisplay()
         {
             InitializeComponent();
+            OnLoad(null, null);
+        }
+
+        /// <summary>
+        /// Subscribe events on load.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLoad(object sender, EventArgs e)
+        {
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.Opaque, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
@@ -293,6 +305,38 @@ namespace EVEMon.SkillPlanner
             this.Disposed -= new EventHandler(OnDisposed);
         }
 
+        /// <summary>
+        /// Gets the cell width according to dpi (for font scaling support)
+        /// </summary>
+        public int CellWidth
+        {
+            get
+            {
+                Graphics g = Graphics.FromHwnd(this.Handle);
+                float dpi = g.DpiX;
+
+                if (dpi > 125) return 353;
+                if (dpi > 96) return 295;
+                return 235;
+            }
+        }
+
+        /// <summary>
+        /// Gets the cell height according to dpi (for font scaling support)
+        /// </summary>
+        public int CellHeight
+        {
+            get
+            {
+                Graphics g = Graphics.FromHwnd(this.Handle);
+                float dpi = g.DpiX;
+
+                if (dpi > 125) return 110;
+                if (dpi > 96) return 92;
+                return 73;
+            }
+        }
+        
         /// <summary>
         /// Gets or sets the plan this control is bound to
         /// </summary>

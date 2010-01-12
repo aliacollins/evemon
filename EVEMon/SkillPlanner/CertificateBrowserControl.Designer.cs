@@ -86,6 +86,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.certSelectCtl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.certSelectCtl.Location = new System.Drawing.Point(0, 0);
+            this.certSelectCtl.Margin = new System.Windows.Forms.Padding(2);
             this.certSelectCtl.Name = "certSelectCtl";
             this.certSelectCtl.Plan = null;
             this.certSelectCtl.SelectedCertificateClass = null;
@@ -201,28 +202,28 @@ namespace EVEMon.SkillPlanner
             // tsPlanToBasic
             // 
             this.tsPlanToBasic.Name = "tsPlanToBasic";
-            this.tsPlanToBasic.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToBasic.Size = new System.Drawing.Size(125, 22);
             this.tsPlanToBasic.Text = "&Basic";
             this.tsPlanToBasic.Click += new System.EventHandler(this.tsPlanToBasic_Click);
             // 
             // tsPlanToStandard
             // 
             this.tsPlanToStandard.Name = "tsPlanToStandard";
-            this.tsPlanToStandard.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToStandard.Size = new System.Drawing.Size(125, 22);
             this.tsPlanToStandard.Text = "&Standard";
             this.tsPlanToStandard.Click += new System.EventHandler(this.tsPlanToStandard_Click);
             // 
             // tsPlanToImproved
             // 
             this.tsPlanToImproved.Name = "tsPlanToImproved";
-            this.tsPlanToImproved.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToImproved.Size = new System.Drawing.Size(125, 22);
             this.tsPlanToImproved.Text = "&Improved";
             this.tsPlanToImproved.Click += new System.EventHandler(this.tsPlanToImproved_Click);
             // 
             // tsPlanToElite
             // 
             this.tsPlanToElite.Name = "tsPlanToElite";
-            this.tsPlanToElite.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToElite.Size = new System.Drawing.Size(125, 22);
             this.tsPlanToElite.Text = "&Elite";
             this.tsPlanToElite.Click += new System.EventHandler(this.tsPlanToElite_Click);
             // 
@@ -256,7 +257,7 @@ namespace EVEMon.SkillPlanner
             this.textboxDescription.Name = "textboxDescription";
             this.textboxDescription.ReadOnly = true;
             this.textboxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textboxDescription.Size = new System.Drawing.Size(212, 85);
+            this.textboxDescription.Size = new System.Drawing.Size(209, 85);
             this.textboxDescription.TabIndex = 25;
             // 
             // lblLevel4Time

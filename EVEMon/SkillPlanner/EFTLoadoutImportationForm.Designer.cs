@@ -36,10 +36,10 @@ namespace EVEMon.SkillPlanner
             this.RightClickContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowInBrowserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BottomPanel = new System.Windows.Forms.Panel();
+            this.TrainTimeLabel = new System.Windows.Forms.Label();
             this.PlanedLabel = new System.Windows.Forms.Label();
             this.AddToPlanButton = new System.Windows.Forms.Button();
             this.TrainingTimeLabel = new System.Windows.Forms.Label();
-            this.TrainTimeLabel = new System.Windows.Forms.Label();
             this.CloseButton = new System.Windows.Forms.Button();
             this.topSplitContainer.Panel1.SuspendLayout();
             this.topSplitContainer.Panel2.SuspendLayout();
@@ -62,6 +62,7 @@ namespace EVEMon.SkillPlanner
             // topSplitContainer.Panel2
             // 
             this.topSplitContainer.Panel2.Controls.Add(this.ResultsTreeView);
+            this.topSplitContainer.RememberDistanceKey = null;
             this.topSplitContainer.Size = new System.Drawing.Size(747, 401);
             this.topSplitContainer.SplitterDistance = 249;
             this.topSplitContainer.TabIndex = 1;
@@ -104,27 +105,37 @@ namespace EVEMon.SkillPlanner
             this.RightClickContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowInBrowserMenuItem});
             this.RightClickContextMenuStrip.Name = "cmNode";
-            this.RightClickContextMenuStrip.Size = new System.Drawing.Size(204, 26);
+            this.RightClickContextMenuStrip.Size = new System.Drawing.Size(198, 26);
             // 
             // ShowInBrowserMenuItem
             // 
             this.ShowInBrowserMenuItem.Name = "ShowInBrowserMenuItem";
-            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(197, 22);
             this.ShowInBrowserMenuItem.Text = "Show Item In Browser...";
             this.ShowInBrowserMenuItem.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // BottomPanel
             // 
+            this.BottomPanel.Controls.Add(this.TrainTimeLabel);
             this.BottomPanel.Controls.Add(this.PlanedLabel);
             this.BottomPanel.Controls.Add(this.AddToPlanButton);
             this.BottomPanel.Controls.Add(this.TrainingTimeLabel);
-            this.BottomPanel.Controls.Add(this.TrainTimeLabel);
             this.BottomPanel.Controls.Add(this.CloseButton);
             this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.BottomPanel.Location = new System.Drawing.Point(0, 401);
             this.BottomPanel.Name = "BottomPanel";
             this.BottomPanel.Size = new System.Drawing.Size(747, 44);
             this.BottomPanel.TabIndex = 2;
+            // 
+            // TrainTimeLabel
+            // 
+            this.TrainTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TrainTimeLabel.AutoSize = true;
+            this.TrainTimeLabel.Location = new System.Drawing.Point(191, 14);
+            this.TrainTimeLabel.Name = "TrainTimeLabel";
+            this.TrainTimeLabel.Size = new System.Drawing.Size(115, 13);
+            this.TrainTimeLabel.TabIndex = 32;
+            this.TrainTimeLabel.Text = "All skills already known";
             // 
             // PlanedLabel
             // 
@@ -156,16 +167,6 @@ namespace EVEMon.SkillPlanner
             this.TrainingTimeLabel.Size = new System.Drawing.Size(176, 13);
             this.TrainingTimeLabel.TabIndex = 31;
             this.TrainingTimeLabel.Text = "Training Time for selected loadout: ";
-            // 
-            // TrainTimeLabel
-            // 
-            this.TrainTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TrainTimeLabel.AutoSize = true;
-            this.TrainTimeLabel.Location = new System.Drawing.Point(191, 14);
-            this.TrainTimeLabel.Name = "TrainTimeLabel";
-            this.TrainTimeLabel.Size = new System.Drawing.Size(115, 13);
-            this.TrainTimeLabel.TabIndex = 32;
-            this.TrainTimeLabel.Text = "All skills already known";
             // 
             // CloseButton
             // 

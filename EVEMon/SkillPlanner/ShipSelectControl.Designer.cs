@@ -36,78 +36,68 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cbSkillFilter
-            // 
-            this.cbSkillFilter.Location = new System.Drawing.Point(40, 3);
-            this.cbSkillFilter.Size = new System.Drawing.Size(189, 21);
-            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
-            // 
             // tbSearchText
             // 
-            this.tbSearchText.Location = new System.Drawing.Point(31, 132);
-            this.tbSearchText.Margin = new System.Windows.Forms.Padding(0);
-            this.tbSearchText.Size = new System.Drawing.Size(198, 20);
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Location = new System.Drawing.Point(45, 135);
+            this.tbSearchText.Size = new System.Drawing.Size(179, 20);
             this.tbSearchText.TabIndex = 35;
             // 
             // tvItems
             // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Margin = new System.Windows.Forms.Padding(0);
-            this.tvItems.Size = new System.Drawing.Size(229, 319);
+            this.tvItems.Size = new System.Drawing.Size(224, 256);
             // 
             // lbNoMatches
             // 
-            this.lbNoMatches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
-            this.lbNoMatches.AutoSize = false;
-            this.lbNoMatches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbNoMatches.Location = new System.Drawing.Point(0, 0);
-            this.lbNoMatches.Margin = new System.Windows.Forms.Padding(0);
-            this.lbNoMatches.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
-            this.lbNoMatches.Size = new System.Drawing.Size(229, 319);
+            this.lbNoMatches.Size = new System.Drawing.Size(224, 256);
             // 
             // lbSearchList
             // 
-            this.lbSearchList.Margin = new System.Windows.Forms.Padding(0);
-            this.lbSearchList.Size = new System.Drawing.Size(229, 319);
+            this.lbSearchList.Size = new System.Drawing.Size(224, 256);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Size = new System.Drawing.Size(229, 159);
+            this.panel1.Size = new System.Drawing.Size(224, 162);
+            this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
             this.panel1.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
             this.panel1.Controls.SetChildIndex(this.pbSearchImage, 0);
             this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
             this.panel1.Controls.SetChildIndex(this.lbSearchTextHint, 0);
             this.panel1.Controls.SetChildIndex(this.label1, 0);
-            this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 159);
-            this.panel2.Size = new System.Drawing.Size(229, 319);
+            this.panel2.Location = new System.Drawing.Point(0, 162);
+            this.panel2.Size = new System.Drawing.Size(224, 256);
             // 
             // lbSearchTextHint
             // 
-            this.lbSearchTextHint.Location = new System.Drawing.Point(32, 133);
-            this.lbSearchTextHint.Margin = new System.Windows.Forms.Padding(0);
-            this.lbSearchTextHint.Size = new System.Drawing.Size(76, 18);
+            this.lbSearchTextHint.Location = new System.Drawing.Point(49, 138);
             // 
             // pbSearchImage
             // 
-            this.pbSearchImage.Location = new System.Drawing.Point(6, 132);
-            this.pbSearchImage.Margin = new System.Windows.Forms.Padding(0);
+            this.pbSearchImage.Location = new System.Drawing.Point(9, 135);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            // 
+            // cbSkillFilter
+            // 
+            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSkillFilter.Size = new System.Drawing.Size(179, 21);
+            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
             // 
             // cbCaldari
             // 
             this.cbCaldari.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.cbCaldari.AutoSize = true;
             this.cbCaldari.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbCaldari.Location = new System.Drawing.Point(0, 25);
+            this.cbCaldari.Location = new System.Drawing.Point(0, 22);
             this.cbCaldari.Margin = new System.Windows.Forms.Padding(0);
             this.cbCaldari.Name = "cbCaldari";
             this.cbCaldari.Size = new System.Drawing.Size(58, 17);
@@ -119,7 +109,7 @@
             // cbFaction
             // 
             this.cbFaction.AutoSize = true;
-            this.cbFaction.Location = new System.Drawing.Point(108, 25);
+            this.cbFaction.Location = new System.Drawing.Point(106, 22);
             this.cbFaction.Margin = new System.Windows.Forms.Padding(0);
             this.cbFaction.Name = "cbFaction";
             this.cbFaction.Size = new System.Drawing.Size(61, 17);
@@ -131,7 +121,7 @@
             // cbGallente
             // 
             this.cbGallente.AutoSize = true;
-            this.cbGallente.Location = new System.Drawing.Point(0, 50);
+            this.cbGallente.Location = new System.Drawing.Point(0, 44);
             this.cbGallente.Margin = new System.Windows.Forms.Padding(0);
             this.cbGallente.Name = "cbGallente";
             this.cbGallente.Size = new System.Drawing.Size(65, 17);
@@ -143,7 +133,7 @@
             // cbMinmatar
             // 
             this.cbMinmatar.AutoSize = true;
-            this.cbMinmatar.Location = new System.Drawing.Point(108, 0);
+            this.cbMinmatar.Location = new System.Drawing.Point(106, 0);
             this.cbMinmatar.Margin = new System.Windows.Forms.Padding(0);
             this.cbMinmatar.Name = "cbMinmatar";
             this.cbMinmatar.Size = new System.Drawing.Size(69, 17);
@@ -155,7 +145,7 @@
             // cbORE
             // 
             this.cbORE.AutoSize = true;
-            this.cbORE.Location = new System.Drawing.Point(108, 50);
+            this.cbORE.Location = new System.Drawing.Point(106, 44);
             this.cbORE.Margin = new System.Windows.Forms.Padding(0);
             this.cbORE.Name = "cbORE";
             this.cbORE.Size = new System.Drawing.Size(49, 17);
@@ -178,8 +168,7 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -190,22 +179,22 @@
             this.tableLayoutPanel1.Controls.Add(this.cbFaction, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.cbGallente, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.cbORE, 1, 2);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 39);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 45);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(217, 77);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(212, 69);
             this.tableLayoutPanel1.TabIndex = 36;
             // 
             // ShipSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ShipSelectControl";
-            this.Size = new System.Drawing.Size(229, 478);
+            this.Size = new System.Drawing.Size(224, 418);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
