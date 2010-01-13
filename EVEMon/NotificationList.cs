@@ -41,6 +41,7 @@ namespace EVEMon
             listBox.MouseMove += new MouseEventHandler(listBox_MouseMove);
             listBox.MouseDown += new MouseEventHandler(listBox_MouseDown);
             listBox.MouseLeave += new EventHandler(listBox_MouseLeave);
+            listBox.Resize += new EventHandler(listBox_Resize);
         }
 
         /// <summary>
@@ -94,6 +95,67 @@ namespace EVEMon
                     m_notifications.AddRange(notificationsToAdd.ToArray().OrderBy(x => (int)x.Priority));
                 }
                 UpdateContent();
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximium text lenght of the list
+        /// </summary>
+        private int MaxTextLength
+        {
+            get
+            {
+                int maxTextLenght = 0;
+
+                foreach (var item in m_notifications)
+                {
+                    string text = item.ToString();
+                    Size textSize = TextRenderer.MeasureText(text, this.Font);
+                    if (textSize.Width > maxTextLenght) maxTextLenght = (int)textSize.Width;
+                }
+
+                return maxTextLenght;
+            }
+        }
+
+        /// <summary>
+        /// Gets the font size to use for drawning the text
+        /// </summary>
+        private Font NotificationFont
+        {
+            get
+            {
+                Font font = this.Font;
+                var fontSize = font.Size;
+                int magnifierIconSize = 0;
+
+                // Check for magnifier icon
+                foreach (var item in m_notifications)
+                {
+                    if (item.HasDetails) magnifierIconSize = IconMagnifierPositionFromRight;
+                    else continue;
+                }
+
+                // Calculates the available text space
+                var availableTextSpace = this.Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
+
+                // If any text lenght exceeds our bounds we decrease the font size
+                while ((MaxTextLength > availableTextSpace) && (fontSize > 6.5f))
+                {
+                    fontSize -= 0.01f;
+                    font = FontFactory.GetFont("Tahoma", fontSize);
+                    this.Font = font;
+                }
+
+                // If any text lenght fits better in our bounds we increase the font size
+                while ((MaxTextLength < availableTextSpace) && (fontSize < 8.25f))
+                {
+                    fontSize += 0.01f;
+                    font = FontFactory.GetFont("Tahoma", fontSize);
+                    this.Font = font;
+                }
+
+                return this.Font;
             }
         }
 
@@ -184,8 +246,8 @@ namespace EVEMon
             using (var foreBrush = new SolidBrush(this.ForeColor))
             {
                 string text = notification.ToString();
-                var size = g.MeasureString(text, this.Font);
-                g.DrawString(text, this.Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                var size = g.MeasureString(text, NotificationFont);
+                g.DrawString(text, NotificationFont, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -390,6 +452,16 @@ namespace EVEMon
                 m_hoveredIndex = -1;
                 listBox.Invalidate();
             }
+        }
+
+        /// <summary>
+        /// When the listbox resizes we force it to redraw itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void listBox_Resize(object sender, EventArgs e)
+        {
+            listBox.Refresh();
         }
 
         /// <summary>
