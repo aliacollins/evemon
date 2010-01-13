@@ -293,72 +293,139 @@ namespace EVEMon.Common.IgbService
         /// <param name="sw">stream writer to output to</param>
         private void ProcessRequest(string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
         {
-            if (!headers.ContainsKey("eve_trusted"))
+            string trusted;
+            if (!headers.TryGetValue("eve_trusted", out trusted))
             {
                 sw.WriteLine("Please visit this site using the in-game browser.");
                 return;
             }
 
-            if (headers["eve_trusted"].ToLower() != "yes")
+            if (trusted.ToLower() != "yes")
             {
-                sw.WriteLine("not trusted");
+                sw.WriteLine("The in-game browser do not trust EVEMon.<br/>");
+                sw.WriteLine("<a href=\"\" onclick=\"CCPEVE.requestTrust('http://{0}')\">Trust EVEMon</a>.", BuildHostAndPort(headers["host"]));
                 return;
             }
 
-            Character ci = EveClient.MonitoredCharacters.FirstOrDefault(x => x.Name == headers["eve_charname"]);
-            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
+            string headerCharacterName;
+            if (!headers.TryGetValue("eve_charname", out headerCharacterName))
+                headerCharacterName = "";
+
+            if (string.IsNullOrEmpty(headerCharacterName) || // no character in header
+                (EveClient.Characters.FirstOrDefault(x => x.Name == headerCharacterName) == null)) // character is not listed
             {
-                GeneratePlanOrShoppingOutput(requestUrl, sw, ci);
+                sw.WriteLine("Hello {0}, this character is not recognized by EVEMon!", headerCharacterName);
+                return;
             }
-            else if (requestUrl.StartsWith("/skills/bytime"))
+
+            var context = "";
+            var characterName = headerCharacterName;
+            var contextRegex = new Regex(@"(?'context'\/characters(\/(?'charName'[^\/]*))?)?(?'request'.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            var match = contextRegex.Match(requestUrl);
+            if (match.Success)
             {
-                GenerateSkillsByTimeOutput(headers, sw, ci);
+                var contextGroup = match.Groups["context"];
+                if (contextGroup.Success)
+                {
+                    context = contextGroup.Value;
+                    characterName = HttpUtility.UrlDecode(match.Groups["charName"].Value);
+                }
+                requestUrl = match.Groups["request"].Value;
+            }
+            var character = !string.IsNullOrEmpty(characterName) ? EveClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName) : null;
+            if (character == null)
+            {
+                GenerateCharacterList(headerCharacterName, sw, EveClient.MonitoredCharacters);
+                return;
             }
             else
             {
-                GeneratePlanListOutput(headers, sw, ci);
+                context = string.Format("/characters/{0}", HttpUtility.UrlEncode(character.Name));
+            }
+            
+            if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))
+            {
+                GeneratePlanOrShoppingOutput(context, requestUrl, sw, character);
+            }
+            else if (requestUrl.StartsWith("/skills/bytime"))
+            {
+                GenerateSkillsByTimeOutput(context, sw, character);
+            }
+            else
+            {
+                GeneratePlanListOutput(context, sw, character);
             }
         }
 
         /// <summary>
-        /// Output list of plans to a stream writer
+        /// Outputs a list of characters to a stream writer
         /// </summary>
-        /// <param name="headers">headers for the request</param>
+        /// <param name="context">context of the request</param>
         /// <param name="sw">stream writer to output to</param>
-        /// <param name="ci">character to use</param>
-        private static void GeneratePlanListOutput(Dictionary<string, string> headers, StreamWriter sw, Character ci)
+        /// <param name="characters">list of characters to output</param>
+        private static void GenerateCharacterList(string currentCharacterName, StreamWriter sw, IEnumerable<Character> characters)
         {
-            sw.WriteLine(
-                String.Format("<html><head><title>Hi</title></head><body><h1>Hello, {0}</h1>",
-                              headers["eve_charname"]));
+            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            sw.WriteLine("<h1>Welcome!</h1>");
 
-            sw.WriteLine("<h2>Your Plans:</h2>");
-            foreach (var plan in ci.Plans)
+            sw.WriteLine("<h2>Monitored characters:</h2>");
+            foreach (var character in characters)
             {
-                sw.WriteLine(String.Format("<a href=\"/plan/{0}\">{1}</a> (<a href=\"/shopping/{0}\">shopping list</a>)<br>",
-                                           HttpUtility.UrlEncode(plan.Name),
-                                           HttpUtility.HtmlEncode(plan.Name)));
+                sw.WriteLine("<a href=\"/characters/{0}\">{1}</a>",
+                             HttpUtility.UrlEncode(character.Name),
+                             HttpUtility.HtmlEncode(character.Name));
+                if (!string.IsNullOrEmpty(currentCharacterName) && (currentCharacterName == character.Name))
+                    sw.WriteLine(" (current)");
+                sw.WriteLine("<br/>");
             }
 
-            sw.WriteLine("<br><h2>Your Skills:</h2>");
-            sw.WriteLine("<a href=\"/skills/bytime\">By training time</a>");
             sw.WriteLine("</body></html>");
         }
 
         /// <summary>
-        /// Generate a list of skills by time
+        /// Outputs a list of plans for a given character to a stream writer
         /// </summary>
-        /// <param name="headers">headers for the request</param>
+        /// <param name="context">context of the request</param>
         /// <param name="sw">stream writer to output to</param>
-        /// <param name="ci">character to use</param>
-        private static void GenerateSkillsByTimeOutput(Dictionary<string, string> headers, StreamWriter sw, Character ci)
+        /// <param name="character">character to use</param>
+        private static void GeneratePlanListOutput(string context, StreamWriter sw, Character character)
         {
-            sw.WriteLine("<html><head><title>Skills</title></head><body>");
-            sw.WriteLine("<h1>Skills: By training time</h1>");
-            sw.WriteLine("<hr><a href=\"/\">Back</a></hr>");
-            sw.WriteLine(string.Format("<p>Skills for {0}</p>", HttpUtility.HtmlEncode(headers["eve_charname"])));
+            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
+            sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
 
-            var allskills = ci.Skills.Where(x => x.IsPublic && x.Level < 5 && x.Level > 0);
+            sw.WriteLine("<h2>Your plans:</h2>");
+            foreach (var plan in character.Plans)
+            {
+                sw.WriteLine("<a href=\"{0}/plan/{1}\">{2}</a> (<a href=\"{0}/shopping/{1}\">shopping list</a>)<br/>",
+                             context,
+                             HttpUtility.UrlEncode(plan.Name),
+                             HttpUtility.HtmlEncode(plan.Name));
+            }
+
+            sw.WriteLine("<h2>Your skills:</h2>");
+            sw.WriteLine("<a href=\"{0}/skills/bytime\">By training time</a><br/>", context);
+
+            sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
+            sw.WriteLine("</body></html>");
+        }
+
+        /// <summary>
+        /// Outputs a list of skills for a given character ordered by time to a stream writer
+        /// </summary>
+        /// <param name="context">context of the request</param>
+        /// <param name="sw">stream writer to output to</param>
+        /// <param name="character">character to use</param>
+        private static void GenerateSkillsByTimeOutput(string context, StreamWriter sw, Character character)
+        {
+            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
+            sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
+            sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
+
+            sw.WriteLine("<h2>Your skills by training time:</h2>");
+
+            var allskills = character.Skills.Where(x => x.IsPublic && x.Level < 5 && x.Level > 0);
             allskills = allskills.OrderBy(x => x.GetLeftTrainingTimeToNextLevel());
 
             sw.WriteLine("<table>");
@@ -372,15 +439,15 @@ namespace EVEMon.Common.IgbService
                 sw.Write("<tr>");
 
                 sw.Write("<td width=\"15\">");
-                sw.Write(string.Format("<b>{0}.</b>", index.ToString()));
+                sw.Write("<b>{0}.</b>", index);
                 sw.Write("</td>");
 
                 sw.Write("<td width=\"250\">");
-                sw.Write(string.Format("<b><a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a></b>", s.ID, s.Name));
+                sw.Write("<b><a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a></b>", s.ID, s.Name);
                 sw.Write("</td>");
 
                 sw.Write("<td width=\"100\">");
-                sw.Write(string.Format("<b>{0} -&gt; {1}</b>", s.RomanLevel, Skill.GetRomanForInt(s.Level + 1)));
+                sw.Write("<b>{0} -&gt; {1}</b>", s.RomanLevel, Skill.GetRomanForInt(s.Level + 1));
                 sw.Write("</td>");
 
                 sw.Write("<td>");
@@ -393,18 +460,25 @@ namespace EVEMon.Common.IgbService
             }
             sw.WriteLine("</table>");
 
-            sw.WriteLine("<hr><a href=\"/\">Back</a></hr>");
+            sw.WriteLine("<br/><a href=\"{0}\">Character overview</a>", context);
+            sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
             sw.WriteLine("</body></html>");
         }
 
         /// <summary>
-        /// Generate the plan or shopping list
+        /// Outputs a plan or shopping list for a given character to a stream writer
         /// </summary>
-        /// <param name="headers">headers for the request</param>
+        /// <param name="context">context of the request</param>
+        /// <param name="requestUrl">url of the request</param>
         /// <param name="sw">stream writer to output to</param>
-        /// <param name="ci">character to use</param>
-        private static void GeneratePlanOrShoppingOutput(string requestUrl, StreamWriter sw, Character ci)
+        /// <param name="character">character to use</param>
+        private static void GeneratePlanOrShoppingOutput(string context, string requestUrl, StreamWriter sw, Character character)
         {
+            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
+            sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
+            sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
+
             var regex = new Regex(@"\/(owned\/(?'skillId'[^\/]+)\/(?'markOwned'[^\/]+)\/)?(?'requestType'shopping|plan)\/(?'planName'[^\/]+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
             var match = regex.Match(requestUrl);
 
@@ -414,7 +488,6 @@ namespace EVEMon.Common.IgbService
                 var shopping = requestType.Equals("shopping", StringComparison.OrdinalIgnoreCase);
                 var planName = HttpUtility.UrlDecode(match.Groups["planName"].Value);
 
-                sw.WriteLine("<html><head><title>Plan</title></head><body>");
                 int skillId;
                 bool setAsOwned;
                 if (match.Groups["skillId"].Success &&
@@ -422,38 +495,37 @@ namespace EVEMon.Common.IgbService
                     Int32.TryParse(match.Groups["skillId"].Value, out skillId) &&
                     Boolean.TryParse(match.Groups["markOwned"].Value, out setAsOwned))
                 {
-                    var skill = ci.Skills.FirstOrDefault(x => x.ID == skillId);
+                    var skill = character.Skills.FirstOrDefault(x => x.ID == skillId);
                     if (skill != null)
                     {
                         sw.WriteLine("<h2>Skillbook shopping result</h2>");
                         Dispatcher.Invoke(() => skill.IsOwned = setAsOwned);
                         if (skill.IsOwned)
                         {
-                            sw.WriteLine("Congratulations, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as owned.", skill.ID, skill.Name);
+                            sw.WriteLine("Congratulations, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name));
                         }
                         else
                         {
-                            sw.WriteLine("Sorry, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as not owned.", skill.ID, skill.Name);
+                            sw.WriteLine("Sorry, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as not owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name));
                         }
                         sw.WriteLine("<hr/>");
                     }
                     else
                     {
                         // maybe we should do nothing in this case?
-                        sw.WriteLine("skill with id '{0}' could not be found", skillId);
+                        sw.WriteLine("Skill with id '{0}' could not be found", skillId);
                     }
                 }
 
-                sw.WriteLine("<h2>Plan: {0}</h2>", HttpUtility.HtmlEncode(planName));
-                sw.WriteLine("<hr/><a href=\"/\">Back</a><br/><br/>");
-
-                Plan p = ci.Plans[planName];
+                Plan p = character.Plans[planName];
                 if (p == null)
                 {
-                    sw.WriteLine("non-existant plan name");
+                    sw.WriteLine("A plan named \"{0}\" do not exist.", HttpUtility.HtmlEncode(planName));
                 }
                 else
                 {
+                    sw.WriteLine("<h2>Plan: {0}</h2>", HttpUtility.HtmlEncode(p.Name));
+
                     PlanExportSettings x = new PlanExportSettings();
                     x.EntryTrainingTimes = !shopping; // only if not shopping
                     x.EntryStartDate = !shopping; // only if not shopping
@@ -474,16 +546,23 @@ namespace EVEMon.Common.IgbService
                         if (entry.CharacterSkill.IsKnown || entry.Level != 1)
                             return;
 
-                        builder.AppendFormat("<a href='/owned/{0}/{1}/{3}/{4}'>{2}</a>", entry.Skill.ID, !entry.CharacterSkill.IsOwned, !entry.CharacterSkill.IsOwned ? "Mark as owned" : "Mark as not owned", requestType, planName);
+                        builder.AppendFormat("<a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>", 
+                                             context,
+                                             entry.Skill.ID,
+                                             !entry.CharacterSkill.IsOwned,
+                                             HttpUtility.HtmlEncode(!entry.CharacterSkill.IsOwned ? "Mark as owned" : "Mark as not owned"),
+                                             requestType,
+                                             HttpUtility.HtmlEncode(p.Name));
                     }));
                 }
             }
             else
             {
-                sw.WriteLine("invalid request");
+                sw.WriteLine("Invalid request");
             }
 
-            sw.WriteLine("<hr/><a href=\"/\">Back</a>");
+            sw.WriteLine("<br/><a href=\"{0}\">Character overview</a>", context);
+            sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
             sw.WriteLine("</body></html>");
         }
 
