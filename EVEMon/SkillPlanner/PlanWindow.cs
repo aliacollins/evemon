@@ -166,9 +166,6 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == value) return;
                 m_plan = value;
 
-                // Check to see if one or more invalid entries were found.
-                CheckInvalidEntries();
-
                 // The tag is used by WindowsFactory.ShowByTag
                 this.Tag = value;
 
@@ -181,13 +178,19 @@ namespace EVEMon.SkillPlanner
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
                 if (loadoutSelect != null) loadoutSelect.Plan = m_plan;
 
-                // Jump to the appropriate tab depending on whether or not the plan is empty
+                // Jump to the appropriate tab depending on whether
+                // or not the plan is empty
                 if (m_plan.Count == 0) tabControl.SelectedTab = tpSkillBrowser;
                 else tabControl.SelectedTab = tpPlanQueue;
 
                 // Update controls
                 this.Text = this.Character.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
                 planEditor.UpdateListColumns();
+
+                // Check to see if one or more invalid entries were 
+                // found, we do this last so as not to cause problems
+                // for background update tasks.
+                CheckInvalidEntries();
             }
         }
 
