@@ -99,22 +99,22 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the maximium text lenght of the list
+        /// Gets the maximum text length of the list
         /// </summary>
         private int MaxTextLength
         {
             get
             {
-                int maxTextLenght = 0;
+                int maxTextLength = 0;
 
                 foreach (var item in m_notifications)
                 {
                     string text = item.ToString();
                     Size textSize = TextRenderer.MeasureText(text, this.Font);
-                    if (textSize.Width > maxTextLenght) maxTextLenght = (int)textSize.Width;
+                    if (textSize.Width > maxTextLength) maxTextLength = (int)textSize.Width;
                 }
 
-                return maxTextLenght;
+                return maxTextLength;
             }
         }
 
@@ -142,7 +142,7 @@ namespace EVEMon
                 // If any text lenght exceeds our bounds we decrease the font size
                 while ((MaxTextLength > availableTextSpace) && (fontSize > 6.5f))
                 {
-                    fontSize -= 0.01f;
+                    fontSize -= 0.05f;
                     font = FontFactory.GetFont("Tahoma", fontSize);
                     this.Font = font;
                 }
@@ -150,7 +150,7 @@ namespace EVEMon
                 // If any text lenght fits better in our bounds we increase the font size
                 while ((MaxTextLength < availableTextSpace) && (fontSize < 8.25f))
                 {
-                    fontSize += 0.01f;
+                    fontSize += 0.05f;
                     font = FontFactory.GetFont("Tahoma", fontSize);
                     this.Font = font;
                 }
@@ -461,7 +461,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void listBox_Resize(object sender, EventArgs e)
         {
-            listBox.Refresh();
+            UpdateContent();
         }
 
         /// <summary>
