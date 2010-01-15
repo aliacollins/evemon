@@ -250,8 +250,8 @@ namespace EVEMon
             float percentComplete = 0;
             int skillPoints = skill.Skill.SkillPoints;
             int skillPointsToNextLevel = skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentComplete = skill.Skill.FractionCompleted;
-            if (skill.Level > skill.Skill.LastConfirmedLvl + 1) skillPoints = skill.CurrentSP;
+            if (skill.Level == skill.Skill.Level + 1) percentComplete = skill.Skill.FractionCompleted;
+            if (skill.Level > skill.Skill.Level + 1) skillPoints = skill.CurrentSP;
             string rankText = String.Format(CultureInfo.CurrentCulture, " (Rank {0})", skill.Skill.Rank);
             string spText = String.Format(CultureInfo.CurrentCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skill.Level);
@@ -284,7 +284,7 @@ namespace EVEMon
                 Rectangle brect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (levelBoxWidth * (level - 1)) + (level - 1),
                                   e.Bounds.Top + PadTop + 2, levelBoxWidth, BoxHeight - 3);
 
-                if (level <= skill.Skill.LastConfirmedLvl)
+                if (level <= skill.Skill.Level)
                 {
                     g.FillRectangle(Brushes.Black, brect);
                 }
@@ -298,13 +298,12 @@ namespace EVEMon
                 foreach (var qskill in skillQueue)
                 {
                     if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
-                       || (skill == qskill && level <= qskill.Level && level > skill.Skill.LastConfirmedLvl && percentComplete == 0.0))
-
+                       || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level && percentComplete == 0.0))
                     {
                         g.FillRectangle(Brushes.RoyalBlue, brect);
                     }
                     
-                    // Blinking indicator of skill in training level
+                    // Blinking indicator of skill level in training
                     if (skill.Skill.IsTraining && skill == qskill && level == skill.Level && percentComplete > 0.0)
                     {
                         if (count == 0) g.FillRectangle(Brushes.White, brect);
@@ -552,8 +551,8 @@ namespace EVEMon
             int sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
             float percentDone = 0;
-            if (skill.Level == skill.Skill.LastConfirmedLvl + 1) percentDone = skill.FractionCompleted;
-            if (skill.Level > skill.Skill.LastConfirmedLvl + 1) sp = skill.CurrentSP;
+            if (skill.Level == skill.Skill.Level + 1) percentDone = skill.FractionCompleted;
+            if (skill.Level > skill.Skill.Level + 1) sp = skill.CurrentSP;
             int nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             int pointsLeft = nextLevelSP - sp;
 
