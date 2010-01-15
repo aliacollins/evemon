@@ -9,7 +9,6 @@ namespace EVEMon.Common.Notifications
     public sealed class SkillCompletionNotification : Notification
     {
         private readonly List<QueuedSkill> m_skills;
-        public bool reverse;
 
         /// <summary>
         /// Constructor.
@@ -25,7 +24,7 @@ namespace EVEMon.Common.Notifications
                 m_skills.Add(skill);
             }
             m_skills.Reverse();
-            UpdateDescription(m_skills);
+            UpdateDescription();
         }
 
         /// <summary>
@@ -35,7 +34,6 @@ namespace EVEMon.Common.Notifications
         {
             get 
             {
-                if (reverse) m_skills.Reverse();
                 foreach (var skill in m_skills) yield return skill;
             }
         }
@@ -64,17 +62,16 @@ namespace EVEMon.Common.Notifications
             {
                 if (!m_skills.Contains(skill)) m_skills.Add(skill);
             }
-            UpdateDescription(m_skills);
+            UpdateDescription();
         }
 
 
         /// <summary>
         /// Updates the description.
         /// </summary>
-        /// <param name="skills">List of queueud skills</param>
-        private void UpdateDescription(List<QueuedSkill> skills)
+        private void UpdateDescription()
         {
-            if (skills.Count == 1)
+            if (m_skills.Count == 1)
             {
                 m_description = String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", m_skills[0].Skill.Name, Skill.GetRomanForInt(m_skills[0].Level));
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -33,8 +34,7 @@ namespace EVEMon
             { 
                 m_notification = value;
                 StringBuilder text = new StringBuilder();
-                m_notification.reverse = true;
-                foreach (var skill in m_notification.Skills)
+                foreach (var skill in m_notification.Skills.Reverse())
                 {
                     text.AppendLine(skill.ToString());
                 }
