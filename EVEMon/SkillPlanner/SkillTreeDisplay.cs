@@ -372,7 +372,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void CheckTraining()
         {
-            if (m_rootSkill == null) return;
+            if (m_rootSkill == null)
+                return;
+
             tmrSkillTick.Enabled = m_rootSkill.AllPrerequisites.Any(x => x.Skill.IsTraining);
         }
 
@@ -705,7 +707,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_plan.Character) return;
+            if (m_plan == null) 
+                return;
+
+            if (e.Character != m_plan.Character) 
+                return;
+
             this.Invalidate();
         }
 
