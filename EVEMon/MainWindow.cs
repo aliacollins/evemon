@@ -1154,29 +1154,6 @@ namespace EVEMon
 
             // Show or bring to front if a window with the same plan as tag already exists
             WindowsFactory<PlanWindow>.ShowByTag(plan);
-
-            if (plan.ObsoleteEntries)
-            {
-                bool showDialog = Settings.UI.PlanWindow.ShowObsEntriesMsgBox;
-
-                if (showDialog)
-                {
-                    string text = String.Concat("The plan contains one or more obsolete entries.",
-                        " (Obsolete entry is an entry for a skill level that is already trained).\r\n\r\n",
-                           "Do you wish them to be removed ?"),
-                    captionText = "Obsolete Entry",
-                    cbOptionText = "Do not show this dialog again";
-
-                    MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
-                    DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                    if (drb == DialogResult.Yes)
-                    {
-                        plan.CleanObsoleteEntries();
-                    }
-                    Settings.UI.PlanWindow.ShowObsEntriesMsgBox = MsgBoxCustom.cbUnchecked;
-                }
-                else plan.CleanObsoleteEntries();
-            }
         }
 
         /// <summary>

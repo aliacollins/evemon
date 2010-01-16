@@ -21,7 +21,7 @@ using EVEMon.Common.Controls;
 namespace EVEMon.SkillPlanner
 {
     /// <summary>
-    /// Provides a way for implant calculator and attributes optimization form to add a column showning the training time difference.
+    /// Provides a way for implant calculator and attributes optimization form to add a column showing the training time difference.
     /// </summary>
     public interface IPlanOrderPluggable
     {
@@ -777,13 +777,29 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When a skill is in training, every 30s a timer ticks and causes the list to refresh. Here is the handler for that.
+        /// Every 30s a timer ticks and causes the list to refresh.
+        /// If there are obsolete entries user gets asked how to handle them.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tmrAutoRefresh_Tick(object sender, EventArgs e)
         {
+            var window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            if (window == null)
+                return;
+
+            window.CheckObsoleteEntries();
             UpdateListViewItems();
+        }
+
+        /// <summary>
+        /// Removes all obsolete entries and rebuilds the plan 
+        /// </summary>
+        public void ClearObsoleteEntries()
+        {
+            m_plan.CleanObsoleteEntries();
+            UpdateDisplayPlan();
+            UpdateSkillList(true);
         }
 
         /// <summary>
@@ -792,7 +808,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateStatusBar()
         {
             var window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (window == null) return;
+            if (window == null)
+                return;
 
             // At most one item selected
             if (lvSkills.SelectedItems.Count < 1)

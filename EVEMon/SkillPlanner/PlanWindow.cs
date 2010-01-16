@@ -187,10 +187,48 @@ namespace EVEMon.SkillPlanner
                 this.Text = this.Character.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
                 planEditor.UpdateListColumns();
 
+                // Check to see if one or more obsolete entries were found
+                CheckObsoleteEntries();
+
                 // Check to see if one or more invalid entries were 
                 // found, we do this last so as not to cause problems
                 // for background update tasks.
                 CheckInvalidEntries();
+            }
+        }
+
+        /// <summary>
+        /// Identifies if there are obsolete entries in the skill plan,
+        /// displays message if required.
+        /// </summary>
+        public void CheckObsoleteEntries()
+        {
+            if (m_plan.ObsoleteEntries)
+            {
+                bool showDialog = Settings.UI.PlanWindow.ShowObsEntriesMsgBox;
+
+                if (showDialog)
+                {
+                    string text = String.Concat("The plan contains one or more obsolete entries.",
+                        " (Obsolete entry is an entry for a skill level that is already trained).\r\n\r\n",
+                           "Do you wish them to be removed ?"),
+                    captionText = "Obsolete Entry",
+                    cbOptionText = "Do not show this dialog again";
+
+                    MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
+                    DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    Settings.UI.PlanWindow.ShowObsEntriesMsgBox = MsgBoxCustom.cbUnchecked;
+
+                    if (drb == DialogResult.Yes)
+                    {
+                        planEditor.ClearObsoleteEntries();
+                    }
+
+                }
+                else
+                {
+                    planEditor.ClearObsoleteEntries();
+                }
             }
         }
 
