@@ -47,7 +47,7 @@
             this.waitingPage = new EVEMon.Controls.MultiPanelPage();
             this.throbber = new EVEMon.Controls.Throbber();
             this.resultPage = new EVEMon.Controls.MultiPanelPage();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.keyTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.keyPicture = new System.Windows.Forms.PictureBox();
             this.keyLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -62,7 +62,7 @@
             this.waitingPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.resultPage.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.keyTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.keyPicture)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -238,7 +238,7 @@
             // 
             // resultPage
             // 
-            this.resultPage.Controls.Add(this.panel1);
+            this.resultPage.Controls.Add(this.keyTableLayoutPanel);
             this.resultPage.Controls.Add(this.groupBox1);
             this.resultPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resultPage.Location = new System.Drawing.Point(0, 0);
@@ -247,15 +247,22 @@
             this.resultPage.TabIndex = 2;
             this.resultPage.Text = "resultPage";
             // 
-            // panel1
+            // keyTableLayoutPanel
             // 
-            this.panel1.AutoSize = true;
-            this.panel1.Controls.Add(this.keyPicture);
-            this.panel1.Controls.Add(this.keyLabel);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(479, 38);
-            this.panel1.TabIndex = 4;
+            this.keyTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.keyTableLayoutPanel.AutoSize = true;
+            this.keyTableLayoutPanel.ColumnCount = 2;
+            this.keyTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.141962F));
+            this.keyTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 91.85804F));
+            this.keyTableLayoutPanel.Controls.Add(this.keyPicture, 0, 0);
+            this.keyTableLayoutPanel.Controls.Add(this.keyLabel, 1, 0);
+            this.keyTableLayoutPanel.Location = new System.Drawing.Point(12, 12);
+            this.keyTableLayoutPanel.Name = "keyTableLayoutPanel";
+            this.keyTableLayoutPanel.RowCount = 1;
+            this.keyTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.keyTableLayoutPanel.Size = new System.Drawing.Size(479, 38);
+            this.keyTableLayoutPanel.TabIndex = 0;
             // 
             // keyPicture
             // 
@@ -263,16 +270,17 @@
             this.keyPicture.Location = new System.Drawing.Point(3, 3);
             this.keyPicture.Name = "keyPicture";
             this.keyPicture.Size = new System.Drawing.Size(32, 32);
-            this.keyPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.keyPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.keyPicture.TabIndex = 0;
             this.keyPicture.TabStop = false;
             // 
             // keyLabel
             // 
             this.keyLabel.AutoSize = true;
-            this.keyLabel.Location = new System.Drawing.Point(41, 13);
+            this.keyLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.keyLabel.Location = new System.Drawing.Point(41, 0);
             this.keyLabel.Name = "keyLabel";
-            this.keyLabel.Size = new System.Drawing.Size(122, 13);
+            this.keyLabel.Size = new System.Drawing.Size(435, 38);
             this.keyLabel.TabIndex = 1;
             this.keyLabel.Text = "This is a limited API key.";
             this.keyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -345,8 +353,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.resultPage.ResumeLayout(false);
             this.resultPage.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.keyTableLayoutPanel.ResumeLayout(false);
+            this.keyTableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.keyPicture)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -371,7 +379,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListView charactersListView;
         private System.Windows.Forms.Label removalWarningLabel;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TableLayoutPanel keyTableLayoutPanel;
         private System.Windows.Forms.Label keyLabel;
     }
 }
