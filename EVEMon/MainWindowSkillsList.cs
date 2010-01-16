@@ -603,26 +603,42 @@ namespace EVEMon
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels.
             Skill s = (Skill)item;
-            if (e.Button == MouseButtons.Right && s.Level < 5)
+            if (e.Button == MouseButtons.Right)
             {
-                // Reset the menu.
-                ToolStripMenuItem tm = new ToolStripMenuItem(String.Format(CultureInfo.CurrentCulture, "Add {0}", s.Name));
+                // "Show in Skill Explorer" menu item
+                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", Properties.Resources.LeadsTo);
+                tmSkillExplorer.Click += new EventHandler(tmSkillExplorer_Click);
+                tmSkillExplorer.Tag = s;
 
-                // Build the level options.
-                int nextLevel = Math.Min(5, s.Level + 1);
-                for (int level = nextLevel; level < 6; level++)
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Clear();
+                contextMenuStripPlanPopup.Items.Add(tmSkillExplorer);
+
+                if (s.Level < 5)
                 {
-                    ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureInfo.CurrentCulture, "Level {0} to", Skill.GetRomanForInt(level)));
-                    tm.DropDownItems.Add(menuLevel);
-                    m_character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) => {
+                    // Reset the menu.
+                    ToolStripMenuItem tm = new ToolStripMenuItem(String.Format(CultureInfo.CurrentCulture, "Add {0}", s.Name));
+
+                    // Build the level options.
+                    int nextLevel = Math.Min(5, s.Level + 1);
+                    for (int level = nextLevel; level < 6; level++)
+                    {
+                        ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureInfo.CurrentCulture, "Level {0} to", Skill.GetRomanForInt(level)));
+                        tm.DropDownItems.Add(menuLevel);
+                        m_character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
+                        {
                             menuPlanItem.Click += new EventHandler(menuPlanItem_Click);
                             menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan, new SkillLevel(s, level));
                         });
+                    }
+
+
+                    // Add to the context menu
+                    contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
+                    contextMenuStripPlanPopup.Items.Add(tm);
                 }
 
-                // Add to the context menu and display
-                contextMenuStripPlanPopup.Items.Clear();
-                contextMenuStripPlanPopup.Items.Add(tm);
+                // Display the context menu
                 contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
                 return;
             }
@@ -830,6 +846,20 @@ namespace EVEMon
 
             var operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
             PlanHelper.PerformSilently(operation);
+        }
+
+        /// <summary>
+        /// Shows the selected skill in Skill Explorer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tmSkillExplorer_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            Skill skill = (Skill) item.Tag;
+
+            var window = WindowsFactory<SkillExplorerWindow>.ShowUnique();
+            window.Skill = skill;
         }
         #endregion
 

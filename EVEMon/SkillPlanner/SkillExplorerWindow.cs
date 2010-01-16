@@ -122,10 +122,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Update the the character and plan name on the skill header group title
+        /// Update the character and plan name on the skill header group title
         /// </summary>
          private void UpdatePlanName()
         {
+            if (m_planWindow == null)
+                return;
+
             grpPlanName.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_character.Name, m_planWindow.Plan.Name);
         }
 
