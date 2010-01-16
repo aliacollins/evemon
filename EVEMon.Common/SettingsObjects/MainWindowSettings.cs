@@ -18,6 +18,8 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
             ShowRelocationMenu = true;
+            EnableAutomaticRelocation = false;
+            AutomaticRelocationInterval = (int)TimeSpan.FromSeconds(10).TotalSeconds;
         }
 
         [XmlElement("showCharacterInfoInTitleBar")]
@@ -29,6 +31,20 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("showRelocationMenu")]
         public bool ShowRelocationMenu
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("enableAutomaticRelocation")]
+        public bool EnableAutomaticRelocation
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("autmoaticRelocationInterval")]
+        public int AutomaticRelocationInterval
         {
             get;
             set;

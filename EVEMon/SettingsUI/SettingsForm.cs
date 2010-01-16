@@ -41,7 +41,7 @@ namespace EVEMon.SettingsUI
             {
                 runAtStartupComboBox.Enabled = false;
                 treeView.Nodes["trayIconNode"].Remove();
-                treeView.Nodes["generalNode"].Nodes["eveRelocationNode"].Remove();
+                treeView.Nodes["generalNode"].Nodes["relocationNode"].Remove();
             }
 
             // Ran with Mono ?
@@ -134,11 +134,30 @@ namespace EVEMon.SettingsUI
                 cbSkillIconSet.Items.Add(IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
             }
 
+            // Relocation
+            showRelocationMenuCheckbox.Checked = m_settings.UI.MainWindow.ShowRelocationMenu;
+            enableAutomaticRelocationCheckBox.Checked = m_settings.UI.MainWindow.EnableAutomaticRelocation;
+
+            // Do the bounds checking for the relocation interval
+            var automaticRelocationInterval = m_settings.UI.MainWindow.AutomaticRelocationInterval;
+
+            if (automaticRelocationInterval > relocationSecondsNumericUpDown.Maximum)
+            {
+                relocationSecondsNumericUpDown.Value = relocationSecondsNumericUpDown.Maximum;
+            }
+            else if (automaticRelocationInterval < relocationSecondsNumericUpDown.Minimum)
+            {
+                relocationSecondsNumericUpDown.Value = relocationSecondsNumericUpDown.Minimum;
+            }
+            else
+            {
+                relocationSecondsNumericUpDown.Value = m_settings.UI.MainWindow.AutomaticRelocationInterval;
+            }
+
             // Window settings
             rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
             rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
             rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
-            showRelocationMenuCheckbox.Checked = m_settings.UI.MainWindow.ShowRelocationMenu;
 
             if (m_settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar)
             {
@@ -351,8 +370,10 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.HighlightQueuedSkills = cbColorQueuedSkills.Checked;
             m_settings.UI.MainWindow.AlwaysShowSkillQueueTime = cbAlwaysShowSkillQueueTime.Checked;
 
-            // EVE Window relocation
+            // Relocation
             m_settings.UI.MainWindow.ShowRelocationMenu = showRelocationMenuCheckbox.Checked;
+            m_settings.UI.MainWindow.EnableAutomaticRelocation = enableAutomaticRelocationCheckBox.Checked;
+            m_settings.UI.MainWindow.AutomaticRelocationInterval = (int)relocationSecondsNumericUpDown.Value;
 
             // Notifications
             m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
@@ -586,6 +607,11 @@ namespace EVEMon.SettingsUI
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
             btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedIndex != 0;
+
+            // Relocator
+            relocationSecondsNumericUpDown.Enabled = enableAutomaticRelocationCheckBox.Checked;
+            relocationCheckEveryLabel.Enabled = enableAutomaticRelocationCheckBox.Checked;
+            relocationSecondsLabel.Enabled = enableAutomaticRelocationCheckBox.Checked;
 
             // Minimize to tray/task bar
             rbMinToTray.Enabled = !rbSystemTrayOptionsNever.Checked;

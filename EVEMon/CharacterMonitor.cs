@@ -1,5 +1,4 @@
 //#define DEBUG_SINGLETHREAD
-// (If setting DEBUG_SINGLE THREAD, also set it in EVESession.cs)
 using System;
 using System.Collections.Generic;
 using System.Drawing;

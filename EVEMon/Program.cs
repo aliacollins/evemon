@@ -51,6 +51,11 @@ namespace EVEMon
             // Initialization
             EveClient.Initialize();
             Settings.InitializeFromFile();
+            
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            {
+                Relocator.Initialize();
+            }
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested) return;
@@ -65,6 +70,7 @@ namespace EVEMon
             // Save before we quit.
             finally
             {
+                Relocator.Stop();
                 Settings.SaveImmediate();
                 EveClient.Trace("Closed");
                 EveClient.StopTraceLogging();

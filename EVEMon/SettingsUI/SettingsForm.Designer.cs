@@ -31,28 +31,49 @@ namespace EVEMon.SettingsUI
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Panel bottomPanel;
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Updates", 5, 5);
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Network", 8, 8);
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 12, 12);
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("IGB Server", 11, 11);
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Relocation");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5});
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Skill Planner", 7, 7);
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("System Tray Icon", 9, 9);
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("External Calendar", 13, 13);
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
+            treeNode10});
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Skills Completion Mails", 4, 4);
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Notifications", 3, 3, new System.Windows.Forms.TreeNode[] {
+            treeNode12});
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             System.Windows.Forms.Label label31;
             System.Windows.Forms.GroupBox groupBox15;
             System.Windows.Forms.GroupBox groupBox7;
             System.Windows.Forms.Label label29;
             System.Windows.Forms.GroupBox groupBox10;
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode14,
+            treeNode15,
+            treeNode16,
+            treeNode17,
+            treeNode18,
+            treeNode19,
+            treeNode20,
+            treeNode21});
             System.Windows.Forms.Label label16;
             System.Windows.Forms.Label label13;
             System.Windows.Forms.Label label12;
@@ -77,51 +98,16 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.Label lblEarlyReminder;
             System.Windows.Forms.Label lblLateReminder;
             System.Windows.Forms.Label label25;
+            System.Windows.Forms.Label label27;
             System.Windows.Forms.Label label14;
             System.Windows.Forms.Label label9;
-            System.Windows.Forms.Label label27;
             System.Windows.Forms.Label label30;
             System.Windows.Forms.Label label23;
             System.Windows.Forms.FlowLayoutPanel flowLayoutPanel28;
             System.Windows.Forms.Label igbHelpLabel;
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 5, 5);
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 8, 8);
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 12, 12);
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 11, 11);
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12,
-            treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Skill Planner", 7, 7);
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("System Tray Icon", 9, 9);
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("External Calendar", 13, 13);
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
-            treeNode18});
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Skills Completion Mails", 4, 4);
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Notifications", 3, 3, new System.Windows.Forms.TreeNode[] {
-            treeNode20});
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.applyButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.cbColorQueuedSkills = new System.Windows.Forms.CheckBox();
-            this.cbShowPrereqMetSkills = new System.Windows.Forms.CheckBox();
-            this.cbColorPartialSkills = new System.Windows.Forms.CheckBox();
-            this.cbAlwaysShowSkillQueueTime = new System.Windows.Forms.CheckBox();
-            this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
-            this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
-            this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
-            this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
-            this.cbTitleToTime = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
-            this.tvlist = new System.Windows.Forms.TreeView();
-            this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
-            this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
-            this.rbSystemTrayOptionsMinimized = new System.Windows.Forms.RadioButton();
-            this.igbUrlTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -138,7 +124,6 @@ namespace EVEMon.SettingsUI
             this.leftPanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Controls.MultiPanel();
             this.mainWindowPage = new EVEMon.Controls.MultiPanelPage();
-            this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.overviewPanel = new System.Windows.Forms.Panel();
             this.overviewShowSkillQueueFreeRoomCheckBox = new System.Windows.Forms.CheckBox();
@@ -146,6 +131,15 @@ namespace EVEMon.SettingsUI
             this.overviewShowPortraitCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewPortraitSizeComboBox = new System.Windows.Forms.ComboBox();
             this.cbShowOverViewTab = new System.Windows.Forms.CheckBox();
+            this.cbColorQueuedSkills = new System.Windows.Forms.CheckBox();
+            this.cbShowPrereqMetSkills = new System.Windows.Forms.CheckBox();
+            this.cbColorPartialSkills = new System.Windows.Forms.CheckBox();
+            this.cbAlwaysShowSkillQueueTime = new System.Windows.Forms.CheckBox();
+            this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
+            this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
+            this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
+            this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
+            this.cbTitleToTime = new System.Windows.Forms.CheckBox();
             this.generalPage = new EVEMon.Controls.MultiPanelPage();
             this.cbWorksafeMode = new System.Windows.Forms.CheckBox();
             this.compatibilityCombo = new System.Windows.Forms.ComboBox();
@@ -156,6 +150,9 @@ namespace EVEMon.SettingsUI
             this.cbHighlightConflicts = new System.Windows.Forms.CheckBox();
             this.cbHighlightPrerequisites = new System.Windows.Forms.CheckBox();
             this.cbHighlightPlannedSkills = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
+            this.tvlist = new System.Windows.Forms.TreeView();
             this.networkPage = new EVEMon.Controls.MultiPanelPage();
             this.ApiProxyGroupBox = new System.Windows.Forms.GroupBox();
             this.btnDeleteAPIServer = new System.Windows.Forms.Button();
@@ -197,6 +194,9 @@ namespace EVEMon.SettingsUI
             this.trayPopupRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipButton = new System.Windows.Forms.Button();
+            this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
+            this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
+            this.rbSystemTrayOptionsMinimized = new System.Windows.Forms.RadioButton();
             this.updatesPage = new EVEMon.Controls.MultiPanelPage();
             this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.label18 = new System.Windows.Forms.Label();
@@ -239,7 +239,14 @@ namespace EVEMon.SettingsUI
             this.igbFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
             this.igbPortTextBox = new System.Windows.Forms.TextBox();
+            this.igbUrlTextBox = new System.Windows.Forms.TextBox();
             this.cbIGBPublic = new System.Windows.Forms.CheckBox();
+            this.relocationPage = new EVEMon.Controls.MultiPanelPage();
+            this.relocationCheckEveryLabel = new System.Windows.Forms.Label();
+            this.relocationSecondsLabel = new System.Windows.Forms.Label();
+            this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
+            this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
             bottomPanel = new System.Windows.Forms.Panel();
             label31 = new System.Windows.Forms.Label();
             groupBox15 = new System.Windows.Forms.GroupBox();
@@ -270,20 +277,14 @@ namespace EVEMon.SettingsUI
             lblEarlyReminder = new System.Windows.Forms.Label();
             lblLateReminder = new System.Windows.Forms.Label();
             label25 = new System.Windows.Forms.Label();
+            label27 = new System.Windows.Forms.Label();
             label14 = new System.Windows.Forms.Label();
             label9 = new System.Windows.Forms.Label();
-            label27 = new System.Windows.Forms.Label();
             label30 = new System.Windows.Forms.Label();
             label23 = new System.Windows.Forms.Label();
             flowLayoutPanel28 = new System.Windows.Forms.FlowLayoutPanel();
             igbHelpLabel = new System.Windows.Forms.Label();
             bottomPanel.SuspendLayout();
-            groupBox15.SuspendLayout();
-            groupBox7.SuspendLayout();
-            groupBox10.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            groupBox1.SuspendLayout();
-            flowLayoutPanel28.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
             this.leftPanel.SuspendLayout();
@@ -291,8 +292,12 @@ namespace EVEMon.SettingsUI
             this.mainWindowPage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.overviewPanel.SuspendLayout();
+            groupBox15.SuspendLayout();
+            groupBox7.SuspendLayout();
             this.generalPage.SuspendLayout();
             this.skillPlannerPage.SuspendLayout();
+            groupBox10.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.networkPage.SuspendLayout();
             this.ApiProxyGroupBox.SuspendLayout();
             this.ProxyServerGroupBox.SuspendLayout();
@@ -306,6 +311,7 @@ namespace EVEMon.SettingsUI
             this.trayIconPage.SuspendLayout();
             this.WindowBehaviourGroupBox.SuspendLayout();
             this.trayIconPopupGroupBox.SuspendLayout();
+            groupBox1.SuspendLayout();
             this.updatesPage.SuspendLayout();
             this.schedulerUIPage.SuspendLayout();
             this.externalCalendarPage.SuspendLayout();
@@ -320,6 +326,9 @@ namespace EVEMon.SettingsUI
             this.igbServerPage.SuspendLayout();
             this.igbFlowPanel.SuspendLayout();
             this.flowLayoutPanel27.SuspendLayout();
+            flowLayoutPanel28.SuspendLayout();
+            this.relocationPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.relocationSecondsNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // bottomPanel
@@ -368,6 +377,313 @@ namespace EVEMon.SettingsUI
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label7, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 60);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(90, 40);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "Server Password:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(24, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(69, 20);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Email Server:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(22, 101);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(73, 26);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "From address:";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // flowLayoutPanel9
+            // 
+            this.flowLayoutPanel9.AutoSize = true;
+            this.flowLayoutPanel9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel9.Controls.Add(this.checkBox1);
+            this.flowLayoutPanel9.Controls.Add(this.checkBox2);
+            this.flowLayoutPanel9.Controls.Add(this.checkBox3);
+            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel9.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 16);
+            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
+            this.flowLayoutPanel9.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(356, 70);
+            this.flowLayoutPanel9.TabIndex = 3;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(12, 3);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(102, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Minimize to Tray";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(12, 26);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(171, 17);
+            this.checkBox2.TabIndex = 1;
+            this.checkBox2.Text = "Set window title to training time";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(12, 49);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(264, 17);
+            this.checkBox3.TabIndex = 2;
+            this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // chName
+            // 
+            this.chName.Text = "Sample";
+            // 
+            // treeView
+            // 
+            this.treeView.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.treeView.FullRowSelect = true;
+            this.treeView.HideSelection = false;
+            this.treeView.ImageIndex = 0;
+            this.treeView.ImageList = this.imageList;
+            this.treeView.ItemHeight = 20;
+            this.treeView.Location = new System.Drawing.Point(6, 6);
+            this.treeView.Name = "treeView";
+            treeNode1.ImageIndex = 5;
+            treeNode1.Name = "Node9";
+            treeNode1.SelectedImageIndex = 5;
+            treeNode1.Tag = "updatesPage";
+            treeNode1.Text = "Updates";
+            treeNode2.ImageIndex = 8;
+            treeNode2.Name = "Node5";
+            treeNode2.SelectedImageIndex = 8;
+            treeNode2.Tag = "networkPage";
+            treeNode2.Text = "Network";
+            treeNode3.ImageIndex = 12;
+            treeNode3.Name = "g15Node";
+            treeNode3.SelectedImageIndex = 12;
+            treeNode3.Tag = "g15Page";
+            treeNode3.Text = "Logitech Keyboards";
+            treeNode4.ImageIndex = 11;
+            treeNode4.Name = "Node2";
+            treeNode4.SelectedImageIndex = 11;
+            treeNode4.Tag = "igbServerPage";
+            treeNode4.Text = "IGB Server";
+            treeNode5.Name = "relocationNode";
+            treeNode5.Tag = "relocationPage";
+            treeNode5.Text = "Relocation";
+            treeNode6.ImageIndex = 10;
+            treeNode6.Name = "generalNode";
+            treeNode6.SelectedImageIndex = 10;
+            treeNode6.Tag = "generalPage";
+            treeNode6.Text = "General";
+            treeNode7.ImageIndex = 6;
+            treeNode7.Name = "Node3";
+            treeNode7.SelectedImageIndex = 6;
+            treeNode7.Tag = "mainWindowPage";
+            treeNode7.Text = "Main Window";
+            treeNode8.ImageIndex = 7;
+            treeNode8.Name = "Node4";
+            treeNode8.SelectedImageIndex = 7;
+            treeNode8.Tag = "skillPlannerPage";
+            treeNode8.Text = "Skill Planner";
+            treeNode9.ImageIndex = 9;
+            treeNode9.Name = "trayIconNode";
+            treeNode9.SelectedImageIndex = 9;
+            treeNode9.Tag = "trayIconPage";
+            treeNode9.Text = "System Tray Icon";
+            treeNode10.ImageIndex = 13;
+            treeNode10.Name = "Node11";
+            treeNode10.SelectedImageIndex = 13;
+            treeNode10.Tag = "externalCalendarPage";
+            treeNode10.Text = "External Calendar";
+            treeNode11.ImageIndex = 1;
+            treeNode11.Name = "Node10";
+            treeNode11.SelectedImageIndex = 1;
+            treeNode11.Tag = "schedulerUIPage";
+            treeNode11.Text = "Scheduler";
+            treeNode12.ImageIndex = 4;
+            treeNode12.Name = "Node7";
+            treeNode12.SelectedImageIndex = 4;
+            treeNode12.Tag = "emailNotificationsPage";
+            treeNode12.Text = "Skills Completion Mails";
+            treeNode13.ImageIndex = 3;
+            treeNode13.Name = "Node2";
+            treeNode13.SelectedImageIndex = 3;
+            treeNode13.Tag = "notificationsPage";
+            treeNode13.Text = "Notifications";
+            this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode7,
+            treeNode8,
+            treeNode9,
+            treeNode11,
+            treeNode13});
+            this.treeView.SelectedImageIndex = 0;
+            this.treeView.ShowLines = false;
+            this.treeView.ShowPlusMinus = false;
+            this.treeView.ShowRootLines = false;
+            this.treeView.Size = new System.Drawing.Size(187, 424);
+            this.treeView.TabIndex = 6;
+            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
+            // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList.Images.SetKeyName(0, "Transparent.png");
+            this.imageList.Images.SetKeyName(1, "Calendar.png");
+            this.imageList.Images.SetKeyName(2, "LookNFeel.png");
+            this.imageList.Images.SetKeyName(3, "Notification2.png");
+            this.imageList.Images.SetKeyName(4, "Email.png");
+            this.imageList.Images.SetKeyName(5, "Software update.png");
+            this.imageList.Images.SetKeyName(6, "MainWindow.png");
+            this.imageList.Images.SetKeyName(7, "Plan.png");
+            this.imageList.Images.SetKeyName(8, "Connection.png");
+            this.imageList.Images.SetKeyName(9, "EVEMon16.png");
+            this.imageList.Images.SetKeyName(10, "System config.png");
+            this.imageList.Images.SetKeyName(11, "IGB Server.png");
+            this.imageList.Images.SetKeyName(12, "Logitech Keyboard.png");
+            this.imageList.Images.SetKeyName(13, "gcalendar.png");
+            // 
+            // leftPanel
+            // 
+            this.leftPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.leftPanel.Controls.Add(this.treeView);
+            this.leftPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.leftPanel.Location = new System.Drawing.Point(0, 0);
+            this.leftPanel.Name = "leftPanel";
+            this.leftPanel.Padding = new System.Windows.Forms.Padding(6);
+            this.leftPanel.Size = new System.Drawing.Size(199, 436);
+            this.leftPanel.TabIndex = 9;
+            // 
+            // multiPanel
+            // 
+            this.multiPanel.Controls.Add(this.mainWindowPage);
+            this.multiPanel.Controls.Add(this.generalPage);
+            this.multiPanel.Controls.Add(this.skillPlannerPage);
+            this.multiPanel.Controls.Add(this.networkPage);
+            this.multiPanel.Controls.Add(this.emailNotificationsPage);
+            this.multiPanel.Controls.Add(this.notificationsPage);
+            this.multiPanel.Controls.Add(this.trayIconPage);
+            this.multiPanel.Controls.Add(this.updatesPage);
+            this.multiPanel.Controls.Add(this.schedulerUIPage);
+            this.multiPanel.Controls.Add(this.externalCalendarPage);
+            this.multiPanel.Controls.Add(this.g15Page);
+            this.multiPanel.Controls.Add(this.igbServerPage);
+            this.multiPanel.Controls.Add(this.relocationPage);
+            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.multiPanel.Location = new System.Drawing.Point(199, 0);
+            this.multiPanel.Name = "multiPanel";
+            this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
+            this.multiPanel.SelectedPage = this.relocationPage;
+            this.multiPanel.Size = new System.Drawing.Size(445, 436);
+            this.multiPanel.TabIndex = 7;
+            // 
+            // mainWindowPage
+            // 
+            this.mainWindowPage.Controls.Add(this.groupBox2);
+            this.mainWindowPage.Controls.Add(groupBox15);
+            this.mainWindowPage.Controls.Add(groupBox7);
+            this.mainWindowPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainWindowPage.Location = new System.Drawing.Point(5, 5);
+            this.mainWindowPage.Name = "mainWindowPage";
+            this.mainWindowPage.Size = new System.Drawing.Size(435, 426);
+            this.mainWindowPage.TabIndex = 1;
+            this.mainWindowPage.Text = "mainWindowPage";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.overviewPanel);
+            this.groupBox2.Controls.Add(this.cbShowOverViewTab);
+            this.groupBox2.Location = new System.Drawing.Point(1, 274);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(428, 127);
+            this.groupBox2.TabIndex = 15;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Overview";
+            // 
+            // overviewPanel
+            // 
+            this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.overviewPanel.Controls.Add(this.overviewShowSkillQueueFreeRoomCheckBox);
+            this.overviewPanel.Controls.Add(this.overviewShowWalletCheckBox);
+            this.overviewPanel.Controls.Add(label31);
+            this.overviewPanel.Controls.Add(this.overviewShowPortraitCheckBox);
+            this.overviewPanel.Controls.Add(this.overviewPortraitSizeComboBox);
+            this.overviewPanel.Location = new System.Drawing.Point(29, 43);
+            this.overviewPanel.Name = "overviewPanel";
+            this.overviewPanel.Size = new System.Drawing.Size(393, 79);
+            this.overviewPanel.TabIndex = 32;
+            // 
+            // overviewShowSkillQueueFreeRoomCheckBox
+            // 
+            this.overviewShowSkillQueueFreeRoomCheckBox.AutoSize = true;
+            this.overviewShowSkillQueueFreeRoomCheckBox.Location = new System.Drawing.Point(161, 3);
+            this.overviewShowSkillQueueFreeRoomCheckBox.Name = "overviewShowSkillQueueFreeRoomCheckBox";
+            this.overviewShowSkillQueueFreeRoomCheckBox.Size = new System.Drawing.Size(162, 17);
+            this.overviewShowSkillQueueFreeRoomCheckBox.TabIndex = 32;
+            this.overviewShowSkillQueueFreeRoomCheckBox.Text = "Show Skill Queue Free Room";
+            this.overviewShowSkillQueueFreeRoomCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // overviewShowWalletCheckBox
+            // 
+            this.overviewShowWalletCheckBox.AutoSize = true;
+            this.overviewShowWalletCheckBox.Location = new System.Drawing.Point(3, 3);
+            this.overviewShowWalletCheckBox.Name = "overviewShowWalletCheckBox";
+            this.overviewShowWalletCheckBox.Size = new System.Drawing.Size(125, 17);
+            this.overviewShowWalletCheckBox.TabIndex = 30;
+            this.overviewShowWalletCheckBox.Text = "Show Wallet Balance";
+            this.overviewShowWalletCheckBox.UseVisualStyleBackColor = true;
+            // 
             // label31
             // 
             label31.AutoSize = true;
@@ -376,6 +692,36 @@ namespace EVEMon.SettingsUI
             label31.Size = new System.Drawing.Size(26, 13);
             label31.TabIndex = 31;
             label31.Text = "Size";
+            // 
+            // overviewShowPortraitCheckBox
+            // 
+            this.overviewShowPortraitCheckBox.AutoSize = true;
+            this.overviewShowPortraitCheckBox.Location = new System.Drawing.Point(3, 26);
+            this.overviewShowPortraitCheckBox.Name = "overviewShowPortraitCheckBox";
+            this.overviewShowPortraitCheckBox.Size = new System.Drawing.Size(142, 17);
+            this.overviewShowPortraitCheckBox.TabIndex = 26;
+            this.overviewShowPortraitCheckBox.Text = "Show Character Portrait";
+            this.overviewShowPortraitCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // overviewPortraitSizeComboBox
+            // 
+            this.overviewPortraitSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.overviewPortraitSizeComboBox.FormattingEnabled = true;
+            this.overviewPortraitSizeComboBox.Location = new System.Drawing.Point(52, 49);
+            this.overviewPortraitSizeComboBox.Name = "overviewPortraitSizeComboBox";
+            this.overviewPortraitSizeComboBox.Size = new System.Drawing.Size(93, 21);
+            this.overviewPortraitSizeComboBox.TabIndex = 28;
+            // 
+            // cbShowOverViewTab
+            // 
+            this.cbShowOverViewTab.AutoSize = true;
+            this.cbShowOverViewTab.Location = new System.Drawing.Point(14, 20);
+            this.cbShowOverViewTab.Name = "cbShowOverViewTab";
+            this.cbShowOverViewTab.Size = new System.Drawing.Size(128, 17);
+            this.cbShowOverViewTab.TabIndex = 0;
+            this.cbShowOverViewTab.Text = "Show \"Overview\" tab";
+            this.cbShowOverViewTab.UseVisualStyleBackColor = true;
+            this.cbShowOverViewTab.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
             // groupBox15
             // 
@@ -510,808 +856,6 @@ namespace EVEMon.SettingsUI
             this.cbTitleToTime.UseVisualStyleBackColor = true;
             this.cbTitleToTime.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // label29
-            // 
-            label29.AutoSize = true;
-            label29.Location = new System.Drawing.Point(3, 181);
-            label29.Name = "label29";
-            label29.Size = new System.Drawing.Size(222, 13);
-            label29.TabIndex = 1;
-            label29.Text = "Environment (requires restart to take effect)";
-            // 
-            // groupBox10
-            // 
-            groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            groupBox10.Controls.Add(this.tableLayoutPanel4);
-            groupBox10.Location = new System.Drawing.Point(0, 106);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new System.Drawing.Size(435, 218);
-            groupBox10.TabIndex = 13;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "Skill Browser Icon Set";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.cbSkillIconSet, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(429, 198);
-            this.tableLayoutPanel4.TabIndex = 15;
-            // 
-            // cbSkillIconSet
-            // 
-            this.cbSkillIconSet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbSkillIconSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSkillIconSet.FormattingEnabled = true;
-            this.cbSkillIconSet.Location = new System.Drawing.Point(3, 3);
-            this.cbSkillIconSet.Name = "cbSkillIconSet";
-            this.cbSkillIconSet.Size = new System.Drawing.Size(423, 21);
-            this.cbSkillIconSet.TabIndex = 3;
-            this.cbSkillIconSet.SelectedIndexChanged += new System.EventHandler(this.skillIconSetComboBox_SelectedIndexChanged);
-            // 
-            // tvlist
-            // 
-            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvlist.Location = new System.Drawing.Point(3, 30);
-            this.tvlist.Name = "tvlist";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "Node1";
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Node2";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "Node3";
-            treeNode4.Name = "Node4";
-            treeNode4.Text = "Node4";
-            treeNode5.Name = "Node5";
-            treeNode5.Text = "Node5";
-            treeNode6.Name = "Node6";
-            treeNode6.Text = "Node6";
-            treeNode7.Name = "Node7";
-            treeNode7.Text = "Node7";
-            treeNode8.Name = "Node8";
-            treeNode8.Text = "Node8";
-            treeNode9.Name = "Node0";
-            treeNode9.Text = "Node0";
-            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
-            this.tvlist.Size = new System.Drawing.Size(423, 165);
-            this.tvlist.TabIndex = 9;
-            // 
-            // label16
-            // 
-            label16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label16.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label16.Location = new System.Drawing.Point(12, 17);
-            label16.Name = "label16";
-            label16.Size = new System.Drawing.Size(374, 29);
-            label16.TabIndex = 8;
-            label16.Text = "By default, EVEMon queries CCP for the API data. You can implement your own provi" +
-                "der and make EVEMon uses it.";
-            // 
-            // label13
-            // 
-            label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label13.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label13.Location = new System.Drawing.Point(9, 17);
-            label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(382, 32);
-            label13.TabIndex = 8;
-            label13.Text = "By default, EVEMon will use the same Proxy settings than Internet Explorer (can b" +
-                "e configured through the Control Panel).";
-            // 
-            // label12
-            // 
-            label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label12.Location = new System.Drawing.Point(50, 8);
-            label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(165, 13);
-            label12.TabIndex = 3;
-            label12.Text = "Host/IP Address";
-            label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label11
-            // 
-            label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label11.Location = new System.Drawing.Point(221, 8);
-            label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(39, 13);
-            label11.TabIndex = 4;
-            label11.Text = "Port";
-            label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new System.Drawing.Point(8, 27);
-            label10.Name = "label10";
-            label10.Size = new System.Drawing.Size(36, 13);
-            label10.TabIndex = 0;
-            label10.Text = "HTTP:";
-            label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label1
-            // 
-            label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(9, 0);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(70, 27);
-            label1.TabIndex = 0;
-            label1.Text = "Email Server:";
-            label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label2
-            // 
-            label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(3, 162);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(76, 27);
-            label2.TabIndex = 1;
-            label2.Text = "From address:";
-            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label3
-            // 
-            label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(15, 189);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(64, 27);
-            label3.TabIndex = 2;
-            label3.Text = "To address:";
-            label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label5
-            // 
-            label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(5, 27);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(57, 27);
-            label5.TabIndex = 8;
-            label5.Text = "Password:";
-            label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label4
-            // 
-            label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(3, 0);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(59, 27);
-            label4.TabIndex = 7;
-            label4.Text = "Username:";
-            label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblPortNumber
-            // 
-            lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            lblPortNumber.AutoSize = true;
-            lblPortNumber.Location = new System.Drawing.Point(8, 27);
-            lblPortNumber.Name = "lblPortNumber";
-            lblPortNumber.Size = new System.Drawing.Size(71, 27);
-            lblPortNumber.TabIndex = 10;
-            lblPortNumber.Text = "Port Number:";
-            lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // groupBox1
-            // 
-            groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            groupBox1.Controls.Add(this.rbSystemTrayOptionsNever);
-            groupBox1.Controls.Add(this.rbSystemTrayOptionsAlways);
-            groupBox1.Controls.Add(this.rbSystemTrayOptionsMinimized);
-            groupBox1.Location = new System.Drawing.Point(9, 29);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new System.Drawing.Size(419, 100);
-            groupBox1.TabIndex = 9;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Show System Tray Icon";
-            // 
-            // rbSystemTrayOptionsNever
-            // 
-            this.rbSystemTrayOptionsNever.AutoSize = true;
-            this.rbSystemTrayOptionsNever.Location = new System.Drawing.Point(6, 20);
-            this.rbSystemTrayOptionsNever.Name = "rbSystemTrayOptionsNever";
-            this.rbSystemTrayOptionsNever.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsNever.Size = new System.Drawing.Size(57, 17);
-            this.rbSystemTrayOptionsNever.TabIndex = 1;
-            this.rbSystemTrayOptionsNever.TabStop = true;
-            this.rbSystemTrayOptionsNever.Tag = "";
-            this.rbSystemTrayOptionsNever.Text = "Never";
-            this.rbSystemTrayOptionsNever.UseVisualStyleBackColor = true;
-            this.rbSystemTrayOptionsNever.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // rbSystemTrayOptionsAlways
-            // 
-            this.rbSystemTrayOptionsAlways.AutoSize = true;
-            this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(6, 66);
-            this.rbSystemTrayOptionsAlways.Name = "rbSystemTrayOptionsAlways";
-            this.rbSystemTrayOptionsAlways.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(62, 17);
-            this.rbSystemTrayOptionsAlways.TabIndex = 3;
-            this.rbSystemTrayOptionsAlways.TabStop = true;
-            this.rbSystemTrayOptionsAlways.Tag = "";
-            this.rbSystemTrayOptionsAlways.Text = "Always";
-            this.rbSystemTrayOptionsAlways.UseVisualStyleBackColor = true;
-            // 
-            // rbSystemTrayOptionsMinimized
-            // 
-            this.rbSystemTrayOptionsMinimized.AutoSize = true;
-            this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(6, 43);
-            this.rbSystemTrayOptionsMinimized.Name = "rbSystemTrayOptionsMinimized";
-            this.rbSystemTrayOptionsMinimized.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(104, 17);
-            this.rbSystemTrayOptionsMinimized.TabIndex = 2;
-            this.rbSystemTrayOptionsMinimized.TabStop = true;
-            this.rbSystemTrayOptionsMinimized.Tag = "";
-            this.rbSystemTrayOptionsMinimized.Text = "When Minimized";
-            this.rbSystemTrayOptionsMinimized.UseVisualStyleBackColor = true;
-            // 
-            // label19
-            // 
-            label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label19.Location = new System.Drawing.Point(6, 34);
-            label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(422, 45);
-            label19.TabIndex = 6;
-            label19.Text = "Select the colors used in the scheduler. Using the scheduler, EVEMon can warn you" +
-                " about skill that will complete at times you will be away from your computer.";
-            // 
-            // label24
-            // 
-            label24.AutoSize = true;
-            label24.Location = new System.Drawing.Point(6, 109);
-            label24.Name = "label24";
-            label24.Size = new System.Drawing.Size(33, 13);
-            label24.TabIndex = 5;
-            label24.Text = "Text:";
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new System.Drawing.Point(6, 132);
-            label20.Name = "label20";
-            label20.Size = new System.Drawing.Size(85, 13);
-            label20.TabIndex = 0;
-            label20.Text = "Blocking Events:";
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.Location = new System.Drawing.Point(6, 180);
-            label21.Name = "label21";
-            label21.Size = new System.Drawing.Size(93, 13);
-            label21.TabIndex = 1;
-            label21.Text = "Recurring Events:";
-            // 
-            // label22
-            // 
-            label22.AutoSize = true;
-            label22.Location = new System.Drawing.Point(6, 157);
-            label22.Name = "label22";
-            label22.Size = new System.Drawing.Size(77, 13);
-            label22.TabIndex = 2;
-            label22.Text = "Simple Events:";
-            // 
-            // lblReminder
-            // 
-            lblReminder.AutoSize = true;
-            lblReminder.Location = new System.Drawing.Point(6, 107);
-            lblReminder.Name = "lblReminder";
-            lblReminder.Size = new System.Drawing.Size(56, 13);
-            lblReminder.TabIndex = 6;
-            lblReminder.Text = "Reminder:";
-            // 
-            // lblURI
-            // 
-            lblURI.AutoSize = true;
-            lblURI.Location = new System.Drawing.Point(6, 80);
-            lblURI.Name = "lblURI";
-            lblURI.Size = new System.Drawing.Size(29, 13);
-            lblURI.TabIndex = 5;
-            lblURI.Text = "URI:";
-            // 
-            // lblPassword
-            // 
-            lblPassword.AutoSize = true;
-            lblPassword.Location = new System.Drawing.Point(6, 52);
-            lblPassword.Name = "lblPassword";
-            lblPassword.Size = new System.Drawing.Size(57, 13);
-            lblPassword.TabIndex = 1;
-            lblPassword.Text = "Password:";
-            // 
-            // lblGoogleEmail
-            // 
-            lblGoogleEmail.AutoSize = true;
-            lblGoogleEmail.Location = new System.Drawing.Point(6, 24);
-            lblGoogleEmail.Name = "lblGoogleEmail";
-            lblGoogleEmail.Size = new System.Drawing.Size(71, 13);
-            lblGoogleEmail.TabIndex = 0;
-            lblGoogleEmail.Text = "Google Email:";
-            // 
-            // lblEarlyReminder
-            // 
-            lblEarlyReminder.AutoSize = true;
-            lblEarlyReminder.Location = new System.Drawing.Point(30, 228);
-            lblEarlyReminder.Name = "lblEarlyReminder";
-            lblEarlyReminder.Size = new System.Drawing.Size(83, 13);
-            lblEarlyReminder.TabIndex = 4;
-            lblEarlyReminder.Text = "Early Reminder:";
-            // 
-            // lblLateReminder
-            // 
-            lblLateReminder.AutoSize = true;
-            lblLateReminder.Location = new System.Drawing.Point(195, 228);
-            lblLateReminder.Name = "lblLateReminder";
-            lblLateReminder.Size = new System.Drawing.Size(80, 13);
-            lblLateReminder.TabIndex = 6;
-            lblLateReminder.Text = "Late Reminder:";
-            // 
-            // label25
-            // 
-            label25.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label25.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label25.Location = new System.Drawing.Point(3, 32);
-            label25.Name = "label25";
-            label25.Size = new System.Drawing.Size(429, 35);
-            label25.TabIndex = 11;
-            label25.Text = "EVEMon can import scheduler entries from Outlook or Google calendars to emphasize" +
-                " the skills that will complete at times you won\'t be available.";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new System.Drawing.Point(273, 6);
-            label14.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(46, 13);
-            label14.TabIndex = 9;
-            label14.Text = "seconds";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new System.Drawing.Point(166, 6);
-            label9.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            label9.Name = "label9";
-            label9.Size = new System.Drawing.Size(46, 13);
-            label9.TabIndex = 6;
-            label9.Text = "seconds";
-            // 
-            // label27
-            // 
-            label27.AutoSize = true;
-            label27.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label27.Location = new System.Drawing.Point(3, 40);
-            label27.Name = "label27";
-            label27.Size = new System.Drawing.Size(339, 13);
-            label27.TabIndex = 5;
-            label27.Text = "EVEMon supports the LCD display of the Logitech G15/G19 keyboard.";
-            // 
-            // label30
-            // 
-            label30.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            label30.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            label30.Location = new System.Drawing.Point(4, 34);
-            label30.Name = "label30";
-            label30.Size = new System.Drawing.Size(424, 48);
-            label30.TabIndex = 5;
-            label30.Text = "When this option is checked and EVEMon running, you can open the in-game browser " +
-                "and type the address provided below to give a quick look at your plans and the s" +
-                "killbooks you need to buy.\r\n";
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Dock = System.Windows.Forms.DockStyle.Left;
-            label23.Location = new System.Drawing.Point(3, 0);
-            label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(51, 27);
-            label23.TabIndex = 6;
-            label23.Text = "IGB Port:";
-            label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // flowLayoutPanel28
-            // 
-            flowLayoutPanel28.Controls.Add(igbHelpLabel);
-            flowLayoutPanel28.Controls.Add(this.igbUrlTextBox);
-            flowLayoutPanel28.Location = new System.Drawing.Point(12, 37);
-            flowLayoutPanel28.Name = "flowLayoutPanel28";
-            flowLayoutPanel28.Size = new System.Drawing.Size(334, 22);
-            flowLayoutPanel28.TabIndex = 11;
-            // 
-            // igbHelpLabel
-            // 
-            igbHelpLabel.AutoSize = true;
-            igbHelpLabel.Location = new System.Drawing.Point(3, 3);
-            igbHelpLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            igbHelpLabel.Name = "igbHelpLabel";
-            igbHelpLabel.Size = new System.Drawing.Size(188, 13);
-            igbHelpLabel.TabIndex = 8;
-            igbHelpLabel.Text = "Open the in-game browser and type :";
-            // 
-            // igbUrlTextBox
-            // 
-            this.igbUrlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.igbUrlTextBox.Location = new System.Drawing.Point(197, 3);
-            this.igbUrlTextBox.Name = "igbUrlTextBox";
-            this.igbUrlTextBox.ReadOnly = true;
-            this.igbUrlTextBox.Size = new System.Drawing.Size(100, 14);
-            this.igbUrlTextBox.TabIndex = 10;
-            this.igbUrlTextBox.Text = "http://localhost:80/";
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label7, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 60);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(90, 40);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Server Password:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(24, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(69, 20);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "Email Server:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label8
-            // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(22, 101);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 26);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "From address:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // flowLayoutPanel9
-            // 
-            this.flowLayoutPanel9.AutoSize = true;
-            this.flowLayoutPanel9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel9.Controls.Add(this.checkBox1);
-            this.flowLayoutPanel9.Controls.Add(this.checkBox2);
-            this.flowLayoutPanel9.Controls.Add(this.checkBox3);
-            this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel9.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Padding = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(356, 70);
-            this.flowLayoutPanel9.TabIndex = 3;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(102, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Minimize to Tray";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(12, 26);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(171, 17);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "Set window title to training time";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(12, 49);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(264, 17);
-            this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Run in \"safe for work\" mode (no portraits or colors)";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // chName
-            // 
-            this.chName.Text = "Sample";
-            // 
-            // treeView
-            // 
-            this.treeView.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.treeView.FullRowSelect = true;
-            this.treeView.HideSelection = false;
-            this.treeView.ImageIndex = 0;
-            this.treeView.ImageList = this.imageList;
-            this.treeView.ItemHeight = 20;
-            this.treeView.Location = new System.Drawing.Point(6, 6);
-            this.treeView.Name = "treeView";
-            treeNode10.ImageIndex = 5;
-            treeNode10.Name = "Node9";
-            treeNode10.SelectedImageIndex = 5;
-            treeNode10.Tag = "updatesPage";
-            treeNode10.Text = "Updates";
-            treeNode11.ImageIndex = 8;
-            treeNode11.Name = "Node5";
-            treeNode11.SelectedImageIndex = 8;
-            treeNode11.Tag = "networkPage";
-            treeNode11.Text = "Network";
-            treeNode12.ImageIndex = 12;
-            treeNode12.Name = "g15Node";
-            treeNode12.SelectedImageIndex = 12;
-            treeNode12.Tag = "g15Page";
-            treeNode12.Text = "Logitech Keyboards";
-            treeNode13.ImageIndex = 11;
-            treeNode13.Name = "Node2";
-            treeNode13.SelectedImageIndex = 11;
-            treeNode13.Tag = "igbServerPage";
-            treeNode13.Text = "IGB Server";
-            treeNode14.ImageIndex = 10;
-            treeNode14.Name = "generalNode";
-            treeNode14.SelectedImageIndex = 10;
-            treeNode14.Tag = "generalPage";
-            treeNode14.Text = "General";
-            treeNode15.ImageIndex = 6;
-            treeNode15.Name = "Node3";
-            treeNode15.SelectedImageIndex = 6;
-            treeNode15.Tag = "mainWindowPage";
-            treeNode15.Text = "Main Window";
-            treeNode16.ImageIndex = 7;
-            treeNode16.Name = "Node4";
-            treeNode16.SelectedImageIndex = 7;
-            treeNode16.Tag = "skillPlannerPage";
-            treeNode16.Text = "Skill Planner";
-            treeNode17.ImageIndex = 9;
-            treeNode17.Name = "trayIconNode";
-            treeNode17.SelectedImageIndex = 9;
-            treeNode17.Tag = "trayIconPage";
-            treeNode17.Text = "System Tray Icon";
-            treeNode18.ImageIndex = 13;
-            treeNode18.Name = "Node11";
-            treeNode18.SelectedImageIndex = 13;
-            treeNode18.Tag = "externalCalendarPage";
-            treeNode18.Text = "External Calendar";
-            treeNode19.ImageIndex = 1;
-            treeNode19.Name = "Node10";
-            treeNode19.SelectedImageIndex = 1;
-            treeNode19.Tag = "schedulerUIPage";
-            treeNode19.Text = "Scheduler";
-            treeNode20.ImageIndex = 4;
-            treeNode20.Name = "Node7";
-            treeNode20.SelectedImageIndex = 4;
-            treeNode20.Tag = "emailNotificationsPage";
-            treeNode20.Text = "Skills Completion Mails";
-            treeNode21.ImageIndex = 3;
-            treeNode21.Name = "Node2";
-            treeNode21.SelectedImageIndex = 3;
-            treeNode21.Tag = "notificationsPage";
-            treeNode21.Text = "Notifications";
-            this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode14,
-            treeNode15,
-            treeNode16,
-            treeNode17,
-            treeNode19,
-            treeNode21});
-            this.treeView.SelectedImageIndex = 0;
-            this.treeView.ShowLines = false;
-            this.treeView.ShowPlusMinus = false;
-            this.treeView.ShowRootLines = false;
-            this.treeView.Size = new System.Drawing.Size(187, 424);
-            this.treeView.TabIndex = 6;
-            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
-            // 
-            // imageList
-            // 
-            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "Transparent.png");
-            this.imageList.Images.SetKeyName(1, "Calendar.png");
-            this.imageList.Images.SetKeyName(2, "LookNFeel.png");
-            this.imageList.Images.SetKeyName(3, "Notification2.png");
-            this.imageList.Images.SetKeyName(4, "Email.png");
-            this.imageList.Images.SetKeyName(5, "Software update.png");
-            this.imageList.Images.SetKeyName(6, "MainWindow.png");
-            this.imageList.Images.SetKeyName(7, "Plan.png");
-            this.imageList.Images.SetKeyName(8, "Connection.png");
-            this.imageList.Images.SetKeyName(9, "EVEMon16.png");
-            this.imageList.Images.SetKeyName(10, "System config.png");
-            this.imageList.Images.SetKeyName(11, "IGB Server.png");
-            this.imageList.Images.SetKeyName(12, "Logitech Keyboard.png");
-            this.imageList.Images.SetKeyName(13, "gcalendar.png");
-            // 
-            // leftPanel
-            // 
-            this.leftPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.leftPanel.Controls.Add(this.treeView);
-            this.leftPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.leftPanel.Location = new System.Drawing.Point(0, 0);
-            this.leftPanel.Name = "leftPanel";
-            this.leftPanel.Padding = new System.Windows.Forms.Padding(6);
-            this.leftPanel.Size = new System.Drawing.Size(199, 436);
-            this.leftPanel.TabIndex = 9;
-            // 
-            // multiPanel
-            // 
-            this.multiPanel.Controls.Add(this.mainWindowPage);
-            this.multiPanel.Controls.Add(this.generalPage);
-            this.multiPanel.Controls.Add(this.skillPlannerPage);
-            this.multiPanel.Controls.Add(this.networkPage);
-            this.multiPanel.Controls.Add(this.emailNotificationsPage);
-            this.multiPanel.Controls.Add(this.notificationsPage);
-            this.multiPanel.Controls.Add(this.trayIconPage);
-            this.multiPanel.Controls.Add(this.updatesPage);
-            this.multiPanel.Controls.Add(this.schedulerUIPage);
-            this.multiPanel.Controls.Add(this.externalCalendarPage);
-            this.multiPanel.Controls.Add(this.g15Page);
-            this.multiPanel.Controls.Add(this.igbServerPage);
-            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.multiPanel.Location = new System.Drawing.Point(199, 0);
-            this.multiPanel.Name = "multiPanel";
-            this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.g15Page;
-            this.multiPanel.Size = new System.Drawing.Size(445, 436);
-            this.multiPanel.TabIndex = 7;
-            // 
-            // mainWindowPage
-            // 
-            this.mainWindowPage.Controls.Add(this.showRelocationMenuCheckbox);
-            this.mainWindowPage.Controls.Add(this.groupBox2);
-            this.mainWindowPage.Controls.Add(groupBox15);
-            this.mainWindowPage.Controls.Add(groupBox7);
-            this.mainWindowPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainWindowPage.Location = new System.Drawing.Point(5, 5);
-            this.mainWindowPage.Name = "mainWindowPage";
-            this.mainWindowPage.Size = new System.Drawing.Size(435, 426);
-            this.mainWindowPage.TabIndex = 1;
-            this.mainWindowPage.Text = "mainWindowPage";
-            // 
-            // showRelocationMenuCheckbox
-            // 
-            this.showRelocationMenuCheckbox.AutoSize = true;
-            this.showRelocationMenuCheckbox.Location = new System.Drawing.Point(18, 28);
-            this.showRelocationMenuCheckbox.Name = "showRelocationMenuCheckbox";
-            this.showRelocationMenuCheckbox.Size = new System.Drawing.Size(131, 17);
-            this.showRelocationMenuCheckbox.TabIndex = 0;
-            this.showRelocationMenuCheckbox.Text = "Show relocation menu";
-            this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
-            this.showRelocationMenuCheckbox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.overviewPanel);
-            this.groupBox2.Controls.Add(this.cbShowOverViewTab);
-            this.groupBox2.Location = new System.Drawing.Point(1, 274);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(428, 127);
-            this.groupBox2.TabIndex = 15;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Overview";
-            // 
-            // overviewPanel
-            // 
-            this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.overviewPanel.Controls.Add(this.overviewShowSkillQueueFreeRoomCheckBox);
-            this.overviewPanel.Controls.Add(this.overviewShowWalletCheckBox);
-            this.overviewPanel.Controls.Add(label31);
-            this.overviewPanel.Controls.Add(this.overviewShowPortraitCheckBox);
-            this.overviewPanel.Controls.Add(this.overviewPortraitSizeComboBox);
-            this.overviewPanel.Location = new System.Drawing.Point(29, 43);
-            this.overviewPanel.Name = "overviewPanel";
-            this.overviewPanel.Size = new System.Drawing.Size(393, 79);
-            this.overviewPanel.TabIndex = 32;
-            // 
-            // overviewShowSkillQueueFreeRoomCheckBox
-            // 
-            this.overviewShowSkillQueueFreeRoomCheckBox.AutoSize = true;
-            this.overviewShowSkillQueueFreeRoomCheckBox.Location = new System.Drawing.Point(161, 3);
-            this.overviewShowSkillQueueFreeRoomCheckBox.Name = "overviewShowSkillQueueFreeRoomCheckBox";
-            this.overviewShowSkillQueueFreeRoomCheckBox.Size = new System.Drawing.Size(162, 17);
-            this.overviewShowSkillQueueFreeRoomCheckBox.TabIndex = 32;
-            this.overviewShowSkillQueueFreeRoomCheckBox.Text = "Show Skill Queue Free Room";
-            this.overviewShowSkillQueueFreeRoomCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // overviewShowWalletCheckBox
-            // 
-            this.overviewShowWalletCheckBox.AutoSize = true;
-            this.overviewShowWalletCheckBox.Location = new System.Drawing.Point(3, 3);
-            this.overviewShowWalletCheckBox.Name = "overviewShowWalletCheckBox";
-            this.overviewShowWalletCheckBox.Size = new System.Drawing.Size(125, 17);
-            this.overviewShowWalletCheckBox.TabIndex = 30;
-            this.overviewShowWalletCheckBox.Text = "Show Wallet Balance";
-            this.overviewShowWalletCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // overviewShowPortraitCheckBox
-            // 
-            this.overviewShowPortraitCheckBox.AutoSize = true;
-            this.overviewShowPortraitCheckBox.Location = new System.Drawing.Point(3, 26);
-            this.overviewShowPortraitCheckBox.Name = "overviewShowPortraitCheckBox";
-            this.overviewShowPortraitCheckBox.Size = new System.Drawing.Size(142, 17);
-            this.overviewShowPortraitCheckBox.TabIndex = 26;
-            this.overviewShowPortraitCheckBox.Text = "Show Character Portrait";
-            this.overviewShowPortraitCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // overviewPortraitSizeComboBox
-            // 
-            this.overviewPortraitSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.overviewPortraitSizeComboBox.FormattingEnabled = true;
-            this.overviewPortraitSizeComboBox.Location = new System.Drawing.Point(52, 49);
-            this.overviewPortraitSizeComboBox.Name = "overviewPortraitSizeComboBox";
-            this.overviewPortraitSizeComboBox.Size = new System.Drawing.Size(93, 21);
-            this.overviewPortraitSizeComboBox.TabIndex = 28;
-            // 
-            // cbShowOverViewTab
-            // 
-            this.cbShowOverViewTab.AutoSize = true;
-            this.cbShowOverViewTab.Location = new System.Drawing.Point(14, 20);
-            this.cbShowOverViewTab.Name = "cbShowOverViewTab";
-            this.cbShowOverViewTab.Size = new System.Drawing.Size(128, 17);
-            this.cbShowOverViewTab.TabIndex = 0;
-            this.cbShowOverViewTab.Text = "Show \"Overview\" tab";
-            this.cbShowOverViewTab.UseVisualStyleBackColor = true;
-            this.cbShowOverViewTab.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
             // generalPage
             // 
             this.generalPage.Controls.Add(this.cbWorksafeMode);
@@ -1348,6 +892,15 @@ namespace EVEMon.SettingsUI
             this.compatibilityCombo.Name = "compatibilityCombo";
             this.compatibilityCombo.Size = new System.Drawing.Size(121, 21);
             this.compatibilityCombo.TabIndex = 0;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new System.Drawing.Point(3, 181);
+            label29.Name = "label29";
+            label29.Size = new System.Drawing.Size(222, 13);
+            label29.TabIndex = 1;
+            label29.Text = "Environment (requires restart to take effect)";
             // 
             // runAtStartupComboBox
             // 
@@ -1425,6 +978,75 @@ namespace EVEMon.SettingsUI
             this.cbHighlightPlannedSkills.Text = "Emphasize Planned Skills";
             this.cbHighlightPlannedSkills.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            groupBox10.Controls.Add(this.tableLayoutPanel4);
+            groupBox10.Location = new System.Drawing.Point(0, 106);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new System.Drawing.Size(435, 218);
+            groupBox10.TabIndex = 13;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Skill Browser Icon Set";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.AutoSize = true;
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.cbSkillIconSet, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(429, 198);
+            this.tableLayoutPanel4.TabIndex = 15;
+            // 
+            // cbSkillIconSet
+            // 
+            this.cbSkillIconSet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbSkillIconSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSkillIconSet.FormattingEnabled = true;
+            this.cbSkillIconSet.Location = new System.Drawing.Point(3, 3);
+            this.cbSkillIconSet.Name = "cbSkillIconSet";
+            this.cbSkillIconSet.Size = new System.Drawing.Size(423, 21);
+            this.cbSkillIconSet.TabIndex = 3;
+            this.cbSkillIconSet.SelectedIndexChanged += new System.EventHandler(this.skillIconSetComboBox_SelectedIndexChanged);
+            // 
+            // tvlist
+            // 
+            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvlist.Location = new System.Drawing.Point(3, 30);
+            this.tvlist.Name = "tvlist";
+            treeNode14.Name = "Node1";
+            treeNode14.Text = "Node1";
+            treeNode15.Name = "Node2";
+            treeNode15.Text = "Node2";
+            treeNode16.Name = "Node3";
+            treeNode16.Text = "Node3";
+            treeNode17.Name = "Node4";
+            treeNode17.Text = "Node4";
+            treeNode18.Name = "Node5";
+            treeNode18.Text = "Node5";
+            treeNode19.Name = "Node6";
+            treeNode19.Text = "Node6";
+            treeNode20.Name = "Node7";
+            treeNode20.Text = "Node7";
+            treeNode21.Name = "Node8";
+            treeNode21.Text = "Node8";
+            treeNode22.Name = "Node0";
+            treeNode22.Text = "Node0";
+            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode22});
+            this.tvlist.Size = new System.Drawing.Size(423, 165);
+            this.tvlist.TabIndex = 9;
+            // 
             // networkPage
             // 
             this.networkPage.Controls.Add(this.ApiProxyGroupBox);
@@ -1450,6 +1072,18 @@ namespace EVEMon.SettingsUI
             this.ApiProxyGroupBox.TabIndex = 7;
             this.ApiProxyGroupBox.TabStop = false;
             this.ApiProxyGroupBox.Text = "API Provider";
+            // 
+            // label16
+            // 
+            label16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label16.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label16.Location = new System.Drawing.Point(12, 17);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(374, 29);
+            label16.TabIndex = 8;
+            label16.Text = "By default, EVEMon queries CCP for the API data. You can implement your own provi" +
+                "der and make EVEMon uses it.";
             // 
             // btnDeleteAPIServer
             // 
@@ -1514,6 +1148,18 @@ namespace EVEMon.SettingsUI
             this.customProxyCheckBox.UseVisualStyleBackColor = true;
             this.customProxyCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
+            // label13
+            // 
+            label13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label13.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label13.Location = new System.Drawing.Point(9, 17);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(382, 32);
+            label13.TabIndex = 8;
+            label13.Text = "By default, EVEMon will use the same Proxy settings than Internet Explorer (can b" +
+                "e configured through the Control Panel).";
+            // 
             // customProxyPanel
             // 
             this.customProxyPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -1538,6 +1184,17 @@ namespace EVEMon.SettingsUI
             this.proxyPortTextBox.TabIndex = 2;
             this.proxyPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.proxyPortTextBox_Validating);
             // 
+            // label12
+            // 
+            label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label12.Location = new System.Drawing.Point(50, 8);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(165, 13);
+            label12.TabIndex = 3;
+            label12.Text = "Host/IP Address";
+            label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // proxyAuthenticationButton
             // 
             this.proxyAuthenticationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1550,6 +1207,27 @@ namespace EVEMon.SettingsUI
             this.proxyAuthenticationButton.Text = "Authentication...";
             this.proxyAuthenticationButton.UseVisualStyleBackColor = true;
             this.proxyAuthenticationButton.Click += new System.EventHandler(this.proxyAuthenticationButton_Click);
+            // 
+            // label11
+            // 
+            label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label11.Location = new System.Drawing.Point(221, 8);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(39, 13);
+            label11.TabIndex = 4;
+            label11.Text = "Port";
+            label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new System.Drawing.Point(8, 27);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(36, 13);
+            label10.TabIndex = 0;
+            label10.Text = "HTTP:";
+            label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // proxyHttpHostTextBox
             // 
@@ -1645,6 +1323,42 @@ namespace EVEMon.SettingsUI
             this.tlpEmailSettings.Size = new System.Drawing.Size(294, 216);
             this.tlpEmailSettings.TabIndex = 2;
             // 
+            // label1
+            // 
+            label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(9, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(70, 27);
+            label1.TabIndex = 0;
+            label1.Text = "Email Server:";
+            label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label2
+            // 
+            label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(3, 162);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(76, 27);
+            label2.TabIndex = 1;
+            label2.Text = "From address:";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label3
+            // 
+            label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(15, 189);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(64, 27);
+            label3.TabIndex = 2;
+            label3.Text = "To address:";
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // tbMailServer
             // 
             this.tbMailServer.Location = new System.Drawing.Point(85, 3);
@@ -1707,6 +1421,30 @@ namespace EVEMon.SettingsUI
             this.tlpEmailAuthTable.Size = new System.Drawing.Size(200, 54);
             this.tlpEmailAuthTable.TabIndex = 8;
             // 
+            // label5
+            // 
+            label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(5, 27);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(57, 27);
+            label5.TabIndex = 8;
+            label5.Text = "Password:";
+            label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label4
+            // 
+            label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(3, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(59, 27);
+            label4.TabIndex = 7;
+            label4.Text = "Username:";
+            label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // tbEmailUsername
             // 
             this.tbEmailUsername.Location = new System.Drawing.Point(68, 3);
@@ -1729,6 +1467,18 @@ namespace EVEMon.SettingsUI
             this.emailPortTextBox.Size = new System.Drawing.Size(152, 21);
             this.emailPortTextBox.TabIndex = 1;
             this.emailPortTextBox.Text = "25";
+            // 
+            // lblPortNumber
+            // 
+            lblPortNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            lblPortNumber.AutoSize = true;
+            lblPortNumber.Location = new System.Drawing.Point(8, 27);
+            lblPortNumber.Name = "lblPortNumber";
+            lblPortNumber.Size = new System.Drawing.Size(71, 27);
+            lblPortNumber.TabIndex = 10;
+            lblPortNumber.Text = "Port Number:";
+            lblPortNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnTestEmail
             // 
@@ -1900,6 +1650,60 @@ namespace EVEMon.SettingsUI
             this.trayTooltipButton.UseVisualStyleBackColor = true;
             this.trayTooltipButton.Click += new System.EventHandler(this.trayTooltipButton_Click);
             // 
+            // groupBox1
+            // 
+            groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            groupBox1.Controls.Add(this.rbSystemTrayOptionsNever);
+            groupBox1.Controls.Add(this.rbSystemTrayOptionsAlways);
+            groupBox1.Controls.Add(this.rbSystemTrayOptionsMinimized);
+            groupBox1.Location = new System.Drawing.Point(9, 29);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new System.Drawing.Size(419, 100);
+            groupBox1.TabIndex = 9;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Show System Tray Icon";
+            // 
+            // rbSystemTrayOptionsNever
+            // 
+            this.rbSystemTrayOptionsNever.AutoSize = true;
+            this.rbSystemTrayOptionsNever.Location = new System.Drawing.Point(6, 20);
+            this.rbSystemTrayOptionsNever.Name = "rbSystemTrayOptionsNever";
+            this.rbSystemTrayOptionsNever.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsNever.Size = new System.Drawing.Size(57, 17);
+            this.rbSystemTrayOptionsNever.TabIndex = 1;
+            this.rbSystemTrayOptionsNever.TabStop = true;
+            this.rbSystemTrayOptionsNever.Tag = "";
+            this.rbSystemTrayOptionsNever.Text = "Never";
+            this.rbSystemTrayOptionsNever.UseVisualStyleBackColor = true;
+            this.rbSystemTrayOptionsNever.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // rbSystemTrayOptionsAlways
+            // 
+            this.rbSystemTrayOptionsAlways.AutoSize = true;
+            this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(6, 66);
+            this.rbSystemTrayOptionsAlways.Name = "rbSystemTrayOptionsAlways";
+            this.rbSystemTrayOptionsAlways.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(62, 17);
+            this.rbSystemTrayOptionsAlways.TabIndex = 3;
+            this.rbSystemTrayOptionsAlways.TabStop = true;
+            this.rbSystemTrayOptionsAlways.Tag = "";
+            this.rbSystemTrayOptionsAlways.Text = "Always";
+            this.rbSystemTrayOptionsAlways.UseVisualStyleBackColor = true;
+            // 
+            // rbSystemTrayOptionsMinimized
+            // 
+            this.rbSystemTrayOptionsMinimized.AutoSize = true;
+            this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(6, 43);
+            this.rbSystemTrayOptionsMinimized.Name = "rbSystemTrayOptionsMinimized";
+            this.rbSystemTrayOptionsMinimized.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(104, 17);
+            this.rbSystemTrayOptionsMinimized.TabIndex = 2;
+            this.rbSystemTrayOptionsMinimized.TabStop = true;
+            this.rbSystemTrayOptionsMinimized.Tag = "";
+            this.rbSystemTrayOptionsMinimized.Text = "When Minimized";
+            this.rbSystemTrayOptionsMinimized.UseVisualStyleBackColor = true;
+            // 
             // updatesPage
             // 
             this.updatesPage.Controls.Add(this.updateSettingsControl);
@@ -1978,6 +1782,18 @@ namespace EVEMon.SettingsUI
             this.schedulerUIPage.Text = "schedulerUIPage";
             this.schedulerUIPage.Visible = false;
             // 
+            // label19
+            // 
+            label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label19.Location = new System.Drawing.Point(6, 34);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(422, 45);
+            label19.TabIndex = 6;
+            label19.Text = "Select the colors used in the scheduler. Using the scheduler, EVEMon can warn you" +
+                " about skill that will complete at times you will be away from your computer.";
+            // 
             // panelColorText
             // 
             this.panelColorText.BackColor = System.Drawing.Color.White;
@@ -1988,6 +1804,15 @@ namespace EVEMon.SettingsUI
             this.panelColorText.Size = new System.Drawing.Size(43, 17);
             this.panelColorText.TabIndex = 4;
             this.panelColorText.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new System.Drawing.Point(6, 109);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(33, 13);
+            label24.TabIndex = 5;
+            label24.Text = "Text:";
             // 
             // panelColorRecurring2
             // 
@@ -2000,6 +1825,15 @@ namespace EVEMon.SettingsUI
             this.panelColorRecurring2.TabIndex = 4;
             this.panelColorRecurring2.Click += new System.EventHandler(this.colorPanel_Click);
             // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new System.Drawing.Point(6, 132);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(85, 13);
+            label20.TabIndex = 0;
+            label20.Text = "Blocking Events:";
+            // 
             // panelColorRecurring1
             // 
             this.panelColorRecurring1.BackColor = System.Drawing.Color.Green;
@@ -2011,6 +1845,15 @@ namespace EVEMon.SettingsUI
             this.panelColorRecurring1.TabIndex = 4;
             this.panelColorRecurring1.Click += new System.EventHandler(this.colorPanel_Click);
             // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new System.Drawing.Point(6, 180);
+            label21.Name = "label21";
+            label21.Size = new System.Drawing.Size(93, 13);
+            label21.TabIndex = 1;
+            label21.Text = "Recurring Events:";
+            // 
             // panelColorSingle2
             // 
             this.panelColorSingle2.BackColor = System.Drawing.Color.LightBlue;
@@ -2021,6 +1864,15 @@ namespace EVEMon.SettingsUI
             this.panelColorSingle2.Size = new System.Drawing.Size(43, 17);
             this.panelColorSingle2.TabIndex = 4;
             this.panelColorSingle2.Click += new System.EventHandler(this.colorPanel_Click);
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new System.Drawing.Point(6, 157);
+            label22.Name = "label22";
+            label22.Size = new System.Drawing.Size(77, 13);
+            label22.TabIndex = 2;
+            label22.Text = "Simple Events:";
             // 
             // panelColorSingle1
             // 
@@ -2154,6 +2006,24 @@ namespace EVEMon.SettingsUI
             this.cbGoogleReminder.Size = new System.Drawing.Size(121, 21);
             this.cbGoogleReminder.TabIndex = 7;
             // 
+            // lblReminder
+            // 
+            lblReminder.AutoSize = true;
+            lblReminder.Location = new System.Drawing.Point(6, 107);
+            lblReminder.Name = "lblReminder";
+            lblReminder.Size = new System.Drawing.Size(56, 13);
+            lblReminder.TabIndex = 6;
+            lblReminder.Text = "Reminder:";
+            // 
+            // lblURI
+            // 
+            lblURI.AutoSize = true;
+            lblURI.Location = new System.Drawing.Point(6, 80);
+            lblURI.Name = "lblURI";
+            lblURI.Size = new System.Drawing.Size(29, 13);
+            lblURI.TabIndex = 5;
+            lblURI.Text = "URI:";
+            // 
             // tbGoogleURI
             // 
             this.tbGoogleURI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -2183,6 +2053,24 @@ namespace EVEMon.SettingsUI
             this.tbGoogleEmail.Size = new System.Drawing.Size(334, 21);
             this.tbGoogleEmail.TabIndex = 3;
             // 
+            // lblPassword
+            // 
+            lblPassword.AutoSize = true;
+            lblPassword.Location = new System.Drawing.Point(6, 52);
+            lblPassword.Name = "lblPassword";
+            lblPassword.Size = new System.Drawing.Size(57, 13);
+            lblPassword.TabIndex = 1;
+            lblPassword.Text = "Password:";
+            // 
+            // lblGoogleEmail
+            // 
+            lblGoogleEmail.AutoSize = true;
+            lblGoogleEmail.Location = new System.Drawing.Point(6, 24);
+            lblGoogleEmail.Name = "lblGoogleEmail";
+            lblGoogleEmail.Size = new System.Drawing.Size(71, 13);
+            lblGoogleEmail.TabIndex = 0;
+            lblGoogleEmail.Text = "Google Email:";
+            // 
             // rbGoogle
             // 
             this.rbGoogle.AutoSize = true;
@@ -2206,6 +2094,15 @@ namespace EVEMon.SettingsUI
             this.cbUseAlterateReminder.Text = "Use alternate reminder";
             this.cbUseAlterateReminder.UseVisualStyleBackColor = true;
             // 
+            // lblEarlyReminder
+            // 
+            lblEarlyReminder.AutoSize = true;
+            lblEarlyReminder.Location = new System.Drawing.Point(30, 228);
+            lblEarlyReminder.Name = "lblEarlyReminder";
+            lblEarlyReminder.Size = new System.Drawing.Size(83, 13);
+            lblEarlyReminder.TabIndex = 4;
+            lblEarlyReminder.Text = "Early Reminder:";
+            // 
             // cbSetReminder
             // 
             this.cbSetReminder.AutoSize = true;
@@ -2217,6 +2114,27 @@ namespace EVEMon.SettingsUI
             this.cbSetReminder.TabIndex = 6;
             this.cbSetReminder.Text = "Reminder";
             this.cbSetReminder.UseVisualStyleBackColor = true;
+            // 
+            // lblLateReminder
+            // 
+            lblLateReminder.AutoSize = true;
+            lblLateReminder.Location = new System.Drawing.Point(195, 228);
+            lblLateReminder.Name = "lblLateReminder";
+            lblLateReminder.Size = new System.Drawing.Size(80, 13);
+            lblLateReminder.TabIndex = 6;
+            lblLateReminder.Text = "Late Reminder:";
+            // 
+            // label25
+            // 
+            label25.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label25.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label25.Location = new System.Drawing.Point(3, 32);
+            label25.Name = "label25";
+            label25.Size = new System.Drawing.Size(429, 35);
+            label25.TabIndex = 11;
+            label25.Text = "EVEMon can import scheduler entries from Outlook or Google calendars to emphasize" +
+                " the skills that will complete at times you won\'t be available.";
             // 
             // externalCalendarCheckbox
             // 
@@ -2252,6 +2170,16 @@ namespace EVEMon.SettingsUI
             this.g15CheckBox.Text = "Use G15/G19 Display";
             this.g15CheckBox.UseVisualStyleBackColor = true;
             this.g15CheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label27.Location = new System.Drawing.Point(3, 40);
+            label27.Name = "label27";
+            label27.Size = new System.Drawing.Size(339, 13);
+            label27.TabIndex = 5;
+            label27.Text = "EVEMon supports the LCD display of the Logitech G15/G19 keyboard.";
             // 
             // g15Panel
             // 
@@ -2322,6 +2250,16 @@ namespace EVEMon.SettingsUI
             0,
             0});
             // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new System.Drawing.Point(273, 6);
+            label14.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(46, 13);
+            label14.TabIndex = 9;
+            label14.Text = "seconds";
+            // 
             // panel1
             // 
             this.panel1.AutoSize = true;
@@ -2369,6 +2307,16 @@ namespace EVEMon.SettingsUI
             0,
             0});
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(166, 6);
+            label9.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(46, 13);
+            label9.TabIndex = 6;
+            label9.Text = "seconds";
+            // 
             // igbServerPage
             // 
             this.igbServerPage.Controls.Add(this.igbCheckBox);
@@ -2392,6 +2340,19 @@ namespace EVEMon.SettingsUI
             this.igbCheckBox.Text = "Run IGB Mini-server";
             this.igbCheckBox.UseVisualStyleBackColor = true;
             this.igbCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // label30
+            // 
+            label30.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label30.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label30.Location = new System.Drawing.Point(4, 34);
+            label30.Name = "label30";
+            label30.Size = new System.Drawing.Size(424, 48);
+            label30.TabIndex = 5;
+            label30.Text = "When this option is checked and EVEMon running, you can open the in-game browser " +
+                "and type the address provided below to give a quick look at your plans and the s" +
+                "killbooks you need to buy.\r\n";
             // 
             // igbFlowPanel
             // 
@@ -2417,6 +2378,17 @@ namespace EVEMon.SettingsUI
             this.flowLayoutPanel27.Size = new System.Drawing.Size(125, 28);
             this.flowLayoutPanel27.TabIndex = 7;
             // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Dock = System.Windows.Forms.DockStyle.Left;
+            label23.Location = new System.Drawing.Point(3, 0);
+            label23.Name = "label23";
+            label23.Size = new System.Drawing.Size(51, 27);
+            label23.TabIndex = 6;
+            label23.Text = "IGB Port:";
+            label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // igbPortTextBox
             // 
             this.igbPortTextBox.Location = new System.Drawing.Point(60, 3);
@@ -2424,6 +2396,35 @@ namespace EVEMon.SettingsUI
             this.igbPortTextBox.Size = new System.Drawing.Size(35, 21);
             this.igbPortTextBox.TabIndex = 8;
             this.igbPortTextBox.Text = "80";
+            // 
+            // flowLayoutPanel28
+            // 
+            flowLayoutPanel28.Controls.Add(igbHelpLabel);
+            flowLayoutPanel28.Controls.Add(this.igbUrlTextBox);
+            flowLayoutPanel28.Location = new System.Drawing.Point(12, 37);
+            flowLayoutPanel28.Name = "flowLayoutPanel28";
+            flowLayoutPanel28.Size = new System.Drawing.Size(334, 22);
+            flowLayoutPanel28.TabIndex = 11;
+            // 
+            // igbHelpLabel
+            // 
+            igbHelpLabel.AutoSize = true;
+            igbHelpLabel.Location = new System.Drawing.Point(3, 3);
+            igbHelpLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            igbHelpLabel.Name = "igbHelpLabel";
+            igbHelpLabel.Size = new System.Drawing.Size(188, 13);
+            igbHelpLabel.TabIndex = 8;
+            igbHelpLabel.Text = "Open the in-game browser and type :";
+            // 
+            // igbUrlTextBox
+            // 
+            this.igbUrlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.igbUrlTextBox.Location = new System.Drawing.Point(197, 3);
+            this.igbUrlTextBox.Name = "igbUrlTextBox";
+            this.igbUrlTextBox.ReadOnly = true;
+            this.igbUrlTextBox.Size = new System.Drawing.Size(100, 14);
+            this.igbUrlTextBox.TabIndex = 10;
+            this.igbUrlTextBox.Text = "http://localhost:80/";
             // 
             // cbIGBPublic
             // 
@@ -2434,6 +2435,81 @@ namespace EVEMon.SettingsUI
             this.cbIGBPublic.TabIndex = 4;
             this.cbIGBPublic.Text = "Make IGB Mini-server public?";
             this.cbIGBPublic.UseVisualStyleBackColor = true;
+            // 
+            // relocationPage
+            // 
+            this.relocationPage.Controls.Add(this.relocationCheckEveryLabel);
+            this.relocationPage.Controls.Add(this.relocationSecondsLabel);
+            this.relocationPage.Controls.Add(this.relocationSecondsNumericUpDown);
+            this.relocationPage.Controls.Add(this.enableAutomaticRelocationCheckBox);
+            this.relocationPage.Controls.Add(this.showRelocationMenuCheckbox);
+            this.relocationPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.relocationPage.Location = new System.Drawing.Point(5, 5);
+            this.relocationPage.Name = "relocationPage";
+            this.relocationPage.Size = new System.Drawing.Size(435, 426);
+            this.relocationPage.TabIndex = 15;
+            this.relocationPage.Text = "relocationPage";
+            // 
+            // relocationCheckEveryLabel
+            // 
+            this.relocationCheckEveryLabel.AutoSize = true;
+            this.relocationCheckEveryLabel.Location = new System.Drawing.Point(40, 97);
+            this.relocationCheckEveryLabel.Name = "relocationCheckEveryLabel";
+            this.relocationCheckEveryLabel.Size = new System.Drawing.Size(67, 13);
+            this.relocationCheckEveryLabel.TabIndex = 5;
+            this.relocationCheckEveryLabel.Text = "Check every";
+            // 
+            // relocationSecondsLabel
+            // 
+            this.relocationSecondsLabel.AutoSize = true;
+            this.relocationSecondsLabel.Location = new System.Drawing.Point(168, 97);
+            this.relocationSecondsLabel.Name = "relocationSecondsLabel";
+            this.relocationSecondsLabel.Size = new System.Drawing.Size(46, 13);
+            this.relocationSecondsLabel.TabIndex = 4;
+            this.relocationSecondsLabel.Text = "seconds";
+            // 
+            // relocationSecondsNumericUpDown
+            // 
+            this.relocationSecondsNumericUpDown.Location = new System.Drawing.Point(113, 95);
+            this.relocationSecondsNumericUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.relocationSecondsNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.relocationSecondsNumericUpDown.Name = "relocationSecondsNumericUpDown";
+            this.relocationSecondsNumericUpDown.Size = new System.Drawing.Size(49, 21);
+            this.relocationSecondsNumericUpDown.TabIndex = 3;
+            this.relocationSecondsNumericUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // enableAutomaticRelocationCheckBox
+            // 
+            this.enableAutomaticRelocationCheckBox.AutoSize = true;
+            this.enableAutomaticRelocationCheckBox.Location = new System.Drawing.Point(22, 63);
+            this.enableAutomaticRelocationCheckBox.Name = "enableAutomaticRelocationCheckBox";
+            this.enableAutomaticRelocationCheckBox.Size = new System.Drawing.Size(158, 17);
+            this.enableAutomaticRelocationCheckBox.TabIndex = 2;
+            this.enableAutomaticRelocationCheckBox.Text = "Enable automatic relocation";
+            this.enableAutomaticRelocationCheckBox.UseVisualStyleBackColor = true;
+            this.enableAutomaticRelocationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            // 
+            // showRelocationMenuCheckbox
+            // 
+            this.showRelocationMenuCheckbox.AutoSize = true;
+            this.showRelocationMenuCheckbox.Location = new System.Drawing.Point(22, 30);
+            this.showRelocationMenuCheckbox.Name = "showRelocationMenuCheckbox";
+            this.showRelocationMenuCheckbox.Size = new System.Drawing.Size(131, 17);
+            this.showRelocationMenuCheckbox.TabIndex = 1;
+            this.showRelocationMenuCheckbox.Text = "Show relocation menu";
+            this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -2456,17 +2532,6 @@ namespace EVEMon.SettingsUI
             this.Text = "EVEMon Settings";
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             bottomPanel.ResumeLayout(false);
-            groupBox15.ResumeLayout(false);
-            groupBox15.PerformLayout();
-            groupBox7.ResumeLayout(false);
-            groupBox7.PerformLayout();
-            groupBox10.ResumeLayout(false);
-            groupBox10.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            flowLayoutPanel28.ResumeLayout(false);
-            flowLayoutPanel28.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
@@ -2474,15 +2539,21 @@ namespace EVEMon.SettingsUI
             this.leftPanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
             this.mainWindowPage.ResumeLayout(false);
-            this.mainWindowPage.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.overviewPanel.ResumeLayout(false);
             this.overviewPanel.PerformLayout();
+            groupBox15.ResumeLayout(false);
+            groupBox15.PerformLayout();
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
             this.generalPage.ResumeLayout(false);
             this.generalPage.PerformLayout();
             this.skillPlannerPage.ResumeLayout(false);
             this.skillPlannerPage.PerformLayout();
+            groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.networkPage.ResumeLayout(false);
             this.ApiProxyGroupBox.ResumeLayout(false);
             this.ProxyServerGroupBox.ResumeLayout(false);
@@ -2506,6 +2577,8 @@ namespace EVEMon.SettingsUI
             this.WindowBehaviourGroupBox.PerformLayout();
             this.trayIconPopupGroupBox.ResumeLayout(false);
             this.trayIconPopupGroupBox.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             this.updatesPage.ResumeLayout(false);
             this.updatesPage.PerformLayout();
             this.schedulerUIPage.ResumeLayout(false);
@@ -2532,6 +2605,11 @@ namespace EVEMon.SettingsUI
             this.igbFlowPanel.PerformLayout();
             this.flowLayoutPanel27.ResumeLayout(false);
             this.flowLayoutPanel27.PerformLayout();
+            flowLayoutPanel28.ResumeLayout(false);
+            flowLayoutPanel28.PerformLayout();
+            this.relocationPage.ResumeLayout(false);
+            this.relocationPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.relocationSecondsNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2556,7 +2634,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.TableLayoutPanel tlpEmailAuthTable;
         private System.Windows.Forms.CheckBox cbPlaySoundOnSkillComplete;
         private System.Windows.Forms.FlowLayoutPanel mailNotificationPanel;
-        private System.Windows.Forms.CheckBox showRelocationMenuCheckbox;
         private System.Windows.Forms.GroupBox ProxyServerGroupBox;
         private System.Windows.Forms.TextBox proxyPortTextBox;
         private System.Windows.Forms.TextBox proxyHttpHostTextBox;
@@ -2674,5 +2751,11 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox cbG15CycleTimes;
         private System.Windows.Forms.NumericUpDown ACycleTimesInterval;
+        private EVEMon.Controls.MultiPanelPage relocationPage;
+        private System.Windows.Forms.CheckBox enableAutomaticRelocationCheckBox;
+        private System.Windows.Forms.CheckBox showRelocationMenuCheckbox;
+        private System.Windows.Forms.Label relocationCheckEveryLabel;
+        private System.Windows.Forms.Label relocationSecondsLabel;
+        private System.Windows.Forms.NumericUpDown relocationSecondsNumericUpDown;
     }
 }

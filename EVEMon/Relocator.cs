@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Threading;
+using EVEMon.Common;
 
 namespace EVEMon
 {
@@ -14,8 +16,25 @@ namespace EVEMon
     {
         private delegate bool WindowFoundHandler(int hwnd, int lParam);
 
+        private static bool m_initilzed = false;
         private static readonly int m_pid = Application.ProductName.GetHashCode();
         private static readonly List<IntPtr> m_foundWindows = new List<IntPtr>();
+        private static volatile bool m_terminate = false;
+        private static volatile int m_checkInterval = 5000;
+        private static Thread m_automationThread;
+
+        public static void Initialize()
+        {
+            if (m_initilzed)
+                return;
+
+            EveClient.Trace("Relocator.Start() - Initilizing");
+
+            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+
+            m_initilzed = true;
+        }
 
         #region DLL Imports
         [DllImport("user32.Dll")]
@@ -161,8 +180,7 @@ namespace EVEMon
             // Don't resize if the eve window if it's size is not that of the screen
             if (sc.Bounds.Width != cr.Width || sc.Bounds.Height != cr.Height)
                 return;
-
-
+            
             m_positionedPoint = new Point(sc.Bounds.X - (cr.Left - ncr.Left),
                                           sc.Bounds.Y - (cr.Top - ncr.Top));
 
@@ -215,14 +233,146 @@ namespace EVEMon
         /// <returns>Screen z - WidthxHeight</returns>
         public static string GetScreenDescription(int screen)
         {
-            string data = "";
             Screen sc = Screen.AllScreens[screen];
-
-            data += "Screen " + screen + " - " + sc.Bounds.Width + "x" + sc.Bounds.Height;
-            
-            return data;
+            return String.Format(CultureConstants.DefaultCulture, "Screen {0} - {1}x{2}", screen, sc.Bounds.Width, sc.Bounds.Height);
         }
 
+        #endregion
+
+        #region Automatic Relocation
+
+        private static bool AutomaticRelocationRunning
+        {
+            get
+            {
+                if (m_automationThread == null)
+                    return false;
+
+                return m_automationThread.IsAlive;
+            }
+        }
+        
+        /// <summary>
+        /// Designed to be run in its own thread, wakes up, looks for
+        /// new EVE windows, moves them, and goes back to sleep.
+        /// </summary>
+        private static void PerformAutomaticRelocation()
+        {
+            int screenCount;
+            DateTime nextCheck = DateTime.MinValue;
+
+            while (!m_terminate)
+            {
+                screenCount = Screen.AllScreens.Length;
+
+                foreach (IntPtr eveInstance in FindEveWindows())
+                {
+                    // Skip if null ptr
+                    if (eveInstance == IntPtr.Zero)
+                        continue;
+
+                    if (screenCount == 1)
+                    {
+                        Relocate(eveInstance, 0);
+                    }
+                    else
+                    {
+                        for (int screen = 0; screen < screenCount; screen++)
+                        {
+                            Relocate(eveInstance, screen);
+                        }
+                    }
+                }
+
+                nextCheck = DateTime.Now.AddMilliseconds(m_checkInterval);
+
+                while (nextCheck > DateTime.Now)
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+                    if (m_terminate)
+                        return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Starts the automatic relocation thread
+        /// </summary>
+        /// <param name="interval">The length of time to sleep between updates.</param>
+        private static void Start()
+        {
+            if (AutomaticRelocationRunning)
+                return;
+
+            EveClient.Trace("Relocator.Start() - Starting");
+
+            StartActual();
+        }
+
+        private static void StartActual()
+        {
+            var interval = TimeSpan.FromSeconds(Settings.UI.MainWindow.AutomaticRelocationInterval);
+
+            m_checkInterval = (int)interval.TotalMilliseconds;
+
+            // Begin background eve window relocation thread
+            m_automationThread = new Thread(Relocator.PerformAutomaticRelocation);
+            m_automationThread.Start();
+        }
+
+        /// <summary>
+        /// Stops the automatic relocation process
+        /// </summary>
+        public static void Stop()
+        {
+            if (!AutomaticRelocationRunning)
+                return;
+
+            EveClient.Trace("Relocator.Stop() - Stopping");
+
+            m_terminate = true;
+
+            // wait for the check interval length plus a second before giving up
+            m_automationThread.Join(m_checkInterval + 1000);
+
+            m_terminate = false;
+            m_automationThread = null;
+        }
+
+        /// <summary>
+        /// Restarts the thread
+        /// </summary>
+        /// <param name="interval">The length of time to sleep between updates.</param>
+        public static void Restart()
+        {
+            if (!AutomaticRelocationRunning)
+            {
+                Relocator.Start();
+                return;
+            }
+
+            EveClient.Trace("Relocator.Restart() - Restarting");
+
+            Stop();
+            StartActual();
+        }
+
+        #endregion
+
+        #region Response to setting change
+        
+        private static void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            if (Settings.UI.MainWindow.EnableAutomaticRelocation)
+            {
+                Relocator.Restart();
+            }
+            else
+            {
+                Relocator.Stop();
+            }
+        }
 
         #endregion
     }
