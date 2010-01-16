@@ -65,7 +65,7 @@ namespace EVEMon
         [Conditional("DEBUG")]
         private void DisplayTestMenu()
         {
-            TestToolStripMenuItem.Visible = true;
+            testToolStripMenuItem.Visible = true;
         }
         
         /// <summary>
@@ -1414,6 +1414,7 @@ namespace EVEMon
         {
             standardToolbar.Visible = !standardToolbar.Visible;
             Settings.UI.MainWindow.ShowToolBar = standardToolbar.Visible;
+            relocationSettingsToolStripSeparator.Visible = relocationMenu.Visible;
         }
 
         /// <summary>
@@ -1692,6 +1693,7 @@ namespace EVEMon
             // Relocate window
             relocationMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
             relocationTbMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocationSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
 
             // Updates manager.
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
