@@ -808,10 +808,18 @@ namespace EVEMon.SkillPlanner
         private void UpdateStatusBar()
         {
             var window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+
             if (window == null)
                 return;
 
-            // At most one item selected
+            // 1 or fewer items are selected and status bar only updates on multi-select
+            if (lvSkills.SelectedItems.Count < 2 && Settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect)
+            {
+                window.UpdateStatusBar();
+                return;
+            }
+            
+            // 0 items selected
             if (lvSkills.SelectedItems.Count < 1)
             {
                 window.UpdateStatusBar();

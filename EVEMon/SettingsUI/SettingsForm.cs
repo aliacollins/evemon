@@ -235,6 +235,7 @@ namespace EVEMon.SettingsUI
             cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
             cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
             cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
+            SummaryOnMultiSelectOnlyCheckBox.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
 
             // Skill Icon Set
             if (m_settings.UI.SkillBrowser.IconsGoupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGoupIndex > 0)
@@ -325,6 +326,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.PlanWindow.HighlightConflicts = cbHighlightConflicts.Checked;
             m_settings.UI.PlanWindow.HighlightPartialSkills = cbHighlightPartialSkills.Checked;
             m_settings.UI.PlanWindow.HighlightQueuedSkills = cbHighlightQueuedSiklls.Checked;
+            m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect = SummaryOnMultiSelectOnlyCheckBox.Checked;
 
             // Plan window icon sets
             m_settings.UI.SkillBrowser.IconsGoupIndex = cbSkillIconSet.SelectedIndex + 1;

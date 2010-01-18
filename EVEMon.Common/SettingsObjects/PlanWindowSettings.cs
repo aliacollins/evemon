@@ -12,6 +12,7 @@ namespace EVEMon.Common.SettingsObjects
             DimUntrainable = true;
             ShowMsgBoxCustom = true;
             ShowObsEntriesMsgBox = true;
+            OnlyShowSelectionSummaryOnMultiSelect = true;
 
             var displayedColumns = new PlanColumn[] { 
                 PlanColumn.Priority, 
@@ -78,6 +79,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("showObsEntriesMsgBox")]
         public bool ShowObsEntriesMsgBox
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
+        public bool OnlyShowSelectionSummaryOnMultiSelect
         {
             get;
             set;
