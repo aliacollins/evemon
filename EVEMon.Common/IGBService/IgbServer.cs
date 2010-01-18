@@ -365,7 +365,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="characters">list of characters to output</param>
         private static void GenerateCharacterList(string currentCharacterName, StreamWriter sw, IEnumerable<Character> characters)
         {
-            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Welcome!</h1>");
 
             sw.WriteLine("<h2>Monitored characters:</h2>");
@@ -379,7 +379,27 @@ namespace EVEMon.Common.IgbService
                 sw.WriteLine("<br/>");
             }
 
-            sw.WriteLine("</body></html>");
+            WriteDocumentFooter(sw);
+        }
+
+        private static void WriteDocumentFooter(StreamWriter sw)
+        {
+            sw.WriteLine("  </body>");
+            sw.WriteLine("</html>");
+        }
+
+        private static void WriteDocumentHeader(StreamWriter sw)
+        {
+            sw.WriteLine("<html>");
+            sw.WriteLine("  <head>");
+            sw.WriteLine("    <style>");
+            sw.WriteLine("      body { background-color: black; color: white; font-family: Arial; font-size: small; }");
+            sw.WriteLine("      a:link { color: #5555FF; }");
+            sw.WriteLine("      a:visited { color: #FF9900; }");
+            sw.WriteLine("    </style>");
+            sw.WriteLine("    <title>EVEMon</title>");
+            sw.WriteLine("  </head>");
+            sw.WriteLine("  <body>");
         }
 
         /// <summary>
@@ -390,7 +410,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GeneratePlanListOutput(string context, StreamWriter sw, Character character)
         {
-            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
 
@@ -407,7 +427,7 @@ namespace EVEMon.Common.IgbService
             sw.WriteLine("<a href=\"{0}/skills/bytime\">By training time</a><br/>", context);
 
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            sw.WriteLine("</body></html>");
+            WriteDocumentFooter(sw);
         }
 
         /// <summary>
@@ -418,7 +438,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GenerateSkillsByTimeOutput(string context, StreamWriter sw, Character character)
         {
-            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
             sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
@@ -462,7 +482,7 @@ namespace EVEMon.Common.IgbService
 
             sw.WriteLine("<br/><a href=\"{0}\">Character overview</a>", context);
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            sw.WriteLine("</body></html>");
+            WriteDocumentFooter(sw);
         }
 
         /// <summary>
@@ -474,7 +494,7 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GeneratePlanOrShoppingOutput(string context, string requestUrl, StreamWriter sw, Character character)
         {
-            sw.WriteLine("<html><head><title>EVEMon</title></head><body>");
+            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
             sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
@@ -546,7 +566,7 @@ namespace EVEMon.Common.IgbService
                         if (entry.CharacterSkill.IsKnown || entry.Level != 1)
                             return;
 
-                        builder.AppendFormat("<a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>", 
+                        builder.AppendFormat(" <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>", 
                                              context,
                                              entry.Skill.ID,
                                              !entry.CharacterSkill.IsOwned,
@@ -561,9 +581,9 @@ namespace EVEMon.Common.IgbService
                 sw.WriteLine("Invalid request");
             }
 
-            sw.WriteLine("<br/><a href=\"{0}\">Character overview</a>", context);
+            sw.WriteLine("<br/><br/><a href=\"{0}\">Character overview</a>", context);
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            sw.WriteLine("</body></html>");
+            WriteDocumentFooter(sw);
         }
 
         /// <summary>

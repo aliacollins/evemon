@@ -210,7 +210,7 @@ namespace EVEMon.Common
                     if (needComma) builder.Append("; ");
                     needComma = true;
 
-                    string formattedIsk = String.Format(CultureConstants.TidyInteger, "{0:n}", plan.TotalBooksCost);
+                    string formattedIsk = String.Format(CultureConstants.TidyInteger, "{0:n}", plan.NotKnownSkillBooksCost);
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Cost: {0}{1}{2}", boldStart, formattedIsk, boldEnd);
                 }
 
