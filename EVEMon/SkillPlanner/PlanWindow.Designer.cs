@@ -376,7 +376,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.upperToolStrip);
             this.Controls.Add(this.statusStrip1);
-            this.MinimumSize = new System.Drawing.Size(960, 353);
+            this.MinimumSize = new System.Drawing.Size(780, 353);
             this.Name = "PlanWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EVEMon Skill Planner";

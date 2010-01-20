@@ -35,6 +35,8 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             this.RememberPositionKey = "PlanWindow";
+
+            this.ResizeEnd += new EventHandler(PlanWindow_ResizeEnd);
         }
 
         /// <summary>
@@ -339,6 +341,16 @@ namespace EVEMon.SkillPlanner
             if (m_plan != e.Plan) return;
             UpdateEnables();
         }
+
+        /// <summary>
+        /// Occurs when plan window gets resized.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlanWindow_ResizeEnd(object sender, EventArgs e)
+        {
+            UpdateStatusBar();
+        }
         #endregion
 
 
@@ -359,6 +371,7 @@ namespace EVEMon.SkillPlanner
         public void UpdateStatusBarSelected(String txt)
         {
             slblStatusText.Text = txt;
+            FixStatusBarTextLength();
         }
 
         /// <summary>
@@ -380,13 +393,13 @@ namespace EVEMon.SkillPlanner
             long cost = m_plan.NotKnownSkillBooksCost;
             if (totalcost > 0)
             {
-                slblStatusText.Text += String.Format("Total skill book{0} cost : {1:0,0,0} ISK. ",
+                slblStatusText.Text += String.Format("Total skill book{0} cost: {1:0,0,0} ISK. ",
                     m_plan.UniqueSkillsCount == 1 ? "" : "s", totalcost);
             }
 
             if (cost > 0)
             {
-                slblStatusText.Text += String.Format("Not known skill book{0} cost : {1:0,0,0} ISK. ",
+                slblStatusText.Text += String.Format("Not known skill book{0} cost: {1:0,0,0} ISK. ",
                     m_plan.NotKnownSkillsCount == 1 ? "" : "s", cost);
             }
 
@@ -408,6 +421,45 @@ namespace EVEMon.SkillPlanner
             else
             {
                 tslSuggestion.Visible = false;
+            }
+
+            FixStatusBarTextLength();
+        }
+
+        /// <summary>
+        /// Trims the status text in an ellipsis style to fit the windows width
+        /// </summary>
+        private void FixStatusBarTextLength()
+        {
+            string ellipsis = "…";
+
+            int suggestionTextWidth = (tslSuggestion.Visible ? tslSuggestion.Width : 0);
+            int statusTextWidth = TextRenderer.MeasureText(slblStatusText.Text, slblStatusText.Font).Width;
+            int statusBarTextWidth = statusTextWidth + suggestionTextWidth;
+            int ellipsisWidth = TextRenderer.MeasureText(ellipsis, slblStatusText.Font).Width;
+            int windowWidth = this.Width - slblStatusText.Height * 2;
+            
+            // We check the status text lenght to the windows width
+            if (statusBarTextWidth > windowWidth)
+            {
+                // We calculate the position to trim the text and remove it
+                float factor = (float)windowWidth / (float)statusTextWidth;
+                int position = (int)(slblStatusText.Text.Length * factor);
+
+                // the measurements are a bit of an inexact science
+                // check the position is still valid.
+                if (position < 0)
+                    return;
+
+                if (position >= slblStatusText.Text.Length)
+                    return;
+                
+                // trim the text
+                string newStatusBarText = slblStatusText.Text.Remove(position - 2);
+                
+                // Adds the ellipsis
+                newStatusBarText += ellipsis;
+                slblStatusText.Text = newStatusBarText;
             }
         }
         #endregion

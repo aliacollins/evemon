@@ -842,7 +842,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Appends the string to display in the status bar.
-            String sb = String.Format("{0} Skill{1} selected ({2} Unique Skill{3}). Training time: {4}. ", 
+            StringBuilder sb = new StringBuilder();
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} Skill{1} selected ({2} Unique Skill{3}). Training time: {4}. ", 
                     entriesCount,
                     entriesCount == 1 ? "" : "s",
                     UniqueSkillsCount, 
@@ -851,21 +852,21 @@ namespace EVEMon.SkillPlanner
 
             if (selectedTimeWithLearning != selectedTrainTime)
             {
-                sb += String.Format("({0} with preceding learning skills). ",
+                sb.AppendFormat(CultureConstants.DefaultCulture, "({0} with preceding learning skills). ",
                     Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning, DescriptiveTextOptions.IncludeCommas));
             }
             
             if (sbcost > 0)
             {
-                sb += String.Format("Skill book{0} cost : {1:0,0,0} ISK. ", UniqueSkillsCount == 1 ? "" : "s", sbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ", UniqueSkillsCount == 1 ? "" : "s", sbcost);
             }
 
             if (entriesCount > 1 && nksbcost > 0)
             {
-                sb += String.Format("Not known skill book{0} cost : {1:0,0,0} ISK. ", NotKnownSkillsCount == 1 ? "" : "s", nksbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ", NotKnownSkillsCount == 1 ? "" : "s", nksbcost);
             }
             
-            window.UpdateStatusBarSelected(sb);
+            window.UpdateStatusBarSelected(sb.ToString());
         }
         #endregion
 
