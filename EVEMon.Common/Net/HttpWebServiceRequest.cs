@@ -12,7 +12,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal class HttpWebServiceRequest
     {
-        private const int Timeout = 10000;
+        private int Timeout = 10000;
 
         private readonly object m_syncLock = new object();
 
@@ -37,6 +37,16 @@ namespace EVEMon.Common.Net
         {
             m_webServiceState = webServiceState;
             m_redirectsRemaining = m_webServiceState.MaxRedirects;
+
+            // pull the timeout from the settings
+            TimeSpan TimeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
+            Timeout = (int)TimeoutSetting.TotalMilliseconds;
+
+            // if user has configured timeout to be below 1 second reset to 10 seconds
+            if (Timeout < 1000)
+            {
+                Timeout = 10000;
+            }
         }
 
         /// <summary>

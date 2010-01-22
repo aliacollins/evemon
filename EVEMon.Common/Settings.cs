@@ -577,6 +577,7 @@ namespace EVEMon.Common
             get;
             set;
         }
+
         #endregion
     }
 }

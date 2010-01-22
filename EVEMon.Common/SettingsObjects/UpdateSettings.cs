@@ -16,6 +16,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             CheckTimeOnStartup = true;
             CheckEVEMonVersion = true;
+            HttpTimeout = 10000;
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
         }
 
@@ -56,12 +57,20 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("httpTimeout")]
+        public int HttpTimeout
+        {
+            get;
+            set;
+        }
+        
         internal UpdateSettings Clone()
         {
             var clone = new UpdateSettings();
             clone.CheckEVEMonVersion = this.CheckEVEMonVersion;
             clone.CheckTimeOnStartup = this.CheckTimeOnStartup;
             clone.MostRecentDeniedUpdgrade = this.MostRecentDeniedUpdgrade;
+            clone.HttpTimeout = this.HttpTimeout;
 
             foreach (var pair in this.Periods)
             {
