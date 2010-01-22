@@ -12,7 +12,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal class HttpWebServiceRequest
     {
-        private int Timeout = 10000;
+        private int Timeout = 10;
 
         private readonly object m_syncLock = new object();
 
