@@ -1372,7 +1372,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Enable other items
-                miSubPlan.Enabled = true;
+                miCopyToNewPlan.Enabled = true;
                 miChangePriority.Enabled = true;
                 miShowInSkillBrowser.Enabled = true;
                 miShowInSkillExplorer.Enabled = true;
@@ -1409,7 +1409,7 @@ namespace EVEMon.SkillPlanner
             // Multiple items selected
             else
             {
-                miSubPlan.Enabled = true;
+                miCopyToNewPlan.Enabled = true;
                 miMarkOwned.Enabled = true;
                 miChangePriority.Enabled = true;
                 miRemoveFromPlan.Enabled = true;
@@ -1596,7 +1596,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miSubPlan_Click(object sender, EventArgs e)
+        private void miCopyToNewPlan_Click(object sender, EventArgs e)
         {
             var entries = SelectedEntries;
             if (entries.IsEmpty()) return;
