@@ -313,6 +313,7 @@ namespace EVEMon.Common
             }
 
             RebuildPlanFrom(entries);
+            FixPrerequisites();
 
             foreach (var serialInvalidEntry in serial.InvalidEntries)
             {

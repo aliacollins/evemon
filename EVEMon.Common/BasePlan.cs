@@ -408,7 +408,7 @@ namespace EVEMon.Common
             // Is the prerequisite already planned before this very entry ?
             // Then we continue the foreach loop to the next prereq
             int skillIndex = IndexOf(skill, level);
-            if (skillIndex < insertionIndex) return true;
+            if (skillIndex != -1 && skillIndex < insertionIndex) return true;
 
 
             // The prerequsite is not planned yet, we insert it just before this very entry

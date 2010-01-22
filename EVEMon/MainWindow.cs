@@ -1292,10 +1292,6 @@ namespace EVEMon
             Plan loadedPlan = new Plan(character);
             loadedPlan.Import(serial);
 
-            // Cleans any obsolete entries and fixes the prerequisites
-            loadedPlan.CleanObsoleteEntries();
-            loadedPlan.Fix();
-
             // Prompt the user for the plan name
             using (NewPlanWindow npw = new NewPlanWindow())
             {

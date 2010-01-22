@@ -1,18 +1,18 @@
 using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using EVEMon.Common;
-using EVEMon.Common.Controls;
-
-using SortOrder = EVEMon.Common.SortOrder;
-using EVEMon.Common.SettingsObjects;
+using System.Linq;
 using System.Text;
+using System.Collections;
+using System.Windows.Forms;
+using System.IO.Compression;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+
+using EVEMon.Common;
 using EVEMon.Controls;
+using EVEMon.Common.Controls;
+using EVEMon.Common.SettingsObjects;
+using SortOrder = EVEMon.Common.SortOrder;
 
 namespace EVEMon.SkillPlanner
 {
@@ -320,10 +320,6 @@ namespace EVEMon.SkillPlanner
             Plan loadedPlan = new Plan(m_character);
             loadedPlan.Import(serial);
 
-            // Cleans any obsolete entries and fixes the prerequisites
-            loadedPlan.CleanObsoleteEntries();
-            loadedPlan.Fix();
-
             // Prompt the user for the plan name
             using (NewPlanWindow npw = new NewPlanWindow())
             {
@@ -351,9 +347,8 @@ namespace EVEMon.SkillPlanner
 
                 // Retrieves the cloned plan
                 var plan = cps.TargetPlan;
-                
-                // Cleans any obsolete entries and fixes the prerequisites
-                plan.CleanObsoleteEntries();
+
+                // Adds and fixes the prerequisites order
                 plan.Fix();
 
                 // Prompt the user for the new plan's name
