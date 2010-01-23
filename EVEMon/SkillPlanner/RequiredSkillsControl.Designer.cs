@@ -133,7 +133,7 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem,
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
-            this.planToMenu.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.planToMenu.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(199, 22);
             this.planToMenu.Text = "&Plan to";

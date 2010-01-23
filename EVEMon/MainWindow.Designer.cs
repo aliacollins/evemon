@@ -104,12 +104,12 @@ namespace EVEMon
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.tcCharacterTabs = new EVEMon.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
-            this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -262,7 +262,7 @@ namespace EVEMon
             // 
             // addAccountMenu
             // 
-            this.addAccountMenu.Image = ((System.Drawing.Image)(resources.GetObject("addAccountMenu.Image")));
+            this.addAccountMenu.Image = global::EVEMon.Properties.Resources.AddAccount;
             this.addAccountMenu.Name = "addAccountMenu";
             this.addAccountMenu.Size = new System.Drawing.Size(179, 22);
             this.addAccountMenu.Text = "&Add Account...";
@@ -270,7 +270,7 @@ namespace EVEMon
             // 
             // manageAccountsMenuItem
             // 
-            this.manageAccountsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("manageAccountsMenuItem.Image")));
+            this.manageAccountsMenuItem.Image = global::EVEMon.Properties.Resources.AccountManagement;
             this.manageAccountsMenuItem.Name = "manageAccountsMenuItem";
             this.manageAccountsMenuItem.Size = new System.Drawing.Size(179, 22);
             this.manageAccountsMenuItem.Text = "&Manage Accounts...";
@@ -283,7 +283,7 @@ namespace EVEMon
             // 
             // hideCharacterMenu
             // 
-            this.hideCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("hideCharacterMenu.Image")));
+            this.hideCharacterMenu.Image = global::EVEMon.Properties.Resources.HideCharacter;
             this.hideCharacterMenu.Name = "hideCharacterMenu";
             this.hideCharacterMenu.Size = new System.Drawing.Size(179, 22);
             this.hideCharacterMenu.Text = "&Hide Character";
@@ -291,7 +291,7 @@ namespace EVEMon
             // 
             // deleteCharacterMenu
             // 
-            this.deleteCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("deleteCharacterMenu.Image")));
+            this.deleteCharacterMenu.Image = global::EVEMon.Properties.Resources.DeleteCharacter;
             this.deleteCharacterMenu.Name = "deleteCharacterMenu";
             this.deleteCharacterMenu.Size = new System.Drawing.Size(179, 22);
             this.deleteCharacterMenu.Text = "&Delete Character...";
@@ -299,7 +299,7 @@ namespace EVEMon
             // 
             // exportCharacterMenu
             // 
-            this.exportCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("exportCharacterMenu.Image")));
+            this.exportCharacterMenu.Image = global::EVEMon.Properties.Resources.ExportCharacter;
             this.exportCharacterMenu.Name = "exportCharacterMenu";
             this.exportCharacterMenu.Size = new System.Drawing.Size(179, 22);
             this.exportCharacterMenu.Text = "Export &Character...";
@@ -312,7 +312,7 @@ namespace EVEMon
             // 
             // saveSettingsToolStripMenuItem
             // 
-            this.saveSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSettingsToolStripMenuItem.Image")));
+            this.saveSettingsToolStripMenuItem.Image = global::EVEMon.Properties.Resources.SaveSettings;
             this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
             this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.saveSettingsToolStripMenuItem.Text = "Sa&ve Settings...";
@@ -320,7 +320,7 @@ namespace EVEMon
             // 
             // loadSettingsToolStripMenuItem
             // 
-            this.loadSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadSettingsToolStripMenuItem.Image")));
+            this.loadSettingsToolStripMenuItem.Image = global::EVEMon.Properties.Resources.LoadSettings;
             this.loadSettingsToolStripMenuItem.Name = "loadSettingsToolStripMenuItem";
             this.loadSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.loadSettingsToolStripMenuItem.Text = "R&estore Settings...";
@@ -333,8 +333,7 @@ namespace EVEMon
             // 
             // resetSettingsToolStripMenuItem
             // 
-            this.resetSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("resetSettingsToolStripMenuItem.Image")));
-            this.resetSettingsToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.resetSettingsToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Reset;
             this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
             this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.resetSettingsToolStripMenuItem.Text = "&Reset Settings";
@@ -347,7 +346,7 @@ namespace EVEMon
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
+            this.exitToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Exit;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
@@ -364,7 +363,7 @@ namespace EVEMon
             // 
             // copySkillsToClipboardBBFormatToolStripMenuItem
             // 
-            this.copySkillsToClipboardBBFormatToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copySkillsToClipboardBBFormatToolStripMenuItem.Image")));
+            this.copySkillsToClipboardBBFormatToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Copy;
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Name = "copySkillsToClipboardBBFormatToolStripMenuItem";
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.copySkillsToClipboardBBFormatToolStripMenuItem.Text = "&Copy Skills to Clipboard (BB Format)";
@@ -384,7 +383,7 @@ namespace EVEMon
             // 
             // newToolStripMenuItem
             // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
+            this.newToolStripMenuItem.Image = global::EVEMon.Properties.Resources.NewPlan;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.newToolStripMenuItem.Text = "&New…";
@@ -392,7 +391,7 @@ namespace EVEMon
             // 
             // loadFromFileToolStripMenuItem
             // 
-            this.loadFromFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromFileToolStripMenuItem.Image")));
+            this.loadFromFileToolStripMenuItem.Image = global::EVEMon.Properties.Resources.LoadPlan;
             this.loadFromFileToolStripMenuItem.Name = "loadFromFileToolStripMenuItem";
             this.loadFromFileToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.loadFromFileToolStripMenuItem.Text = "Load Plan from File...";
@@ -400,7 +399,7 @@ namespace EVEMon
             // 
             // manageToolStripMenuItem
             // 
-            this.manageToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("manageToolStripMenuItem.Image")));
+            this.manageToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Plan;
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
             this.manageToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.manageToolStripMenuItem.Text = "&Manage...";
@@ -428,7 +427,7 @@ namespace EVEMon
             // 
             // mineralWorksheetToolStripMenuItem
             // 
-            this.mineralWorksheetToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("mineralWorksheetToolStripMenuItem.Image")));
+            this.mineralWorksheetToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Mineral;
             this.mineralWorksheetToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mineralWorksheetToolStripMenuItem.Name = "mineralWorksheetToolStripMenuItem";
             this.mineralWorksheetToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
@@ -437,7 +436,7 @@ namespace EVEMon
             // 
             // skillsPieChartMenu
             // 
-            this.skillsPieChartMenu.Image = ((System.Drawing.Image)(resources.GetObject("skillsPieChartMenu.Image")));
+            this.skillsPieChartMenu.Image = global::EVEMon.Properties.Resources.PieChart;
             this.skillsPieChartMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillsPieChartMenu.Name = "skillsPieChartMenu";
             this.skillsPieChartMenu.Size = new System.Drawing.Size(209, 22);
@@ -446,7 +445,7 @@ namespace EVEMon
             // 
             // schedulerToolStripMenuItem
             // 
-            this.schedulerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("schedulerToolStripMenuItem.Image")));
+            this.schedulerToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Calendar;
             this.schedulerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.schedulerToolStripMenuItem.Name = "schedulerToolStripMenuItem";
             this.schedulerToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
@@ -460,7 +459,7 @@ namespace EVEMon
             // 
             // implantsMenu
             // 
-            this.implantsMenu.Image = ((System.Drawing.Image)(resources.GetObject("implantsMenu.Image")));
+            this.implantsMenu.Image = global::EVEMon.Properties.Resources.JumpClone;
             this.implantsMenu.Name = "implantsMenu";
             this.implantsMenu.Size = new System.Drawing.Size(209, 22);
             this.implantsMenu.Text = "&Implant Groups...";
@@ -468,7 +467,7 @@ namespace EVEMon
             // 
             // showOwnedSkillbooksMenu
             // 
-            this.showOwnedSkillbooksMenu.Image = ((System.Drawing.Image)(resources.GetObject("showOwnedSkillbooksMenu.Image")));
+            this.showOwnedSkillbooksMenu.Image = global::EVEMon.Properties.Resources.OwnedBook;
             this.showOwnedSkillbooksMenu.Name = "showOwnedSkillbooksMenu";
             this.showOwnedSkillbooksMenu.Size = new System.Drawing.Size(209, 22);
             this.showOwnedSkillbooksMenu.Text = "Show Owned Skillbooks...";
@@ -482,7 +481,7 @@ namespace EVEMon
             // 
             // optionsToolStripMenuItem
             // 
-            this.optionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("optionsToolStripMenuItem.Image")));
+            this.optionsToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Settings;
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.optionsToolStripMenuItem.Text = "&Options...";
@@ -508,7 +507,7 @@ namespace EVEMon
             // 
             // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
+            this.aboutToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Help;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
@@ -521,7 +520,7 @@ namespace EVEMon
             // 
             // knownProblemsMenu
             // 
-            this.knownProblemsMenu.Image = ((System.Drawing.Image)(resources.GetObject("knownProblemsMenu.Image")));
+            this.knownProblemsMenu.Image = global::EVEMon.Properties.Resources.Problem;
             this.knownProblemsMenu.Name = "knownProblemsMenu";
             this.knownProblemsMenu.Size = new System.Drawing.Size(238, 22);
             this.knownProblemsMenu.Text = "&Known problems and solutions";
@@ -529,7 +528,7 @@ namespace EVEMon
             // 
             // forumsMenu
             // 
-            this.forumsMenu.Image = ((System.Drawing.Image)(resources.GetObject("forumsMenu.Image")));
+            this.forumsMenu.Image = global::EVEMon.Properties.Resources.Forum;
             this.forumsMenu.Name = "forumsMenu";
             this.forumsMenu.Size = new System.Drawing.Size(238, 22);
             this.forumsMenu.Text = "&Forums";
@@ -581,7 +580,7 @@ namespace EVEMon
             // 
             // accountsManagementTbMenu
             // 
-            this.accountsManagementTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("accountsManagementTbMenu.Image")));
+            this.accountsManagementTbMenu.Image = global::EVEMon.Properties.Resources.AccountManagement;
             this.accountsManagementTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.accountsManagementTbMenu.Name = "accountsManagementTbMenu";
             this.accountsManagementTbMenu.Size = new System.Drawing.Size(23, 22);
@@ -591,7 +590,7 @@ namespace EVEMon
             // addAccountTbMenu
             // 
             this.addAccountTbMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.addAccountTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("addAccountTbMenu.Image")));
+            this.addAccountTbMenu.Image = global::EVEMon.Properties.Resources.AddAccount;
             this.addAccountTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addAccountTbMenu.Name = "addAccountTbMenu";
             this.addAccountTbMenu.Size = new System.Drawing.Size(23, 22);
@@ -602,7 +601,7 @@ namespace EVEMon
             // 
             this.hideCharacterTbMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.hideCharacterTbMenu.Enabled = false;
-            this.hideCharacterTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("hideCharacterTbMenu.Image")));
+            this.hideCharacterTbMenu.Image = global::EVEMon.Properties.Resources.HideCharacter;
             this.hideCharacterTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.hideCharacterTbMenu.Name = "hideCharacterTbMenu";
             this.hideCharacterTbMenu.Size = new System.Drawing.Size(23, 22);
@@ -620,7 +619,7 @@ namespace EVEMon
             this.tsdbSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsSaveSettings,
             this.tsLoadSettings});
-            this.tsdbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsdbSettings.Image")));
+            this.tsdbSettings.Image = global::EVEMon.Properties.Resources.Folder;
             this.tsdbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsdbSettings.Name = "tsdbSettings";
             this.tsdbSettings.Size = new System.Drawing.Size(29, 22);
@@ -629,7 +628,7 @@ namespace EVEMon
             // 
             // tsSaveSettings
             // 
-            this.tsSaveSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsSaveSettings.Image")));
+            this.tsSaveSettings.Image = global::EVEMon.Properties.Resources.SaveSettings;
             this.tsSaveSettings.Name = "tsSaveSettings";
             this.tsSaveSettings.Size = new System.Drawing.Size(167, 22);
             this.tsSaveSettings.Text = "Save Settings...";
@@ -637,7 +636,7 @@ namespace EVEMon
             // 
             // tsLoadSettings
             // 
-            this.tsLoadSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsLoadSettings.Image")));
+            this.tsLoadSettings.Image = global::EVEMon.Properties.Resources.LoadSettings;
             this.tsLoadSettings.Name = "tsLoadSettings";
             this.tsLoadSettings.Size = new System.Drawing.Size(167, 22);
             this.tsLoadSettings.Text = "Restore Settings...";
@@ -651,7 +650,7 @@ namespace EVEMon
             // tsbMineralSheet
             // 
             this.tsbMineralSheet.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbMineralSheet.Image = ((System.Drawing.Image)(resources.GetObject("tsbMineralSheet.Image")));
+            this.tsbMineralSheet.Image = global::EVEMon.Properties.Resources.Mineral;
             this.tsbMineralSheet.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMineralSheet.Name = "tsbMineralSheet";
             this.tsbMineralSheet.Size = new System.Drawing.Size(23, 22);
@@ -661,7 +660,7 @@ namespace EVEMon
             // skillsPieChartTbMenu
             // 
             this.skillsPieChartTbMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.skillsPieChartTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("skillsPieChartTbMenu.Image")));
+            this.skillsPieChartTbMenu.Image = global::EVEMon.Properties.Resources.PieChart;
             this.skillsPieChartTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillsPieChartTbMenu.Name = "skillsPieChartTbMenu";
             this.skillsPieChartTbMenu.Size = new System.Drawing.Size(23, 22);
@@ -671,7 +670,7 @@ namespace EVEMon
             // tsbSchedule
             // 
             this.tsbSchedule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSchedule.Image = ((System.Drawing.Image)(resources.GetObject("tsbSchedule.Image")));
+            this.tsbSchedule.Image = global::EVEMon.Properties.Resources.Calendar;
             this.tsbSchedule.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSchedule.Name = "tsbSchedule";
             this.tsbSchedule.Size = new System.Drawing.Size(23, 22);
@@ -686,7 +685,7 @@ namespace EVEMon
             // tsbManagePlans
             // 
             this.tsbManagePlans.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbManagePlans.Image = ((System.Drawing.Image)(resources.GetObject("tsbManagePlans.Image")));
+            this.tsbManagePlans.Image = global::EVEMon.Properties.Resources.Plan;
             this.tsbManagePlans.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbManagePlans.Name = "tsbManagePlans";
             this.tsbManagePlans.Size = new System.Drawing.Size(23, 22);
@@ -710,7 +709,7 @@ namespace EVEMon
             // 
             // relocationTbMenu
             // 
-            this.relocationTbMenu.Image = ((System.Drawing.Image)(resources.GetObject("relocationTbMenu.Image")));
+            this.relocationTbMenu.Image = global::EVEMon.Properties.Resources.Relocation;
             this.relocationTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.relocationTbMenu.Name = "relocationTbMenu";
             this.relocationTbMenu.Size = new System.Drawing.Size(92, 22);
@@ -726,7 +725,7 @@ namespace EVEMon
             // tsbOptions
             // 
             this.tsbOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbOptions.Image = ((System.Drawing.Image)(resources.GetObject("tsbOptions.Image")));
+            this.tsbOptions.Image = global::EVEMon.Properties.Resources.Settings;
             this.tsbOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOptions.Name = "tsbOptions";
             this.tsbOptions.Size = new System.Drawing.Size(23, 22);
@@ -736,7 +735,7 @@ namespace EVEMon
             // tsbAbout
             // 
             this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAbout.Image = ((System.Drawing.Image)(resources.GetObject("tsbAbout.Image")));
+            this.tsbAbout.Image = global::EVEMon.Properties.Resources.Help;
             this.tsbAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAbout.Name = "tsbAbout";
             this.tsbAbout.Size = new System.Drawing.Size(23, 22);
@@ -750,6 +749,11 @@ namespace EVEMon
             this.niAlertIcon.BalloonTipClicked += new System.EventHandler(this.niAlertIcon_BalloonTipClicked);
             this.niAlertIcon.Click += new System.EventHandler(this.niAlertIcon_Click);
             this.niAlertIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.niAlertIcon_MouseClick);
+            // 
+            // ofdOpenDialog
+            // 
+            this.ofdOpenDialog.Filter = "Plan Files (*.emp)|*.emp|Plan Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            this.ofdOpenDialog.Title = "Open Plan File";
             // 
             // tcCharacterTabs
             // 
@@ -807,11 +811,6 @@ namespace EVEMon
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
-            // 
-            // ofdOpenDialog
-            // 
-            this.ofdOpenDialog.Filter = "Plan Files (*.emp)|*.emp|Plan Files (*.xml)|*.xml|All Files (*.*)|*.*";
-            this.ofdOpenDialog.Title = "Open Plan File";
             // 
             // MainWindow
             // 

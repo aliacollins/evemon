@@ -60,16 +60,16 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Add_account16 {
+        internal static System.Drawing.Bitmap AccountManagement {
             get {
-                object obj = ResourceManager.GetObject("Add_account16", resourceCulture);
+                object obj = ResourceManager.GetObject("AccountManagement", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Addition {
+        internal static System.Drawing.Bitmap AddAccount {
             get {
-                object obj = ResourceManager.GetObject("Addition", resourceCulture);
+                object obj = ResourceManager.GetObject("AddAccount", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -109,9 +109,9 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Attribute_Optimize {
+        internal static System.Drawing.Bitmap AttributeOptimize {
             get {
-                object obj = ResourceManager.GetObject("Attribute_Optimize", resourceCulture);
+                object obj = ResourceManager.GetObject("AttributeOptimize", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -119,13 +119,6 @@ namespace EVEMon.Properties {
         internal static System.Drawing.Bitmap BlueGlassArrow {
             get {
                 object obj = ResourceManager.GetObject("BlueGlassArrow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap BookOpened16 {
-            get {
-                object obj = ResourceManager.GetObject("BookOpened16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,23 +186,44 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Delete_Character {
+        internal static System.Drawing.Bitmap DeleteAccount {
             get {
-                object obj = ResourceManager.GetObject("Delete_Character", resourceCulture);
+                object obj = ResourceManager.GetObject("DeleteAccount", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Deletion {
+        internal static System.Drawing.Bitmap DeleteCharacter {
             get {
-                object obj = ResourceManager.GetObject("Deletion", resourceCulture);
+                object obj = ResourceManager.GetObject("DeleteCharacter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Edition {
+        internal static System.Drawing.Bitmap DeletePlan {
             get {
-                object obj = ResourceManager.GetObject("Edition", resourceCulture);
+                object obj = ResourceManager.GetObject("DeletePlan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap EditAccount {
+            get {
+                object obj = ResourceManager.GetObject("EditAccount", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap EditChar {
+            get {
+                object obj = ResourceManager.GetObject("EditChar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap EditPlan {
+            get {
+                object obj = ResourceManager.GetObject("EditPlan", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -249,16 +263,30 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Export {
+        internal static System.Drawing.Bitmap ExportArrow {
             get {
-                object obj = ResourceManager.GetObject("Export", resourceCulture);
+                object obj = ResourceManager.GetObject("ExportArrow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Export_Character {
+        internal static System.Drawing.Bitmap ExportCharacter {
             get {
-                object obj = ResourceManager.GetObject("Export_Character", resourceCulture);
+                object obj = ResourceManager.GetObject("ExportCharacter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ExportPlan {
+            get {
+                object obj = ResourceManager.GetObject("ExportPlan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Folder {
+            get {
+                object obj = ResourceManager.GetObject("Folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -284,30 +312,23 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Hide_Character {
+        internal static System.Drawing.Bitmap HideCharacter {
             get {
-                object obj = ResourceManager.GetObject("Hide_Character", resourceCulture);
+                object obj = ResourceManager.GetObject("HideCharacter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Implant_Calculator {
+        internal static System.Drawing.Bitmap ImplantCalculator {
             get {
-                object obj = ResourceManager.GetObject("Implant_Calculator", resourceCulture);
+                object obj = ResourceManager.GetObject("ImplantCalculator", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Import32 {
+        internal static System.Drawing.Bitmap ImportCharacter {
             get {
-                object obj = ResourceManager.GetObject("Import32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Importation {
-            get {
-                object obj = ResourceManager.GetObject("Importation", resourceCulture);
+                object obj = ResourceManager.GetObject("ImportCharacter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -319,9 +340,9 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Jump_Clone {
+        internal static System.Drawing.Bitmap JumpClone {
             get {
-                object obj = ResourceManager.GetObject("Jump_Clone", resourceCulture);
+                object obj = ResourceManager.GetObject("JumpClone", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -340,16 +361,16 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Load_from32 {
+        internal static System.Drawing.Bitmap LoadPlan {
             get {
-                object obj = ResourceManager.GetObject("Load_from32", resourceCulture);
+                object obj = ResourceManager.GetObject("LoadPlan", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap LookNFeel {
+        internal static System.Drawing.Bitmap LoadSettings {
             get {
-                object obj = ResourceManager.GetObject("LookNFeel", resourceCulture);
+                object obj = ResourceManager.GetObject("LoadSettings", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -357,13 +378,6 @@ namespace EVEMon.Properties {
         internal static System.Drawing.Bitmap Magnifier {
             get {
                 object obj = ResourceManager.GetObject("Magnifier", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap MainWindow {
-            get {
-                object obj = ResourceManager.GetObject("MainWindow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -382,6 +396,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap NewPlan {
+            get {
+                object obj = ResourceManager.GetObject("NewPlan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Notification {
             get {
                 object obj = ResourceManager.GetObject("Notification", resourceCulture);
@@ -396,16 +417,23 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Owned_book {
+        internal static System.Drawing.Bitmap Online {
             get {
-                object obj = ResourceManager.GetObject("Owned_book", resourceCulture);
+                object obj = ResourceManager.GetObject("Online", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap pie_chart32 {
+        internal static System.Drawing.Bitmap OwnedBook {
             get {
-                object obj = ResourceManager.GetObject("pie_chart32", resourceCulture);
+                object obj = ResourceManager.GetObject("OwnedBook", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap PieChart {
+            get {
+                object obj = ResourceManager.GetObject("PieChart", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -417,23 +445,9 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Plan_manager {
+        internal static System.Drawing.Bitmap PlanCharacter {
             get {
-                object obj = ResourceManager.GetObject("Plan_manager", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap PlanEdit {
-            get {
-                object obj = ResourceManager.GetObject("PlanEdit", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap PlanNew {
-            get {
-                object obj = ResourceManager.GetObject("PlanNew", resourceCulture);
+                object obj = ResourceManager.GetObject("PlanCharacter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -452,16 +466,44 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap reset_settings {
+        internal static System.Drawing.Bitmap Relocation {
             get {
-                object obj = ResourceManager.GetObject("reset_settings", resourceCulture);
+                object obj = ResourceManager.GetObject("Relocation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Save {
+        internal static System.Drawing.Bitmap Reset {
             get {
-                object obj = ResourceManager.GetObject("Save", resourceCulture);
+                object obj = ResourceManager.GetObject("Reset", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SaveSettings {
+            get {
+                object obj = ResourceManager.GetObject("SaveSettings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SchedulerAdd {
+            get {
+                object obj = ResourceManager.GetObject("SchedulerAdd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SchedulerClear {
+            get {
+                object obj = ResourceManager.GetObject("SchedulerClear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap SchedulerDelete {
+            get {
+                object obj = ResourceManager.GetObject("SchedulerDelete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -469,6 +511,13 @@ namespace EVEMon.Properties {
         internal static System.Drawing.Bitmap Settings {
             get {
                 object obj = ResourceManager.GetObject("Settings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Ship {
+            get {
+                object obj = ResourceManager.GetObject("Ship", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -487,16 +536,16 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap SkillsQueue {
+        internal static System.Drawing.Bitmap Skills {
             get {
-                object obj = ResourceManager.GetObject("SkillsQueue", resourceCulture);
+                object obj = ResourceManager.GetObject("Skills", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
-        internal static System.Drawing.Bitmap Sync_16 {
+        internal static System.Drawing.Bitmap SkillsQueue {
             get {
-                object obj = ResourceManager.GetObject("Sync_16", resourceCulture);
+                object obj = ResourceManager.GetObject("SkillsQueue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -515,23 +564,9 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Tools {
-            get {
-                object obj = ResourceManager.GetObject("Tools", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap Transparent {
             get {
                 object obj = ResourceManager.GetObject("Transparent", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Updates {
-            get {
-                object obj = ResourceManager.GetObject("Updates", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -550,9 +585,9 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap wrench_orange {
+        internal static System.Drawing.Bitmap Window {
             get {
-                object obj = ResourceManager.GetObject("wrench_orange", resourceCulture);
+                object obj = ResourceManager.GetObject("Window", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

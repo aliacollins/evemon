@@ -215,7 +215,7 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel2,
             this.tsmLevel3,
             this.tsmLevel4});
-            this.cmiLvPlanTo.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.cmiLvPlanTo.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.cmiLvPlanTo.Name = "cmiLvPlanTo";
             this.cmiLvPlanTo.Size = new System.Drawing.Size(145, 22);
             this.cmiLvPlanTo.Text = "&Add to plan...";

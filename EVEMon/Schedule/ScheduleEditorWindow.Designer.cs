@@ -29,7 +29,6 @@ namespace EVEMon.Schedule
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScheduleEditorWindow));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAddEntry = new System.Windows.Forms.ToolStripButton();
             this.tsbDeleteEntry = new System.Windows.Forms.ToolStripButton();
@@ -39,6 +38,7 @@ namespace EVEMon.Schedule
             this.lbEntries = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblEntryDescription = new System.Windows.Forms.Label();
+            this.calControl = new EVEMon.Schedule.ScheduleCalendar();
             this.panel1 = new System.Windows.Forms.Panel();
             this.nudMonth = new System.Windows.Forms.DomainUpDown();
             this.nudDay = new System.Windows.Forms.NumericUpDown();
@@ -50,7 +50,6 @@ namespace EVEMon.Schedule
             this.calContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newScheduleEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.calControl = new EVEMon.Schedule.ScheduleCalendar();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -79,29 +78,28 @@ namespace EVEMon.Schedule
             // 
             // tsbAddEntry
             // 
-            this.tsbAddEntry.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddEntry.Image")));
+            this.tsbAddEntry.Image = global::EVEMon.Properties.Resources.SchedulerAdd;
             this.tsbAddEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddEntry.Name = "tsbAddEntry";
-            this.tsbAddEntry.Size = new System.Drawing.Size(133, 22);
+            this.tsbAddEntry.Size = new System.Drawing.Size(139, 22);
             this.tsbAddEntry.Text = "Add Schedule Entry...";
             this.tsbAddEntry.Click += new System.EventHandler(this.addEntryMenuItem_Click);
             // 
             // tsbDeleteEntry
             // 
-            this.tsbDeleteEntry.Image = ((System.Drawing.Image)(resources.GetObject("tsbDeleteEntry.Image")));
+            this.tsbDeleteEntry.Image = global::EVEMon.Properties.Resources.SchedulerDelete;
             this.tsbDeleteEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteEntry.Name = "tsbDeleteEntry";
-            this.tsbDeleteEntry.Size = new System.Drawing.Size(87, 22);
+            this.tsbDeleteEntry.Size = new System.Drawing.Size(90, 22);
             this.tsbDeleteEntry.Text = "Delete Entry";
             this.tsbDeleteEntry.Click += new System.EventHandler(this.tsbDeleteEntry_Click);
             // 
             // tsbClearExpired
             // 
-            this.tsbClearExpired.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsbClearExpired.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearExpired.Image")));
+            this.tsbClearExpired.Image = global::EVEMon.Properties.Resources.SchedulerClear;
             this.tsbClearExpired.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClearExpired.Name = "tsbClearExpired";
-            this.tsbClearExpired.Size = new System.Drawing.Size(111, 22);
+            this.tsbClearExpired.Size = new System.Drawing.Size(133, 22);
             this.tsbClearExpired.Text = "Clear Expired Entries";
             this.tsbClearExpired.Click += new System.EventHandler(this.tsbClearExpired_Click);
             // 
@@ -158,8 +156,8 @@ namespace EVEMon.Schedule
             this.lbEntries.Name = "lbEntries";
             this.lbEntries.Size = new System.Drawing.Size(168, 210);
             this.lbEntries.TabIndex = 1;
-            this.lbEntries.DoubleClick += new System.EventHandler(this.lbEntries_DoubleClick);
             this.lbEntries.SelectedIndexChanged += new System.EventHandler(this.lbEntries_SelectedIndexChanged);
+            this.lbEntries.DoubleClick += new System.EventHandler(this.lbEntries_DoubleClick);
             // 
             // label1
             // 
@@ -177,6 +175,27 @@ namespace EVEMon.Schedule
             this.lblEntryDescription.Name = "lblEntryDescription";
             this.lblEntryDescription.Size = new System.Drawing.Size(171, 207);
             this.lblEntryDescription.TabIndex = 2;
+            // 
+            // calControl
+            // 
+            this.calControl.BlockingColor = System.Drawing.Color.Red;
+            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
+            this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
+            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.calControl.EntryFont = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.calControl.Location = new System.Drawing.Point(0, 27);
+            this.calControl.Name = "calControl";
+            this.calControl.RecurringColor = System.Drawing.Color.Green;
+            this.calControl.RecurringColor2 = System.Drawing.Color.LightGreen;
+            this.calControl.SingleColor = System.Drawing.Color.Blue;
+            this.calControl.SingleColor2 = System.Drawing.Color.LightBlue;
+            this.calControl.Size = new System.Drawing.Size(533, 421);
+            this.calControl.TabIndex = 0;
+            this.calControl.TextColor = System.Drawing.Color.White;
+            this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
+            this.calControl.DayClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayClicked);
+            this.calControl.DayDoubleClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayDoubleClicked);
+            this.calControl.MouseEnter += new System.EventHandler(this.calControl_MouseEnter);
             // 
             // panel1
             // 
@@ -290,38 +309,19 @@ namespace EVEMon.Schedule
             this.newScheduleEntryToolStripMenuItem,
             this.toolStripMenuItem1});
             this.calContext.Name = "calContext";
-            this.calContext.Size = new System.Drawing.Size(194, 54);
+            this.calContext.Size = new System.Drawing.Size(189, 32);
             // 
             // newScheduleEntryToolStripMenuItem
             // 
             this.newScheduleEntryToolStripMenuItem.Name = "newScheduleEntryToolStripMenuItem";
-            this.newScheduleEntryToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.newScheduleEntryToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.newScheduleEntryToolStripMenuItem.Text = "New Schedule Entry...";
             this.newScheduleEntryToolStripMenuItem.Click += new System.EventHandler(this.newEntryMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
-            // 
-            // calControl
-            // 
-            this.calControl.BlockingColor = System.Drawing.Color.Red;
-            this.calControl.CalendarType = EVEMon.Schedule.CalendarType.Month;
-            this.calControl.Date = new System.DateTime(2006, 8, 5, 18, 11, 38, 453);
-            this.calControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.calControl.Location = new System.Drawing.Point(0, 27);
-            this.calControl.Name = "calControl";
-            this.calControl.RecurringColor = System.Drawing.Color.Green;
-            this.calControl.RecurringColor2 = System.Drawing.Color.LightGreen;
-            this.calControl.SingleColor = System.Drawing.Color.Blue;
-            this.calControl.SingleColor2 = System.Drawing.Color.LightBlue;
-            this.calControl.Size = new System.Drawing.Size(533, 421);
-            this.calControl.TabIndex = 0;
-            this.calControl.DayClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayClicked);
-            this.calControl.MouseEnter += new System.EventHandler(this.calControl_MouseEnter);
-            this.calControl.MouseLeave += new System.EventHandler(this.calControl_MouseLeave);
-            this.calControl.DayDoubleClicked += new EVEMon.Schedule.CalendarControl.DaySelectedEvent(this.calControl_DayDoubleClicked);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(185, 6);
             // 
             // ScheduleEditorWindow
             // 

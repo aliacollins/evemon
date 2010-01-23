@@ -362,7 +362,7 @@ namespace EVEMon.SkillPlanner
             this.planTo3Menu,
             this.planTo4Menu,
             this.planTo5Menu});
-            this.planToMenu.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.planToMenu.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(82, 22);

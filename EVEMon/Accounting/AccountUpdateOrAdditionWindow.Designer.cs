@@ -89,8 +89,7 @@
             ccpLinkLabel.Size = new System.Drawing.Size(420, 18);
             ccpLinkLabel.TabIndex = 5;
             ccpLinkLabel.TabStop = true;
-            ccpLinkLabel.Text = "Your API credentials are available at : http://myeve.eve-online.com/api/default.a" +
-                "sp";
+            ccpLinkLabel.Text = "Your API credentials are available at : http://www.eveonline.com/api/default.asp";
             ccpLinkLabel.UseCompatibleTextRendering = true;
             ccpLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ccpLinkLabel_LinkClicked);
             // 

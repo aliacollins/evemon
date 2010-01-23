@@ -158,7 +158,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeTo3,
             this.miChangeTo4,
             this.miChangeTo5});
-            this.miChangeLevel.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.miChangeLevel.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.miChangeLevel.Name = "miChangeLevel";
             this.miChangeLevel.Size = new System.Drawing.Size(250, 22);
             this.miChangeLevel.Text = "Change Planned Level...";

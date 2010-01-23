@@ -155,7 +155,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiOpen
             // 
-            this.cmiOpen.Image = global::EVEMon.Properties.Resources.BookOpened16;
+            this.cmiOpen.Image = global::EVEMon.Properties.Resources.Plan;
             this.cmiOpen.Name = "cmiOpen";
             this.cmiOpen.Size = new System.Drawing.Size(117, 22);
             this.cmiOpen.Text = "Open";
@@ -170,7 +170,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiExport
             // 
-            this.cmiExport.Image = global::EVEMon.Properties.Resources.Export;
+            this.cmiExport.Image = global::EVEMon.Properties.Resources.ExportCharacter;
             this.cmiExport.Name = "cmiExport";
             this.cmiExport.Size = new System.Drawing.Size(117, 22);
             this.cmiExport.Text = "Export";
@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiDelete
             // 
-            this.cmiDelete.Image = global::EVEMon.Properties.Resources.Deletion;
+            this.cmiDelete.Image = global::EVEMon.Properties.Resources.DeleteCharacter;
             this.cmiDelete.Name = "cmiDelete";
             this.cmiDelete.Size = new System.Drawing.Size(117, 22);
             this.cmiDelete.Text = "Delete";
@@ -300,7 +300,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miNewPlan
             // 
-            this.miNewPlan.Image = global::EVEMon.Properties.Resources.PlanNew;
+            this.miNewPlan.Image = global::EVEMon.Properties.Resources.NewPlan;
             this.miNewPlan.Name = "miNewPlan";
             this.miNewPlan.Size = new System.Drawing.Size(218, 22);
             this.miNewPlan.Text = "&New Plan…";
@@ -308,7 +308,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miLoadPlanFromFile
             // 
-            this.miLoadPlanFromFile.Image = global::EVEMon.Properties.Resources.Import32;
+            this.miLoadPlanFromFile.Image = global::EVEMon.Properties.Resources.LoadPlan;
             this.miLoadPlanFromFile.Name = "miLoadPlanFromFile";
             this.miLoadPlanFromFile.Size = new System.Drawing.Size(218, 22);
             this.miLoadPlanFromFile.Text = "&Load Plan from File…";
@@ -316,7 +316,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miLoadPlanFromCharacter
             // 
-            this.miLoadPlanFromCharacter.Image = global::EVEMon.Properties.Resources.Load_from32;
+            this.miLoadPlanFromCharacter.Image = global::EVEMon.Properties.Resources.PlanCharacter;
             this.miLoadPlanFromCharacter.Name = "miLoadPlanFromCharacter";
             this.miLoadPlanFromCharacter.Size = new System.Drawing.Size(218, 22);
             this.miLoadPlanFromCharacter.Text = "Load Plan from &Character…";
@@ -344,7 +344,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miExport
             // 
-            this.miExport.Image = global::EVEMon.Properties.Resources.Export;
+            this.miExport.Image = global::EVEMon.Properties.Resources.ExportPlan;
             this.miExport.Name = "miExport";
             this.miExport.Size = new System.Drawing.Size(136, 22);
             this.miExport.Text = "&Export";
@@ -352,7 +352,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miDelete
             // 
-            this.miDelete.Image = global::EVEMon.Properties.Resources.Deletion;
+            this.miDelete.Image = global::EVEMon.Properties.Resources.DeletePlan;
             this.miDelete.Name = "miDelete";
             this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.miDelete.Size = new System.Drawing.Size(136, 22);

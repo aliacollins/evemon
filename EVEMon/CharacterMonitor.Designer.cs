@@ -812,7 +812,7 @@ namespace EVEMon
             // 
             this.skillsIcon.Checked = true;
             this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsIcon.Image")));
+            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
             this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillsIcon.Name = "skillsIcon";
             this.skillsIcon.Size = new System.Drawing.Size(53, 22);
@@ -823,7 +823,7 @@ namespace EVEMon
             // 
             // skillsQueueIcon
             // 
-            this.skillsQueueIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsQueueIcon.Image")));
+            this.skillsQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
             this.skillsQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillsQueueIcon.Name = "skillsQueueIcon";
             this.skillsQueueIcon.Size = new System.Drawing.Size(62, 22);
@@ -834,7 +834,7 @@ namespace EVEMon
             // 
             // ordersIcon
             // 
-            this.ordersIcon.Image = ((System.Drawing.Image)(resources.GetObject("ordersIcon.Image")));
+            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
             this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ordersIcon.Name = "ordersIcon";
             this.ordersIcon.Size = new System.Drawing.Size(102, 22);
@@ -862,7 +862,7 @@ namespace EVEMon
             this.columnSettingsMenuItem,
             this.hideInactiveOrdersMenuItem,
             this.numberAbsFormatMenuItem});
-            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
+            this.preferencesMenu.Image = global::EVEMon.Properties.Resources.Settings;
             this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.preferencesMenu.Name = "preferencesMenu";
             this.preferencesMenu.Size = new System.Drawing.Size(29, 22);

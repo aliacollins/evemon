@@ -160,7 +160,7 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem,
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
-            this.cmiPlanTo.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.cmiPlanTo.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.cmiPlanTo.Name = "cmiPlanTo";
             this.cmiPlanTo.Size = new System.Drawing.Size(190, 22);
             this.cmiPlanTo.Text = "&Plan to...";
@@ -287,7 +287,7 @@ namespace EVEMon.SkillPlanner
             this.tsmLevel3,
             this.tsmLevel4,
             this.tsmLevel5});
-            this.cmiLvPlanTo.Image = global::EVEMon.Properties.Resources.PlanEdit;
+            this.cmiLvPlanTo.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.cmiLvPlanTo.Name = "cmiLvPlanTo";
             this.cmiLvPlanTo.Size = new System.Drawing.Size(190, 22);
             this.cmiLvPlanTo.Text = "&Plan To...";

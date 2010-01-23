@@ -229,7 +229,6 @@ namespace EVEMon
             this.Controls.Add(this.planSelector);
             this.Controls.Add(this.pieControlPanel);
             this.Controls.Add(this.skillPieChartControl);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(674, 490);
             this.Name = "SkillsPieChart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

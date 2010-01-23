@@ -92,25 +92,25 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.FlowLayoutPanel flowLayoutPanel28;
             System.Windows.Forms.Label igbHelpLabel;
             System.Windows.Forms.Label lblRelocatorPage;
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 5, 5);
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 8, 8);
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 12, 12);
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 11, 11);
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server");
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Relocator");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
             treeNode12,
             treeNode13,
             treeNode14});
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Skill Planner", 7, 7);
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("System Tray Icon", 9, 9);
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("External Calendar", 13, 13);
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9);
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("External Calendar", 6, 6);
             System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
             treeNode19});
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Skills Completion Mails", 4, 4);
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Notifications", 3, 3, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Skills Completion Mails", 13, 13);
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Notifications", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode21});
             this.applyButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
@@ -143,7 +143,6 @@ namespace EVEMon.SettingsUI
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.treeView = new System.Windows.Forms.TreeView();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.leftPanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Controls.MultiPanel();
             this.mainWindowPage = new EVEMon.Controls.MultiPanelPage();
@@ -255,6 +254,7 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -1193,9 +1193,9 @@ namespace EVEMon.SettingsUI
             this.treeView.ItemHeight = 20;
             this.treeView.Location = new System.Drawing.Point(6, 6);
             this.treeView.Name = "treeView";
-            treeNode10.ImageIndex = 5;
+            treeNode10.ImageIndex = 12;
             treeNode10.Name = "Node9";
-            treeNode10.SelectedImageIndex = 5;
+            treeNode10.SelectedImageIndex = 12;
             treeNode10.Tag = "updatesPage";
             treeNode10.Text = "Updates";
             treeNode11.ImageIndex = 8;
@@ -1203,42 +1203,42 @@ namespace EVEMon.SettingsUI
             treeNode11.SelectedImageIndex = 8;
             treeNode11.Tag = "networkPage";
             treeNode11.Text = "Network";
-            treeNode12.ImageIndex = 12;
+            treeNode12.ImageIndex = 5;
             treeNode12.Name = "g15Node";
-            treeNode12.SelectedImageIndex = 12;
+            treeNode12.SelectedImageIndex = 5;
             treeNode12.Tag = "g15Page";
             treeNode12.Text = "Logitech Keyboards";
-            treeNode13.ImageIndex = 11;
+            treeNode13.ImageKey = "IGB Server.png";
             treeNode13.Name = "Node2";
-            treeNode13.SelectedImageIndex = 11;
+            treeNode13.SelectedImageIndex = 4;
             treeNode13.Tag = "igbServerPage";
             treeNode13.Text = "IGB Server";
             treeNode14.Name = "relocationNode";
             treeNode14.Tag = "relocatorPage";
             treeNode14.Text = "Relocator";
-            treeNode15.ImageIndex = 10;
+            treeNode15.ImageIndex = 11;
             treeNode15.Name = "generalNode";
-            treeNode15.SelectedImageIndex = 10;
+            treeNode15.SelectedImageIndex = 11;
             treeNode15.Tag = "generalPage";
             treeNode15.Text = "General";
-            treeNode16.ImageIndex = 6;
+            treeNode16.ImageIndex = 7;
             treeNode16.Name = "Node3";
-            treeNode16.SelectedImageIndex = 6;
+            treeNode16.SelectedImageIndex = 7;
             treeNode16.Tag = "mainWindowPage";
             treeNode16.Text = "Main Window";
-            treeNode17.ImageIndex = 7;
+            treeNode17.ImageIndex = 9;
             treeNode17.Name = "Node4";
-            treeNode17.SelectedImageIndex = 7;
+            treeNode17.SelectedImageIndex = 9;
             treeNode17.Tag = "skillPlannerPage";
             treeNode17.Text = "Skill Planner";
-            treeNode18.ImageIndex = 9;
+            treeNode18.ImageIndex = 3;
             treeNode18.Name = "trayIconNode";
-            treeNode18.SelectedImageIndex = 9;
+            treeNode18.SelectedImageIndex = 3;
             treeNode18.Tag = "trayIconPage";
             treeNode18.Text = "System Tray Icon";
-            treeNode19.ImageIndex = 13;
+            treeNode19.ImageIndex = 6;
             treeNode19.Name = "Node11";
-            treeNode19.SelectedImageIndex = 13;
+            treeNode19.SelectedImageIndex = 6;
             treeNode19.Tag = "externalCalendarPage";
             treeNode19.Text = "External Calendar";
             treeNode20.ImageIndex = 1;
@@ -1246,14 +1246,14 @@ namespace EVEMon.SettingsUI
             treeNode20.SelectedImageIndex = 1;
             treeNode20.Tag = "schedulerUIPage";
             treeNode20.Text = "Scheduler";
-            treeNode21.ImageIndex = 4;
+            treeNode21.ImageIndex = 13;
             treeNode21.Name = "Node7";
-            treeNode21.SelectedImageIndex = 4;
+            treeNode21.SelectedImageIndex = 13;
             treeNode21.Tag = "emailNotificationsPage";
             treeNode21.Text = "Skills Completion Mails";
-            treeNode22.ImageIndex = 3;
+            treeNode22.ImageIndex = 10;
             treeNode22.Name = "Node2";
-            treeNode22.SelectedImageIndex = 3;
+            treeNode22.SelectedImageIndex = 10;
             treeNode22.Tag = "notificationsPage";
             treeNode22.Text = "Notifications";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
@@ -1270,25 +1270,6 @@ namespace EVEMon.SettingsUI
             this.treeView.Size = new System.Drawing.Size(187, 424);
             this.treeView.TabIndex = 6;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
-            // 
-            // imageList
-            // 
-            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "Transparent.png");
-            this.imageList.Images.SetKeyName(1, "Calendar.png");
-            this.imageList.Images.SetKeyName(2, "LookNFeel.png");
-            this.imageList.Images.SetKeyName(3, "Notification2.png");
-            this.imageList.Images.SetKeyName(4, "Email.png");
-            this.imageList.Images.SetKeyName(5, "Software update.png");
-            this.imageList.Images.SetKeyName(6, "MainWindow.png");
-            this.imageList.Images.SetKeyName(7, "Plan.png");
-            this.imageList.Images.SetKeyName(8, "Connection.png");
-            this.imageList.Images.SetKeyName(9, "EVEMon16.png");
-            this.imageList.Images.SetKeyName(10, "System config.png");
-            this.imageList.Images.SetKeyName(11, "IGB Server.png");
-            this.imageList.Images.SetKeyName(12, "Logitech Keyboard.png");
-            this.imageList.Images.SetKeyName(13, "gcalendar.png");
             // 
             // leftPanel
             // 
@@ -2629,6 +2610,25 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Empty;
+            this.imageList.Images.SetKeyName(0, "Transparent.png");
+            this.imageList.Images.SetKeyName(1, "Calendar.png");
+            this.imageList.Images.SetKeyName(2, "LookNFeel.png");
+            this.imageList.Images.SetKeyName(3, "EVEMon16.png");
+            this.imageList.Images.SetKeyName(4, "IGB Server.png");
+            this.imageList.Images.SetKeyName(5, "Logitech Keyboard.png");
+            this.imageList.Images.SetKeyName(6, "gcalendar.png");
+            this.imageList.Images.SetKeyName(7, "MainWindow.png");
+            this.imageList.Images.SetKeyName(8, "Online.png");
+            this.imageList.Images.SetKeyName(9, "Plan.png");
+            this.imageList.Images.SetKeyName(10, "Problem.png");
+            this.imageList.Images.SetKeyName(11, "Settings.png");
+            this.imageList.Images.SetKeyName(12, "Update3.png");
+            this.imageList.Images.SetKeyName(13, "Email.png");
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -2832,7 +2832,6 @@ namespace EVEMon.SettingsUI
         private EVEMon.Controls.MultiPanelPage schedulerUIPage;
         private EVEMon.Controls.MultiPanelPage externalCalendarPage;
         private System.Windows.Forms.Panel customProxyPanel;
-        private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.Panel leftPanel;
         private EVEMon.Controls.MultiPanelPage g15Page;
         private EVEMon.Controls.MultiPanelPage igbServerPage;
@@ -2876,5 +2875,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label relocationSecondsLabel;
         private System.Windows.Forms.NumericUpDown relocationSecondsNumericUpDown;
         private System.Windows.Forms.CheckBox cbSummaryOnMultiSelectOnly;
+        private System.Windows.Forms.ImageList imageList;
     }
 }
