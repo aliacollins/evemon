@@ -70,7 +70,6 @@ namespace EVEMon
             // Save before we quit.
             finally
             {
-                Relocator.Stop();
                 Settings.SaveImmediate();
                 EveClient.Trace("Closed");
                 EveClient.StopTraceLogging();

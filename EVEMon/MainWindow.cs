@@ -1519,28 +1519,27 @@ namespace EVEMon
                 string windowDescription = Relocator.GetWindowDescription(eveInstance);
                 Rectangle instanceDimensions = Relocator.GetWindowDimensions(eveInstance);
                 
+                // Relocator menu disabled when autorelocate is active or client is minimized
                 var instanceMenu = new ToolStripMenuItem(windowDescription);
-                instanceMenu.Enabled = !((instanceDimensions.Height == 0) && (instanceDimensions.Width == 0));
+                instanceMenu.Enabled = !((instanceDimensions.Height == 0) && (instanceDimensions.Width == 0))
+                    && !Relocator.AutoRelocationEnabled;
 
                 var instanceCopy = eveInstance;
 
-                // One screen ? No children then.
-                if (screenCount == 1)
+                // Let's add submenus
+                for (int i = 0; i < screenCount; i++)
                 {
-                    instanceMenu.Click += (senders, args) => Relocator.Relocate(instanceCopy, 0);
-                }
-                // Multiple screens ? Let's add submenus
-                else
-                {
-                    for (int i = 0; i < screenCount; i++)
-                    {
-                        var screenCopy = i;
-                        string screenDescription = Relocator.GetScreenDescription(i);
+                    var screenCopy = i;
+                    
+                    // Skip if client doesn't fit in screen
+                    if (instanceDimensions.Width > Screen.AllScreens[screenCopy].Bounds.Width)
+                        continue;
 
-                        var screenMenu = new ToolStripMenuItem(screenDescription);
-                        screenMenu.Click += (senders, args) => Relocator.Relocate(instanceCopy, screenCopy);
-                        instanceMenu.DropDownItems.Add(screenMenu);
-                    }
+                    string screenDescription = Relocator.GetScreenDescription(i);
+
+                    var screenMenu = new ToolStripMenuItem(screenDescription);
+                    screenMenu.Click += (senders, args) => Relocator.Relocate(instanceCopy, screenCopy);
+                    instanceMenu.DropDownItems.Add(screenMenu);
                 }
 
                 // Add to the root menu.

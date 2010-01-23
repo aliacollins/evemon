@@ -14,69 +14,25 @@ namespace EVEMon
     /// </summary>
     public static class Relocator
     {
-        private delegate bool WindowFoundHandler(int hwnd, int lParam);
+        public delegate bool WindowFoundHandler(int hwnd, int lParam);
 
-        private static bool m_initilzed = false;
+        private static bool m_initilized = false;
         private static readonly int m_pid = Application.ProductName.GetHashCode();
         private static readonly List<IntPtr> m_foundWindows = new List<IntPtr>();
-        private static volatile bool m_terminate = false;
-        private static volatile int m_checkInterval = 5000;
-        private static Thread m_automationThread;
+        private static bool m_autoRelocation;
+        private static int counter = 0;
 
         public static void Initialize()
         {
-            if (m_initilzed)
+            if (m_initilized)
                 return;
-
-            EveClient.Trace("Relocator.Start() - Initilizing");
-
+            
+            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
             EveClient_SettingsChanged(null, EventArgs.Empty);
 
-            m_initilzed = true;
+            m_initilized = true;
         }
-
-        #region DLL Imports
-        [DllImport("user32.Dll")]
-        private static extern IntPtr EnumWindows(WindowFoundHandler x, int y);
-
-        [DllImport("User32.Dll")]
-        private static extern void GetClassName(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-        [DllImport("user32")]
-        private extern static int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-        [DllImport("user32")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-
-        [DllImport("user32")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-
-        [DllImport("user32")]
-        private static extern int GetClientRect(IntPtr hWnd, out RECT lpRect);
-
-        [DllImport("user32")]
-        private static extern int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
-
-        [DllImport("user32.dll")]
-        private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-        [Serializable, StructLayout(LayoutKind.Sequential)]
-        private struct RECT
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
-        [Serializable, StructLayout(LayoutKind.Sequential)]
-        private struct POINT
-        {
-            public int X;
-            public int Y;
-        }
-        #endregion
 
         #region Dimensions
         /// <summary>
@@ -86,8 +42,8 @@ namespace EVEMon
         /// <returns>new Rectangle(Left, Top, Width, Height)</returns>
         private static Rectangle GetWindowRect(IntPtr hWnd)
         {
-            RECT r;
-            GetWindowRect(hWnd, out r);
+            NativeMethods.RECT r;
+            NativeMethods.GetWindowRect(hWnd, out r);
             return new Rectangle(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
         }
 
@@ -98,16 +54,15 @@ namespace EVEMon
         /// <returns>new Rectangle(Left, Top, Right, Bottom) relative to the screen</returns>
         private static Rectangle GetClientRectInScreenCoords(IntPtr hWnd)
         {
-            RECT cr;
-            GetClientRect(hWnd, out cr);
-            POINT pt = new POINT();
+            NativeMethods.RECT cr;
+            NativeMethods.GetClientRect(hWnd, out cr);
+            NativeMethods.POINT pt = new NativeMethods.POINT();
             pt.X = 0;
             pt.Y = 0;
-            ClientToScreen(hWnd, ref pt);
+            NativeMethods.ClientToScreen(hWnd, ref pt);
             return new Rectangle(pt.X, pt.Y, cr.Right - cr.Left, cr.Bottom - cr.Top);
         }
 
-        private static Point m_positionedPoint = new Point(Int32.MaxValue, Int32.MaxValue);
         #endregion
 
         #region Private functions
@@ -120,13 +75,13 @@ namespace EVEMon
             IntPtr windowHandle = (IntPtr)hwnd;
             StringBuilder sbText = new StringBuilder(512);
             StringBuilder sbClass = new StringBuilder(512);
-            GetWindowText(windowHandle, sbText, 512);
-            GetClassName(windowHandle, sbClass, 512);
+            NativeMethods.GetWindowText(windowHandle, sbText, 512);
+            NativeMethods.GetClassName(windowHandle, sbClass, 512);
 
             if (sbText.ToString().StartsWith("EVE", StringComparison.CurrentCultureIgnoreCase) && sbClass.ToString() == "triuiScreen")
             {
                 int pid = 0;
-                GetWindowThreadProcessId(windowHandle, out pid);
+                NativeMethods.GetWindowThreadProcessId(windowHandle, out pid);
                 System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(pid);
                 if (p.ProcessName == "ExeFile")
                 {
@@ -148,13 +103,13 @@ namespace EVEMon
             lock (m_foundWindows)
             {
                 m_foundWindows.Clear();
-                EnumWindows(new WindowFoundHandler(Relocator.EnumWindowCallBack), m_pid);
+                NativeMethods.EnumWindows(new WindowFoundHandler(EnumWindowCallBack), m_pid);
                 return m_foundWindows;
             }
         }
 
         /// <summary>
-        /// Position the window on the targe screen
+        /// Position the window on the target screen
         /// </summary>
         /// <param name="hWnd">EVE instance to be moved</param>
         /// <param name="targetScreen">Screen to be moved to</param>
@@ -165,29 +120,23 @@ namespace EVEMon
             int wDiff = ncr.Width - cr.Width;
             int hDiff = ncr.Height - cr.Height;
 
-            Screen sc = null;
+            Screen sc = Screen.AllScreens[targetScreen];
 
-            if (Screen.AllScreens.Length > targetScreen)
-            {
-                sc = Screen.AllScreens[targetScreen];
-            }
-            else
-                sc = Screen.AllScreens[0];
-
+            // Null guard? Could in any case sc be null?
             if (sc == null)
                 return;
 
-            // Don't resize if the eve window if it's size is not that of the screen
-            if (sc.Bounds.Width != cr.Width || sc.Bounds.Height != cr.Height)
-                return;
-            
-            m_positionedPoint = new Point(sc.Bounds.X - (cr.Left - ncr.Left),
-                                          sc.Bounds.Y - (cr.Top - ncr.Top));
+            // Grab the current window style
+            long oldStyle = NativeMethods.GetWindowLong(hWnd, NativeMethods.GWL_STYLE);
 
-            MoveWindow(hWnd, sc.Bounds.X - (cr.Left - ncr.Left),
-                       sc.Bounds.Y - (cr.Top - ncr.Top),
-                       sc.Bounds.Width + wDiff,
-                       sc.Bounds.Height + hDiff, true);
+            // Turn off dialog frame and border
+            long newStyle = oldStyle & ~(NativeMethods.WS_DLGFRAME | NativeMethods.WS_BORDER);
+            NativeMethods.SetWindowLong(hWnd, NativeMethods.GWL_STYLE, newStyle);
+
+            NativeMethods.MoveWindow(hWnd, sc.Bounds.X,
+                       sc.Bounds.Y,
+                       cr.Width,
+                       cr.Height, true);
         }
 
         /// <summary>
@@ -199,7 +148,7 @@ namespace EVEMon
         {
             StringBuilder sb = new StringBuilder(512);
 
-            GetWindowText(hWnd, sb, 512);
+            NativeMethods.GetWindowText(hWnd, sb, 512);
             sb.Append(" - ");
 
             Rectangle cr = GetClientRectInScreenCoords(hWnd);
@@ -234,146 +183,147 @@ namespace EVEMon
         public static string GetScreenDescription(int screen)
         {
             Screen sc = Screen.AllScreens[screen];
-            return String.Format(CultureConstants.DefaultCulture, "Screen {0} - {1}x{2}", screen, sc.Bounds.Width, sc.Bounds.Height);
+            return String.Format(CultureConstants.DefaultCulture, "Screen {0} - {1}x{2}", screen + 1, sc.Bounds.Width, sc.Bounds.Height);
         }
 
         #endregion
 
         #region Automatic Relocation
-
-        private static bool AutomaticRelocationRunning
+        /// <summary>
+        /// Gets the state of autorelocation checkbox
+        /// </summary>  
+        public static bool AutoRelocationEnabled
         {
             get
             {
-                if (m_automationThread == null)
-                    return false;
-
-                return m_automationThread.IsAlive;
+                return m_autoRelocation = Settings.UI.MainWindow.EnableAutomaticRelocation;
             }
         }
         
         /// <summary>
-        /// Designed to be run in its own thread, wakes up, looks for
-        /// new EVE windows, moves them, and goes back to sleep.
+        /// Perfoms the AutoRelocation
         /// </summary>
-        private static void PerformAutomaticRelocation()
+        private static void AutoRelocate()
         {
-            int screenCount;
-            DateTime nextCheck = DateTime.MinValue;
+            int screenCount = Screen.AllScreens.Length;
 
-            while (!m_terminate)
+            foreach (IntPtr eveInstance in FindEveWindows())
             {
-                screenCount = Screen.AllScreens.Length;
+                // Skip if null ptr
+                if (eveInstance == IntPtr.Zero)
+                    continue;
 
-                foreach (IntPtr eveInstance in FindEveWindows())
+                // We skip if the client is minimized
+                Rectangle cr = GetClientRectInScreenCoords(eveInstance);
+                if ((cr.Height == 0) && (cr.Width == 0))
+                    continue;
+
+                for (int screen = 0; screen < screenCount; screen++)
                 {
-                    // Skip if null ptr
-                    if (eveInstance == IntPtr.Zero)
+                    if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
                         continue;
-
-                    if (screenCount == 1)
-                    {
-                        Relocate(eveInstance, 0);
-                    }
-                    else
-                    {
-                        for (int screen = 0; screen < screenCount; screen++)
-                        {
-                            Relocate(eveInstance, screen);
-                        }
-                    }
-                }
-
-                nextCheck = DateTime.Now.AddMilliseconds(m_checkInterval);
-
-                while (nextCheck > DateTime.Now)
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-
-                    if (m_terminate)
-                        return;
+                    Relocate(eveInstance, screen);
                 }
             }
-        }
-
-        /// <summary>
-        /// Starts the automatic relocation thread
-        /// </summary>
-        /// <param name="interval">The length of time to sleep between updates.</param>
-        private static void Start()
-        {
-            if (AutomaticRelocationRunning)
-                return;
-
-            EveClient.Trace("Relocator.Start() - Starting");
-
-            StartActual();
-        }
-
-        private static void StartActual()
-        {
-            var interval = TimeSpan.FromSeconds(Settings.UI.MainWindow.AutomaticRelocationInterval);
-
-            m_checkInterval = (int)interval.TotalMilliseconds;
-
-            // Begin background eve window relocation thread
-            m_automationThread = new Thread(Relocator.PerformAutomaticRelocation);
-            m_automationThread.Start();
-        }
-
-        /// <summary>
-        /// Stops the automatic relocation process
-        /// </summary>
-        public static void Stop()
-        {
-            if (!AutomaticRelocationRunning)
-                return;
-
-            EveClient.Trace("Relocator.Stop() - Stopping");
-
-            m_terminate = true;
-
-            // wait for the check interval length plus a second before giving up
-            m_automationThread.Join(m_checkInterval + 1000);
-
-            m_terminate = false;
-            m_automationThread = null;
-        }
-
-        /// <summary>
-        /// Restarts the thread
-        /// </summary>
-        /// <param name="interval">The length of time to sleep between updates.</param>
-        public static void Restart()
-        {
-            if (!AutomaticRelocationRunning)
-            {
-                Relocator.Start();
-                return;
-            }
-
-            EveClient.Trace("Relocator.Restart() - Restarting");
-
-            Stop();
-            StartActual();
         }
 
         #endregion
 
-        #region Response to setting change
-        
+        #region Event Handlers
+
+        /// <summary>
+        /// Checks whether an AutoRelocation should occur
+        /// </summary>
+        /// <param name="interval">The length of time to wait between checks.</param>
+        private static void EveClient_TimerTick(object sender, EventArgs e)
+        {
+            var interval = TimeSpan.FromSeconds(Settings.UI.MainWindow.AutomaticRelocationInterval);
+            int m_checkInterval = (int)interval.Seconds;
+
+            if (AutoRelocationEnabled)
+            {
+                while (counter == m_checkInterval)
+                {
+                    counter = 0;
+                    AutoRelocate();
+                }
+                counter++;
+            }
+        }
+
+        #endregion
+
+        #region Reaction to settings change
+
+        /// <summary>
+        /// Occurs when the settings have changed.
+        /// </summary>
         private static void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (Settings.UI.MainWindow.EnableAutomaticRelocation)
-            {
-                Relocator.Restart();
-            }
-            else
-            {
-                Relocator.Stop();
-            }
+            if (m_autoRelocation) EveClient.Trace("AutoRelocation.Enabled");
+            else EveClient.Trace("AutoRelocation.Disabled");
         }
 
         #endregion
     }
+
+    #region Native Stuff
+    /// <summary>
+    /// Provides window-reloaction functionality through calls to User32
+    /// </summary>
+    public static class NativeMethods
+    {
+
+        [Serializable, StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [Serializable, StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        public const int GWL_STYLE = -16;
+        public const int WS_DLGFRAME = 0x00400000;
+        public const int WS_BORDER = 0x00800000;
+
+        [DllImport("user32.Dll")]
+        public static extern IntPtr EnumWindows(Relocator.WindowFoundHandler x, int y);
+
+        [DllImport("User32.Dll")]
+        public static extern void GetClassName(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32")]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32")]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        [DllImport("user32")]
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32")]
+        public static extern int GetClientRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32")]
+        public static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32")]
+        public static extern long SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
+
+        [DllImport("user32")]
+        public static extern int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+    }
+    #endregion
+
 }
