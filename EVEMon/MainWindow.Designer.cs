@@ -74,7 +74,7 @@ namespace EVEMon
             this.showOwnedSkillbooksMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsOwnedOptionsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.relocationMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.relocatorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -99,8 +99,8 @@ namespace EVEMon
             this.tsbManagePlans = new System.Windows.Forms.ToolStripButton();
             this.plansTbMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.plansRelocationToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.relocationTbMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.relocationSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.relocatorTbMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.relocatorSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -204,7 +204,7 @@ namespace EVEMon
             this.editToolStripMenuItem,
             this.plansToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.relocationMenu,
+            this.relocatorMenu,
             this.helpToolStripMenuItem,
             this.testToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
@@ -477,7 +477,6 @@ namespace EVEMon
             // 
             this.toolsOwnedOptionsToolStripSeparator.Name = "toolsOwnedOptionsToolStripSeparator";
             this.toolsOwnedOptionsToolStripSeparator.Size = new System.Drawing.Size(206, 6);
-            this.toolsOwnedOptionsToolStripSeparator.Visible = false;
             // 
             // optionsToolStripMenuItem
             // 
@@ -487,12 +486,12 @@ namespace EVEMon
             this.optionsToolStripMenuItem.Text = "&Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // relocationMenu
+            // relocatorMenu
             // 
-            this.relocationMenu.Name = "relocationMenu";
-            this.relocationMenu.Size = new System.Drawing.Size(75, 20);
-            this.relocationMenu.Text = "Relocation";
-            this.relocationMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
+            this.relocatorMenu.Name = "relocatorMenu";
+            this.relocatorMenu.Size = new System.Drawing.Size(69, 20);
+            this.relocatorMenu.Text = "Relocator";
+            this.relocatorMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
             // 
             // helpToolStripMenuItem
             // 
@@ -568,8 +567,8 @@ namespace EVEMon
             this.tsbManagePlans,
             this.plansTbMenu,
             this.plansRelocationToolStripSeparator,
-            this.relocationTbMenu,
-            this.relocationSettingsToolStripSeparator,
+            this.relocatorTbMenu,
+            this.relocatorSettingsToolStripSeparator,
             this.tsbOptions,
             this.tsbAbout});
             this.standardToolbar.Location = new System.Drawing.Point(0, 24);
@@ -707,20 +706,20 @@ namespace EVEMon
             this.plansRelocationToolStripSeparator.Name = "plansRelocationToolStripSeparator";
             this.plansRelocationToolStripSeparator.Size = new System.Drawing.Size(6, 25);
             // 
-            // relocationTbMenu
+            // relocatorTbMenu
             // 
-            this.relocationTbMenu.Image = global::EVEMon.Properties.Resources.Relocation;
-            this.relocationTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.relocationTbMenu.Name = "relocationTbMenu";
-            this.relocationTbMenu.Size = new System.Drawing.Size(92, 22);
-            this.relocationTbMenu.Text = "Relocation";
-            this.relocationTbMenu.ToolTipText = "Relocate EVE windows";
-            this.relocationTbMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
+            this.relocatorTbMenu.Image = global::EVEMon.Properties.Resources.Relocation;
+            this.relocatorTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.relocatorTbMenu.Name = "relocatorTbMenu";
+            this.relocatorTbMenu.Size = new System.Drawing.Size(86, 22);
+            this.relocatorTbMenu.Text = "Relocator";
+            this.relocatorTbMenu.ToolTipText = "Relocate EVE windows";
+            this.relocatorTbMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
             // 
-            // relocationSettingsToolStripSeparator
+            // relocatorSettingsToolStripSeparator
             // 
-            this.relocationSettingsToolStripSeparator.Name = "relocationSettingsToolStripSeparator";
-            this.relocationSettingsToolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            this.relocatorSettingsToolStripSeparator.Name = "relocatorSettingsToolStripSeparator";
+            this.relocatorSettingsToolStripSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbOptions
             // 
@@ -917,11 +916,11 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem addAccountMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteCharacterMenu;
         private System.Windows.Forms.ToolStripSeparator fileManagerHideToolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem relocationMenu;
+        private System.Windows.Forms.ToolStripMenuItem relocatorMenu;
         private System.Windows.Forms.ToolStripMenuItem hideCharacterMenu;
         private System.Windows.Forms.ToolStripButton addAccountTbMenu;
-        private System.Windows.Forms.ToolStripDropDownButton relocationTbMenu;
-        private System.Windows.Forms.ToolStripSeparator relocationSettingsToolStripSeparator;
+        private System.Windows.Forms.ToolStripDropDownButton relocatorTbMenu;
+        private System.Windows.Forms.ToolStripSeparator relocatorSettingsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem loadFromFileToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;

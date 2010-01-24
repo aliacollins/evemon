@@ -1410,7 +1410,7 @@ namespace EVEMon
         {
             standardToolbar.Visible = !standardToolbar.Visible;
             Settings.UI.MainWindow.ShowToolBar = standardToolbar.Visible;
-            relocationSettingsToolStripSeparator.Visible = relocationMenu.Visible;
+            relocatorSettingsToolStripSeparator.Visible = relocatorMenu.Visible;
         }
 
         /// <summary>
@@ -1498,7 +1498,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Menu bar > Relocation.
+        /// Menu bar > Relocator.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1686,9 +1686,9 @@ namespace EVEMon
                             || this.WindowState == FormWindowState.Minimized);
 
             // Relocate window
-            relocationMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-            relocationTbMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-            relocationSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocatorMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocatorTbMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocatorSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
 
             // Updates manager.
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
