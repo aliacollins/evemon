@@ -36,7 +36,7 @@ namespace EVEMon.SkillPlanner
             this.upperToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsddbSave = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiCharacter = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAfterPlanCharacter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbDeletePlan = new System.Windows.Forms.ToolStripButton();
             this.tsbPrintPlan = new System.Windows.Forms.ToolStripButton();
@@ -131,8 +131,8 @@ namespace EVEMon.SkillPlanner
             // tsddbSave
             // 
             this.tsddbSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiCharacter,
-            this.tsmiPlan});
+            this.tsmiPlan,
+            this.tsmiAfterPlanCharacter});
             this.tsddbSave.Image = global::EVEMon.Properties.Resources.ExportArrow;
             this.tsddbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddbSave.Name = "tsddbSave";
@@ -141,11 +141,11 @@ namespace EVEMon.SkillPlanner
             // 
             // tsmiCharacter
             // 
-            this.tsmiCharacter.Image = global::EVEMon.Properties.Resources.ExportCharacter;
-            this.tsmiCharacter.Name = "tsmiCharacter";
-            this.tsmiCharacter.Size = new System.Drawing.Size(152, 22);
-            this.tsmiCharacter.Text = "Character";
-            this.tsmiCharacter.Click += new System.EventHandler(this.tsmiCharacter_Click);
+            this.tsmiAfterPlanCharacter.Image = global::EVEMon.Properties.Resources.ExportCharacter;
+            this.tsmiAfterPlanCharacter.Name = "tsmiAfterPlanCharacter";
+            this.tsmiAfterPlanCharacter.Size = new System.Drawing.Size(152, 22);
+            this.tsmiAfterPlanCharacter.Text = "After Plan Character";
+            this.tsmiAfterPlanCharacter.Click += new System.EventHandler(this.tsmiAfterPlanCharacter_Click);
             // 
             // tsmiPlan
             // 
@@ -419,7 +419,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripDropDownButton tsddbPlans;
         private System.Windows.Forms.ToolStripButton tsbPrintPlan;
         private System.Windows.Forms.ToolStripDropDownButton tsddbSave;
-        private System.Windows.Forms.ToolStripMenuItem tsmiCharacter;
+        private System.Windows.Forms.ToolStripMenuItem tsmiAfterPlanCharacter;
         private System.Windows.Forms.ToolStripMenuItem tsmiPlan;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsbAttributesOptimization;

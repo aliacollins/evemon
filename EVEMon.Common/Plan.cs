@@ -7,6 +7,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Serialization.API;
 using System.Threading;
 using EVEMon.Common.SettingsObjects;
 using System.Collections.ObjectModel;
@@ -757,6 +758,22 @@ namespace EVEMon.Common
         public void ClearInvalidEntries()
         {
             m_invalidEntries = m_invalidEntries.Where(x => x.Acknowledged == true).ToArray();
+        }
+
+        /// <summary>
+        /// Merges the characters skills with the plan entries
+        /// </summary>
+        public SerializableCharacterSkill Merge(SerializableCharacterSkill skill)
+        {
+            foreach (PlanEntry entry in m_items)
+            {
+                if (entry.Skill.ID == skill.ID)
+                {
+                    skill.Level = entry.Level;
+                    skill.Skillpoints = entry.Skill.GetPointsRequiredForLevel(entry.Level);
+                }
+            }
+            return skill;
         }
     }
 

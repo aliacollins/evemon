@@ -36,6 +36,11 @@ namespace EVEMon.Common.Data
         public const int PerceptionModifierPropertyID = 178;
         public const int WillpowerModifierPropertyID = 179;
 
+        public const int CorporationManagementSkillsGroupID = 266;
+        public const int LearningSkillsGroupID = 267;
+        public const int SocialSkillsGroupID = 278;
+        public const int TradeSkillsGroupID = 274;
+
         public const int SkillGroupID = 150;
         public const int ShipsGroupID = 4;
         public const int DronesGroupID = 157;

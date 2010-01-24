@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Xml;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using System.Globalization;
 using System.Collections.Generic;
+
 using EVEMon.Common.Serialization;
-using System.Xml;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Exportation;
-using System.Windows.Forms;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -16,29 +19,32 @@ namespace EVEMon.Common
     /// </summary>
     public static class CharacterExporter
     {
-        private const string Separator = "=======================================================================";
-        private const string SubSeparator = "-----------------------------------------------------------------------";
-
+        private static SerializableCharacterSkill mergedSkill = new SerializableCharacterSkill();
+        
         /// <summary>
-        /// 
+        /// Creates a TXT format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
-        public static string ExportAsText(Character character)
+        /// <param name="plan"></param>
+        public static string ExportAsText(Character character, Plan plan)
         {
+            string Separator = "=======================================================================";
+            string SubSeparator = "-----------------------------------------------------------------------";
+
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("BASIC INFO");
             builder.AppendLine(Separator);
-            builder.AppendLine(String.Format("     Name: {0}", character.Name));
-            builder.AppendLine(String.Format("   Gender: {0}", character.Gender));
-            builder.AppendLine(String.Format("     Race: {0}", character.Race));
-            builder.AppendLine(String.Format("Bloodline: {0}", character.Bloodline));
-            builder.AppendLine(String.Format("  Balance: {0} ISK", character.Balance.ToString("#,##0.00")));
+            builder.AppendFormat(CultureInfo.CurrentCulture, "     Name: {0}{1}", character.Name, Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "   Gender: {0}{1}", character.Gender, Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "     Race: {0}{1}", character.Race, Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "Bloodline: {0}{1}", character.Bloodline, Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "  Balance: {0} ISK{1}", character.Balance.ToString("#,##0.00"), Environment.NewLine);
             builder.AppendLine();
-            builder.AppendLine(String.Format("Intelligence: {0}", character.Intelligence.ToString("#0.00").PadLeft(5)));
-            builder.AppendLine(String.Format("    Charisma: {0}", character.Charisma.ToString("#0.00").PadLeft(5)));
-            builder.AppendLine(String.Format("  Perception: {0}", character.Perception.ToString("#0.00").PadLeft(5)));
-            builder.AppendLine(String.Format("      Memory: {0}", character.Memory.ToString("#0.00").PadLeft(5)));
-            builder.AppendLine(String.Format("   Willpower: {0}", character.Willpower.ToString("#0.00").PadLeft(5)));
+            builder.AppendFormat(CultureInfo.CurrentCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "    Charisma: {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "  Perception: {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "      Memory: {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureInfo.CurrentCulture, "   Willpower: {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
             builder.AppendLine();
 
             // Implants
@@ -49,7 +55,7 @@ namespace EVEMon.Common
                 builder.AppendLine(Separator);
                 foreach (var implant in implants)
                 {
-                    builder.AppendLine(String.Format("+{0} {1} : {2}", implant.Bonus, implant.Slot.ToString().PadRight(13), implant.Name));
+                    builder.AppendFormat(CultureInfo.CurrentCulture, "+{0} {1} : {2}{3}", implant.Bonus, implant.Slot.ToString().PadRight(13), implant.Name, Environment.NewLine);
                 }
                 builder.AppendLine();
             }
@@ -59,24 +65,53 @@ namespace EVEMon.Common
             builder.AppendLine(Separator);
             foreach (var skillGroup in character.SkillGroups)
             {
-                builder.AppendLine(String.Format("{0}, {1} Skill{2}, {3} Points", 
-                             skillGroup.Name, skillGroup.Count, skillGroup.Count > 1 ? "s" : "",
-                             skillGroup.TotalSP.ToString("#,##0")));
+                int count = 0;
+                foreach (var skill in skillGroup)
+                {
+                    if (skill.IsKnown)
+                        count++;
+                }
+
+                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}, {1} Skill{2}, {3} Points{4}",
+                             skillGroup.Name, count, count > 1 ? "s" : "",
+                             skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
 
                 // Skills
                 foreach (var skill in skillGroup)
                 {
+                    int skillLevel;
+                    int skillPoints;
+
+                    if (plan != null)
+                    {
+                        GetMergedSkill(plan, skill);
+
+                        if (!skill.IsKnown && mergedSkill.Level == 0)
+                            continue;
+
+                        skillLevel = mergedSkill.Level;
+                        skillPoints = mergedSkill.Skillpoints;
+                    }
+                    else
+                    {
+                        if (!skill.IsKnown)
+                            continue;
+
+                        skillLevel = skill.Level;
+                        skillPoints = skill.SkillPoints;
+                    }
+
                     string skillDesc = skill.ToString() + " (" + skill.Rank.ToString() + ")";
-                    builder.AppendLine(String.Format(": {0} {1}/{2} Points", 
-                        skillDesc.PadRight(40), skill.SkillPoints.ToString("#,##0"),
-                        skill.StaticData.GetPointsRequiredForLevel(5).ToString("#,##0")));
+                    builder.AppendFormat(CultureInfo.CurrentCulture, ": {0} L{1} {2}/{3} Points{4}",
+                        skillDesc.PadRight(45), skillLevel.ToString().PadRight(5), skillPoints.ToString("#,##0"),
+                        skill.StaticData.GetPointsRequiredForLevel(5).ToString("#,##0"), Environment.NewLine);
 
                     // If the skill is in training...
                     if (skill.IsTraining)
                     {
                         DateTime adjustedEndTime = character.CurrentlyTrainingSkill.EndTime.ToLocalTime();
-                        builder.AppendLine(String.Format(":  (Currently training to level {0}, completes {1})",
-                                     Skill.GetRomanForInt(character.CurrentlyTrainingSkill.Level), adjustedEndTime));
+                        builder.AppendFormat(CultureInfo.CurrentCulture, ":  (Currently training to level {0}, completes {1}){2}",
+                                     Skill.GetRomanForInt(character.CurrentlyTrainingSkill.Level), adjustedEndTime, Environment.NewLine);
                     }
                 }
 
@@ -87,27 +122,51 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Creates a CHR format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
-        public static string ExportAsCCPXML(Character character)
+        /// <param name="plan"></param>
+        public static string ExportAsEFTCHR(Character character, Plan plan)
         {
-            // Try to use the last XML character sheet downloaded from CCP
-            var doc = LocalXmlCache.GetCharacterXml(character.Name);
-            if (doc != null)
+            StringBuilder builder = new StringBuilder();
+
+            foreach (var skill in character.Skills.Where(x => x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
+                                                                        && x.Group.ID != DBConstants.LearningSkillsGroupID
+                                                                        && x.Group.ID != DBConstants.SocialSkillsGroupID
+                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID))
             {
-                return Util.GetXMLStringRepresentation(doc);
+                int skillLevel;
+
+                if (plan != null)
+                {
+                    GetMergedSkill(plan, skill);
+
+                    skillLevel = mergedSkill.Level;
+                }
+                else
+                {
+                    skillLevel = skill.Level;
+                }
+
+                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}={1}{2}", skill.Name, skillLevel, Environment.NewLine);
             }
 
-            // Displays an error
-            return null;
+            if (character.Identity.Account != null)
+            {
+                builder.AppendFormat(CultureInfo.CurrentCulture, "UserID={0}{1}", character.Identity.Account.UserID, Environment.NewLine);
+                builder.AppendFormat(CultureInfo.CurrentCulture, "APIKey={0}{1}", character.Identity.Account.APIKey, Environment.NewLine);
+                builder.AppendFormat(CultureInfo.CurrentCulture, "CharID={0}{1}", character.CharacterID, Environment.NewLine);
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>
-        /// 
+        /// Creates a HTML format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
-        public static string ExportAsHTML(Character character)
+        /// <param name="plan"></param>
+        public static string ExportAsHTML(Character character, Plan plan)
         {
             // Retrieves a XML representation of this character
             var serial = new OutputCharacter();
@@ -126,7 +185,7 @@ namespace EVEMon.Common
             serial.Memory = character.Memory.EffectiveValue;
 
             // Attributes enhancers
-            foreach(var implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
+            foreach (var implant in character.CurrentImplants.Where(x => x != Implant.None && (int)x.Slot < 5))
             {
                 serial.AttributeEnhancers.Add(new OutputAttributeEnhancer { Attribute = implant.Slot, Bonus = implant.Bonus, Name = implant.Name });
             }
@@ -135,7 +194,8 @@ namespace EVEMon.Common
             foreach (var certClass in character.CertificateClasses)
             {
                 var cert = certClass.HighestClaimedGrade;
-                if (cert == null) continue;
+                if (cert == null)
+                    continue;
 
                 serial.Certificates.Add(new OutputCertificate { Name = certClass.Name, Grade = cert.Grade.ToString() });
             }
@@ -143,17 +203,46 @@ namespace EVEMon.Common
             // Skills (grouped by skill groups)
             foreach (var skillGroup in character.SkillGroups)
             {
-                var outGroup = new OutputSkillGroup { Name = skillGroup.Name, SkillsCount = skillGroup.Count, TotalSP = skillGroup.TotalSP };
-
-                foreach (var skill in skillGroup.Where(x => x.IsKnown))
+                int count = 0;
+                foreach (var skill in skillGroup)
                 {
+                    if (skill.IsKnown)
+                        count++;
+                }
+
+                var outGroup = new OutputSkillGroup { Name = skillGroup.Name, SkillsCount = count, TotalSP = skillGroup.TotalSP };
+
+                foreach (var skill in skillGroup)
+                {
+                    int skillLevel;
+                    int skillPoints;
+
+                    if (plan != null)
+                    {
+                        GetMergedSkill(plan, skill);
+
+                        if (!skill.IsKnown && mergedSkill.Level == 0)
+                            continue;
+
+                        skillLevel = mergedSkill.Level;
+                        skillPoints = mergedSkill.Skillpoints;
+                    }
+                    else
+                    {
+                        if (!skill.IsKnown)
+                            continue;
+
+                        skillLevel = skill.Level;
+                        skillPoints = skill.SkillPoints;
+                    }
+
                     outGroup.Skills.Add(new OutputSkill
                     {
                         Name = skill.Name,
                         Rank = skill.Rank,
-                        Level = skill.Level,
-                        SkillPoints = skill.SkillPoints,
-                        RomanLevel = Skill.GetRomanForInt(skill.Level),
+                        Level = skillLevel,
+                        SkillPoints = skillPoints,
+                        RomanLevel = Skill.GetRomanForInt(skillLevel),
                         MaxSkillPoints = skill.StaticData.GetPointsRequiredForLevel(5)
                     });
                 }
@@ -175,34 +264,76 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Creates a XML format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
-        public static string ExportAsEVEMonXML(Character character)
+        /// <param name="plan"></param>
+        public static string ExportAsEVEMonXML(Character character, Plan plan)
         {
             var serial = character.Export();
+
+            if (plan != null)
+            {
+                serial.Skills.Clear();
+
+                foreach (var skill in character.Skills)
+                {
+
+                    GetMergedSkill(plan, skill);
+
+                    if (!skill.IsKnown && mergedSkill.Level == 0)
+                        continue;
+
+                    serial.Skills.Add(new SerializableCharacterSkill()
+                    {
+                        ID = mergedSkill.ID,
+                        IsKnown = mergedSkill.IsKnown,
+                        Level = mergedSkill.Level,
+                        Name = mergedSkill.Name,
+                        OwnsBook = mergedSkill.OwnsBook,
+                        Skillpoints = mergedSkill.Skillpoints,
+                    });
+                }
+            }
+
             var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
             return Util.GetXMLStringRepresentation(doc);
         }
 
         /// <summary>
-        /// 
+        /// Creates a XML format file for character exportation.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="plan"></param>
+        public static string ExportAsCCPXML(Character character)
+        {
+            // Try to use the last XML character sheet downloaded from CCP
+            var doc = LocalXmlCache.GetCharacterXml(character.Name);
+            if (doc != null)
+            {
+                return Util.GetXMLStringRepresentation(doc);
+            }
+
+            // Displays an error
+            return null;
+        }
+
+        /// <summary>
+        /// Creates a BBCode format file for character exportation.
         /// </summary>
         /// <param name="character"></param>
         public static string ExportAsBBCode(Character character)
         {
-            // TODO : Switch formatting to Localizable String.Format style formatting.
-
             StringBuilder result = new StringBuilder();
 
-            result.AppendLine(String.Format("[b]{0}[/b]", character.Name));
+            result.AppendFormat(CultureInfo.CurrentCulture, "[b]{0}[/b]{1}", character.Name, Environment.NewLine);
             result.AppendLine();
             result.AppendLine("[b]Attributes[/b]");
-            result.AppendLine("Intelligence: " + character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5));
-            result.AppendLine("Perception: " + character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5));
-            result.AppendLine("Charisma: " + character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5));
-            result.AppendLine("Willpower: " + character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5));
-            result.AppendLine("Memory: " + character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5));
+            result.AppendFormat(CultureInfo.CurrentCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Perception:   {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Charisma:     {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Willpower:    {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Memory:       {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
 
             foreach (var skillGroup in character.SkillGroups)
             {
@@ -214,32 +345,58 @@ namespace EVEMon.Common
                         if (!skillGroupAppended)
                         {
                             result.AppendLine();
-                            result.AppendLine(String.Format("[b]{0}[/b]", skillGroup.Name));
+                            result.AppendFormat(CultureInfo.CurrentCulture, "[b]{0}[/b]{1}", skillGroup.Name, Environment.NewLine);
 
                             skillGroupAppended = true;
                         }
 
-                        result.AppendLine(String.Format("[img]{0}{1}.gif[/img] {2}", NetworkConstants.MyEVELevelImage, skill.Level, skill.Name));
+                        result.AppendFormat(CultureInfo.CurrentCulture, "[img]{0}{1}.gif[/img] {2}{3}", NetworkConstants.MyEVELevelImage, skill.Level, skill.Name, Environment.NewLine);
                     }
                 }
 
                 if (skillGroupAppended)
                 {
-                    result.AppendLine("Total Skillpoints in Group: " + skillGroup.TotalSP.ToString("#,##0"));
+                    result.AppendFormat(CultureInfo.CurrentCulture, "Total Skillpoints in Group: {0}{1}", skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
                 }
             }
 
             result.AppendLine();
-            result.AppendLine("Total Skillpoints: " + character.SkillPoints.ToString("#,##0"));
-            result.AppendLine("Total Number of Skills: " + character.KnownSkillCount.ToString());
+            result.AppendFormat(CultureInfo.CurrentCulture, "Total Skillpoints: {0}{1}", character.SkillPoints.ToString("#,##0"), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Total Number of Skills: {0}{1}", character.KnownSkillCount.ToString(), Environment.NewLine);
             result.AppendLine();
-            result.AppendLine("Skills at Level 1: " + character.GetSkillCountAtLevel(1).ToString());
-            result.AppendLine("Skills at Level 2: " + character.GetSkillCountAtLevel(2).ToString());
-            result.AppendLine("Skills at Level 3: " + character.GetSkillCountAtLevel(3).ToString());
-            result.AppendLine("Skills at Level 4: " + character.GetSkillCountAtLevel(4).ToString());
-            result.AppendLine("Skills at Level 5: " + character.GetSkillCountAtLevel(5).ToString());
+            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 1: {0}{1}", character.GetSkillCountAtLevel(1).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 2: {0}{1}", character.GetSkillCountAtLevel(2).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 3: {0}{1}", character.GetSkillCountAtLevel(3).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 4: {0}{1}", character.GetSkillCountAtLevel(4).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 5: {0}{1}", character.GetSkillCountAtLevel(5).ToString(), Environment.NewLine);
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Gets the skill properties of a merged skill with a plan entry
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <param name="skill"></param>
+        /// <returns>The skill properties after the merge</returns>
+        private static SerializableCharacterSkill GetMergedSkill(Plan plan, Skill skill)
+        {
+            SerializableCharacterSkill s_skill = new SerializableCharacterSkill();
+
+            s_skill.ID = skill.ID;
+            s_skill.Level = skill.Level;
+            s_skill.Skillpoints = skill.SkillPoints;
+
+            plan.Merge(s_skill);
+
+            mergedSkill.ID = skill.ID;
+            mergedSkill.Name = skill.Name;
+            mergedSkill.IsKnown = skill.IsKnown;
+            mergedSkill.OwnsBook = skill.IsOwned;
+            mergedSkill.Level = s_skill.Level;
+            mergedSkill.Skillpoints = s_skill.Skillpoints;
+
+            return mergedSkill;
         }
     }
 
@@ -250,9 +407,10 @@ namespace EVEMon.Common
     {
         None = 0,
         Text = 1,
-        HTML = 2,
-        CCPXML = 3,
+        EFTCHR = 2,
+        HTML = 3,
         EVEMonXML = 4,
-        PNG = 5,
+        CCPXML = 5,
+        PNG = 6,
     }
 }

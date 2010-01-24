@@ -128,16 +128,74 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Displays the character exportation window and then exports it as it would be after the plan finish.
+        /// </summary>
+        /// <param name="character"></param>
+        public static void ExportAfterPlanCharacter(Character character, Plan plan)
+        {
+            // Open the dialog box
+            using (var characterSaveDialog = new SaveFileDialog())
+            {
+                characterSaveDialog.Title = "Save After Plan Character Info";
+                characterSaveDialog.Filter = "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
+                characterSaveDialog.FileName = String.Format(" {0} (after plan {1})", character.Name, plan.Name);
+                characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.EVEMonXML;
+
+                var result = characterSaveDialog.ShowDialog();
+                if (result == DialogResult.Cancel)
+                    return;
+                
+                // Serialize
+                try
+                {
+                    // Save file to the chosen format and to a temp file
+                    string tempFileName = Path.GetTempFileName();
+                    CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
+                    switch (format)
+                    {
+                        case CharacterSaveFormat.Text:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsText(character, plan), Encoding.UTF8);
+                            break;
+
+                        case CharacterSaveFormat.EFTCHR:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEFTCHR(character, plan), Encoding.UTF8);
+                            break;
+
+                        case CharacterSaveFormat.EVEMonXML:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEVEMonXML(character, plan), Encoding.UTF8);
+                            break;
+
+                        case CharacterSaveFormat.HTML:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsHTML(character, plan), Encoding.UTF8);
+                            break;
+
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    // Writes to our file
+                    FileHelper.OverwriteOrWarnTheUser(tempFileName, characterSaveDialog.FileName, OverwriteOperation.Move);
+                }
+                // Handle exception
+                catch (IOException ex)
+                {
+                    ExceptionHandler.LogException(ex, true);
+                    MessageBox.Show("A problem occured during exportation. The operation has not been completed.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Displays the character exportation window and then exports it.
         /// </summary>
         /// <param name="character"></param>
         public static void ExportCharacter(Character character)
         {
             // Open the dialog box
-            using(var characterSaveDialog = new System.Windows.Forms.SaveFileDialog())
+            using(var characterSaveDialog = new SaveFileDialog())
             {
                 characterSaveDialog.Title = "Save Character Info";
-                characterSaveDialog.Filter = "Text Format|*.txt|HTML Format|*.html|XML Format (CCP API)|*.xml|XML Format (EVEMon)|*.xml|PNG Image|*.png";
+                characterSaveDialog.Filter = "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml|XML Format (CCP API)|*.xml|PNG Image|*.png";
                 characterSaveDialog.FileName = character.Name;
                 characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.CCPXML;
 
@@ -152,8 +210,12 @@ namespace EVEMon
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
                     switch (format)
                     {
-                        case CharacterSaveFormat.HTML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsHTML(character), Encoding.UTF8);
+                        case CharacterSaveFormat.Text:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsText(character, null), Encoding.UTF8);
+                            break;
+
+                        case CharacterSaveFormat.EFTCHR:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEFTCHR(character, null), Encoding.UTF8);
                             break;
 
                         case CharacterSaveFormat.CCPXML:
@@ -167,11 +229,11 @@ namespace EVEMon
                             break;
 
                         case CharacterSaveFormat.EVEMonXML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEVEMonXML(character), Encoding.UTF8);
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEVEMonXML(character, null), Encoding.UTF8);
                             break;
 
-                        case CharacterSaveFormat.Text:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsText(character), Encoding.UTF8);
+                        case CharacterSaveFormat.HTML:
+                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsHTML(character, null), Encoding.UTF8);
                             break;
 
                         case CharacterSaveFormat.PNG:

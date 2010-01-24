@@ -608,13 +608,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Toolbar > Export > Character
+        /// Toolbar > Export > After Plan Character
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmiCharacter_Click(object sender, EventArgs e)
+        private void tsmiAfterPlanCharacter_Click(object sender, EventArgs e)
         {
-            UIHelper.ExportCharacter(Character);
+            UIHelper.ExportAfterPlanCharacter(Character, m_plan);
         }
 
         /// <summary>
