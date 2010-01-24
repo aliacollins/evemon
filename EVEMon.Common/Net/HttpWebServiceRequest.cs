@@ -40,12 +40,14 @@ namespace EVEMon.Common.Net
 
             // pull the timeout from the settings
             TimeSpan TimeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
-            Timeout = (int)TimeoutSetting.TotalMilliseconds;
 
-            // if user has configured timeout to be below 1 second reset to 10 seconds
-            if (Timeout < 1000)
+            if (TimeoutSetting < TimeSpan.FromSeconds(1) || TimeoutSetting > TimeSpan.FromMinutes(5))
             {
                 Timeout = 10000;
+            }
+            else
+            {
+                Timeout = (int)TimeoutSetting.TotalMilliseconds;
             }
         }
 
