@@ -9,9 +9,13 @@ namespace EVEMon.Controls
     {
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
-            BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
-
             Rectangle newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
+
+            if (newBounds.Width == 0 || newBounds.Height == 0) 
+                return;
+
+            // stacked using blocks to avoid indentation, don't need to call IDisposable.Dispose explicitly
+            using (BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current)
             using (BufferedGraphics bufferedGraphics = currentContext.Allocate(e.Graphics, newBounds))
             {
                 DrawItemEventArgs newArgs = new DrawItemEventArgs(
