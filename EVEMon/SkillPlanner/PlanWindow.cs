@@ -437,14 +437,14 @@ namespace EVEMon.SkillPlanner
             int statusTextWidth = TextRenderer.MeasureText(slblStatusText.Text, slblStatusText.Font).Width;
             int statusBarTextWidth = statusTextWidth + suggestionTextWidth;
             int ellipsisWidth = TextRenderer.MeasureText(ellipsis, slblStatusText.Font).Width;
-            int windowWidth = this.Width - slblStatusText.Height * 2;
-            
+            float factor = (float)statusBarTextWidth / (float)slblStatusText.Text.Length;
+            int availableTextWidth = this.Width - slblStatusText.Height * 2 - (int)factor;
+
             // We check the status text lenght to the windows width
-            if (statusBarTextWidth > windowWidth)
+            if (statusBarTextWidth > availableTextWidth)
             {
                 // We calculate the position to trim the text and remove it
-                float factor = (float)windowWidth / (float)statusTextWidth;
-                int position = (int)(slblStatusText.Text.Length * factor);
+                int position = (int)(availableTextWidth / factor) - ellipsis.Length * 2 - (int)factor;
 
                 // the measurements are a bit of an inexact science
                 // check the position is still valid.
@@ -453,10 +453,10 @@ namespace EVEMon.SkillPlanner
 
                 if (position >= slblStatusText.Text.Length)
                     return;
-                
+
                 // trim the text
-                string newStatusBarText = slblStatusText.Text.Remove(position - 2);
-                
+                string newStatusBarText = slblStatusText.Text.Remove(position);
+
                 // Adds the ellipsis
                 newStatusBarText += ellipsis;
                 slblStatusText.Text = newStatusBarText;
