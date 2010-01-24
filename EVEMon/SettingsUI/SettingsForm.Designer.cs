@@ -95,8 +95,8 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 8, 8);
             System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Relocator");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 4, 4);
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Relocator", 2, 2);
             System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
@@ -143,6 +143,7 @@ namespace EVEMon.SettingsUI
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.treeView = new System.Windows.Forms.TreeView();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.leftPanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Controls.MultiPanel();
             this.mainWindowPage = new EVEMon.Controls.MultiPanelPage();
@@ -254,7 +255,6 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -1208,12 +1208,14 @@ namespace EVEMon.SettingsUI
             treeNode12.SelectedImageIndex = 5;
             treeNode12.Tag = "g15Page";
             treeNode12.Text = "Logitech Keyboards";
-            treeNode13.ImageKey = "IGB Server.png";
+            treeNode13.ImageIndex = 4;
             treeNode13.Name = "Node2";
             treeNode13.SelectedImageIndex = 4;
             treeNode13.Tag = "igbServerPage";
             treeNode13.Text = "IGB Server";
+            treeNode14.ImageIndex = 2;
             treeNode14.Name = "relocationNode";
+            treeNode14.SelectedImageIndex = 2;
             treeNode14.Tag = "relocatorPage";
             treeNode14.Text = "Relocator";
             treeNode15.ImageIndex = 11;
@@ -1270,6 +1272,25 @@ namespace EVEMon.SettingsUI
             this.treeView.Size = new System.Drawing.Size(187, 424);
             this.treeView.TabIndex = 6;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
+            // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Empty;
+            this.imageList.Images.SetKeyName(0, "Transparent.png");
+            this.imageList.Images.SetKeyName(1, "Calendar.png");
+            this.imageList.Images.SetKeyName(2, "Relocation.png");
+            this.imageList.Images.SetKeyName(3, "EVEMon16.png");
+            this.imageList.Images.SetKeyName(4, "IGB Server.png");
+            this.imageList.Images.SetKeyName(5, "Logitech Keyboard.png");
+            this.imageList.Images.SetKeyName(6, "gcalendar.png");
+            this.imageList.Images.SetKeyName(7, "MainWindow.png");
+            this.imageList.Images.SetKeyName(8, "Online.png");
+            this.imageList.Images.SetKeyName(9, "Plan.png");
+            this.imageList.Images.SetKeyName(10, "Problem.png");
+            this.imageList.Images.SetKeyName(11, "Settings.png");
+            this.imageList.Images.SetKeyName(12, "Update3.png");
+            this.imageList.Images.SetKeyName(13, "Email.png");
             // 
             // leftPanel
             // 
@@ -2609,25 +2630,6 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.TabIndex = 1;
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // imageList
-            // 
-            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = System.Drawing.Color.Empty;
-            this.imageList.Images.SetKeyName(0, "Transparent.png");
-            this.imageList.Images.SetKeyName(1, "Calendar.png");
-            this.imageList.Images.SetKeyName(2, "LookNFeel.png");
-            this.imageList.Images.SetKeyName(3, "EVEMon16.png");
-            this.imageList.Images.SetKeyName(4, "IGB Server.png");
-            this.imageList.Images.SetKeyName(5, "Logitech Keyboard.png");
-            this.imageList.Images.SetKeyName(6, "gcalendar.png");
-            this.imageList.Images.SetKeyName(7, "MainWindow.png");
-            this.imageList.Images.SetKeyName(8, "Online.png");
-            this.imageList.Images.SetKeyName(9, "Plan.png");
-            this.imageList.Images.SetKeyName(10, "Problem.png");
-            this.imageList.Images.SetKeyName(11, "Settings.png");
-            this.imageList.Images.SetKeyName(12, "Update3.png");
-            this.imageList.Images.SetKeyName(13, "Email.png");
             // 
             // SettingsForm
             // 
