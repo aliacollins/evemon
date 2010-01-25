@@ -9,7 +9,7 @@ using EVEMon.Common.Serialization;
 namespace EVEMon.Common.Serialization.API
 {
     [XmlRoot("eveapi")]
-    public sealed class APIResult<T> : EVEMon.Common.Serialization.API.IAPIResult
+    public sealed class APIResult<T> : IAPIResult
     {
         private APIErrors m_error = APIErrors.None;
         private readonly string m_errorMessage = "";

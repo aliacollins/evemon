@@ -156,7 +156,7 @@ namespace EVEMon.Common.IgbService
         public event EventHandler<IgbClientDataReadEventArgs> DataRead;
         #endregion
 
-        #region Writeing
+        #region Writing
         public void Write(string str)
         {
             byte[] outbuf = Encoding.UTF8.GetBytes(str);

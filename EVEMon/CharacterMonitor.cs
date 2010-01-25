@@ -1,26 +1,28 @@
 //#define DEBUG_SINGLETHREAD
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Reflection;
+using System.Web;
 using System.Text;
 using System.Linq;
+using System.Drawing;
 using System.Threading;
-using System.Windows.Forms;
-using EVEMon.Common;
-using EVEMon.Common.Scheduling;
+using System.Reflection;
 using EVEMon.SkillPlanner;
-using System.Web;
-using System.Runtime.InteropServices;
-using EVEMon.ExternalCalendar;
-using EVEMon.Controls;
-using EVEMon.Accounting;
-using EVEMon.Common.Net;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Notifications;
+using System.Windows.Forms;
 using System.Globalization;
+using System.ComponentModel;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
+using EVEMon.Common;
+using EVEMon.Controls;
+using EVEMon.Common.Net;
+using EVEMon.Accounting;
+using EVEMon.ExternalCalendar;
+using EVEMon.Common.Scheduling;
+using EVEMon.Common.Notifications;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
@@ -175,12 +177,9 @@ namespace EVEMon
 
                 // Update the other controls
                 UpdateCharacterInfo();
-                UpdateSkillHeaderStats();
-                UpdateTrainingInfo();
                 UpdateErrorInfo();
-                UpdateThrobberState();
-                UpdateWarningLabel();
-                UpdatePageControls();
+
+                // Update the rest of the controls
                 EveClient_TimerTick(null, EventArgs.Empty);
             }
             finally
@@ -752,7 +751,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void throbberContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void throbberContextMenu_Opening(object sender, CancelEventArgs e)
         {
             // Remove all the items after the separator
             int separatorIndex = throbberContextMenu.Items.IndexOf(throbberSeparator);
@@ -777,7 +776,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void throbberContextMenu_ItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
+        void throbberContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null) return;

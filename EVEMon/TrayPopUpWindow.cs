@@ -124,7 +124,7 @@ namespace EVEMon
         {
             // Create graphics object to work with
             Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.SmoothingMode = SmoothingMode.HighQuality;
             // Define the size of the rectangle used for each of the 4 corner arcs.
             int radius = 4;
             Size cornerSize = new Size(radius * 2, radius * 2);

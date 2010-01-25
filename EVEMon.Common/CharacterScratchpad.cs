@@ -216,7 +216,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Peforms the given training. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="training"></param>
         public void Train<T>(IEnumerable<T> trainings)
@@ -229,7 +229,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Peforms the given training, also apply remapping points. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training, also apply remapping points. Rely on <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="entries"></param>
         public void TrainEntries(IEnumerable<PlanEntry> entries, bool applyRemappingPoints)
@@ -245,7 +245,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Peforms the given training. Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training. Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="training"></param>
         public void Train(ISkillLevel training)
@@ -254,7 +254,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Peforms the given training. Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
+        /// Performs the given training. Same as <see cref="SetSkillLevel"/> but only applied when the given level is greater than the current one.
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
@@ -251,9 +252,8 @@ namespace EVEMon
                 m_hasRemainingTime = false;
             }
 
-            // Updates the controls visibilities.
+            // Adjusts all the controls layout.
             PerformCustomLayout(m_tooltip);
-            UpdateVisibilities();
         }
 
         /// <summary>
@@ -356,8 +356,8 @@ namespace EVEMon
             if (m_hovered)
             {
                 ButtonRenderer.DrawButton(e.Graphics, this.DisplayRectangle,
-                    m_pressed ? System.Windows.Forms.VisualStyles.PushButtonState.Pressed
-                              : System.Windows.Forms.VisualStyles.PushButtonState.Hot);
+                    m_pressed ? PushButtonState.Pressed
+                              : PushButtonState.Hot);
             }
             base.OnPaint(e);
         }

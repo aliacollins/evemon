@@ -133,7 +133,7 @@ namespace EVEMon
         /// </summary>
         private void UpdatePieChart()
         {
-            // Prevents updating before LonLoad() completed.
+            // Prevents updating before OnLoad() completed.
             if (planSelector.SelectedIndex < 0) return;
 
             int groupCount = StaticSkills.AllGroups.Count();
