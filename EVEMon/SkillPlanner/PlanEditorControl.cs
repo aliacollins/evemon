@@ -2021,7 +2021,7 @@ namespace EVEMon.SkillPlanner
         #region Other controls' handlers
         /// <summary>
         /// Left toolbar > Toggle skills panel.
-        /// Display a skill list on the riht
+        /// Display a skill list on the right.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2073,6 +2073,18 @@ namespace EVEMon.SkillPlanner
                 if (originalEntry.Remapping == null) originalEntry.Remapping = new RemappingPoint();
                 else originalEntry.Remapping = null;
             }
+        }
+
+        /// <summary>
+        /// Left toolbar > Toggle color key panel.
+        /// Display a color key panel at the bottom.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsbColorKey_Click(object sender, EventArgs e)
+        {
+            this.pFooter.Visible = !this.pFooter.Visible;
+            tsbColorKey.Checked = this.pFooter.Visible;
         }
 
         /// <summary>
