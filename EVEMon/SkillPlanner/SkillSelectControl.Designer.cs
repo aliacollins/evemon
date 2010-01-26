@@ -217,7 +217,7 @@ namespace EVEMon.SkillPlanner
             this.showInSkillsExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
             this.showInSkillsExplorerMenu.Name = "showInSkillsExplorerMenu";
             this.showInSkillsExplorerMenu.Size = new System.Drawing.Size(190, 22);
-            this.showInSkillsExplorerMenu.Text = "Show in Skills &Explorer";
+            this.showInSkillsExplorerMenu.Text = "Show in Skill &Explorer";
             this.showInSkillsExplorerMenu.Click += new System.EventHandler(this.showInSkillsExplorerMenu_Click);
             // 
             // cmiExpandSelected
@@ -344,7 +344,7 @@ namespace EVEMon.SkillPlanner
             this.showInSkillsExplorerListMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
             this.showInSkillsExplorerListMenu.Name = "showInSkillsExplorerListMenu";
             this.showInSkillsExplorerListMenu.Size = new System.Drawing.Size(190, 22);
-            this.showInSkillsExplorerListMenu.Text = "Show in Skills &Explorer";
+            this.showInSkillsExplorerListMenu.Text = "Show in Skill &Explorer";
             this.showInSkillsExplorerListMenu.Click += new System.EventHandler(this.showInSkillsExplorerMenu_Click);
             // 
             // lbSearchTextHint

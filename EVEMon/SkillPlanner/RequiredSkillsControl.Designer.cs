@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showInSkillsBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.showInSkillsExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.contextMenu.SuspendLayout();
@@ -120,7 +120,7 @@ namespace EVEMon.SkillPlanner
             this.planToMenu,
             this.toolStripSeparator1,
             this.showInSkillsBrowserMenu,
-            this.showInSkillsExplorerMenu});
+            this.showInSkillExplorerMenu});
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.Size = new System.Drawing.Size(200, 76);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -187,11 +187,11 @@ namespace EVEMon.SkillPlanner
             // 
             // showInSkillsExplorerMenu
             // 
-            this.showInSkillsExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
-            this.showInSkillsExplorerMenu.Name = "showInSkillsExplorerMenu";
-            this.showInSkillsExplorerMenu.Size = new System.Drawing.Size(199, 22);
-            this.showInSkillsExplorerMenu.Text = "Show in Skills Explorer...";
-            this.showInSkillsExplorerMenu.Click += new System.EventHandler(this.showInSkillsExplorerMenu_Click);
+            this.showInSkillExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
+            this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
+            this.showInSkillExplorerMenu.Size = new System.Drawing.Size(199, 22);
+            this.showInSkillExplorerMenu.Text = "Show in Skill Explorer...";
+            this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillsExplorerMenu_Click);
             // 
             // RequiredSkillsControl
             // 
@@ -225,6 +225,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem level5ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showInSkillsBrowserMenu;
-        private System.Windows.Forms.ToolStripMenuItem showInSkillsExplorerMenu;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerMenu;
     }
 }

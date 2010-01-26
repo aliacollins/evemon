@@ -756,7 +756,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void cmSkills_Opening(object sender, CancelEventArgs e)
         {
             Skill skill = null;
             var node = tvItems.SelectedNode;
@@ -788,7 +788,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmListSkills_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             if (this.SelectedSkill == null)
             {
@@ -874,7 +874,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Show In Skills Explorer
+        /// Context menu > Show In Skill Explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

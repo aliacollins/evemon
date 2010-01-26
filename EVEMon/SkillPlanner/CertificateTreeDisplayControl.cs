@@ -487,7 +487,7 @@ namespace EVEMon.SkillPlanner
                     showInBrowserMenu.Enabled = m_class != cert.Class;
                     showInBrowserMenu.Text = "Show Certificates";
 
-                    // Update "show in skills explorer" menu
+                    // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = false;
                 }
                 // When a skill is selected
@@ -503,9 +503,9 @@ namespace EVEMon.SkillPlanner
                     showInBrowserMenu.Enabled = true;
                     showInBrowserMenu.Text = "Show in Skills Browser";
 
-                    // Update "show in skills explorer" menu
+                    // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = true;
-                    showInExplorerMenu.Text = "Show in Skills Explorer";
+                    showInExplorerMenu.Text = "Show in Skill Explorer";
                 }
             }
         }

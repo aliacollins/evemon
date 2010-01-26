@@ -263,7 +263,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context > Show in Skills Explorer
+        /// Context > Show in Skill Explorer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
