@@ -79,10 +79,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Windows7.DesktopIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Windows7.DesktopIntegration.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutWindow.cs">
@@ -1087,6 +1083,10 @@
     <ProjectReference Include="..\EveMon.LogitechG15\EVEMon.LogitechG15.csproj">
       <Project>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</Project>
       <Name>EVEMon.LogitechG15</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EVEMon.WindowsApi\EVEMon.WindowsApi.csproj">
+      <Project>{D942D976-6185-4ECD-A83B-60260100D12E}</Project>
+      <Name>EVEMon.WindowsApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\EVEMon.PieChart\EVEMon.PieChart.csproj">
       <Project>{696E929A-6A4A-4C6D-A8B2-C4F25F781940}</Project>

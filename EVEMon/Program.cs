@@ -2,11 +2,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
-using Windows7.DesktopIntegration;
-using System.Text;
+using EVEMon.WindowsApi;
 
 namespace EVEMon
 {
@@ -124,7 +124,7 @@ namespace EVEMon
                 {
                     appId = String.Format("{0}-DEBUG", appId);
                 }
-                Windows7Taskbar.SetCurrentProcessAppId(appId);
+                Windows7.SetProcessAppID(appId);
             }
             catch (Exception ex)
             {
