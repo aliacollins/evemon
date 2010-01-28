@@ -107,7 +107,7 @@ namespace EVEMon
             {
                 int maxTextLength = 0;
 
-                foreach (var item in m_notifications)
+                foreach (var item in listBox.Items)
                 {
                     string text = item.ToString();
                     Size textSize = TextRenderer.MeasureText(text, this.Font);
@@ -130,11 +130,9 @@ namespace EVEMon
                 int magnifierIconSize = 0;
 
                 // Check for magnifier icon
-                foreach (var item in m_notifications)
-                {
-                    if (item.HasDetails) magnifierIconSize = IconMagnifierPositionFromRight;
-                    else continue;
-                }
+                var itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
+                if (itemWithDetails != null)
+                    magnifierIconSize = IconMagnifierPositionFromRight;
 
                 // Calculates the available text space
                 var availableTextSpace = this.Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
@@ -183,7 +181,7 @@ namespace EVEMon
             }
 
             // Update size
-            this.Height = m_notifications.Count * listBox.ItemHeight;
+            this.Height = listBox.Items.Count * listBox.ItemHeight;
             this.Width = listBox.Width;
             this.Invalidate();
         }
@@ -198,7 +196,8 @@ namespace EVEMon
             if (e.Index == -1) return;
             var g = e.Graphics;
 
-            var notification = m_notifications[e.Index];
+            var notification = listBox.Items[e.Index] as Notification;
+            if (notification == null) return;
 
             // Retrieves the icon and background color
             Image icon;
@@ -246,8 +245,9 @@ namespace EVEMon
             using (var foreBrush = new SolidBrush(this.ForeColor))
             {
                 string text = notification.ToString();
-                var size = g.MeasureString(text, NotificationFont);
-                g.DrawString(text, NotificationFont, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                var font = NotificationFont;
+                var size = g.MeasureString(text, font);
+                g.DrawString(text, font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -269,7 +269,7 @@ namespace EVEMon
             int oldHoveredIndex = m_hoveredIndex;
 
             m_hoveredIndex = -1;
-            for(int i = 0; i<m_notifications.Count; i++)
+            for (int i = 0; i < listBox.Items.Count; i++)
             {
                 var rect = GetDeleteIconRect(i);
                 if (rect.Contains(e.Location))
@@ -295,44 +295,33 @@ namespace EVEMon
         void listBox_MouseDown(object sender, MouseEventArgs e)
         {
             // First test whether the "delete" and "mangifier" icons have been clicked
-            for (int i = 0; i < m_notifications.Count; i++)
+            for (int i = 0; i < listBox.Items.Count; i++)
             {
-                // Did he click on the "delete" icon ?
-                var rect = GetDeleteIconRect(i);
+                var rect = listBox.GetItemRectangle(i);                
+                if (!rect.Contains(e.Location))
+                    continue;
 
-                if (rect.Contains(e.Location))
-                {
-                    EveClient.Notifications.Remove(m_notifications[i]);
-                    m_notifications.RemoveAt(i);
-                    UpdateContent();
-                    return;
-                }
+                var notification = listBox.Items[i] as Notification;
 
                 // Did he click on the "magnifier" icon ?
-                if (m_notifications[i].HasDetails)
+                if (notification.HasDetails)
                 {
                     rect = GetMagnifierIconRect(i);
                     if (rect.Contains(e.Location))
                     {
-                        ShowDetails(m_notifications[i]);
+                        ShowDetails(notification);
                         return;
                     }
                 }
-            }
 
-            // On wheel-click, we delete the clicked notification.
-            if (e.Button == MouseButtons.Middle)
-            {
-                for (int i = 0; i < m_notifications.Count; i++)
+                // Did he click on the "delete" icon or did a wheel-click?
+                rect = GetDeleteIconRect(i);
+                if (e.Button == MouseButtons.Middle || rect.Contains(e.Location))
                 {
-                    var rect = listBox.GetItemRectangle(i);
-                    if (rect.Contains(e.Location))
-                    {
-                        EveClient.Notifications.Remove(m_notifications[i]);
-                        m_notifications.RemoveAt(i);
-                        UpdateContent();
-                        return;
-                    }
+                    EveClient.Notifications.Remove(notification);
+                    m_notifications.Remove(notification);
+                    UpdateContent();
+                    return;
                 }
             }
         }
