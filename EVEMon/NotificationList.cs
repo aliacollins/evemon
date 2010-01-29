@@ -99,62 +99,56 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the maximum text length of the list
+        /// Calculates the maximum text length of the list with given font
         /// </summary>
-        private int MaxTextLength
+        /// <param name="font"></param>
+        /// <returns></returns>
+        private int CalculateMaxTextLength(Font font)
         {
-            get
+            int maxTextLength = 0;
+
+            foreach (var item in listBox.Items)
             {
-                int maxTextLength = 0;
-
-                foreach (var item in listBox.Items)
-                {
-                    string text = item.ToString();
-                    Size textSize = TextRenderer.MeasureText(text, this.Font);
-                    if (textSize.Width > maxTextLength) maxTextLength = (int)textSize.Width;
-                }
-
-                return maxTextLength;
+                string text = item.ToString();
+                Size textSize = TextRenderer.MeasureText(text, font);
+                if (textSize.Width > maxTextLength) maxTextLength = (int)textSize.Width;
             }
+
+            return maxTextLength;
         }
 
         /// <summary>
-        /// Gets the font size to use for drawning the text
+        /// Calculates the font according to the notifications to display
         /// </summary>
-        private Font NotificationFont
+        private void CalculateFontSize()
         {
-            get
+            Font font = this.Font;
+            var fontSize = font.Size;
+            int magnifierIconSize = 0;
+
+            // Check for magnifier icon
+            var itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
+            if (itemWithDetails != null)
+                magnifierIconSize = IconMagnifierPositionFromRight;
+
+            // Calculates the available text space
+            var availableTextSpace = this.Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
+
+            // If any text lenght exceeds our bounds we decrease the font size
+            while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
             {
-                Font font = this.Font;
-                var fontSize = font.Size;
-                int magnifierIconSize = 0;
-
-                // Check for magnifier icon
-                var itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
-                if (itemWithDetails != null)
-                    magnifierIconSize = IconMagnifierPositionFromRight;
-
-                // Calculates the available text space
-                var availableTextSpace = this.Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
-
-                // If any text lenght exceeds our bounds we decrease the font size
-                while ((MaxTextLength > availableTextSpace) && (fontSize > 6.5f))
-                {
-                    fontSize -= 0.05f;
-                    font = FontFactory.GetFont("Tahoma", fontSize);
-                    this.Font = font;
-                }
-
-                // If any text lenght fits better in our bounds we increase the font size
-                while ((MaxTextLength < availableTextSpace) && (fontSize < 8.25f))
-                {
-                    fontSize += 0.05f;
-                    font = FontFactory.GetFont("Tahoma", fontSize);
-                    this.Font = font;
-                }
-
-                return this.Font;
+                fontSize -= 0.05f;
+                font = FontFactory.GetFont("Tahoma", fontSize);
             }
+
+            // If any text lenght fits better in our bounds we increase the font size
+            while ((CalculateMaxTextLength(font) < availableTextSpace) && (fontSize < 8.25f))
+            {
+                fontSize += 0.05f;
+                font = FontFactory.GetFont("Tahoma", fontSize);
+            }
+
+            this.Font = font;
         }
 
         /// <summary>
@@ -180,9 +174,17 @@ namespace EVEMon
                 listBox.EndUpdate();
             }
 
-            // Update size
+            UpdateSize();
+        }
+
+        /// <summary>
+        /// Updates the size of the control.
+        /// </summary>
+        private void UpdateSize()
+        {
             this.Height = listBox.Items.Count * listBox.ItemHeight;
             this.Width = listBox.Width;
+            CalculateFontSize();
             this.Invalidate();
         }
 
@@ -245,9 +247,8 @@ namespace EVEMon
             using (var foreBrush = new SolidBrush(this.ForeColor))
             {
                 string text = notification.ToString();
-                var font = NotificationFont;
-                var size = g.MeasureString(text, font);
-                g.DrawString(text, font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                var size = g.MeasureString(text, this.Font);
+                g.DrawString(text, this.Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -450,7 +451,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void listBox_Resize(object sender, EventArgs e)
         {
-            UpdateContent();
+            UpdateSize();
         }
 
         /// <summary>
