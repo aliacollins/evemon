@@ -177,6 +177,7 @@ namespace EVEMon
 
                 // Update the other controls
                 UpdateCharacterInfo();
+                UpdateSkillHeaderStats();
                 UpdateErrorInfo();
 
                 // Update the rest of the controls
