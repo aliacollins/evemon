@@ -9,7 +9,7 @@
 		<key Table="crtRecommendations" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="recommendationID" Collation="A" Cardinality="596" Null="" Index_type="BTREE" Comment="" />
 		<key Table="crtRecommendations" Non_unique="1" Key_name="crtRecommendations_IX_certificate" Seq_in_index="1" Column_name="certificateID" Collation="A" Cardinality="119" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="crtRecommendations" Non_unique="1" Key_name="crtRecommendations_IX_shipType" Seq_in_index="1" Column_name="shipTypeID" Collation="A" Cardinality="149" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="crtRecommendations" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="596" Avg_row_length="12" Data_length="7152" Max_data_length="3377699720527871" Index_length="23552" Data_free="0" Create_time="2009-12-22 16:19:14" Update_time="2009-12-22 16:19:14" Check_time="2009-12-22 16:19:14" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="crtRecommendations" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="596" Avg_row_length="12" Data_length="7152" Max_data_length="3377699720527871" Index_length="23552" Data_free="0" Create_time="2010-01-26 19:44:56" Update_time="2010-01-26 19:44:56" Check_time="2010-01-26 19:44:56" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="crtRecommendations">
 	<row>

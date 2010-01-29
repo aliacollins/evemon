@@ -13,7 +13,7 @@
 		<field Field="explosionID" Type="smallint(6)" Null="YES" Key="MUL" Extra="" />
 		<key Table="eveGraphics" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="4355" Null="" Index_type="BTREE" Comment="" />
 		<key Table="eveGraphics" Non_unique="1" Key_name="explosionID" Seq_in_index="1" Column_name="explosionID" Collation="A" Cardinality="4355" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="eveGraphics" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="4355" Avg_row_length="69" Data_length="302588" Max_data_length="281474976710655" Index_length="70656" Data_free="0" Create_time="2009-12-22 16:19:17" Update_time="2009-12-22 16:19:17" Check_time="2009-12-22 16:19:17" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="eveGraphics" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="4355" Avg_row_length="69" Data_length="302600" Max_data_length="281474976710655" Index_length="70656" Data_free="0" Create_time="2010-01-26 19:45:01" Update_time="2010-01-26 19:45:01" Check_time="2010-01-26 19:45:01" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="eveGraphics">
 	<row>
@@ -3175,7 +3175,7 @@
 	</row>
 	<row>
 		<field name="graphicID">318</field>
-		<field name="url3D">res:/Model/Ship/Gallente/gb1/gb1.blue</field>
+		<field name="url3D">res:/Model/Ship/Gallente/Battleship/gb1/gb1.blue</field>
 		<field name="urlWeb">Dominix</field>
 		<field name="description">Ship</field>
 		<field name="published">1</field>

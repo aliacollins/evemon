@@ -8,10 +8,10 @@
 		<field Field="description" Type="varchar(3000)" Null="YES" Key="" Extra="" />
 		<field Field="graphicID" Type="smallint(6)" Null="YES" Key="MUL" Extra="" />
 		<field Field="hasTypes" Type="tinyint(1)" Null="YES" Key="" Extra="" />
-		<key Table="invMarketGroups" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="marketGroupID" Collation="A" Cardinality="998" Null="" Index_type="BTREE" Comment="" />
-		<key Table="invMarketGroups" Non_unique="1" Key_name="parentGroupID" Seq_in_index="1" Column_name="parentGroupID" Collation="A" Cardinality="199" Null="YES" Index_type="BTREE" Comment="" />
-		<key Table="invMarketGroups" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="998" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="invMarketGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="998" Avg_row_length="65" Data_length="65680" Max_data_length="281474976710655" Index_length="29696" Data_free="0" Create_time="2009-12-22 16:19:24" Update_time="2009-12-22 16:19:24" Check_time="2009-12-22 16:19:24" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<key Table="invMarketGroups" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="marketGroupID" Collation="A" Cardinality="1002" Null="" Index_type="BTREE" Comment="" />
+		<key Table="invMarketGroups" Non_unique="1" Key_name="parentGroupID" Seq_in_index="1" Column_name="parentGroupID" Collation="A" Cardinality="200" Null="YES" Index_type="BTREE" Comment="" />
+		<key Table="invMarketGroups" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="1002" Null="YES" Index_type="BTREE" Comment="" />
+		<options Name="invMarketGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1002" Avg_row_length="65" Data_length="65936" Max_data_length="281474976710655" Index_length="29696" Data_free="0" Create_time="2010-01-26 19:45:12" Update_time="2010-01-26 19:45:12" Check_time="2010-01-26 19:45:12" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="invMarketGroups">
 	<row>
@@ -4668,7 +4668,7 @@
 		<field name="marketGroupID">840</field>
 		<field name="parentGroupID">159</field>
 		<field name="marketGroupName">Fighters</field>
-		<field name="description">Single-pilot combat vessels, deployable from carriers and motherships.</field>
+		<field name="description">Single-pilot combat vessels, deployable from Carriers and Supercarriers.</field>
 		<field name="graphicID" xsi:nil="true" />
 		<field name="hasTypes">1</field>
 	</row>
@@ -5523,7 +5523,7 @@
 	<row>
 		<field name="marketGroupID">953</field>
 		<field name="parentGroupID">943</field>
-		<field name="marketGroupName">Projectile Weapon Rig</field>
+		<field name="marketGroupName">Projectile Weapon Rigs</field>
 		<field name="description">Permanent modification of a ship's projectile weapon facilities.</field>
 		<field name="graphicID">2703</field>
 		<field name="hasTypes">0</field>
@@ -7994,8 +7994,40 @@
 	</row>
 	<row>
 		<field name="marketGroupID">1287</field>
+		<field name="parentGroupID">1316</field>
+		<field name="marketGroupName">Standard Citadel Cruise Missiles</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="hasTypes">1</field>
+	</row>
+	<row>
+		<field name="marketGroupID">1310</field>
+		<field name="parentGroupID">159</field>
+		<field name="marketGroupName">Fighter Bombers</field>
+		<field name="description">Piloted combat vessels, deployable from Carriers and Supercarriers.</field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="hasTypes">1</field>
+	</row>
+	<row>
+		<field name="marketGroupID">1313</field>
+		<field name="parentGroupID">357</field>
+		<field name="marketGroupName">Fighter Bombers</field>
+		<field name="description">Blueprints of fighter bomber drone designs.</field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="hasTypes">1</field>
+	</row>
+	<row>
+		<field name="marketGroupID">1316</field>
 		<field name="parentGroupID">114</field>
 		<field name="marketGroupName">Citadel Cruise Missiles</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="hasTypes">0</field>
+	</row>
+	<row>
+		<field name="marketGroupID">1317</field>
+		<field name="parentGroupID">1316</field>
+		<field name="marketGroupName">Faction Citadel Cruise Missiles</field>
 		<field name="description"></field>
 		<field name="graphicID" xsi:nil="true" />
 		<field name="hasTypes">1</field>

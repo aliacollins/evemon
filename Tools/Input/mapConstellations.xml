@@ -21,7 +21,7 @@
 		<key Table="mapConstellations" Non_unique="0" Key_name="constellationID" Seq_in_index="2" Column_name="regionID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="mapConstellations" Non_unique="1" Key_name="mapConstellations_IX_region" Seq_in_index="1" Column_name="regionID" Collation="A" Cardinality="100" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="mapConstellations" Non_unique="1" Key_name="factionID" Seq_in_index="1" Column_name="factionID" Collation="A" Cardinality="1109" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="mapConstellations" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1109" Avg_row_length="104" Data_length="115368" Max_data_length="281474976710655" Index_length="55296" Data_free="0" Create_time="2009-12-22 16:19:28" Update_time="2009-12-22 16:19:28" Check_time="2009-12-22 16:19:28" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="mapConstellations" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1109" Avg_row_length="104" Data_length="115368" Max_data_length="281474976710655" Index_length="55296" Data_free="0" Create_time="2010-01-26 19:45:19" Update_time="2010-01-26 19:45:19" Check_time="2010-01-26 19:45:19" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="mapConstellations">
 	<row>

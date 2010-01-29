@@ -11,7 +11,7 @@
 		<key Table="crtRelationships" Non_unique="1" Key_name="crtRelationships_IX_child" Seq_in_index="1" Column_name="childID" Collation="A" Cardinality="368" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="crtRelationships" Non_unique="1" Key_name="crtRelationships_IX_parent" Seq_in_index="1" Column_name="parentID" Collation="A" Cardinality="1475" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="crtRelationships" Non_unique="1" Key_name="parentTypeID" Seq_in_index="1" Column_name="parentTypeID" Collation="A" Cardinality="737" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="crtRelationships" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="1475" Avg_row_length="16" Data_length="23600" Max_data_length="4503599627370495" Index_length="63488" Data_free="0" Create_time="2009-12-22 16:19:14" Update_time="2009-12-22 16:19:14" Check_time="2009-12-22 16:19:14" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="crtRelationships" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="1475" Avg_row_length="16" Data_length="23600" Max_data_length="4503599627370495" Index_length="63488" Data_free="0" Create_time="2010-01-26 19:44:56" Update_time="2010-01-26 19:44:56" Check_time="2010-01-26 19:44:56" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="crtRelationships">
 	<row>

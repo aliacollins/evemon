@@ -13,11 +13,11 @@
 		<field Field="stackable" Type="tinyint(1)" Null="YES" Key="" Extra="" />
 		<field Field="highIsGood" Type="tinyint(1)" Null="YES" Key="" Extra="" />
 		<field Field="categoryID" Type="tinyint(3) unsigned" Null="YES" Key="MUL" Extra="" />
-		<key Table="dgmAttributeTypes" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="attributeID" Collation="A" Cardinality="1470" Null="" Index_type="BTREE" Comment="" />
+		<key Table="dgmAttributeTypes" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="attributeID" Collation="A" Cardinality="1475" Null="" Index_type="BTREE" Comment="" />
 		<key Table="dgmAttributeTypes" Non_unique="1" Key_name="categoryID" Seq_in_index="1" Column_name="categoryID" Collation="A" Cardinality="52" Null="YES" Index_type="BTREE" Comment="" />
-		<key Table="dgmAttributeTypes" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="367" Null="YES" Index_type="BTREE" Comment="" />
-		<key Table="dgmAttributeTypes" Non_unique="1" Key_name="unitID" Seq_in_index="1" Column_name="unitID" Collation="A" Cardinality="735" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="dgmAttributeTypes" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1470" Avg_row_length="82" Data_length="121780" Max_data_length="281474976710655" Index_length="54272" Data_free="0" Create_time="2009-12-22 16:19:14" Update_time="2009-12-22 16:19:14" Check_time="2009-12-22 16:19:14" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<key Table="dgmAttributeTypes" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="368" Null="YES" Index_type="BTREE" Comment="" />
+		<key Table="dgmAttributeTypes" Non_unique="1" Key_name="unitID" Seq_in_index="1" Column_name="unitID" Collation="A" Cardinality="737" Null="YES" Index_type="BTREE" Comment="" />
+		<options Name="dgmAttributeTypes" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1475" Avg_row_length="82" Data_length="121948" Max_data_length="281474976710655" Index_length="54272" Data_free="0" Create_time="2010-01-26 19:44:57" Update_time="2010-01-26 19:44:57" Check_time="2010-01-26 19:44:57" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="dgmAttributeTypes">
 	<row>
@@ -18181,7 +18181,7 @@
 		<field name="unitID" xsi:nil="true" />
 		<field name="stackable">1</field>
 		<field name="highIsGood">1</field>
-		<field name="categoryID" xsi:nil="true" />
+		<field name="categoryID">9</field>
 	</row>
 	<row>
 		<field name="attributeID">1536</field>
@@ -19086,7 +19086,7 @@ development index.</field>
 		<field name="attributeName">reinforcementVariance</field>
 		<field name="description">The number of seconds that the reinforcement exit time will be adjusted by. exitTime +- attribute</field>
 		<field name="graphicID" xsi:nil="true" />
-		<field name="defaultValue">7200</field>
+		<field name="defaultValue">10800</field>
 		<field name="published">0</field>
 		<field name="displayName">Reinforcement variance</field>
 		<field name="unitID">3</field>
@@ -19132,6 +19132,71 @@ development index.</field>
 		<field name="stackable">1</field>
 		<field name="highIsGood">1</field>
 		<field name="categoryID" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="attributeID">1619</field>
+		<field name="attributeName">webSpeedFactorBonus</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="defaultValue">0</field>
+		<field name="published">1</field>
+		<field name="displayName">Drone Stasis Web Bonus</field>
+		<field name="unitID">105</field>
+		<field name="stackable">1</field>
+		<field name="highIsGood">1</field>
+		<field name="categoryID" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="attributeID">1623</field>
+		<field name="attributeName">shipBonus3AF</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="defaultValue">0</field>
+		<field name="published">0</field>
+		<field name="displayName"></field>
+		<field name="unitID" xsi:nil="true" />
+		<field name="stackable">1</field>
+		<field name="highIsGood">1</field>
+		<field name="categoryID">9</field>
+	</row>
+	<row>
+		<field name="attributeID">1624</field>
+		<field name="attributeName">shipBonus3CF</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="defaultValue">0</field>
+		<field name="published">0</field>
+		<field name="displayName"></field>
+		<field name="unitID" xsi:nil="true" />
+		<field name="stackable">1</field>
+		<field name="highIsGood">1</field>
+		<field name="categoryID">9</field>
+	</row>
+	<row>
+		<field name="attributeID">1625</field>
+		<field name="attributeName">shipBonus3GF</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="defaultValue">0</field>
+		<field name="published">0</field>
+		<field name="displayName"></field>
+		<field name="unitID" xsi:nil="true" />
+		<field name="stackable">1</field>
+		<field name="highIsGood">1</field>
+		<field name="categoryID">9</field>
+	</row>
+	<row>
+		<field name="attributeID">1626</field>
+		<field name="attributeName">shipBonus3MF</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="defaultValue">0</field>
+		<field name="published">0</field>
+		<field name="displayName"></field>
+		<field name="unitID" xsi:nil="true" />
+		<field name="stackable">1</field>
+		<field name="highIsGood">1</field>
+		<field name="categoryID">9</field>
 	</row>
 	</table_data>
 </database>

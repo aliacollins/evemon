@@ -6,7 +6,7 @@
 		<field Field="description" Type="varchar(500)" Null="YES" Key="" Extra="" />
 		<field Field="className" Type="varchar(256)" Null="YES" Key="" Extra="" />
 		<key Table="crtClasses" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="classID" Collation="A" Cardinality="137" Null="" Index_type="BTREE" Comment="" />
-		<options Name="crtClasses" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="137" Avg_row_length="60" Data_length="8320" Max_data_length="281474976710655" Index_length="4096" Data_free="0" Create_time="2009-12-22 16:17:21" Update_time="2009-12-22 16:17:21" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="crtClasses" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="137" Avg_row_length="60" Data_length="8320" Max_data_length="281474976710655" Index_length="4096" Data_free="0" Create_time="2010-01-26 19:30:48" Update_time="2010-01-26 19:30:48" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="crtClasses">
 	<row>

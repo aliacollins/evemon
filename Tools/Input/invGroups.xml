@@ -14,10 +14,10 @@
 		<field Field="anchorable" Type="tinyint(1)" Null="YES" Key="" Extra="" />
 		<field Field="fittableNonSingleton" Type="tinyint(1)" Null="YES" Key="" Extra="" />
 		<field Field="published" Type="tinyint(1)" Null="YES" Key="" Extra="" />
-		<key Table="invGroups" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="groupID" Collation="A" Cardinality="807" Null="" Index_type="BTREE" Comment="" />
+		<key Table="invGroups" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="groupID" Collation="A" Cardinality="808" Null="" Index_type="BTREE" Comment="" />
 		<key Table="invGroups" Non_unique="1" Key_name="invGroups_IX_category" Seq_in_index="1" Column_name="categoryID" Collation="A" Cardinality="27" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="invGroups" Non_unique="1" Key_name="graphicID" Seq_in_index="1" Column_name="graphicID" Collation="A" Cardinality="161" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="invGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="807" Avg_row_length="48" Data_length="39004" Max_data_length="281474976710655" Index_length="25600" Data_free="0" Create_time="2009-12-22 16:19:23" Update_time="2009-12-22 16:19:23" Check_time="2009-12-22 16:19:23" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="invGroups" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="808" Avg_row_length="48" Data_length="39040" Max_data_length="281474976710655" Index_length="25600" Data_free="0" Create_time="2010-01-26 19:45:11" Update_time="2010-01-26 19:45:11" Check_time="2010-01-26 19:45:11" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="invGroups">
 	<row>
@@ -7010,8 +7010,8 @@
 	<row>
 		<field name="groupID">659</field>
 		<field name="categoryID">6</field>
-		<field name="groupName">Mothership</field>
-		<field name="description">Mothership</field>
+		<field name="groupName">Supercarrier</field>
+		<field name="description">Supercarrier</field>
 		<field name="graphicID">0</field>
 		<field name="useBasePrice">0</field>
 		<field name="allowManufacture">1</field>
@@ -11238,7 +11238,7 @@
 	<row>
 		<field name="groupID">1013</field>
 		<field name="categoryID">9</field>
-		<field name="groupName">Mothership Blueprints</field>
+		<field name="groupName">Supercarrier Blueprints</field>
 		<field name="description"></field>
 		<field name="graphicID" xsi:nil="true" />
 		<field name="useBasePrice">1</field>
@@ -11309,6 +11309,20 @@
 		<field name="groupID">1022</field>
 		<field name="categoryID">6</field>
 		<field name="groupName">Prototype Exploration Ship</field>
+		<field name="description"></field>
+		<field name="graphicID" xsi:nil="true" />
+		<field name="useBasePrice">0</field>
+		<field name="allowManufacture">1</field>
+		<field name="allowRecycler">1</field>
+		<field name="anchored">0</field>
+		<field name="anchorable">0</field>
+		<field name="fittableNonSingleton">0</field>
+		<field name="published">1</field>
+	</row>
+	<row>
+		<field name="groupID">1023</field>
+		<field name="categoryID">18</field>
+		<field name="groupName">Fighter Bomber</field>
 		<field name="description"></field>
 		<field name="graphicID" xsi:nil="true" />
 		<field name="useBasePrice">0</field>

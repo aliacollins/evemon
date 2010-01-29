@@ -16,7 +16,7 @@
 		<key Table="chrFactions" Non_unique="1" Key_name="solarSystemID" Seq_in_index="1" Column_name="solarSystemID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="chrFactions" Non_unique="1" Key_name="corporationID" Seq_in_index="1" Column_name="corporationID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
 		<key Table="chrFactions" Non_unique="1" Key_name="militiaCorporationID" Seq_in_index="1" Column_name="militiaCorporationID" Collation="A" Null="YES" Index_type="BTREE" Comment="" />
-		<options Name="chrFactions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="20" Avg_row_length="718" Data_length="14364" Max_data_length="281474976710655" Index_length="5120" Data_free="0" Create_time="2009-12-22 16:19:12" Update_time="2009-12-22 16:19:12" Collation="utf8_general_ci" Create_options="" Comment="" />
+		<options Name="chrFactions" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="20" Avg_row_length="718" Data_length="14364" Max_data_length="281474976710655" Index_length="5120" Data_free="0" Create_time="2010-01-26 19:44:53" Update_time="2010-01-26 19:44:53" Collation="utf8_general_ci" Create_options="" Comment="" />
 	</table_structure>
 	<table_data name="chrFactions">
 	<row>
