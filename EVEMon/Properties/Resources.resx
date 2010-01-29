@@ -346,4 +346,46 @@
   <data name="Relocation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons\Relocation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Rename" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAScQAA
+        EnEB89x6jgAAAQ1JREFUOE+1kzuKhEAQhudOgg8QA8HcB0YmxgYewMTYWIwMBA0NjL2CB/AEXsBH/u9W
+        Lb1r7wzMzO5MQ2Ep/X/1V3d5ubxp4ZNLQeucP11OQJ4WCsHjgHEckec5yrLEvu9n+wxr2xa6rnNQLlmq
+        6xpxHCNNUziOA8/zJMAwDCwUIsqnafqBdF33/RKGIQzDkAAE/w2oqkp20TQNO3Bd97yZNwmAaIGeSZJ8
+        AahfqkofjuNAFEXQNE1yEAQBQyXbop++77lqURQMsCwLqqpKAHGAWZZh2zYsywLSMYNEpmmyyPd92LYN
+        RVGuboF6pgOmoILSLazrinmeb93543NwY9TECP8b8qcxftnPdLf6B66vtUjei4rpAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="MoveDown" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAftJREFUOE+tk+1L
+        U1EYwK//SJ97+RB+KJBKok8lYm8wCsJCXWhFpcGKYvShGcVijKSZo1kt1kphWjp7ETdpWCsKFQKlYpRr
+        5ax0ttx2d3f9de+pSWMjEnrgx3PPeZ7zu8+5cMskLaxdM+hZDyUnSbKClM4ipWSNP3Ji4VebkkN6ZltR
+        lj8jBO4n4BxScTzKYfcrWHuzWLplzN4MJ90pml0LGK8kBeXGV0svFBJdoGPxxDl9Pc7R9s/U2T5hOB+j
+        yhxlsylKRcvUEmvrwoUC78BLlhPrqxr+s+DW/XDBAKZr07Rc/ciRyxGM1glqLWMF9XXb6gsn6PSFChqO
+        O6a4HVJo1z7oxV6V6uahvwucdwNksovIGpmsSqPtDZ0BlVMelX32NJUN937XVa1HpWgCh+cxs0mFuWRO
+        5P2t47T6Fqlty2G48JWN9f2ilq8XCdrcD4h+kdHvfqIjxiH7W8x3YO+l72w/G2HVLi8VB3xsafQTnZGL
+        J9AFEx9SPH2doMY0wmFnmmOuDLstMbaaxtlwcJCVNS76QlHRV3KCF5NJdPpG4qzZ42PnuRjVZyapbAqy
+        escNugbfa/UfgpKC4Ng8w6MJgqPzdAemhWRT0zDlBjc3+yNiP09JwUB4FsFzPc/hfhgTko6ed2Kdx689
+        lxT0hL7xr5QU6JvLIf8r/wRFx3qKKujlCAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="MoveUp" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAd5JREFUOE+Vk8tL
+        G1EUh8d/pCA1VLqwiFRwIy5aRItWN0F0ZxVXSh9oQZuFEERIjOIjYjCpjoq2hba0RFHQiC5MfcSgQgou
+        NInPFB8hNc5kkv567w0zJMyA5sLHuZxzft8MDJPFkWP6HAKt9EhxjhMlcLcxcFGRkFKvb5JrUhzcmuVB
+        lpxhAn4FsC0mYJ2Po88pwfQ9BuMXEYZpAe/5KN7Yb9A4FGHkN24pD2QSKqAYp87R/vEcLcOnqLecQN91
+        jHJDECVtQRS9DSg8qXenC6ZnN5HJKSxvuFuwdyigZSiA3f2Qyq0STPxwpy35AgLaRs8wviwhX8+rJE/L
+        XqW/gePrqiJIDZt/AjVdfjyuGkuTqAS2T0sQYv+weyDgne0UYy7yFUi42QHU9UZR2rqD3Eo7PL4ziLEE
+        VALr1AIuIxILF7/eQUGTBz1E0DAYZuTpZ6CrsCOnzMr2VIIBfg7BPyKOQiKChMrOIziWEixc2+3Ho5c8
+        m8lzTYHPH4UMFRgmk+HqDi90L2zKjO5oCtZ/R0DZIFABDVd98OJ58yIelvZjw0fnfxmaApc3jOXta7i2
+        w0yQVz2C7GdmBdqX0RTMui/B+EXrFZzk7iQ12ac1Ce1pCr6tXuC+aApoMxPkX/k/wAh3Erg5UfUAAAAA
+        SUVORK5CYII=
+</value>
+  </data>
 </root>

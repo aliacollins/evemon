@@ -29,7 +29,6 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanManagementWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
@@ -163,6 +162,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiRename
             // 
+            this.cmiRename.Image = global::EVEMon.Properties.Resources.Rename;
             this.cmiRename.Name = "cmiRename";
             this.cmiRename.Size = new System.Drawing.Size(117, 22);
             this.cmiRename.Text = "Rename";
@@ -170,7 +170,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiExport
             // 
-            this.cmiExport.Image = global::EVEMon.Properties.Resources.ExportCharacter;
+            this.cmiExport.Image = global::EVEMon.Properties.Resources.ExportPlan;
             this.cmiExport.Name = "cmiExport";
             this.cmiExport.Size = new System.Drawing.Size(117, 22);
             this.cmiExport.Text = "Export";
@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
             // 
             // cmiDelete
             // 
-            this.cmiDelete.Image = global::EVEMon.Properties.Resources.DeleteCharacter;
+            this.cmiDelete.Image = global::EVEMon.Properties.Resources.DeletePlan;
             this.cmiDelete.Name = "cmiDelete";
             this.cmiDelete.Size = new System.Drawing.Size(117, 22);
             this.cmiDelete.Text = "Delete";
@@ -207,7 +207,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsbMoveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbMoveUp.Enabled = false;
-            this.tsbMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveUp.Image")));
+            this.tsbMoveUp.Image = global::EVEMon.Properties.Resources.MoveUp;
             this.tsbMoveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveUp.Name = "tsbMoveUp";
             this.tsbMoveUp.Size = new System.Drawing.Size(38, 20);
@@ -218,7 +218,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsbMoveDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbMoveDown.Enabled = false;
-            this.tsbMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("tsbMoveDown.Image")));
+            this.tsbMoveDown.Image = global::EVEMon.Properties.Resources.MoveDown;
             this.tsbMoveDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbMoveDown.Name = "tsbMoveDown";
             this.tsbMoveDown.Size = new System.Drawing.Size(38, 20);
@@ -335,7 +335,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miRename
             // 
-            this.miRename.Image = ((System.Drawing.Image)(resources.GetObject("miRename.Image")));
+            this.miRename.Image = global::EVEMon.Properties.Resources.Rename;
             this.miRename.Name = "miRename";
             this.miRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.miRename.Size = new System.Drawing.Size(136, 22);
