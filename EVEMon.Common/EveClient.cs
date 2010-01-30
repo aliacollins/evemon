@@ -616,14 +616,14 @@ namespace EVEMon.Common
 
         #region Diagnostics
         /// <summary>
-        /// Sends a message to the trace with the prepended time
-        /// since startup.
+        /// Sends a message to the trace with the prepended time since
+        /// startup.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">message to trace</param>
         public static void Trace(string message)
         {
             var time = DateTime.UtcNow - s_startTime;
-            string timeStr = String.Format("{0:#0}h {1:00}m {2:00}s > ", time.Hours, time.Minutes, time.Seconds);
+            string timeStr = String.Format("{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
             System.Diagnostics.Trace.WriteLine(timeStr + message);
         }
 
