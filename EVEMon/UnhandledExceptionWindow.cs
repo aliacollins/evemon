@@ -104,42 +104,19 @@ namespace EVEMon
                 trace = "Unable to load trace file for inclusion in report";
             }
 
-            StringBuilder datafileReport = new StringBuilder();
-
-            try
-            {
-                string[] datafiles = Directory.GetFiles(EveClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
-
-                datafileReport.AppendLine("Datafile report");
-
-                foreach (string datafile in datafiles)
-                {
-                    FileInfo info = new FileInfo(datafile);
-                    datafileReport.AppendFormat("  {0} ({1}KiB - {2})", info.Name, info.Length / 1024, QuickMD5(datafile));
-                    datafileReport.AppendLine();
-                }
-            }
-            catch
-            {
-                datafileReport.AppendLine("Unable to create datafile report");
-            }
-
             try
             {
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
-
-                string exceptionString = m_exception.ToString();
-                exceptionString = exceptionString.Replace("D:\\EVEMon\\", "");
 
                 exceptionReport.AppendLine(String.Format("EVEMon Version: {0}", Application.ProductVersion));
                 exceptionReport.AppendLine(String.Format(".NET Runtime Version: {0}", System.Environment.Version));
                 exceptionReport.AppendLine(String.Format("Operating System: {0}", os.VersionString));
                 exceptionReport.AppendLine(String.Format("Executable Path: {0}", System.Environment.CommandLine));
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine(exceptionString);
+                exceptionReport.AppendLine(RecursiveStackTrace);
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine(datafileReport.ToString());
+                exceptionReport.AppendLine(DatafileReport);
                 exceptionReport.AppendLine();
                 exceptionReport.AppendLine("Diagnostic Log:");
                 exceptionReport.AppendLine(trace.Trim());
@@ -150,6 +127,55 @@ namespace EVEMon
             {
                 ExceptionHandler.LogException(ex, true);
                 TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
+            }
+        }
+
+        private string DatafileReport
+        {
+            get
+            {
+                StringBuilder datafileReport = new StringBuilder();
+
+                try
+                {
+                    string[] datafiles = Directory.GetFiles(EveClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
+
+                    datafileReport.AppendLine("Datafile report");
+
+                    foreach (string datafile in datafiles)
+                    {
+                        FileInfo info = new FileInfo(datafile);
+                        datafileReport.AppendFormat("  {0} ({1}KiB - {2})", info.Name, info.Length / 1024, QuickMD5(datafile));
+                        datafileReport.AppendLine();
+                    }
+                }
+                catch
+                {
+                    datafileReport.AppendLine("Unable to create datafile report");
+                }
+                return datafileReport.ToString();
+            }
+        }
+
+        private string RecursiveStackTrace
+        {
+            get
+            {
+                StringBuilder stackTraceBuilder = new StringBuilder();
+                Exception ex = m_exception;
+
+                stackTraceBuilder.AppendLine(ex.ToString());
+
+                while (ex.InnerException != null)
+                {
+                    ex = ex.InnerException;
+
+                    stackTraceBuilder.AppendLine();
+                    stackTraceBuilder.AppendLine(ex.ToString());
+                }
+
+                stackTraceBuilder = stackTraceBuilder.Replace("D:\\EVEMon\\", "");
+                return stackTraceBuilder.ToString();
             }
         }
 
@@ -185,6 +211,7 @@ namespace EVEMon
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
+
             if (dr == DialogResult.Yes)
             {
                 Settings.Reset();

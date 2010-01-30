@@ -110,6 +110,7 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -536,7 +537,8 @@ namespace EVEMon
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exceptionWindowToolStripMenuItem});
+            this.exceptionWindowToolStripMenuItem,
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.testToolStripMenuItem.Text = "Te&st";
@@ -545,7 +547,7 @@ namespace EVEMon
             // exceptionWindowToolStripMenuItem
             // 
             this.exceptionWindowToolStripMenuItem.Name = "exceptionWindowToolStripMenuItem";
-            this.exceptionWindowToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.exceptionWindowToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.exceptionWindowToolStripMenuItem.Text = "Exception Window";
             this.exceptionWindowToolStripMenuItem.Click += new System.EventHandler(this.ExceptionWindowToolStripMenuItem_Click);
             // 
@@ -795,6 +797,7 @@ namespace EVEMon
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.notificationList.Location = new System.Drawing.Point(0, 552);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
@@ -810,6 +813,13 @@ namespace EVEMon
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
+            // 
+            // exceptionWindowRecursiveExceptionToolStripMenuItem
+            // 
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Name = "exceptionWindowRecursiveExceptionToolStripMenuItem";
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Text = "Exception Window (Recursive Exception)";
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Click += new System.EventHandler(this.exceptionWindowRecursiveExceptionToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -925,5 +935,6 @@ namespace EVEMon
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
     }
 }

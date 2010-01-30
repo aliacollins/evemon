@@ -1566,6 +1566,16 @@ namespace EVEMon
             throw new Exception("Test Exception");
         }
 
+        /// <summary>
+        /// Thrown an exception with an inner excetpion just to test the exception handler is working
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new Exception("Test Exception", new Exception("Inner Exception"));
+        }
+
         #endregion
 
 
@@ -1735,5 +1745,6 @@ namespace EVEMon
             }
         }
         #endregion
+
     }
 }
