@@ -32,6 +32,9 @@ namespace EVEMon
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.trayIconToolStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.plansStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.relocatorTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.relocatorTrayToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -82,6 +85,7 @@ namespace EVEMon
             this.forumsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ttMainWindow = new System.Windows.Forms.ToolTip(this.components);
             this.standardToolbar = new System.Windows.Forms.ToolStrip();
             this.accountsManagementTbMenu = new System.Windows.Forms.ToolStripButton();
@@ -110,7 +114,6 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
-            this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -124,30 +127,50 @@ namespace EVEMon
             // 
             this.trayIconToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToolStripMenuItem,
+            this.plansStripSeparator,
+            this.relocatorTrayToolStripMenuItem,
+            this.relocatorTrayToolStripSeparator,
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(114, 70);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(153, 126);
             this.trayIconToolStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
             this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.planToolStripMenuItem.Text = "Plans";
+            // 
+            // plansStripSeparator
+            // 
+            this.plansStripSeparator.Name = "plansStripSeparator";
+            this.plansStripSeparator.Size = new System.Drawing.Size(149, 6);
+            // 
+            // relocatorTrayToolStripMenuItem
+            // 
+            this.relocatorTrayToolStripMenuItem.Name = "relocatorTrayToolStripMenuItem";
+            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.relocatorTrayToolStripMenuItem.Tag = "";
+            this.relocatorTrayToolStripMenuItem.Text = "Relocator";
+            // 
+            // relocatorTrayToolStripSeparator
+            // 
+            this.relocatorTrayToolStripSeparator.Name = "relocatorTrayToolStripSeparator";
+            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -551,6 +574,13 @@ namespace EVEMon
             this.exceptionWindowToolStripMenuItem.Text = "Exception Window";
             this.exceptionWindowToolStripMenuItem.Click += new System.EventHandler(this.ExceptionWindowToolStripMenuItem_Click);
             // 
+            // exceptionWindowRecursiveExceptionToolStripMenuItem
+            // 
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Name = "exceptionWindowRecursiveExceptionToolStripMenuItem";
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Text = "Exception Window (Recursive Exception)";
+            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Click += new System.EventHandler(this.exceptionWindowRecursiveExceptionToolStripMenuItem_Click);
+            // 
             // standardToolbar
             // 
             this.standardToolbar.ContextMenuStrip = this.toolbarContext;
@@ -814,13 +844,6 @@ namespace EVEMon
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             // 
-            // exceptionWindowRecursiveExceptionToolStripMenuItem
-            // 
-            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Name = "exceptionWindowRecursiveExceptionToolStripMenuItem";
-            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Text = "Exception Window (Recursive Exception)";
-            this.exceptionWindowRecursiveExceptionToolStripMenuItem.Click += new System.EventHandler(this.exceptionWindowRecursiveExceptionToolStripMenuItem_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -936,5 +959,8 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem relocatorTrayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator relocatorTrayToolStripSeparator;
     }
 }

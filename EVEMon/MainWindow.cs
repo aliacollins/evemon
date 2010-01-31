@@ -1657,7 +1657,7 @@ namespace EVEMon
         {
             HidePopup();
 
-            // Scroll through characters
+            // Create the Plans sub-menu
             List<Character> characters = new List<Character>(EveClient.MonitoredCharacters);
             characters.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
             foreach (var character in characters)
@@ -1666,6 +1666,12 @@ namespace EVEMon
                 planToolStripMenuItem.DropDownItems.Add(characterItem);
 
                 character.Plans.AddTo(characterItem.DropDownItems, InitializePlanItem);
+            }
+
+            // Create the Relocator sub-menu
+            if (Settings.UI.MainWindow.ShowRelocationMenu)
+            {
+                relocationMenu_DropDownOpening(relocatorTrayToolStripMenuItem, e);
             }
         }
 
@@ -1697,8 +1703,11 @@ namespace EVEMon
 
             // Relocate window
             relocatorMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocatorTrayToolStripMenuItem.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
             relocatorTbMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+
             relocatorSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
+            relocatorTrayToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
 
             // Updates manager.
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
