@@ -15,7 +15,7 @@ namespace EVEMon.Common.Data
 
         public Material(SerializableMaterialQuantity src)
         {
-            m_product = StaticItems.GetItem(src.ID);
+            m_product = StaticItems.GetItemByID(src.ID);
             m_quantity = src.Quantity;
         }
 

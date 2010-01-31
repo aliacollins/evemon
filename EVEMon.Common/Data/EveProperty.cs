@@ -220,7 +220,7 @@ namespace EVEMon.Common.Data
                         // A reference to an item or a skill.
                         case 116: // "typeID"
                             int id = Int32.Parse(value);
-                            return StaticItems.GetItem(id).Name;
+                            return StaticItems.GetItemByID(id).Name;
 
                         // Format a Sizeclass
                         case 117: // "1=small 2=medium 3=l"

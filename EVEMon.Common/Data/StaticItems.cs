@@ -69,7 +69,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="itemName">The name of the item to find.</param>
         /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
-        public static Item FindItem(string itemName)
+        public static Item GetItemByName(string itemName)
         {
             foreach (var item in s_itemsByID.Values)
             {
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="itemId">The id of the item to find.</param>
         /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
-        public static Item GetItem(int itemId)
+        public static Item GetItemByID(int itemId)
         {
             Item value = null;
             s_itemsByID.TryGetValue(itemId, out value);

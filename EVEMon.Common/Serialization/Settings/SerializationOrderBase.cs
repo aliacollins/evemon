@@ -33,6 +33,13 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlAttribute("itemID")]
+        public int ItemID
+        {
+            get;
+            set;
+        }
+
         [XmlAttribute("item")]
         public string Item
         {

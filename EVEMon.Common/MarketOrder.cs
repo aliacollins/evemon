@@ -27,6 +27,7 @@ namespace EVEMon.Common
         protected DateTime m_issued;
 
         protected readonly int m_orderID;
+        protected readonly int m_itemID;
         protected readonly Item m_item;
         protected readonly Station m_station;
         protected readonly int m_initialVolume;
@@ -45,7 +46,8 @@ namespace EVEMon.Common
         {
             m_state = GetState(src);
             m_orderID = src.OrderID;
-            m_item = StaticItems.GetItem(src.ItemID);
+            m_itemID = src.ItemID;
+            m_item = StaticItems.GetItemByID(src.ItemID);
             m_station = StaticGeography.GetStation(src.StationID);
             m_unitaryPrice = src.UnitaryPrice;
             m_initialVolume = src.InitialVolume;
@@ -65,7 +67,8 @@ namespace EVEMon.Common
             m_ignored = src.Ignored;
             m_orderID = src.OrderID;
             m_state = src.State;
-            m_item = StaticItems.FindItem(src.Item);
+            m_itemID = GetItemID(src);
+            m_item = GetItem(src);
             m_station = StaticGeography.GetStation(src.StationID);
             m_unitaryPrice = src.UnitaryPrice;
             m_initialVolume = src.InitialVolume;
@@ -91,7 +94,8 @@ namespace EVEMon.Common
             src.Ignored = m_ignored;
             src.OrderID = m_orderID;
             src.State = m_state;
-            src.Item = m_item.Name;
+            src.ItemID = m_itemID;
+            src.Item = (m_item != null ? m_item.Name : "Unknown Item");
             src.StationID = m_station.ID;
             src.UnitaryPrice = m_unitaryPrice;
             src.InitialVolume = m_initialVolume;
@@ -155,6 +159,47 @@ namespace EVEMon.Common
             return false;
         }
 
+        /// <summary>
+        /// Gets an items ID either by source or by name
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static int GetItemID(SerializableOrderBase src)
+        {
+            int itemID;
+
+            // Try get item ID by source
+            itemID = src.ItemID;
+
+            // We failed? Try get item ID by name
+            if (itemID == 0)
+            {
+                var item = StaticItems.GetItemByName(src.Item);
+                itemID = (item == null ? 0 : item.ID);
+            }
+            
+            return itemID;
+        }
+
+        /// <summary>
+        /// Gets an item by its ID or its name
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static Item GetItem(SerializableOrderBase src)
+        {
+            Item item = null;
+
+            // Try get item by its ID
+            item = StaticItems.GetItemByID(src.ItemID);
+
+            // We failed? Try get item by its name
+            if (item == null)
+                item = StaticItems.GetItemByName(src.Item);
+
+            return item;
+        }
+        
         /// <summary>
         /// Gets the state of an order.
         /// </summary>

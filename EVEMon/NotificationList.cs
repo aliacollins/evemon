@@ -409,6 +409,9 @@ namespace EVEMon
 
                     foreach (var order in orderGroup)
                     {
+                        if (order.Item == null)
+                            continue;
+
                         int volume = order.InitialVolume;
                         var format = AbbreviationFormat.AbbreviationSymbols;
 

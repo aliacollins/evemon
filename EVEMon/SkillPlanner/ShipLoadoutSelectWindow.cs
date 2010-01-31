@@ -262,8 +262,9 @@ namespace EVEMon.SkillPlanner
 
                 foreach (var slot in slotType)
                 {
-                    Item item = StaticItems.GetItem(slot.ItemID);
-                    if (item == null) continue;
+                    Item item = StaticItems.GetItemByID(slot.ItemID);
+                    if (item == null)
+                        continue;
 
                     TreeNode slotNode = new TreeNode();
                     slotNode.Text = item.Name;

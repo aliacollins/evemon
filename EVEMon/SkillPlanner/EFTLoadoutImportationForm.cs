@@ -220,8 +220,8 @@ namespace EVEMon.SkillPlanner
             string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
             string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
 
-            Item item = StaticItems.FindItem(itemName);
-            Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.FindItem(chargeName) : null;
+            Item item = StaticItems.GetItemByName(itemName);
+            Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;
             
             // Regular item ?
             if (item != null)
@@ -255,7 +255,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Retrieve the item
                 itemName = line.Contains(" x") ? line.Substring(0, line.LastIndexOf(" x")) : line;
-                item = StaticItems.FindItem(itemName);
+                item = StaticItems.GetItemByName(itemName);
 
                 // Add it to the drones node
                 if (item != null)

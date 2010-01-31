@@ -353,6 +353,9 @@ namespace EVEMon
                 // Add the items in every group.
                 foreach (var order in group)
                 {
+                    if (order.Item == null)
+                        continue;
+
                     var item = new ListViewItem(order.Item.Name, listGroup);
                     item.UseItemStyleForSubItems = false;
                     item.Tag = order;
