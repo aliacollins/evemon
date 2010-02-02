@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -234,13 +235,13 @@ namespace EVEMon
         }
     }
 
+
     #region DatafileVersions
     [XmlRoot("evemon")]
     public class DatafileVersions
     {
         [XmlArray("datafiles"), XmlArrayItem("datafile", typeof(DatafileVersion))]
-        public System.Collections.ArrayList Datafiles =
-           new System.Collections.ArrayList();
+        public ArrayList Datafiles = new ArrayList();
 
         private List<DatafileVersion> m_changedList = new List<DatafileVersion>();
         public List<DatafileVersion> ChangedDataFiles
@@ -276,6 +277,7 @@ namespace EVEMon
         }
     }
     #endregion
+
 
     #region DatafileVersion
     public class DatafileVersion

@@ -53,7 +53,12 @@ namespace EVEMon
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
                 pbProgress.Maximum = 100;
+                
+                // Under Vista and Windows 7 there is a lag when progress bar updates too quick.
+                // This hackish way though solves this issue (in a way) as explained in
+                // http://stackoverflow.com/questions/977278/how-can-i-make-the-progress-bar-update-fast-enough/1214147#1214147.
                 pbProgress.Value = e.ProgressPercentage;
+                pbProgress.Value = (e.ProgressPercentage == 0 ? e.ProgressPercentage : e.ProgressPercentage - 1);
             }
             else
             {
@@ -100,7 +105,7 @@ namespace EVEMon
             Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btCancel_Click(object sender, EventArgs e)
         {
             if (m_request != null)
                 EveClient.HttpWebService.CancelRequest(m_request);

@@ -128,6 +128,10 @@ namespace EVEMon.Common.Net
                         }
                     }
                 } while (bytesRead > 0 && !Cancelled);
+
+                // In case filesize don't agree we retry to download
+                if (totalBytesRead != webResponse.ContentLength && m_asyncState.ProgressCallback != null)
+                    GetResponse(url, responseStream, accept, postData);
             }
             catch (HttpWebServiceException ex)
             {
@@ -144,8 +148,10 @@ namespace EVEMon.Common.Net
             }
             finally
             {
-                if (webResponseStream != null) webResponseStream.Close();
-                if (webResponse != null) webResponse.Close();
+                if (webResponseStream != null)
+                    webResponseStream.Close();
+                if (webResponse != null)
+                    webResponse.Close();
             }
         }
 
@@ -191,7 +197,8 @@ namespace EVEMon.Common.Net
             }
 
             // Prevents invoking the callback on the UI thread when the application has been closed.
-            if (EveClient.Closed) return;
+            if (EveClient.Closed)
+                return;
             m_asyncState.Callback(m_asyncState);
         }
 
@@ -259,7 +266,8 @@ namespace EVEMon.Common.Net
             request.Accept = m_accept;
             request.Timeout = Timeout;
 
-            if (referer != null) request.Referer = referer;
+            if (referer != null)
+                request.Referer = referer;
             if (m_postData != null)
             {
                 request.Method = "POST";

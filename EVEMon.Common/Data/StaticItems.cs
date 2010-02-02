@@ -92,7 +92,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Load the items from the datafile
+        /// Initialize static items
         /// </summary>
         internal static void Load()
         {

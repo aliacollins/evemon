@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -19,7 +17,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Update the datafiles checksums
+        /// Update the datafiles list
         /// </summary>
         public void Refresh()
         {
@@ -36,7 +34,7 @@ namespace EVEMon.Common
             // Don't worry if we cant create MD5 maybe they have FIPS enforced.
             catch (Exception)
             {
-                System.Diagnostics.Trace.Write("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
+                EveClient.Trace("Couldn't compute datafiles checksums. FIPS was enforced, the datafiles were missing, or we couldn't copy to %APPDATA%.");
             }
         }
     }

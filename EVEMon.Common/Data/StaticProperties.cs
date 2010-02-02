@@ -79,7 +79,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Initializa static skills
+        /// Initialize static properties
         /// </summary>
         internal static void Load()
         {

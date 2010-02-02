@@ -30,9 +30,8 @@ namespace EVEMon
             StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
             foreach (DatafileVersion dfv in m_args.ChangedFiles)
             {
-                changedFiles.Append(String.Format(CultureInfo.CurrentCulture, "{0} dated {1}. Url: {2}/{0}\n", dfv.Name, dfv.DateChanged, dfv.Url));
-                notes.Append(dfv.Message);
-                notes.Append("\n");
+                changedFiles.AppendFormat(CultureInfo.CurrentCulture, "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}", dfv.Name, dfv.DateChanged, dfv.Url, Environment.NewLine);
+                notes.AppendLine(dfv.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
             tbNotes.Lines = notes.ToString().Split('\n');
@@ -47,27 +46,41 @@ namespace EVEMon
 
                 string newFilename = String.Format(CultureInfo.CurrentCulture, "{0}.tmp", oldFilename);
                 File.Delete(newFilename);
-                using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
+                bool checksumOK = false;
+                do
                 {
-                    f.ShowDialog();
-                    if (f.DialogResult == DialogResult.OK)
-                    { 
-                        try
+                    using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
+                    {
+                        f.ShowDialog();
+                        if (f.DialogResult == DialogResult.OK)
                         {
-                            File.Delete(oldFilename + ".bak");
-                            File.Copy(oldFilename,oldFilename + ".bak");
-                            File.Delete(oldFilename);
-                            File.Move(newFilename,oldFilename);
+                            string filename = Path.GetFileName(newFilename);
+                            Datafile datafile = new Datafile(filename);
+
+                            if (datafile.Sum != dfv.Md5)
+                            {
+                                File.Delete(newFilename);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    File.Delete(oldFilename + ".bak");
+                                    File.Copy(oldFilename, oldFilename + ".bak");
+                                    File.Delete(oldFilename);
+                                    File.Move(newFilename, oldFilename);
+                                }
+                                catch (IOException ex)
+                                {
+                                    ExceptionHandler.LogException(ex, true);
+                                }
+
+                                checksumOK = true;
+                            }
                         }
-                        catch (IOException ex) 
-                        {
-                            ExceptionHandler.LogException(ex, true);
-                        }
-                        // download, patch and update settings MD5.
                     }
-                }
+                } while (!checksumOK);
             }
-            EveClient.Datafiles.Refresh();
             Settings.SaveImmediate();
 
             MessageBox.Show("Your datafiles have been updated. Please restart EVEMon for them to take effect.", "Data Files Updated", MessageBoxButtons.OK);

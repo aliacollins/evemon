@@ -89,13 +89,13 @@ namespace EVEMon
             // tbNotes
             // 
             this.tbNotes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbNotes.Location = new System.Drawing.Point(3, 81);
+            this.tbNotes.Location = new System.Drawing.Point(3, 203);
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ReadOnly = true;
             this.tbNotes.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbNotes.Size = new System.Drawing.Size(568, 276);
+            this.tbNotes.Size = new System.Drawing.Size(568, 154);
             this.tbNotes.TabIndex = 1;
             // 
             // tbFiles
@@ -105,7 +105,8 @@ namespace EVEMon
             this.tbFiles.Name = "tbFiles";
             this.tbFiles.ReadOnly = true;
             this.tbFiles.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tbFiles.Size = new System.Drawing.Size(568, 59);
+            this.tbFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbFiles.Size = new System.Drawing.Size(568, 181);
             this.tbFiles.TabIndex = 4;
             // 
             // DataUpdateNotifyForm

@@ -8,30 +8,33 @@ namespace EVEMon.Common.Controls
 {
     public partial class StaticDataErrorForm : EVEMonForm
     {
-        private readonly string _errorMessage;
-        private static StaticDataErrorForm _errorForm;
-
-        public StaticDataErrorForm() :this(string.Empty){}
-
-        public StaticDataErrorForm(string errorMessage)
+        private readonly string m_errorMessage;
+        private static StaticDataErrorForm m_errorForm;
+        
+        public StaticDataErrorForm()
         {
             InitializeComponent();
-            _errorMessage = errorMessage;
+        }
+
+        public StaticDataErrorForm(string errorMessage)
+            : this()
+        {
+            m_errorMessage = errorMessage;
         }
 
         public static void ShowError(string errorMessage)
         {
-            if (_errorForm == null)
+            if (m_errorForm == null)
             {
-                _errorForm = new StaticDataErrorForm(errorMessage);
-                _errorForm.Show();
+                m_errorForm = new StaticDataErrorForm(errorMessage);
+                m_errorForm.Show();
             }
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            _errorForm = null;
+            m_errorForm = null;
         }
         protected override void OnLoad(EventArgs e)
         {
@@ -50,7 +53,7 @@ namespace EVEMon.Common.Controls
         private void SetErrorDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(_errorMessage);
+            sb.Append(m_errorMessage);
             sb.Append(Environment.NewLine);
             sb.Append(Environment.NewLine);
             sb.Append("Diagnostic information");
@@ -97,4 +100,3 @@ namespace EVEMon.Common.Controls
         }
     }
 }
-

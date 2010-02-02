@@ -70,9 +70,9 @@ namespace EVEMon
                 int oWidth = i.Width;
                 if (i.Height > BugPictureBox.ClientSize.Height)
                 {
-                    Double scale = Convert.ToDouble(BugPictureBox.ClientSize.Height) / Convert.ToDouble(i.Height);
-                    oHeight = Convert.ToInt32(oHeight * scale);
-                    oWidth = Convert.ToInt32(oWidth * scale);
+                    double scale = (double)(BugPictureBox.ClientSize.Height) / (double)(i.Height);
+                    oHeight = (int)(oHeight * scale);
+                    oWidth = (int)(oWidth * scale);
                     Bitmap b = new Bitmap(i, new Size(oWidth, oHeight));
 
                     int oRight = BugPictureBox.Right;
@@ -109,17 +109,17 @@ namespace EVEMon
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport.AppendLine(String.Format("EVEMon Version: {0}", Application.ProductVersion));
-                exceptionReport.AppendLine(String.Format(".NET Runtime Version: {0}", System.Environment.Version));
-                exceptionReport.AppendLine(String.Format("Operating System: {0}", os.VersionString));
-                exceptionReport.AppendLine(String.Format("Executable Path: {0}", System.Environment.CommandLine));
+                exceptionReport.AppendFormat("EVEMon Version: {0}{1}", Application.ProductVersion, Environment.NewLine);
+                exceptionReport.AppendFormat(".NET Runtime Version: {0}{1}", Environment.Version, Environment.NewLine);
+                exceptionReport.AppendFormat("Operating System: {0}{1}", os.VersionString, Environment.NewLine);
+                exceptionReport.AppendFormat("Executable Path: {0}{1}", Environment.CommandLine, Environment.NewLine);
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine(RecursiveStackTrace);
+                exceptionReport.Append(RecursiveStackTrace).AppendLine();
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine(DatafileReport);
+                exceptionReport.Append(DatafileReport).AppendLine();
                 exceptionReport.AppendLine();
-                exceptionReport.AppendLine("Diagnostic Log:");
-                exceptionReport.AppendLine(trace.Trim());
+                exceptionReport.Append("Diagnostic Log:").AppendLine();
+                exceptionReport.Append(trace.Trim()).AppendLine();
 
                 TechnicalDetailsTextBox.Text = exceptionReport.ToString();
             }
@@ -140,18 +140,17 @@ namespace EVEMon
                 {
                     string[] datafiles = Directory.GetFiles(EveClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
 
-                    datafileReport.AppendLine("Datafile report");
+                    datafileReport.AppendLine("Datafile report:");
 
                     foreach (string datafile in datafiles)
                     {
                         FileInfo info = new FileInfo(datafile);
-                        datafileReport.AppendFormat("  {0} ({1}KiB - {2})", info.Name, info.Length / 1024, QuickMD5(datafile));
-                        datafileReport.AppendLine();
+                        datafileReport.AppendFormat("  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, QuickMD5(datafile), Environment.NewLine);
                     }
                 }
                 catch
                 {
-                    datafileReport.AppendLine("Unable to create datafile report");
+                    datafileReport.Append("Unable to create datafile report").AppendLine();
                 }
                 return datafileReport.ToString();
             }
@@ -164,14 +163,14 @@ namespace EVEMon
                 StringBuilder stackTraceBuilder = new StringBuilder();
                 Exception ex = m_exception;
 
-                stackTraceBuilder.AppendLine(ex.ToString());
+                stackTraceBuilder.Append(ex.ToString()).AppendLine();
 
                 while (ex.InnerException != null)
                 {
                     ex = ex.InnerException;
 
                     stackTraceBuilder.AppendLine();
-                    stackTraceBuilder.AppendLine(ex.ToString());
+                    stackTraceBuilder.Append(ex.ToString()).AppendLine();
                 }
 
                 stackTraceBuilder = stackTraceBuilder.Replace("D:\\EVEMon\\", "");

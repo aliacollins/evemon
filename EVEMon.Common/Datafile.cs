@@ -20,7 +20,7 @@ namespace EVEMon.Common
         /// Constructor
         /// </summary>
         /// <param name="filename"></param>
-        internal Datafile(string filename)
+        public Datafile(string filename)
         {
             // The file may be in local directory, %APPDATA%, etc.
             m_fileName = filename;
@@ -31,7 +31,8 @@ namespace EVEMon.Common
             using (FileStream fs = File.Open(fullpath, FileMode.Open))
             {
                 byte[] hash = md5.ComputeHash(fs);
-                foreach (byte b in hash) builder.Append(b.ToString("x2").ToLower());
+                foreach (byte b in hash)
+                    builder.Append(b.ToString("x2").ToLower());
             }
 
             m_sum = builder.ToString();
@@ -71,7 +72,8 @@ namespace EVEMon.Common
                 Path.DirectorySeparatorChar,
                 filename);
 
-            if (File.Exists(filepath)) return filepath;
+            if (File.Exists(filepath))
+                return filepath;
 
             // File isn't in the current folder, look in installation directory ("resources" subdirectory)
             string baseFile = String.Format(

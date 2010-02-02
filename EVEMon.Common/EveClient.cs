@@ -48,7 +48,8 @@ namespace EVEMon.Common
         {
             lock (s_initializationLock)
             {
-                if (s_initialized) return;
+                if (s_initialized)
+                    return;
                 s_initialized = true;
 
                 Trace("EveClient.Initialize() - begin");
@@ -135,7 +136,8 @@ namespace EVEMon.Common
             lock (s_pathsInitializationLock)
             {
                 // Ensure it is made once only
-                if (!String.IsNullOrEmpty(s_settingsFile)) return;
+                if (!String.IsNullOrEmpty(s_settingsFile))
+                    return;
 
 #if DEBUG
                 s_settingsFile = "settings-debug.xml";
@@ -212,7 +214,8 @@ namespace EVEMon.Common
             string filePattern = "*_tranquility";
 
             // check folder exists
-            if (!Directory.Exists(EVEApplicationData)) return;
+            if (!Directory.Exists(EVEApplicationData))
+                return;
 
             // enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationData);
@@ -460,7 +463,8 @@ namespace EVEMon.Common
             Trace("EveClient.OnSettingsChanged");
             Settings.Save();
             UpdateSettings();
-            if (SettingsChanged != null) SettingsChanged(null, EventArgs.Empty);
+            if (SettingsChanged != null)
+                SettingsChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -470,7 +474,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnSchedulerChanged");
             Settings.Save();
-            if (SchedulerChanged != null) SchedulerChanged(null, EventArgs.Empty);
+            if (SchedulerChanged != null)
+                SchedulerChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -480,7 +485,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnAccountCollectionChanged");
             Settings.Save();
-            if (AccountCollectionChanged != null) AccountCollectionChanged(null, EventArgs.Empty);
+            if (AccountCollectionChanged != null)
+                AccountCollectionChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -490,7 +496,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnMonitoredCharactersChanged");
             Settings.Save();
-            if (MonitoredCharacterCollectionChanged != null) MonitoredCharacterCollectionChanged(null, EventArgs.Empty);
+            if (MonitoredCharacterCollectionChanged != null)
+                MonitoredCharacterCollectionChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -500,7 +507,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnCharacterCollectionChanged");
             Settings.Save();
-            if (CharacterCollectionChanged != null) CharacterCollectionChanged(null, EventArgs.Empty);
+            if (CharacterCollectionChanged != null)
+                CharacterCollectionChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -511,7 +519,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnCharacterChanged - " + character.Name);
             Settings.Save();
-            if (CharacterChanged != null) CharacterChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterChanged != null)
+                CharacterChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -522,7 +531,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnCharacterMarketOrdersChanged - " + character.Name);
             Settings.Save();
-            if (CharacterMarketOrdersChanged != null) CharacterMarketOrdersChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterMarketOrdersChanged != null)
+                CharacterMarketOrdersChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -533,7 +543,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnCharacterPortraitChanged - " + character.Name);
             Settings.Save();
-            if (CharacterPortraitChanged != null) CharacterPortraitChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterPortraitChanged != null)
+                CharacterPortraitChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -544,7 +555,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnCharacterPlanCollectionChanged - " + character.Name);
             Settings.Save();
-            if (CharacterPlanCollectionChanged != null) CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterPlanCollectionChanged != null)
+                CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -555,7 +567,8 @@ namespace EVEMon.Common
         internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
         {
             Trace("EveClient.OnCharacterQueuedSkillsCompleted - " + character.Name);
-            if (QueuedSkillsCompleted != null) QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
+            if (QueuedSkillsCompleted != null)
+                QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
 
         /// <summary>
@@ -566,7 +579,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnPlanChanged - " + plan.Name);
             Settings.Save();
-            if (PlanChanged != null) PlanChanged(null, new PlanChangedEventArgs(plan));
+            if (PlanChanged != null)
+                PlanChanged(null, new PlanChangedEventArgs(plan));
         }
 
         /// <summary>
@@ -577,7 +591,8 @@ namespace EVEMon.Common
         {
             Trace("EveClient.OnPlanNameChanged - " + plan.Name);
             Settings.Save();
-            if (PlanNameChanged != null) PlanNameChanged(null, new PlanChangedEventArgs(plan));
+            if (PlanNameChanged != null)
+                PlanNameChanged(null, new PlanChangedEventArgs(plan));
         }
 
         /// <summary>
@@ -589,7 +604,8 @@ namespace EVEMon.Common
         internal static void OnServerStatusUpdated(EveServer server, ServerStatus previousStatus, ServerStatus status)
         {
             Trace("EveClient.OnServerStatusUpdated");
-            if (ServerStatusUpdated != null) ServerStatusUpdated(null, new EveServerEventArgs(server, previousStatus, status));
+            if (ServerStatusUpdated != null)
+                ServerStatusUpdated(null, new EveServerEventArgs(server, previousStatus, status));
         }
 
         /// <summary>
@@ -599,7 +615,8 @@ namespace EVEMon.Common
         internal static void OnNotificationSent(Notification notification)
         {
             Trace("EveClient.OnNotificationSent - " + notification.ToString());
-            if (NotificationSent != null) NotificationSent(null, notification);
+            if (NotificationSent != null)
+                NotificationSent(null, notification);
         }
 
         /// <summary>
@@ -609,7 +626,8 @@ namespace EVEMon.Common
         internal static void OnNotificationInvalidated(NotificationInvalidationEventArgs args)
         {
             Trace("EveClient.OnNotificationInvalidated");
-            if (NotificationInvalidated != null) NotificationInvalidated(null, args);
+            if (NotificationInvalidated != null)
+                NotificationInvalidated(null, args);
         }
         #endregion 
 

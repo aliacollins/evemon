@@ -87,7 +87,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Ensure the static datas are initialized
+        /// Initialize static certificates
         /// </summary>
         internal static void Load()
         {
