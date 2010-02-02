@@ -776,9 +776,9 @@ namespace EVEMon.SkillPlanner
             cmiPlanTo.Enabled = skill != null;
             if (skill != null)
             {
-                for (int i = 1; i <= 5; i++)
+                for (int i = 0; i <= 5; i++)
                 {
-                    PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i - 1], m_plan, this.SelectedSkill, i);
+                    PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, this.SelectedSkill, i);
                 }
             }
         }
@@ -797,9 +797,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // "Plan to N" menus
-            for (int i = 1; i <= 5; i++)
+            for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i - 1], m_plan, this.SelectedSkill, i);
+                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, this.SelectedSkill, i);
             }
 
             // "Show in skills browser"

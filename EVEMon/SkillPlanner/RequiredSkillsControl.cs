@@ -240,9 +240,9 @@ namespace EVEMon.SkillPlanner
             // "Plan to N" menus
             var skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
             var skill = skillLevel.Skill;
-            for (int i = 1; i <= 5; i++)
+            for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i - 1], m_plan, skill, i);
+                PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, skill, i);
             }
         }
 
