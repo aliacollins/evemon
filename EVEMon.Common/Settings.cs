@@ -300,6 +300,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static SerializableSettings TryDeserializeBackup(string backupFile, string settingsFile, bool recover)
         {
+            SerializableSettings settings = null;
+
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
@@ -318,9 +320,20 @@ namespace EVEMon.Common
                             return null;
                         }
                     }
+                    // Gets the revision number of the assembly which generated this file.
+                    int revision = Util.GetRevisionNumber(backupFile);
 
-                    // Try to load from backup file
-                    var settings = Util.DeserializeXML<SerializableSettings>(backupFile);
+                    // Try to load from a backup file
+                    if (revision == 0)
+                    {
+                        // Old format
+                        settings = DeserializeOldFormat(backupFile);
+                    }
+                    else
+                    {
+                        // New format
+                        settings = Util.DeserializeXML<SerializableSettings>(backupFile);
+                    }
 
                     // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
                     if (settings != null)
