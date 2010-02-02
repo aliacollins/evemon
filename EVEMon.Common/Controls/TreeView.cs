@@ -67,6 +67,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
@@ -320,6 +321,14 @@ namespace EVEMon.Common.Controls
 			}
 		}
 
+        /// <summary>
+        /// Gets the last selected node.
+        /// </summary>
+        public TreeNode LastSelectedNode
+        {
+            get { return tnMostRecentSelectedNode; }
+        }
+
 		/// <summary>
 		/// Occurs when a tree node is added to the SelectedNodes collection.
 		/// </summary>
@@ -511,6 +520,10 @@ namespace EVEMon.Common.Controls
 			return false;
 		}
 
+        /// <summary>
+        /// Preserves the nodes color.
+        /// </summary>
+        /// <param name="tn">Node to check.</param>
 		private void PreserveNodeColors(TreeNode tn)
 		{
 			if (tn == null)
@@ -939,16 +952,16 @@ namespace EVEMon.Common.Controls
 #endif
 		}
 
-		private bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e)
+        /// <summary>
+        /// Checks if we have clicked on the plus/minus icon.
+        /// </summary>
+        /// <param name="tn">Node to check.</param>
+        /// <returns>True if we click on the plus/minus icon</returns>
+        private bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e)
 		{
-/*
-			int intNodeLevel = GetNodeLevel(tn);
-			bool blnPlusMinusClicked = false;
-			if (e.X < 20 + (intNodeLevel * 20))
-				blnPlusMinusClicked = true;
+            if (tn == null)
+                return false;
 
-			return blnPlusMinusClicked;
- */
             return e.X < tn.Bounds.X;
 		}
 
@@ -984,7 +997,7 @@ namespace EVEMon.Common.Controls
 					// Flash node. In case the node selection is cancelled by the user, this gives the effect that it
 					// was selected and unselected again.
 					tnToFlash = tn;
-					System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(FlashNode));
+					Thread t = new Thread(new ThreadStart(FlashNode));
 					t.Start();
 
 					blnNodeProcessedOnMouseDown = true;
@@ -1007,9 +1020,10 @@ namespace EVEMon.Common.Controls
 			if (this.InvokeRequired)
 			{
 				this.Invoke(new MethodInvoker(delegate
-												  {
-													  FlashNode();
-												  }));
+                    { 
+                        FlashNode();
+                    }
+                    ));
 				return;
 			}
 
@@ -1022,7 +1036,7 @@ namespace EVEMon.Common.Controls
 				this.Invalidate();
 				this.Refresh();
 				Application.DoEvents();
-				System.Threading.Thread.Sleep(200);
+				Thread.Sleep(200);
 			}
 
 			// If node is not selected yet, restore default colors to end flashing
@@ -1038,7 +1052,7 @@ namespace EVEMon.Common.Controls
 		/// </summary>
 		private void StartEdit()
 		{
-			System.Threading.Thread.Sleep(200);
+			Thread.Sleep(200);
 			if (!blnWasDoubleClick)
 			{
 				blnInternalCall = true;
@@ -1065,7 +1079,7 @@ namespace EVEMon.Common.Controls
 		/// <param name="keys">Keys.</param>
 		/// <param name="tva">TreeViewAction.</param>
 		/// <param name="allowStartEdit">True if node can go to edit mode, false if not.</param>
-		private void ProcessNodeRange(TreeNode startNode, TreeNode endNode, MouseEventArgs e, Keys keys, TreeViewAction tva, bool allowStartEdit)
+		public void ProcessNodeRange(TreeNode startNode, TreeNode endNode, MouseEventArgs e, Keys keys, TreeViewAction tva, bool allowStartEdit)
 		{
 			blnSelectionChanged = false; // prepare for OnSelectionsChanged
 
@@ -1104,7 +1118,7 @@ namespace EVEMon.Common.Controls
 						{
 							// Node should be put in edit mode					
 							tnNodeToStartEditOn = endNode;
-							System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(StartEdit));
+							Thread t = new Thread(new ThreadStart(StartEdit));
 							t.Start();
 						}
 					}

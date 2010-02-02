@@ -108,6 +108,7 @@ namespace EVEMon.SkillPlanner
                 if (SelectedSkillChanged != null)
                 {
                     SelectedSkillChanged(this, new EventArgs());
+                    tvItems.ProcessNodeRange(tvItems.LastSelectedNode, tvItems.SelectNodeWithTag(value), new MouseEventArgs(MouseButtons.Left, 1, 60, 0, 0), Control.ModifierKeys, TreeViewAction.ByMouse, true);
                 }
             }
         }
