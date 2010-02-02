@@ -971,7 +971,7 @@ namespace EVEMon
         private System.Windows.Forms.Label lblBioInfo;
         private System.Windows.Forms.Label lblCorpInfo;
         private System.Windows.Forms.Label lblBalance;
-        private EVEMon.MainWindowSkillsList skillsList;
+        private MainWindowSkillsList skillsList;
         private System.Windows.Forms.Panel pnlTraining;
         private System.Windows.Forms.Label lblTrainingEst;
         private System.Windows.Forms.Label lblTrainingRemain;

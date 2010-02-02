@@ -178,7 +178,10 @@ namespace EVEMon
             }
         }
 
-        private bool QueueHasChanged(QueuedSkill[] queue)
+        /// <summary>
+        /// Check if the queue list has changed
+        /// </summary>
+        public bool QueueHasChanged(QueuedSkill[] queue)
         {
             if (m_skillQueue == null)
                 return true;
@@ -205,7 +208,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void lbSkillsQueue_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0) return;
+            if (e.Index < 0)
+                return;
             item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
             DrawItem(item, e);
         }
@@ -217,7 +221,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.MeasureItemEventArgs"/> instance containing the event data.</param>
         private void lbSkillsQueue_MeasureItem(object sender, MeasureItemEventArgs e)
         {
-            if (e.Index < 0) return;
+            if (e.Index < 0)
+                return;
             e.ItemHeight = GetItemHeight;
         }
 
@@ -249,8 +254,17 @@ namespace EVEMon
             float percentComplete = 0;
             int skillPoints = skill.Skill.SkillPoints;
             int skillPointsToNextLevel = skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            if (skill.Level == skill.Skill.Level + 1) percentComplete = skill.Skill.FractionCompleted;
-            if (skill.Level > skill.Skill.Level + 1) skillPoints = skill.CurrentSP;
+            
+            if (skill.Level == skill.Skill.Level + 1)
+            {
+                percentComplete = skill.Skill.FractionCompleted;
+            }
+
+            if (skill.Level > skill.Skill.Level + 1)
+            {
+                skillPoints = skill.CurrentSP;
+            }
+
             string rankText = String.Format(CultureInfo.CurrentCulture, " (Rank {0})", skill.Skill.Rank);
             string spText = String.Format(CultureInfo.CurrentCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureInfo.CurrentCulture, "Level {0}", skill.Level);
@@ -305,8 +319,16 @@ namespace EVEMon
                     // Blinking indicator of skill level in training
                     if (skill.Skill.IsTraining && skill == qskill && level == skill.Level && percentComplete > 0.0)
                     {
-                        if (count == 0) g.FillRectangle(Brushes.White, brect);
-                        if (count == 1) count = -1;
+                        if (count == 0)
+                        {
+                            g.FillRectangle(Brushes.White, brect);
+                        }
+
+                        if (count == 1)
+                        {
+                            count = -1;
+                        }
+
                         count++;
                     }
                 }
@@ -399,7 +421,8 @@ namespace EVEMon
             // Update the drawing based upon the mouse wheel scrolling.
             int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
             int lines = numberOfItemLinesToMove;
-            if (lines == 0) return;
+            if (lines == 0)
+                return;
 
             // Compute the number of lines to move
             int direction = lines / Math.Abs(lines);
@@ -461,14 +484,16 @@ namespace EVEMon
         {
             // Retrieve the item at the given point and quit if none
             int index = lbSkillsQueue.IndexFromPoint(e.X, e.Y);
-            if (index < 0 || index >= lbSkillsQueue.Items.Count) return;
+            if (index < 0 || index >= lbSkillsQueue.Items.Count)
+                return;
 
             // Beware, this last index may actually means a click in the whitespace at the bottom
             // Let's deal with this special case
             if (index == lbSkillsQueue.Items.Count - 1)
             {
                 Rectangle itemRect = lbSkillsQueue.GetItemRectangle(index);
-                if (!itemRect.Contains(e.Location)) return;
+                if (!itemRect.Contains(e.Location))
+                    return;
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels.
@@ -529,7 +554,8 @@ namespace EVEMon
             {
                 // Skip until we found the mouse location
                 var rect = lbSkillsQueue.GetItemRectangle(i);
-                if (!rect.Contains(e.Location)) continue;
+                if (!rect.Contains(e.Location))
+                    continue;
 
                 // Updates the tooltip
                 item = lbSkillsQueue.Items[i] as QueuedSkill;
@@ -548,7 +574,8 @@ namespace EVEMon
         /// <param name="item"></param>
         private void DisplayTooltip(QueuedSkill item)
         {
-            if (ttToolTip.Active && m_lastTooltipItem == item) return;
+            if (ttToolTip.Active && m_lastTooltipItem == item)
+                return;
             m_lastTooltipItem = item;
 
             ttToolTip.Active = false;
@@ -565,8 +592,10 @@ namespace EVEMon
             int sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
             float percentDone = 0;
-            if (skill.Level == skill.Skill.Level + 1) percentDone = skill.FractionCompleted;
-            if (skill.Level > skill.Skill.Level + 1) sp = skill.CurrentSP;
+            if (skill.Level == skill.Skill.Level + 1)
+                percentDone = skill.FractionCompleted;
+            if (skill.Level > skill.Skill.Level + 1)
+                sp = skill.CurrentSP;
             int nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             int pointsLeft = nextLevelSP - sp;
 
@@ -694,7 +723,8 @@ namespace EVEMon
             {
                 // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
                 var training = m_character.CurrentlyTrainingSkill;
-                if (training == null) return;
+                if (training == null)
+                    return;
 
                 // Invalidate the skill row
                 int index = lbSkillsQueue.Items.IndexOf(training);
@@ -714,7 +744,8 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
             UpdateContent();
         }
 

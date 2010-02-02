@@ -146,7 +146,11 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (m_pendingUpdate) UpdateContent();
+            if (m_pendingUpdate)
+            {
+                UpdateContent();
+            }
+
             base.OnVisibleChanged(e);
         }
         #endregion
@@ -248,7 +252,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateTrainingInfo()
         {
-			var ccpCharacter = m_character as CCPCharacter;
+            var ccpCharacter = m_character as CCPCharacter;
 
             // Is the character in training ?
             if (m_character.IsTraining)
@@ -258,7 +262,7 @@ namespace EVEMon
 
                 lblTrainingSkill.Text = training.ToString();
                 lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureInfo.CurrentCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
-                lblTrainingEst.Text = String.Concat(completionTime.ToString("ddd ", CultureInfo.CurrentCulture), completionTime.ToString("G", CultureInfo.CurrentCulture));
+                lblTrainingEst.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", completionTime.ToString("ddd"), completionTime.ToString("G"));
 
                 string conflictMessage;
                 if (Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage))
@@ -271,13 +275,15 @@ namespace EVEMon
                     lblScheduleWarning.Visible = false;
                 }
 
-				if (ccpCharacter != null)
-				{
-					var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-					lblQueueCompletionTime.Text = String.Concat(queueCompletionTime.ToString("ddd ", CultureInfo.CurrentCulture), queueCompletionTime.ToString("G", CultureInfo.CurrentCulture));
-					skillQueuePanel.Visible = true;
+                if (ccpCharacter != null)
+                {
+                    var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
+                    lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
+                    if (skillsQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+                        skillQueueControl.Invalidate();
+                    skillQueuePanel.Visible = true;
                     skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 || Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
-				}
+                }
 
                 pnlTraining.Visible = true;
                 labelPaused.Visible = false;
@@ -287,8 +293,10 @@ namespace EVEMon
             // Not in training, check for paused skill queue
             if (ccpCharacter != null && !ccpCharacter.SkillQueue.IsEmpty())
             {
-				var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-				lblQueueCompletionTime.Text = String.Concat(queueCompletionTime.ToString("ddd ", CultureInfo.CurrentCulture), queueCompletionTime.ToString("G", CultureInfo.CurrentCulture));
+                var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
+                lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
+                if (skillsQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+                    skillQueueControl.Invalidate();
                 skillQueuePanel.Visible = true;
                 skillQueueTimePanel.Visible = false;
                 labelPaused.Visible = true;
@@ -308,7 +316,8 @@ namespace EVEMon
         private void UpdateErrorInfo()
         {
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter == null) return;
+            if (ccpCharacter == null)
+                return;
 
             // TODO : Errors
         }
@@ -475,7 +484,8 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
             UpdateContent();
         }
 
@@ -526,7 +536,8 @@ namespace EVEMon
         void EveClient_TimerTick(object sender, EventArgs e)
         {
             // No need to do anything when the control is not visible
-            if (!this.Visible) return;
+            if (!this.Visible)
+                return;
 
             // Is the character in training ?
             if (m_character.IsTraining)
@@ -612,7 +623,8 @@ namespace EVEMon
             foreach (ToolStripItem item in toolStrip.Items)
             {
                 // Skip tags without tag, those ones do not represent "pages switches"
-                if (item.Tag == null) continue;
+                if (item.Tag == null)
+                    continue;
 
                 // Is it the item we clicked ?
                 var button = item as ToolStripButton;
@@ -640,7 +652,8 @@ namespace EVEMon
         /// <param name="args"></param>
         void multiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs e)
         {
-            if (e.NewPage == null) return;
+            if (e.NewPage == null)
+                return;
 
             // Hides or shows the full key warning.
             UpdateWarningLabel();
@@ -664,7 +677,8 @@ namespace EVEMon
         void lblUpdateTimer_MouseHover(object sender, EventArgs e)
         {
             var ccpCharacter = (CCPCharacter)m_character;
-            if (ccpCharacter == null) return;
+            if (ccpCharacter == null)
+                return;
 
             // Updates the autotimer label's tooltip
             var sb = new StringBuilder();
@@ -763,7 +777,8 @@ namespace EVEMon
 
             // Add menus
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter == null) return;
+            if (ccpCharacter == null)
+                return;
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
                 var menu = new ToolStripMenuItem("Update " + monitor.ToString());
@@ -780,7 +795,8 @@ namespace EVEMon
         void throbberContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter == null) return;
+            if (ccpCharacter == null)
+                return;
 
             if (e.ClickedItem.Tag is APIMethods)
             {
