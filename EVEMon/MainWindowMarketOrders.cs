@@ -44,12 +44,13 @@ namespace EVEMon
             listView.Visible = false;
             listView.ShowItemToolTips = true;
             listView.AllowColumnReorder = true;
-            listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
             listView.Columns.Clear();
+            noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            noOrdersLabel.Visible = true;
+
+            listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
             listView.KeyDown += new KeyEventHandler(listView_KeyDown);
             listView.ColumnWidthChanged += new ColumnWidthChangedEventHandler(listView_ColumnWidthChanged);
-            noOrdersLabel.Visible = true;
-            noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
             this.Disposed += new EventHandler(OnDisposed);
@@ -119,7 +120,8 @@ namespace EVEMon
             set
             {
                 m_list.Clear();
-                if (value == null) return;
+                if (value == null)
+                    return;
                 m_list.AddRange(value);
             }
         }
@@ -138,7 +140,8 @@ namespace EVEMon
                 foreach (var header in listView.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
                     var columnSetting = m_columns.First(x => x.Column == (MarketOrderColumn)header.Tag);
-                    if (columnSetting.Width != -1) columnSetting.Width = header.Width;
+                    if (columnSetting.Width != -1)
+                        columnSetting.Width = header.Width;
                     newColumns.Add(columnSetting);
                 }
 
@@ -153,7 +156,8 @@ namespace EVEMon
             set 
             {
                 m_columns.Clear();
-                if (value != null) m_columns.AddRange(value.Select(x => x.Clone()));
+                if (value != null)
+                    m_columns.AddRange(value.Select(x => x.Clone()));
                 UpdateColumns();
             }
         }
@@ -175,15 +179,22 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
+
             if (this.Visible)
             {
                 var ccpCharacter = m_character as CCPCharacter;
                 this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
                 this.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 this.Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
+
+                UpdateContent();
             }
-            if (this.Visible && m_updatePending) UpdateContent();
+
+            if (m_updatePending)
+                UpdateContent();
+
             base.OnVisibleChanged(e);
         }
         # endregion
@@ -263,6 +274,7 @@ namespace EVEMon
                 m_updatePending = true;
                 return;
             }
+            m_updatePending = false;
  
             m_hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             m_numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
@@ -272,7 +284,8 @@ namespace EVEMon
             {
                 var text = m_textFilter.ToLowerInvariant();
                 var orders = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
-                if (m_character != null && m_hideInactive) orders = orders.Where(x => x.IsAvailable);
+                if (m_character != null && m_hideInactive)
+                    orders = orders.Where(x => x.IsAvailable);
                 noOrdersLabel.Visible = orders.IsEmpty();
                 listView.Visible = !orders.IsEmpty();
                 
@@ -328,7 +341,6 @@ namespace EVEMon
             finally
             {
                 listView.EndUpdate();
-                m_updatePending = false;
             }
         }
 
@@ -343,8 +355,10 @@ namespace EVEMon
             foreach (var group in groups)
             {
                 string groupText = "";
-                if (group.Key is OrderState) groupText = ((OrderState)(Object)group.Key).GetHeader().ToString();
-                else if (group.Key is DateTime) groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                if (group.Key is OrderState)
+                    groupText = ((OrderState)(Object)group.Key).GetHeader().ToString();
+                else if (group.Key is DateTime)
+                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
                 else groupText = group.Key.ToString();
 
                 var listGroup = new ListViewGroup(groupText);
@@ -448,7 +462,8 @@ namespace EVEMon
                 case MarketOrderColumn.Expiration:
                     item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription (order.Expiration).ToUpper() : "Expired");
                     item.ForeColor = (order.IsAvailable ? Color.Black : Color.Red);
-                    if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1)) item.ForeColor = Color.DarkOrange; 
+                    if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
+                        item.ForeColor = Color.DarkOrange; 
                     break;
 
                 case MarketOrderColumn.InitialVolume:
@@ -526,7 +541,8 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.OrderRange:
-                    if (order is BuyOrder) item.Text = (order as BuyOrder).RangeDescription;
+                    if (order is BuyOrder)
+                        item.Text = (order as BuyOrder).RangeDescription;
                     break;
                 
                 case MarketOrderColumn.Escrow:
@@ -575,8 +591,10 @@ namespace EVEMon
         /// <param name="e"></param>
         void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
-            if (m_isUpdatingColumns) return;
-            if (m_columns.Count <= e.ColumnIndex) return;
+            if (m_isUpdatingColumns)
+                return;
+            if (m_columns.Count <= e.ColumnIndex)
+                return;
             m_columns[e.ColumnIndex].Width = listView.Columns[e.ColumnIndex].Width;
         }
 
@@ -611,7 +629,8 @@ namespace EVEMon
             switch (e.KeyCode)
             {
                 case Keys.Delete:
-                    if (listView.SelectedItems.Count == 0) return;
+                    if (listView.SelectedItems.Count == 0)
+                        return;
 
                     // Mark as ignored
                     foreach (ListViewItem item in listView.SelectedItems)
@@ -636,7 +655,10 @@ namespace EVEMon
         void EveClient_CharacterMarketOrdersChanged(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
-            IEnumerable<MarketOrder> orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
+            if (e.Character != ccpCharacter)
+                return;
+            
+            this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
             UpdateContent();
         }
         # endregion
