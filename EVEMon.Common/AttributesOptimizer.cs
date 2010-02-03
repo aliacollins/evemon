@@ -135,7 +135,8 @@ namespace EVEMon.Common
                 m_bestDuration = m_bestScratchpad.After(m_skills).TrainingTime - m_startTime;
 
                 // Update the underlying remapping point
-                if (m_point != null) m_point.SetBaseAttributes(m_bestScratchpad, m_baseScratchpad);
+                if (m_point != null)
+                    m_point.SetBaseAttributes(m_bestScratchpad, m_baseScratchpad);
             }
 
             /// <summary>
@@ -198,7 +199,7 @@ namespace EVEMon.Common
                             // Reject invalid combinations
                             if (cha <= MaxPerSkill)
                             {
-                                // Resets the scratchped
+                                // Resets the scratchpad
                                 tempScratchpad.Reset();
 
                                 // Set new attributes
@@ -255,7 +256,10 @@ namespace EVEMon.Common
         public static List<RemappingResult> OptimizeFromPlanAndRemappingPoints(BasePlan plan)
         {
             var results = GetResultsFromRemappingPoints(plan);
-            foreach (var result in results) result.Optimize(TimeSpan.MaxValue);
+            foreach (var result in results)
+            {
+                result.Optimize(TimeSpan.MaxValue);
+            }
             return results;
         }
 
@@ -266,7 +270,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static List<RemappingResult> GetResultsFromRemappingPoints(BasePlan plan)
         {
-            var scratchpad = new CharacterScratchpad(plan.Character);
+            var scratchpad = new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet));
             var remappingList = new List<RemappingResult>();
             var list = new List<ISkillLevel>();
             RemappingResult remapping = null;
@@ -299,7 +303,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static RemappingResult OptimizeFromFirstYearOfPlan(BasePlan plan)
         {
-            var remapping = new RemappingResult(new CharacterScratchpad(plan.Character));
+            var remapping = new RemappingResult(new CharacterScratchpad(plan.Character.After(plan.ChosenImplantSet)));
 
             // Scroll through the entries and split it into remappings
             foreach (var entry in plan)
@@ -317,32 +321,35 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
-        public static RemappingResult OptimizeFromCharacter(Character character)
+        public static RemappingResult OptimizeFromCharacter(Character character, BasePlan plan)
         {
             // Create a character without any skill
-            var scratchpad = new CharacterScratchpad(character);
+            var scratchpad = new CharacterScratchpad(character.After(plan.ChosenImplantSet));
             scratchpad.ClearSkills();
 
             // Create a sorted plan for the learning skills
-            var plan = new Plan(scratchpad);
+            var newPlan = new Plan(scratchpad);
             foreach (var learning in character.SkillGroups["Learning"])
             {
-                plan.PlanTo(learning, learning.Level);
+                newPlan.PlanTo(learning, learning.Level);
             }
-            plan.SortLearningSkills(false);
+            newPlan.SortLearningSkills(false);
 
             // Add the non-training skills after that
             foreach (var skill in character.Skills)
             {
                 if (skill.Group.Name != "Learning")
                 {
-                    plan.PlanTo(skill, skill.Level);
+                    newPlan.PlanTo(skill, skill.Level);
                 }
             }
 
             // Add those learning skills to a list
             var remapping = new RemappingResult(scratchpad);
-            foreach (var entry in plan) remapping.Skills.Add(entry);
+            foreach (var entry in plan)
+            {
+                remapping.Skills.Add(entry);
+            }
 
             // Optimize
             remapping.Optimize(TimeSpan.FromDays(365.0));

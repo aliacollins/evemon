@@ -12,10 +12,11 @@ namespace EVEMon.SkillPlanner
     public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
     {
         private bool m_isUpdating = false;
-        private Character m_baseCharacter;
-        private BaseCharacter m_character;
+        private Character m_character;
+        private BaseCharacter m_characterScratchpad;
         private PlanEditorControl m_planEditor;
         private Plan m_plan;
+        private ImplantSet m_set;
 
         /// <summary>
         /// Default constructor for designer.
@@ -33,8 +34,6 @@ namespace EVEMon.SkillPlanner
             : this()
         {
             m_plan = plan;
-            m_character = plan.Character;
-            m_baseCharacter = (Character)plan.Character;
         }
 
         /// <summary>
@@ -51,6 +50,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            m_character = (Character)m_plan.Character;
+            m_characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
+            m_set = m_plan.ChosenImplantSet;
+
             UpdateContent();
  	        base.OnLoad(e);
         }
@@ -60,14 +63,20 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
+            gbAttributes.Text = String.Format("Attributes of \"{0}\"", m_set.Name);
+
             m_isUpdating = true;
-            nudCharisma.Value = m_character.Charisma.PreLearningEffectiveAttribute;
-            nudWillpower.Value = m_character.Willpower.PreLearningEffectiveAttribute;
-            nudIntelligence.Value = m_character.Intelligence.PreLearningEffectiveAttribute;
-            nudPerception.Value = m_character.Perception.PreLearningEffectiveAttribute;
-            nudMemory.Value = m_character.Memory.PreLearningEffectiveAttribute;
+            nudCharisma.Value = m_characterScratchpad.Charisma.PreLearningEffectiveAttribute;
+            nudWillpower.Value = m_characterScratchpad.Willpower.PreLearningEffectiveAttribute;
+            nudIntelligence.Value = m_characterScratchpad.Intelligence.PreLearningEffectiveAttribute;
+            nudPerception.Value = m_characterScratchpad.Perception.PreLearningEffectiveAttribute;
+            nudMemory.Value = m_characterScratchpad.Memory.PreLearningEffectiveAttribute;
             m_isUpdating = false;
 
+            // If the implant set isn't the active one we notify the user
+            this.lblNotice.Visible = (m_set != m_character.ImplantSets.Current);
+
+            //  Update all the times on the right pane
             UpdateTimes();
         }
 
@@ -80,7 +89,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="lblEffective"></param>
         private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffective)
         {
-            int baseAttr = m_character[attrib].PreLearningEffectiveAttribute - m_character[attrib].ImplantBonus;
+            int baseAttr = m_characterScratchpad[attrib].PreLearningEffectiveAttribute - m_characterScratchpad[attrib].ImplantBonus;
             int adjust = myValue - baseAttr;
 
             if (adjust >= 0)
@@ -94,23 +103,30 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString();
             }
 
-            lblEffective.Text = m_character[attrib].EffectiveValue.ToString("#0.00");
+            lblEffective.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("#0.00");
         }
-
+        
         /// <summary>
         /// Update all the times on the right pane (base time, best time, etc).
         /// </summary>
         private void UpdateTimes()
         {
-            if (m_isUpdating) return;
-            if (m_planEditor != null) m_planEditor.ShowWithPluggable(this);
+            if (m_isUpdating)
+                return;
+            
+
+            if (m_planEditor != null)
+            {
+                m_characterScratchpad = m_character.After(m_set);
+                m_planEditor.ShowWithPluggable(this);
+            }
 
             // Current (with implants)
-            TimeSpan currentSpan = UpdateTimesForCharacter(m_character, lblCurrentSpan, lblCurrentDate);
+            TimeSpan currentSpan = UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet), lblCurrentSpan, lblCurrentDate);
 
             // Current (without implants)
-            var noneImplantSet = m_baseCharacter.ImplantSets.None;
-            TimeSpan baseSpan = UpdateTimesForCharacter(m_baseCharacter.After(noneImplantSet), lblBaseSpan, lblBaseDate);
+            var noneImplantSet = m_character.ImplantSets.None;
+            TimeSpan baseSpan = UpdateTimesForCharacter(m_character.After(noneImplantSet), lblBaseSpan, lblBaseDate);
 
             // This
             var scratchpad = CreateModifiedScratchpad();
@@ -123,25 +139,35 @@ namespace EVEMon.SkillPlanner
                 lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(thisSpan - baseSpan,DescriptiveTextOptions.IncludeCommas) 
                     + " slower than current base";
             }
+            else if (thisSpan < baseSpan)
+            {
+                lblComparedToBase.ForeColor = Color.Green;
+                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(baseSpan - thisSpan, DescriptiveTextOptions.IncludeCommas)
+                    + " faster than current base";
+            }
             else
             {
                 lblComparedToBase.ForeColor = SystemColors.ControlText;
-                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(baseSpan - thisSpan, DescriptiveTextOptions.IncludeCommas) 
-                    + " better than current base";
+                lblComparedToBase.Text = "No time difference than current base";
             }
 
             // Are the new attributes better than current (with implants) ?
             if (thisSpan > currentSpan)
             {
-                lblComparedToCurrent.ForeColor = Color.Red;
+                lblComparedToCurrent.ForeColor = Color.DarkRed;
                 lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(thisSpan - currentSpan, DescriptiveTextOptions.IncludeCommas) 
                     + " slower than current";
             }
-            else
+            else if (thisSpan < currentSpan)
             {
+                lblComparedToCurrent.ForeColor = Color.DarkGreen;
+                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(currentSpan - thisSpan, DescriptiveTextOptions.IncludeCommas)
+                    + " faster than current";
+            }
+            else
+            { 
                 lblComparedToCurrent.ForeColor = SystemColors.ControlText;
-                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(currentSpan - thisSpan, DescriptiveTextOptions.IncludeCommas) 
-                    + " better than current";
+                lblComparedToCurrent.Text = "No time difference than current";
             }
         }
 
@@ -172,7 +198,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudIntelligence_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Intelligence, Convert.ToInt32(nudIntelligence.Value),
+            UpdateAttributeLabels(EveAttribute.Intelligence, (int)(nudIntelligence.Value),
                             lblAdjustIntelligence, lblEffectiveIntelligence);
             UpdateTimes();
         }
@@ -184,7 +210,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudCharisma_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Charisma, Convert.ToInt32(nudCharisma.Value),
+            UpdateAttributeLabels(EveAttribute.Charisma, (int)(nudCharisma.Value),
                             lblAdjustCharisma, lblEffectiveCharisma);
             UpdateTimes();
         }
@@ -196,10 +222,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudPerception_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Perception, Convert.ToInt32(nudPerception.Value),
+            UpdateAttributeLabels(EveAttribute.Perception, (int)(nudPerception.Value),
                             lblAdjustPerception, lblEffectivePerception);
             UpdateTimes();
-            if (m_planEditor != null) m_planEditor.ShowWithPluggable(this);
+            if (m_planEditor != null)
+                m_planEditor.ShowWithPluggable(this);
         }
 
         /// <summary>
@@ -209,7 +236,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudMemory_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Memory, Convert.ToInt32(nudMemory.Value),
+            UpdateAttributeLabels(EveAttribute.Memory, (int)(nudMemory.Value),
                             lblAdjustMemory, lblEffectiveMemory);
             UpdateTimes();
         }
@@ -221,7 +248,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudWillpower_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Willpower, Convert.ToInt32(nudWillpower.Value),
+            UpdateAttributeLabels(EveAttribute.Willpower, (int)(nudWillpower.Value),
                             lblAdjustWillpower, lblEffectiveWillpower);
             UpdateTimes();
         }
@@ -233,16 +260,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void mnLoadAtts_DropDownOpening(object sender, EventArgs e)
         {
-            mnLoadAtts.DropDownItems.Clear();
-
-            // Add the "none" menu
-            var item = mnLoadAtts.DropDownItems.Add("none");
-            item.Click += new EventHandler(implantSetMenuitem_Click);
-
             // Add the menus for the sets
-            foreach (var set in m_baseCharacter.ImplantSets)
+            mnLoadAtts.DropDownItems.Clear();
+            foreach (var set in m_character.ImplantSets)
             {
-                item = mnLoadAtts.DropDownItems.Add(set.Name);
+                var item = mnLoadAtts.DropDownItems.Add(set.Name);
                 item.Click += new EventHandler(implantSetMenuitem_Click);
                 item.Tag = set;
             }
@@ -257,34 +279,34 @@ namespace EVEMon.SkillPlanner
         {
             // Update the character to a scratchpad using the implant set attacthed to the sender menu as its tag.
             var menu = (ToolStripItem)sender;
-            var set = menu.Tag as ImplantSet;
-            if (set == null)  m_character = m_baseCharacter;
-            else m_character = m_baseCharacter.After(set);
-
+            m_set = menu.Tag as ImplantSet;
+            m_characterScratchpad = m_character.After(m_set);
+            
             UpdateContent();
         }
 
         /// <summary>
-        /// Creates a scrahcpad with the new implants values.
+        /// Creates a scratchpad with the new implants values.
         /// </summary>
         /// <returns></returns>
         private CharacterScratchpad CreateModifiedScratchpad()
         {
             // Creates a scratchpad with new implants
-            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+            m_characterScratchpad = m_character.After(m_set);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_characterScratchpad);
 
-            scratchpad.Memory.ImplantBonus += (int)this.nudMemory.Value - m_character.Memory.PreLearningEffectiveAttribute;
-            scratchpad.Charisma.ImplantBonus += (int)this.nudCharisma.Value - m_character.Charisma.PreLearningEffectiveAttribute;
-            scratchpad.Intelligence.ImplantBonus += (int)this.nudIntelligence.Value - m_character.Intelligence.PreLearningEffectiveAttribute;
-            scratchpad.Perception.ImplantBonus += (int)this.nudPerception.Value - m_character.Perception.PreLearningEffectiveAttribute;
-            scratchpad.Willpower.ImplantBonus += (int)this.nudWillpower.Value - m_character.Willpower.PreLearningEffectiveAttribute;
+            scratchpad.Memory.ImplantBonus += (int)this.nudMemory.Value - m_characterScratchpad.Memory.PreLearningEffectiveAttribute;
+            scratchpad.Charisma.ImplantBonus += (int)this.nudCharisma.Value - m_characterScratchpad.Charisma.PreLearningEffectiveAttribute;
+            scratchpad.Intelligence.ImplantBonus += (int)this.nudIntelligence.Value - m_characterScratchpad.Intelligence.PreLearningEffectiveAttribute;
+            scratchpad.Perception.ImplantBonus += (int)this.nudPerception.Value - m_characterScratchpad.Perception.PreLearningEffectiveAttribute;
+            scratchpad.Willpower.ImplantBonus += (int)this.nudWillpower.Value - m_characterScratchpad.Willpower.PreLearningEffectiveAttribute;
 
             return scratchpad;
         }
         #endregion
 
 
-        #region IPlanOrderPluggable implementation
+        #region IPlanOrderPluggable Members
         /// <summary>
         /// Updates the statistics for the plan editor.
         /// </summary>
@@ -297,6 +319,14 @@ namespace EVEMon.SkillPlanner
             var scratchpad = CreateModifiedScratchpad();
             plan.UpdateStatistics(scratchpad, true, true);
             plan.UpdateOldTrainingTimes();
+        }
+
+        /// <summary>
+        /// Updates the times when "choose implant set" changes.
+        /// </summary>
+        public void UpdateOnImplantSetChange()
+        {
+            UpdateTimes();
         }
         #endregion
     }

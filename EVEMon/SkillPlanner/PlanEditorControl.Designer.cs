@@ -68,7 +68,7 @@ namespace EVEMon.SkillPlanner
             this.tmrSelect = new System.Windows.Forms.Timer(this.components);
             this.pFooter = new System.Windows.Forms.Panel();
             this.gbColorKey = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpColorKey = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTrainable = new System.Windows.Forms.Label();
             this.lblNonPublic = new System.Windows.Forms.Label();
             this.lblPrereqNotMet = new System.Windows.Forms.Label();
@@ -81,13 +81,15 @@ namespace EVEMon.SkillPlanner
             this.pscPlan = new EVEMon.Controls.PersistentSplitContainer();
             this.lvSkills = new EVEMon.Controls.DraggableListView();
             this.pHeader = new System.Windows.Forms.Panel();
+            this.cbChooseImplantSet = new System.Windows.Forms.ComboBox();
+            this.lblChooseImplantSet = new System.Windows.Forms.Label();
             this.columnsLink = new System.Windows.Forms.LinkLabel();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.cmsContextMenu.SuspendLayout();
             this.tsPlan.SuspendLayout();
             this.pFooter.SuspendLayout();
             this.gbColorKey.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.flpColorKey.SuspendLayout();
             this.pscPlan.Panel1.SuspendLayout();
             this.pscPlan.Panel2.SuspendLayout();
             this.pscPlan.SuspendLayout();
@@ -411,7 +413,7 @@ namespace EVEMon.SkillPlanner
             // 
             // gbColorKey
             // 
-            this.gbColorKey.Controls.Add(this.flowLayoutPanel1);
+            this.gbColorKey.Controls.Add(this.flpColorKey);
             this.gbColorKey.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbColorKey.Location = new System.Drawing.Point(0, 0);
             this.gbColorKey.Name = "gbColorKey";
@@ -420,31 +422,32 @@ namespace EVEMon.SkillPlanner
             this.gbColorKey.TabStop = false;
             this.gbColorKey.Text = "Color Keys";
             // 
-            // flowLayoutPanel1
+            // flpColorKey
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.lblTrainable);
-            this.flowLayoutPanel1.Controls.Add(this.lblNonPublic);
-            this.flowLayoutPanel1.Controls.Add(this.lblPrereqNotMet);
-            this.flowLayoutPanel1.Controls.Add(this.lblDepended);
-            this.flowLayoutPanel1.Controls.Add(this.lblQueued);
-            this.flowLayoutPanel1.Controls.Add(this.lblPrereqMetNotKnown);
-            this.flowLayoutPanel1.Controls.Add(this.lblDowntime);
-            this.flowLayoutPanel1.Controls.Add(this.lblCurrentlyTraining);
-            this.flowLayoutPanel1.Controls.Add(this.lblPartiallyTrained);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(713, 19);
-            this.flowLayoutPanel1.TabIndex = 29;
+            this.flpColorKey.AutoSize = true;
+            this.flpColorKey.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpColorKey.Controls.Add(this.lblTrainable);
+            this.flpColorKey.Controls.Add(this.lblNonPublic);
+            this.flpColorKey.Controls.Add(this.lblPrereqNotMet);
+            this.flpColorKey.Controls.Add(this.lblDepended);
+            this.flpColorKey.Controls.Add(this.lblQueued);
+            this.flpColorKey.Controls.Add(this.lblPrereqMetNotKnown);
+            this.flpColorKey.Controls.Add(this.lblDowntime);
+            this.flpColorKey.Controls.Add(this.lblCurrentlyTraining);
+            this.flpColorKey.Controls.Add(this.lblPartiallyTrained);
+            this.flpColorKey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpColorKey.Location = new System.Drawing.Point(3, 16);
+            this.flpColorKey.Name = "flpColorKey";
+            this.flpColorKey.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.flpColorKey.Size = new System.Drawing.Size(713, 19);
+            this.flpColorKey.TabIndex = 29;
             // 
             // lblTrainable
             // 
             this.lblTrainable.AutoSize = true;
             this.lblTrainable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblTrainable.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTrainable.Location = new System.Drawing.Point(0, 0);
+            this.lblTrainable.Location = new System.Drawing.Point(5, 0);
             this.lblTrainable.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblTrainable.Name = "lblTrainable";
             this.lblTrainable.Size = new System.Drawing.Size(53, 15);
@@ -457,7 +460,7 @@ namespace EVEMon.SkillPlanner
             this.lblNonPublic.AutoSize = true;
             this.lblNonPublic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblNonPublic.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblNonPublic.Location = new System.Drawing.Point(57, 0);
+            this.lblNonPublic.Location = new System.Drawing.Point(62, 0);
             this.lblNonPublic.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblNonPublic.Name = "lblNonPublic";
             this.lblNonPublic.Size = new System.Drawing.Size(61, 15);
@@ -470,7 +473,7 @@ namespace EVEMon.SkillPlanner
             this.lblPrereqNotMet.AutoSize = true;
             this.lblPrereqNotMet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPrereqNotMet.ForeColor = System.Drawing.Color.Red;
-            this.lblPrereqNotMet.Location = new System.Drawing.Point(122, 0);
+            this.lblPrereqNotMet.Location = new System.Drawing.Point(127, 0);
             this.lblPrereqNotMet.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblPrereqNotMet.Name = "lblPrereqNotMet";
             this.lblPrereqNotMet.Size = new System.Drawing.Size(81, 15);
@@ -483,7 +486,7 @@ namespace EVEMon.SkillPlanner
             this.lblDepended.AutoSize = true;
             this.lblDepended.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblDepended.ForeColor = System.Drawing.Color.Gray;
-            this.lblDepended.Location = new System.Drawing.Point(207, 0);
+            this.lblDepended.Location = new System.Drawing.Point(212, 0);
             this.lblDepended.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblDepended.Name = "lblDepended";
             this.lblDepended.Size = new System.Drawing.Size(59, 15);
@@ -496,7 +499,7 @@ namespace EVEMon.SkillPlanner
             this.lblQueued.AutoSize = true;
             this.lblQueued.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblQueued.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.lblQueued.Location = new System.Drawing.Point(270, 0);
+            this.lblQueued.Location = new System.Drawing.Point(275, 0);
             this.lblQueued.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblQueued.Name = "lblQueued";
             this.lblQueued.Size = new System.Drawing.Size(47, 15);
@@ -509,7 +512,7 @@ namespace EVEMon.SkillPlanner
             this.lblPrereqMetNotKnown.AutoSize = true;
             this.lblPrereqMetNotKnown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPrereqMetNotKnown.ForeColor = System.Drawing.Color.LightSlateGray;
-            this.lblPrereqMetNotKnown.Location = new System.Drawing.Point(321, 0);
+            this.lblPrereqMetNotKnown.Location = new System.Drawing.Point(326, 0);
             this.lblPrereqMetNotKnown.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblPrereqMetNotKnown.Name = "lblPrereqMetNotKnown";
             this.lblPrereqMetNotKnown.Size = new System.Drawing.Size(123, 15);
@@ -523,7 +526,7 @@ namespace EVEMon.SkillPlanner
             this.lblDowntime.BackColor = System.Drawing.Color.DarkGray;
             this.lblDowntime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblDowntime.ForeColor = System.Drawing.Color.Red;
-            this.lblDowntime.Location = new System.Drawing.Point(448, 0);
+            this.lblDowntime.Location = new System.Drawing.Point(453, 0);
             this.lblDowntime.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblDowntime.Name = "lblDowntime";
             this.lblDowntime.Size = new System.Drawing.Size(56, 15);
@@ -537,7 +540,7 @@ namespace EVEMon.SkillPlanner
             this.lblCurrentlyTraining.BackColor = System.Drawing.Color.LightSteelBlue;
             this.lblCurrentlyTraining.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblCurrentlyTraining.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblCurrentlyTraining.Location = new System.Drawing.Point(508, 0);
+            this.lblCurrentlyTraining.Location = new System.Drawing.Point(513, 0);
             this.lblCurrentlyTraining.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblCurrentlyTraining.Name = "lblCurrentlyTraining";
             this.lblCurrentlyTraining.Size = new System.Drawing.Size(91, 15);
@@ -550,7 +553,7 @@ namespace EVEMon.SkillPlanner
             this.lblPartiallyTrained.AutoSize = true;
             this.lblPartiallyTrained.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPartiallyTrained.ForeColor = System.Drawing.Color.Green;
-            this.lblPartiallyTrained.Location = new System.Drawing.Point(603, 0);
+            this.lblPartiallyTrained.Location = new System.Drawing.Point(608, 0);
             this.lblPartiallyTrained.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.lblPartiallyTrained.Name = "lblPartiallyTrained";
             this.lblPartiallyTrained.Size = new System.Drawing.Size(84, 15);
@@ -586,10 +589,10 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.ContextMenuStrip = this.cmsContextMenu;
             this.lvSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSkills.FullRowSelect = true;
-            this.lvSkills.Location = new System.Drawing.Point(0, 21);
+            this.lvSkills.Location = new System.Drawing.Point(0, 33);
             this.lvSkills.Name = "lvSkills";
             this.lvSkills.ShowItemToolTips = true;
-            this.lvSkills.Size = new System.Drawing.Size(719, 499);
+            this.lvSkills.Size = new System.Drawing.Size(719, 487);
             this.lvSkills.SmallImageList = this.ilListIcons;
             this.lvSkills.TabIndex = 0;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
@@ -607,17 +610,38 @@ namespace EVEMon.SkillPlanner
             // 
             // pHeader
             // 
+            this.pHeader.Controls.Add(this.cbChooseImplantSet);
+            this.pHeader.Controls.Add(this.lblChooseImplantSet);
             this.pHeader.Controls.Add(this.columnsLink);
             this.pHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pHeader.Location = new System.Drawing.Point(0, 0);
             this.pHeader.Name = "pHeader";
-            this.pHeader.Size = new System.Drawing.Size(719, 21);
+            this.pHeader.Size = new System.Drawing.Size(719, 33);
             this.pHeader.TabIndex = 1;
+            // 
+            // cbChooseImplantSet
+            // 
+            this.cbChooseImplantSet.DisplayMember = "Name";
+            this.cbChooseImplantSet.FormattingEnabled = true;
+            this.cbChooseImplantSet.Location = new System.Drawing.Point(113, 5);
+            this.cbChooseImplantSet.Name = "cbChooseImplantSet";
+            this.cbChooseImplantSet.Size = new System.Drawing.Size(170, 21);
+            this.cbChooseImplantSet.TabIndex = 2;
+            this.cbChooseImplantSet.SelectedIndexChanged += new System.EventHandler(this.cbChooseImplantSet_SelectedIndexChanged);
+            // 
+            // lblChooseImplantSet
+            // 
+            this.lblChooseImplantSet.AutoSize = true;
+            this.lblChooseImplantSet.Location = new System.Drawing.Point(5, 8);
+            this.lblChooseImplantSet.Name = "lblChooseImplantSet";
+            this.lblChooseImplantSet.Size = new System.Drawing.Size(102, 13);
+            this.lblChooseImplantSet.TabIndex = 1;
+            this.lblChooseImplantSet.Text = "Choose Implant Set:";
             // 
             // columnsLink
             // 
             this.columnsLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.columnsLink.Location = new System.Drawing.Point(538, -1);
+            this.columnsLink.Location = new System.Drawing.Point(535, 8);
             this.columnsLink.Name = "columnsLink";
             this.columnsLink.Size = new System.Drawing.Size(181, 22);
             this.columnsLink.TabIndex = 0;
@@ -653,12 +677,13 @@ namespace EVEMon.SkillPlanner
             this.pFooter.ResumeLayout(false);
             this.gbColorKey.ResumeLayout(false);
             this.gbColorKey.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
+            this.flpColorKey.ResumeLayout(false);
+            this.flpColorKey.PerformLayout();
             this.pscPlan.Panel1.ResumeLayout(false);
             this.pscPlan.Panel2.ResumeLayout(false);
             this.pscPlan.ResumeLayout(false);
             this.pHeader.ResumeLayout(false);
+            this.pHeader.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -709,7 +734,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbColorKey;
         private System.Windows.Forms.Panel pFooter;
         private System.Windows.Forms.GroupBox gbColorKey;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flpColorKey;
         private System.Windows.Forms.Label lblTrainable;
         private System.Windows.Forms.Label lblNonPublic;
         private System.Windows.Forms.Label lblPrereqNotMet;
@@ -719,5 +744,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblDowntime;
         private System.Windows.Forms.Label lblCurrentlyTraining;
         private System.Windows.Forms.Label lblPartiallyTrained;
+        private System.Windows.Forms.ComboBox cbChooseImplantSet;
+        private System.Windows.Forms.Label lblChooseImplantSet;
     }
 }

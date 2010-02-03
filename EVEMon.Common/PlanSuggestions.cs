@@ -21,8 +21,9 @@ namespace EVEMon.Common
         /// <param name="plan">The plan to get suggestions for, it will be unchanged.</param>
         internal PlanSuggestions(Plan plan)
         {
+            var character = (plan.ChosenImplantSet != null ? plan.Character.After(plan.ChosenImplantSet) : plan.Character);
+            m_plan = new PlanScratchpad(character, plan);
             m_originalPlan = plan;
-            m_plan = new PlanScratchpad(plan.Character, plan);
 
             var baseTime = m_plan.TotalTrainingTime;
             using (m_plan.SuspendingEvents())
@@ -37,7 +38,8 @@ namespace EVEMon.Common
                     foundNewBenefits |= CheckForTimeBenefit(GetLearningEntries(EveAttribute.Memory));
                     foundNewBenefits |= CheckForTimeBenefit(GetLearningEntries(EveAttribute.Charisma));
                     foundNewBenefits |= CheckForTimeBenefit(GetLearningEntries());
-                    if (!foundNewBenefits) break;
+                    if (!foundNewBenefits)
+                        break;
                 }
             }
 
@@ -106,14 +108,15 @@ namespace EVEMon.Common
             foreach(var entry in entriesToAdd)
             {
                 // Stop when we reached the desired entries count
-                if (entriesCount == bestEntriesCount) break;
+                if (entriesCount == bestEntriesCount)
+                    break;
                 entriesCount++;
 
                 m_items.Add(entry);
                 m_plan.InsertAtBestPosition(entry.Skill, entry.Level);
             }
 
-            // Returns tru if new benefits have been found
+            // Returns true if new benefits have been found
             return (bestEntriesCount != 0);
         }
 

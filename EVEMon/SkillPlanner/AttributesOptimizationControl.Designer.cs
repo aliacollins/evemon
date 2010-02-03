@@ -28,20 +28,20 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label label10;
-            System.Windows.Forms.Label label8;
+            System.Windows.Forms.Label lblSkills;
+            System.Windows.Forms.Label lblImplants;
             System.Windows.Forms.PictureBox pictureBox5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationControl));
             System.Windows.Forms.PictureBox pictureBox4;
             System.Windows.Forms.PictureBox pictureBox3;
             System.Windows.Forms.PictureBox pictureBox2;
             System.Windows.Forms.PictureBox pictureBox1;
-            this.label9 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblMemory = new System.Windows.Forms.Label();
+            this.lblWillpower = new System.Windows.Forms.Label();
+            this.lblCharisma = new System.Windows.Forms.Label();
+            this.lblPerception = new System.Windows.Forms.Label();
+            this.lblIntelligence = new System.Windows.Forms.Label();
+            this.lblBase = new System.Windows.Forms.Label();
             this.lbMEM = new System.Windows.Forms.Label();
             this.lbWIL = new System.Windows.Forms.Label();
             this.lbCHA = new System.Windows.Forms.Label();
@@ -55,9 +55,9 @@ namespace EVEMon.SkillPlanner
             this.lbCurrentTimeInfo = new System.Windows.Forms.Label();
             this.lbWarning = new System.Windows.Forms.Label();
             this.buttonCurrent = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblUnassignedAttributePoints = new System.Windows.Forms.Label();
             this.buttonOptimize = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblAsterisk = new System.Windows.Forms.Label();
             this.abMEMInc = new EVEMon.SkillPlanner.AttributeButtonControl();
             this.pbMEMBase = new EVEMon.SkillPlanner.AttributeBarControl();
             this.abWILInc = new EVEMon.SkillPlanner.AttributeButtonControl();
@@ -84,8 +84,10 @@ namespace EVEMon.SkillPlanner
             this.pbMEMSkills = new EVEMon.SkillPlanner.AttributeBarControl();
             this.pbINTSkills = new EVEMon.SkillPlanner.AttributeBarControl();
             this.pbUnassigned = new EVEMon.SkillPlanner.AttributeBarControl();
-            label10 = new System.Windows.Forms.Label();
-            label8 = new System.Windows.Forms.Label();
+            this.lblNotice = new System.Windows.Forms.Label();
+            this.labelDescription = new System.Windows.Forms.Label();
+            lblSkills = new System.Windows.Forms.Label();
+            lblImplants = new System.Windows.Forms.Label();
             pictureBox5 = new System.Windows.Forms.PictureBox();
             pictureBox4 = new System.Windows.Forms.PictureBox();
             pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -99,28 +101,28 @@ namespace EVEMon.SkillPlanner
             this.tblayoutComparePanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label10
+            // lblSkills
             // 
-            label10.Location = new System.Drawing.Point(397, 0);
-            label10.Name = "label10";
-            label10.Size = new System.Drawing.Size(103, 16);
-            label10.TabIndex = 61;
-            label10.Text = "Skills*";
-            label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblSkills.Location = new System.Drawing.Point(403, 41);
+            lblSkills.Name = "lblSkills";
+            lblSkills.Size = new System.Drawing.Size(103, 16);
+            lblSkills.TabIndex = 61;
+            lblSkills.Text = "Skills*";
+            lblSkills.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label8
+            // lblImplants
             // 
-            label8.Location = new System.Drawing.Point(326, 0);
-            label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(65, 16);
-            label8.TabIndex = 60;
-            label8.Text = "Implants";
-            label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblImplants.Location = new System.Drawing.Point(332, 41);
+            lblImplants.Name = "lblImplants";
+            lblImplants.Size = new System.Drawing.Size(65, 16);
+            lblImplants.TabIndex = 60;
+            lblImplants.Text = "Implants";
+            lblImplants.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox5
             // 
             pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            pictureBox5.Location = new System.Drawing.Point(3, 170);
+            pictureBox5.Location = new System.Drawing.Point(9, 211);
             pictureBox5.Name = "pictureBox5";
             pictureBox5.Size = new System.Drawing.Size(32, 28);
             pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -130,7 +132,7 @@ namespace EVEMon.SkillPlanner
             // pictureBox4
             // 
             pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            pictureBox4.Location = new System.Drawing.Point(3, 132);
+            pictureBox4.Location = new System.Drawing.Point(9, 173);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new System.Drawing.Size(32, 28);
             pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -140,7 +142,7 @@ namespace EVEMon.SkillPlanner
             // pictureBox3
             // 
             pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            pictureBox3.Location = new System.Drawing.Point(3, 94);
+            pictureBox3.Location = new System.Drawing.Point(9, 135);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new System.Drawing.Size(32, 28);
             pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -150,7 +152,7 @@ namespace EVEMon.SkillPlanner
             // pictureBox2
             // 
             pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            pictureBox2.Location = new System.Drawing.Point(3, 18);
+            pictureBox2.Location = new System.Drawing.Point(9, 59);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new System.Drawing.Size(32, 27);
             pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -160,72 +162,72 @@ namespace EVEMon.SkillPlanner
             // pictureBox1
             // 
             pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            pictureBox1.Location = new System.Drawing.Point(3, 56);
+            pictureBox1.Location = new System.Drawing.Point(9, 97);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new System.Drawing.Size(32, 29);
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             pictureBox1.TabIndex = 54;
             pictureBox1.TabStop = false;
             // 
-            // label9
+            // lblMemory
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(41, 170);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(50, 13);
-            this.label9.TabIndex = 47;
-            this.label9.Text = "Memory";
+            this.lblMemory.AutoSize = true;
+            this.lblMemory.Location = new System.Drawing.Point(47, 211);
+            this.lblMemory.Name = "lblMemory";
+            this.lblMemory.Size = new System.Drawing.Size(44, 13);
+            this.lblMemory.TabIndex = 47;
+            this.lblMemory.Text = "Memory";
             // 
-            // label7
+            // lblWillpower
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(41, 132);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 13);
-            this.label7.TabIndex = 45;
-            this.label7.Text = "Willpower";
+            this.lblWillpower.AutoSize = true;
+            this.lblWillpower.Location = new System.Drawing.Point(47, 173);
+            this.lblWillpower.Name = "lblWillpower";
+            this.lblWillpower.Size = new System.Drawing.Size(53, 13);
+            this.lblWillpower.TabIndex = 45;
+            this.lblWillpower.Text = "Willpower";
             // 
-            // label5
+            // lblCharisma
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(41, 94);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 13);
-            this.label5.TabIndex = 43;
-            this.label5.Text = "Charisma";
+            this.lblCharisma.AutoSize = true;
+            this.lblCharisma.Location = new System.Drawing.Point(47, 135);
+            this.lblCharisma.Name = "lblCharisma";
+            this.lblCharisma.Size = new System.Drawing.Size(50, 13);
+            this.lblCharisma.TabIndex = 43;
+            this.lblCharisma.Text = "Charisma";
             // 
-            // label3
+            // lblPerception
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(41, 56);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 13);
-            this.label3.TabIndex = 41;
-            this.label3.Text = "Perception";
+            this.lblPerception.AutoSize = true;
+            this.lblPerception.Location = new System.Drawing.Point(47, 97);
+            this.lblPerception.Name = "lblPerception";
+            this.lblPerception.Size = new System.Drawing.Size(58, 13);
+            this.lblPerception.TabIndex = 41;
+            this.lblPerception.Text = "Perception";
             // 
-            // label1
+            // lblIntelligence
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
-            this.label1.TabIndex = 39;
-            this.label1.Text = "Intelligence";
+            this.lblIntelligence.AutoSize = true;
+            this.lblIntelligence.Location = new System.Drawing.Point(47, 59);
+            this.lblIntelligence.Name = "lblIntelligence";
+            this.lblIntelligence.Size = new System.Drawing.Size(61, 13);
+            this.lblIntelligence.TabIndex = 39;
+            this.lblIntelligence.Text = "Intelligence";
             // 
-            // label6
+            // lblBase
             // 
-            this.label6.Location = new System.Drawing.Point(192, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(108, 16);
-            this.label6.TabIndex = 59;
-            this.label6.Text = "Base";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBase.Location = new System.Drawing.Point(198, 41);
+            this.lblBase.Name = "lblBase";
+            this.lblBase.Size = new System.Drawing.Size(108, 16);
+            this.lblBase.TabIndex = 59;
+            this.lblBase.Text = "Base";
+            this.lblBase.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbMEM
             // 
             this.lbMEM.AutoSize = true;
             this.lbMEM.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbMEM.Location = new System.Drawing.Point(41, 185);
+            this.lbMEM.Location = new System.Drawing.Point(47, 226);
             this.lbMEM.Name = "lbMEM";
             this.lbMEM.Size = new System.Drawing.Size(58, 13);
             this.lbMEM.TabIndex = 48;
@@ -235,7 +237,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lbWIL.AutoSize = true;
             this.lbWIL.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbWIL.Location = new System.Drawing.Point(41, 147);
+            this.lbWIL.Location = new System.Drawing.Point(47, 188);
             this.lbWIL.Name = "lbWIL";
             this.lbWIL.Size = new System.Drawing.Size(58, 13);
             this.lbWIL.TabIndex = 46;
@@ -245,7 +247,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lbCHA.AutoSize = true;
             this.lbCHA.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbCHA.Location = new System.Drawing.Point(43, 109);
+            this.lbCHA.Location = new System.Drawing.Point(49, 150);
             this.lbCHA.Name = "lbCHA";
             this.lbCHA.Size = new System.Drawing.Size(58, 13);
             this.lbCHA.TabIndex = 44;
@@ -255,7 +257,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lbPER.AutoSize = true;
             this.lbPER.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbPER.Location = new System.Drawing.Point(41, 72);
+            this.lbPER.Location = new System.Drawing.Point(47, 113);
             this.lbPER.Name = "lbPER";
             this.lbPER.Size = new System.Drawing.Size(58, 13);
             this.lbPER.TabIndex = 42;
@@ -265,7 +267,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lbINT.AutoSize = true;
             this.lbINT.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbINT.Location = new System.Drawing.Point(41, 32);
+            this.lbINT.Location = new System.Drawing.Point(47, 73);
             this.lbINT.Name = "lbINT";
             this.lbINT.Size = new System.Drawing.Size(118, 13);
             this.lbINT.TabIndex = 40;
@@ -282,7 +284,7 @@ namespace EVEMon.SkillPlanner
             this.tblayoutComparePanel.Controls.Add(this.lbCurrentTime, 1, 0);
             this.tblayoutComparePanel.Controls.Add(this.lbOptimizedTime, 1, 1);
             this.tblayoutComparePanel.Controls.Add(this.lbCurrentTimeInfo, 0, 0);
-            this.tblayoutComparePanel.Location = new System.Drawing.Point(3, 291);
+            this.tblayoutComparePanel.Location = new System.Drawing.Point(9, 332);
             this.tblayoutComparePanel.Name = "tblayoutComparePanel";
             this.tblayoutComparePanel.RowCount = 3;
             this.tblayoutComparePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -346,22 +348,22 @@ namespace EVEMon.SkillPlanner
             // 
             // lbWarning
             // 
-            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbWarning.AutoSize = true;
             this.lbWarning.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbWarning.Location = new System.Drawing.Point(295, 322);
+            this.lbWarning.Location = new System.Drawing.Point(301, 332);
             this.lbWarning.Margin = new System.Windows.Forms.Padding(4);
             this.lbWarning.MaximumSize = new System.Drawing.Size(211, 2000);
             this.lbWarning.Name = "lbWarning";
-            this.lbWarning.Size = new System.Drawing.Size(211, 52);
+            this.lbWarning.Size = new System.Drawing.Size(210, 26);
             this.lbWarning.TabIndex = 74;
             this.lbWarning.Text = "Training will be complete before the end of 12 month period.";
             this.lbWarning.Visible = false;
             // 
             // buttonCurrent
             // 
-            this.buttonCurrent.Location = new System.Drawing.Point(126, 251);
+            this.buttonCurrent.Location = new System.Drawing.Point(132, 292);
             this.buttonCurrent.Name = "buttonCurrent";
             this.buttonCurrent.Size = new System.Drawing.Size(117, 23);
             this.buttonCurrent.TabIndex = 75;
@@ -369,18 +371,18 @@ namespace EVEMon.SkillPlanner
             this.buttonCurrent.UseVisualStyleBackColor = true;
             this.buttonCurrent.Click += new System.EventHandler(this.buttonCurrent_Click);
             // 
-            // label2
+            // lblUnassignedAttributePoints
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 222);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(140, 13);
-            this.label2.TabIndex = 77;
-            this.label2.Text = "Unassigned Attribute Points:";
+            this.lblUnassignedAttributePoints.AutoSize = true;
+            this.lblUnassignedAttributePoints.Location = new System.Drawing.Point(15, 263);
+            this.lblUnassignedAttributePoints.Name = "lblUnassignedAttributePoints";
+            this.lblUnassignedAttributePoints.Size = new System.Drawing.Size(140, 13);
+            this.lblUnassignedAttributePoints.TabIndex = 77;
+            this.lblUnassignedAttributePoints.Text = "Unassigned Attribute Points:";
             // 
             // buttonOptimize
             // 
-            this.buttonOptimize.Location = new System.Drawing.Point(3, 251);
+            this.buttonOptimize.Location = new System.Drawing.Point(9, 292);
             this.buttonOptimize.Name = "buttonOptimize";
             this.buttonOptimize.Size = new System.Drawing.Size(117, 23);
             this.buttonOptimize.TabIndex = 79;
@@ -388,21 +390,21 @@ namespace EVEMon.SkillPlanner
             this.buttonOptimize.UseVisualStyleBackColor = true;
             this.buttonOptimize.Click += new System.EventHandler(this.buttonOptimize_Click);
             // 
-            // label4
+            // lblAsterisk
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(390, 251);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(110, 26);
-            this.label4.TabIndex = 101;
-            this.label4.Text = "* skills bonus includes\r\nlearning multiplier";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblAsterisk.AutoSize = true;
+            this.lblAsterisk.Location = new System.Drawing.Point(396, 292);
+            this.lblAsterisk.Name = "lblAsterisk";
+            this.lblAsterisk.Size = new System.Drawing.Size(110, 26);
+            this.lblAsterisk.TabIndex = 101;
+            this.lblAsterisk.Text = "* skills bonus includes\r\nlearning multiplier";
+            this.lblAsterisk.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // abMEMInc
             // 
             this.abMEMInc.AttributeBar = this.pbMEMBase;
             this.abMEMInc.BackColor = System.Drawing.Color.Transparent;
-            this.abMEMInc.Location = new System.Drawing.Point(306, 182);
+            this.abMEMInc.Location = new System.Drawing.Point(312, 223);
             this.abMEMInc.Name = "abMEMInc";
             this.abMEMInc.Size = new System.Drawing.Size(16, 16);
             this.abMEMInc.TabIndex = 111;
@@ -412,7 +414,7 @@ namespace EVEMon.SkillPlanner
             // pbMEMBase
             // 
             this.pbMEMBase.BaseValue = 5;
-            this.pbMEMBase.Location = new System.Drawing.Point(192, 181);
+            this.pbMEMBase.Location = new System.Drawing.Point(198, 222);
             this.pbMEMBase.MaxPoints = 15;
             this.pbMEMBase.Name = "pbMEMBase";
             this.pbMEMBase.Size = new System.Drawing.Size(108, 18);
@@ -427,7 +429,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abWILInc.AttributeBar = this.pbWILBase;
             this.abWILInc.BackColor = System.Drawing.Color.Transparent;
-            this.abWILInc.Location = new System.Drawing.Point(306, 144);
+            this.abWILInc.Location = new System.Drawing.Point(312, 185);
             this.abWILInc.Name = "abWILInc";
             this.abWILInc.Size = new System.Drawing.Size(16, 16);
             this.abWILInc.TabIndex = 110;
@@ -437,7 +439,7 @@ namespace EVEMon.SkillPlanner
             // pbWILBase
             // 
             this.pbWILBase.BaseValue = 5;
-            this.pbWILBase.Location = new System.Drawing.Point(192, 143);
+            this.pbWILBase.Location = new System.Drawing.Point(198, 184);
             this.pbWILBase.MaxPoints = 15;
             this.pbWILBase.Name = "pbWILBase";
             this.pbWILBase.Size = new System.Drawing.Size(108, 18);
@@ -452,7 +454,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abCHAInc.AttributeBar = this.pbCHABase;
             this.abCHAInc.BackColor = System.Drawing.Color.Transparent;
-            this.abCHAInc.Location = new System.Drawing.Point(306, 106);
+            this.abCHAInc.Location = new System.Drawing.Point(312, 147);
             this.abCHAInc.Name = "abCHAInc";
             this.abCHAInc.Size = new System.Drawing.Size(16, 16);
             this.abCHAInc.TabIndex = 109;
@@ -462,7 +464,7 @@ namespace EVEMon.SkillPlanner
             // pbCHABase
             // 
             this.pbCHABase.BaseValue = 5;
-            this.pbCHABase.Location = new System.Drawing.Point(192, 105);
+            this.pbCHABase.Location = new System.Drawing.Point(198, 146);
             this.pbCHABase.MaxPoints = 15;
             this.pbCHABase.Name = "pbCHABase";
             this.pbCHABase.Size = new System.Drawing.Size(108, 18);
@@ -477,7 +479,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abPERInc.AttributeBar = this.pbPERBase;
             this.abPERInc.BackColor = System.Drawing.Color.Transparent;
-            this.abPERInc.Location = new System.Drawing.Point(306, 69);
+            this.abPERInc.Location = new System.Drawing.Point(312, 110);
             this.abPERInc.Name = "abPERInc";
             this.abPERInc.Size = new System.Drawing.Size(16, 16);
             this.abPERInc.TabIndex = 108;
@@ -487,7 +489,7 @@ namespace EVEMon.SkillPlanner
             // pbPERBase
             // 
             this.pbPERBase.BaseValue = 5;
-            this.pbPERBase.Location = new System.Drawing.Point(192, 68);
+            this.pbPERBase.Location = new System.Drawing.Point(198, 109);
             this.pbPERBase.MaxPoints = 15;
             this.pbPERBase.Name = "pbPERBase";
             this.pbPERBase.Size = new System.Drawing.Size(108, 18);
@@ -502,7 +504,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abINTInc.AttributeBar = this.pbINTBase;
             this.abINTInc.BackColor = System.Drawing.Color.Transparent;
-            this.abINTInc.Location = new System.Drawing.Point(306, 29);
+            this.abINTInc.Location = new System.Drawing.Point(312, 70);
             this.abINTInc.Name = "abINTInc";
             this.abINTInc.Size = new System.Drawing.Size(16, 16);
             this.abINTInc.TabIndex = 107;
@@ -512,7 +514,7 @@ namespace EVEMon.SkillPlanner
             // pbINTBase
             // 
             this.pbINTBase.BaseValue = 5;
-            this.pbINTBase.Location = new System.Drawing.Point(192, 28);
+            this.pbINTBase.Location = new System.Drawing.Point(198, 69);
             this.pbINTBase.MaxPoints = 15;
             this.pbINTBase.Name = "pbINTBase";
             this.pbINTBase.Size = new System.Drawing.Size(108, 18);
@@ -527,7 +529,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abMEMDec.AttributeBar = this.pbMEMBase;
             this.abMEMDec.BackColor = System.Drawing.Color.Transparent;
-            this.abMEMDec.Location = new System.Drawing.Point(170, 182);
+            this.abMEMDec.Location = new System.Drawing.Point(176, 223);
             this.abMEMDec.Name = "abMEMDec";
             this.abMEMDec.Size = new System.Drawing.Size(16, 16);
             this.abMEMDec.TabIndex = 106;
@@ -538,7 +540,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abWILDec.AttributeBar = this.pbWILBase;
             this.abWILDec.BackColor = System.Drawing.Color.Transparent;
-            this.abWILDec.Location = new System.Drawing.Point(170, 144);
+            this.abWILDec.Location = new System.Drawing.Point(176, 185);
             this.abWILDec.Name = "abWILDec";
             this.abWILDec.Size = new System.Drawing.Size(16, 16);
             this.abWILDec.TabIndex = 105;
@@ -549,7 +551,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abCHADec.AttributeBar = this.pbCHABase;
             this.abCHADec.BackColor = System.Drawing.Color.Transparent;
-            this.abCHADec.Location = new System.Drawing.Point(170, 106);
+            this.abCHADec.Location = new System.Drawing.Point(176, 147);
             this.abCHADec.Name = "abCHADec";
             this.abCHADec.Size = new System.Drawing.Size(16, 16);
             this.abCHADec.TabIndex = 104;
@@ -560,7 +562,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abPERDec.AttributeBar = this.pbPERBase;
             this.abPERDec.BackColor = System.Drawing.Color.Transparent;
-            this.abPERDec.Location = new System.Drawing.Point(170, 69);
+            this.abPERDec.Location = new System.Drawing.Point(176, 110);
             this.abPERDec.Name = "abPERDec";
             this.abPERDec.Size = new System.Drawing.Size(16, 16);
             this.abPERDec.TabIndex = 103;
@@ -571,7 +573,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.abINTDec.AttributeBar = this.pbINTBase;
             this.abINTDec.BackColor = System.Drawing.Color.Transparent;
-            this.abINTDec.Location = new System.Drawing.Point(170, 29);
+            this.abINTDec.Location = new System.Drawing.Point(176, 70);
             this.abINTDec.Name = "abINTDec";
             this.abINTDec.Size = new System.Drawing.Size(16, 16);
             this.abINTDec.TabIndex = 102;
@@ -581,7 +583,7 @@ namespace EVEMon.SkillPlanner
             // pbINTImplants
             // 
             this.pbINTImplants.Enabled = false;
-            this.pbINTImplants.Location = new System.Drawing.Point(338, 28);
+            this.pbINTImplants.Location = new System.Drawing.Point(344, 69);
             this.pbINTImplants.Name = "pbINTImplants";
             this.pbINTImplants.Size = new System.Drawing.Size(38, 18);
             this.pbINTImplants.SpentPointColor = System.Drawing.Color.LightGray;
@@ -592,7 +594,7 @@ namespace EVEMon.SkillPlanner
             // pbPERImplants
             // 
             this.pbPERImplants.Enabled = false;
-            this.pbPERImplants.Location = new System.Drawing.Point(338, 68);
+            this.pbPERImplants.Location = new System.Drawing.Point(344, 109);
             this.pbPERImplants.Name = "pbPERImplants";
             this.pbPERImplants.Size = new System.Drawing.Size(38, 18);
             this.pbPERImplants.SpentPointColor = System.Drawing.Color.LightGray;
@@ -603,7 +605,7 @@ namespace EVEMon.SkillPlanner
             // pbCHAImplants
             // 
             this.pbCHAImplants.Enabled = false;
-            this.pbCHAImplants.Location = new System.Drawing.Point(338, 105);
+            this.pbCHAImplants.Location = new System.Drawing.Point(344, 146);
             this.pbCHAImplants.Name = "pbCHAImplants";
             this.pbCHAImplants.Size = new System.Drawing.Size(38, 18);
             this.pbCHAImplants.SpentPointColor = System.Drawing.Color.LightGray;
@@ -614,7 +616,7 @@ namespace EVEMon.SkillPlanner
             // pbWILImplants
             // 
             this.pbWILImplants.Enabled = false;
-            this.pbWILImplants.Location = new System.Drawing.Point(338, 143);
+            this.pbWILImplants.Location = new System.Drawing.Point(344, 184);
             this.pbWILImplants.Name = "pbWILImplants";
             this.pbWILImplants.Size = new System.Drawing.Size(38, 18);
             this.pbWILImplants.SpentPointColor = System.Drawing.Color.LightGray;
@@ -625,7 +627,7 @@ namespace EVEMon.SkillPlanner
             // pbMEMImplants
             // 
             this.pbMEMImplants.Enabled = false;
-            this.pbMEMImplants.Location = new System.Drawing.Point(338, 181);
+            this.pbMEMImplants.Location = new System.Drawing.Point(344, 222);
             this.pbMEMImplants.Name = "pbMEMImplants";
             this.pbMEMImplants.Size = new System.Drawing.Size(38, 18);
             this.pbMEMImplants.SpentPointColor = System.Drawing.Color.LightGray;
@@ -636,7 +638,7 @@ namespace EVEMon.SkillPlanner
             // pbPERSkills
             // 
             this.pbPERSkills.Enabled = false;
-            this.pbPERSkills.Location = new System.Drawing.Point(399, 68);
+            this.pbPERSkills.Location = new System.Drawing.Point(405, 109);
             this.pbPERSkills.MaxPoints = 14;
             this.pbPERSkills.Name = "pbPERSkills";
             this.pbPERSkills.Size = new System.Drawing.Size(101, 18);
@@ -648,7 +650,7 @@ namespace EVEMon.SkillPlanner
             // pbCHASkills
             // 
             this.pbCHASkills.Enabled = false;
-            this.pbCHASkills.Location = new System.Drawing.Point(399, 105);
+            this.pbCHASkills.Location = new System.Drawing.Point(405, 146);
             this.pbCHASkills.MaxPoints = 14;
             this.pbCHASkills.Name = "pbCHASkills";
             this.pbCHASkills.Size = new System.Drawing.Size(101, 18);
@@ -660,7 +662,7 @@ namespace EVEMon.SkillPlanner
             // pbWILSkills
             // 
             this.pbWILSkills.Enabled = false;
-            this.pbWILSkills.Location = new System.Drawing.Point(399, 143);
+            this.pbWILSkills.Location = new System.Drawing.Point(405, 184);
             this.pbWILSkills.MaxPoints = 14;
             this.pbWILSkills.Name = "pbWILSkills";
             this.pbWILSkills.Size = new System.Drawing.Size(101, 18);
@@ -672,7 +674,7 @@ namespace EVEMon.SkillPlanner
             // pbMEMSkills
             // 
             this.pbMEMSkills.Enabled = false;
-            this.pbMEMSkills.Location = new System.Drawing.Point(399, 181);
+            this.pbMEMSkills.Location = new System.Drawing.Point(405, 222);
             this.pbMEMSkills.MaxPoints = 14;
             this.pbMEMSkills.Name = "pbMEMSkills";
             this.pbMEMSkills.Size = new System.Drawing.Size(101, 18);
@@ -684,7 +686,7 @@ namespace EVEMon.SkillPlanner
             // pbINTSkills
             // 
             this.pbINTSkills.Enabled = false;
-            this.pbINTSkills.Location = new System.Drawing.Point(399, 28);
+            this.pbINTSkills.Location = new System.Drawing.Point(405, 69);
             this.pbINTSkills.MaxPoints = 14;
             this.pbINTSkills.Name = "pbINTSkills";
             this.pbINTSkills.Size = new System.Drawing.Size(101, 18);
@@ -696,18 +698,47 @@ namespace EVEMon.SkillPlanner
             // pbUnassigned
             // 
             this.pbUnassigned.Enabled = false;
-            this.pbUnassigned.Location = new System.Drawing.Point(192, 219);
+            this.pbUnassigned.Location = new System.Drawing.Point(198, 260);
             this.pbUnassigned.MaxPoints = 30;
             this.pbUnassigned.Name = "pbUnassigned";
             this.pbUnassigned.Size = new System.Drawing.Size(213, 18);
             this.pbUnassigned.TabIndex = 80;
             this.pbUnassigned.TabStop = false;
             // 
+            // lblNotice
+            // 
+            this.lblNotice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNotice.AutoSize = true;
+            this.lblNotice.ForeColor = System.Drawing.Color.Red;
+            this.lblNotice.Location = new System.Drawing.Point(301, 381);
+            this.lblNotice.Margin = new System.Windows.Forms.Padding(4);
+            this.lblNotice.MaximumSize = new System.Drawing.Size(211, 2000);
+            this.lblNotice.Name = "lblNotice";
+            this.lblNotice.Size = new System.Drawing.Size(211, 26);
+            this.lblNotice.TabIndex = 112;
+            this.lblNotice.Text = "Notice! This is not the active \"Implant Set\" of your character.";
+            this.lblNotice.Visible = false;
+            // 
+            // labelDescription
+            // 
+            this.labelDescription.AutoSize = true;
+            this.labelDescription.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelDescription.Location = new System.Drawing.Point(0, 0);
+            this.labelDescription.Margin = new System.Windows.Forms.Padding(3, 0, 10, 0);
+            this.labelDescription.Name = "labelDescription";
+            this.labelDescription.Padding = new System.Windows.Forms.Padding(8);
+            this.labelDescription.Size = new System.Drawing.Size(98, 29);
+            this.labelDescription.TabIndex = 113;
+            this.labelDescription.Text = "labelDescription";
+            // 
             // AttributesOptimizationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.labelDescription);
+            this.Controls.Add(this.lblNotice);
             this.Controls.Add(this.abMEMInc);
             this.Controls.Add(this.abWILInc);
             this.Controls.Add(this.abCHAInc);
@@ -718,7 +749,7 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.abCHADec);
             this.Controls.Add(this.abPERDec);
             this.Controls.Add(this.abINTDec);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.lblAsterisk);
             this.Controls.Add(this.pbINTImplants);
             this.Controls.Add(this.pbPERImplants);
             this.Controls.Add(this.pbCHAImplants);
@@ -736,30 +767,30 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.pbINTBase);
             this.Controls.Add(this.pbUnassigned);
             this.Controls.Add(this.buttonOptimize);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblUnassignedAttributePoints);
             this.Controls.Add(this.buttonCurrent);
             this.Controls.Add(this.tblayoutComparePanel);
             this.Controls.Add(this.lbWarning);
-            this.Controls.Add(label10);
-            this.Controls.Add(label8);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(lblSkills);
+            this.Controls.Add(lblImplants);
+            this.Controls.Add(this.lblBase);
             this.Controls.Add(pictureBox5);
             this.Controls.Add(pictureBox4);
             this.Controls.Add(pictureBox3);
             this.Controls.Add(pictureBox2);
             this.Controls.Add(pictureBox1);
             this.Controls.Add(this.lbMEM);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.lblMemory);
             this.Controls.Add(this.lbWIL);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.lblWillpower);
             this.Controls.Add(this.lbCHA);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblCharisma);
             this.Controls.Add(this.lbPER);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblPerception);
             this.Controls.Add(this.lbINT);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblIntelligence);
             this.Name = "AttributesOptimizationControl";
-            this.Size = new System.Drawing.Size(510, 378);
+            this.Size = new System.Drawing.Size(518, 433);
             this.Click += new System.EventHandler(this.attributeButton_Click);
             ((System.ComponentModel.ISupportInitialize)(pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(pictureBox4)).EndInit();
@@ -775,7 +806,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblBase;
         private System.Windows.Forms.Label lbMEM;
         private System.Windows.Forms.Label lbWIL;
         private System.Windows.Forms.Label lbCHA;
@@ -788,13 +819,13 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lbOptimizedTime;
         private System.Windows.Forms.Label lbCurrentTimeInfo;
         private System.Windows.Forms.Label lbWarning;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblMemory;
+        private System.Windows.Forms.Label lblWillpower;
+        private System.Windows.Forms.Label lblCharisma;
+        private System.Windows.Forms.Label lblPerception;
+        private System.Windows.Forms.Label lblIntelligence;
         private System.Windows.Forms.Button buttonCurrent;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblUnassignedAttributePoints;
         private System.Windows.Forms.Button buttonOptimize;
         private AttributeBarControl pbUnassigned;
         private AttributeBarControl pbINTBase;
@@ -812,7 +843,7 @@ namespace EVEMon.SkillPlanner
         private AttributeBarControl pbCHAImplants;
         private AttributeBarControl pbPERImplants;
         private AttributeBarControl pbINTImplants;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblAsterisk;
         private AttributeButtonControl abINTDec;
         private AttributeButtonControl abPERDec;
         private AttributeButtonControl abCHADec;
@@ -823,5 +854,7 @@ namespace EVEMon.SkillPlanner
         private AttributeButtonControl abCHAInc;
         private AttributeButtonControl abPERInc;
         private AttributeButtonControl abINTInc;
+        private System.Windows.Forms.Label lblNotice;
+        private System.Windows.Forms.Label labelDescription;
     }
 }

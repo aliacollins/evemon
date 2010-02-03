@@ -40,7 +40,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SuggestionWindow_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode) return;
+            if (this.DesignMode)
+                return;
 
             // Update the suggestions list
             lbSkills.Items.Clear();
@@ -50,7 +51,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the times labels
-            TimeSpan preTime = m_plan.GetTotalTime(null, true);
+            CharacterScratchpad character = m_plan.Character.After(m_plan.ChosenImplantSet);
+            TimeSpan preTime = m_plan.GetTotalTime(character, true);
             TimeSpan postTime = preTime - m_suggestions.TimeBenefit;
 
             lblBeforeTime.Text = Skill.TimeSpanToDescriptiveText(preTime, DescriptiveTextOptions.IncludeCommas);

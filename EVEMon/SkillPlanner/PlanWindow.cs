@@ -165,7 +165,8 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             protected set
             {
-                if (m_plan == value) return;
+                if (m_plan == value)
+                    return;
                 m_plan = value;
 
                 // The tag is used by WindowsFactory.ShowByTag
@@ -178,11 +179,13 @@ namespace EVEMon.SkillPlanner
                 certBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
-                if (loadoutSelect != null) loadoutSelect.Plan = m_plan;
+                if (loadoutSelect != null)
+                    loadoutSelect.Plan = m_plan;
 
                 // Jump to the appropriate tab depending on whether
                 // or not the plan is empty
-                if (m_plan.Count == 0) tabControl.SelectedTab = tpSkillBrowser;
+                if (m_plan.Count == 0)
+                    tabControl.SelectedTab = tpSkillBrowser;
                 else tabControl.SelectedTab = tpPlanQueue;
 
                 // Update controls
@@ -338,7 +341,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if (m_plan != e.Plan) return;
+            if (m_plan != e.Plan)
+                return;
             UpdateEnables();
         }
 
@@ -380,7 +384,10 @@ namespace EVEMon.SkillPlanner
         public void UpdateStatusBar()
         {
             // Training time
-            TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(null, true);
+            var scratchpad = new CharacterScratchpad(Character);
+            if (m_plan.ChosenImplantSet != null)
+                scratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
+            TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
             slblStatusText.Text = String.Format("{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}. ",
                                                 m_plan.Count,
                                                 m_plan.Count == 1 ? "" : "s",
@@ -418,10 +425,7 @@ namespace EVEMon.SkillPlanner
                                       "\"Suggestion\" link in the planner status bar.");
                 }
             }
-            else
-            {
-                tslSuggestion.Visible = false;
-            }
+            else tslSuggestion.Visible = false;
 
             FixStatusBarTextLength();
         }
@@ -477,7 +481,8 @@ namespace EVEMon.SkillPlanner
             DialogResult dr = MessageBox.Show("Are you sure you want to delete this plan?", "Delete Plan", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
-            if (dr != DialogResult.Yes) return;
+            if (dr != DialogResult.Yes)
+                return;
 
             // Close the skill explorer
             WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
@@ -489,7 +494,8 @@ namespace EVEMon.SkillPlanner
             // Choose which plan to show next
             // By default we choose the next one,
             // if it was the last in the list we select the previous one
-            if (i > Character.Plans.Count - 1) i--;
+            if (i > Character.Plans.Count - 1)
+                i--;
             
             // When no plans exists after deletion we close the window
             if (i < 0)
@@ -510,7 +516,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.DesignMode) return;
+            if (this.DesignMode)
+                return;
 
             // Force update of column widths in case we've just created a new plan from within the planner window.
             if (tabControl.SelectedIndex == 0)
@@ -530,7 +537,8 @@ namespace EVEMon.SkillPlanner
             using (SuggestionWindow f = new SuggestionWindow(m_plan))
             {
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
             }
         }
 
@@ -568,7 +576,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsddbPlans_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem.Tag == m_plan) return;
+            if (e.ClickedItem.Tag == m_plan)
+                return;
 
             // Is it another plan ?
             if (e.ClickedItem.Tag != null)
@@ -577,7 +586,8 @@ namespace EVEMon.SkillPlanner
                 var window = WindowsFactory<PlanWindow>.GetByTag(plan);
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened.
-                if (window != null) window.BringToFront();
+                if (window != null)
+                    window.BringToFront();
                 else this.Plan = plan;
 
                 return;
@@ -587,7 +597,8 @@ namespace EVEMon.SkillPlanner
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 var plan = new Plan(Character);
                 plan.Name = npw.Result;
@@ -637,7 +648,8 @@ namespace EVEMon.SkillPlanner
         {
             // Prompt the user for settings. When null, the user cancelled.
             PlanExportSettings settings = UIHelper.PromptUserForPlanExportSettings(m_plan);
-            if (settings == null) return;
+            if (settings == null)
+                return;
 
             string output = PlanExporter.ExportAsText(m_plan, settings);
 

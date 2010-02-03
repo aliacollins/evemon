@@ -28,37 +28,37 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblEffectiveWillpower = new System.Windows.Forms.Label();
             this.nudIntelligence = new System.Windows.Forms.NumericUpDown();
             this.lblEffectiveMemory = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblIntelligence = new System.Windows.Forms.Label();
             this.lblEffectivePerception = new System.Windows.Forms.Label();
             this.nudCharisma = new System.Windows.Forms.NumericUpDown();
             this.nudPerception = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblMemory = new System.Windows.Forms.Label();
+            this.lblCharisma = new System.Windows.Forms.Label();
             this.lblAdjustMemory = new System.Windows.Forms.Label();
             this.lblEffectiveCharisma = new System.Windows.Forms.Label();
             this.nudMemory = new System.Windows.Forms.NumericUpDown();
             this.lblEffectiveIntelligence = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbWillpower = new System.Windows.Forms.Label();
             this.lblAdjustCharisma = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
+            this.lblEffective = new System.Windows.Forms.Label();
             this.lblAdjustWillpower = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblPerception = new System.Windows.Forms.Label();
             this.nudWillpower = new System.Windows.Forms.NumericUpDown();
             this.lblAdjustPerception = new System.Windows.Forms.Label();
             this.lblAdjustIntelligence = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblBase = new System.Windows.Forms.Label();
+            this.gbCurrentBase = new System.Windows.Forms.GroupBox();
             this.lblBaseDate = new System.Windows.Forms.Label();
             this.lblBaseSpan = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbCurrent = new System.Windows.Forms.GroupBox();
             this.lblCurrentDate = new System.Windows.Forms.Label();
             this.lblCurrentSpan = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.gbWithThisAttributes = new System.Windows.Forms.GroupBox();
             this.lblComparedToCurrent = new System.Windows.Forms.Label();
             this.lblComparedToBase = new System.Windows.Forms.Label();
             this.lblThisDate = new System.Windows.Forms.Label();
@@ -72,53 +72,54 @@ namespace EVEMon.SkillPlanner
             this.miJumpClone3 = new System.Windows.Forms.ToolStripMenuItem();
             this.miJumpClone4 = new System.Windows.Forms.ToolStripMenuItem();
             this.miJumpClone5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1.SuspendLayout();
+            this.lblNotice = new System.Windows.Forms.Label();
+            this.gbAttributes.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCharisma)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMemory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWillpower)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
+            this.gbCurrentBase.SuspendLayout();
+            this.gbCurrent.SuspendLayout();
+            this.gbWithThisAttributes.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // gbAttributes
             // 
-            this.groupBox1.Controls.Add(this.panel1);
-            this.groupBox1.Location = new System.Drawing.Point(0, 25);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(249, 188);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Attributes";
+            this.gbAttributes.Controls.Add(this.panel1);
+            this.gbAttributes.Location = new System.Drawing.Point(9, 25);
+            this.gbAttributes.Name = "gbAttributes";
+            this.gbAttributes.Size = new System.Drawing.Size(249, 188);
+            this.gbAttributes.TabIndex = 0;
+            this.gbAttributes.TabStop = false;
+            this.gbAttributes.Text = "Attributes of \"Implant Set Name\"";
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.lblEffectiveWillpower);
             this.panel1.Controls.Add(this.nudIntelligence);
             this.panel1.Controls.Add(this.lblEffectiveMemory);
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.lblIntelligence);
             this.panel1.Controls.Add(this.lblEffectivePerception);
             this.panel1.Controls.Add(this.nudCharisma);
             this.panel1.Controls.Add(this.nudPerception);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.lblMemory);
+            this.panel1.Controls.Add(this.lblCharisma);
             this.panel1.Controls.Add(this.lblAdjustMemory);
             this.panel1.Controls.Add(this.lblEffectiveCharisma);
             this.panel1.Controls.Add(this.nudMemory);
             this.panel1.Controls.Add(this.lblEffectiveIntelligence);
-            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.lbWillpower);
             this.panel1.Controls.Add(this.lblAdjustCharisma);
-            this.panel1.Controls.Add(this.label12);
+            this.panel1.Controls.Add(this.lblEffective);
             this.panel1.Controls.Add(this.lblAdjustWillpower);
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lblPerception);
             this.panel1.Controls.Add(this.nudWillpower);
             this.panel1.Controls.Add(this.lblAdjustPerception);
             this.panel1.Controls.Add(this.lblAdjustIntelligence);
-            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.lblBase);
             this.panel1.Location = new System.Drawing.Point(12, 20);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(231, 157);
@@ -165,14 +166,14 @@ namespace EVEMon.SkillPlanner
             this.lblEffectiveMemory.TabIndex = 21;
             this.lblEffectiveMemory.Text = "22.14";
             // 
-            // label1
+            // lblIntelligence
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Intelligence:";
+            this.lblIntelligence.AutoSize = true;
+            this.lblIntelligence.Location = new System.Drawing.Point(-1, 26);
+            this.lblIntelligence.Name = "lblIntelligence";
+            this.lblIntelligence.Size = new System.Drawing.Size(66, 13);
+            this.lblIntelligence.TabIndex = 2;
+            this.lblIntelligence.Text = "Intelligence:";
             // 
             // lblEffectivePerception
             // 
@@ -229,23 +230,23 @@ namespace EVEMon.SkillPlanner
             0});
             this.nudPerception.ValueChanged += new System.EventHandler(this.nudPerception_ValueChanged);
             // 
-            // label4
+            // lblMemory
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-1, 134);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 13);
-            this.label4.TabIndex = 18;
-            this.label4.Text = "Memory:";
+            this.lblMemory.AutoSize = true;
+            this.lblMemory.Location = new System.Drawing.Point(-1, 134);
+            this.lblMemory.Name = "lblMemory";
+            this.lblMemory.Size = new System.Drawing.Size(49, 13);
+            this.lblMemory.TabIndex = 18;
+            this.lblMemory.Text = "Memory:";
             // 
-            // label2
+            // lblCharisma
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 80);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Charisma:";
+            this.lblCharisma.AutoSize = true;
+            this.lblCharisma.Location = new System.Drawing.Point(-1, 80);
+            this.lblCharisma.Name = "lblCharisma";
+            this.lblCharisma.Size = new System.Drawing.Size(55, 13);
+            this.lblCharisma.TabIndex = 10;
+            this.lblCharisma.Text = "Charisma:";
             // 
             // lblAdjustMemory
             // 
@@ -297,14 +298,14 @@ namespace EVEMon.SkillPlanner
             this.lblEffectiveIntelligence.TabIndex = 5;
             this.lblEffectiveIntelligence.Text = "22.14";
             // 
-            // label5
+            // lbWillpower
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(-1, 107);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Willpower:";
+            this.lbWillpower.AutoSize = true;
+            this.lbWillpower.Location = new System.Drawing.Point(-1, 107);
+            this.lbWillpower.Name = "lbWillpower";
+            this.lbWillpower.Size = new System.Drawing.Size(57, 13);
+            this.lbWillpower.TabIndex = 14;
+            this.lbWillpower.Text = "Willpower:";
             // 
             // lblAdjustCharisma
             // 
@@ -315,14 +316,14 @@ namespace EVEMon.SkillPlanner
             this.lblAdjustCharisma.TabIndex = 12;
             this.lblAdjustCharisma.Text = "+0";
             // 
-            // label12
+            // lblEffective
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(168, 2);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(56, 13);
-            this.label12.TabIndex = 1;
-            this.label12.Text = "Effective";
+            this.lblEffective.AutoSize = true;
+            this.lblEffective.Location = new System.Drawing.Point(168, 2);
+            this.lblEffective.Name = "lblEffective";
+            this.lblEffective.Size = new System.Drawing.Size(50, 13);
+            this.lblEffective.TabIndex = 1;
+            this.lblEffective.Text = "Effective";
             // 
             // lblAdjustWillpower
             // 
@@ -333,14 +334,14 @@ namespace EVEMon.SkillPlanner
             this.lblAdjustWillpower.TabIndex = 16;
             this.lblAdjustWillpower.Text = "+0";
             // 
-            // label3
+            // lblPerception
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-1, 53);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Perception:";
+            this.lblPerception.AutoSize = true;
+            this.lblPerception.Location = new System.Drawing.Point(-1, 53);
+            this.lblPerception.Name = "lblPerception";
+            this.lblPerception.Size = new System.Drawing.Size(62, 13);
+            this.lblPerception.TabIndex = 6;
+            this.lblPerception.Text = "Perception:";
             // 
             // nudWillpower
             // 
@@ -383,121 +384,121 @@ namespace EVEMon.SkillPlanner
             this.lblAdjustIntelligence.TabIndex = 4;
             this.lblAdjustIntelligence.Text = "+0";
             // 
-            // label6
+            // lblBase
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(128, 2);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 13);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "Base";
+            this.lblBase.AutoSize = true;
+            this.lblBase.Location = new System.Drawing.Point(128, 2);
+            this.lblBase.Name = "lblBase";
+            this.lblBase.Size = new System.Drawing.Size(30, 13);
+            this.lblBase.TabIndex = 0;
+            this.lblBase.Text = "Base";
             // 
-            // groupBox2
+            // gbCurrentBase
             // 
-            this.groupBox2.Controls.Add(this.lblBaseDate);
-            this.groupBox2.Controls.Add(this.lblBaseSpan);
-            this.groupBox2.Location = new System.Drawing.Point(255, 25);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(279, 50);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Current (without implants)";
+            this.gbCurrentBase.Controls.Add(this.lblBaseDate);
+            this.gbCurrentBase.Controls.Add(this.lblBaseSpan);
+            this.gbCurrentBase.Location = new System.Drawing.Point(264, 25);
+            this.gbCurrentBase.Name = "gbCurrentBase";
+            this.gbCurrentBase.Size = new System.Drawing.Size(279, 50);
+            this.gbCurrentBase.TabIndex = 2;
+            this.gbCurrentBase.TabStop = false;
+            this.gbCurrentBase.Text = "Current base (without implants)";
             // 
             // lblBaseDate
             // 
             this.lblBaseDate.AutoSize = true;
             this.lblBaseDate.Location = new System.Drawing.Point(6, 30);
             this.lblBaseDate.Name = "lblBaseDate";
-            this.lblBaseDate.Size = new System.Drawing.Size(41, 13);
+            this.lblBaseDate.Size = new System.Drawing.Size(96, 13);
             this.lblBaseDate.TabIndex = 1;
-            this.lblBaseDate.Text = "label19";
+            this.lblBaseDate.Text = "Current Base Date";
             // 
             // lblBaseSpan
             // 
             this.lblBaseSpan.AutoSize = true;
             this.lblBaseSpan.Location = new System.Drawing.Point(6, 17);
             this.lblBaseSpan.Name = "lblBaseSpan";
-            this.lblBaseSpan.Size = new System.Drawing.Size(41, 13);
+            this.lblBaseSpan.Size = new System.Drawing.Size(97, 13);
             this.lblBaseSpan.TabIndex = 0;
-            this.lblBaseSpan.Text = "label18";
+            this.lblBaseSpan.Text = "Current Base Span";
             // 
-            // groupBox3
+            // gbCurrent
             // 
-            this.groupBox3.Controls.Add(this.lblCurrentDate);
-            this.groupBox3.Controls.Add(this.lblCurrentSpan);
-            this.groupBox3.Location = new System.Drawing.Point(255, 81);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(279, 50);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Current (with implants)";
+            this.gbCurrent.Controls.Add(this.lblCurrentDate);
+            this.gbCurrent.Controls.Add(this.lblCurrentSpan);
+            this.gbCurrent.Location = new System.Drawing.Point(264, 81);
+            this.gbCurrent.Name = "gbCurrent";
+            this.gbCurrent.Size = new System.Drawing.Size(279, 50);
+            this.gbCurrent.TabIndex = 3;
+            this.gbCurrent.TabStop = false;
+            this.gbCurrent.Text = "Current (with implants)";
             // 
             // lblCurrentDate
             // 
             this.lblCurrentDate.AutoSize = true;
             this.lblCurrentDate.Location = new System.Drawing.Point(6, 30);
             this.lblCurrentDate.Name = "lblCurrentDate";
-            this.lblCurrentDate.Size = new System.Drawing.Size(41, 13);
+            this.lblCurrentDate.Size = new System.Drawing.Size(70, 13);
             this.lblCurrentDate.TabIndex = 1;
-            this.lblCurrentDate.Text = "label20";
+            this.lblCurrentDate.Text = "Current Date";
             // 
             // lblCurrentSpan
             // 
             this.lblCurrentSpan.AutoSize = true;
             this.lblCurrentSpan.Location = new System.Drawing.Point(6, 17);
             this.lblCurrentSpan.Name = "lblCurrentSpan";
-            this.lblCurrentSpan.Size = new System.Drawing.Size(41, 13);
+            this.lblCurrentSpan.Size = new System.Drawing.Size(71, 13);
             this.lblCurrentSpan.TabIndex = 0;
-            this.lblCurrentSpan.Text = "label21";
+            this.lblCurrentSpan.Text = "Current Span";
             // 
-            // groupBox4
+            // gbWithThisAttributes
             // 
-            this.groupBox4.Controls.Add(this.lblComparedToCurrent);
-            this.groupBox4.Controls.Add(this.lblComparedToBase);
-            this.groupBox4.Controls.Add(this.lblThisDate);
-            this.groupBox4.Controls.Add(this.lblThisSpan);
-            this.groupBox4.Location = new System.Drawing.Point(255, 137);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(279, 76);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "With These Attributes";
+            this.gbWithThisAttributes.Controls.Add(this.lblComparedToCurrent);
+            this.gbWithThisAttributes.Controls.Add(this.lblComparedToBase);
+            this.gbWithThisAttributes.Controls.Add(this.lblThisDate);
+            this.gbWithThisAttributes.Controls.Add(this.lblThisSpan);
+            this.gbWithThisAttributes.Location = new System.Drawing.Point(264, 137);
+            this.gbWithThisAttributes.Name = "gbWithThisAttributes";
+            this.gbWithThisAttributes.Size = new System.Drawing.Size(279, 76);
+            this.gbWithThisAttributes.TabIndex = 4;
+            this.gbWithThisAttributes.TabStop = false;
+            this.gbWithThisAttributes.Text = "With These Attributes";
             // 
             // lblComparedToCurrent
             // 
             this.lblComparedToCurrent.AutoSize = true;
             this.lblComparedToCurrent.Location = new System.Drawing.Point(6, 56);
             this.lblComparedToCurrent.Name = "lblComparedToCurrent";
-            this.lblComparedToCurrent.Size = new System.Drawing.Size(41, 13);
+            this.lblComparedToCurrent.Size = new System.Drawing.Size(105, 13);
             this.lblComparedToCurrent.TabIndex = 3;
-            this.lblComparedToCurrent.Text = "label25";
+            this.lblComparedToCurrent.Text = "Compare To Current";
             // 
             // lblComparedToBase
             // 
             this.lblComparedToBase.AutoSize = true;
             this.lblComparedToBase.Location = new System.Drawing.Point(6, 43);
             this.lblComparedToBase.Name = "lblComparedToBase";
-            this.lblComparedToBase.Size = new System.Drawing.Size(41, 13);
+            this.lblComparedToBase.Size = new System.Drawing.Size(131, 13);
             this.lblComparedToBase.TabIndex = 2;
-            this.lblComparedToBase.Text = "label24";
+            this.lblComparedToBase.Text = "Compare To Current Base";
             // 
             // lblThisDate
             // 
             this.lblThisDate.AutoSize = true;
             this.lblThisDate.Location = new System.Drawing.Point(6, 30);
             this.lblThisDate.Name = "lblThisDate";
-            this.lblThisDate.Size = new System.Drawing.Size(41, 13);
+            this.lblThisDate.Size = new System.Drawing.Size(52, 13);
             this.lblThisDate.TabIndex = 1;
-            this.lblThisDate.Text = "label22";
+            this.lblThisDate.Text = "This Date";
             // 
             // lblThisSpan
             // 
             this.lblThisSpan.AutoSize = true;
             this.lblThisSpan.Location = new System.Drawing.Point(6, 17);
             this.lblThisSpan.Name = "lblThisSpan";
-            this.lblThisSpan.Size = new System.Drawing.Size(41, 13);
+            this.lblThisSpan.Size = new System.Drawing.Size(53, 13);
             this.lblThisSpan.TabIndex = 0;
-            this.lblThisSpan.Text = "label23";
+            this.lblThisSpan.Text = "This Span";
             // 
             // menuStrip1
             // 
@@ -512,18 +513,64 @@ namespace EVEMon.SkillPlanner
             // mnLoadAtts
             // 
             this.mnLoadAtts.Name = "mnLoadAtts";
-            this.mnLoadAtts.Size = new System.Drawing.Size(105, 20);
+            this.mnLoadAtts.Size = new System.Drawing.Size(109, 20);
             this.mnLoadAtts.Text = "Load Attributes...";
             this.mnLoadAtts.DropDownOpening += new System.EventHandler(this.mnLoadAtts_DropDownOpening);
+            // 
+            // miNoImplants
+            // 
+            this.miNoImplants.Name = "miNoImplants";
+            this.miNoImplants.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miCurrentClone
+            // 
+            this.miCurrentClone.Name = "miCurrentClone";
+            this.miCurrentClone.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miJumpClone1
+            // 
+            this.miJumpClone1.Name = "miJumpClone1";
+            this.miJumpClone1.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miJumpClone2
+            // 
+            this.miJumpClone2.Name = "miJumpClone2";
+            this.miJumpClone2.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miJumpClone3
+            // 
+            this.miJumpClone3.Name = "miJumpClone3";
+            this.miJumpClone3.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miJumpClone4
+            // 
+            this.miJumpClone4.Name = "miJumpClone4";
+            this.miJumpClone4.Size = new System.Drawing.Size(32, 19);
+            // 
+            // miJumpClone5
+            // 
+            this.miJumpClone5.Name = "miJumpClone5";
+            this.miJumpClone5.Size = new System.Drawing.Size(32, 19);
+            // 
+            // lblNotice
+            // 
+            this.lblNotice.AutoSize = true;
+            this.lblNotice.ForeColor = System.Drawing.Color.Red;
+            this.lblNotice.Location = new System.Drawing.Point(18, 216);
+            this.lblNotice.Name = "lblNotice";
+            this.lblNotice.Size = new System.Drawing.Size(300, 13);
+            this.lblNotice.TabIndex = 6;
+            this.lblNotice.Text = "Notice! This is not the active \"Implant Set\" of your character.";
             // 
             // ImplantCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(553, 234);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lblNotice);
+            this.Controls.Add(this.gbWithThisAttributes);
+            this.Controls.Add(this.gbCurrent);
+            this.Controls.Add(this.gbCurrentBase);
+            this.Controls.Add(this.gbAttributes);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
@@ -531,7 +578,7 @@ namespace EVEMon.SkillPlanner
             this.Name = "ImplantCalculator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Implant Calculator";
-            this.groupBox1.ResumeLayout(false);
+            this.gbAttributes.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).EndInit();
@@ -539,12 +586,12 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMemory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWillpower)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.gbCurrentBase.ResumeLayout(false);
+            this.gbCurrentBase.PerformLayout();
+            this.gbCurrent.ResumeLayout(false);
+            this.gbCurrent.PerformLayout();
+            this.gbWithThisAttributes.ResumeLayout(false);
+            this.gbWithThisAttributes.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -554,36 +601,36 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbAttributes;
         private System.Windows.Forms.NumericUpDown nudIntelligence;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblIntelligence;
+        private System.Windows.Forms.Label lbWillpower;
+        private System.Windows.Forms.Label lblMemory;
+        private System.Windows.Forms.Label lblPerception;
+        private System.Windows.Forms.Label lblCharisma;
         private System.Windows.Forms.NumericUpDown nudWillpower;
         private System.Windows.Forms.NumericUpDown nudMemory;
         private System.Windows.Forms.NumericUpDown nudPerception;
         private System.Windows.Forms.NumericUpDown nudCharisma;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblBase;
         private System.Windows.Forms.Label lblEffectiveWillpower;
         private System.Windows.Forms.Label lblEffectiveMemory;
         private System.Windows.Forms.Label lblEffectivePerception;
         private System.Windows.Forms.Label lblEffectiveCharisma;
         private System.Windows.Forms.Label lblEffectiveIntelligence;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lblEffective;
         private System.Windows.Forms.Label lblAdjustWillpower;
         private System.Windows.Forms.Label lblAdjustMemory;
         private System.Windows.Forms.Label lblAdjustPerception;
         private System.Windows.Forms.Label lblAdjustCharisma;
         private System.Windows.Forms.Label lblAdjustIntelligence;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbCurrentBase;
         private System.Windows.Forms.Label lblBaseDate;
         private System.Windows.Forms.Label lblBaseSpan;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox gbCurrent;
         private System.Windows.Forms.Label lblCurrentDate;
         private System.Windows.Forms.Label lblCurrentSpan;
-        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox gbWithThisAttributes;
         private System.Windows.Forms.Label lblThisDate;
         private System.Windows.Forms.Label lblThisSpan;
         private System.Windows.Forms.Panel panel1;
@@ -598,5 +645,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miJumpClone3;
         private System.Windows.Forms.ToolStripMenuItem miJumpClone4;
         private System.Windows.Forms.ToolStripMenuItem miJumpClone5;
+        private System.Windows.Forms.Label lblNotice;
     }
 }

@@ -77,7 +77,8 @@ namespace EVEMon.Common
             get { return m_current; }
             set
             {
-                if (m_current == value) return;
+                if (m_current == value)
+                    return;
                 m_current = value;
                 EveClient.OnCharacterChanged(m_owner);
             }
@@ -114,7 +115,10 @@ namespace EVEMon.Common
         {
             yield return m_api;
             yield return m_oldAPI;
-            foreach (var set in m_customSets) yield return set;
+            foreach (var set in m_customSets)
+            {
+                yield return set;
+            }
         }
 
         /// <summary>
@@ -136,6 +140,8 @@ namespace EVEMon.Common
 
             // Imports selection
             m_current = Enumerate().ElementAt(serial.SelectedIndex);
+
+            EveClient.OnSettingsChanged();
         }
 
         /// <summary>
@@ -173,6 +179,8 @@ namespace EVEMon.Common
             // Imports the API and make a backup
             if (isDifferent) m_oldAPI.Import(m_api.Export(), false);
             m_api.Import(serial);
+
+            EveClient.OnSettingsChanged();
         }
     }
 }

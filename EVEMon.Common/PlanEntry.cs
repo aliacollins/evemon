@@ -27,6 +27,7 @@ namespace EVEMon.Common
         private string m_notes;
 
         // Statistics computed on Plan.UpdateTrainingTimes
+        private TimeSpan m_trainingTimeWithLearning;
         private TimeSpan m_naturalTrainingTime;
         private TimeSpan m_oldTrainingTime;
         private TimeSpan m_trainingTime;
@@ -79,7 +80,8 @@ namespace EVEMon.Common
 
             foreach (var group in serial.PlanGroups) m_planGroups.Add(group);
 
-            if (serial.Remapping != null) m_remapping = new RemappingPoint(serial.Remapping);
+            if (serial.Remapping != null)
+                m_remapping = new RemappingPoint(serial.Remapping);
         }
 
         /// <summary>
@@ -114,7 +116,8 @@ namespace EVEMon.Common
             get 
             {
                 var character = m_owner.Character as Character;
-                if (character == null) return null;
+                if (character == null)
+                    return null;
                 return m_skill.ToCharacter(character); 
             }
         }
@@ -154,7 +157,8 @@ namespace EVEMon.Common
             set 
             { 
                 m_notes = value; 
-                if (m_owner != null) m_owner.OnChanged(BasePlan.PlanChange.Notification);
+                if (m_owner != null)
+                    m_owner.OnChanged(BasePlan.PlanChange.Notification);
             }
         }
 
@@ -167,7 +171,8 @@ namespace EVEMon.Common
             set 
             {
                 m_remapping = value;
-                if (m_owner != null) m_owner.OnChanged(BasePlan.PlanChange.Notification);
+                if (m_owner != null)
+                    m_owner.OnChanged(BasePlan.PlanChange.Notification);
             }
         }
 
@@ -234,7 +239,8 @@ namespace EVEMon.Common
             skill = StaticSkills.GetSkillById(serial.ID);
 
             // We failed? Try get skill by its name
-            if(skill == null) skill = StaticSkills.GetSkillByName(serial.SkillName);
+            if(skill == null)
+                skill = StaticSkills.GetSkillByName(serial.SkillName);
             
             return skill;
         }
@@ -250,6 +256,14 @@ namespace EVEMon.Common
         }
 
         #region Computations done when UpdateTrainingTime is called
+        /// <summary>
+        /// Gets the training time computed with preceding learning skills.
+        /// </summary>
+        public TimeSpan TrainingTimeWithLearning
+        {
+            get { return m_trainingTimeWithLearning; }
+        }
+
         /// <summary>
         /// Gets the training time computed the last time the <see cref="Plan.UpdateStatistics"/> was called.
         /// </summary>
@@ -325,12 +339,14 @@ namespace EVEMon.Common
         /// Updates the column statistics (with the exception of the <see cref="UpdateOldTrainingTime"/>) from the given scratchpad.
         /// </summary>
         /// <param name="character"></param>
-        /// <returns></returns>
+        /// <param name="characterWithoutImplants"></param>
+        /// <param name="time"></param>
         internal void UpdateStatistics(BaseCharacter character, BaseCharacter characterWithoutImplants, ref DateTime time)
         {
             var sp = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
             m_totalSP = character.SkillPoints + sp;
             m_trainingTime = character.GetTrainingTime(m_skill, m_level);
+            m_trainingTimeWithLearning = character.GetTrainingTimeWithLearning(m_owner, m_skill, m_level);
             m_naturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
             m_spPerHour = (int) Math.Round(character.GetBaseSPPerHour(m_skill)) * character.GetNewCharacterSkillTrainingBonus(sp);
             m_endTime = time + m_trainingTime;
@@ -341,7 +357,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the <see cref="OldTrainingTime"/> statistic.
         /// </summary>
-        /// <param name="scratchpad"></param>
+        /// <param name="character"></param>
         internal void UpdateOldTrainingTime(BaseCharacter character)
         {
             m_oldTrainingTime = character.GetTrainingTime(m_skill, m_level);

@@ -6,9 +6,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common;
 using System.Drawing.Imaging;
 using System.Threading;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Controls;
 
@@ -44,6 +44,7 @@ namespace EVEMon.SkillPlanner
 
         private readonly Dictionary<AttributesOptimizationControl, AttributesOptimizer.RemappingResult> m_remappingDictionary;
         private PlanEditorControl m_planEditor;
+        private BaseCharacter m_baseCharacter;
         private Character m_character;
         private Strategy m_strategy;
         private BasePlan m_plan;
@@ -51,10 +52,13 @@ namespace EVEMon.SkillPlanner
         private Thread m_thread;
 
         private bool m_areRemappingPointsActive;
+        private bool m_update = false;
+        private string m_description;
         private CharacterScratchpad m_statisticsScratchpad;
 
         // Variables for manual edition of a plan
         private RemappingPoint m_manuallyEditedRemappingPoint;
+        private AttributesOptimizer.RemappingResult m_remapping;
 
 
         /// <summary>
@@ -78,10 +82,11 @@ namespace EVEMon.SkillPlanner
             : this()
         {
             m_character = character;
+            m_baseCharacter = character.After(plan.ChosenImplantSet);
             m_strategy = strategy;
             m_plan = plan;
+            m_description = description;
             this.Text = name;
-            this.labelDescription.Text = description;
         }
 
         /// <summary>
@@ -92,15 +97,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="strategy">Optimization strategy</param>
         /// <param name="name">Title of this form</param>
         /// <param name="description">Description of the optimization operation</param>
-        public AttributesOptimizationForm(Character character, BasePlan plan, RemappingPoint point, string planName)
+        public AttributesOptimizationForm(Character character, Plan plan, RemappingPoint point)
             : this()
         {
             m_plan = plan;
             m_character = character;
+            m_baseCharacter = character.After(plan.ChosenImplantSet);
             m_manuallyEditedRemappingPoint = point;
             m_strategy = Strategy.ManualRemappingPointEdition;
-            this.Text = "Remapping point edition (" + planName + ")";
-            this.labelDescription.Text = "Manual edition of a remapping point";
+            m_description = "Manual editing of a remapping point";
+            this.Text = "Remapping point manual editing (" + plan.Name + ")";
         }
 
         /// <summary>
@@ -108,8 +114,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public PlanEditorControl PlanEditor
         {
-            get { return this.m_planEditor; }
-            set { this.m_planEditor = value; }
+            get { return m_planEditor; }
+            set { m_planEditor = value; }
         }
 
         /// <summary>
@@ -161,13 +167,22 @@ namespace EVEMon.SkillPlanner
             {
                 case Strategy.ManualRemappingPointEdition:
                     m_areRemappingPointsActive = true;
-                    remapping = AttributesOptimizer.GetResultsFromRemappingPoints(m_plan).Single(x => x.Point == m_manuallyEditedRemappingPoint);
-                    m_manuallyEditedRemappingPoint = m_manuallyEditedRemappingPoint.Clone();
+                    if (m_update)
+                    {
+                        remapping = m_remapping;
+                        m_manuallyEditedRemappingPoint = remapping.Point.Clone();
+                    }
+                    else
+                    {
+                        remapping = AttributesOptimizer.GetResultsFromRemappingPoints(m_plan).Single(x => x.Point == m_manuallyEditedRemappingPoint);
+                        m_manuallyEditedRemappingPoint = m_manuallyEditedRemappingPoint.Clone();
+                        m_remapping = remapping;
+                    }
                     remapping.Optimize(TimeSpan.MaxValue);
                     break;
                 case Strategy.Character:
                     m_areRemappingPointsActive = false;
-                    remapping = AttributesOptimizer.OptimizeFromCharacter(m_character);
+                    remapping = AttributesOptimizer.OptimizeFromCharacter(m_character, m_plan);
                     break;
                 case Strategy.OneYearPlan:
                     m_areRemappingPointsActive = false;
@@ -181,8 +196,16 @@ namespace EVEMon.SkillPlanner
                     throw new NotImplementedException();
             }
 
-            // Update the controls for every attribute
-            this.Invoke((MethodInvoker)(() => UpdateForm(remapping, remappingList)));
+            if (m_update)
+            {
+                // Update the controls for every attribute on the already shown form
+                UpdateForm(remapping, remappingList);
+            }
+            else
+            {
+                // Update the controls for every attribute
+                this.Invoke((MethodInvoker)(() => UpdateForm(remapping, remappingList)));
+            }
         }
 
         /// <summary>
@@ -200,6 +223,8 @@ namespace EVEMon.SkillPlanner
             this.throbber.State = ThrobberState.Stopped;
             this.panelWait.Visible = false;
 
+            this.tabControl.Controls.Clear();
+
             // Update the attributes
             if (remapping != null)
             {
@@ -216,8 +241,6 @@ namespace EVEMon.SkillPlanner
             {
                 this.m_planEditor.ShowWithPluggable(this);
             }
-
-            m_thread = null;
         }
 
         /// <summary>
@@ -227,7 +250,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateForRemapping(AttributesOptimizer.RemappingResult remapping)
         {
             // Create control
-            var ctl = CreateAttributesOptimizationControl(remapping);
+            var ctl = CreateAttributesOptimizationControl(remapping, m_description);
             this.Controls.Add(ctl);
             ctl.BringToFront();
         }
@@ -247,19 +270,22 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
+                // Adds a tab page for the summary
+                this.tabControl.Controls.Add(tabSummary);
+
+                // Updates the summary informations
+                UpdateSummaryInformation(remappingList);
+
+                // Adds a tab page for every remapping
+                int index = 1;
+                foreach (var remap in remappingList)
+                {
+                    AddTabPage(remap, "#" + index.ToString(), m_description);
+                    index++;
+                }
+
                 this.tabControl.Visible = true;
                 tabSummary.Focus();
-            }
-
-            // Updates the summary informations
-            UpdateSummaryInformation(remappingList);
-
-            // Adds a tab page for every remapping
-            int index = 1;
-            foreach (var remap in remappingList)
-            {
-                AddTabPage(remap, "#" + index.ToString());
-                index++;
             }
         }
 
@@ -269,7 +295,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="remappingList">List of remappings</param>
         private void UpdateSummaryInformation(IEnumerable<AttributesOptimizer.RemappingResult> remappingList)
         {
-            var baseDuration = m_plan.GetTotalTime(null, false);
+            var baseDuration = m_plan.GetTotalTime(m_character.After(m_plan.ChosenImplantSet), false);
             this.lvPoints.Items.Clear();
 
             // Add global informations
@@ -376,9 +402,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping"></param>
         /// <param name="tabName"></param>
-        private void AddTabPage(AttributesOptimizer.RemappingResult remapping, string tabName)
+        private void AddTabPage(AttributesOptimizer.RemappingResult remapping, string tabName, string description)
         {
-            var ctl = CreateAttributesOptimizationControl(remapping);
+            var ctl = CreateAttributesOptimizationControl(remapping, description);
             m_remappingDictionary[ctl] = remapping;
 
             TabPage page = new TabPage(tabName);
@@ -392,11 +418,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping">The remapping object to represents.</param>
         /// <returns>The created control.</returns>
-        private AttributesOptimizationControl CreateAttributesOptimizationControl(AttributesOptimizer.RemappingResult remapping)
+        private AttributesOptimizationControl CreateAttributesOptimizationControl(AttributesOptimizer.RemappingResult remapping, string description)
         {
-            var ctl = new AttributesOptimizationControl(m_character, remapping);
+            var ctl = new AttributesOptimizationControl(m_character, m_plan, remapping, description);
             ctl.AttributeChanged += new AttributeChangedHandler(AttributesOptimizationControl_AttributeChanged);
-            ctl.Dock = DockStyle.Fill;
 
             // For a manually edited point, we initialize the control with the attributes from the current remapping point
             if (m_strategy == Strategy.ManualRemappingPointEdition && m_manuallyEditedRemappingPoint.Status == RemappingPoint.PointStatus.UpToDate)
@@ -425,6 +450,7 @@ namespace EVEMon.SkillPlanner
 
                 m_statisticsScratchpad = remapping.BestScratchpad.Clone();
                 this.m_planEditor.ShowWithPluggable(this);
+                m_remapping = remapping;
             }
         }
 
@@ -440,14 +466,25 @@ namespace EVEMon.SkillPlanner
 
             if (m_areRemappingPointsActive)
             {
-                plan.UpdateStatistics(new CharacterScratchpad(m_character), true, true);
-                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_character), false, true);
+                plan.UpdateStatistics(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), true, true);
+                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), false, true);
             }
             else
             {
                 plan.UpdateStatistics(m_statisticsScratchpad.Clone(), false, true);
-                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_character), true, true);
+                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), true, true);
             }
+        }
+
+        /// <summary>
+        /// Updates the times when "choose implant set" changes.
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <param name="areRemappingPointsActive"></param>
+        public void UpdateOnImplantSetChange()
+        {
+            m_update = true;
+            Run();
         }
         #endregion
     }

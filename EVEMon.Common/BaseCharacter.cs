@@ -140,7 +140,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public int GetSPToTrain(StaticSkill skill, int level, TrainingOrigin origin)
         {
-            if (level == 0) return 0;
+            if (level == 0)
+                return 0;
             int sp = skill.GetPointsRequiredForLevel(level);
 
             // Deals with the origin
@@ -167,8 +168,10 @@ namespace EVEMon.Common
                     break;
             }
 
-            // Returns if greater than zero
-            if (result < 0) return 0;
+            // Returns result
+            if (result < 0)
+                return 0;
+
             return result;
         }
         #endregion
@@ -218,7 +221,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public TimeSpan GetTrainingTime(int sp, float spPerHour)
         {
-            if (spPerHour == 0.0f) return TimeSpan.FromDays(999.0);
+            if (spPerHour == 0.0f)
+                return TimeSpan.FromDays(999.0);
             spPerHour *= GetNewCharacterSkillTrainingBonus(sp);
             return TimeSpan.FromHours(sp / spPerHour);
         }
@@ -233,6 +237,29 @@ namespace EVEMon.Common
         {
             CharacterScratchpad scratchpad = this.After(trainings);
             return scratchpad.TrainingTime;
+        }
+
+        /// <summary>
+        /// Gets the time require to train the given skills and their prerequisites
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <param name="skill"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public TimeSpan GetTrainingTimeWithLearning(BasePlan plan, StaticSkill skill, int level)
+        {
+            Character character = plan.Character as Character;
+            if (character == null)
+                return TimeSpan.Zero;
+
+            Plan newPlan = new Plan(character);
+            List<PlanEntry> entry = new List<PlanEntry>();
+            entry.Add(new PlanEntry(newPlan, skill, level));
+            newPlan.RebuildPlanFrom(entry);
+            newPlan.ChosenImplantSet = plan.ChosenImplantSet;
+            
+            TimeSpan trainingTimeWithLearning = GetTrainingTime(skill, level) - new PlanSuggestions(newPlan).TimeBenefit;
+            return trainingTimeWithLearning;
         }
         #endregion
 

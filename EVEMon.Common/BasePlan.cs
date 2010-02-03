@@ -28,6 +28,8 @@ namespace EVEMon.Common
 
         protected readonly BaseCharacter m_character = null;
         protected readonly PlanEntry[] m_lookup;
+        private ImplantSet m_chosenImplantSet;
+
 
         /// <summary>
         /// Constructor
@@ -37,6 +39,15 @@ namespace EVEMon.Common
         {
             m_lookup = new PlanEntry[StaticSkills.ArrayIndicesCount * 5];
             m_character = character;
+        }
+
+        /// <summary>
+        /// Gets or sets the implant set chosen by the user.
+        /// </summary>
+        public ImplantSet ChosenImplantSet
+        {
+            get { return m_chosenImplantSet; }
+            set { m_chosenImplantSet = value; }
         }
 
         /// <summary>
@@ -101,7 +112,8 @@ namespace EVEMon.Common
         public TimeSpan GetTotalTime(CharacterScratchpad scratchpad, bool applyRemappingPoints)
         {
             // No scratchpad ? Let's create one
-            if (scratchpad == null) scratchpad = new CharacterScratchpad(m_character);
+            if (scratchpad == null)
+                scratchpad = new CharacterScratchpad(m_character);
 
             // Train entries
             TimeSpan time = TimeSpan.Zero;
@@ -233,7 +245,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public PlanEntry GetEntry(StaticSkill skill, int level)
         {
-            if (level == 0) return null;
+            if (level == 0)
+                return null;
             return m_lookup[skill.ArrayIndex * 5 + level - 1];
         }
 
@@ -293,7 +306,8 @@ namespace EVEMon.Common
         protected int IndexOf(StaticSkill skill, int level)
         {
             var entry = GetEntry(skill, level);
-            if (entry == null) return -1;
+            if (entry == null)
+                return -1;
             return m_items.IndexOf(entry);
         }
 
@@ -306,7 +320,8 @@ namespace EVEMon.Common
         {
             for (int i = 0; i < 5; i++)
             {
-                if (IsPlanned(skill, i)) return true;
+                if (IsPlanned(skill, i))
+                    return true;
             }
             return false;
         }
@@ -331,23 +346,12 @@ namespace EVEMon.Common
         {
             for (int i = 5; i > 0; i--)
             {
-                if (IsPlanned(gs, i)) return i;
+                if (IsPlanned(gs, i))
+                    return i;
             }
             return 0;
         }
 
-        /// <summary>
-        /// Gets the priority of the entry matching the given parameters
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        public int GetPriority(StaticSkill skill, int level)
-        {
-            var entry = GetEntry(skill, level);
-            if (entry == null) return Int32.MinValue;
-            return entry.Priority;
-        }
         #endregion
 
 
@@ -403,12 +407,14 @@ namespace EVEMon.Common
         private bool EnsurePrerequisiteExistBefore(StaticSkill skill, int level, int insertionIndex, int newEntriesPriority)
         {
             // Is the wanted level already known by the character ?
-            if (m_character.GetSkillLevel(skill) >= level) return true;
+            if (m_character.GetSkillLevel(skill) >= level)
+                return true;
 
             // Is the prerequisite already planned before this very entry ?
             // Then we continue the foreach loop to the next prereq
             int skillIndex = IndexOf(skill, level);
-            if (skillIndex != -1 && skillIndex < insertionIndex) return true;
+            if (skillIndex != -1 && skillIndex < insertionIndex)
+                return true;
 
 
             // The prerequsite is not planned yet, we insert it just before this very entry
@@ -450,9 +456,11 @@ namespace EVEMon.Common
                 // Find all dependants on this skill and get the highest priority
                 if (pe.Priority > highestDepPriority)
                 {
-                    if (!fixConflicts) return false;
+                    if (!fixConflicts)
+                        return false;
 
-                    if (loweringPriorities) LowerDependenciesPriorities(i);
+                    if (loweringPriorities)
+                        LowerDependenciesPriorities(i);
                     else pe.Priority = highestDepPriority;
                     planOK = false;
                 }
@@ -524,7 +532,8 @@ namespace EVEMon.Common
                 if (tSkill.HasAsPrerequisite(skill, out required) && tSkill != skill)
                 {
                     // All 5 levels are needed, fail now
-                    if (required == 5) return 5;
+                    if (required == 5)
+                        return 5;
                     minNeeded = Math.Max(minNeeded, required);
                 }
             }
@@ -572,8 +581,10 @@ namespace EVEMon.Common
                         // Compute list's training time if the next item was inserted at index
                         for (int i = 0; i <= m_items.Count; i++)
                         {
-                            if (i < index) scratchpad.Train(m_items[i]);
-                            else if (i > index) scratchpad.Train(m_items[i - 1]);
+                            if (i < index)
+                                scratchpad.Train(m_items[i]);
+                            else if (i > index)
+                                scratchpad.Train(m_items[i - 1]);
                             else scratchpad.Train(entry);
                         }
 
@@ -600,7 +611,8 @@ namespace EVEMon.Common
         {
             foreach (var item in skillsToAdd)
             {
-                if (!IsPlanned(item.Skill, item.Level)) return false;
+                if (!IsPlanned(item.Skill, item.Level))
+                    return false;
             }
             return true;
         }
@@ -619,7 +631,8 @@ namespace EVEMon.Common
 
                 foreach (var entry in entries)
                 {
-                    if (entry.Plan != this) AddCore(entry.Clone(this));
+                    if (entry.Plan != this)
+                        AddCore(entry.Clone(this));
                     else AddCore(entry);
                 }
             }
@@ -643,11 +656,13 @@ namespace EVEMon.Common
             {
                 // Save the old entries
                 var set = new SkillLevelSet<PlanEntry>();
-                foreach (var entry in m_items) set[entry.Skill, entry.Level] = entry;
+                foreach (var entry in m_items)
+                    set[entry.Skill, entry.Level] = entry;
 
                 // Clear items
                 m_items.Clear();
-                for (int i = 0; i < m_lookup.Length; i++) m_lookup[i] = null;
+                for (int i = 0; i < m_lookup.Length; i++)
+                    m_lookup[i] = null;
 
                 // Add the new entries
                 foreach (var entry in entries)
@@ -655,8 +670,10 @@ namespace EVEMon.Common
                     var oldEntry = set[entry.Skill, entry.Level];
 
                     PlanEntry entryToAdd;
-                    if (entry.Plan != this) entryToAdd = entry.Clone(this);
-                    else if (oldEntry != null) entryToAdd = oldEntry;
+                    if (entry.Plan != this)
+                        entryToAdd = entry.Clone(this);
+                    else if (oldEntry != null)
+                        entryToAdd = oldEntry;
                     else entryToAdd = entry;
 
                     AddCore(entryToAdd);
@@ -678,20 +695,24 @@ namespace EVEMon.Common
             foreach (var itemToRemove in skillsToRemove)
             {
                 // Not planned ? We skip it.
-                if (!IsPlanned(itemToRemove.Skill, itemToRemove.Level)) continue;
+                if (!IsPlanned(itemToRemove.Skill, itemToRemove.Level))
+                    continue;
 
                 // Already in the "entries to remove" list ? We skip it (done at this point only because of recursive prereqs)
-                if (entriesSet.Contains(itemToRemove)) continue;
+                if (entriesSet.Contains(itemToRemove))
+                    continue;
 
                 // Let's first gather dependencies
                 var item = new StaticSkillLevel(itemToRemove);
                 foreach (var dependencyEntry in m_items)
                 {
                     // Already in the "entries to remove" list ? We skip it.
-                    if (entriesSet.Contains(dependencyEntry)) continue;
+                    if (entriesSet.Contains(dependencyEntry))
+                        continue;
 
                     // Not dependent ? We skip it.
-                    if (!dependencyEntry.IsDependentOf(itemToRemove)) continue;
+                    if (!dependencyEntry.IsDependentOf(itemToRemove))
+                        continue;
 
                     // Gather this entry
                     planEntries.Add(dependencyEntry);
@@ -739,10 +760,12 @@ namespace EVEMon.Common
                 foreach (var dependency in item.AllDependencies)
                 {
                     // Already in the "entries to add" list ? We skip it.
-                    if (entriesSet.Contains(dependency)) continue;
+                    if (entriesSet.Contains(dependency))
+                        continue;
 
                     // Already trained ? We skip it.
-                    if (m_character.GetSkillLevel(dependency.Skill) >= dependency.Level) continue;
+                    if (m_character.GetSkillLevel(dependency.Skill) >= dependency.Level)
+                        continue;
 
                     // Create an entry (even for existing ones, we will update them later from those new entries)
                     var dependencyEntry = CreateEntryToAdd(dependency.Skill, dependency.Level, PlanEntryType.Prerequisite, note, ref lowestPrereqPriority);
@@ -751,7 +774,8 @@ namespace EVEMon.Common
                 }
 
                 // Already in the "entries to add" list ? We skip it (done at this point only because of recursive prereqs)
-                if (entriesSet.Contains(itemToAdd)) continue;
+                if (entriesSet.Contains(itemToAdd))
+                    continue;
 
                 // Then add the item itself
                 var entry = CreateEntryToAdd(itemToAdd.Skill, itemToAdd.Level, PlanEntryType.Planned, note, ref lowestPrereqPriority);
@@ -851,15 +875,18 @@ namespace EVEMon.Common
         public bool WillGrantEligibilityFor(Certificate cert)
         {
             var status = cert.Status;
-            if (status == CertificateStatus.Claimable || status == CertificateStatus.Granted) return true;
+            if (status == CertificateStatus.Claimable || status == CertificateStatus.Granted)
+                return true;
 
             // We check every prerequisite
             foreach (var skillToTrain in cert.AllTopPrerequisiteSkills)
             {
                 // If level already greater or skill level planned, we continue the loop
                 var skill = skillToTrain.Skill;
-                if (skill.Level >= skillToTrain.Level) continue;
-                if (this.IsPlanned(skill, skillToTrain.Level)) continue;
+                if (skill.Level >= skillToTrain.Level)
+                    continue;
+                if (this.IsPlanned(skill, skillToTrain.Level))
+                    continue;
 
                 // If it's not, then eligibility tests are over
                 return false;
@@ -959,7 +986,7 @@ namespace EVEMon.Common
         /// </summary>
         public void UpdateOldTrainingTimes()
         {
-            UpdateOldTrainingTimes(new CharacterScratchpad(m_character), true, true);
+            UpdateOldTrainingTimes(new CharacterScratchpad(m_character.After(ChosenImplantSet)), true, true);
         }
 
         /// <summary>

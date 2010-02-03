@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common;
 using System.Drawing.Imaging;
+using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
@@ -23,7 +23,9 @@ namespace EVEMon.SkillPlanner
     public partial class AttributesOptimizationControl : UserControl
     {
         private readonly Character m_character;
+        private readonly BasePlan m_plan;
         private readonly AttributesOptimizer.RemappingResult m_remapping;
+        private readonly string m_description;
 
         /// <summary>
         /// Occurs when attributes changes. 
@@ -36,14 +38,16 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="character">Character information</param>
         /// <param name="remapping">Optimized remapping</param>
-        public AttributesOptimizationControl(Character character, AttributesOptimizer.RemappingResult remapping)
+        public AttributesOptimizationControl(Character character, BasePlan plan, AttributesOptimizer.RemappingResult remapping, string description)
         {
             InitializeComponent();
 
             m_character = character;
+            m_plan = plan;
             m_remapping = remapping;
+            m_description = description;
 
-            UpdateControls(m_character, m_remapping);
+            UpdateControls(m_character, m_plan, m_remapping, m_description);
         }
 
         /// <summary>
@@ -53,13 +57,13 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.label2.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            this.lblUnassignedAttributePoints.Font = FontFactory.GetFont("Tahoma", 8.25F);
             this.lbWarning.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.label9.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.label7.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.label5.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.label3.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.label1.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            this.lblMemory.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            this.lblWillpower.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            this.lblCharisma.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            this.lblPerception.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            this.lblIntelligence.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
         }
 
         /// <summary>
@@ -67,14 +71,18 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="character">Character information</param>
         /// <param name="remapping">Remapping with attributes and training time</param>
-        private void UpdateControls(Character character, AttributesOptimizer.RemappingResult remapping)
+        private void UpdateControls(Character character, BasePlan plan, AttributesOptimizer.RemappingResult remapping, string description)
         {
-            UpdateAttributeControls(character, remapping, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
-            UpdateAttributeControls(character, remapping, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
-            UpdateAttributeControls(character, remapping, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
-            UpdateAttributeControls(character, remapping, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
-            UpdateAttributeControls(character, remapping, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
+            var baseCharacter = character.After(plan.ChosenImplantSet);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
 
+            // Update the description label
+            this.labelDescription.Text = description;
+            
             // Update the current time control
             this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(remapping.BaseDuration, DescriptiveTextOptions.IncludeCommas);
 
@@ -107,9 +115,15 @@ namespace EVEMon.SkillPlanner
 
             // Spare points
             int sparePoints = EveConstants.SpareAttributePointsOnRemap;
-            for (int i = 0; i < 5; i++) sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base - EveConstants.MinAttributeValueOnRemap);
+            for (int i = 0; i < 5; i++)
+            {
+                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base - EveConstants.MinAttributeValueOnRemap);
+            }
             pbUnassigned.Value = sparePoints;
 
+            // If the implant set isn't the active one we notify the user
+            var implantSet = plan.ChosenImplantSet;
+            this.lblNotice.Visible = (implantSet != character.ImplantSets.Current);
         }
 
         /// <summary>
@@ -123,7 +137,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="pbImplants">Attribute bar for implants</param>
         /// <param name="pbSkills">Attribute bar for skills</param>
         private void UpdateAttributeControls(
-            Character character,
+            BaseCharacter character,
             AttributesOptimizer.RemappingResult remapping,
             EveAttribute attrib,
             Label lb,
@@ -150,7 +164,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Calculates new remapping from values of controls.
         /// </summary>
-        private void Recalculate()
+        public void Recalculate()
         {
             var scratchpad = m_remapping.BaseScratchpad.Clone();
             scratchpad.Memory.Base = pbMEMBase.Value;
@@ -162,10 +176,11 @@ namespace EVEMon.SkillPlanner
             // Get remapping for provided attributes
             var manualRemapping = new AttributesOptimizer.RemappingResult(m_remapping, scratchpad);
             manualRemapping.Update();
-            UpdateControls(m_character, manualRemapping);
+            UpdateControls(m_character, m_plan, manualRemapping, m_description);
 
             // Notify the changes
-            if (AttributeChanged != null) AttributeChanged(this, manualRemapping);
+            if (AttributeChanged != null)
+                AttributeChanged(this, manualRemapping);
         }
 
         #region Events
@@ -181,7 +196,7 @@ namespace EVEMon.SkillPlanner
             if (pbUnassigned.Value < deltaValue)
                 deltaValue = pbUnassigned.Value;
 
-            // Add/remove pionts from pool
+            // Add/remove points from pool
             pbUnassigned.Value -= deltaValue;
         }
 
@@ -217,7 +232,7 @@ namespace EVEMon.SkillPlanner
             m_remapping.Update();
 
             // Set all labels and bars to calculated optimized remap
-            UpdateControls(m_character, m_remapping);
+            UpdateControls(m_character, m_plan, m_remapping, m_description);
 
             // Fires the event
             if (AttributeChanged != null)
@@ -236,7 +251,7 @@ namespace EVEMon.SkillPlanner
             zeroRemapping.Update();
 
             // Update the controls
-            UpdateControls(m_character, zeroRemapping);
+            UpdateControls(m_character, m_plan, zeroRemapping, m_description);
 
             // Fires the event
             if (AttributeChanged != null)
@@ -252,8 +267,10 @@ namespace EVEMon.SkillPlanner
         private void attributeButton_Click(object sender, EventArgs e)
         {
             AttributeButtonControl button = (sender as AttributeButtonControl);
-            if (button == null) return;
-            if (button.AttributeBar == null) return;
+            if (button == null)
+                return;
+            if (button.AttributeBar == null)
+                return;
 
             // Adjust delta
             int deltaValue = button.ValueChange;
@@ -284,14 +301,17 @@ namespace EVEMon.SkillPlanner
         public void UpdateValuesFrom(RemappingPoint point)
         {
             // Creates a scratchpad with the base values from the provided point.
-            var scratchpad = new CharacterScratchpad(m_character);
-            for (int i = 0; i < 5; i++) scratchpad[(EveAttribute)i].Base = point[(EveAttribute)i];
+            var scratchpad = new CharacterScratchpad(m_character.After(m_plan.ChosenImplantSet));
+            for (int i = 0; i < 5; i++)
+            {
+                scratchpad[(EveAttribute)i].Base = point[(EveAttribute)i];
+            }
 
             var remapping = new AttributesOptimizer.RemappingResult(m_remapping, scratchpad);
             remapping.Update();
 
             // Update the controls
-            UpdateControls(m_character, remapping);
+            UpdateControls(m_character, m_plan, remapping, m_description);
 
             // Fires the event
             if (AttributeChanged != null)
