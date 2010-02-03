@@ -19,7 +19,7 @@ namespace EVEMon.Common.Net
     }
 
     /// <summary>
-    /// This class notifies subscribers about the change and the status of an 
+    /// This class notifies subscribers about the change and the status of an network interface
     /// </summary>
     public static class NetworkMonitor
     {
@@ -27,6 +27,7 @@ namespace EVEMon.Common.Net
 
         private static List<WeakReference<INetworkChangeSubscriber>> s_subscribers;
         private static bool s_networkAvailable;
+        private static bool s_manualTestRequired = false;
 
         /// <summary>
         /// Initializer.
@@ -48,18 +49,29 @@ namespace EVEMon.Common.Net
                 {
                     // GetIsNetworkAvailable dosn't seem to work on every system (f.ex. Mac OSX/Darwine)
                     ExceptionHandler.LogException(ex, true);
-                    
-                    // Send a ping to www.google.com
-                    Ping pingSender = new Ping();
-                    PingOptions options = new PingOptions(50, false);
-                    byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
-                    int timeout = 120;
-                    string host = "www.google.com";
-                    PingReply reply = pingSender.Send(host, timeout, buffer, options);
 
-                    s_networkAvailable = reply.Status == IPStatus.Success;
+                    // check the network manually and set the manual flag to true
+                    s_networkAvailable = IsNetworkAvailableManual();
+                    s_manualTestRequired = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Tests to see if the network is available 
+        /// </summary>
+        /// <returns>true if ping is sucessfull, otherwise false</returns>
+        private static bool IsNetworkAvailableManual()
+        {
+            // Send a ping to www.google.com
+            Ping pingSender = new Ping();
+            PingOptions options = new PingOptions(50, false);
+            byte[] buffer = Encoding.ASCII.GetBytes("EVEMon Network Status Ping");
+            int timeout = 120;
+            string host = "www.google.com";
+            PingReply reply = pingSender.Send(host, timeout, buffer, options);
+
+            return (reply.Status == IPStatus.Success);
         }
 
         /// <summary>
@@ -67,7 +79,13 @@ namespace EVEMon.Common.Net
         /// </summary>
         public static bool IsNetworkAvailable
         {
-            get { return s_networkAvailable; }
+            get 
+            {
+                if (!s_manualTestRequired)
+                    return s_networkAvailable;
+
+                return IsNetworkAvailableManual();
+            }
         }
 
         /// <summary>
@@ -78,7 +96,9 @@ namespace EVEMon.Common.Net
         {
             lock (s_syncLock)
             {
-                if (s_subscribers == null) return;
+                if (s_subscribers == null)
+                    return;
+
                 s_subscribers.Add(new WeakReference<INetworkChangeSubscriber>(monitor, false));
             }
         }
@@ -93,7 +113,9 @@ namespace EVEMon.Common.Net
             lock (s_syncLock)
             {
                 s_networkAvailable = e.IsAvailable;
-                if (s_subscribers == null) return;
+
+                if (s_subscribers == null)
+                    return;
 
                 // Scroll through the monitors and remove them when they're no longer available.
                 int index = 0;
