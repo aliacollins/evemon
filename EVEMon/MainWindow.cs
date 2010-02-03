@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -10,7 +11,6 @@ using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using System.ComponentModel;
 
 using EVEMon.Accounting;
 using EVEMon.Common;
@@ -106,7 +106,8 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode) return;
+            if (this.DesignMode)
+                return;
 
             this.Visible = false;
             trayIcon.Text = Application.ProductName;
@@ -141,9 +142,7 @@ namespace EVEMon
 
             // Check with Battleclinic the local clock is synchronized.
             if (Settings.Updates.CheckTimeOnStartup)
-            {
                 CheckTimeSynchronization();
-            }
 
             // Apply the intial settings
             EveClient_SettingsChanged(null, null);
@@ -259,9 +258,7 @@ namespace EVEMon
         {
             // Only cleanup if we're deactivating to the minimized state (e.g. systray)
             if (this.WindowState == FormWindowState.Minimized)
-            {
                 TriggerAutoShrink();
-            }
         }
 
         /// <summary>
@@ -291,7 +288,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
-            if (m_isUpdatingTabOrder) return;
+            if (m_isUpdatingTabOrder)
+                return;
+
             UpdateTabs();
         }
 
@@ -306,7 +305,8 @@ namespace EVEMon
             Dictionary<Character, TabPage> pages = new Dictionary<Character, TabPage>();
             foreach (TabPage page in tcCharacterTabs.TabPages)
             {
-                if (page.Tag is Character) pages[page.Tag as Character] = page;
+                if (page.Tag is Character)
+                    pages[page.Tag as Character] = page;
             }
 
             // Updates the pages
@@ -914,9 +914,7 @@ namespace EVEMon
             if (Settings.Updates.MostRecentDeniedUpdgrade != null)
             {
                 if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpdgrade))
-                {
                     return;
-                }
             }
 
             // Notify the user and prompt him
@@ -1282,7 +1280,8 @@ namespace EVEMon
             
             // Prompt the user to select a file
             DialogResult dr = ofdOpenDialog.ShowDialog();
-            if (dr == DialogResult.Cancel) return;
+            if (dr == DialogResult.Cancel)
+                return;
 
             // Load from file and returns if an error occured (user has already been warned)
             var serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
@@ -1297,7 +1296,8 @@ namespace EVEMon
             {
                 npw.PlanName = Path.GetFileNameWithoutExtension(ofdOpenDialog.FileName);
                 DialogResult xdr = npw.ShowDialog();
-                if (xdr == DialogResult.Cancel) return;
+                if (xdr == DialogResult.Cancel)
+                    return;
 
                 loadedPlan.Name = npw.Result;
                 character.Plans.Add(loadedPlan);
@@ -1313,7 +1313,9 @@ namespace EVEMon
         private void manageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+
+            if (character == null)
+                return;
 
             WindowsFactory<PlanManagementWindow>.ShowByTag(character);
         }
@@ -1327,14 +1329,16 @@ namespace EVEMon
         private void newPlanMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             // Ask the user for a new name
             string planName;
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
                 planName = npw.Result;
             }
 
@@ -1358,7 +1362,8 @@ namespace EVEMon
         private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             // Collect the owned skillbooks and sort them by name
             SortedList<string, bool> sortedSkills = new SortedList<string, bool>();
@@ -1422,7 +1427,8 @@ namespace EVEMon
         private void tsdbPlans_DropDownOpening(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             // Clear the menu items and rebuild them
             plansTbMenu.DropDownItems.Clear();
@@ -1461,7 +1467,8 @@ namespace EVEMon
         private void copySkillsToClipboardBBFormatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             try
             {
@@ -1622,16 +1629,20 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
-            // Only display the pop up window if the context menu isn't showing
-            if (trayIconToolStrip.Visible) return;
+            // Only display the pop up window if the context menu isn't showing.
+            if (trayIconToolStrip.Visible)
+                return;
 
-            // Create the popup
+            // Stop if the popup is disabled.
+            if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled)
+                return;
+
+            // Create the popup.
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm)
                 m_trayPopup = new TrayPopUpWindow();
             else
                 m_trayPopup = new TrayTooltipWindow();
 
-            // Now show the popup
             m_trayPopup.Show();
         }
 

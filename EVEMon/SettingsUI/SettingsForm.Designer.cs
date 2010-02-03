@@ -255,6 +255,7 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
+            this.trayPopupDisabledRadio = new System.Windows.Forms.RadioButton();
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -1322,7 +1323,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.skillPlannerPage;
+            this.multiPanel.SelectedPage = this.trayIconPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1967,13 +1968,14 @@ namespace EVEMon.SettingsUI
             // 
             this.trayIconPopupGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.trayIconPopupGroupBox.Controls.Add(this.trayPopupDisabledRadio);
             this.trayIconPopupGroupBox.Controls.Add(this.trayPopupButton);
             this.trayIconPopupGroupBox.Controls.Add(this.trayPopupRadio);
             this.trayIconPopupGroupBox.Controls.Add(this.trayTooltipRadio);
             this.trayIconPopupGroupBox.Controls.Add(this.trayTooltipButton);
-            this.trayIconPopupGroupBox.Location = new System.Drawing.Point(9, 194);
+            this.trayIconPopupGroupBox.Location = new System.Drawing.Point(9, 184);
             this.trayIconPopupGroupBox.Name = "trayIconPopupGroupBox";
-            this.trayIconPopupGroupBox.Size = new System.Drawing.Size(419, 83);
+            this.trayIconPopupGroupBox.Size = new System.Drawing.Size(419, 104);
             this.trayIconPopupGroupBox.TabIndex = 10;
             this.trayIconPopupGroupBox.TabStop = false;
             this.trayIconPopupGroupBox.Text = "Icon Popup Style";
@@ -2631,6 +2633,17 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
+            // trayPopupDisabledRadio
+            // 
+            this.trayPopupDisabledRadio.AutoSize = true;
+            this.trayPopupDisabledRadio.Location = new System.Drawing.Point(6, 78);
+            this.trayPopupDisabledRadio.Name = "trayPopupDisabledRadio";
+            this.trayPopupDisabledRadio.Size = new System.Drawing.Size(65, 17);
+            this.trayPopupDisabledRadio.TabIndex = 5;
+            this.trayPopupDisabledRadio.TabStop = true;
+            this.trayPopupDisabledRadio.Text = "Disabled";
+            this.trayPopupDisabledRadio.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -2878,5 +2891,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.NumericUpDown relocationSecondsNumericUpDown;
         private System.Windows.Forms.CheckBox cbSummaryOnMultiSelectOnly;
         private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.RadioButton trayPopupDisabledRadio;
     }
 }

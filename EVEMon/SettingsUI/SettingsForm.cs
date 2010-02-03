@@ -250,6 +250,7 @@ namespace EVEMon.SettingsUI
             // System tray popup/tooltip
             trayPopupRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm);
             trayTooltipRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.WindowsTooltip);
+            trayPopupDisabledRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled);
 
             // Calendar
             panelColorBlocking.BackColor = (Color)m_settings.UI.Scheduler.BlockingColor;
@@ -422,8 +423,18 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;
 
             // Tray icon window style
-            if (trayPopupRadio.Checked) m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.PopupForm;
-            else m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.WindowsTooltip;
+            if (trayPopupRadio.Checked)
+            {
+                m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.PopupForm;
+            }
+            else if (trayTooltipRadio.Checked)
+            {
+                m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.WindowsTooltip;
+            }
+            else
+            {
+                m_settings.UI.SystemTrayPopup.Style = TrayPopupStyles.Disabled;
+            }
 
             // Proxy
             m_settings.Proxy.Enabled = customProxyCheckBox.Checked;
