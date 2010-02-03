@@ -69,9 +69,6 @@ namespace EVEMon.Common
                 s_accounts = new GlobalAccountCollection();
                 s_tranquilityServer = new EveServer();
 
-                // Check datafiles checksums
-                s_datafiles.Refresh();
-
                 // Load static datas (min order to follow : skills before anything else, ships before certs)
                 Trace("Load Datafiles - begin");
                 StaticProperties.Load();
@@ -272,7 +269,11 @@ namespace EVEMon.Common
         /// </summary>
         public static GlobalDatafileCollection Datafiles
         {
-            get { return s_datafiles; }
+            get 
+            {
+                s_datafiles.Refresh();
+                return s_datafiles; 
+            }
         }
 
         /// <summary>

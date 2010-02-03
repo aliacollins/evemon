@@ -45,10 +45,11 @@ namespace EVEMon
                 string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
 
                 string newFilename = String.Format(CultureInfo.CurrentCulture, "{0}.tmp", oldFilename);
-                File.Delete(newFilename);
                 bool checksumOK = false;
+                int attempt = 0;
                 do
                 {
+                    File.Delete(newFilename);
                     using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
                     {
                         f.ShowDialog();
@@ -59,6 +60,7 @@ namespace EVEMon
 
                             if (datafile.Sum != dfv.Md5)
                             {
+                                attempt++;
                                 File.Delete(newFilename);
                             }
                             else
@@ -79,7 +81,7 @@ namespace EVEMon
                             }
                         }
                     }
-                } while (!checksumOK);
+                } while (!checksumOK && attempt < 3);
             }
             Settings.SaveImmediate();
 
