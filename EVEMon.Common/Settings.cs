@@ -416,7 +416,7 @@ namespace EVEMon.Common
                         DialogResult saveFile = fileDialog.ShowDialog();
                         if (saveFile == DialogResult.OK)
                         {
-                            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, fileDialog.FileName, OverwriteOperation.Copy);
+                            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, fileDialog.FileName);
                         }
                     }
                 }
