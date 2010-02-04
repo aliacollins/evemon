@@ -622,6 +622,7 @@ namespace EVEMon.SkillPlanner
             // cbChooseImplantSet
             // 
             this.cbChooseImplantSet.DisplayMember = "Name";
+            this.cbChooseImplantSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbChooseImplantSet.FormattingEnabled = true;
             this.cbChooseImplantSet.Location = new System.Drawing.Point(113, 5);
             this.cbChooseImplantSet.Name = "cbChooseImplantSet";
