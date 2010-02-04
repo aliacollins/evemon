@@ -20,6 +20,8 @@ namespace EVEMon.Common.SettingsObjects
 
             Columns = EnumExtensions.GetValues<MarketOrderColumn>().Where(x => x != MarketOrderColumn.None).Select(x =>
                 new MarketOrderColumnSettings { Column = x, Visible = defaultColumns.Contains(x), Width = -1 }).ToArray();
+
+            HideInactiveOrders = true;
         }
 
         [XmlArray("columns")]
