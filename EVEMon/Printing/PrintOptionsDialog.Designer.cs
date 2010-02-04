@@ -41,6 +41,7 @@ namespace EVEMon.Printing
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.btn_setDefs = new System.Windows.Forms.Button();
+            this.checkNotes = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // comboPrinters
@@ -73,7 +74,7 @@ namespace EVEMon.Printing
             // checkStartDate
             // 
             this.checkStartDate.AutoSize = true;
-            this.checkStartDate.Location = new System.Drawing.Point(55, 67);
+            this.checkStartDate.Location = new System.Drawing.Point(55, 90);
             this.checkStartDate.Name = "checkStartDate";
             this.checkStartDate.Size = new System.Drawing.Size(101, 17);
             this.checkStartDate.TabIndex = 3;
@@ -83,7 +84,7 @@ namespace EVEMon.Printing
             // checkTrainingTimes
             // 
             this.checkTrainingTimes.AutoSize = true;
-            this.checkTrainingTimes.Location = new System.Drawing.Point(55, 90);
+            this.checkTrainingTimes.Location = new System.Drawing.Point(55, 113);
             this.checkTrainingTimes.Name = "checkTrainingTimes";
             this.checkTrainingTimes.Size = new System.Drawing.Size(119, 17);
             this.checkTrainingTimes.TabIndex = 4;
@@ -93,7 +94,7 @@ namespace EVEMon.Printing
             // checkFinishDate
             // 
             this.checkFinishDate.AutoSize = true;
-            this.checkFinishDate.Location = new System.Drawing.Point(55, 113);
+            this.checkFinishDate.Location = new System.Drawing.Point(55, 136);
             this.checkFinishDate.Name = "checkFinishDate";
             this.checkFinishDate.Size = new System.Drawing.Size(104, 17);
             this.checkFinishDate.TabIndex = 5;
@@ -103,7 +104,7 @@ namespace EVEMon.Printing
             // checkPageHeaders
             // 
             this.checkPageHeaders.AutoSize = true;
-            this.checkPageHeaders.Location = new System.Drawing.Point(55, 136);
+            this.checkPageHeaders.Location = new System.Drawing.Point(55, 159);
             this.checkPageHeaders.Name = "checkPageHeaders";
             this.checkPageHeaders.Size = new System.Drawing.Size(118, 17);
             this.checkPageHeaders.TabIndex = 6;
@@ -113,7 +114,7 @@ namespace EVEMon.Printing
             // checkPageNumbers
             // 
             this.checkPageNumbers.AutoSize = true;
-            this.checkPageNumbers.Location = new System.Drawing.Point(55, 159);
+            this.checkPageNumbers.Location = new System.Drawing.Point(55, 182);
             this.checkPageNumbers.Name = "checkPageNumbers";
             this.checkPageNumbers.Size = new System.Drawing.Size(120, 17);
             this.checkPageNumbers.TabIndex = 7;
@@ -123,7 +124,7 @@ namespace EVEMon.Printing
             // checkDateInformation
             // 
             this.checkDateInformation.AutoSize = true;
-            this.checkDateInformation.Location = new System.Drawing.Point(55, 182);
+            this.checkDateInformation.Location = new System.Drawing.Point(55, 205);
             this.checkDateInformation.Name = "checkDateInformation";
             this.checkDateInformation.Size = new System.Drawing.Size(133, 17);
             this.checkDateInformation.TabIndex = 8;
@@ -133,7 +134,7 @@ namespace EVEMon.Printing
             // checkTotalTimes
             // 
             this.checkTotalTimes.AutoSize = true;
-            this.checkTotalTimes.Location = new System.Drawing.Point(55, 205);
+            this.checkTotalTimes.Location = new System.Drawing.Point(55, 228);
             this.checkTotalTimes.Name = "checkTotalTimes";
             this.checkTotalTimes.Size = new System.Drawing.Size(146, 17);
             this.checkTotalTimes.TabIndex = 9;
@@ -143,7 +144,7 @@ namespace EVEMon.Printing
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(39, 267);
+            this.button1.Location = new System.Drawing.Point(39, 300);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 10;
@@ -154,7 +155,7 @@ namespace EVEMon.Printing
             // button2
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(171, 267);
+            this.button2.Location = new System.Drawing.Point(171, 300);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 11;
@@ -163,7 +164,7 @@ namespace EVEMon.Printing
             // 
             // btn_setDefs
             // 
-            this.btn_setDefs.Location = new System.Drawing.Point(39, 228);
+            this.btn_setDefs.Location = new System.Drawing.Point(39, 261);
             this.btn_setDefs.Name = "btn_setDefs";
             this.btn_setDefs.Size = new System.Drawing.Size(207, 23);
             this.btn_setDefs.TabIndex = 12;
@@ -171,13 +172,24 @@ namespace EVEMon.Printing
             this.btn_setDefs.UseVisualStyleBackColor = true;
             this.btn_setDefs.Click += new System.EventHandler(this.OnSetAsDefaults);
             // 
-            // PrintOptionsDlg
+            // checkNotes
+            // 
+            this.checkNotes.AutoSize = true;
+            this.checkNotes.Location = new System.Drawing.Point(55, 67);
+            this.checkNotes.Name = "checkNotes";
+            this.checkNotes.Size = new System.Drawing.Size(79, 17);
+            this.checkNotes.TabIndex = 13;
+            this.checkNotes.Text = "Print Notes";
+            this.checkNotes.UseVisualStyleBackColor = true;
+            // 
+            // PrintOptionsDialog
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button2;
-            this.ClientSize = new System.Drawing.Size(290, 311);
+            this.ClientSize = new System.Drawing.Size(290, 339);
+            this.Controls.Add(this.checkNotes);
             this.Controls.Add(this.btn_setDefs);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -194,7 +206,7 @@ namespace EVEMon.Printing
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "PrintOptionsDlg";
+            this.Name = "PrintOptionsDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Skill Printer Options";
             this.ResumeLayout(false);
@@ -217,5 +229,6 @@ namespace EVEMon.Printing
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btn_setDefs;
+        private System.Windows.Forms.CheckBox checkNotes;
     }
 }

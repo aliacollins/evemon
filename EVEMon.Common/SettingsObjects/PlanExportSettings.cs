@@ -44,6 +44,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlAttribute]
+        public bool EntryNotes
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute]
         public bool EntryCost
         {
             get;

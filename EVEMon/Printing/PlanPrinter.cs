@@ -122,7 +122,8 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Update training time
-                if (resetTotal) m_trainingTime = TimeSpan.Zero;
+                if (resetTotal)
+                    m_trainingTime = TimeSpan.Zero;
                 m_trainingTime += pe.TrainingTime;
                 resetTotal = false;
 
@@ -171,6 +172,18 @@ namespace EVEMon.SkillPlanner
             // Print skill name and level
             size = PrintBold(g, pe.ToString(), m_point);
             m_point.X += (int)size.Width;
+
+            // Print Notes ?
+            if (m_settings.EntryNotes)
+            {
+                // Jump to next line
+                m_point.Y += (int)size.Height;
+                m_point.X = 20;
+                
+                // Note
+                size = Print(g, pe.Notes, m_point);
+                m_point.X += (int)size.Width;
+            }
 
             // Print additional infos below
             if (m_settings.EntryTrainingTimes || m_settings.EntryStartDate || m_settings.EntryFinishDate)

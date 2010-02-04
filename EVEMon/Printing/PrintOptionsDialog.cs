@@ -42,6 +42,7 @@ namespace EVEMon.Printing
             EntryNumber = pto.EntryNumber;
             EntryStartDate = pto.EntryStartDate;
             EntryTrainingTimes = pto.EntryTrainingTimes;
+            EntryNotes = pto.EntryNotes;
             FooterCount = pto.FooterCount;
             FooterDate = pto.FooterDate;
             FooterTotalTime = pto.FooterTotalTime;
@@ -76,6 +77,12 @@ namespace EVEMon.Printing
         {
             get { return checkTrainingTimes.Checked; }
             set { checkTrainingTimes.Checked = value; }
+        }
+
+        public bool EntryNotes
+        {
+            get { return checkNotes.Checked; }
+            set { checkNotes.Checked = value; }
         }
 
         public bool FooterCount
@@ -114,6 +121,7 @@ namespace EVEMon.Printing
             m_pto.EntryNumber = EntryNumber;
             m_pto.EntryStartDate = EntryStartDate;
             m_pto.EntryTrainingTimes = EntryTrainingTimes;
+            m_pto.EntryNotes = EntryNotes;
             m_pto.FooterCount = FooterCount;
             m_pto.FooterDate = FooterDate;
             m_pto.FooterTotalTime = FooterTotalTime;
