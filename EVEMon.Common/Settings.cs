@@ -283,7 +283,7 @@ namespace EVEMon.Common
                     if (settings != null)
                     {
                         CheckSettingsVersion(settings);
-                        FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile, OverwriteOperation.Copy);
+                        FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
                         return settings;
                     }
                 }
@@ -339,8 +339,8 @@ namespace EVEMon.Common
                     if (settings != null)
                     {
                         CheckSettingsVersion(settings);
-                        FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile, OverwriteOperation.Copy);
-                        FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile, OverwriteOperation.Copy);
+                        FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
+                        FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
                         return settings;
                     }
 
@@ -469,18 +469,15 @@ namespace EVEMon.Common
         public static void SaveImmediate()
         {
             SerializableSettings settings = Export();
+            XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
 
-            // Save in temp file
-            string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            using (FileStream s = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+            // Save in settings file
+            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, fs =>
             {
-                XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
-                xs.Serialize(s, settings);
-                s.Flush();
-            }
-
-            // Overwrite settings file
-            FileHelper.OverwriteOrWarnTheUser(tempFileName, EveClient.SettingsFileName, OverwriteOperation.Move);
+                xs.Serialize(fs, settings);
+                fs.Flush();
+                return true;
+            });
 
             // Reset savePending flag
             m_lastSaveTime = DateTime.UtcNow;
@@ -495,7 +492,7 @@ namespace EVEMon.Common
         {
             // Ensure we have the latest settings saved
             SaveImmediate();
-            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, copyFileName, OverwriteOperation.Copy);
+            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, copyFileName);
         }
 
         /// <summary>

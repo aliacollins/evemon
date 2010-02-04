@@ -86,42 +86,21 @@ namespace EVEMon.Common
         /// Adds the image to the memory cache, flush the cache to the hard drive, then save the image to a cached file.
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="i"></param>
-        private static void AddImageToCache(string url, Image i)
+        /// <param name="image"></param>
+        private static void AddImageToCache(string url, Image image)
         {
             lock (s_syncLock)
             {
-                string cacheName = GetCacheName(url);
-
-
-                // Make sure the file map is writeable, or attemp to make it so by prompting the user. Returns on denial.
-                string mapFileName = Path.Combine(ImageCacheDirectory, "file.map");
-                if (File.Exists(mapFileName))
-                {
-                    if (!FileHelper.TryMakeWritable(mapFileName)) return;
-                }
-
-                // Appends this entry to the map file
-                using (StreamWriter sw = new StreamWriter(mapFileName, true))
-                {
-                    sw.WriteLine(String.Format("{0} {1}", cacheName, url));
-                    sw.Close();
-                }
-
                 // Saves the image file
                 try
                 {
-                    // Write this image to a temp file name
-                    string tempFileName = Path.GetTempFileName();
-                    using (FileStream fs = new FileStream(tempFileName, FileMode.Create))
-                    {
-                        i.Save(fs, ImageFormat.Png);
+                    // Write this image to the cache file
+                    string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs => {
+                        image.Save(fs, ImageFormat.Png);
                         fs.Flush();
-                    }
-
-                    // Move to the file
-                    string fn = Path.Combine(ImageCacheDirectory, cacheName);
-                    FileHelper.OverwriteOrWarnTheUser(tempFileName, fn, OverwriteOperation.Move);
+                        return true;
+                    });
                 }
                 catch (Exception e)
                 {

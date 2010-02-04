@@ -71,18 +71,18 @@ namespace EVEMon.Common
                 string name = characterNode.InnerText;
                 string encodedName = name + ".xml";
 
-                // Writes in a temporary file name
-                string tempFileName = Path.GetTempFileName();
-                using (XmlTextWriter writer = new XmlTextWriter(new FileStream(tempFileName, FileMode.Create), Encoding.GetEncoding("iso-8859-1")))
-                {
-                    xdoc.WriteTo(writer);
-                    writer.Flush();
-                    writer.Close();
-                }
-
-                // Overwrite the target file
+                // Writes in the target file
                 string fileName = Path.Combine(m_cacheDirectory, characterNode.InnerText + ".xml");
-                FileHelper.OverwriteOrWarnTheUser(tempFileName, fileName, OverwriteOperation.Move);
+                FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
+                {
+                    using (XmlTextWriter writer = new XmlTextWriter(fs, Encoding.GetEncoding("iso-8859-1")))
+                    {
+                        xdoc.WriteTo(writer);
+                        writer.Flush();
+                        writer.Close();
+                    }
+                    return true;
+                });
             }
         }
 

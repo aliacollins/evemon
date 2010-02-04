@@ -7,6 +7,7 @@ using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Controls;
 using System.Windows.Forms;
 using System.IO.Compression;
+using System.Drawing.Imaging;
 
 namespace EVEMon
 {
@@ -47,49 +48,45 @@ namespace EVEMon
             // Serialize
             try
             {
-                string fileName = Path.GetTempFileName();
-
-                // Emp is actually compressed text
-                if (sfdSave.FilterIndex == (int)PlanFormat.Emp)
+                var format = (PlanFormat)sfdSave.FilterIndex;
+                
+                string content;
+                switch (format)
                 {
-                    using (FileStream fs = new FileStream(fileName, FileMode.Create))
-                    {
-                        using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress))
-                        {
-                            using (var writer = new StreamWriter(gzs))
-                            {
-                                string output = PlanExporter.ExportAsXML(plan);
-                                writer.Write(output);
-                                writer.Flush();
-                                gzs.Flush();
-                                fs.Flush();
-                            }
-                        }
-                    }
-                }
-                // Serialize to XML and text outputs
-                else
-                {
-                    // Gets a string output
-                    switch ((PlanFormat)sfdSave.FilterIndex)
-                    {
-                        case PlanFormat.Xml:
-                            File.WriteAllText(fileName, PlanExporter.ExportAsXML(plan), Encoding.UTF8);
-                            break;
-                        case PlanFormat.Text:
-                            // Prompts the user and returns if he canceled
-                            var settings = PromptUserForPlanExportSettings(plan);
-                            if (settings == null) return;
+                    case PlanFormat.Emp:
+                    case PlanFormat.Xml:
+                        content = PlanExporter.ExportAsXML(plan);
+                        break;
+                    case PlanFormat.Text:
+                        // Prompts the user and returns if he canceled
+                        var settings = PromptUserForPlanExportSettings(plan);
+                        if (settings == null)
+                            return;
 
-                            File.WriteAllText(fileName, PlanExporter.ExportAsText(plan, settings), Encoding.UTF8);
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
+                        content = PlanExporter.ExportAsText(plan, settings);                        
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
 
                 // Moves to the final file
-                FileHelper.OverwriteOrWarnTheUser(fileName, sfdSave.FileName, OverwriteOperation.Move);
+                FileHelper.OverwriteOrWarnTheUser(sfdSave.FileName, fs =>
+                {
+                    Stream s = fs;
+                    // Emp is actually compressed text
+                    if (format == PlanFormat.Emp)
+                        s = new GZipStream(fs, CompressionMode.Compress);
+
+                    using (s)
+                    using (var writer = new StreamWriter(s, Encoding.UTF8))
+                    {
+                        writer.Write(content);
+                        writer.Flush();
+                        s.Flush();
+                        fs.Flush();
+                    }
+                    return true;
+                });
             }
             catch (IOException err)
             {
@@ -148,33 +145,20 @@ namespace EVEMon
                 // Serialize
                 try
                 {
-                    // Save file to the chosen format and to a temp file
-                    string tempFileName = Path.GetTempFileName();
+                    // Save character to string with the chosen format
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
-                    switch (format)
+                    var content = CharacterExporter.Export(format, character, plan);
+                    // Save character with the chosen format to our file
+                    FileHelper.OverwriteOrWarnTheUser(characterSaveDialog.FileName, fs =>
                     {
-                        case CharacterSaveFormat.Text:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsText(character, plan), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.EFTCHR:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEFTCHR(character, plan), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.EVEMonXML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEVEMonXML(character, plan), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.HTML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsHTML(character, plan), Encoding.UTF8);
-                            break;
-
-                        default:
-                            throw new NotImplementedException();
-                    }
-
-                    // Writes to our file
-                    FileHelper.OverwriteOrWarnTheUser(tempFileName, characterSaveDialog.FileName, OverwriteOperation.Move);
+                        using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                        {
+                            sw.Write(content);
+                            sw.Flush();
+                            sw.Close();
+                        }
+                        return true;
+                    });
                 }
                 // Handle exception
                 catch (IOException ex)
@@ -205,49 +189,33 @@ namespace EVEMon
                 // Serialize
                 try
                 {
-                    // Save file to the chosen format and to a temp file
-                    string tempFileName = Path.GetTempFileName();
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
-                    switch (format)
+                    // Save character with the chosen format to our file
+                    FileHelper.OverwriteOrWarnTheUser(characterSaveDialog.FileName, fs =>
                     {
-                        case CharacterSaveFormat.Text:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsText(character, null), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.EFTCHR:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEFTCHR(character, null), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.CCPXML:
-                            var content = CharacterExporter.ExportAsCCPXML(character);
-                            if (content == null)
-                            {
-                                MessageBox.Show("This character has never been downloaded from CCP, cannot find it in the XML cache.", "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return;
-                            }
-                            File.WriteAllText(tempFileName, content, Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.EVEMonXML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsEVEMonXML(character, null), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.HTML:
-                            File.WriteAllText(tempFileName, CharacterExporter.ExportAsHTML(character, null), Encoding.UTF8);
-                            break;
-
-                        case CharacterSaveFormat.PNG:
+                        if (format == CharacterSaveFormat.PNG)
+                        {
                             var monitor = Program.MainWindow.GetCurrentMonitor();
                             var bmp = monitor.GetCharacterScreenshot();
-                            bmp.Save(tempFileName, System.Drawing.Imaging.ImageFormat.Png);
-                            break;
+                            bmp.Save(fs, ImageFormat.Png);
+                            return true;
+                        }
 
-                        default:
-                            throw new NotImplementedException();
-                    }
+                        var content = CharacterExporter.Export(format, character, null);
+                        if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
+                        {
+                            MessageBox.Show("This character has never been downloaded from CCP, cannot find it in the XML cache.", "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return false;
+                        }
 
-                    // Writes to our file
-                    FileHelper.OverwriteOrWarnTheUser(tempFileName, characterSaveDialog.FileName, OverwriteOperation.Move);
+                        using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                        {
+                            sw.Write(content);
+                            sw.Flush();
+                            sw.Close();
+                        }
+                        return true;
+                    });
                 }
                 // Handle exception
                 catch (IOException exc)

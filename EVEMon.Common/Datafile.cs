@@ -89,7 +89,7 @@ namespace EVEMon.Common
             }
 
             // The file was in the installation directory, let's copy it to %APPDATA%
-            FileHelper.OverwriteOrWarnTheUser(baseFile, filepath, OverwriteOperation.Copy);
+            FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);
 
             // Return
             return baseFile;

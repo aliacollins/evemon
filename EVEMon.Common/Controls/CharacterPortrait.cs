@@ -244,16 +244,13 @@ namespace EVEMon.Common.Controls
             // Save to the portraits cache and notify we changed this character's portrait
             try
             {
-                // Save the image to a temp file
-                string tempFileName = Path.GetTempFileName();
-                using (FileStream fs = new FileStream(tempFileName, FileMode.Create))
+                // Save the image to the portrait cache file
+                FileHelper.OverwriteOrWarnTheUser(this.CachePath, fs =>
                 {
                     newImage.Save(fs, ImageFormat.Png);
                     fs.Flush();
-                }
-
-                // Overwrite the portrait cache file
-                FileHelper.OverwriteOrWarnTheUser(tempFileName, this.CachePath, OverwriteOperation.Move);
+                    return true;
+                });
 
                 // Notify the other controls we updated this portrait
                 EveClient.OnCharacterPortraitChanged(m_character);

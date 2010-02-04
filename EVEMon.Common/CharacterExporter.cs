@@ -398,6 +398,32 @@ namespace EVEMon.Common
 
             return mergedSkill;
         }
+
+        /// <summary>
+        /// Creates formatted string for character exportation.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="character"></param>
+        /// <param name="plan"></param>
+        /// <returns></returns>
+        public static string Export(CharacterSaveFormat format, Character character, Plan plan)
+        {
+            switch (format)
+            {
+                case CharacterSaveFormat.Text:
+                    return ExportAsText(character, plan);
+                case CharacterSaveFormat.EFTCHR:
+                    return ExportAsEFTCHR(character, plan);
+                case CharacterSaveFormat.EVEMonXML:
+                    return ExportAsEVEMonXML(character, plan);
+                case CharacterSaveFormat.HTML:
+                    return ExportAsHTML(character, plan);
+                case CharacterSaveFormat.CCPXML:
+                    return ExportAsCCPXML(character);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 
     /// <summary>
