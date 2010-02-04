@@ -10,9 +10,10 @@ namespace EVEMon.Common.SettingsObjects
         public PlanWindowSettings()
         {
             DimUntrainable = true;
-            ShowMsgBoxCustom = true;
-            ShowObsEntriesMsgBox = true;
             OnlyShowSelectionSummaryOnMultiSelect = true;
+
+            PrioritiesMsgBox = new CustomMsgBoxSettings();
+            ObsEntriesMsgBox = new CustomMsgBoxSettings();
 
             var displayedColumns = new PlanColumn[] { 
                 PlanColumn.Priority, 
@@ -70,22 +71,22 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("showMsgBoxCustom")]
-        public bool ShowMsgBoxCustom
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("showObsEntriesMsgBox")]
-        public bool ShowObsEntriesMsgBox
-        {
-            get;
-            set;
-        }
-
         [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
         public bool OnlyShowSelectionSummaryOnMultiSelect
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("prioritiesMsgBox")]
+        public CustomMsgBoxSettings PrioritiesMsgBox
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("obsEntriesMsgBox")]
+        public CustomMsgBoxSettings ObsEntriesMsgBox
         {
             get;
             set;

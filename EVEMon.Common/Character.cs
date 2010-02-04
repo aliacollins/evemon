@@ -498,9 +498,6 @@ namespace EVEMon.Common
 
             // Implants
             m_implants.Import(serial.Implants);
-
-            // Clean the obsolete entries on plans.
-            CleanObsoleteEntries();
         }
 
         /// <summary>
@@ -570,7 +567,6 @@ namespace EVEMon.Common
         internal void ImportPlans(IEnumerable<SerializablePlan> plans)
         {
             m_plans.Import(plans);
-            CleanObsoleteEntries();
         }
 
         /// <summary>

@@ -345,6 +345,7 @@
     <Compile Include="Serialization\Importation\OldExportedSkillGroup.cs" />
     <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
+    <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />
     <Compile Include="SettingsObjects\IGBSettings.cs" />
     <Compile Include="SettingsObjects\MarketOrderColumn.cs" />

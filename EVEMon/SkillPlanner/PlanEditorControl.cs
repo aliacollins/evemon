@@ -838,7 +838,11 @@ namespace EVEMon.SkillPlanner
             if (window == null)
                 return;
 
-            window.CheckObsoleteEntries();
+            // We check for obsolete entries
+            // Skip if the dialog is already shown
+            if (!window.IsObsDialogActive)
+                window.CheckObsoleteEntries();
+
             UpdateListViewItems();
         }
 
@@ -1609,8 +1613,9 @@ namespace EVEMon.SkillPlanner
                 // Update priorities, while performing backup for subsequent check
                 if (!m_plan.TrySetPriority(m_displayPlan, entries, form.Priority))
                 {
-                    bool showDialog = Settings.UI.PlanWindow.ShowMsgBoxCustom;
-                    
+                    bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
+                    DialogResult dlr = Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult;
+
                     if (showDialog)
                     {
                         string text = String.Concat("This would result in a priority conflict.",
@@ -1619,15 +1624,24 @@ namespace EVEMon.SkillPlanner
                         captionText = "Priority Conflict",
                         cbOptionText = "Do not show this dialog again";
 
+                        // Shows the custom dialog box
                         MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
                         DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = MsgBoxCustom.cbUnchecked;
+                        
+                        // When the checkbox is checked we store the dialog result
+                        if (!MsgBoxCustom.cbUnchecked)
+                            Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
+
                         if (drb == DialogResult.Yes)
-                        {
                             m_plan.SetPriority(m_displayPlan, entries, form.Priority);
-                        }
-                        Settings.UI.PlanWindow.ShowMsgBoxCustom = MsgBoxCustom.cbUnchecked;
+
                     }
-                    else m_plan.SetPriority(m_displayPlan, entries, form.Priority);
+                    else
+                    {
+                        if (dlr == DialogResult.Yes)
+                            m_plan.SetPriority(m_displayPlan, entries, form.Priority);
+                    }
                 }
             }
         }

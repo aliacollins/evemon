@@ -6,8 +6,8 @@ using System.IO.Compression;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using EVEMon.Common;
 using System.Runtime.InteropServices;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Data;
@@ -26,8 +26,10 @@ namespace EVEMon.SkillPlanner
         private ShipLoadoutSelectWindow m_loadoutForm;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
+        private bool m_obsDialogActive;
 
-        #region Initialization, loading, closing
+
+        #region Initialization, loading, closing, entries validation checking
         /// <summary>
         /// Default constructor for designer
         /// </summary>
@@ -158,6 +160,22 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Gets the current character
+        /// </summary>
+        public Character Character
+        {
+            get { return (Character)m_plan.Character; }
+        }
+
+        /// <summary>
+        /// Gets the obsolete entries dialog box status
+        /// </summary>
+        public bool IsObsDialogActive
+        {
+            get { return m_obsDialogActive; }
+        }
+
+        /// <summary>
         /// Gets the plan represented by this window
         /// </summary>
         public Plan Plan
@@ -210,29 +228,37 @@ namespace EVEMon.SkillPlanner
         {
             if (m_plan.ObsoleteEntries)
             {
-                bool showDialog = Settings.UI.PlanWindow.ShowObsEntriesMsgBox;
+                bool showDialog = Settings.UI.PlanWindow.ObsEntriesMsgBox.ShowDialogBox;
+                DialogResult dlr = Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult;
 
                 if (showDialog)
                 {
+                    m_obsDialogActive = true;
+
                     string text = String.Concat("The plan contains one or more obsolete entries.",
                         " (Obsolete entry is an entry for a skill level that is already trained).\r\n\r\n",
                            "Do you wish them to be removed ?"),
                     captionText = "Obsolete Entry",
                     cbOptionText = "Do not show this dialog again";
-
+                    
+                    // Shows the custom dialog box
                     MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
                     DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                    Settings.UI.PlanWindow.ShowObsEntriesMsgBox = MsgBoxCustom.cbUnchecked;
+                    Settings.UI.PlanWindow.ObsEntriesMsgBox.ShowDialogBox = MsgBoxCustom.cbUnchecked;
+
+                    // When the checkbox is checked we store the dialog result
+                    if (!MsgBoxCustom.cbUnchecked)
+                        Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult = drb;
 
                     if (drb == DialogResult.Yes)
-                    {
                         planEditor.ClearObsoleteEntries();
-                    }
 
+                    m_obsDialogActive = false;
                 }
                 else
                 {
-                    planEditor.ClearObsoleteEntries();
+                    if (dlr == DialogResult.Yes)
+                        planEditor.ClearObsoleteEntries();
                 }
             }
         }
@@ -269,14 +295,6 @@ namespace EVEMon.SkillPlanner
                     m_plan.AcknoledgeInvalidEntries();
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the current character
-        /// </summary>
-        public Character Character
-        {
-            get { return (Character)m_plan.Character; }
         }
         #endregion
 
