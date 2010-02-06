@@ -30,32 +30,6 @@ namespace EVEMon
         private Exception m_exception;
 
         /// <summary>
-        /// Generates a MD5 sum of a filename
-        /// </summary>
-        /// <param name="filename">Fully qualified path of the file</param>
-        /// <returns>String containing the MD5 hash of the file</returns>
-        private string QuickMD5(string filename)
-        {
-            MD5 md5Hasher = MD5.Create();
-            StringBuilder hashString = new StringBuilder();
-            byte[] hash;
-
-            using (Stream fileStream = new FileStream(filename, FileMode.Open))
-            {
-                using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
-                {
-                    hash = md5Hasher.ComputeHash(bufferedStream);
-                    foreach (byte b in hash)
-                    {
-                        hashString.Append(b.ToString("x2").ToLower());
-                    }
-                }
-            }
-
-            return hashString.ToString();
-        }
-
-        /// <summary>
         /// Loads resources, generates the report
         /// </summary>
         /// <param name="sender"></param>
@@ -145,7 +119,9 @@ namespace EVEMon
                     foreach (string datafile in datafiles)
                     {
                         FileInfo info = new FileInfo(datafile);
-                        datafileReport.AppendFormat("  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, QuickMD5(datafile), Environment.NewLine);
+                        Datafile file = new Datafile(Path.GetFileName(datafile));
+
+                        datafileReport.AppendFormat("  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, file.MD5Sum, Environment.NewLine);
                     }
                 }
                 catch

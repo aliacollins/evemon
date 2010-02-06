@@ -54,20 +54,20 @@ namespace EVEMon.Common.Controls
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(m_errorMessage);
-            sb.Append(Environment.NewLine);
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
+            sb.AppendLine();
             sb.Append("Diagnostic information");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
             sb.Append("--------------------------------------------");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
             sb.AppendFormat("EVEMon Version {0}", Application.ProductVersion);
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
             sb.AppendFormat("AutoUpdate {0}", Settings.Updates.CheckEVEMonVersion ? "Enabled" : "Disabled");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
             foreach (var datafile in EveClient.Datafiles)
             {
-                sb.AppendFormat("{0}: {1}", datafile.Filename, datafile.Sum);
-                sb.Append(Environment.NewLine);
+                sb.AppendFormat("{0}: {1}", datafile.Filename, datafile.MD5Sum);
+                sb.AppendLine();
             }
             errorMessageTextBox.Text = sb.ToString();
         }

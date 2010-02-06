@@ -262,7 +262,7 @@ namespace EVEMon
                     {
                         if (datafile.Filename == dfv.Name)
                         {
-                            if (datafile.Sum != dfv.Md5)
+                            if (datafile.MD5Sum != dfv.Md5)
                             {
                                 m_changedList.Add(dfv);
                             }

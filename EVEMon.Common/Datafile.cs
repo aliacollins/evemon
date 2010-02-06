@@ -24,15 +24,23 @@ namespace EVEMon.Common
         {
             // The file may be in local directory, %APPDATA%, etc.
             m_fileName = filename;
+            
+            // Compute the MD5 sum
             var fullpath = GetFullPath(filename);
-
             MD5 md5 = MD5.Create();
             StringBuilder builder = new StringBuilder();
-            using (FileStream fs = File.Open(fullpath, FileMode.Open))
+            byte[] hash;
+
+            using (Stream fileStream = new FileStream(fullpath, FileMode.Open))
             {
-                byte[] hash = md5.ComputeHash(fs);
-                foreach (byte b in hash)
-                    builder.Append(b.ToString("x2").ToLower());
+                using (Stream bufferedStream = new BufferedStream(fileStream, 1200000))
+                {
+                    hash = md5.ComputeHash(bufferedStream);
+                    foreach (byte b in hash)
+                    {
+                        builder.Append(b.ToString("x2").ToLower());
+                    }
+                }
             }
 
             m_sum = builder.ToString();
@@ -49,7 +57,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the MD5 sum
         /// </summary>
-        public string Sum
+        public string MD5Sum
         {
             get { return m_sum; }
         }

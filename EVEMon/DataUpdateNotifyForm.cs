@@ -58,7 +58,7 @@ namespace EVEMon
                             string filename = Path.GetFileName(newFilename);
                             Datafile datafile = new Datafile(filename);
 
-                            if (datafile.Sum != dfv.Md5)
+                            if (datafile.MD5Sum != dfv.Md5)
                             {
                                 attempt++;
                                 File.Delete(newFilename);
