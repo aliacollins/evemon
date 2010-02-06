@@ -193,6 +193,7 @@ namespace EVEMon.SettingsUI
             overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
             overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
             overviewShowSkillQueueFreeRoomCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueFreeRoom;
+            overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
             cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
             cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
             cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
@@ -419,6 +420,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
             m_settings.UI.MainWindow.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
             m_settings.UI.MainWindow.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
+            m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
             m_settings.UI.MainWindow.ShowOverviewSkillQueueFreeRoom = overviewShowSkillQueueFreeRoomCheckBox.Checked;
             m_settings.UI.MainWindow.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;
 

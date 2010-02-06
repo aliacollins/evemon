@@ -255,6 +255,7 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
+            this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
             this.trayPopupDisabledRadio = new System.Windows.Forms.RadioButton();
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
@@ -1323,7 +1324,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.trayIconPage;
+            this.multiPanel.SelectedPage = this.mainWindowPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1357,6 +1358,7 @@ namespace EVEMon.SettingsUI
             // 
             this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.overviewPanel.Controls.Add(this.overviewGroupCharactersInTrainingCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowSkillQueueFreeRoomCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowWalletCheckBox);
             this.overviewPanel.Controls.Add(lblSize);
@@ -2633,6 +2635,16 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
+            // overviewGroupCharactersInTrainingCheckBox
+            // 
+            this.overviewGroupCharactersInTrainingCheckBox.AutoSize = true;
+            this.overviewGroupCharactersInTrainingCheckBox.Location = new System.Drawing.Point(161, 26);
+            this.overviewGroupCharactersInTrainingCheckBox.Name = "overviewGroupCharactersInTrainingCheckBox";
+            this.overviewGroupCharactersInTrainingCheckBox.Size = new System.Drawing.Size(165, 17);
+            this.overviewGroupCharactersInTrainingCheckBox.TabIndex = 33;
+            this.overviewGroupCharactersInTrainingCheckBox.Text = "Group Characters In Training";
+            this.overviewGroupCharactersInTrainingCheckBox.UseVisualStyleBackColor = true;
+            // 
             // trayPopupDisabledRadio
             // 
             this.trayPopupDisabledRadio.AutoSize = true;
@@ -2892,5 +2904,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbSummaryOnMultiSelectOnly;
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.RadioButton trayPopupDisabledRadio;
+        private System.Windows.Forms.CheckBox overviewGroupCharactersInTrainingCheckBox;
     }
 }

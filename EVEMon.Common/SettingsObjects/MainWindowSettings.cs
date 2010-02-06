@@ -17,6 +17,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverviewSkillQueueFreeRoom = true;
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
+            PutTrainingSkillsFirstOnOverview = true;
             ShowRelocationMenu = true;
             EnableAutomaticRelocation = false;
             AutomaticRelocationInterval = (int)TimeSpan.FromSeconds(10).TotalSeconds;
@@ -157,6 +158,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("showOverviewSkillQueueFreeRoom")]
         public bool ShowOverviewSkillQueueFreeRoom
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("putTrainingSkillsFirstOnOverview")]
+        public bool PutTrainingSkillsFirstOnOverview
         {
             get;
             set;

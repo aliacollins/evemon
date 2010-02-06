@@ -78,8 +78,15 @@ namespace EVEMon
                 // Creates the controls
                 labelNoCharacters.Visible = false;
                 var characters = new List<Character>();
-                characters.AddRange(EveClient.MonitoredCharacters.Where(x => x.IsTraining));
-                characters.AddRange(EveClient.MonitoredCharacters.Where(x => !x.IsTraining));
+                if(Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
+                {
+                    characters.AddRange(EveClient.MonitoredCharacters.Where(x => x.IsTraining));
+                    characters.AddRange(EveClient.MonitoredCharacters.Where(x => !x.IsTraining));
+                }
+                else
+                {
+                    characters.AddRange(EveClient.MonitoredCharacters);
+                }
                 foreach (var character in characters)
                 {
                     // Creates a control and adds it
