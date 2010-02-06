@@ -782,13 +782,23 @@ namespace EVEMon
             if (!this.Visible)
                 return;
 
-            StringBuilder builder = new StringBuilder();
-
             // If character's trainings must be displayed in title
-            if (Settings.UI.MainWindow.ShowCharacterInfoInTitleBar)
+            if (!Settings.UI.MainWindow.ShowCharacterInfoInTitleBar)
             {
-                // Retrieve the selected character
-                CCPCharacter selectedChar = this.GetCurrentCharacter() as CCPCharacter;
+                this.Text = Application.ProductName;
+                return;
+            }
+
+            StringBuilder builder;
+
+            // Retrieve the selected character
+            CCPCharacter selectedChar = this.GetCurrentCharacter() as CCPCharacter;
+
+            int trimTimeSpanComponents = 0;
+
+            do
+            {
+                builder = new StringBuilder();
 
                 // Scroll through the ordered list of chars in training
                 SortedList<TimeSpan, CCPCharacter> orderedTrainingTimes = GetOrderedCharactersTrainingTime();
@@ -796,23 +806,36 @@ namespace EVEMon
                 {
                     CCPCharacter character = orderedTrainingTimes[ts];
 
+                    TimeSpan trimmedTime = ts;
+
+                    // first pass we remove the seconds from the TimeSpan
+                    if (trimTimeSpanComponents >= 1)
+                        trimmedTime = trimmedTime.Add(TimeSpan.FromSeconds(0 - ts.Seconds));
+
+                    // second pass we remove the minutes from the TimeSpan
+                    if (trimTimeSpanComponents >= 2)
+                        trimmedTime = trimmedTime.Add(TimeSpan.FromMinutes(0 - ts.Minutes));
+
                     switch (Settings.UI.MainWindow.TitleFormat)
                     {
                         // (default) single Char - finishing skill next
                         case MainWindowTitleFormat.Default:
                         case MainWindowTitleFormat.NextCharToFinish:
-                            if (builder.Length == 0) AppendCharacterTrainingTime(builder, character, ts);
+                            if (builder.Length == 0)
+                                builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
                         // single Char - selected char
                         case MainWindowTitleFormat.SelectedChar:
-                            if (selectedChar == character) AppendCharacterTrainingTime(builder, character, ts);
+                            if (selectedChar == character)
+                                builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
                         // multi Char - finishing skill next first
                         case MainWindowTitleFormat.AllCharacters:
-                            if (builder.Length > 0) builder.Append(" | ");
-                            AppendCharacterTrainingTime(builder, character, ts);
+                            if (builder.Length > 0)
+                                builder.Append(" | ");
+                            builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
                         // multi Char - selected char first
@@ -822,8 +845,9 @@ namespace EVEMon
                             {
                                 // Precreate the string for this char
                                 StringBuilder subBuilder = new StringBuilder();
-                                AppendCharacterTrainingTime(subBuilder, character, ts);
-                                if (builder.Length > 0) subBuilder.Append(" | ");
+                                subBuilder.Append(AppendCharacterTrainingTime(character, trimmedTime));
+                                if (builder.Length > 0)
+                                    subBuilder.Append(" | ");
 
                                 // Insert it at the beginning
                                 builder.Insert(0, subBuilder.ToString());
@@ -831,17 +855,28 @@ namespace EVEMon
                             // Non-selected char ? Same as "3"
                             else
                             {
-                                if (builder.Length > 0) builder.Append(" | ");
-                                AppendCharacterTrainingTime(builder, character, ts);
+                                if (builder.Length > 0)
+                                    builder.Append(" | ");
+                                builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             }
                             break;
                     }
                 }
+
+                // if we go through the loop again we will remove another component of the TimeSpan
+                trimTimeSpanComponents++;
+            }
+            // each pass we remove one component of the time span up untill the hours
+            while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
+
+            // Adds EVEMon at the end if there is space in the title bar
+            string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", Application.ProductName);
+            if (builder.Length + appSuffix.Length <= MaxTitleLength)
+            {
+                builder.Append(appSuffix);
             }
 
-            // Adds EVEMon at the end
-            if (builder.Length > 0) builder.Append(" - ");
-            builder.Append(Application.ProductName);
+            // set the window title
             this.Text = builder.ToString();
         }
 
@@ -883,14 +918,19 @@ namespace EVEMon
         /// <param name="builder"></param>
         /// <param name="character"></param>
         /// <param name="time"></param>
-        private void AppendCharacterTrainingTime(StringBuilder builder, CCPCharacter character, TimeSpan time)
+        private string AppendCharacterTrainingTime(CCPCharacter character, TimeSpan time)
         {
-            builder.Append(Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default)).Append(" ").Append(character.Name);
+            StringBuilder builder = new StringBuilder();
+            
+            string skillDescriptionText = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+            builder.AppendFormat(CultureConstants.DefaultCulture,"{0} {1}", skillDescriptionText, character.Name);
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
             {
-                builder.Append(" (").Append(character.CurrentlyTrainingSkill.SkillName).Append(")");
+                builder.AppendFormat(CultureConstants.DefaultCulture, " ({0})", character.CurrentlyTrainingSkill.SkillName);
             }
+
+            return builder.ToString();
         }
         #endregion
 

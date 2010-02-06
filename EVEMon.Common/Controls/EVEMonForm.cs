@@ -11,6 +11,8 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public partial class EVEMonForm : Form
     {
+        protected const int MaxTitleLength = 40;
+
         delegate void OnLayoutCallback(LayoutEventArgs levent);
 
         private bool m_loaded;
