@@ -783,7 +783,7 @@ namespace EVEMon
 
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
-                TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.Now);
+                TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
                 string timeToNextUpdateText;
 
                 if (timeToNextUpdate.TotalMinutes >= 60)
