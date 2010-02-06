@@ -777,11 +777,26 @@ namespace EVEMon
 
             // Add menus
             var ccpCharacter = m_character as CCPCharacter;
+            
             if (ccpCharacter == null)
                 return;
+
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
-                var menu = new ToolStripMenuItem("Update " + monitor.ToString());
+                TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.Now);
+                string timeToNextUpdateText;
+
+                if (timeToNextUpdate.TotalMinutes >= 60)
+                {
+                    timeToNextUpdateText = String.Format("{0}h", Math.Floor(timeToNextUpdate.TotalHours));
+                }
+                else
+                {
+                    timeToNextUpdateText = String.Format("{0}m", Math.Floor(timeToNextUpdate.TotalMinutes));
+                }
+                
+                string menuText = String.Format("Update {0} ({1})", monitor.ToString(), timeToNextUpdateText);
+                var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
                 throbberContextMenu.Items.Add(menu);
             }
