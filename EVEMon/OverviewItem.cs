@@ -172,7 +172,9 @@ namespace EVEMon
             get { return m_character; }
             set
             {
-                if (m_character == value) return;
+                if (m_character == value)
+                    return;
+
                 pbCharacterPortrait.Character = value;
                 m_character = value;
 
@@ -190,6 +192,7 @@ namespace EVEMon
                 m_pendingUpdate = true;
                 return;
             }
+
             m_pendingUpdate = false;
 
             lblCharName.Text = m_character.Name;
@@ -234,15 +237,7 @@ namespace EVEMon
                 m_hasRemainingTime = true;
 
                 // Updates the skill queue free room
-                CCPCharacter character = m_character as CCPCharacter;
-                bool freeTime = character.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
-                if (freeTime)
-                {
-                    TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - character.SkillQueue.EndTime;
-                    string timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
-                    lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
-                    lblSkillQueueFreeRoom.ForeColor = Color.Red;
-                }
+                UpdateSkillQueueFreeRoom();
             }
             else
             {
@@ -270,20 +265,64 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Updates the skill queue free room.
+        /// </summary>
+        /// <returns></returns>
+        private void UpdateSkillQueueFreeRoom()
+        {
+            CCPCharacter character = m_character as CCPCharacter;
+            bool freeTime = character.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+            
+            if (freeTime)
+            {
+                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - character.SkillQueue.EndTime;
+                string timeLeftText;
+                
+                // Prevents the "(none)" text from being displayed
+                if (timeLeft < TimeSpan.FromSeconds(1))
+                    return;
+                
+                // Less than minute ? Display seconds
+                if (timeLeft < TimeSpan.FromMinutes(1))
+                {
+                    timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
+                }
+                // Display time without seconds
+                else
+                {
+                    timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
+                }
+                
+                lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
+                lblSkillQueueFreeRoom.ForeColor = Color.Red;
+            }
+        }
+
+        /// <summary>
         /// On every second, we update the remaining time.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void EveClient_TimerTick(object sender, EventArgs e)
         {
-            if (!this.Visible) return;
+            if (!this.Visible)
+                return;
 
             if (m_character.IsTraining)
             {
                 var remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
                 lblRemainingTime.Text = Skill.TimeSpanToDescriptiveText(remainingTime, DescriptiveTextOptions.IncludeCommas);
-                if (m_loading) UpdateContent();
+
+                UpdateSkillQueueFreeRoom();
+
+                if (m_loading)
+                    UpdateContent();
+
                 m_loading = false;
+            }
+            else
+            {
+                UpdateContent();
             }
         }
 

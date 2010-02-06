@@ -35,7 +35,9 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_isPaused) return false;
+                if (m_isPaused)
+                    return false;
+
                 return m_items.Count != 0;
             }
         }
@@ -56,9 +58,16 @@ namespace EVEMon.Common
             get
             {
                 var endTime = DateTime.UtcNow;
-                if (this.IsPaused) return endTime;
+                if (this.IsPaused)
+                {
+                    return endTime;
+                }
 
-                foreach (var skill in m_items) endTime = skill.EndTime;
+                foreach (var skill in m_items)
+                {
+                    endTime = skill.EndTime;
+                }
+
                 return endTime;
             }
         }
@@ -70,7 +79,9 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (m_items.Count == 0) return null;
+                if (m_items.Count == 0)
+                    return null;
+                
                 return m_items[0];
             }
         }
@@ -88,7 +99,9 @@ namespace EVEMon.Common
         /// </summary>
         internal void UpdateOnTimerTick()
         {
-            if (m_isPaused) return;
+            if (m_isPaused)
+                return;
+
             DateTime now = DateTime.UtcNow;
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
 
@@ -98,10 +111,15 @@ namespace EVEMon.Common
                 QueuedSkill skill = m_items[0];
 
                 // If the skill is not completed, we jump out of the loop
-                if (skill.EndTime > now) break;
+                if (skill.EndTime > now)
+                    break;
 
                 // The skill has been completed
-                if (skill.Skill != null) skill.Skill.MarkAsCompleted();
+                if (skill.Skill != null)
+                {
+                    skill.Skill.MarkAsCompleted();
+                }
+
                 skillsCompleted.Add(skill);
                 m_lastCompleted = skill;
                 m_items.RemoveAt(0);
@@ -157,7 +175,10 @@ namespace EVEMon.Common
             {
                 // When the skill queue is paused, startTime and endTime are empty in the XML document.
                 // As a result, the serialization leaves the DateTime with its default value.
-                if (serialSkill.EndTime == default(DateTime)) m_isPaused = true;
+                if (serialSkill.EndTime == default(DateTime))
+                {
+                    m_isPaused = true;
+                }
 
                 // Creates the skill queue
                 m_items.Add(new QueuedSkill(m_character, serialSkill, m_isPaused, ref startTimeWhenPaused));

@@ -73,7 +73,10 @@ namespace EVEMon.Common
             m_level = 0;
 
             // Are we reloading the settings ?
-            if (!importFromCCP) m_owned = false;
+            if (!importFromCCP)
+            {
+                m_owned = false;
+            }
         }
 
         /// <summary>
@@ -357,12 +360,16 @@ namespace EVEMon.Common
             get
             {
                 CCPCharacter ccpCharacter = m_character as CCPCharacter;
-                if (ccpCharacter == null) return false;
+                if (ccpCharacter == null)
+                    return false;
+
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
                 foreach (var skill in skillQueue)
                 {
-                    if (m_staticData.ID == skill.Skill.ID) return true;
+                    if (m_staticData.ID == skill.Skill.ID)
+                        return true;
                 }
+
                 return false;
             }
         }
@@ -375,7 +382,9 @@ namespace EVEMon.Common
             get
             {
                 var ccpCharacter = m_character as CCPCharacter;
-                if (ccpCharacter == null) return false;
+                if (ccpCharacter == null)
+                    return false;
+
                 return (ccpCharacter.IsTraining && ccpCharacter.CurrentlyTrainingSkill.Skill == this);
             }
         }
@@ -387,7 +396,9 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (!IsTraining) throw new InvalidOperationException("This character is not in training");
+                if (!IsTraining)
+                    throw new InvalidOperationException("This character is not in training");
+
                 var ccpCharacter = m_character as CCPCharacter;
                 return ccpCharacter.CurrentlyTrainingSkill.Level;
             }
@@ -400,7 +411,9 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (!IsTraining) throw new InvalidOperationException("This character is not in training");
+                if (!IsTraining)
+                    throw new InvalidOperationException("This character is not in training");
+
                 var ccpCharacter = m_character as CCPCharacter;
                 return ccpCharacter.CurrentlyTrainingSkill.EndTime;
             }
@@ -437,7 +450,8 @@ namespace EVEMon.Common
 
                 // Not partially trained ? Then it's 1.0
                 var levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
-                if (this.SkillPoints <= levelSp) return 0.0f;
+                if (this.SkillPoints <= levelSp)
+                    return 0.0f;
 
                 // Partially trained, let's compute the difference with the previous level
                 float nextLevelSp = (float)m_staticData.GetPointsRequiredForLevel(m_level + 1);
@@ -528,11 +542,21 @@ namespace EVEMon.Common
         public static string TimeSpanToDescriptiveText(TimeSpan ts, DescriptiveTextOptions dto, bool includeSeconds)
         {
             StringBuilder sb = new StringBuilder();
+            
             BuildDescriptiveFragment(sb, ts.Days, dto, "days");
             BuildDescriptiveFragment(sb, ts.Hours, dto, "hours");
             BuildDescriptiveFragment(sb, ts.Minutes, dto, "minutes");
-            if (includeSeconds) BuildDescriptiveFragment(sb, ts.Seconds, dto, "seconds");
-            if (sb.Length == 0) sb.Append("(none)");
+            
+            if (includeSeconds)
+            {
+                BuildDescriptiveFragment(sb, ts.Seconds, dto, "seconds");
+            }
+
+            if (sb.Length == 0)
+            {
+                sb.Append("(none)");
+            }
+
             return sb.ToString();
         }
 
@@ -549,6 +573,7 @@ namespace EVEMon.Common
             {
                 return;
             }
+
             if ((dto & DescriptiveTextOptions.IncludeCommas) != 0)
             {
                 if (sb.Length > 0)
@@ -556,26 +581,31 @@ namespace EVEMon.Common
                     sb.Append(", ");
                 }
             }
+
             if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
             {
                 sb.Append(" ");
             }        
 
             sb.Append(p.ToString());
+
             if ((dto & DescriptiveTextOptions.SpaceText) != 0)
             {
                 sb.Append(' ');
             }
+
             if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
             {
                 dstr = dstr.ToUpper();
             }
+
             if ((dto & DescriptiveTextOptions.FullText) != 0)
             {
                 if (p == 1)
                 {
                     dstr = dstr.Substring(0, dstr.Length - 1);
                 }
+
                 sb.Append(dstr);
             }
             else
@@ -670,7 +700,10 @@ namespace EVEMon.Common
         public int GetLeftPointsRequiredToLevel(int level)
         {
             int result = m_staticData.GetPointsRequiredForLevel(level) - this.SkillPoints;
-            if (result < 0) return 0;
+            
+            if (result < 0)
+                return 0;
+
             return result;
         }
 
@@ -682,10 +715,15 @@ namespace EVEMon.Common
         /// <returns>The required nr. of points.</returns>
         public int GetLeftPointsRequiredForLevelOnly(int level)
         {
-            if (level == 0) return 0;
+            if (level == 0)
+                return 0;
+
             int startSP = Math.Max(this.SkillPoints, m_staticData.GetPointsRequiredForLevel(level - 1));
             int result = m_staticData.GetPointsRequiredForLevel(level) - startSP;
-            if (result < 0) return 0;
+
+            if (result < 0)
+                return 0;
+
             return result;
         }
 
@@ -717,7 +755,9 @@ namespace EVEMon.Common
         /// <returns>Time it will take</returns>
         public TimeSpan GetLeftTrainingTimeToNextLevel()
         {
-            if (Level == 5) return TimeSpan.Zero;
+            if (Level == 5)
+                return TimeSpan.Zero;
+
             return GetLeftTrainingTimeToLevel(Level + 1);
         }
         #endregion
