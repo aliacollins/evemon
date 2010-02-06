@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 
 namespace EVEMon
 {
@@ -21,6 +22,7 @@ namespace EVEMon
         private static readonly List<IntPtr> m_foundWindows = new List<IntPtr>();
         private static bool m_autoRelocation;
         private static int counter = 0;
+        private static bool dialogActive;
 
         public static void Initialize()
         {
@@ -206,6 +208,7 @@ namespace EVEMon
         private static void AutoRelocate()
         {
             int screenCount = Screen.AllScreens.Length;
+            int sameResScr = 0;
 
             foreach (IntPtr eveInstance in FindEveWindows())
             {
@@ -213,17 +216,129 @@ namespace EVEMon
                 if (eveInstance == IntPtr.Zero)
                     continue;
 
-                // We skip if the client is minimized
+                Rectangle ncr = GetWindowRect(eveInstance);
                 Rectangle cr = GetClientRectInScreenCoords(eveInstance);
+                int wDiff = ncr.Width - cr.Width;
+                int hDiff = ncr.Height - cr.Height;
+
+                // We skip if the client is minimized
                 if ((cr.Height == 0) && (cr.Width == 0))
                     continue;
 
+                // We skip if the client is already relocated
+                if (wDiff == 0 && hDiff == 0)
+                    continue;
+
+                // Check if monitors with same resolution are present
                 for (int screen = 0; screen < screenCount; screen++)
                 {
-                    if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
-                        continue;
-                    Relocate(eveInstance, screen);
+                    var nextScreen = Math.Min(screen + 1, screenCount - 1);
+                    if (Screen.AllScreens[screen].Bounds.Size == Screen.AllScreens[nextScreen].Bounds.Size)
+                    {
+                        sameResScr += 1;
+                    }
                 }
+
+                // More than one monitor with same resolution ?
+                if (sameResScr > 1)
+                {
+                    // Ensure that the client is the same size as the monitor's resolution
+                    for (int screen = 0; screen < screenCount; screen++)
+                    {
+                        if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
+                            return;
+                    }
+
+                    if (!dialogActive)
+                    {
+                        dialogActive = true;
+                        ShowDialog(eveInstance, sameResScr);
+                        dialogActive = false;
+
+                        // We have changed the enumeration
+                        // so we need to exit
+                        return;
+                    }
+                }
+                // Different monitor resolutions ?
+                // Relocate to the monitor that fits the client
+                else
+                {
+                    for (int screen = 0; screen < screenCount; screen++)
+                    {
+                        if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
+                            continue;
+
+                        Relocate(eveInstance, screen);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shows a dialog to the user requesting
+        /// to which monitor to relocate the client
+        /// </summary>
+        private static void ShowDialog(IntPtr eveInstance, int sameResScr)
+        {
+            var buttonWidth = 0;
+            var buttonHeight = 0;
+            int hPad = (sameResScr > 2 ? 15 : 60);
+            int pad = 30;
+            
+            // We create a dialog for the user
+            using (var dialog = new EVEMonForm())
+            {
+                // We add a panel to the form
+                Panel panel = new Panel();
+                panel.Dock = DockStyle.Fill;
+                dialog.Controls.Add(panel);
+
+                // Add label
+                Label label = new Label();
+                label.AutoSize = true;
+                label.Text = "EVEMon detected that you have more than one\rmonitor with the same resolution.\r\rChoose to which monitor to relocate the EVE client.";
+                panel.Controls.Add(label);
+
+                // Add buttons
+                for (int scr = 0; scr <= sameResScr - 1; scr++)
+                {
+                    int screen = scr;
+                    int spacing = (scr == sameResScr ? 10 : 5);
+
+                    Button button = new Button();
+                    button.Text = "Monitor " + (scr + 1);
+                    button.Location = new Point(hPad + buttonWidth, label.Height + pad);
+                    buttonWidth += button.Width + spacing;
+                    buttonHeight = button.Height;
+                    panel.Controls.Add(button);
+
+                    // Handles the button press
+                    button.Click += (sender, args) =>
+                    {
+                        Relocate(eveInstance, screen);
+                        dialog.Close();
+                    };
+                }
+
+                // Sets form properties
+                dialog.StartPosition = FormStartPosition.CenterScreen;
+                dialog.TopMost = true;
+
+                // Sets the size of the dialog
+                // and prevents manual resizing
+                int dialogWidth = Math.Max((label.Width + pad > buttonWidth + pad ? label.Width + pad : buttonWidth + pad), 220);
+                int dialogHeight = label.Height * 2 + buttonHeight * 2;
+
+                dialog.Size = new Size(dialogWidth, dialogHeight);
+                dialog.MaximumSize = dialog.Size;
+                dialog.MinimumSize = dialog.Size;
+
+                // Centers the label to the panel
+                label.Location = new Point((panel.Width - label.Width) / 2, 10);
+
+                // We show the dialog
+                dialog.ShowDialog();
             }
         }
 
