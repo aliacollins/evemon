@@ -18,6 +18,7 @@ namespace EVEMon.Common.SettingsObjects
             CheckEVEMonVersion = true;
             HttpTimeout = 10;
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
+            IgnoreNetworkStatus = false;
         }
 
         /// <summary>
@@ -63,6 +64,19 @@ namespace EVEMon.Common.SettingsObjects
             get;
             set;
         }
+
+        /// <summary>
+        /// Short circuit the check for network connectivity and try and connect anyway.
+        /// </summary>
+        /// <remarks>
+        /// Hidden setting, no UI. Used for the hand full of people using Wine/Darwine with a broken .NET Network Stack.
+        /// </remarks>
+        [XmlElement("ignoreNetworkStatus")]
+        public bool IgnoreNetworkStatus
+        {
+            get;
+            set;
+        }
         
         internal UpdateSettings Clone()
         {
@@ -71,6 +85,7 @@ namespace EVEMon.Common.SettingsObjects
             clone.CheckTimeOnStartup = this.CheckTimeOnStartup;
             clone.MostRecentDeniedUpdgrade = this.MostRecentDeniedUpdgrade;
             clone.HttpTimeout = this.HttpTimeout;
+            clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
 
             foreach (var pair in this.Periods)
             {

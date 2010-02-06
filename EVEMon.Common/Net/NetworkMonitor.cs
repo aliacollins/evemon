@@ -81,6 +81,10 @@ namespace EVEMon.Common.Net
         {
             get 
             {
+                // edge case: Wine/Darwine user with broken .NET Networking Stack
+                if (Settings.Updates.IgnoreNetworkStatus)
+                    return true;
+
                 if (!s_manualTestRequired)
                     return s_networkAvailable;
 
