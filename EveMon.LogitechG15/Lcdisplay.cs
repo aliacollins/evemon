@@ -465,6 +465,12 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintSkillCompletionMessage() 
         {
+            if (CurrentCharacter == null)
+                return;
+
+            if (CurrentCharacter.SkillQueue.CurrentlyTraining == null)
+                return;
+
             m_lcdLines.Clear();
             m_lcdLines.Add(new TextLine(CurrentCharacter.AdornedName, m_defaultFont));
             m_lcdLines.Add(new TextLine("Has finished training", m_defaultFont));
@@ -472,7 +478,6 @@ namespace EVEMon.LogitechG15
             m_lcdLines.Add(new TextLine(String.Format("{0} more skills in queue", CurrentCharacter.SkillQueue.Count), m_defaultFont));
 
             RenderLines();
-            RenderTime();
             UpdateLcdDisplay(LcdisplayPriority.Alert);
         }
 
