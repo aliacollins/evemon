@@ -51,7 +51,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SkillSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
             cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
@@ -62,6 +63,8 @@ namespace EVEMon.SkillPlanner
                 tbSearchText.Text = Settings.UI.SkillBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
+
+            UpdateContent();
         }
 
         /// <summary>
@@ -82,11 +85,11 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set 
             {
-                if (m_plan == value) return;
-                m_plan = value;
+                if (m_plan == value)
+                    return;
 
+                m_plan = value;
                 m_character = (Character)m_plan.Character;
-                UpdateContent();
             }
         }
 
@@ -98,7 +101,8 @@ namespace EVEMon.SkillPlanner
             get { return m_selectedSkill; }
             set
             {
-                if (m_selectedSkill == value) return;
+                if (m_selectedSkill == value)
+                    return;
                 m_selectedSkill = value;
 
                 // Expands the tree view
@@ -209,7 +213,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public void UpdateContent()
         {
-            if (m_plan == null) return;
+            if (m_plan == null)
+                return;
 
             IEnumerable<Skill> skills = GetFilteredData();
 
@@ -356,7 +361,9 @@ namespace EVEMon.SkillPlanner
         {
             // Update the image list choice
             int index = Settings.UI.SkillBrowser.IconsGoupIndex;
-            if (index == 0) index = 1;
+            if (index == 0)
+                index = 1;
+
             tvItems.ImageList = GetIconSet(index);
             tvItems.ImageList.ColorDepth = ColorDepth.Depth32Bit;
 
@@ -403,10 +410,20 @@ namespace EVEMon.SkillPlanner
                         stn.Tag = skill;
 
                         // We color some nodes
-                        if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills) stn.ForeColor = Color.DarkRed;
-                        if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills) stn.ForeColor = Color.Green;
-                        if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills) stn.ForeColor = Color.RoyalBlue;
-                        if (skill.IsTraining) { stn.BackColor = Color.LightSteelBlue; stn.ForeColor = Color.Black; }
+                        if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
+                            stn.ForeColor = Color.DarkRed;
+
+                        if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
+                            stn.ForeColor = Color.Green;
+
+                        if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
+                            stn.ForeColor = Color.RoyalBlue;
+
+                        if (skill.IsTraining)
+                        {
+                            stn.BackColor = Color.LightSteelBlue;
+                            stn.ForeColor = Color.Black;
+                        }
 
                         groupNode.Nodes.Add(stn);
                     }
@@ -451,7 +468,8 @@ namespace EVEMon.SkillPlanner
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
             string column = GetSortedListData(ref skills, ref labels);
-            if (labels == null) return;
+            if (labels == null)
+                return;
 
             // Update the listview
             lvSortedSkillList.BeginUpdate();
@@ -513,8 +531,14 @@ namespace EVEMon.SkillPlanner
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
                         var time = timesArray[i];
-                        if (time == TimeSpan.Zero) labelsArray[i] = "-";
-                        else labelsArray[i] = Skill.GetRomanForInt(skillsArray[i].Level + 1) + ": " + Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                        if (time == TimeSpan.Zero)
+                        {
+                            labelsArray[i] = "-";
+                        }
+                        else
+                        {
+                            labelsArray[i] = Skill.GetRomanForInt(skillsArray[i].Level + 1) + ": " + Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                        }
                     }
 
                     skills = skillsArray;
@@ -534,8 +558,14 @@ namespace EVEMon.SkillPlanner
                     for (int i = 0; i < labelsArray.Length; i++)
                     {
                         var time = timesArray[i];
-                        if (time == TimeSpan.Zero) labelsArray[i] = "-";
-                        else labelsArray[i] = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                        if (time == TimeSpan.Zero)
+                        {
+                            labelsArray[i] = "-";
+                        }
+                        else
+                        {
+                            labelsArray[i] = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                        }
                     }
 
                     skills = skillsArray;
@@ -744,7 +774,9 @@ namespace EVEMon.SkillPlanner
             if (node.Nodes.Count == 0)
             {
                 Skill skill = node.Tag as Skill;
-                if (skill == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5) return;
+                if (skill == null || m_plan.GetPlannedLevel(skill) == 5 || skill.Level == 5)
+                    return;
+
                 DoDragDrop(node, DragDropEffects.Move);
             }
         }
@@ -761,7 +793,8 @@ namespace EVEMon.SkillPlanner
         {
             Skill skill = null;
             var node = tvItems.SelectedNode;
-            if (node != null) skill = tvItems.SelectedNode.Tag as Skill;
+            if (node != null)
+                skill = tvItems.SelectedNode.Tag as Skill;
 
             // "Show in skills browser/explorer"
             showInSkillsExplorerMenu.Visible = (skill != null);
@@ -868,7 +901,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             // Open the skill explorer
             npw.ShowSkillInBrowser(this.SelectedSkill);
@@ -883,7 +917,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             // Open the skill explorer
             npw.ShowSkillInExplorer(this.SelectedSkill);

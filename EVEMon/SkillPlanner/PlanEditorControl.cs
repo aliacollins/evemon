@@ -38,6 +38,8 @@ namespace EVEMon.SkillPlanner
         private const int ArrowUpIndex = 4;
         private const int ArrowDownIndex = 5;
 
+        private int m_lastImplantSetIndex;
+
         private Font m_plannedSkillFont;
         private Font m_prerequisiteSkillFont;
         private Color m_nonImmedTrainablePlanEntryColor;
@@ -118,7 +120,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
+
             base.OnLoad(e);
         }
 
@@ -136,27 +140,17 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 m_displayPlan = new PlanScratchpad(m_character);
-                UpdateDisplayPlan();
-                
-                // Implant Set control
-                UpdateImplantSetList();
-                cbChooseImplantSet.SelectedIndex = 0;
+                m_lastImplantSetIndex = -1;
 
                 // Children controls
                 this.skillSelectControl.Plan = m_plan;
 
-                // Update the list
-                lvSkills.BeginUpdate();
-                try
-                {
-                    UpdateListColumns();
-                    UpdateSkillList(false);
-                    UpdateSortVisualFeedback();
-                }
-                finally
-                {
-                    lvSkills.EndUpdate();
-                }
+                // Build the plan
+                UpdateDisplayPlan();
+
+                // Update Implant Set control
+                UpdateImplantSetList();
+                cbChooseImplantSet.SelectedIndex = 0;
             }
         }
 
@@ -288,7 +282,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
+
             UpdateDisplayPlan();
             UpdateSkillList(true);
         }
@@ -314,16 +310,6 @@ namespace EVEMon.SkillPlanner
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateSkillList(true);
-        }
-
-        /// <summary>
-        /// When the columns changed in one of the window, we update all the windows.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveClient_PlanColumnsChanged(object sender, EventArgs e)
-        {
-            UpdateListColumns();
         }
 
         /// <summary>
@@ -464,7 +450,9 @@ namespace EVEMon.SkillPlanner
                 {
                     RestoreSelection(selection);
                     var focusedItem = lvSkills.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
-                    if (focusedItem != null) focusedItem.Focused = true;
+                    if (focusedItem != null)
+                        focusedItem.Focused = true;
+                    
                     lvSkills.Select();
                 }
             }
@@ -491,6 +479,7 @@ namespace EVEMon.SkillPlanner
                 var scratchpad = new CharacterScratchpad(m_character);
                 if (m_plan.ChosenImplantSet != null)
                     scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
+
                 m_displayPlan.UpdateStatistics(scratchpad, true, true);
             }
 
@@ -1044,9 +1033,12 @@ namespace EVEMon.SkillPlanner
         {
             if (m_isUpdatingColumns)
                 return;
+
             if (m_columns.Count <= e.ColumnIndex)
                 return;
+
             m_columns[e.ColumnIndex].Width = lvSkills.Columns[e.ColumnIndex].Width;
+            Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
         }
 
         /// <summary>
@@ -1410,7 +1402,7 @@ namespace EVEMon.SkillPlanner
 
         #region Context Menu
         /// <summary>
-        /// When the context menu is opened, we upddate the status of the menus
+        /// When the context menu is opened, we update the status of the menus
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1526,7 +1518,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > "Select items from group..." > Groupname
+        /// Context menu > "Select entries from group..." > Groupname
         /// Selects all the items which belong to the same group.
         /// </summary>
         /// <param name="sender"></param>
@@ -2203,7 +2195,8 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the user clicks the "select columns" link, we display the suggestions window.
+        /// When the user clicks the "select columns" link,
+        /// we display the suggestions window and save the changes.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2219,6 +2212,7 @@ namespace EVEMon.SkillPlanner
                 if (dr == DialogResult.OK)
                 {
                     ImportColumnSettings(f.Columns.Cast<PlanColumnSettings>());
+                    Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
                 }
             }
         }
@@ -2230,7 +2224,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbChooseImplantSet_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cbChooseImplantSet.SelectedIndex == m_lastImplantSetIndex)
+                return;
+
             m_plan.ChosenImplantSet = cbChooseImplantSet.SelectedItem as ImplantSet;
+            m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
             m_displayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
             UpdateSkillList(true);
 
@@ -2246,6 +2244,17 @@ namespace EVEMon.SkillPlanner
         private void cbChooseImplantSet_DropDown(object sender, EventArgs e)
         {
             UpdateImplantSetList();
+        }
+
+        /// <summary>
+        /// When the user doesn't select a set, display the last selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbChooseImplantSet_DropDownClosed(object sender, EventArgs e)
+        {
+            if (cbChooseImplantSet.SelectedIndex == -1)
+                cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
         }
         #endregion
     }

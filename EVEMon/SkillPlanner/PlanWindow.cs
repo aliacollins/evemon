@@ -101,16 +101,6 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On deactivation, we export this window's plan column settings.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnDeactivate(EventArgs e)
-        {
-            base.OnDeactivate(e);
-            Settings.UI.PlanWindow.Columns = planEditor.ExportColumnSettings().ToArray();
-        }
-
-        /// <summary>
         /// On closing, we unsubscribe the global events to help the GC.
         /// </summary>
         /// <param name="e"></param>
@@ -198,17 +188,23 @@ namespace EVEMon.SkillPlanner
                 skillBrowser.Plan = m_plan;
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
                 if (loadoutSelect != null)
+                {
                     loadoutSelect.Plan = m_plan;
+                }
 
                 // Jump to the appropriate tab depending on whether
                 // or not the plan is empty
                 if (m_plan.Count == 0)
+                {
                     tabControl.SelectedTab = tpSkillBrowser;
-                else tabControl.SelectedTab = tpPlanQueue;
+                }
+                else
+                {
+                    tabControl.SelectedTab = tpPlanQueue;
+                }
 
                 // Update controls
                 this.Text = this.Character.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
-                planEditor.UpdateListColumns();
 
                 // Check to see if one or more obsolete entries were found
                 CheckObsoleteEntries();
@@ -605,8 +601,13 @@ namespace EVEMon.SkillPlanner
 
                 // Opens the existing window when there is one, or switch to this plan when no window opened.
                 if (window != null)
+                {
                     window.BringToFront();
-                else this.Plan = plan;
+                }
+                else
+                {
+                    this.Plan = plan;
+                }
 
                 return;
             }

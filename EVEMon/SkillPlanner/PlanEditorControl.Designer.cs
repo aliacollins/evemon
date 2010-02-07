@@ -629,6 +629,7 @@ namespace EVEMon.SkillPlanner
             this.cbChooseImplantSet.Size = new System.Drawing.Size(170, 21);
             this.cbChooseImplantSet.TabIndex = 2;
             this.cbChooseImplantSet.SelectedIndexChanged += new System.EventHandler(this.cbChooseImplantSet_SelectedIndexChanged);
+            this.cbChooseImplantSet.DropDownClosed += new System.EventHandler(this.cbChooseImplantSet_DropDownClosed);
             // 
             // lblChooseImplantSet
             // 
