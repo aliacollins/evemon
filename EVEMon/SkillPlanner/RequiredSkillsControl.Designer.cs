@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.showInSkillsBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -120,10 +120,10 @@ namespace EVEMon.SkillPlanner
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToMenu,
             this.toolStripSeparator1,
-            this.showInSkillsBrowserMenu,
+            this.showInSkillBrowserMenu,
             this.showInSkillExplorerMenu});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(200, 98);
+            this.contextMenu.Size = new System.Drawing.Size(195, 98);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // planToMenu
@@ -137,70 +137,70 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem});
             this.planToMenu.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.planToMenu.Name = "planToMenu";
-            this.planToMenu.Size = new System.Drawing.Size(199, 22);
+            this.planToMenu.Size = new System.Drawing.Size(194, 22);
             this.planToMenu.Text = "&Plan to";
             // 
             // level0ToolStripMenuItem
             // 
             this.level0ToolStripMenuItem.Name = "level0ToolStripMenuItem";
-            this.level0ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level0ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level0ToolStripMenuItem.Text = "&Remove";
             this.level0ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // level1ToolStripMenuItem
             // 
             this.level1ToolStripMenuItem.Name = "level1ToolStripMenuItem";
-            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level1ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level1ToolStripMenuItem.Text = "Level &1";
             this.level1ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // level2ToolStripMenuItem
             // 
             this.level2ToolStripMenuItem.Name = "level2ToolStripMenuItem";
-            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level2ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level2ToolStripMenuItem.Text = "Level &2";
             this.level2ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // level3ToolStripMenuItem
             // 
             this.level3ToolStripMenuItem.Name = "level3ToolStripMenuItem";
-            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level3ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level3ToolStripMenuItem.Text = "Level &3";
             this.level3ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // level4ToolStripMenuItem
             // 
             this.level4ToolStripMenuItem.Name = "level4ToolStripMenuItem";
-            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level4ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level4ToolStripMenuItem.Text = "Level &4";
             this.level4ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // level5ToolStripMenuItem
             // 
             this.level5ToolStripMenuItem.Name = "level5ToolStripMenuItem";
-            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.level5ToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(191, 6);
             // 
-            // showInSkillsBrowserMenu
+            // showInSkillBrowserMenu
             // 
-            this.showInSkillsBrowserMenu.Name = "showInSkillsBrowserMenu";
-            this.showInSkillsBrowserMenu.Size = new System.Drawing.Size(199, 22);
-            this.showInSkillsBrowserMenu.Text = "Show in Skills &Browser...";
-            this.showInSkillsBrowserMenu.Click += new System.EventHandler(this.showInSkillsBrowserMenu_Click);
+            this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
+            this.showInSkillBrowserMenu.Size = new System.Drawing.Size(194, 22);
+            this.showInSkillBrowserMenu.Text = "Show in Skill &Browser...";
+            this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
             // 
             // showInSkillExplorerMenu
             // 
             this.showInSkillExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
             this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
-            this.showInSkillExplorerMenu.Size = new System.Drawing.Size(199, 22);
+            this.showInSkillExplorerMenu.Size = new System.Drawing.Size(194, 22);
             this.showInSkillExplorerMenu.Text = "Show in Skill Explorer...";
-            this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillsExplorerMenu_Click);
+            this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
             // 
             // RequiredSkillsControl
             // 
@@ -233,7 +233,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem level4ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem level5ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem showInSkillsBrowserMenu;
+        private System.Windows.Forms.ToolStripMenuItem showInSkillBrowserMenu;
         private System.Windows.Forms.ToolStripMenuItem showInSkillExplorerMenu;
         private System.Windows.Forms.ToolStripMenuItem level0ToolStripMenuItem;
     }

@@ -144,6 +144,10 @@ namespace EVEMon
             }
             
             ccpCharacter = m_character as CCPCharacter;
+
+            // if the character is not a CCPCharacter it does not have a skill queue.
+            if (ccpCharacter == null)
+                return;
             
             // When the skill queue hasn't changed don't do anything
             if (!QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))

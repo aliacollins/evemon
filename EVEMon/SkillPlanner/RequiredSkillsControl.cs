@@ -247,11 +247,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context > Show in Skills Browser
+        /// Context > Show in Skill Browser
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showInSkillsBrowserMenu_Click(object sender, EventArgs e)
+        private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
@@ -267,7 +267,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showInSkillsExplorerMenu_Click(object sender, EventArgs e)
+        private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);

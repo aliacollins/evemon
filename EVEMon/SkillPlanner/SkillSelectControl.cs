@@ -118,10 +118,10 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets true whether the control is hosted in the skills browser. When true, the "Show in skills browser" context menus won't be displayed.
+        /// Gets or sets true whether the control is hosted in the skill browser. When true, the "Show in skill browser" context menus won't be displayed.
         /// </summary>
         [Category("Behavior")]
-        [Description("When true, the \"Show in Skills Browser\" context menus won't be displayed.")]
+        [Description("When true, the \"Show in Skill Browser\" context menus won't be displayed.")]
         [DefaultValue(false)]
         public bool HostedInSkillBrowser
         {
@@ -796,9 +796,9 @@ namespace EVEMon.SkillPlanner
             if (node != null)
                 skill = tvItems.SelectedNode.Tag as Skill;
 
-            // "Show in skills browser/explorer"
-            showInSkillsExplorerMenu.Visible = (skill != null);
-            showInSkillsBrowserMenu.Visible = (skill != null && !m_hostedInSkillBrowser);
+            // "Show in skill browser/explorer"
+            showInSkillExplorerMenu.Visible = (skill != null);
+            showInSkillBrowserMenu.Visible = (skill != null && !m_hostedInSkillBrowser);
 
 
             // "Collapse" and "Expand" menus
@@ -836,8 +836,8 @@ namespace EVEMon.SkillPlanner
                 PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, this.SelectedSkill, i);
             }
 
-            // "Show in skills browser"
-            showInSkillsBrowserListMenu.Visible = !m_hostedInSkillBrowser;
+            // "Show in skill browser"
+            showInSkillBrowserListMenu.Visible = !m_hostedInSkillBrowser;
         }
 
         /// <summary>
@@ -893,11 +893,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Show In Skills Browser
+        /// Context menu > Show In Skill Browser
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showInSkillsBrowserMenu_Click(object sender, EventArgs e)
+        private void showInSkillBrowserMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
@@ -913,7 +913,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showInSkillsExplorerMenu_Click(object sender, EventArgs e)
+        private void showInSkillExplorerMenu_Click(object sender, EventArgs e)
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);

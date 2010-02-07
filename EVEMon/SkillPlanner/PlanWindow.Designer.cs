@@ -279,7 +279,7 @@ namespace EVEMon.SkillPlanner
             this.tpSkillBrowser.Name = "tpSkillBrowser";
             this.tpSkillBrowser.Size = new System.Drawing.Size(710, 536);
             this.tpSkillBrowser.TabIndex = 0;
-            this.tpSkillBrowser.Text = "Skills browser";
+            this.tpSkillBrowser.Text = "Skill browser";
             this.tpSkillBrowser.UseVisualStyleBackColor = true;
             // 
             // skillBrowser

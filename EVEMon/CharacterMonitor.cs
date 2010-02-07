@@ -65,7 +65,7 @@ namespace EVEMon
         {
             m_character = character;
             this.skillsList.Character = character;
-            this.skillsQueueList.Character = character;
+            this.skillQueueList.Character = character;
             this.ordersList.Character = character;
             notificationList.Notifications = null;
 
@@ -79,7 +79,7 @@ namespace EVEMon
             {
                 pnlTraining.Visible = false;
                 skillQueuePanel.Visible = false;
-                skillsQueueIcon.Visible = false;
+                skillQueueIcon.Visible = false;
                 ordersIcon.Visible = false;
             }
 
@@ -224,14 +224,10 @@ namespace EVEMon
             // Update the known skills count, total SP, skills at lv5, clone limit
             StringBuilder header = new StringBuilder();
 
-            header.AppendFormat(CultureInfo.CurrentCulture, "Known Skills: {0}", m_character.KnownSkillCount);
-            header.AppendLine();
-            header.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5));
-            header.AppendLine();
-            header.AppendFormat(CultureInfo.CurrentCulture, "Total SP: {0:#,##0}", m_character.SkillPoints);
-            header.AppendLine();
-            header.AppendFormat(CultureInfo.CurrentCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints);
-            header.AppendLine();
+            header.AppendFormat(CultureInfo.CurrentCulture, "Known Skills: {0}{1}", m_character.KnownSkillCount, Environment.NewLine);
+            header.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level V: {0}{1}", m_character.GetSkillCountAtLevel(5), Environment.NewLine);
+            header.AppendFormat(CultureInfo.CurrentCulture, "Total SP: {0:#,##0}{1}", m_character.SkillPoints, Environment.NewLine);
+            header.AppendFormat(CultureInfo.CurrentCulture, "Clone Limit: {0:#,##0}{1}", m_character.CloneSkillPoints, Environment.NewLine);
             header.Append(m_character.CloneName);
 
             lblSkillHeader.Text = header.ToString();
@@ -279,7 +275,7 @@ namespace EVEMon
                 {
                     var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
                     lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
-                    if (skillsQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+                    if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
                         skillQueueControl.Invalidate();
                     skillQueuePanel.Visible = true;
                     skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 || Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
@@ -295,7 +291,7 @@ namespace EVEMon
             {
                 var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
                 lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
-                if (skillsQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+                if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
                     skillQueueControl.Invalidate();
                 skillQueuePanel.Visible = true;
                 skillQueueTimePanel.Visible = false;
@@ -502,7 +498,7 @@ namespace EVEMon
                 pbCharImage.Character = m_character;
                 pbCharImage.Visible = true;
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                skillsQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 ordersGroupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -512,7 +508,7 @@ namespace EVEMon
             {
                 pbCharImage.Visible = false;
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
-                skillsQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 ordersGroupMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;

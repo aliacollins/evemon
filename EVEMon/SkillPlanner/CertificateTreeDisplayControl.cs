@@ -465,7 +465,7 @@ namespace EVEMon.SkillPlanner
                 tsmAddToPlan.Enabled = false;
                 tsmAddToPlan.Text = "Plan...";
 
-                // Update "show in skills browser" menu
+                // Update "show in skill browser" menu
                 showInMenuSeparator.Visible = false;
                 showInExplorerMenu.Visible = false;
                 showInBrowserMenu.Visible = false;
@@ -499,9 +499,9 @@ namespace EVEMon.SkillPlanner
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
                     tsmAddToPlan.Text = "Plan \"" + skill.ToString() + " " + Skill.GetRomanForInt(prereq.Level) + "\"";
 
-                    // Update "show in skills browser" menu
+                    // Update "show in skill browser" menu
                     showInBrowserMenu.Enabled = true;
-                    showInBrowserMenu.Text = "Show in Skills Browser";
+                    showInBrowserMenu.Text = "Show in Skill Browser";
 
                     // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = true;
@@ -553,7 +553,7 @@ namespace EVEMon.SkillPlanner
             {
                 npw.ShowCertInBrowser(cert);
             }
-            // When a skill is selected, we select it in the skills browser
+            // When a skill is selected, we select it in the skill browser
             else
             {
                 SkillLevel prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
