@@ -1414,12 +1414,16 @@ namespace EVEMon.SkillPlanner
                 item.Visible = true;
                 item.Enabled = false;
             }
+
             // Reset text in case of previous multiple selection
             miRemoveFromPlan.Text = "Remove from Plan";
 
             // Nothing more to do when nothing selected
             if (lvSkills.SelectedItems.Count == 0)
                 return;
+
+            // There is something to remove (see guard clause above)
+            miRemoveFromPlan.Enabled = true;
 
             // When there is only one selected item...
             if (lvSkills.SelectedItems.Count == 1)
@@ -1429,7 +1433,6 @@ namespace EVEMon.SkillPlanner
                 // When the selected item is a remapping, only "remove from plan" is visible
                 if (entry == null)
                 {
-                    miRemoveFromPlan.Enabled = true;
                     return;
                 }
 
@@ -1445,10 +1448,6 @@ namespace EVEMon.SkillPlanner
 
                 // "Change level"
                 miChangeLevel.Enabled = SetChangeLevelMenu();
-
-                // If skill is level 5 "remove from plan" is visible
-                if (entry.Level == 5)
-                    miRemoveFromPlan.Enabled = true;
 
                 // "Plan groups"
                 if (entry.PlanGroups.Count > 0)
@@ -1475,7 +1474,6 @@ namespace EVEMon.SkillPlanner
                 miCopyToNewPlan.Enabled = true;
                 miMarkOwned.Enabled = true;
                 miChangePriority.Enabled = true;
-                miRemoveFromPlan.Enabled = true;
                 var operation = PrepareSelectionRemoval();
                 if (PlanHelper.RequiresWindow(operation))
                     miRemoveFromPlan.Text += "...";
@@ -1508,10 +1506,10 @@ namespace EVEMon.SkillPlanner
 
             // Scroll through levels (and menus, one per level)
             bool result = false;
-            for (int i = 0; i <= 5; i++)
+            for (int level = 1; level <= 5; level++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[i], m_plan, pe.CharacterSkill, i);
-                result |= miChangeLevel.DropDownItems[i].Enabled;
+                PlanHelper.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[level - 1], m_plan, pe.CharacterSkill, level);
+                result |= miChangeLevel.DropDownItems[level - 1].Enabled;
             }
 
             return result;

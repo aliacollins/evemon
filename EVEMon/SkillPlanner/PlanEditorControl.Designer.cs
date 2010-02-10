@@ -40,7 +40,6 @@ namespace EVEMon.SkillPlanner
             this.miCopyToNewPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.miChangeLevel = new System.Windows.Forms.ToolStripMenuItem();
-            this.miChangeTo0 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo1 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo2 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -171,7 +170,6 @@ namespace EVEMon.SkillPlanner
             // miChangeLevel
             // 
             this.miChangeLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miChangeTo0,
             this.miChangeTo1,
             this.miChangeTo2,
             this.miChangeTo3,
@@ -182,18 +180,10 @@ namespace EVEMon.SkillPlanner
             this.miChangeLevel.Size = new System.Drawing.Size(250, 22);
             this.miChangeLevel.Text = "Change Planned Level...";
             // 
-            // miChangeTo0
-            // 
-            this.miChangeTo0.Name = "miChangeTo0";
-            this.miChangeTo0.Size = new System.Drawing.Size(117, 22);
-            this.miChangeTo0.Tag = "0";
-            this.miChangeTo0.Text = "Remove";
-            this.miChangeTo0.Click += new System.EventHandler(this.miChangeToLevel_Click);
-            // 
             // miChangeTo1
             // 
             this.miChangeTo1.Name = "miChangeTo1";
-            this.miChangeTo1.Size = new System.Drawing.Size(117, 22);
+            this.miChangeTo1.Size = new System.Drawing.Size(152, 22);
             this.miChangeTo1.Tag = "1";
             this.miChangeTo1.Text = "Level 1";
             this.miChangeTo1.Click += new System.EventHandler(this.miChangeToLevel_Click);
@@ -201,7 +191,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo2
             // 
             this.miChangeTo2.Name = "miChangeTo2";
-            this.miChangeTo2.Size = new System.Drawing.Size(117, 22);
+            this.miChangeTo2.Size = new System.Drawing.Size(152, 22);
             this.miChangeTo2.Tag = "2";
             this.miChangeTo2.Text = "Level 2";
             this.miChangeTo2.Click += new System.EventHandler(this.miChangeToLevel_Click);
@@ -209,7 +199,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo3
             // 
             this.miChangeTo3.Name = "miChangeTo3";
-            this.miChangeTo3.Size = new System.Drawing.Size(117, 22);
+            this.miChangeTo3.Size = new System.Drawing.Size(152, 22);
             this.miChangeTo3.Tag = "3";
             this.miChangeTo3.Text = "Level 3";
             this.miChangeTo3.Click += new System.EventHandler(this.miChangeToLevel_Click);
@@ -217,7 +207,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo4
             // 
             this.miChangeTo4.Name = "miChangeTo4";
-            this.miChangeTo4.Size = new System.Drawing.Size(117, 22);
+            this.miChangeTo4.Size = new System.Drawing.Size(152, 22);
             this.miChangeTo4.Tag = "4";
             this.miChangeTo4.Text = "Level 4";
             this.miChangeTo4.Click += new System.EventHandler(this.miChangeToLevel_Click);
@@ -225,7 +215,7 @@ namespace EVEMon.SkillPlanner
             // miChangeTo5
             // 
             this.miChangeTo5.Name = "miChangeTo5";
-            this.miChangeTo5.Size = new System.Drawing.Size(117, 22);
+            this.miChangeTo5.Size = new System.Drawing.Size(152, 22);
             this.miChangeTo5.Tag = "5";
             this.miChangeTo5.Text = "Level 5";
             this.miChangeTo5.Click += new System.EventHandler(this.miChangeToLevel_Click);
@@ -718,7 +708,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillExplorer;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem miChangeLevel;
-        private System.Windows.Forms.ToolStripMenuItem miChangeTo0;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo1;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo2;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo3;
