@@ -145,7 +145,7 @@ namespace EVEMon
             
             ccpCharacter = m_character as CCPCharacter;
 
-            // if the character is not a CCPCharacter it does not have a skill queue.
+            // If the character is not a CCPCharacter it does not have a skill queue.
             if (ccpCharacter == null)
                 return;
             

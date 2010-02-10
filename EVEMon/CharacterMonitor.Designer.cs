@@ -702,7 +702,7 @@ namespace EVEMon
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.skillQueuePage;
+            this.multiPanel.SelectedPage = this.skillsPage;
             this.multiPanel.Size = new System.Drawing.Size(568, 142);
             this.multiPanel.TabIndex = 14;
             // 
@@ -828,7 +828,7 @@ namespace EVEMon
             this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillQueueIcon.Name = "skillQueueIcon";
             this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
-            this.skillQueueIcon.Tag = "skillsQueuePage";
+            this.skillQueueIcon.Tag = "skillQueuePage";
             this.skillQueueIcon.Text = "Queue";
             this.skillQueueIcon.ToolTipText = "Display skills in queue";
             this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
