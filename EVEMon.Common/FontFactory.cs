@@ -11,6 +11,19 @@ namespace EVEMon.Common
     /// </summary>
     public static class FontFactory
     {
+
+        
+        
+        /// <summary>
+        /// Variable to store default font in
+        /// </summary>
+        /// <remarks>
+        /// DefaultFont is cached for the following reasons:
+        /// 1) improve the display time of the traybar popup.
+        /// 2) remove the 50+ TrueType exceptions which SystemFonts.DefaultFont generates (at least on WinXP).
+        /// </remarks>
+        private static Font s_CachedDefaultFont = null;
+        
         /// <summary>
         /// Gets the default font.
         /// </summary>
@@ -19,7 +32,9 @@ namespace EVEMon.Common
         {
             get
             {
-                return SystemFonts.DefaultFont;
+                if (s_CachedDefaultFont == null)
+                    s_CachedDefaultFont = SystemFonts.DefaultFont;
+                return s_CachedDefaultFont;
             }
         }
 
