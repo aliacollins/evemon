@@ -141,24 +141,43 @@ namespace EVEMon.SkillPlanner
         private void UpdateHeader()
         {
             StringBuilder sb = new StringBuilder();
-            if (m_skill.IsTraining) sb.AppendFormat(CultureConstants.DefaultCulture, "{0} - In Training", m_skill.Name);
+            if (m_skill.IsTraining)
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} - In Training", m_skill.Name);
 
             sb.Append(" (");
             if (m_skill.IsKnown)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with ", m_skill.Level);
-                if (m_skill.SkillPoints > 0) sb.AppendFormat(CultureConstants.DefaultCulture, "{0:0,0,0} sp)", m_skill.SkillPoints);
-                else sb.Append(" 0 sp)");
+                if (m_skill.SkillPoints > 0)
+                {
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "{0:0,0,0} sp)", m_skill.SkillPoints);
+                }
+                else
+                {
+                    sb.Append(" 0 sp)");
+                }
             }
             else
             {
                 sb.Append("Not Trained - prereqs ");
 
-                if (m_skill.ArePrerequisitesMet) sb.Append("met, skillbook ");
-                else sb.Append("not met, skillbook ");
+                if (m_skill.ArePrerequisitesMet)
+                {
+                    sb.Append("met, skillbook ");
+                }
+                else
+                {
+                    sb.Append("not met, skillbook ");
+                }
 
-                if (m_skill.IsOwned) sb.Append("is owned.)");
-                else sb.Append("is not owned, book costs " + m_skill.FormattedCost + " ISK)");
+                if (m_skill.IsOwned)
+                {
+                    sb.Append("is owned.)");
+                }
+                else
+                {
+                    sb.Append("is not owned, book costs " + m_skill.FormattedCost + " ISK)");
+                }
             }
 
             lblSkill.Text = sb.ToString();
@@ -227,11 +246,14 @@ namespace EVEMon.SkillPlanner
 
                     // Gets the enabled skills and check it's not empty
                     var enabledSkills = m_skill.Character.Skills.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill && y.Level == i) && x.IsPublic).ToArray();
-                    if (enabledSkills.IsEmpty()) continue;
+                    if (enabledSkills.IsEmpty())
+                        continue;
 
                     // Add a node for this skill level
                     TreeNode levelNode = new TreeNode(skillLevel.ToString());
-                    if (m_skill.Level >= i) levelNode.Text += " (Trained)";
+                    if (m_skill.Level >= i)
+                        levelNode.Text += " (Trained)";
+
                     levelNode.ForeColor = Color.DarkBlue;
 
                     // Is it a plain alphabetical presentation ?
@@ -287,7 +309,8 @@ namespace EVEMon.SkillPlanner
             try
             {
                 tvEntity.Nodes.Clear();
-                if (m_skill == null) return;
+                if (m_skill == null)
+                    return;
 
                 List<Item> items = new List<Item>(StaticItems.AllItems.
                     Where(x => x.MarketGroup.ParentGroup.ID != DBConstants.SkillGroupID). // exclude skills
@@ -301,11 +324,14 @@ namespace EVEMon.SkillPlanner
 
                     // Gets the enabled objects and check it's not empty
                     var enabledObjects = items.Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData && y.Level == i));
-                    if (enabledObjects.IsEmpty()) continue;
+                    if (enabledObjects.IsEmpty())
+                        continue;
 
                     // Add a node for this skill level
                     TreeNode levelNode = new TreeNode(skillLevel.ToString());
-                    if (m_skill.Level >= i) levelNode.Text += " (Trained)";
+                    if (m_skill.Level >= i)
+                        levelNode.Text += " (Trained)";
+
                     levelNode.ForeColor = Color.DarkBlue;
 
                     // Is it a plain alphabetical presentation ?
@@ -379,7 +405,8 @@ namespace EVEMon.SkillPlanner
             foreach (var category in marketGroup.SubGroups)
             {
                 var children = CreateMarketGroupsNode(category, items);
-                if (children.IsEmpty()) continue;
+                if (children.IsEmpty())
+                    continue;
 
                 TreeNode node = new TreeNode(category.Name);
                 node.Nodes.AddRange(children.ToArray());
@@ -407,7 +434,8 @@ namespace EVEMon.SkillPlanner
             skillNode.Tag = obj;
 
             // When all prereqs satisifed, keep the default color
-            if (prerequisites.All(x => x.IsKnown)) return skillNode;
+            if (prerequisites.All(x => x.IsKnown))
+                return skillNode;
 
             // Are all other prerequisites known ?
             if (prerequisites.All(x => x.IsKnown || x.Skill == m_skill))
@@ -487,18 +515,26 @@ namespace EVEMon.SkillPlanner
         void tvSkills_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             this.tvSkills.SelectedNode = e.Node;
-            if (e.Button != MouseButtons.Right) return;
+            if (e.Button != MouseButtons.Right)
+                return;
 
+            // Display menu only when we access the skill explorer through a plan
+            if (m_planWindow == null)
+                return;
+            
             // Do not display menu for non-skill nodes
             var skill = e.Node.Tag as Skill;
-            if (skill == null) return;
+            if (skill == null)
+                return;
 
             // Updates selection
             tvSkills.SelectedNode = e.Node;
 
             // Update the "plan to X" menus
             tsAddPlan.Enabled = false;
-            if (skill.Level < 5) tsAddPlan.Enabled = true;
+            if (skill.Level < 5)
+                tsAddPlan.Enabled = true;
+
             for (int i = 1; i <= 5; i++)
             {
                 PlanHelper.UpdatesRegularPlanToMenu(tsAddPlan.DropDownItems[i - 1], m_planWindow.Plan, skill, i);
@@ -541,6 +577,7 @@ namespace EVEMon.SkillPlanner
             var skill = GetSelectedSkill();
             if (skill == null)
                 return;
+
             this.Skill = skill;
         }
 
@@ -554,6 +591,7 @@ namespace EVEMon.SkillPlanner
             var skill = GetSelectedSkill();
             if (skill == null)
                 return;
+
             m_planWindow.ShowSkillInBrowser(skill);
         }
 
@@ -608,12 +646,24 @@ namespace EVEMon.SkillPlanner
             sb.Append("Prereqs ");
 
             // Could we train it now?
-            if (prereq.Skill.Prerequisites.AreTrained()) sb.Append("met, skillbook ");
-            else sb.Append("not met, skillbook ");
+            if (prereq.Skill.Prerequisites.AreTrained())
+            {
+                sb.Append("met, skillbook ");
+            }
+            else
+            {
+                sb.Append("not met, skillbook ");
+            }
 
             // Do we own  the skillbook?
-            if (prereq.Skill.IsOwned) sb.AppendLine(" owned.)");
-            else sb.AppendLine("not owned,\n costs " + prereq.Skill.FormattedCost + " ISK)\n");
+            if (prereq.Skill.IsOwned)
+            {
+                sb.AppendLine(" owned.)");
+            }
+            else
+            {
+                sb.AppendLine("not owned,\n costs " + prereq.Skill.FormattedCost + " ISK)\n");
+            }
         }
         #endregion
 
@@ -640,6 +690,10 @@ namespace EVEMon.SkillPlanner
         {
             tvEntity.SelectedNode = e.Node;
             if (e.Button != MouseButtons.Right)
+                return;
+            
+            // Display menu only when we access the skill explorer through a plan
+            if (m_planWindow == null)
                 return;
 
             // Display menu only for items or ships nodes (not market groups and level nodes)
@@ -743,14 +797,23 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvEntity_DoubleClick(object sender, EventArgs e)
         {
+            if (m_planWindow == null)
+                return;
+
             var item = GetSelectedItem();
             if (item == null)
                 return;
             
             Item ship = item as Ship;
 
-            if (ship != null) m_planWindow.ShowShipInBrowser(ship);
-            else if (item != null) m_planWindow.ShowItemInBrowser(item);
+            if (ship != null)
+            {
+                m_planWindow.ShowShipInBrowser(ship);
+            }
+            else if (item != null)
+            {
+                m_planWindow.ShowItemInBrowser(item);
+            }
         }
 
         /// <summary>
