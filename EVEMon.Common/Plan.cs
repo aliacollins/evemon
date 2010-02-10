@@ -749,7 +749,10 @@ namespace EVEMon.Common
         /// </summary>
         public void AcknoledgeInvalidEntries()
         {
-            m_invalidEntries.ForEach(x => x.Acknowledged = true);
+            foreach (var entry in m_invalidEntries)
+            {
+                entry.Acknowledged = true;
+            }
         }
 
         /// <summary>

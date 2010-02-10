@@ -21,7 +21,8 @@
     <SccProvider>
     </SccProvider>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>LinqBridge.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,38 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grouping.cs" />
-    <Compile Include="Query Operators\Aggregation Operators.cs" />
-    <Compile Include="Query Operators\Conversion Operators.cs" />
-    <Compile Include="Query Operators\Aggregation Operators - Average.cs" />
-    <Compile Include="Query Operators\Element Operators.cs" />
-    <Compile Include="Query Operators\Filtering Operators.cs" />
-    <Compile Include="Query Operators\Generation Operators.cs" />
-    <Compile Include="Query Operators\Grouping Operators.cs" />
-    <Compile Include="Query Operators\Joining Operators.cs" />
-    <Compile Include="Query Operators\Misc Operators.cs" />
-    <Compile Include="Query Operators\Enumerable Private.cs" />
-    <Compile Include="Query Operators\Projection Operators.cs" />
-    <Compile Include="Query Operators\Quantifiers.cs" />
-    <Compile Include="Query Operators\Set Operators.cs" />
-    <Compile Include="IGrouping.cs" />
-    <Compile Include="Lookup.cs" />
-    <Compile Include="Query Operators\Aggregation Operators - Sum.cs" />
-    <Compile Include="ThenByEnumerable.cs" />
-    <Compile Include="ExtensionAttribute.cs" />
-    <Compile Include="Func and Action delegates.cs" />
-    <Compile Include="ILookup.cs" />
-    <Compile Include="IOrderedEnumerable.cs" />
-    <Compile Include="Query Operators\Ordering Operators.cs" />
-    <Compile Include="OrderByEnumerable.cs" />
+    <Compile Include="Action.cs" />
+    <Compile Include="LinqBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="License.txt" />
-    <None Include="LinqBridge.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
