@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Collections;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
-namespace System.Windows.Forms
+namespace EVEMon.Common.Controls
 {
-    public static class TreeViewextensions
+    public static class TreeViewExtensions
     {
         /// <summary>
-        /// Gets an eneumerator over all the tree nodes
+        /// Gets an enumerator over all the tree nodes
         /// </summary>
         /// <param name="treeView"></param>
         /// <returns></returns>
-        public static IEnumerable<TreeNode> GetAllNodes(this TreeView treeView)
+        public static IEnumerable<TreeNode> GetAllNodes(this EVEMon.Common.Controls.TreeView treeView)
         {
             Stack<IEnumerator> enumerators = new Stack<IEnumerator>();
             IEnumerator currentEnumerator = treeView.Nodes.GetEnumerator();
@@ -71,7 +70,7 @@ namespace System.Windows.Forms
         /// </summary>
         /// <param name="treeView"></param>
         /// <returns></returns>
-        public static IEnumerable<TreeNode> GetAllVisibleNodes(this TreeView treeView)
+        public static IEnumerable<TreeNode> GetAllVisibleNodes(this EVEMon.Common.Controls.TreeView treeView)
         {
             for (TreeNode node = treeView.TopNode; node != null; node = node.NextVisibleNode)
             {
@@ -86,11 +85,12 @@ namespace System.Windows.Forms
         /// <param name="treeView"></param>
         /// <param name="tag">The tag to search for, using object references comparison</param>
         /// <returns>The matching node if found, null otherwise</returns>
-        public static TreeNode GetNodeWithTag(this TreeView treeView, Object tag)
+        public static TreeNode GetNodeWithTag(this EVEMon.Common.Controls.TreeView treeView, Object tag)
         {
             foreach (var node in GetAllNodes(treeView))
             {
-                if (Object.ReferenceEquals(node.Tag, tag)) return node;
+                if (Object.ReferenceEquals(node.Tag, tag))
+                    return node;
             }
             return null;
         }
@@ -102,7 +102,7 @@ namespace System.Windows.Forms
         /// <param name="treeView"></param>
         /// <param name="tag"></param>
         /// <returns>The selected node, null if this tag was not found</returns>
-        public static TreeNode SelectNodeWithTag(this TreeView treeView, Object tag)
+        public static TreeNode SelectNodeWithTag(this EVEMon.Common.Controls.TreeView treeView, Object tag)
         {
             // Is it already selected ?
             if (treeView.SelectedNode != null && treeView.SelectedNode.Tag == tag)
@@ -115,7 +115,8 @@ namespace System.Windows.Forms
                 if (Object.ReferenceEquals(node.Tag, tag))
                 {
                     node.EnsureVisible();
-                    treeView.SelectedNode = node;
+                    treeView.UnselectAllNodesExceptNode(node, TreeViewAction.ByMouse);
+                    treeView.SelectNode(node, true, TreeViewAction.ByMouse);
                     return node;
                 }
             }

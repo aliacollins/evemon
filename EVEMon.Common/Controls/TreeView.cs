@@ -66,7 +66,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -473,7 +472,7 @@ namespace EVEMon.Common.Controls
 		/// </summary>
 		/// <param name="nodeKeepSelected">Node not to touch.</param>
 		/// <param name="tva">Specifies the action that caused the selection change.</param>
-		private void UnselectAllNodesExceptNode(TreeNode nodeKeepSelected, TreeViewAction tva)
+		internal void UnselectAllNodesExceptNode(TreeNode nodeKeepSelected, TreeViewAction tva)
 		{
 			// First, build list of nodes that need to be unselected
 			ArrayList arrNodesToDeselect = new ArrayList();
@@ -542,7 +541,7 @@ namespace EVEMon.Common.Controls
 		/// <param name="select">True to select node, false to unselect node.</param>
 		/// <param name="tva">Specifies the action that caused the selection change.</param>
 		/// <returns>True if node was selected, false if not.</returns>
-		private bool SelectNode(TreeNode tn, bool select, TreeViewAction tva)
+		internal bool SelectNode(TreeNode tn, bool select, TreeViewAction tva)
 		{
 			bool blnSelected = false;
 

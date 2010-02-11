@@ -1,13 +1,15 @@
 using System;
-using System.Linq;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Collections;
-using System.IO;
-using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+
+using EVEMon.Common;
+using EVEMon.Common.Controls;
+using EVEMon.Common.SettingsObjects;
 
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
@@ -112,7 +114,6 @@ namespace EVEMon.SkillPlanner
                 if (SelectedSkillChanged != null)
                 {
                     SelectedSkillChanged(this, new EventArgs());
-                    tvItems.ProcessNodeRange(tvItems.LastSelectedNode, tvItems.SelectNodeWithTag(value), new MouseEventArgs(MouseButtons.Left, 1, 60, 0, 0), Control.ModifierKeys, TreeViewAction.ByMouse, true);
                 }
             }
         }

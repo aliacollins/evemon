@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using EVEMon.Common;
 using System.ComponentModel;
+using System.Windows.Forms;
+
+using EVEMon.Common;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 
 namespace EVEMon.SkillPlanner
