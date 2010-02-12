@@ -19,8 +19,6 @@ namespace EVEMon.Common
     /// </summary>
     public static class CharacterExporter
     {
-        private static SerializableCharacterSkill mergedSkill = new SerializableCharacterSkill();
-        
         /// <summary>
         /// Creates a TXT format file for character exportation.
         /// </summary>
@@ -77,33 +75,15 @@ namespace EVEMon.Common
                              skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
 
                 // Skills
-                foreach (var skill in skillGroup)
+                foreach (var skill in skillGroup.Where(x => x.IsKnown))
                 {
-                    int skillLevel;
-                    int skillPoints;
-
-                    if (plan != null)
-                    {
-                        GetMergedSkill(plan, skill);
-
-                        if (!skill.IsKnown && mergedSkill.Level == 0)
-                            continue;
-
-                        skillLevel = mergedSkill.Level;
-                        skillPoints = mergedSkill.Skillpoints;
-                    }
-                    else
-                    {
-                        if (!skill.IsKnown)
-                            continue;
-
-                        skillLevel = skill.Level;
-                        skillPoints = skill.SkillPoints;
-                    }
+                    var mergedSkill = GetMergedSkill(plan, skill);
+                    if ((plan != null) && (mergedSkill.Level == 0))
+                        continue;
 
                     string skillDesc = skill.ToString() + " (" + skill.Rank.ToString() + ")";
                     builder.AppendFormat(CultureInfo.CurrentCulture, ": {0} L{1} {2}/{3} Points{4}",
-                        skillDesc.PadRight(45), skillLevel.ToString().PadRight(5), skillPoints.ToString("#,##0"),
+                        skillDesc.PadRight(45), mergedSkill.Level.ToString().PadRight(5), mergedSkill.Skillpoints.ToString("#,##0"),
                         skill.StaticData.GetPointsRequiredForLevel(5).ToString("#,##0"), Environment.NewLine);
 
                     // If the skill is in training...
@@ -133,22 +113,9 @@ namespace EVEMon.Common
             foreach (var skill in character.Skills.Where(x => x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
                                                                         && x.Group.ID != DBConstants.LearningSkillsGroupID
                                                                         && x.Group.ID != DBConstants.SocialSkillsGroupID
-                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID))
+                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID).Select(x => GetMergedSkill(plan, x)))
             {
-                int skillLevel;
-
-                if (plan != null)
-                {
-                    GetMergedSkill(plan, skill);
-
-                    skillLevel = mergedSkill.Level;
-                }
-                else
-                {
-                    skillLevel = skill.Level;
-                }
-
-                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}={1}{2}", skill.Name, skillLevel, Environment.NewLine);
+                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}={1}{2}", skill.Name, skill.Level, Environment.NewLine);
             }
 
             if (character.Identity.Account != null)
@@ -212,37 +179,19 @@ namespace EVEMon.Common
 
                 var outGroup = new OutputSkillGroup { Name = skillGroup.Name, SkillsCount = count, TotalSP = skillGroup.TotalSP };
 
-                foreach (var skill in skillGroup)
+                foreach (var skill in skillGroup.Where(x => x.IsKnown))
                 {
-                    int skillLevel;
-                    int skillPoints;
-
-                    if (plan != null)
-                    {
-                        GetMergedSkill(plan, skill);
-
-                        if (!skill.IsKnown && mergedSkill.Level == 0)
-                            continue;
-
-                        skillLevel = mergedSkill.Level;
-                        skillPoints = mergedSkill.Skillpoints;
-                    }
-                    else
-                    {
-                        if (!skill.IsKnown)
-                            continue;
-
-                        skillLevel = skill.Level;
-                        skillPoints = skill.SkillPoints;
-                    }
+                    var mergedSkill = GetMergedSkill(plan, skill);
+                    if ((plan != null) && (mergedSkill.Level == 0))
+                        continue;
 
                     outGroup.Skills.Add(new OutputSkill
                     {
-                        Name = skill.Name,
+                        Name = mergedSkill.Name,
                         Rank = skill.Rank,
-                        Level = skillLevel,
-                        SkillPoints = skillPoints,
-                        RomanLevel = Skill.GetRomanForInt(skillLevel),
+                        Level = mergedSkill.Level,
+                        SkillPoints = mergedSkill.Skillpoints,
+                        RomanLevel = Skill.GetRomanForInt(mergedSkill.Level),
                         MaxSkillPoints = skill.StaticData.GetPointsRequiredForLevel(5)
                     });
                 }
@@ -274,26 +223,7 @@ namespace EVEMon.Common
 
             if (plan != null)
             {
-                serial.Skills.Clear();
-
-                foreach (var skill in character.Skills)
-                {
-
-                    GetMergedSkill(plan, skill);
-
-                    if (!skill.IsKnown && mergedSkill.Level == 0)
-                        continue;
-
-                    serial.Skills.Add(new SerializableCharacterSkill()
-                    {
-                        ID = mergedSkill.ID,
-                        IsKnown = mergedSkill.IsKnown,
-                        Level = mergedSkill.Level,
-                        Name = mergedSkill.Name,
-                        OwnsBook = mergedSkill.OwnsBook,
-                        Skillpoints = mergedSkill.Skillpoints,
-                    });
-                }
+                serial.Skills = character.Skills.Where(x => x.IsKnown).Select(x => GetMergedSkill(plan, x)).Where(x => x.Level > 0).ToList();
             }
 
             var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
@@ -374,28 +304,26 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill properties of a merged skill with a plan entry
+        /// Gets the skill properties of a merged skill with a plan entry, if one is provided.
+        /// If no plan is provided, the skill properties are returned unmodified.
         /// </summary>
         /// <param name="plan"></param>
         /// <param name="skill"></param>
         /// <returns>The skill properties after the merge</returns>
         private static SerializableCharacterSkill GetMergedSkill(Plan plan, Skill skill)
         {
-            SerializableCharacterSkill s_skill = new SerializableCharacterSkill();
-
-            s_skill.ID = skill.ID;
-            s_skill.Level = skill.Level;
-            s_skill.Skillpoints = skill.SkillPoints;
-
-            plan.Merge(s_skill);
+            var mergedSkill = new SerializableCharacterSkill();
 
             mergedSkill.ID = skill.ID;
             mergedSkill.Name = skill.Name;
             mergedSkill.IsKnown = skill.IsKnown;
             mergedSkill.OwnsBook = skill.IsOwned;
-            mergedSkill.Level = s_skill.Level;
-            mergedSkill.Skillpoints = s_skill.Skillpoints;
+            mergedSkill.Level = skill.Level;
+            mergedSkill.Skillpoints = skill.SkillPoints;
 
+            if (plan != null)
+                plan.Merge(mergedSkill);
+                
             return mergedSkill;
         }
 
