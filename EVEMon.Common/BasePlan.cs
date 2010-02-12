@@ -126,25 +126,7 @@ namespace EVEMon.Common
         /// </summary>
         public int UniqueSkillsCount
         {
-            get
-            {
-                int count = 0;
-                bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-                // Scroll through entries
-                foreach (PlanEntry pe in m_items)
-                {
-                    int index = pe.Skill.ArrayIndex;
-                    if (!counted[index])
-                    {
-                        counted[index] = true;
-                        count++;
-                    }
-                }
-
-                // Return the count
-                return count;
-            }
+            get { return m_items.GetUniqueSkillsCount(); }
         }
         
         /// <summary>
@@ -152,25 +134,7 @@ namespace EVEMon.Common
         /// </summary>
         public int NotKnownSkillsCount
         {
-            get
-            {
-                int count = 0;
-                bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-                // Scroll through selection
-                foreach (PlanEntry pe in m_items)
-                {
-                    int index = pe.Skill.ArrayIndex;
-                    if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                    {
-                        counted[index] = true;
-                        count++;
-                    }
-                }
-
-                // Return the count
-                return count;
-            }
+            get { return m_items.GetNotKnownSkillsCount(); }
         }
 
         /// <summary>
@@ -178,25 +142,7 @@ namespace EVEMon.Common
         /// </summary>
         public long TotalBooksCost
         {
-            get
-            {
-                long cost = 0;
-                bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-                // Scroll through entries
-                foreach (PlanEntry pe in m_items)
-                {
-                    int index = pe.Skill.ArrayIndex;
-                    if (!counted[index])
-                    {
-                        counted[index] = true;
-                        cost += pe.Skill.Cost;
-                    }
-                }
-
-                // Return the cost
-                return cost;
-            }
+            get { return m_items.GetTotalBooksCost(); }
         }
         
         /// <summary>
@@ -204,25 +150,7 @@ namespace EVEMon.Common
         /// </summary>
         public long NotKnownSkillBooksCost
         {
-            get
-            {
-                long cost = 0;
-                bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-                // Scroll through entries
-                foreach (PlanEntry pe in m_items)
-                {
-                    int index = pe.Skill.ArrayIndex;
-                    if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                    {
-                        counted[index] = true;
-                        cost += pe.Skill.Cost;
-                    }
-                }
-
-                // Return the cost
-                return cost;
-            }
+            get { return m_items.GetNotKnownSkillBooksCost(); }
         }
 
         #endregion
