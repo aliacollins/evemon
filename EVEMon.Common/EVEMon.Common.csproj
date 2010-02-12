@@ -105,7 +105,6 @@
     </Compile>
     <Compile Include="Net\HttpPostData.cs" />
     <Compile Include="Net\WebRequestAsyncState.cs" />
-    <Compile Include="Singleton.cs" />
     <Compile Include="NetworkConstants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
