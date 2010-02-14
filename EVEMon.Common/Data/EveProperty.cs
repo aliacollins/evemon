@@ -162,7 +162,9 @@ namespace EVEMon.Common.Data
         public string GetLabelOrDefault(Item obj)
         {
             var value = obj.Properties[this];
-            if (value == null) return Format(m_defaultValue);
+            if (value == null)
+                return Format(m_defaultValue);
+
             return Format(value.Value.Value);
         }
 
@@ -178,20 +180,29 @@ namespace EVEMon.Common.Data
                 try
                 {
                     // Format a value of Structure Volume
-                    if (m_id == 161) return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0##} {1}", m_value, m_unit);
+                    if (m_id == 161)
+                        return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0##} {1}", m_value, m_unit);
 
                     // Format a value of Capacitor Capacity
-                    if (m_id == 482) return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", Math.Floor(m_value), m_unit);
+                    if (m_id == 482)
+                        return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", Math.Floor(m_value), m_unit);
 
                     // Format a value of Ships Warp Speed
-                    if (m_id == 1281) return String.Format(CultureInfo.CurrentCulture, "{0:0.0#} {1}", m_value, m_unit);
+                    if (m_id == 1281)
+                        return String.Format(CultureInfo.CurrentCulture, "{0:0.0#} {1}", m_value, m_unit);
 
                     switch (m_unitID)
                     {
                         // Format a value of Mass
                         case 2:
-                            if (m_value <= 1000) return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0#} {1}", m_value, m_unit);
-                            else return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);                        
+                            if (m_value <= 1000)
+                            {
+                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0#} {1}", m_value, m_unit);
+                            }
+                            else
+                            {
+                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);
+                            }
 
                         // Format a value of Millseconds
                         case 101:
@@ -207,11 +218,11 @@ namespace EVEMon.Common.Data
 
                         // Format a value of Modifier Percentage
                         case 109:
-                            return String.Format(CultureInfo.CurrentCulture, "{0:0} {1}", (m_value - 1) * 100, m_unit);
+                            return String.Format(CultureInfo.CurrentCulture, "{0:0.###} {1}", (m_value - 1) * 100, m_unit);
 
                         // Format a value of Inverse Modifier Percentage
                         case 111:
-                            return String.Format(CultureInfo.CurrentCulture, "{0:0} {1}", (1 - m_value) * 100, m_unit);
+                            return String.Format(CultureInfo.CurrentCulture, "{0:0.###} {1}", (1 - m_value) * 100, m_unit);
 
                         // A reference to a group, it has been pre-transformed on XmlGenerator.
                         case 115: // "groupID"
@@ -241,8 +252,14 @@ namespace EVEMon.Common.Data
 
                         // Format all other values (use of thousand separator if over 1000)
                         default:
-                            if (m_value < 1000) return String.Format(CultureInfo.CurrentCulture, "{0} {1}", m_value, m_unit);
-                            else return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);
+                            if (m_value < 1000)
+                            {
+                                return String.Format(CultureInfo.CurrentCulture, "{0} {1}", m_value, m_unit);
+                            }
+                            else
+                            {
+                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);
+                            }
                     }
                 }
                 catch
@@ -264,8 +281,14 @@ namespace EVEMon.Common.Data
             // Retrieve the string for the number
             string number = "";
             var value = obj.Properties[this];
-            if (value == null) number = m_defaultValue;
-            else number = value.Value.Value;
+            if (value == null)
+            {
+                number = m_defaultValue;
+            }
+            else
+            {
+                number = value.Value.Value;
+            }
 
             // Try to parse it as a float
             float result = float.NaN;
