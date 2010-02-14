@@ -1,22 +1,18 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
+
 using EVEMon.Common;
-using EVEMon.Common.Scheduling;
-using System.Drawing;
-using System.Collections.Specialized;
-using System.Collections;
-using System.Runtime.InteropServices;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
-using EVEMon.Common.Data;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Scheduling;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -226,7 +222,6 @@ namespace EVEMon.SkillPlanner
         {
             UpdateDisplayPlan();
             UpdateSkillList(true);
-            UpdateListColumns();
         }
 
         /// <summary>
@@ -251,9 +246,7 @@ namespace EVEMon.SkillPlanner
             if (m_columnsOrderChanged)
             {
                 Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
-                m_columns.Clear();
-                m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
-                UpdateListColumns();
+                ImportColumnSettings(Settings.UI.PlanWindow.Columns);
             }
 
             m_columnsOrderChanged = false;
@@ -1089,10 +1082,7 @@ namespace EVEMon.SkillPlanner
         {
             // Recreate the columns
             m_columns.Clear();
-            foreach (var column in columns)
-            {
-                m_columns.Add(column.Clone());
-            }
+            m_columns.AddRange(columns.Select(x => x.Clone()));
 
             // Update the UI
             UpdateListColumns();
@@ -1101,7 +1091,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Rebuild the column settings from the currently displayed columns.
         /// </summary>
-        public List<PlanColumnSettings> ExportColumnSettings()
+        public IEnumerable<PlanColumnSettings> ExportColumnSettings()
         {
             // Recreate the columns
             var newList = new List<PlanColumnSettings>();
@@ -2141,15 +2131,12 @@ namespace EVEMon.SkillPlanner
         private void columnsLink_Click(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Update the settings from the current columns
-            ExportColumnSettings();
-
             var columns = ExportColumnSettings();
-            using (PlanColumnSelectWindow f = new PlanColumnSelectWindow(columns))
+            using (var dialog = new PlanColumnSelectWindow(columns))
             {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    ImportColumnSettings(f.Columns.Cast<PlanColumnSettings>());
+                    ImportColumnSettings(dialog.Columns.Cast<PlanColumnSettings>());
                     Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
                 }
             }

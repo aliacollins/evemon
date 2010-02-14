@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.IO.Compression;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Serialization;
-using System.Runtime.InteropServices;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Data;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
