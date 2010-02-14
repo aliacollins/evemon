@@ -90,6 +90,7 @@ namespace EVEMon.SettingsUI
             cbShowWarning.Checked = config.ShowWarning;
             cbShowTQStatus.Checked = config.ShowTQStatus;
             cbShowEveTime.Checked = config.ShowEveTime;
+			cbIndentGroupedAccounts.Checked = config.IndentGroupedAccounts;
             UpdateEnables();
         }
 
@@ -110,6 +111,7 @@ namespace EVEMon.SettingsUI
             m_settings.ShowWarning = cbShowWarning.Checked;
             m_settings.ShowTQStatus = cbShowTQStatus.Checked;
             m_settings.ShowEveTime = cbShowEveTime.Checked;
+			m_settings.IndentGroupedAccounts = cbIndentGroupedAccounts.Checked;
         }
 
         private TrayPopupSort GetSortOrder(string selectedSortOrder)

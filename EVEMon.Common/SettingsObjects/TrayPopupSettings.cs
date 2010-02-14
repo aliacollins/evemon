@@ -21,6 +21,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowTQStatus = true;
             ShowEveTime = true;
             ShowWarning = true;
+            IndentGroupedAccounts = true;
         }
 
 
@@ -136,7 +137,14 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        public TrayPopupSettings Clone()
+		[XmlElement("IndentGroupedAccounts")]
+		public bool IndentGroupedAccounts
+		{
+			get;
+			set;
+		}
+
+		public TrayPopupSettings Clone()
         {
             return this.MemberwiseClone() as TrayPopupSettings;
         }

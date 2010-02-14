@@ -41,6 +41,7 @@ namespace EVEMon
         private bool m_hasRemainingTime;
         private bool m_hasCompletionTime;
         private bool m_hasSkillInTraining;
+		private bool m_hasSkillQueueFreeRoom;
 
         private bool m_tooltip = false;
 
@@ -112,7 +113,6 @@ namespace EVEMon
             m_showWalletBalance = settings.ShowWallet;
             m_showPortrait = settings.ShowPortrait;
             m_showSkillQueueFreeRoom = settings.ShowSkillQueueFreeRoom;
-
             m_tooltip = true;
         }
 
@@ -245,6 +245,7 @@ namespace EVEMon
                 m_hasSkillInTraining = false;
                 m_hasCompletionTime = false;
                 m_hasRemainingTime = false;
+				m_hasSkillQueueFreeRoom = false; // Yes, it's a lie!
             }
 
             // Adjusts all the controls layout.
@@ -260,7 +261,7 @@ namespace EVEMon
             lblRemainingTime.Visible = m_hasRemainingTime & m_showRemainingTime;
             lblCompletionTime.Visible = m_hasCompletionTime & m_showCompletionTime;
             lblSkillInTraining.Visible = m_hasSkillInTraining & m_showSkillInTraining;
-            lblSkillQueueFreeRoom.Visible = m_hasSkillInTraining & m_showSkillQueueFreeRoom;
+			lblSkillQueueFreeRoom.Visible = m_hasSkillQueueFreeRoom & m_showSkillQueueFreeRoom;
             lblBalance.Visible = m_showWalletBalance;
         }
 
@@ -272,30 +273,35 @@ namespace EVEMon
         {
             CCPCharacter character = m_character as CCPCharacter;
             bool freeTime = character.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
-            
-            if (freeTime)
-            {
-                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - character.SkillQueue.EndTime;
-                string timeLeftText;
-                
-                // Prevents the "(none)" text from being displayed
-                if (timeLeft < TimeSpan.FromSeconds(1))
-                    return;
-                
-                // Less than minute ? Display seconds
-                if (timeLeft < TimeSpan.FromMinutes(1))
-                {
-                    timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
-                }
-                // Display time without seconds
-                else
-                {
-                    timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
-                }
-                
-                lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
-                lblSkillQueueFreeRoom.ForeColor = Color.Red;
-            }
+
+			if (freeTime)
+			{
+				TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - character.SkillQueue.EndTime;
+				string timeLeftText;
+
+				// Prevents the "(none)" text from being displayed
+				if (timeLeft < TimeSpan.FromSeconds(1))
+					return;
+
+				// Less than minute ? Display seconds
+				if (timeLeft < TimeSpan.FromMinutes(1))
+				{
+					timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
+				}
+				// Display time without seconds
+				else
+				{
+					timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
+				}
+
+				lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
+				lblSkillQueueFreeRoom.ForeColor = Color.Red;
+				m_hasSkillQueueFreeRoom = true;
+			}
+			else
+			{
+				m_hasSkillQueueFreeRoom = false;
+			}
         }
 
         /// <summary>
@@ -634,7 +640,7 @@ namespace EVEMon
                 lblRemainingTime.Location = new Point(left, top);
                 if (lblRemainingTime.PreferredWidth + right > labelWidth) labelWidth = lblRemainingTime.PreferredWidth + right;
                 labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
-                lblRemainingTime.Size = new Size(labelWidth, labelHeight); ;
+                lblRemainingTime.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
             }
 

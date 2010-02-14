@@ -227,7 +227,35 @@ namespace EVEMon
             }
 
             // Add controls for characters
-            mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
+			if (Settings.UI.SystemTrayPopup.GroupBy == TrayPopupGrouping.Account && Settings.UI.SystemTrayPopup.IndentGroupedAccounts)
+			{
+				long PrevUserID = 0;
+				foreach (Character character in characters)
+				{
+					if (character.Identity.Account.UserID != PrevUserID)
+					{
+						mainPanel.Controls.Add(new OverviewItem(character, Settings.UI.SystemTrayPopup));
+						PrevUserID = character.Identity.Account.UserID;
+					}
+					else
+					{
+						FlowLayoutPanel AccountGroupPanel = new FlowLayoutPanel();
+						AccountGroupPanel.AutoSize = true;
+						AccountGroupPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+						AccountGroupPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+						AccountGroupPanel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+						OverviewItem charpanel = new OverviewItem(character, Settings.UI.SystemTrayPopup);
+						charpanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
+						AccountGroupPanel.Controls.Add(charpanel);
+						mainPanel.Controls.Add(AccountGroupPanel);
+						PrevUserID = character.Identity.Account.UserID;
+					}
+				}
+			}
+			else
+			{
+				mainPanel.Controls.AddRange(characters.Select(x => new OverviewItem(x, Settings.UI.SystemTrayPopup)).ToArray());
+			}
 
             // Return if the user do not want to be warned about accounts not in training
             if (Settings.UI.SystemTrayPopup.ShowWarning)
