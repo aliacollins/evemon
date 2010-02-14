@@ -45,6 +45,7 @@
     <Compile Include="BattleclinicParser.cs" />
     <Compile Include="CXIParser.cs" />
     <Compile Include="EveCentralParser.cs" />
+    <Compile Include="EveMetricsParser.cs" />
     <Compile Include="IMineralParser.cs" />
     <Compile Include="MatariParser.cs" />
     <Compile Include="MineralTile.cs">
