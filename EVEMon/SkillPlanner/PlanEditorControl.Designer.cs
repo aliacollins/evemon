@@ -40,6 +40,7 @@ namespace EVEMon.SkillPlanner
             this.miCopyToNewPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.miChangeLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.miChangeTo0 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo1 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo2 = new System.Windows.Forms.ToolStripMenuItem();
             this.miChangeTo3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,7 +112,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(251, 220);
+            this.cmsContextMenu.Size = new System.Drawing.Size(251, 242);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -170,6 +171,7 @@ namespace EVEMon.SkillPlanner
             // miChangeLevel
             // 
             this.miChangeLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miChangeTo0,
             this.miChangeTo1,
             this.miChangeTo2,
             this.miChangeTo3,
@@ -179,6 +181,14 @@ namespace EVEMon.SkillPlanner
             this.miChangeLevel.Name = "miChangeLevel";
             this.miChangeLevel.Size = new System.Drawing.Size(250, 22);
             this.miChangeLevel.Text = "Change Planned Level...";
+            // 
+            // miChangeTo0
+            // 
+            this.miChangeTo0.Name = "miChangeTo0";
+            this.miChangeTo0.Size = new System.Drawing.Size(152, 22);
+            this.miChangeTo0.Tag = "0";
+            this.miChangeTo0.Text = "Remove";
+            this.miChangeTo0.Click += new System.EventHandler(this.miChangeToLevel_Click); 
             // 
             // miChangeTo1
             // 
@@ -708,6 +718,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem miShowInSkillExplorer;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem miChangeLevel;
+        private System.Windows.Forms.ToolStripMenuItem miChangeTo0;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo1;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo2;
         private System.Windows.Forms.ToolStripMenuItem miChangeTo3;

@@ -1134,7 +1134,7 @@ namespace EVEMon.SkillPlanner
 
         #region Entries removal
         /// <summary>
-        /// Remove all the selected entries when one or more getselected.
+        /// Remove all the selected entries when one or more get selected.
         /// </summary>
         private void RemoveSelectedEntries()
         {
@@ -1343,15 +1343,12 @@ namespace EVEMon.SkillPlanner
                 item.Enabled = false;
             }
 
-            // Reset text in case of previous multiple selection
-            miRemoveFromPlan.Text = "Remove from Plan";
-
             // Nothing more to do when nothing selected
             if (lvSkills.SelectedItems.Count == 0)
                 return;
 
-            // There is something to remove (see guard clause above)
-            miRemoveFromPlan.Enabled = true;
+            // Reset text in case of previous multiple selection
+            miRemoveFromPlan.Text = "Remove from Plan";
 
             // When there is only one selected item...
             if (lvSkills.SelectedItems.Count == 1)
@@ -1361,6 +1358,7 @@ namespace EVEMon.SkillPlanner
                 // When the selected item is a remapping, only "remove from plan" is visible
                 if (entry == null)
                 {
+                    miRemoveFromPlan.Enabled = true;
                     return;
                 }
 
@@ -1374,9 +1372,13 @@ namespace EVEMon.SkillPlanner
                 miChangeNote.Enabled = true;
                 miChangeNote.Text = "View/Change Note...";
 
-                // "Change level"
+                // "Change Planned Level"
                 miChangeLevel.Enabled = SetChangeLevelMenu();
 
+                // If "Change Planned Level" disabled, "remove from plan" is visible 
+                if (!miChangeLevel.Enabled)
+                    miRemoveFromPlan.Enabled = true;
+                
                 // "Plan groups"
                 if (entry.PlanGroups.Count > 0)
                 {
@@ -1402,6 +1404,7 @@ namespace EVEMon.SkillPlanner
                 miCopyToNewPlan.Enabled = true;
                 miMarkOwned.Enabled = true;
                 miChangePriority.Enabled = true;
+                miRemoveFromPlan.Enabled = true;
                 var operation = PrepareSelectionRemoval();
                 if (PlanHelper.RequiresWindow(operation))
                     miRemoveFromPlan.Text += "...";
@@ -1434,10 +1437,10 @@ namespace EVEMon.SkillPlanner
 
             // Scroll through levels (and menus, one per level)
             bool result = false;
-            for (int level = 1; level <= 5; level++)
+            for (int level = 0; level <= 5; level++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[level - 1], m_plan, pe.CharacterSkill, level);
-                result |= miChangeLevel.DropDownItems[level - 1].Enabled;
+                PlanHelper.UpdatesRegularPlanToMenu(miChangeLevel.DropDownItems[level], m_plan, pe.CharacterSkill, level);
+                result |= miChangeLevel.DropDownItems[level].Enabled;
             }
 
             return result;
@@ -1500,7 +1503,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miRemoveFromPlan_Click(object sender, EventArgs e)
         {
-            RemoveSelectedEntries();
+            var items = lvSkills.SelectedItems;
+
+            if (items.Count == 1 && items[0].Tag is RemappingPoint)
+            {
+                tsbToggleRemapping_Click(null, null);
+            }
+            else
+            {
+                RemoveSelectedEntries();
+            }
         }
 
         /// <summary>
