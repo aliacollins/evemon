@@ -291,7 +291,8 @@ namespace EVEMon
                     return newCharacters;
                 
                 case TrayPopupGrouping.Account:
-                    return charactersList.GroupBy(x => x.Identity.Account).SelectMany(y => y);
+					newCharacters.AddRange(charactersList.Where(x => x.Identity.Account != null));
+					return newCharacters.GroupBy(x => x.Identity.Account).SelectMany(y => y);
 
                 case TrayPopupGrouping.TrainingAtTop:
                     newCharacters.AddRange(charactersList.Where(x => x.IsTraining));
