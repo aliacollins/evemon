@@ -369,7 +369,7 @@ namespace EVEMon
             // No details ?
             if (!notification.HasDetails)
             {
-                toolTip.Active = true;
+                toolTip.Active = false;
                 return;
             }
 
