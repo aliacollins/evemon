@@ -391,22 +391,9 @@ namespace EVEMon.SettingsUI
             m_settings.G15.ShowSystemTime = cbG15ShowTime.Checked;
 
             // Notifications
-            m_settings.Notifications = notificationsControl.Settings;
-            m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
-
-            m_settings.Notifications.EmailToAddress = tbToAddress.Text;
-            m_settings.Notifications.EmailFromAddress = tbFromAddress.Text;
-            m_settings.Notifications.EmailSmtpServer = tbMailServer.Text;
-
-            int emailPortNumber = m_settings.Notifications.EmailPortNumber;
-            Int32.TryParse(emailPortTextBox.Text, out emailPortNumber);
-            m_settings.Notifications.EmailPortNumber = Convert.ToInt16(emailPortTextBox.Text);
-            m_settings.Notifications.EmailServerRequiresSSL = cbEmailServerRequireSsl.Checked;
-            m_settings.Notifications.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
-            m_settings.Notifications.EmailAuthenticationUserName = tbEmailUsername.Text;
-            m_settings.Notifications.EmailAuthenticationPassword = tbEmailPassword.Text;
-            m_settings.Notifications.UseEmailShortFormat = cbEmailUseShortFormat.Checked;
-            m_settings.Notifications.SendMailAlert = mailNotificationCheckBox.Checked;
+            NotificationSettings notificationSettings = new NotificationSettings();
+            PopulateNotificationsFromControls(out notificationSettings);
+            m_settings.Notifications = notificationSettings;
 
             // IGB
             m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
@@ -490,6 +477,35 @@ namespace EVEMon.SettingsUI
 
             // Success
             return true;
+        }
+
+        private void PopulateNotificationsFromControls(out NotificationSettings notificationSettings)
+        {
+            notificationSettings = notificationsControl.Settings;
+            notificationSettings.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
+
+            notificationSettings.EmailToAddress = tbToAddress.Text;
+            notificationSettings.EmailFromAddress = tbFromAddress.Text;
+            notificationSettings.EmailSmtpServer = tbMailServer.Text;
+
+            // try and get a usable number out of the text box
+            int emailPortNumber = notificationSettings.EmailPortNumber;
+            if (Int32.TryParse(emailPortTextBox.Text, out emailPortNumber))
+            {
+                notificationSettings.EmailPortNumber = emailPortNumber;
+            }
+            // failing that just set to the IANA assigned port for SMTP
+            else
+            {
+                notificationSettings.EmailPortNumber = 25;
+            }
+
+            notificationSettings.EmailServerRequiresSSL = cbEmailServerRequireSsl.Checked;
+            notificationSettings.EmailAuthenticationRequired = cbEmailAuthRequired.Checked;
+            notificationSettings.EmailAuthenticationUserName = tbEmailUsername.Text;
+            notificationSettings.EmailAuthenticationPassword = tbEmailPassword.Text;
+            notificationSettings.UseEmailShortFormat = cbEmailUseShortFormat.Checked;
+            notificationSettings.SendMailAlert = mailNotificationCheckBox.Checked;
         }
 
         /// <summary>
@@ -666,7 +682,10 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void emailTestButton_Click(object sender, EventArgs e)
         {
-            if (!Emailer.SendTestMail(Settings.Notifications))
+            NotificationSettings configuredValues = new NotificationSettings();
+            PopulateNotificationsFromControls(out configuredValues);
+            
+            if (!Emailer.SendTestMail(configuredValues))
             {
                 MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

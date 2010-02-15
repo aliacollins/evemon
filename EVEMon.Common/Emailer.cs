@@ -175,6 +175,13 @@ namespace EVEMon.Common
         /// </remarks>
 		private static bool SendMail(NotificationSettings settings, string subject, string body)
 		{
+            // trace something to the logs so we can identify the time the message was sent.
+            EveClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
+                subject,
+                settings.EmailSmtpServer,
+                settings.EmailPortNumber
+                );
+
 			try
 			{
                 // Set up message
