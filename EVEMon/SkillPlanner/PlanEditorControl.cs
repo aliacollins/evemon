@@ -1132,7 +1132,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             var operation = PrepareSelectionRemoval();
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private IPlanOperation PrepareSelectionRemoval()
@@ -1662,7 +1662,7 @@ namespace EVEMon.SkillPlanner
         {
             var menu = sender as ToolStripMenuItem;
             var operation = menu.Tag as IPlanOperation;
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
         #endregion
 

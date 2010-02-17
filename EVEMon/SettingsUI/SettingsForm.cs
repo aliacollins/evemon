@@ -230,18 +230,19 @@ namespace EVEMon.SettingsUI
             cbAutomaticallySearchForNewVersions.Checked = m_settings.Updates.CheckEVEMonVersion;
             updateSettingsControl.Settings = m_settings.Updates;
 
-            // Plan highlights
+            // Skill Planner
             cbHighlightPlannedSkills.Checked = m_settings.UI.PlanWindow.HighlightPlannedSkills;
             cbHighlightPrerequisites.Checked = m_settings.UI.PlanWindow.HighlightPrerequisites;
             cbHighlightConflicts.Checked = m_settings.UI.PlanWindow.HighlightConflicts;
             cbHighlightPartialSkills.Checked = m_settings.UI.PlanWindow.HighlightPartialSkills;
             cbHighlightQueuedSiklls.Checked = m_settings.UI.PlanWindow.HighlightQueuedSkills;
             cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
+            cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
 
-            // Skill Icon Set
-            if (m_settings.UI.SkillBrowser.IconsGoupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGoupIndex > 0)
+            // Skill Browser Icon Set
+            if (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGroupIndex > 0)
             {
-                cbSkillIconSet.SelectedIndex = m_settings.UI.SkillBrowser.IconsGoupIndex - 1;
+                cbSkillIconSet.SelectedIndex = m_settings.UI.SkillBrowser.IconsGroupIndex - 1;
             }
             else
             {
@@ -322,16 +323,17 @@ namespace EVEMon.SettingsUI
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
 
-            // Plan window highlights
+            // Skill Planner
             m_settings.UI.PlanWindow.HighlightPrerequisites = cbHighlightPrerequisites.Checked;
             m_settings.UI.PlanWindow.HighlightPlannedSkills = cbHighlightPlannedSkills.Checked;
             m_settings.UI.PlanWindow.HighlightConflicts = cbHighlightConflicts.Checked;
             m_settings.UI.PlanWindow.HighlightPartialSkills = cbHighlightPartialSkills.Checked;
             m_settings.UI.PlanWindow.HighlightQueuedSkills = cbHighlightQueuedSiklls.Checked;
             m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect = cbSummaryOnMultiSelectOnly.Checked;
+            m_settings.UI.PlanWindow.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
 
-            // Plan window icon sets
-            m_settings.UI.SkillBrowser.IconsGoupIndex = cbSkillIconSet.SelectedIndex + 1;
+            // Skill Browser icon sets
+            m_settings.UI.SkillBrowser.IconsGroupIndex = cbSkillIconSet.SelectedIndex + 1;
 
             // Main window skills filter
             m_settings.UI.MainWindow.ShowAllPublicSkills = cbShowAllPublicSkills.Checked;
@@ -378,9 +380,6 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.ShowRelocationMenu = showRelocationMenuCheckbox.Checked;
             m_settings.UI.MainWindow.EnableAutomaticRelocation = enableAutomaticRelocationCheckBox.Checked;
             m_settings.UI.MainWindow.AutomaticRelocationInterval = (int)relocationSecondsNumericUpDown.Value;
-
-            // Notifications
-            m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
 
             // G15
             m_settings.G15.Enabled = g15CheckBox.Checked;
@@ -488,13 +487,13 @@ namespace EVEMon.SettingsUI
             notificationSettings.EmailFromAddress = tbFromAddress.Text;
             notificationSettings.EmailSmtpServer = tbMailServer.Text;
 
-            // try and get a usable number out of the text box
+            // Try and get a usable number out of the text box
             int emailPortNumber = notificationSettings.EmailPortNumber;
             if (Int32.TryParse(emailPortTextBox.Text, out emailPortNumber))
             {
                 notificationSettings.EmailPortNumber = emailPortNumber;
             }
-            // failing that just set to the IANA assigned port for SMTP
+            // Failing that just set to the IANA assigned port for SMTP
             else
             {
                 notificationSettings.EmailPortNumber = 25;

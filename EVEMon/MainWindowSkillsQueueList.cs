@@ -696,7 +696,7 @@ namespace EVEMon
             var tag = (Pair<Plan, SkillLevel>)planItem.Tag;
 
             var operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>

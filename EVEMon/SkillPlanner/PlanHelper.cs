@@ -20,15 +20,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="level"></param>
         public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
         {
-            if (level == 0) menu.Text = "Remove";
-            else menu.Text = "Level " + level.ToString();
+            if (level == 0)
+            {
+                menu.Text = "Remove";
+            }
+            else
+            {
+                menu.Text = "Level " + level.ToString();
+            }
 
             menu.Enabled = EnablePlanTo(plan, skill, level);
             if (menu.Enabled)
             {
                 var operation = plan.TryPlanTo(skill, level);
                 menu.Tag = operation;
-                if (RequiresWindow(operation)) menu.Text += "...";
+                if (RequiresWindow(operation))
+                    menu.Text += "...";
             }
 
             var menuItem = menu as ToolStripMenuItem;
@@ -50,14 +57,20 @@ namespace EVEMon.SkillPlanner
         public static bool EnablePlanTo(Plan plan, Skill skill, int level)
         {
             // The entry actually wants to remove the item
-            if (level == 0) return plan.IsPlanned(skill);
-
+            if (level == 0)
+            {
+                return plan.IsPlanned(skill);
+            }
             // The entry is already known
-            else if (skill.Level >= level) return false;
-
+            else if (skill.Level >= level)
+            {
+                return false;
+            }
             // The entry is already planned at this very level
-            else if (plan.GetPlannedLevel(skill) == level) return false;
-
+            else if (plan.GetPlannedLevel(skill) == level)
+            {
+                return false;
+            }
             // Ok
             return true;
         }
@@ -70,8 +83,12 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static bool RequiresWindow(IPlanOperation operation)
         {
-            if (operation == null) return false;
-            if (operation.Type != PlanOperations.Suppression) return false;
+            if (operation == null)
+                return false;
+
+            if (operation.Type != PlanOperations.Suppression)
+                return false;
+
             return (operation.SkillsToRemove.Count != operation.AllEntriesToRemove.Count);
         }
 
@@ -95,7 +112,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public static bool PerformSilently(Form parentForm, IPlanOperation operation)
         {
-            if (operation == null) return false;
+            if (operation == null)
+                return false;
 
             // A window is required
             if (RequiresWindow(operation))
@@ -130,6 +148,23 @@ namespace EVEMon.SkillPlanner
             {
                 var result = window.ShowDialog(parentForm);
                 return result == DialogResult.OK;
+            }
+        }
+
+        /// <summary>
+        /// Selects which type of Perform will be called according to user settings.
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        public static bool SelectPerform(IPlanOperation operation)
+        {
+            if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
+            {
+                return Perform(operation);
+            }
+            else
+            {
+                return PerformSilently(operation);
             }
         }
     }

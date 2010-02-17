@@ -765,25 +765,25 @@ namespace EVEMon.SkillPlanner
         private void tsmLevel1_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Basic]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsmLevel2_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Standard]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsmLevel3_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Improved]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsmLevel4_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Elite]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsmExpandAll_Click(object sender, EventArgs e)

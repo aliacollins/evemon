@@ -332,25 +332,25 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToBasic_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToStandard_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToImproved_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToElite_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("iconsGroupIndex")]
-        public int IconsGoupIndex
+        public int IconsGroupIndex
         {
             get;
             set;

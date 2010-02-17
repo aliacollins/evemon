@@ -516,13 +516,13 @@ namespace EVEMon.SkillPlanner
             if (cert != null)
             {
                 var operation = m_plan.TryPlanTo(cert);
-                PlanHelper.PerformSilently(operation);
+                PlanHelper.SelectPerform(operation);
             }
             else
             {
                 var prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
                 var operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
-                PlanHelper.PerformSilently(operation);
+                PlanHelper.SelectPerform(operation);
             }
         }
 

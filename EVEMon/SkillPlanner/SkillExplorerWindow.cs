@@ -564,7 +564,7 @@ namespace EVEMon.SkillPlanner
         private void tsAddLevel_Click(object sender, EventArgs e)
         {
             var operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>

@@ -109,7 +109,25 @@ namespace EVEMon.SkillPlanner
             foreach (var entry in plan)
             {
                 string name = entry.ToString();
-                if (entry.Type == PlanEntryType.Planned) name += " (planned)";
+
+                if (m_operation.Type == PlanOperations.Addition)
+                { 
+                    // Skip if the entry is already in the plan
+                    if (m_operation.Plan.IsPlanned(entry.Skill))
+                        continue;
+                }
+                else
+                {
+                    // On creation of "entries to remove" listbox (first pass),
+                    // skip if entry type is of prerequisite.
+                    // "Useless prerequisites" listbox is created on second pass
+                    // and in that case entry type is of type planned.
+                    if (entry.Type == PlanEntryType.Prerequisite)
+                        continue;
+
+                    if (entry.Type == PlanEntryType.Planned)
+                        name += " (planned)";
+                }
 
                 listBox.Items.Add(name);
             }
@@ -120,7 +138,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void rootMultiPanel_SelectionChange(object sender, EVEMon.Controls.MultiPanelSelectionChangeEventArgs args)
+        private void rootMultiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
 
             // When there are useless prereqs, we offer the user to remove them on a second page.
@@ -128,8 +146,14 @@ namespace EVEMon.SkillPlanner
 
             // Guess whether we're on the final page (2/2 or 1/1)
             bool isFinal = false;
-            if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage) isFinal = true;
-            else isFinal = (m_operation.RemovablePrerequisites.Count == 0);
+            if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
+            {
+                isFinal = true;
+            }
+            else
+            {
+                isFinal = (m_operation.RemovablePrerequisites.Count == 0);
+            }
 
             // Final page ? 
             if (isFinal)

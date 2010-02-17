@@ -104,7 +104,8 @@ namespace EVEMon.SkillPlanner
         private void UpdatePlannedLevel()
         {
             // Not visible
-            if (m_selectedSkill == null) return;
+            if (m_selectedSkill == null)
+                return;
 
             // Toolbar > Planned to... dropdown menu
             bool enabled = false;
@@ -171,7 +172,7 @@ namespace EVEMon.SkillPlanner
                 ownsBookMenu.Enabled = true;
             }
 
-            // Update "planned level" combo (on the top right)
+            // Update "planned level" combo (on the top left)
             UpdatePlannedLevel();
 
             // Updates controls visibility
@@ -337,7 +338,7 @@ namespace EVEMon.SkillPlanner
         private void planToMenu_Click(object sender, EventArgs e)
         {
             var operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
         #endregion
     }

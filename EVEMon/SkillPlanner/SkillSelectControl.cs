@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Update the image list choice
-            int index = Settings.UI.SkillBrowser.IconsGoupIndex;
+            int index = Settings.UI.SkillBrowser.IconsGroupIndex;
             if (index == 0)
                 index = 1;
 
@@ -850,7 +850,7 @@ namespace EVEMon.SkillPlanner
         {
             ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
             var operation = levelItem.Tag as IPlanOperation;
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>

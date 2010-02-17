@@ -149,6 +149,7 @@ namespace EVEMon.SettingsUI
             this.mainWindowPage = new EVEMon.Controls.MultiPanelPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.overviewPanel = new System.Windows.Forms.Panel();
+            this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewShowSkillQueueFreeRoomCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewShowWalletCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewShowPortraitCheckBox = new System.Windows.Forms.CheckBox();
@@ -159,6 +160,7 @@ namespace EVEMon.SettingsUI
             this.compatibilityCombo = new System.Windows.Forms.ComboBox();
             this.runAtStartupComboBox = new System.Windows.Forms.CheckBox();
             this.skillPlannerPage = new EVEMon.Controls.MultiPanelPage();
+            this.cbAdvanceEntryAdd = new System.Windows.Forms.CheckBox();
             this.cbSummaryOnMultiSelectOnly = new System.Windows.Forms.CheckBox();
             this.cbHighlightQueuedSiklls = new System.Windows.Forms.CheckBox();
             this.cbHighlightPartialSkills = new System.Windows.Forms.CheckBox();
@@ -202,6 +204,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTray = new System.Windows.Forms.RadioButton();
             this.rbExitEVEMon = new System.Windows.Forms.RadioButton();
             this.trayIconPopupGroupBox = new System.Windows.Forms.GroupBox();
+            this.trayPopupDisabledRadio = new System.Windows.Forms.RadioButton();
             this.trayPopupButton = new System.Windows.Forms.Button();
             this.trayPopupRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
@@ -255,8 +258,6 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
-            this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
-            this.trayPopupDisabledRadio = new System.Windows.Forms.RadioButton();
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -578,15 +579,15 @@ namespace EVEMon.SettingsUI
             lblSkillPlannerPage.Size = new System.Drawing.Size(424, 28);
             lblSkillPlannerPage.TabIndex = 19;
             lblSkillPlannerPage.Text = "You can select whether to highlight any entry in the Skill Planner according to i" +
-                "ts status. You can also select what kind of icons will be shown in the Skill Bro" +
-                "wser tree.\r\n";
+                "ts status and more. You can also select what kind of icons will be shown in the " +
+                "Skill Browser tree.\r\n";
             // 
             // gbSkillBrowserIconSet
             // 
             gbSkillBrowserIconSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             gbSkillBrowserIconSet.Controls.Add(this.tableLayoutPanel4);
-            gbSkillBrowserIconSet.Location = new System.Drawing.Point(0, 133);
+            gbSkillBrowserIconSet.Location = new System.Drawing.Point(0, 190);
             gbSkillBrowserIconSet.Name = "gbSkillBrowserIconSet";
             gbSkillBrowserIconSet.Size = new System.Drawing.Size(435, 223);
             gbSkillBrowserIconSet.TabIndex = 13;
@@ -1369,6 +1370,16 @@ namespace EVEMon.SettingsUI
             this.overviewPanel.Size = new System.Drawing.Size(393, 79);
             this.overviewPanel.TabIndex = 32;
             // 
+            // overviewGroupCharactersInTrainingCheckBox
+            // 
+            this.overviewGroupCharactersInTrainingCheckBox.AutoSize = true;
+            this.overviewGroupCharactersInTrainingCheckBox.Location = new System.Drawing.Point(161, 26);
+            this.overviewGroupCharactersInTrainingCheckBox.Name = "overviewGroupCharactersInTrainingCheckBox";
+            this.overviewGroupCharactersInTrainingCheckBox.Size = new System.Drawing.Size(165, 17);
+            this.overviewGroupCharactersInTrainingCheckBox.TabIndex = 33;
+            this.overviewGroupCharactersInTrainingCheckBox.Text = "Group Characters In Training";
+            this.overviewGroupCharactersInTrainingCheckBox.UseVisualStyleBackColor = true;
+            // 
             // overviewShowSkillQueueFreeRoomCheckBox
             // 
             this.overviewShowSkillQueueFreeRoomCheckBox.AutoSize = true;
@@ -1469,6 +1480,7 @@ namespace EVEMon.SettingsUI
             // 
             // skillPlannerPage
             // 
+            this.skillPlannerPage.Controls.Add(this.cbAdvanceEntryAdd);
             this.skillPlannerPage.Controls.Add(this.cbSummaryOnMultiSelectOnly);
             this.skillPlannerPage.Controls.Add(lblSkillPlannerPage);
             this.skillPlannerPage.Controls.Add(this.cbHighlightQueuedSiklls);
@@ -1485,6 +1497,16 @@ namespace EVEMon.SettingsUI
             this.skillPlannerPage.Text = "skillPlannerPage";
             this.skillPlannerPage.Visible = false;
             // 
+            // cbAdvanceEntryAdd
+            // 
+            this.cbAdvanceEntryAdd.AutoSize = true;
+            this.cbAdvanceEntryAdd.Location = new System.Drawing.Point(7, 130);
+            this.cbAdvanceEntryAdd.Name = "cbAdvanceEntryAdd";
+            this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(160, 17);
+            this.cbAdvanceEntryAdd.TabIndex = 21;
+            this.cbAdvanceEntryAdd.Text = "Use Advance Entry Addition";
+            this.cbAdvanceEntryAdd.UseVisualStyleBackColor = true;
+            // 
             // cbSummaryOnMultiSelectOnly
             // 
             this.cbSummaryOnMultiSelectOnly.AutoSize = true;
@@ -1498,7 +1520,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightQueuedSiklls
             // 
             this.cbHighlightQueuedSiklls.AutoSize = true;
-            this.cbHighlightQueuedSiklls.Location = new System.Drawing.Point(258, 107);
+            this.cbHighlightQueuedSiklls.Location = new System.Drawing.Point(243, 107);
             this.cbHighlightQueuedSiklls.Name = "cbHighlightQueuedSiklls";
             this.cbHighlightQueuedSiklls.Size = new System.Drawing.Size(133, 17);
             this.cbHighlightQueuedSiklls.TabIndex = 14;
@@ -1508,7 +1530,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightPartialSkills
             // 
             this.cbHighlightPartialSkills.AutoSize = true;
-            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(258, 84);
+            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(243, 84);
             this.cbHighlightPartialSkills.Name = "cbHighlightPartialSkills";
             this.cbHighlightPartialSkills.Size = new System.Drawing.Size(172, 17);
             this.cbHighlightPartialSkills.TabIndex = 10;
@@ -1518,17 +1540,17 @@ namespace EVEMon.SettingsUI
             // cbHighlightConflicts
             // 
             this.cbHighlightConflicts.AutoSize = true;
-            this.cbHighlightConflicts.Location = new System.Drawing.Point(6, 84);
+            this.cbHighlightConflicts.Location = new System.Drawing.Point(7, 84);
             this.cbHighlightConflicts.Name = "cbHighlightConflicts";
-            this.cbHighlightConflicts.Size = new System.Drawing.Size(142, 17);
+            this.cbHighlightConflicts.Size = new System.Drawing.Size(157, 17);
             this.cbHighlightConflicts.TabIndex = 9;
-            this.cbHighlightConflicts.Text = "Show Schedule Conflicts";
+            this.cbHighlightConflicts.Text = "Highlight Schedule Conflicts";
             this.cbHighlightConflicts.UseVisualStyleBackColor = true;
             // 
             // cbHighlightPrerequisites
             // 
             this.cbHighlightPrerequisites.AutoSize = true;
-            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(258, 61);
+            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(243, 61);
             this.cbHighlightPrerequisites.Name = "cbHighlightPrerequisites";
             this.cbHighlightPrerequisites.Size = new System.Drawing.Size(132, 17);
             this.cbHighlightPrerequisites.TabIndex = 8;
@@ -1538,11 +1560,11 @@ namespace EVEMon.SettingsUI
             // cbHighlightPlannedSkills
             // 
             this.cbHighlightPlannedSkills.AutoSize = true;
-            this.cbHighlightPlannedSkills.Location = new System.Drawing.Point(6, 61);
+            this.cbHighlightPlannedSkills.Location = new System.Drawing.Point(7, 61);
             this.cbHighlightPlannedSkills.Name = "cbHighlightPlannedSkills";
-            this.cbHighlightPlannedSkills.Size = new System.Drawing.Size(142, 17);
+            this.cbHighlightPlannedSkills.Size = new System.Drawing.Size(133, 17);
             this.cbHighlightPlannedSkills.TabIndex = 0;
-            this.cbHighlightPlannedSkills.Text = "Emphasize Planned Skills";
+            this.cbHighlightPlannedSkills.Text = "Highlight Planned Skills";
             this.cbHighlightPlannedSkills.UseVisualStyleBackColor = true;
             // 
             // networkPage
@@ -1981,6 +2003,17 @@ namespace EVEMon.SettingsUI
             this.trayIconPopupGroupBox.TabIndex = 10;
             this.trayIconPopupGroupBox.TabStop = false;
             this.trayIconPopupGroupBox.Text = "Icon Popup Style";
+            // 
+            // trayPopupDisabledRadio
+            // 
+            this.trayPopupDisabledRadio.AutoSize = true;
+            this.trayPopupDisabledRadio.Location = new System.Drawing.Point(6, 78);
+            this.trayPopupDisabledRadio.Name = "trayPopupDisabledRadio";
+            this.trayPopupDisabledRadio.Size = new System.Drawing.Size(65, 17);
+            this.trayPopupDisabledRadio.TabIndex = 5;
+            this.trayPopupDisabledRadio.TabStop = true;
+            this.trayPopupDisabledRadio.Text = "Disabled";
+            this.trayPopupDisabledRadio.UseVisualStyleBackColor = true;
             // 
             // trayPopupButton
             // 
@@ -2635,27 +2668,6 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
-            // overviewGroupCharactersInTrainingCheckBox
-            // 
-            this.overviewGroupCharactersInTrainingCheckBox.AutoSize = true;
-            this.overviewGroupCharactersInTrainingCheckBox.Location = new System.Drawing.Point(161, 26);
-            this.overviewGroupCharactersInTrainingCheckBox.Name = "overviewGroupCharactersInTrainingCheckBox";
-            this.overviewGroupCharactersInTrainingCheckBox.Size = new System.Drawing.Size(165, 17);
-            this.overviewGroupCharactersInTrainingCheckBox.TabIndex = 33;
-            this.overviewGroupCharactersInTrainingCheckBox.Text = "Group Characters In Training";
-            this.overviewGroupCharactersInTrainingCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // trayPopupDisabledRadio
-            // 
-            this.trayPopupDisabledRadio.AutoSize = true;
-            this.trayPopupDisabledRadio.Location = new System.Drawing.Point(6, 78);
-            this.trayPopupDisabledRadio.Name = "trayPopupDisabledRadio";
-            this.trayPopupDisabledRadio.Size = new System.Drawing.Size(65, 17);
-            this.trayPopupDisabledRadio.TabIndex = 5;
-            this.trayPopupDisabledRadio.TabStop = true;
-            this.trayPopupDisabledRadio.Text = "Disabled";
-            this.trayPopupDisabledRadio.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -2905,5 +2917,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.RadioButton trayPopupDisabledRadio;
         private System.Windows.Forms.CheckBox overviewGroupCharactersInTrainingCheckBox;
+        private System.Windows.Forms.CheckBox cbAdvanceEntryAdd;
     }
 }

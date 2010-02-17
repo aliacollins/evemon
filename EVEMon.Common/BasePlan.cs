@@ -246,7 +246,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool IsPlanned(StaticSkill skill)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i <= 5; i++)
             {
                 if (IsPlanned(skill, i))
                     return true;

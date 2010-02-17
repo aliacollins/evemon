@@ -64,15 +64,22 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("dimUntrainable")]
-        public bool DimUntrainable
+        [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
+        public bool OnlyShowSelectionSummaryOnMultiSelect
         {
             get;
             set;
         }
 
-        [XmlElement("onlyShowSelectionSummaryOnMultiSelect")]
-        public bool OnlyShowSelectionSummaryOnMultiSelect
+        [XmlElement("useAdvanceEntryAddition")]
+        public bool UseAdvanceEntryAddition
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("dimUntrainable")]
+        public bool DimUntrainable
         {
             get;
             set;

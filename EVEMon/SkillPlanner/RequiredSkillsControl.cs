@@ -287,7 +287,7 @@ namespace EVEMon.SkillPlanner
         {
             var menu = (ToolStripMenuItem)sender;
             var operation = (IPlanOperation)menu.Tag;
-            PlanHelper.PerformSilently(operation);
+            PlanHelper.SelectPerform(operation);
         }
         #endregion
     }
