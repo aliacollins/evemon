@@ -72,20 +72,14 @@ namespace EVEMon.Common
         public static bool OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
         {
             var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            try
-            {
-                using (Stream fs = File.Create(tempFileName))
-                {
-                    if (!writeContentFunc(fs))
-                        return false;
-                }
 
-                return OverwriteOrWarnTheUser(tempFileName, destFileName);
-            }
-            finally
+            using (Stream fs = File.Create(tempFileName))
             {
-                File.Delete(tempFileName);
+                if (!writeContentFunc(fs))
+                    return false;
             }
+
+            return OverwriteOrWarnTheUser(tempFileName, destFileName);
         }
 
         /// <summary>
