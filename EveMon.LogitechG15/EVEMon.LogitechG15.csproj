@@ -82,11 +82,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LCDSplash.bmp" />
-    <Content Include="lgLcdLibWrapper.dll">
+    <None Include="lgLcdLibWrapper.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lgLCDNETWrapper.dll" />
-    <Content Include="readme.txt" />
+    </None>
+    <None Include="lgLCDNETWrapper.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
