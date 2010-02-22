@@ -445,19 +445,7 @@ namespace EVEMon.SkillPlanner
                                 lvi.ForeColor = Color.Green;
                         }
 
-                        // Checks if this entry is queued
-                        if (Settings.UI.PlanWindow.HighlightQueuedSkills)
-                        {
-                            SkillQueue s_skill = new SkillQueue(m_character as CCPCharacter);
-                            var queuedskill = s_skill.m_character.SkillQueue;
-                            string e_skill = entry.ToString();
-                            foreach (var skill in queuedskill)
-                            {   
-                                string q_skill = skill.ToString();
-                                if (e_skill == q_skill)
-                                    lvi.ForeColor = Color.RoyalBlue;
-                            }
-                        }
+                        HighlightQueuedSkills(lvi, entry);
 
                         // Checks if this entry is currently training (even if it's paused)
                         if (entry.CharacterSkill.IsTraining && s_level) 
@@ -548,6 +536,32 @@ namespace EVEMon.SkillPlanner
             {
                 lvSkills.EndUpdate();
                 UpdateStatusBar();
+            }
+        }
+
+        /// <summary>
+        /// Applies formatting to a ListViewItem if the entry is queued.
+        /// </summary>
+        /// <param name="lvi">ListViewItem to be formatted.</param>
+        /// <param name="entry">Entry used to identify is queued.</param>
+        private void HighlightQueuedSkills(ListViewItem lvi, PlanEntry entry)
+        {
+            if (!Settings.UI.PlanWindow.HighlightQueuedSkills)
+                return;
+
+            var ccpCharacter = m_character as CCPCharacter;
+
+            // Current character isn't a CCP character, so can't have a Queue.
+            if (ccpCharacter == null)
+                return;
+
+            string entrySkill = entry.ToString();
+
+            foreach (var skill in ccpCharacter.SkillQueue)
+            {
+                string queuedSkill = skill.ToString();
+                if (entrySkill == queuedSkill)
+                    lvi.ForeColor = Color.RoyalBlue;
             }
         }
 

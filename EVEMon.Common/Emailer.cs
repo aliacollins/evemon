@@ -37,16 +37,18 @@ namespace EVEMon.Common
         /// <returns></returns>
 		public static bool SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
 		{
-            CCPCharacter CCPCharacter = character as CCPCharacter;
-            if (character == null)
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
+            // Current character isn't a CCP character, so can't have a Queue.
+            if (ccpCharacter == null)
                 return false;
             
             string charName = character.Name;
             string skillName = skill.SkillName;
             string skillLevelString = Skill.GetRomanForInt(skill.Level);
 			
-            bool freeTime = CCPCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - CCPCharacter.SkillQueue.EndTime;
+            bool freeTime = ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - ccpCharacter.SkillQueue.EndTime;
             string timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
 
             // Message's first line

@@ -271,12 +271,17 @@ namespace EVEMon
         /// <returns></returns>
         private void UpdateSkillQueueFreeRoom()
         {
-            CCPCharacter character = m_character as CCPCharacter;
-            bool freeTime = character.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+
+            // Current character isn't a CCP character, so can't have a Queue.
+            if (ccpCharacter == null)
+                return;
+
+            bool freeTime = ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
 
 			if (freeTime)
 			{
-				TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - character.SkillQueue.EndTime;
+				TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - ccpCharacter.SkillQueue.EndTime;
 				string timeLeftText;
 
 				// Prevents the "(none)" text from being displayed

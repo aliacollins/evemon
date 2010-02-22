@@ -78,7 +78,14 @@ namespace EVEMon
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = e.Character as CCPCharacter;
-            if (ccpCharacter == null || m_skillQueue == null || ccpCharacter.SkillQueue != m_skillQueue) return;
+
+            // Current character isn't a CCP character, so can't have a Queue.
+            if (ccpCharacter == null)
+                return;
+
+            if (m_skillQueue == null || ccpCharacter.SkillQueue != m_skillQueue)
+                return;
+
             this.Invalidate();
         }
         #endregion

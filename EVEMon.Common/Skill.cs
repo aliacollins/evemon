@@ -360,6 +360,8 @@ namespace EVEMon.Common
             get
             {
                 CCPCharacter ccpCharacter = m_character as CCPCharacter;
+
+                // Current character isn't a CCP character, so can't have a Queue.
                 if (ccpCharacter == null)
                     return false;
 
