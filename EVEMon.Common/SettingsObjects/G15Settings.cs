@@ -55,6 +55,13 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("showEVETime")]
+        public bool ShowEVETime
+        {
+            get;
+            set;
+        }
+
         internal G15Settings Clone()
         {
             return (G15Settings)MemberwiseClone();

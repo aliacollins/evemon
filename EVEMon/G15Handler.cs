@@ -56,7 +56,8 @@ namespace EVEMon
         private static void UpdateOnTimerTick()
         {
             // No G15 keyboard connected
-            if (m_startupError) return;
+            if (m_startupError)
+                return;
 
             // Did the state changed ?
             if (Settings.G15.Enabled != m_running)
@@ -64,7 +65,8 @@ namespace EVEMon
                 if (!m_running)
                 {
                     Start();
-                    if (m_startupError) return;
+                    if (m_startupError)
+                        return;
                 }
                 else
                 {
@@ -117,9 +119,10 @@ namespace EVEMon
             // Settings
             m_lcd.Cycle = Settings.G15.UseCharactersCycle;
             m_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
-            m_lcd.CycleCompletionTime = Settings.G15.UseTimeFormatsCycle;
+            m_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
             m_lcd.CycleCompletionInterval = Settings.G15.TimeFormatsCycleInterval;
-            m_lcd.ShowTime = Settings.G15.ShowSystemTime;
+            m_lcd.ShowSystemTime = Settings.G15.ShowSystemTime;
+            m_lcd.ShowEVETime = Settings.G15.ShowEVETime;
 
             // Characters names
             List<CCPCharacter> lcdCharacters = new List<CCPCharacter>();
@@ -143,9 +146,10 @@ namespace EVEMon
             var currentCharacter = m_lcd.CurrentCharacter;
             if (currentCharacter != null)
             {
-                var skill = currentCharacter.CurrentlyTrainingSkill;
-                if (skill != null)
+                if (currentCharacter.IsTraining)
                 {
+                    var skill = currentCharacter.CurrentlyTrainingSkill;
+
                     m_lcd.CurrentCharacter = currentCharacter;
                     m_lcd.CurrentCharacterTrainingProgression = skill.FractionCompleted;
                     m_lcd.CurrentSkillTrainingText = skill.ToString();
@@ -155,13 +159,13 @@ namespace EVEMon
                 {
                     m_lcd.CurrentSkillTrainingText = "";
                     m_lcd.TimeToComplete = TimeSpan.Zero;
-                    m_lcd.CurrentCharacterTrainingProgression = 1;
+                    m_lcd.CurrentCharacterTrainingProgression = 0;
                 }
             }
         }
 
         /// <summary>
-        /// When skills are completed, we display a special messages
+        /// When skills are completed, we display a special message
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -171,7 +175,7 @@ namespace EVEMon
             {
                 if (e.CompletedSkills.Count == 1)
                 {
-                    m_lcd.SkillCompleted(e.Character, e.CompletedSkills.First());
+                    m_lcd.SkillCompleted(e.Character);
                 }
                 else
                 {

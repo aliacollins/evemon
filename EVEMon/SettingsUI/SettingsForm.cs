@@ -102,7 +102,8 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// 
+        /// Occurs when the user click "Apply".
+        /// We set up the new settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -177,8 +178,9 @@ namespace EVEMon.SettingsUI
             cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
             ACycleInterval.Value = m_settings.G15.CharactersCycleInterval;
             cbG15CycleTimes.Checked = m_settings.G15.UseTimeFormatsCycle;
-            ACycleTimesInterval.Value = m_settings.G15.TimeFormatsCycleInterval;
+            ACycleTimesInterval.Value = Math.Min(m_settings.G15.TimeFormatsCycleInterval, ACycleTimesInterval.Maximum);
             cbG15ShowTime.Checked = m_settings.G15.ShowSystemTime;
+            cbG15ShowEVETime.Checked = m_settings.G15.ShowEVETime;
 
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
@@ -388,6 +390,7 @@ namespace EVEMon.SettingsUI
             m_settings.G15.UseTimeFormatsCycle = cbG15CycleTimes.Checked;
             m_settings.G15.TimeFormatsCycleInterval = (int)ACycleTimesInterval.Value;
             m_settings.G15.ShowSystemTime = cbG15ShowTime.Checked;
+            m_settings.G15.ShowEVETime = cbG15ShowEVETime.Checked;
 
             // Notifications
             NotificationSettings notificationSettings = new NotificationSettings();
@@ -445,8 +448,14 @@ namespace EVEMon.SettingsUI
 
             // External calendar settings
             m_settings.Calendar.Enabled = externalCalendarCheckbox.Checked;
-            if (rbMSOutlook.Checked) m_settings.Calendar.Provider = CalendarProvider.Outlook;
-            else m_settings.Calendar.Provider = CalendarProvider.Google;
+            if (rbMSOutlook.Checked)
+            {
+                m_settings.Calendar.Provider = CalendarProvider.Outlook;
+            }
+            else
+            {
+                m_settings.Calendar.Provider = CalendarProvider.Google;
+            }
             m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text;
             m_settings.Calendar.GooglePassword = tbGooglePassword.Text;
             m_settings.Calendar.GoogleURL = tbGoogleURI.Text;
@@ -839,7 +848,7 @@ namespace EVEMon.SettingsUI
 
         #region Other handlers
         /// <summary>
-        /// Look'n feel > Skill browser icon set > Icons set combo.
+        /// Skill Planner > Skill browser icon set > Icons set combo.
         /// Updates the sample below the combo box
         /// </summary>
         /// <param name="sender"></param>
@@ -952,6 +961,25 @@ namespace EVEMon.SettingsUI
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
+        }
+
+        /// <summary>
+        /// Sets the character info max cycle time.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ACycleInterval_ValueChanged(object sender, EventArgs e)
+        {
+            if (ACycleInterval.Value == 1)
+            {
+                cbG15CycleTimes.Checked = false;
+                panelCycleQueueInfo.Enabled = false;
+            }
+            else
+            {
+                ACycleTimesInterval.Maximum = Math.Max(ACycleInterval.Value / 2, 1);
+                panelCycleQueueInfo.Enabled = true;
+            }
         }
     }
 }

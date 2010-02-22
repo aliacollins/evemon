@@ -239,11 +239,12 @@ namespace EVEMon.SettingsUI
             this.g15Page = new EVEMon.Controls.MultiPanelPage();
             this.g15CheckBox = new System.Windows.Forms.CheckBox();
             this.g15Panel = new System.Windows.Forms.Panel();
+            this.cbG15ShowEVETime = new System.Windows.Forms.CheckBox();
             this.cbG15ShowTime = new System.Windows.Forms.CheckBox();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.panelCycleQueueInfo = new System.Windows.Forms.Panel();
             this.cbG15CycleTimes = new System.Windows.Forms.CheckBox();
             this.ACycleTimesInterval = new System.Windows.Forms.NumericUpDown();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelCycleCharInfo = new System.Windows.Forms.Panel();
             this.cbG15ACycle = new System.Windows.Forms.CheckBox();
             this.ACycleInterval = new System.Windows.Forms.NumericUpDown();
             this.igbServerPage = new EVEMon.Controls.MultiPanelPage();
@@ -338,9 +339,9 @@ namespace EVEMon.SettingsUI
             this.gbGoogle.SuspendLayout();
             this.g15Page.SuspendLayout();
             this.g15Panel.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.panelCycleQueueInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.panelCycleCharInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.igbServerPage.SuspendLayout();
             this.igbFlowPanel.SuspendLayout();
@@ -998,7 +999,7 @@ namespace EVEMon.SettingsUI
             // lblCycleTrainingSeconds
             // 
             lblCycleTrainingSeconds.AutoSize = true;
-            lblCycleTrainingSeconds.Location = new System.Drawing.Point(273, 6);
+            lblCycleTrainingSeconds.Location = new System.Drawing.Point(265, 6);
             lblCycleTrainingSeconds.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             lblCycleTrainingSeconds.Name = "lblCycleTrainingSeconds";
             lblCycleTrainingSeconds.Size = new System.Drawing.Size(46, 13);
@@ -1008,7 +1009,7 @@ namespace EVEMon.SettingsUI
             // lblG15CycleCharSeconds
             // 
             lblG15CycleCharSeconds.AutoSize = true;
-            lblG15CycleCharSeconds.Location = new System.Drawing.Point(166, 6);
+            lblG15CycleCharSeconds.Location = new System.Drawing.Point(186, 6);
             lblG15CycleCharSeconds.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             lblG15CycleCharSeconds.Name = "lblG15CycleCharSeconds";
             lblG15CycleCharSeconds.Size = new System.Drawing.Size(46, 13);
@@ -1325,7 +1326,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.mainWindowPage;
+            this.multiPanel.SelectedPage = this.g15Page;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -2413,35 +2414,46 @@ namespace EVEMon.SettingsUI
             // g15Panel
             // 
             this.g15Panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.g15Panel.Controls.Add(this.cbG15ShowEVETime);
             this.g15Panel.Controls.Add(this.cbG15ShowTime);
-            this.g15Panel.Controls.Add(this.panel3);
-            this.g15Panel.Controls.Add(this.panel1);
+            this.g15Panel.Controls.Add(this.panelCycleQueueInfo);
+            this.g15Panel.Controls.Add(this.panelCycleCharInfo);
             this.g15Panel.Location = new System.Drawing.Point(6, 125);
             this.g15Panel.Margin = new System.Windows.Forms.Padding(0);
             this.g15Panel.Name = "g15Panel";
             this.g15Panel.Size = new System.Drawing.Size(399, 112);
             this.g15Panel.TabIndex = 7;
             // 
+            // cbG15ShowEVETime
+            // 
+            this.cbG15ShowEVETime.AutoSize = true;
+            this.cbG15ShowEVETime.Location = new System.Drawing.Point(10, 59);
+            this.cbG15ShowEVETime.Name = "cbG15ShowEVETime";
+            this.cbG15ShowEVETime.Size = new System.Drawing.Size(98, 17);
+            this.cbG15ShowEVETime.TabIndex = 9;
+            this.cbG15ShowEVETime.Text = "Show EVE Time";
+            this.cbG15ShowEVETime.UseVisualStyleBackColor = true;
+            // 
             // cbG15ShowTime
             // 
             this.cbG15ShowTime.AutoSize = true;
-            this.cbG15ShowTime.Location = new System.Drawing.Point(10, 59);
+            this.cbG15ShowTime.Location = new System.Drawing.Point(114, 59);
             this.cbG15ShowTime.Name = "cbG15ShowTime";
             this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
             this.cbG15ShowTime.TabIndex = 8;
             this.cbG15ShowTime.Text = "Show System Time";
             this.cbG15ShowTime.UseVisualStyleBackColor = true;
             // 
-            // panel3
+            // panelCycleQueueInfo
             // 
-            this.panel3.AutoSize = true;
-            this.panel3.Controls.Add(this.cbG15CycleTimes);
-            this.panel3.Controls.Add(this.ACycleTimesInterval);
-            this.panel3.Controls.Add(lblCycleTrainingSeconds);
-            this.panel3.Location = new System.Drawing.Point(7, 29);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(332, 28);
-            this.panel3.TabIndex = 7;
+            this.panelCycleQueueInfo.AutoSize = true;
+            this.panelCycleQueueInfo.Controls.Add(this.cbG15CycleTimes);
+            this.panelCycleQueueInfo.Controls.Add(this.ACycleTimesInterval);
+            this.panelCycleQueueInfo.Controls.Add(lblCycleTrainingSeconds);
+            this.panelCycleQueueInfo.Location = new System.Drawing.Point(7, 29);
+            this.panelCycleQueueInfo.Name = "panelCycleQueueInfo";
+            this.panelCycleQueueInfo.Size = new System.Drawing.Size(315, 28);
+            this.panelCycleQueueInfo.TabIndex = 7;
             // 
             // cbG15CycleTimes
             // 
@@ -2449,16 +2461,16 @@ namespace EVEMon.SettingsUI
             this.cbG15CycleTimes.Location = new System.Drawing.Point(3, 5);
             this.cbG15CycleTimes.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
             this.cbG15CycleTimes.Name = "cbG15CycleTimes";
-            this.cbG15CycleTimes.Size = new System.Drawing.Size(220, 17);
+            this.cbG15CycleTimes.Size = new System.Drawing.Size(215, 17);
             this.cbG15CycleTimes.TabIndex = 7;
-            this.cbG15CycleTimes.Text = "Cycle training and completion time every";
+            this.cbG15CycleTimes.Text = "Cycle Characters Skill Queue info every";
             this.cbG15CycleTimes.UseVisualStyleBackColor = true;
             this.cbG15CycleTimes.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
             // ACycleTimesInterval
             // 
             this.ACycleTimesInterval.AutoSize = true;
-            this.ACycleTimesInterval.Location = new System.Drawing.Point(229, 4);
+            this.ACycleTimesInterval.Location = new System.Drawing.Point(221, 4);
             this.ACycleTimesInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ACycleTimesInterval.Maximum = new decimal(new int[] {
             120,
@@ -2479,16 +2491,16 @@ namespace EVEMon.SettingsUI
             0,
             0});
             // 
-            // panel1
+            // panelCycleCharInfo
             // 
-            this.panel1.AutoSize = true;
-            this.panel1.Controls.Add(this.cbG15ACycle);
-            this.panel1.Controls.Add(this.ACycleInterval);
-            this.panel1.Controls.Add(lblG15CycleCharSeconds);
-            this.panel1.Location = new System.Drawing.Point(7, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(223, 28);
-            this.panel1.TabIndex = 6;
+            this.panelCycleCharInfo.AutoSize = true;
+            this.panelCycleCharInfo.Controls.Add(this.cbG15ACycle);
+            this.panelCycleCharInfo.Controls.Add(this.ACycleInterval);
+            this.panelCycleCharInfo.Controls.Add(lblG15CycleCharSeconds);
+            this.panelCycleCharInfo.Location = new System.Drawing.Point(7, 3);
+            this.panelCycleCharInfo.Name = "panelCycleCharInfo";
+            this.panelCycleCharInfo.Size = new System.Drawing.Size(236, 28);
+            this.panelCycleCharInfo.TabIndex = 6;
             // 
             // cbG15ACycle
             // 
@@ -2496,16 +2508,16 @@ namespace EVEMon.SettingsUI
             this.cbG15ACycle.Location = new System.Drawing.Point(3, 5);
             this.cbG15ACycle.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
             this.cbG15ACycle.Name = "cbG15ACycle";
-            this.cbG15ACycle.Size = new System.Drawing.Size(114, 17);
+            this.cbG15ACycle.Size = new System.Drawing.Size(139, 17);
             this.cbG15ACycle.TabIndex = 4;
-            this.cbG15ACycle.Text = "Cycle Chars every";
+            this.cbG15ACycle.Text = "Cycle Characters every";
             this.cbG15ACycle.UseVisualStyleBackColor = true;
             this.cbG15ACycle.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
             // ACycleInterval
             // 
             this.ACycleInterval.AutoSize = true;
-            this.ACycleInterval.Location = new System.Drawing.Point(122, 4);
+            this.ACycleInterval.Location = new System.Drawing.Point(142, 4);
             this.ACycleInterval.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ACycleInterval.Maximum = new decimal(new int[] {
             120,
@@ -2525,6 +2537,7 @@ namespace EVEMon.SettingsUI
             0,
             0,
             0});
+            this.ACycleInterval.ValueChanged += new System.EventHandler(this.ACycleInterval_ValueChanged);
             // 
             // igbServerPage
             // 
@@ -2752,11 +2765,11 @@ namespace EVEMon.SettingsUI
             this.g15Page.PerformLayout();
             this.g15Panel.ResumeLayout(false);
             this.g15Panel.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.panelCycleQueueInfo.ResumeLayout(false);
+            this.panelCycleQueueInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleTimesInterval)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panelCycleCharInfo.ResumeLayout(false);
+            this.panelCycleCharInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).EndInit();
             this.igbServerPage.ResumeLayout(false);
             this.igbServerPage.PerformLayout();
@@ -2899,12 +2912,12 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbHighlightQueuedSiklls;
         private System.Windows.Forms.CheckBox overviewShowSkillQueueFreeRoomCheckBox;
         private System.Windows.Forms.TextBox igbPortTextBox;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelCycleCharInfo;
         private System.Windows.Forms.CheckBox cbG15ACycle;
         private System.Windows.Forms.NumericUpDown ACycleInterval;
         private System.Windows.Forms.Panel g15Panel;
         private System.Windows.Forms.CheckBox cbG15ShowTime;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panelCycleQueueInfo;
         private System.Windows.Forms.CheckBox cbG15CycleTimes;
         private System.Windows.Forms.NumericUpDown ACycleTimesInterval;
         private EVEMon.Controls.MultiPanelPage relocatorPage;
@@ -2918,5 +2931,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.RadioButton trayPopupDisabledRadio;
         private System.Windows.Forms.CheckBox overviewGroupCharactersInTrainingCheckBox;
         private System.Windows.Forms.CheckBox cbAdvanceEntryAdd;
+        private System.Windows.Forms.CheckBox cbG15ShowEVETime;
     }
 }

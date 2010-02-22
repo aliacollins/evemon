@@ -191,11 +191,11 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="ShortTimeString">DateTime to be formatted</param>
         /// <returns>String containing formatted text</returns>
-        private static string GetShortTimeString(DateTime shortTimeString)
+        public static string GetShortTimeString(DateTime shortTimeString)
         {
             DateTimeFormatInfo dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
             
-            // get the LongTimePattern and remove :ss and :s
+            // Get the LongTimePattern and remove :ss and :s
             string shortTimePattern = dateTimeFormat.LongTimePattern.Replace(":ss", String.Empty);
             shortTimePattern = shortTimePattern.Replace(":s", String.Empty);
 
