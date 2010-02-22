@@ -16,7 +16,7 @@ namespace EVEMon
     public partial class SkillQueueControl : Control
     {
         private DateTime m_nextRepainting = DateTime.MinValue;
-        private DateTime m_paintTime = DateTime.MinValue;
+        private static DateTime m_paintTime = DateTime.UtcNow;
 
 
         #region Constructors, disposing, global events
@@ -213,8 +213,6 @@ namespace EVEMon
             int width = this.Width;
             int height = this.Height;
 
-            m_paintTime = DateTime.UtcNow;
-
             // If we are in DesignMode we just paint a dummy queue
             if (DesignMode)
             {
@@ -389,8 +387,8 @@ namespace EVEMon
                     brushNumber = (brushNumber + 1) % brushes.Length;
                 }
 
-                // if there are more than 24 hours in the queue show the point
-                if (m_skillQueue.EndTime > m_paintTime.AddHours(24))
+                // If there are more than 24 hours in the queue show the point
+                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(24))
                 {
                     PaintPoint(g, width, height);
                 }
@@ -429,10 +427,24 @@ namespace EVEMon
         /// Rectangle representing the area within the visual
         /// queue the skill occupies.
         /// </returns>
-        private Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
+        internal static Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
         {
-            TimeSpan relativeStart = skill.StartTime - m_paintTime;
-            TimeSpan relativeFinish = skill.EndTime - m_paintTime;
+            TimeSpan relativeStart;
+            TimeSpan relativeFinish;
+
+            // Character is training ? we update the timespan
+            if (skill.Owner.IsTraining)
+            {
+                relativeStart = skill.StartTime.Subtract(DateTime.UtcNow);
+                relativeFinish = skill.EndTime.Subtract(DateTime.UtcNow);
+
+            }
+            // Timespan is stable
+            else
+            {
+                relativeStart = skill.StartTime.Subtract(m_paintTime);
+                relativeFinish = skill.EndTime.Subtract(m_paintTime);
+            }
 
             int TotalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
             
@@ -483,7 +495,7 @@ namespace EVEMon
             var emptyRect = new Rectangle(lastX, 0, this.Width - lastX, this.Height);
             if (emptyRect.Contains(e.Location))
             {
-                var leftTime = m_paintTime.AddHours(24) - m_skillQueue.EndTime;
+                var leftTime = (m_skillQueue.IsPaused ? m_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
                 var text = "Free room:" + Skill.TimeSpanToDescriptiveText(leftTime, DescriptiveTextOptions.SpaceBetween, false);
                 Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2, e.Location.Y);
                 m_toolTip.Display(text, tipPoint);

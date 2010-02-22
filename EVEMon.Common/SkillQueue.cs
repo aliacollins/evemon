@@ -17,7 +17,8 @@ namespace EVEMon.Common
     {
         public CCPCharacter m_character;
         private QueuedSkill m_lastCompleted;
-        private bool m_isPaused = true;
+        private DateTime startTime = DateTime.UtcNow;
+        private bool m_isPaused;
 
         /// <summary>
         /// Default constructor, only used by <see cref="Character"/>
@@ -58,9 +59,13 @@ namespace EVEMon.Common
             get
             {
                 var endTime = DateTime.UtcNow;
-                if (this.IsPaused)
+                if (m_isPaused)
                 {
-                    return endTime;
+                    for (var i = 1; i < m_items.Count; i++)
+                    {
+                        endTime = m_items[i].EndTime;
+                    }
+                    return endTime += m_items[0].Skill.GetLeftTrainingTimeToNextLevel();
                 }
 
                 foreach (var skill in m_items)
@@ -161,13 +166,9 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableQueuedSkill> serial)
         {
-            // Paused is true when the queue is empty, false otherwise, 
-            // unless one of the queued skill has an empty endTime.
-            m_isPaused = serial.IsEmpty();
-
             // If the queue is paused, CCP sends empty start and end time.
-            // So we compute a "what if we start now" scenario
-            var startTimeWhenPaused = DateTime.UtcNow;
+            // So we base the start time on when the skill queue was started.
+            var startTimeWhenPaused = startTime;
 
             // Imports the queued skills and checks whether they are paused
             m_items.Clear();

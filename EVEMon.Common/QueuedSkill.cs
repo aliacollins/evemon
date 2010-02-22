@@ -139,8 +139,14 @@ namespace EVEMon.Common
                 int totalSP = 0;
                 foreach (var skill in StaticSkills.AllSkills)
                 {
-                    if (m_skill.StaticData == skill && m_skill.IsTraining) totalSP += m_endSP;
-                    else totalSP += m_owner.GetSkillPoints(skill);
+                    if (m_skill.StaticData == skill && m_skill.IsTraining)
+                    {
+                        totalSP += m_endSP;
+                    }
+                    else
+                    {
+                        totalSP += m_owner.GetSkillPoints(skill);
+                    }
                 }
 
                 // Computes esimated curent SP
@@ -158,7 +164,8 @@ namespace EVEMon.Common
             get
             {
                 TimeSpan left = (m_endTime - DateTime.UtcNow);
-                if (left < TimeSpan.Zero) return TimeSpan.Zero;
+                if (left < TimeSpan.Zero)
+                    return TimeSpan.Zero;
                 return left;
             }
         }
@@ -170,7 +177,8 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_endTime <= DateTime.UtcNow) return true;
+                if (m_endTime <= DateTime.UtcNow)
+                    return true;
                 return false;
             }
         }

@@ -282,28 +282,30 @@ namespace EVEMon
                 }
 
                 pnlTraining.Visible = true;
-                labelPaused.Visible = false;
+                lblPaused.Visible = false;
                 return;
             }
 
             // Not in training, check for paused skill queue
-            if (ccpCharacter != null && !ccpCharacter.SkillQueue.IsEmpty())
+            if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
             {
-                var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-                lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
-                if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
-                    skillQueueControl.Invalidate();
+                var training = ccpCharacter.SkillQueue.CurrentlyTraining;
+                lblTrainingSkill.Text = training.ToString();
+                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureInfo.CurrentCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
+
+                lblTrainingRemain.Text = "Paused";
+                lblTrainingEst.Text = "";
                 skillQueuePanel.Visible = true;
                 skillQueueTimePanel.Visible = false;
-                labelPaused.Visible = true;
-                pnlTraining.Visible = false;
+                lblPaused.Visible = true;
+                pnlTraining.Visible = true;
                 return;
             }
 
             // Not training, no skill queue
             skillQueuePanel.Visible = false;
             pnlTraining.Visible = false;
-            labelPaused.Visible = false;
+            lblPaused.Visible = false;
         }
 
         /// <summary>

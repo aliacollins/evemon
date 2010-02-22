@@ -51,7 +51,6 @@ namespace EVEMon
             this.upperTable = new System.Windows.Forms.TableLayoutPanel();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
-            this.throbber = new EVEMon.Controls.Throbber();
             this.throbberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.miQueryEverything = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,20 +71,8 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
-            this.skillQueueControl = new EVEMon.SkillQueueControl();
-            this.labelPaused = new System.Windows.Forms.Label();
+            this.lblPaused = new System.Windows.Forms.Label();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.skillsPanel = new EVEMon.Controls.BorderPanel();
-            this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new EVEMon.Controls.MultiPanel();
-            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
-            this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
-            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.warningLabel = new System.Windows.Forms.Label();
-            this.notificationList = new EVEMon.NotificationList();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
@@ -97,6 +84,19 @@ namespace EVEMon
             this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.ordersGroupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.skillsPanel = new EVEMon.Controls.BorderPanel();
+            this.corePanel = new System.Windows.Forms.Panel();
+            this.multiPanel = new EVEMon.Controls.MultiPanel();
+            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
+            this.skillsList = new EVEMon.MainWindowSkillsList();
+            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
+            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
+            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
+            this.warningLabel = new System.Windows.Forms.Label();
+            this.notificationList = new EVEMon.NotificationList();
+            this.skillQueueControl = new EVEMon.SkillQueueControl();
+            this.throbber = new EVEMon.Controls.Throbber();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -107,20 +107,20 @@ namespace EVEMon
             this.upperTable.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
             this.flpThrobber.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.throbberContextMenu.SuspendLayout();
             this.lowerTable.SuspendLayout();
             this.attributesFlowPanel.SuspendLayout();
             this.skillQueuePanel.SuspendLayout();
             this.skillQueueTimePanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.skillsPanel.SuspendLayout();
             this.corePanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
             this.skillsPage.SuspendLayout();
             this.ordersPage.SuspendLayout();
             this.skillQueuePage.SuspendLayout();
-            this.toolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripSeparator1
@@ -174,7 +174,7 @@ namespace EVEMon
             this.pnlTraining.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlTraining.Controls.Add(this.tlpStatus);
             this.pnlTraining.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlTraining.Location = new System.Drawing.Point(0, 275);
+            this.pnlTraining.Location = new System.Drawing.Point(0, 291);
             this.pnlTraining.Name = "pnlTraining";
             this.pnlTraining.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.pnlTraining.Size = new System.Drawing.Size(574, 42);
@@ -393,23 +393,6 @@ namespace EVEMon
             this.flpThrobber.TabIndex = 0;
             this.flpThrobber.WrapContents = false;
             // 
-            // throbber
-            // 
-            this.throbber.BackColor = System.Drawing.Color.Transparent;
-            this.throbber.ContextMenuStrip = this.throbberContextMenu;
-            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
-            this.throbber.Location = new System.Drawing.Point(5, 0);
-            this.throbber.Margin = new System.Windows.Forms.Padding(0);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
-            this.throbber.TabIndex = 18;
-            this.throbber.TabStop = false;
-            this.throbber.Text = "throbber1";
-            this.ttToolTip.SetToolTip(this.throbber, "Click to update everything now.");
-            // 
             // throbberContextMenu
             // 
             this.throbberContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -591,13 +574,14 @@ namespace EVEMon
             // 
             this.skillQueuePanel.AutoSize = true;
             this.skillQueuePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.skillQueuePanel.Controls.Add(this.lblPaused);
             this.skillQueuePanel.Controls.Add(this.skillQueueTimePanel);
             this.skillQueuePanel.Controls.Add(this.skillQueueControl);
             this.skillQueuePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueuePanel.Location = new System.Drawing.Point(0, 236);
+            this.skillQueuePanel.Location = new System.Drawing.Point(0, 235);
             this.skillQueuePanel.Name = "skillQueuePanel";
             this.skillQueuePanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
-            this.skillQueuePanel.Size = new System.Drawing.Size(574, 39);
+            this.skillQueuePanel.Size = new System.Drawing.Size(574, 56);
             this.skillQueuePanel.TabIndex = 13;
             // 
             // skillQueueTimePanel
@@ -632,165 +616,26 @@ namespace EVEMon
             this.lblQueueRemaining.TabIndex = 16;
             this.lblQueueRemaining.Text = "Nothing";
             // 
-            // skillQueueControl
+            // lblPaused
             // 
-            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
-            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
-            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
-            this.skillQueueControl.Location = new System.Drawing.Point(0, 23);
-            this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
-            this.skillQueueControl.SkillQueue = null;
-            this.skillQueueControl.TabIndex = 13;
-            // 
-            // labelPaused
-            // 
-            this.labelPaused.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelPaused.Location = new System.Drawing.Point(0, 317);
-            this.labelPaused.Name = "labelPaused";
-            this.labelPaused.Size = new System.Drawing.Size(574, 16);
-            this.labelPaused.TabIndex = 3;
-            this.labelPaused.Text = "Paused";
-            this.labelPaused.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblPaused.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblPaused.Location = new System.Drawing.Point(0, 23);
+            this.lblPaused.Name = "lblPaused";
+            this.lblPaused.Size = new System.Drawing.Size(574, 17);
+            this.lblPaused.TabIndex = 3;
+            this.lblPaused.Text = "Paused";
+            this.lblPaused.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lowerPanel
             // 
             this.lowerPanel.Controls.Add(this.skillsPanel);
             this.lowerPanel.Controls.Add(this.skillQueuePanel);
             this.lowerPanel.Controls.Add(this.pnlTraining);
-            this.lowerPanel.Controls.Add(this.labelPaused);
             this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lowerPanel.Location = new System.Drawing.Point(0, 166);
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(574, 333);
             this.lowerPanel.TabIndex = 3;
-            // 
-            // skillsPanel
-            // 
-            this.skillsPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.skillsPanel.Controls.Add(this.corePanel);
-            this.skillsPanel.Controls.Add(this.notificationList);
-            this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsPanel.ForeColor = System.Drawing.Color.Gray;
-            this.skillsPanel.Location = new System.Drawing.Point(0, 0);
-            this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsPanel.Name = "skillsPanel";
-            this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.skillsPanel.Size = new System.Drawing.Size(574, 236);
-            this.skillsPanel.TabIndex = 3;
-            // 
-            // corePanel
-            // 
-            this.corePanel.Controls.Add(this.multiPanel);
-            this.corePanel.Controls.Add(this.warningLabel);
-            this.corePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.corePanel.Location = new System.Drawing.Point(2, 74);
-            this.corePanel.Margin = new System.Windows.Forms.Padding(0);
-            this.corePanel.Name = "corePanel";
-            this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(571, 160);
-            this.corePanel.TabIndex = 14;
-            // 
-            // multiPanel
-            // 
-            this.multiPanel.Controls.Add(this.skillsPage);
-            this.multiPanel.Controls.Add(this.ordersPage);
-            this.multiPanel.Controls.Add(this.skillQueuePage);
-            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.multiPanel.Location = new System.Drawing.Point(1, 18);
-            this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(568, 142);
-            this.multiPanel.TabIndex = 14;
-            // 
-            // skillsPage
-            // 
-            this.skillsPage.Controls.Add(this.skillsList);
-            this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsPage.Location = new System.Drawing.Point(0, 0);
-            this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 142);
-            this.skillsPage.TabIndex = 0;
-            this.skillsPage.Text = "skillsPage";
-            // 
-            // skillsList
-            // 
-            this.skillsList.Character = null;
-            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsList.Location = new System.Drawing.Point(0, 0);
-            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 142);
-            this.skillsList.TabIndex = 12;
-            // 
-            // ordersPage
-            // 
-            this.ordersPage.Controls.Add(this.ordersList);
-            this.ordersPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersPage.Location = new System.Drawing.Point(0, 0);
-            this.ordersPage.Name = "ordersPage";
-            this.ordersPage.Size = new System.Drawing.Size(568, 142);
-            this.ordersPage.TabIndex = 2;
-            this.ordersPage.Text = "ordersPage";
-            // 
-            // ordersList
-            // 
-            this.ordersList.Character = null;
-            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
-            this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "ordersList";
-            this.ordersList.Size = new System.Drawing.Size(568, 142);
-            this.ordersList.TabIndex = 13;
-            this.ordersList.TextFilter = "";
-            // 
-            // skillQueuePage
-            // 
-            this.skillQueuePage.Controls.Add(this.skillQueueList);
-            this.skillQueuePage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueuePage.Location = new System.Drawing.Point(0, 0);
-            this.skillQueuePage.Name = "skillQueuePage";
-            this.skillQueuePage.Size = new System.Drawing.Size(568, 142);
-            this.skillQueuePage.TabIndex = 1;
-            this.skillQueuePage.Text = "skillQueuePage";
-            // 
-            // skillQueueList
-            // 
-            this.skillQueueList.Character = null;
-            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
-            this.skillQueueList.Name = "skillQueueList";
-            this.skillQueueList.Size = new System.Drawing.Size(568, 142);
-            this.skillQueueList.TabIndex = 0;
-            // 
-            // warningLabel
-            // 
-            this.warningLabel.AutoEllipsis = true;
-            this.warningLabel.BackColor = System.Drawing.Color.Black;
-            this.warningLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.warningLabel.ForeColor = System.Drawing.Color.White;
-            this.warningLabel.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
-            this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.warningLabel.Location = new System.Drawing.Point(1, 1);
-            this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(568, 17);
-            this.warningLabel.TabIndex = 1;
-            this.warningLabel.Text = "Key level warning.";
-            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // notificationList
-            // 
-            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.notificationList.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.notificationList.Location = new System.Drawing.Point(2, 2);
-            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
-            this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(571, 72);
-            this.notificationList.TabIndex = 13;
             // 
             // toolStrip
             // 
@@ -914,6 +759,161 @@ namespace EVEMon
             this.ordersGroupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ordersGroupMenu_DropDownItemClicked);
             this.ordersGroupMenu.DropDownOpening += new System.EventHandler(this.ordersGroupMenu_DropDownOpening);
             // 
+            // skillsPanel
+            // 
+            this.skillsPanel.BackColor = System.Drawing.SystemColors.Window;
+            this.skillsPanel.Controls.Add(this.corePanel);
+            this.skillsPanel.Controls.Add(this.notificationList);
+            this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsPanel.ForeColor = System.Drawing.Color.Gray;
+            this.skillsPanel.Location = new System.Drawing.Point(0, 0);
+            this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsPanel.Name = "skillsPanel";
+            this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
+            this.skillsPanel.Size = new System.Drawing.Size(574, 235);
+            this.skillsPanel.TabIndex = 3;
+            // 
+            // corePanel
+            // 
+            this.corePanel.Controls.Add(this.multiPanel);
+            this.corePanel.Controls.Add(this.warningLabel);
+            this.corePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.corePanel.Location = new System.Drawing.Point(2, 74);
+            this.corePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.corePanel.Name = "corePanel";
+            this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
+            this.corePanel.Size = new System.Drawing.Size(571, 159);
+            this.corePanel.TabIndex = 14;
+            // 
+            // multiPanel
+            // 
+            this.multiPanel.Controls.Add(this.skillsPage);
+            this.multiPanel.Controls.Add(this.ordersPage);
+            this.multiPanel.Controls.Add(this.skillQueuePage);
+            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.multiPanel.Location = new System.Drawing.Point(1, 18);
+            this.multiPanel.Name = "multiPanel";
+            this.multiPanel.SelectedPage = this.skillsPage;
+            this.multiPanel.Size = new System.Drawing.Size(568, 141);
+            this.multiPanel.TabIndex = 14;
+            // 
+            // skillsPage
+            // 
+            this.skillsPage.Controls.Add(this.skillsList);
+            this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsPage.Location = new System.Drawing.Point(0, 0);
+            this.skillsPage.Name = "skillsPage";
+            this.skillsPage.Size = new System.Drawing.Size(568, 141);
+            this.skillsPage.TabIndex = 0;
+            this.skillsPage.Text = "skillsPage";
+            // 
+            // skillsList
+            // 
+            this.skillsList.Character = null;
+            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsList.Location = new System.Drawing.Point(0, 0);
+            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsList.Name = "skillsList";
+            this.skillsList.Size = new System.Drawing.Size(568, 141);
+            this.skillsList.TabIndex = 12;
+            // 
+            // ordersPage
+            // 
+            this.ordersPage.Controls.Add(this.ordersList);
+            this.ordersPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersPage.Location = new System.Drawing.Point(0, 0);
+            this.ordersPage.Name = "ordersPage";
+            this.ordersPage.Size = new System.Drawing.Size(568, 142);
+            this.ordersPage.TabIndex = 2;
+            this.ordersPage.Text = "ordersPage";
+            // 
+            // ordersList
+            // 
+            this.ordersList.Character = null;
+            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
+            this.ordersList.Location = new System.Drawing.Point(0, 0);
+            this.ordersList.Name = "ordersList";
+            this.ordersList.Size = new System.Drawing.Size(568, 142);
+            this.ordersList.TabIndex = 13;
+            this.ordersList.TextFilter = "";
+            // 
+            // skillQueuePage
+            // 
+            this.skillQueuePage.Controls.Add(this.skillQueueList);
+            this.skillQueuePage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueuePage.Location = new System.Drawing.Point(0, 0);
+            this.skillQueuePage.Name = "skillQueuePage";
+            this.skillQueuePage.Size = new System.Drawing.Size(568, 142);
+            this.skillQueuePage.TabIndex = 1;
+            this.skillQueuePage.Text = "skillQueuePage";
+            // 
+            // skillQueueList
+            // 
+            this.skillQueueList.Character = null;
+            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
+            this.skillQueueList.Name = "skillQueueList";
+            this.skillQueueList.Size = new System.Drawing.Size(568, 142);
+            this.skillQueueList.TabIndex = 0;
+            // 
+            // warningLabel
+            // 
+            this.warningLabel.AutoEllipsis = true;
+            this.warningLabel.BackColor = System.Drawing.Color.Black;
+            this.warningLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.warningLabel.ForeColor = System.Drawing.Color.White;
+            this.warningLabel.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
+            this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.warningLabel.Location = new System.Drawing.Point(1, 1);
+            this.warningLabel.Name = "warningLabel";
+            this.warningLabel.Size = new System.Drawing.Size(568, 17);
+            this.warningLabel.TabIndex = 1;
+            this.warningLabel.Text = "Key level warning.";
+            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // notificationList
+            // 
+            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notificationList.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.notificationList.Location = new System.Drawing.Point(2, 2);
+            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
+            this.notificationList.Name = "notificationList";
+            this.notificationList.Size = new System.Drawing.Size(571, 72);
+            this.notificationList.TabIndex = 13;
+            // 
+            // skillQueueControl
+            // 
+            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
+            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
+            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
+            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.Name = "skillQueueControl";
+            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
+            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.SkillQueue = null;
+            this.skillQueueControl.TabIndex = 13;
+            // 
+            // throbber
+            // 
+            this.throbber.BackColor = System.Drawing.Color.Transparent;
+            this.throbber.ContextMenuStrip = this.throbberContextMenu;
+            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
+            this.throbber.Location = new System.Drawing.Point(5, 0);
+            this.throbber.Margin = new System.Windows.Forms.Padding(0);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.TabIndex = 18;
+            this.throbber.TabStop = false;
+            this.throbber.Text = "throbber1";
+            this.ttToolTip.SetToolTip(this.throbber, "Click to update everything now.");
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -942,7 +942,6 @@ namespace EVEMon
             this.flpCharacterInfo.PerformLayout();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.throbberContextMenu.ResumeLayout(false);
             this.lowerTable.ResumeLayout(false);
             this.lowerTable.PerformLayout();
@@ -953,14 +952,15 @@ namespace EVEMon
             this.skillQueueTimePanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             this.lowerPanel.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.skillsPanel.ResumeLayout(false);
             this.corePanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
             this.skillsPage.ResumeLayout(false);
             this.ordersPage.ResumeLayout(false);
             this.skillQueuePage.ResumeLayout(false);
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -999,7 +999,7 @@ namespace EVEMon
         private System.Windows.Forms.Panel skillQueuePanel;
         private NotificationList notificationList;
         private System.Windows.Forms.Panel corePanel;
-        private System.Windows.Forms.Label labelPaused;
+        private System.Windows.Forms.Label lblPaused;
         private System.Windows.Forms.ToolStripSeparator throbberSeparator;
         private EVEMon.Controls.MultiPanel multiPanel;
         private EVEMon.Controls.MultiPanelPage skillsPage;

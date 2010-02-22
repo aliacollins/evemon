@@ -367,7 +367,7 @@ namespace EVEMon
             // Draw skill queue color bar
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
-            Rectangle skillRect = GetSkillRect(item, qBarRect.Width, LowerBoxHeight - 1);
+            Rectangle skillRect = SkillQueueControl.GetSkillRect(item, qBarRect.Width, LowerBoxHeight - 1);
             g.FillRectangle(Brushes.CornflowerBlue,
                 new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
         }
@@ -380,36 +380,6 @@ namespace EVEMon
         public override Size GetPreferredSize(Size proposedSize)
         {
             return lbSkillsQueue.GetPreferredSize(proposedSize);
-        }
-
-        /// <summary>
-        /// Gets the rectangle a skill rendes in within a specified
-        /// rectange.
-        /// </summary>
-        /// <param name="skill">Skill that exists within the queue</param>
-        /// <param name="width">Width of the canvas</param>
-        /// <param name="height">Height of the canvas</param>
-        /// <returns>
-        /// Rectangle representing the area within the visual
-        /// queue the skill occupies.
-        /// </returns>
-        private Rectangle GetSkillRect(QueuedSkill skill, int width, int height)
-        {
-            TimeSpan relativeStart = skill.StartTime - DateTime.UtcNow;
-            TimeSpan relativeFinish = skill.EndTime - DateTime.UtcNow;
-
-            int TotalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
-
-            double Start = Math.Floor((relativeStart.TotalSeconds / TotalSeconds) * width);
-            double Finish = Math.Floor((relativeFinish.TotalSeconds / TotalSeconds) * width);
-
-            // if the start time is before now set it to zero
-            if (Start < 0)
-            {
-                Start = 0;
-            }
-
-            return new Rectangle((int)Start, 0, (int)(Finish - Start), height);
         }
         #endregion
 

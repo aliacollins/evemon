@@ -61,9 +61,9 @@ namespace EVEMon
             string format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.Skill.Name;
             string skillLevel = Skill.GetRomanForInt(skill.Level);
+            string skillStart = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.StartTime.ToLocalTime()) : "Paused");
+            string skillEnd = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.EndTime.ToLocalTime()) : "Paused");
             string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
-            string skillStart = TimeExtensions.ToAbsoluteDateTimeDescription(skill.StartTime.ToLocalTime());
-            string skillEnd = TimeExtensions.ToAbsoluteDateTimeDescription(skill.EndTime.ToLocalTime());
             string text = String.Format(CultureInfo.CurrentCulture, format, skillName, skillLevel, startText, skillStart, skillEnd);
             Display(text, pt);
         }
