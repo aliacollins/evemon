@@ -42,7 +42,8 @@ namespace EVEMon.Accounting
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode) return;
+            if (this.DesignMode)
+                return;
 
             // Update controls depending on the update mode
             removalWarningLabel.Visible = m_updateMode;
@@ -76,7 +77,7 @@ namespace EVEMon.Accounting
             }
             else
             {
-                nextButton.Enabled = true;
+                nextButton.Enabled = !errorGuideLabel.Visible;
                 previousButton.Enabled = true;
                 nextButton.Text = (m_updateMode ? "Update" : "Import");
             }
@@ -157,14 +158,18 @@ namespace EVEMon.Accounting
                 default:
                     keyPicture.Image = Properties.Resources.APIKeyWrong;
                     keyLabel.Text = m_creationArgs.Result.ErrorMessage;
+                    errorGuideLabel.Visible = true;
+                    errorGuideLabel.BringToFront();
                     break;
                 case CredentialsLevel.Limited:
                     keyPicture.Image = Properties.Resources.APIKeyLimited;
                     keyLabel.Text = "This is a limited API key.";
+                    errorGuideLabel.Visible = false;
                     break;
                 case CredentialsLevel.Full:
                     keyPicture.Image = Properties.Resources.APIKeyFull;
                     keyLabel.Text = "This is a full API key.";
+                    errorGuideLabel.Visible = false;
                     break;
             }
 
@@ -189,18 +194,23 @@ namespace EVEMon.Accounting
         /// </summary>
         private void Complete()
         {
-            if (m_creationArgs == null) return;
+            if (m_creationArgs == null)
+                return;
             m_account = m_creationArgs.CreateOrUpdate();
 
             // Takes care of the ignore list
             foreach (ListViewItem item in charactersListView.Items)
             {
                 var id = (CharacterIdentity)item.Tag;
-                if (item.Checked) m_account.IgnoreList.Remove(id);
+                if (item.Checked)
+                {
+                    m_account.IgnoreList.Remove(id);
+                }
                 else
                 {
                     var ccpCharacter = id.CCPCharacter;
-                    if (ccpCharacter != null) m_account.IgnoreList.Add(ccpCharacter);
+                    if (ccpCharacter != null)
+                        m_account.IgnoreList.Add(ccpCharacter);
                 }
             }
 

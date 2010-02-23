@@ -30,11 +30,12 @@
         {
             System.Windows.Forms.LinkLabel featuresLinkLabel;
             System.Windows.Forms.LinkLabel ccpLinkLabel;
-            System.Windows.Forms.Label label3;
-            System.Windows.Forms.Label label4;
+            System.Windows.Forms.Label fetchingDataLabel;
+            System.Windows.Forms.Label guideLabel;
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Mary Jane");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Ali Baba");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("John Doe");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountUpdateOrAdditionWindow));
             this.nextButton = new System.Windows.Forms.Button();
             this.previousButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -42,8 +43,8 @@
             this.credentialsPage = new EVEMon.Controls.MultiPanelPage();
             this.apiKeyTextBox = new System.Windows.Forms.TextBox();
             this.userIDTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.apiKeyLabel = new System.Windows.Forms.Label();
+            this.UserIDLabel = new System.Windows.Forms.Label();
             this.waitingPage = new EVEMon.Controls.MultiPanelPage();
             this.throbber = new EVEMon.Controls.Throbber();
             this.resultPage = new EVEMon.Controls.MultiPanelPage();
@@ -53,10 +54,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.removalWarningLabel = new System.Windows.Forms.Label();
             this.charactersListView = new System.Windows.Forms.ListView();
+            this.errorGuideLabel = new System.Windows.Forms.Label();
             featuresLinkLabel = new System.Windows.Forms.LinkLabel();
             ccpLinkLabel = new System.Windows.Forms.LinkLabel();
-            label3 = new System.Windows.Forms.Label();
-            label4 = new System.Windows.Forms.Label();
+            fetchingDataLabel = new System.Windows.Forms.Label();
+            guideLabel = new System.Windows.Forms.Label();
             this.multiPanel.SuspendLayout();
             this.credentialsPage.SuspendLayout();
             this.waitingPage.SuspendLayout();
@@ -86,31 +88,31 @@
             ccpLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(40, 43);
             ccpLinkLabel.Location = new System.Drawing.Point(15, 22);
             ccpLinkLabel.Name = "ccpLinkLabel";
-            ccpLinkLabel.Size = new System.Drawing.Size(420, 18);
+            ccpLinkLabel.Size = new System.Drawing.Size(408, 18);
             ccpLinkLabel.TabIndex = 5;
             ccpLinkLabel.TabStop = true;
             ccpLinkLabel.Text = "Your API credentials are available at : http://www.eveonline.com/api/default.asp";
             ccpLinkLabel.UseCompatibleTextRendering = true;
             ccpLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ccpLinkLabel_LinkClicked);
             // 
-            // label3
+            // fetchingDataLabel
             // 
-            label3.Location = new System.Drawing.Point(209, 71);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(153, 24);
-            label3.TabIndex = 1;
-            label3.Text = "Fetching data from CCP...";
-            label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            fetchingDataLabel.Location = new System.Drawing.Point(209, 71);
+            fetchingDataLabel.Name = "fetchingDataLabel";
+            fetchingDataLabel.Size = new System.Drawing.Size(153, 24);
+            fetchingDataLabel.TabIndex = 1;
+            fetchingDataLabel.Text = "Fetching data from CCP...";
+            fetchingDataLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label4
+            // guideLabel
             // 
-            label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            guideLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            label4.Location = new System.Drawing.Point(6, 17);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(284, 61);
-            label4.TabIndex = 3;
-            label4.Text = "Unchecks the characters you do not want to import.\r\n\r\nYou can also import a chara" +
+            guideLabel.Location = new System.Drawing.Point(6, 17);
+            guideLabel.Name = "guideLabel";
+            guideLabel.Size = new System.Drawing.Size(284, 61);
+            guideLabel.TabIndex = 3;
+            guideLabel.Text = "Unchecks the characters you do not want to import.\r\n\r\nYou can also import a chara" +
                 "cter and hide it through the accounts management window.";
             // 
             // nextButton
@@ -168,8 +170,8 @@
             this.credentialsPage.Controls.Add(ccpLinkLabel);
             this.credentialsPage.Controls.Add(this.apiKeyTextBox);
             this.credentialsPage.Controls.Add(this.userIDTextBox);
-            this.credentialsPage.Controls.Add(this.label2);
-            this.credentialsPage.Controls.Add(this.label1);
+            this.credentialsPage.Controls.Add(this.apiKeyLabel);
+            this.credentialsPage.Controls.Add(this.UserIDLabel);
             this.credentialsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.credentialsPage.Location = new System.Drawing.Point(0, 0);
             this.credentialsPage.Name = "credentialsPage";
@@ -195,27 +197,27 @@
             this.userIDTextBox.TabIndex = 2;
             this.userIDTextBox.TextChanged += new System.EventHandler(this.userIDTextBox_TextChanged);
             // 
-            // label2
+            // apiKeyLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 109);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "API Key:";
+            this.apiKeyLabel.AutoSize = true;
+            this.apiKeyLabel.Location = new System.Drawing.Point(12, 109);
+            this.apiKeyLabel.Name = "apiKeyLabel";
+            this.apiKeyLabel.Size = new System.Drawing.Size(49, 13);
+            this.apiKeyLabel.TabIndex = 1;
+            this.apiKeyLabel.Text = "API Key:";
             // 
-            // label1
+            // UserIDLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 81);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "User ID:";
+            this.UserIDLabel.AutoSize = true;
+            this.UserIDLabel.Location = new System.Drawing.Point(14, 81);
+            this.UserIDLabel.Name = "UserIDLabel";
+            this.UserIDLabel.Size = new System.Drawing.Size(47, 13);
+            this.UserIDLabel.TabIndex = 0;
+            this.UserIDLabel.Text = "User ID:";
             // 
             // waitingPage
             // 
-            this.waitingPage.Controls.Add(label3);
+            this.waitingPage.Controls.Add(fetchingDataLabel);
             this.waitingPage.Controls.Add(this.throbber);
             this.waitingPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.waitingPage.Location = new System.Drawing.Point(0, 0);
@@ -288,7 +290,8 @@
             // 
             this.groupBox1.Controls.Add(this.removalWarningLabel);
             this.groupBox1.Controls.Add(this.charactersListView);
-            this.groupBox1.Controls.Add(label4);
+            this.groupBox1.Controls.Add(guideLabel);
+            this.groupBox1.Controls.Add(this.errorGuideLabel);
             this.groupBox1.Location = new System.Drawing.Point(12, 50);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(479, 118);
@@ -325,6 +328,14 @@
             this.charactersListView.TabIndex = 2;
             this.charactersListView.UseCompatibleStateImageBehavior = false;
             this.charactersListView.View = System.Windows.Forms.View.List;
+            // 
+            // errorGuideLabel
+            // 
+            this.errorGuideLabel.Location = new System.Drawing.Point(6, 17);
+            this.errorGuideLabel.Name = "errorGuideLabel";
+            this.errorGuideLabel.Size = new System.Drawing.Size(467, 81);
+            this.errorGuideLabel.TabIndex = 5;
+            this.errorGuideLabel.Text = resources.GetString("errorGuideLabel.Text");
             // 
             // AccountUpdateOrAdditionWindow
             // 
@@ -366,8 +377,8 @@
         private EVEMon.Controls.MultiPanelPage credentialsPage;
         private System.Windows.Forms.TextBox apiKeyTextBox;
         private System.Windows.Forms.TextBox userIDTextBox;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label apiKeyLabel;
+        private System.Windows.Forms.Label UserIDLabel;
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.Button previousButton;
         private System.Windows.Forms.Button cancelButton;
@@ -380,5 +391,6 @@
         private System.Windows.Forms.Label removalWarningLabel;
         private System.Windows.Forms.TableLayoutPanel keyTableLayoutPanel;
         private System.Windows.Forms.Label keyLabel;
+        private System.Windows.Forms.Label errorGuideLabel;
     }
 }
