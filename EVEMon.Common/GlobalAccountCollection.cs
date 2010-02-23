@@ -26,34 +26,33 @@ namespace EVEMon.Common
         /// <summary>
         /// Check whether some accounts are not in training.
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="message">Message describing the accounts not in training.</param>
+        /// <returns>True if one or more accounts is not in training, otherwise false.</returns>
         public bool HasAccountsNotTraining(out string message)
         {
-            message = "";
+            message = String.Empty;
 
-            // Collect the accounts not in training
-            var accountsNotTraining = new List<Account>();
-            foreach (var account in EveClient.Accounts)
-            {
-                // Checks whether the account is training
-                if (!account.CharacterIdentities.IsEmpty() && account.TrainingCharacter == null)
-                {
-                    accountsNotTraining.Add(account);
-                }
-            }
+            var accountsNotTraining = EveClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && x.TrainingCharacter == null);
 
             // All accounts are training ?
-            if (accountsNotTraining.Count == 0) return false;
+            if (accountsNotTraining.Count() == 0)
+                return false;
 
             // Creates the string, scrolling through every not training account
             StringBuilder builder = new StringBuilder();
-            if (accountsNotTraining.Count == 1) builder.Append("One of your account is not in training.");
-            else builder.Append("Some of your accounts are not in training.");
+            if (accountsNotTraining.Count() == 1)
+            {
+                builder.Append("One of your account is not in training.");
+            }
+            else
+            {
+                builder.Append("Some of your accounts are not in training.");
+            }
 
             foreach (var account in accountsNotTraining)
             {
-                builder.AppendLine().Append("* ").Append(account.ToString());
+                builder.AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "* {0}", account.ToString());
             }
 
             // return
@@ -72,7 +71,8 @@ namespace EVEMon.Common
             {
                 foreach (var account in m_items.Values)
                 {
-                    if (account.UserID == userID) return account;
+                    if (account.UserID == userID)
+                        return account;
                 }
                 return null;
             }
@@ -109,9 +109,8 @@ namespace EVEMon.Common
         /// Removes the provided account from this collection
         /// </summary>
         /// <param name="account">The account to remove</param>
-        /// <param name="removeCharacters">When true, the associated characters will be removed.</param>
         /// <exception cref="InvalidOperationException">The account does not exist in the list.</exception>
-        public void Remove(Account account, bool removeCharacters)
+        public void Remove(Account account)
         {
             // Clears the account on the owned identities.
             foreach (var identity in account.CharacterIdentities.Where(x => x.Account == account))
@@ -136,7 +135,8 @@ namespace EVEMon.Common
         internal void Add(Account account, bool notify)
         {
             m_items.Add(account.UserID, account);
-            if (notify) EveClient.OnAccountCollectionChanged();
+            if (notify)
+                EveClient.OnAccountCollectionChanged();
         }
 
         /// <summary>

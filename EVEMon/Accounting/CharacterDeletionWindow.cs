@@ -43,7 +43,8 @@ namespace EVEMon.Accounting
             // Either delete this character only or the whole account.
             if (noCharactersCheckBox.Checked)
             {
-                EveClient.Accounts.Remove(m_account, true);
+                EveClient.Characters.Remove(m_character);
+                EveClient.Accounts.Remove(m_account);
             }
             else
             {

@@ -47,7 +47,7 @@ namespace EVEMon.Accounting
         private void validationButton_Click(object sender, EventArgs e)
         {
             // Remove the account
-            EveClient.Accounts.Remove(m_account, false);
+            EveClient.Accounts.Remove(m_account);
 
             // Remove the characters
             foreach (ListViewItem item in charactersListView.Items)
