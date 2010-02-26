@@ -474,6 +474,23 @@ namespace EVEMon.XmlImporter
             s_attributes[30].HigherIsBetter = false; // CPU usage
             s_attributes[50].HigherIsBetter = false; // PG usage
             s_attributes[161].HigherIsBetter = false; // Volume
+            s_attributes[4].HigherIsBetter = false; // Mass
+            s_attributes[6].HigherIsBetter = false; // Activation Cost
+            s_attributes[55].HigherIsBetter = false; // Capacitor recharge time
+            s_attributes[479].HigherIsBetter = false; // Shield recharge time
+            s_attributes[552].HigherIsBetter = false; // Signature radius
+            s_attributes[560].HigherIsBetter = false; // Sensor Recalibration Time
+            s_attributes[1082].HigherIsBetter = false; // CPU Penalty
+            s_attributes[1105].HigherIsBetter = false; // Armor HP Penalty
+            s_attributes[1153].HigherIsBetter = false; // Calibration cost
+            s_attributes[1272].HigherIsBetter = false; // Bandwidth Needed
+            s_attributes[1416].HigherIsBetter = false; // Target Switch Timer
+            s_attributes[616].HigherIsBetter = false; // Shield Booster Penalty
+            s_attributes[73].HigherIsBetter = false; // Activation time / duration
+            s_attributes[306].HigherIsBetter = false; // Maximum Velocity Penalty
+            s_attributes[556].HigherIsBetter = false; // Anchoring Delay
+            s_attributes[676].HigherIsBetter = false; // Unanchoring Delay
+            s_attributes[677].HigherIsBetter = false; // Onlining Delay
 
             // Export attribute categories
             var categories = new List<SerializablePropertyCategory>();
