@@ -1065,7 +1065,7 @@ namespace EVEMon.SettingsUI
             this.igbUrlTextBox.Location = new System.Drawing.Point(197, 3);
             this.igbUrlTextBox.Name = "igbUrlTextBox";
             this.igbUrlTextBox.ReadOnly = true;
-            this.igbUrlTextBox.Size = new System.Drawing.Size(100, 14);
+            this.igbUrlTextBox.Size = new System.Drawing.Size(120, 14);
             this.igbUrlTextBox.TabIndex = 10;
             this.igbUrlTextBox.Text = "http://localhost:80/";
             // 
@@ -1326,7 +1326,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.g15Page;
+            this.multiPanel.SelectedPage = this.mainWindowPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -2594,6 +2594,7 @@ namespace EVEMon.SettingsUI
             this.igbPortTextBox.Size = new System.Drawing.Size(35, 21);
             this.igbPortTextBox.TabIndex = 8;
             this.igbPortTextBox.Text = "80";
+            this.igbPortTextBox.TextChanged += new System.EventHandler(this.igbPortTextBox_TextChanged);
             // 
             // cbIGBPublic
             // 
