@@ -266,7 +266,7 @@ namespace EVEMon.Common
                 },
                     null);
 
-                // Wait for the completion of the backgound thread.
+                // Wait for the completion of the background thread.
                 wait.WaitOne();
             }
 

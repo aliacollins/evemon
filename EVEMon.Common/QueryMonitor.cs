@@ -87,7 +87,7 @@ namespace EVEMon.Common
         {
             get
             {
-                // If there was an error on last try, we use the cached time with a minimum 10 minutes delay
+                // If there was an error on last try, we use the cached time with a minimum 60 minutes delay
                 if (m_lastResult != null && m_lastResult.HasError)
                 {
                     return m_lastUpdate.AddMinutes(MinutesBeforeRetryOnError);
@@ -95,7 +95,9 @@ namespace EVEMon.Common
 
                 // No error ? Then we compute the next update according to the settings.
                 var period = Settings.Updates.Periods[m_method];
-                if (period == UpdatePeriod.Never) return DateTime.MaxValue;
+                if (period == UpdatePeriod.Never)
+                    return DateTime.MaxValue;
+
                 var nextUpdate = m_lastUpdate + period.ToDuration();
 
                 // If CCP "cached until" is greater than what we computed, return CCP cached time.
@@ -160,7 +162,8 @@ namespace EVEMon.Common
         internal void UpdateOnOneSecondTick()
         {
             // Are we already updating ?
-            if (m_isUpdating) return;
+            if (m_isUpdating)
+                return;
             m_isCanceled = false;
 
             // Is it enabled ?

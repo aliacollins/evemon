@@ -121,7 +121,8 @@ namespace EVEMon.Common
                 foreach (var id in CharacterIdentities)
                 {
                     var ccpCharacter = id.CCPCharacter;
-                    if (ccpCharacter != null && ccpCharacter.Monitored) return true;
+                    if (ccpCharacter != null && ccpCharacter.Monitored) 
+                        return true;
                 }
                 return false;
             }
@@ -154,15 +155,17 @@ namespace EVEMon.Common
         {
             m_charactersListMonitor.UpdateOnOneSecondTick();
 
-            // While the key status is unknown, every ten minutes, we try to update it.
+            // While the key status is unknown, every five minutes, we try to update it.
             if (m_keyLevel == CredentialsLevel.Unknown && DateTime.UtcNow >= m_lastKeyLevelUpdate.AddMinutes(5))
             {
                 // Quits if no network
-                if (!NetworkMonitor.IsNetworkAvailable) return;
+                if (!NetworkMonitor.IsNetworkAvailable)
+                    return;
 
                 // Use the first character ID
                 var characterID = this.CharacterIdentities.FirstOrDefault();
-                if (characterID == null) return;
+                if (characterID == null)
+                    return;
 
                 // Query the wallet balance.
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAccountBalanceList>(
@@ -226,7 +229,8 @@ namespace EVEMon.Common
         internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAccountBalanceList> result)
         {
             // No error ? Then it is a full key
-            if (!result.HasError) return CredentialsLevel.Full;
+            if (!result.HasError)
+                return CredentialsLevel.Full;
 
             // Error code 200 means it was a limited key
             if (result.CCPError != null && result.CCPError.IsLimitedKeyError) 
@@ -244,8 +248,14 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void Import(APIResult<SerializableCharacterList> result)
         {
-            if (result.HasError) ImportIdentities(null);
-            else ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
+            if (result.HasError)
+            {
+                ImportIdentities(null);
+            }
+            else
+            {
+                ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
+            }
         }
 
         /// <summary>
@@ -257,11 +267,13 @@ namespace EVEMon.Common
             // Clear the accounts on this character
             foreach (var id in EveClient.CharacterIdentities)
             {
-                if (id.Account == this) id.Account = null;
+                if (id.Account == this)
+                    id.Account = null;
             }
 
             // Return if there were errors in the query
-            if (identities == null) return;
+            if (identities == null)
+                return;
 
             // Assign owned identities to this account
             foreach (var serialID in identities)
@@ -287,7 +299,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the account with the informations extracter from the API by <see cref="AccountCreationEventArgs"/>.
+        /// Updates the account with the informations extracted from the API by <see cref="AccountCreationEventArgs"/>.
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="keyLevel"></param>
@@ -302,7 +314,8 @@ namespace EVEMon.Common
             // Clear the account for the currently associated identities
             foreach (var id in EveClient.CharacterIdentities)
             {
-                if (id.Account == this) id.Account = null;
+                if (id.Account == this)
+                    id.Account = null;
             }
 
             // Assign this account to the new identities and create CCP characters
@@ -310,7 +323,8 @@ namespace EVEMon.Common
             {
                 // Skip if in the ignore list
                 id.Account = this;
-                if (m_ignoreList.Contains(id)) continue;
+                if (m_ignoreList.Contains(id))
+                    continue;
 
                 // Retrieves the ccp character and create one if none.
                 var ccpCharacter = id.CCPCharacter;
