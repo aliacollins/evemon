@@ -21,7 +21,6 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
-        private ShipLoadoutSelectWindow m_loadoutForm;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
         private bool m_obsDialogActive;
@@ -115,33 +114,25 @@ namespace EVEMon.SkillPlanner
             EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
             Settings.Save();
 
-            // Tell the skill explorer we're closing down
+            // We're closing down
             if (!(e.CloseReason == CloseReason.ApplicationExitCall) && // and Application.Exit() was not called
                 !(e.CloseReason == CloseReason.TaskManagerClosing) &&  // and the user isn't trying to shut the program down for some reason
                 !(e.CloseReason == CloseReason.WindowsShutDown))       // and Windows is not shutting down
             {
+                // Tell the skill explorer we're closing down
                 WindowsFactory<SkillExplorerWindow>.CloseByTag(this);
-            }
 
-            // Tell the attributes optimization window we're closing
-            if (m_attributesOptimizerWindow != null)
-            {
-                m_attributesOptimizerWindow.Close();
-                m_attributesOptimizerWindow = null;
-            }
+                // Tell the attributes optimization window we're closing down
+                if (m_attributesOptimizerWindow != null)
+                {
+                    m_attributesOptimizerWindow.Close();
+                }
 
-            // Tell the implant window we're closing
-            if (m_implantCalcWindow != null)
-            {
-                m_implantCalcWindow.Close();
-                m_implantCalcWindow = null;
-            }
-
-            // Tells the loadout browser we're closing
-            if (m_loadoutForm != null)
-            {
-                m_loadoutForm.Close();
-                m_loadoutForm = null;
+                // Tell the implant window we're closing down
+                if (m_implantCalcWindow != null)
+                {
+                    m_implantCalcWindow.Close();
+                }
             }
 
             base.OnFormClosing(e);
