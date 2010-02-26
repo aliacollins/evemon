@@ -76,17 +76,6 @@ namespace EVEMon.Common
                 // Global settings
                 Settings.Compatibility = serial.Compatibility;
 
-                // Import the characters, accounts and plans
-                if (!preferencesOnly)
-                {
-                    // The above check prevents the settings form to trigger a 
-                    // characters updates since the last queried infos would be lost.
-                    EveClient.Characters.Import(serial.Characters);
-                    EveClient.Characters.ImportPlans(serial.Plans);
-                    EveClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    EveClient.Accounts.Import(serial.Accounts);
-                }
-
                 // API providers
                 EveClient.APIProviders.Import(serial.APIProviders);
 
@@ -102,6 +91,20 @@ namespace EVEMon.Common
                 Settings.Notifications = serial.Notifications.Clone();
                 Settings.Exportation = serial.Exportation.Clone();
                 Settings.Calendar = serial.Calendar.Clone();
+
+                // Import the characters, accounts and plans
+                // (We do this last in order to avoid
+                // exceptions from calling user related
+                // settings from character settings)
+                if (!preferencesOnly)
+                {
+                    // The above check prevents the settings form to trigger a 
+                    // characters updates since the last queried infos would be lost.
+                    EveClient.Characters.Import(serial.Characters);
+                    EveClient.Characters.ImportPlans(serial.Plans);
+                    EveClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+                    EveClient.Accounts.Import(serial.Accounts);
+                }
 
                 // Trim the data
                 OnImportCompleted();

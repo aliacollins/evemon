@@ -184,4 +184,7 @@
   <data name="APIMarketOrders" xml:space="preserve">
     <value>/char/MarketOrders.xml.aspx</value>
   </data>
+  <data name="APIConquerableStationList" xml:space="preserve">
+    <value>/eve/ConquerableStationList.xml.aspx</value>
+  </data>
 </root>

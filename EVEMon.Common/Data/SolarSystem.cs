@@ -38,7 +38,8 @@ namespace EVEMon.Common.Data
             m_y = src.Y;
             m_z = src.Z;
 
-            if (src.Stations == null) return;
+            if (src.Stations == null)
+                return;
             foreach (var srcStation in src.Stations)
             {
                 m_items.Add(new Station(this, srcStation));
@@ -138,7 +139,7 @@ namespace EVEMon.Common.Data
         /// Adds a neighbor with a jumpgate connection to this system.
         /// </summary>
         /// <param name="system"></param>
-        internal void AddNeightbor(SolarSystem system)
+        internal void AddNeighbor(SolarSystem system)
         {
             m_jumps.Add(system);
         }
@@ -176,7 +177,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
-            if (this.Constellation != other.Constellation) return this.Constellation.CompareTo(other.Constellation);
+            if (this.Constellation != other.Constellation)
+                return this.Constellation.CompareTo(other.Constellation);
+
             return m_name.CompareTo(other.m_name);
         }
     }

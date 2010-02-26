@@ -70,7 +70,8 @@ namespace EVEMon.Common
         /// <param name="args"></param>
         public void Invalidate(NotificationInvalidationEventArgs args)
         {
-            if (InvalidateCore(args.Key)) EveClient.OnNotificationInvalidated(args);
+            if (InvalidateCore(args.Key))
+                EveClient.OnNotificationInvalidated(args);
         }
 
         /// <summary>
@@ -85,7 +86,10 @@ namespace EVEMon.Common
             // Removes all the notifications with the given key.
             while (index < m_items.Count)
             {
-                if (m_items[index].InvalidationKey != key) index++;
+                if (m_items[index].InvalidationKey != key)
+                {
+                    index++;
+                }
                 else
                 {
                     m_items.RemoveAt(index);
@@ -96,6 +100,31 @@ namespace EVEMon.Common
             // Did we remove anything
             return foundAny;
         }
+
+        #region API Server error
+        /// <summary>
+        /// Invalidates the notification for an API server querying error for ConquerableStationList.
+        /// </summary>
+        internal void InvalidateConquerableStationListError()
+        {
+            Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.QueryingError));
+        }
+
+        /// <summary>
+        /// Notifies an API server querying error for ConquerableStationList.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyConquerableStationListError(APIResult<SerializableConquerableStationList> result)
+        {
+            var notification = new APIErrorNotification(null, result);
+            notification.Description = "An error occured while querying the API server.";
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Priority = NotificationPriority.Error;
+            Notify(notification);
+        }
+        #endregion
+
 
         #region Server status error
         /// <summary>

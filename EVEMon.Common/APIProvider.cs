@@ -92,7 +92,8 @@ namespace EVEMon.Common
         {
             foreach (APIMethod method in m_methods)
             {
-                if (method.Method == requestMethod) return method;
+                if (method.Method == requestMethod)
+                    return method;
             }
 
             throw new InvalidOperationException();
@@ -160,11 +161,18 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="userID">The account's ID</param>
         /// <param name="apiKey">The account's API key</param>
-        /// <param name="callback">The callback to execute on the data actor (see <see cref="DataObject.CommonActor"/>) once the data are retrieved.</param>
         public APIResult<SerializableCharacterList> QueryCharactersList(long userID, string apiKey)
         {
             HttpPostData postData = new HttpPostData("userID=" + userID.ToString() + "&apiKey=" + apiKey);
             return QueryMethod<SerializableCharacterList>(APIMethods.CharacterList, postData, RowsetsTransform);
+        }
+
+        /// <summary>
+        /// Query the conquerable station list.
+        /// </summary>
+        public APIResult<SerializableConquerableStationList> QueryConquerableSationList()
+        {
+            return QueryMethod<SerializableConquerableStationList>(APIMethods.ConquerableStationList, null, RowsetsTransform);
         }
 
         /// <summary>
@@ -237,6 +245,12 @@ namespace EVEMon.Common
                 LocalXmlCache.Save(sheet.Name, result.XmlDocument);
             }
 
+            // If the result is a conquerable station list, we store the result
+            if (method == APIMethods.ConquerableStationList && !result.HasError)
+            {
+                LocalXmlCache.Save(method.ToString(), result.XmlDocument);
+            }
+
             // Returns
             return result;
         }
@@ -272,6 +286,12 @@ namespace EVEMon.Common
                 {
                     SerializableAPICharacter sheet = (SerializableAPICharacter)(Object)result.Result;
                     LocalXmlCache.Save(sheet.Name, result.XmlDocument);
+                }
+
+                // If the result is a conquerable station list, we store the result
+                if (method == APIMethods.ConquerableStationList && !result.HasError)
+                {
+                    LocalXmlCache.Save(method.ToString(), result.XmlDocument);
                 }
 
                 // Invokes the callback

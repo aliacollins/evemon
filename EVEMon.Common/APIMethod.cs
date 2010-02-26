@@ -63,7 +63,13 @@ namespace EVEMon.Common
         /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
         /// </summary>
         [FullKey]
-        CharacterAccountBalance = 6
+        CharacterAccountBalance = 6,
+
+        /// <summary>
+        /// The conquerable station list. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        ConquerableStationList = 7
     }
 
     /// <summary>

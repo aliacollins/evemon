@@ -460,7 +460,7 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Expiration:
-                    item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription (order.Expiration).ToUpper() : "Expired");
+                    item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription(order.Expiration).ToUpper() : "Expired");
                     item.ForeColor = (order.IsAvailable ? Color.Black : Color.Red);
                     if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
                         item.ForeColor = Color.DarkOrange; 
@@ -485,7 +485,7 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Location:
-                    item.Text = order.Station.FullLocation;
+                    item.Text = (order.Station is ConquerableStation ? (order.Station as ConquerableStation).FullLocation : order.Station.FullLocation);
                     break;
 
                 case MarketOrderColumn.MinimumVolume:
@@ -509,7 +509,7 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Station:
-                    item.Text = order.Station.Name;
+                    item.Text = (order.Station is ConquerableStation ? (order.Station as ConquerableStation).FullName : order.Station.Name);
                     break;
 
                 case MarketOrderColumn.TotalPrice:

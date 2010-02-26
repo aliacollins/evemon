@@ -32,6 +32,19 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Gets the system with the provided ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static SolarSystem GetSystem(int id)
+        {
+            EnsureInitialized();
+            SolarSystem result = null;
+            s_solarSystemsByID.TryGetValue(id, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Gets an enumeration of all the stations in the universe.
         /// </summary>
         public static IEnumerable<Station> AllStations
@@ -47,7 +60,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the station wtih the provided ID.
+        /// Gets the station with the provided ID.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -56,21 +69,16 @@ namespace EVEMon.Common.Data
             EnsureInitialized();
             Station result = null;
             s_stationsByID.TryGetValue(id, out result);
-            if (result == null)
-            {
-                EveClient.Trace("Could not find station id {0}", id);
-                s_stationsByID.TryGetValue(60013747, out result);
-                EveClient.Trace("Setting to {0}", result.Name);
-            }
             return result;
         }
 
         /// <summary>
-        /// Ensures the datafile has been intialized
+        /// Ensures the datafile has been intialized.
         /// </summary>
         public static void EnsureInitialized()
         {
-            if (m_initialized) return;
+            if (m_initialized)
+                return;
             var datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
 
             // Generate the nodes
@@ -101,8 +109,8 @@ namespace EVEMon.Common.Data
             {
                 var a = s_solarSystemsByID[srcJump.FirstSystemID];
                 var b = s_solarSystemsByID[srcJump.SecondSystemID];
-                a.AddNeightbor(b);
-                b.AddNeightbor(a);
+                a.AddNeighbor(b);
+                b.AddNeighbor(a);
             }
             foreach (var system in s_solarSystemsByID.Values)
             {

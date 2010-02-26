@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -8,13 +10,24 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Represents a station inside the EVE universe.
     /// </summary>
-    public sealed class Station : IComparable<Station>
+    public class Station : IComparable<Station>
     {
         private readonly int m_id;
         private readonly string m_name;
         private readonly SolarSystem m_owner;
         private readonly float m_reprocessingTake;
         private readonly float m_reprocessingEfficiency;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="src"></param>
+        public Station(SerializableOutpost src)
+        {
+            m_id = src.StationID;
+            m_name = src.StationName;
+            m_owner = StaticGeography.GetSystem(src.SolarSystemID); 
+        }
 
         /// <summary>
         /// Constructor.

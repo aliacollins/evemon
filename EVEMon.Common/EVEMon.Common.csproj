@@ -229,6 +229,7 @@
       <DependentUpon>MsgBoxCustom.cs</DependentUpon>
     </Compile>
     <Compile Include="CultureConstants.cs" />
+    <Compile Include="ConquerableStation.cs" />
     <Compile Include="Data\Constellation.cs" />
     <Compile Include="Data\DBConstants.cs" />
     <Compile Include="Data\EveProperty.cs" />
@@ -320,6 +321,7 @@
     <Compile Include="Serialization\API\IAPIResult.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
+    <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
     <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

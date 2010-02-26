@@ -106,6 +106,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /eve/ConquerableStationList.xml.aspx.
+        /// </summary>
+        public static string APIConquerableStationList {
+            get {
+                return ResourceManager.GetString("APIConquerableStationList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/MarketOrders.xml.aspx.
         /// </summary>
         public static string APIMarketOrders {
