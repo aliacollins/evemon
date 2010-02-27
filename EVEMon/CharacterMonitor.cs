@@ -781,6 +781,9 @@ namespace EVEMon
 
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
+                if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
+                    continue;
+
                 TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
                 string timeToNextUpdateText;
 
