@@ -183,7 +183,16 @@ namespace EVEMon.Common.Controls
 
             try
             {
-                var image = Image.FromFile(cacheFileName, true);
+                // we need to load the data into a MemoryStream before
+                // returning the image or GDI+ will lock the file for 
+                // the lifetime of the image.
+                MemoryStream stream = new MemoryStream();
+
+                byte[] imageBytes = File.ReadAllBytes(cacheFileName);
+                stream.Write(imageBytes, 0, imageBytes.Length);
+                stream.Position = 0;
+
+                var image = Image.FromStream(stream);
                 return image;
             }
             catch (Exception e)
@@ -249,6 +258,7 @@ namespace EVEMon.Common.Controls
                 {
                     newImage.Save(fs, ImageFormat.Png);
                     fs.Flush();
+                    fs.Close();
                     return true;
                 });
 
@@ -282,7 +292,8 @@ namespace EVEMon.Common.Controls
                 if (String.IsNullOrEmpty(EveClient.EvePortraitCacheFolder))
                 {
                     // Return if the user canceled
-                    if (!ChangeEVEPortraitCache()) return;
+                    if (!ChangeEVEPortraitCache())
+                        return;
                 }
 
                 // Now, seach in the game folder all matching files 
