@@ -8,7 +8,10 @@ using EVEMon.Common.Serialization.Datafiles;
 namespace EVEMon.Common.Data
 {
 	/// <summary>
-    /// Represents a certificate from the datafiles. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
+    /// Represents a certificate from the datafiles.
+    /// Every category (i.e. "Business and Industry")
+    /// contains certificate classes (i.e. "Production Manager"),
+    /// which contain certificates (i.e. "Production Manager Basic").
     /// </summary>
     public sealed class StaticCertificate
     {

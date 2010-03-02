@@ -71,50 +71,52 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(185, 126);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 148);
             // 
             // tsmAddToPlan
             // 
+            this.tsmAddToPlan.Image = global::EVEMon.Properties.Resources.EditPlan;
             this.tsmAddToPlan.Name = "tsmAddToPlan";
-            this.tsmAddToPlan.Size = new System.Drawing.Size(184, 22);
-            this.tsmAddToPlan.Text = "Add to plan";
+            this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
+            this.tsmAddToPlan.Text = "&Plan...";
             this.tsmAddToPlan.Click += new System.EventHandler(this.tsmAddToPlan_Click);
             // 
             // showInMenuSeparator
             // 
             this.showInMenuSeparator.Name = "showInMenuSeparator";
-            this.showInMenuSeparator.Size = new System.Drawing.Size(181, 6);
+            this.showInMenuSeparator.Size = new System.Drawing.Size(182, 6);
             // 
             // showInBrowserMenu
             // 
             this.showInBrowserMenu.Name = "showInBrowserMenu";
-            this.showInBrowserMenu.Size = new System.Drawing.Size(184, 22);
-            this.showInBrowserMenu.Text = "&Show in Skill browser";
+            this.showInBrowserMenu.Size = new System.Drawing.Size(194, 22);
+            this.showInBrowserMenu.Text = "Show in Skill &Browser...";
             this.showInBrowserMenu.Click += new System.EventHandler(this.showInBrowserMenu_Click);
             // 
             // showInExplorerMenu
             // 
+            this.showInExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
             this.showInExplorerMenu.Name = "showInExplorerMenu";
-            this.showInExplorerMenu.Size = new System.Drawing.Size(184, 22);
-            this.showInExplorerMenu.Text = "Show in skill explorer";
+            this.showInExplorerMenu.Size = new System.Drawing.Size(194, 22);
+            this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
             this.showInExplorerMenu.Click += new System.EventHandler(this.showInExplorerMenu_Click);
             // 
             // tsSeparator
             // 
             this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(181, 6);
+            this.tsSeparator.Size = new System.Drawing.Size(182, 6);
             // 
             // tsmExpandAll
             // 
             this.tsmExpandAll.Name = "tsmExpandAll";
-            this.tsmExpandAll.Size = new System.Drawing.Size(184, 22);
+            this.tsmExpandAll.Size = new System.Drawing.Size(185, 22);
             this.tsmExpandAll.Text = "&Expand all";
             this.tsmExpandAll.Click += new System.EventHandler(this.tsmExpandAll_Click);
             // 
             // tsmCollapseAll
             // 
             this.tsmCollapseAll.Name = "tsmCollapseAll";
-            this.tsmCollapseAll.Size = new System.Drawing.Size(184, 22);
+            this.tsmCollapseAll.Size = new System.Drawing.Size(185, 22);
             this.tsmCollapseAll.Text = "&Collapse all";
             this.tsmCollapseAll.Click += new System.EventHandler(this.tsmCollapseAll_Click);
             // 

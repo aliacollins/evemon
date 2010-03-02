@@ -67,10 +67,12 @@ namespace EVEMon.SkillPlanner
             set 
             { 
                 m_plan = value;
-                if (m_plan == null) return;
+                if (m_plan == null)
+                    return;
 
                 var character = (Character)m_plan.Character;
-                if (m_character == character) return;
+                if (m_character == character)
+                    return;
                 m_character = character;
 
                 this.treeView.Nodes.Clear();
@@ -104,7 +106,8 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (this.treeView.SelectedNode == null) return null;
+                if (this.treeView.SelectedNode == null)
+                    return null;
                 return this.treeView.SelectedNode.Tag as Certificate;
             }
         }
@@ -169,14 +172,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
-            // Perform the selection manuall since the bound's width and x are incorrect in owndraw
+            // Perform the selection manually since the bound's width and x are incorrect in owndraw
             TreeNode selection = null;
             for (TreeNode node = treeView.TopNode; node != null; node = node.NextVisibleNode)
             {
                 if (node.Bounds.Top <= e.Y && node.Bounds.Bottom >= e.Y)
                 {
                     // If the user clicked the "arrow zone", we do not change the selection and just return
-                    if (e.X < (node.Bounds.Left - 32)) return;
+                    if (e.X < (node.Bounds.Left - 32))
+                        return;
                     selection = node;
                     break;
                 }
@@ -209,7 +213,8 @@ namespace EVEMon.SkillPlanner
                 this.treeView.Nodes.Clear();
 
                 // No update when not fully initialized
-                if (m_character == null || m_class == null) return;
+                if (m_character == null || m_class == null)
+                    return;
 
                 // Create the nodes when not done, yet
                 if (this.treeView.Nodes.Count == 0)
@@ -220,13 +225,17 @@ namespace EVEMon.SkillPlanner
                         this.treeView.Nodes.Add(node);
 
                         // Does the old selection still exists ?
-                        if (cert == oldSelection) newSelection = node;
+                        if (cert == oldSelection)
+                            newSelection = node;
 
                     }
                 }
                 
                 // Update the nodes
-                foreach (TreeNode node in this.treeView.Nodes) UpdateNode(node);
+                foreach (TreeNode node in this.treeView.Nodes)
+                {
+                    UpdateNode(node);
+                }
 
                 // Is the old selection kept ? Then we select the matching node
                 if (newSelection != null)
@@ -304,10 +313,6 @@ namespace EVEMon.SkillPlanner
             // The node represents a certificate
             if (cert != null)
             {
-                node.Text = cert.ToString();
-                node.ToolTipText = cert.Description;
-                node.StateImageIndex = CertificateIcon;
-
                 switch (cert.Status)
 	            {
 		            case CertificateStatus.Granted:
@@ -332,13 +337,18 @@ namespace EVEMon.SkillPlanner
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
                 var skill = m_character.Skills[skillPrereq.Skill];
 
-                node.Text = skill.Name;
-                node.ToolTipText = skill.Description;
-                node.StateImageIndex = SkillIcon;
-
-                if (skillPrereq.IsKnown) node.ImageIndex = GrantedIcon;
-                else if (skill.IsKnown) node.ImageIndex = UnknownButTrainableIcon;
-                else node.ImageIndex = UnknownIcon;
+                if (skillPrereq.IsKnown)
+                {
+                    node.ImageIndex = GrantedIcon;
+                }
+                else if (skill.IsKnown)
+                {
+                    node.ImageIndex = UnknownButTrainableIcon;
+                }
+                else
+                {
+                    node.ImageIndex = UnknownIcon;
+                }
             }
 
             // When selected, the image remains the same
@@ -365,7 +375,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            string line1 = "";
+            string line1 = String.Empty;
             string line2 = "-";
             int supIcon = -1;
 
@@ -432,7 +442,6 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     var height = e.Graphics.MeasureString(line1, m_boldFont).Height;
-                    //var yOffset = Math.Max(0.0f, (e.Bounds.Height - height) * 0.5f);
                     var yOffset = 0;
                     e.Graphics.DrawString(line1, m_boldFont, foreground, new PointF(left, e.Bounds.Top + yOffset));
                 }
@@ -483,7 +492,7 @@ namespace EVEMon.SkillPlanner
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
                     tsmAddToPlan.Text = "Plan \"" + cert.ToString() + "\"";
 
-                    // Update "browse" menu
+                    // Update "browser" menu
                     showInBrowserMenu.Enabled = m_class != cert.Class;
                     showInBrowserMenu.Text = "Show Certificates";
 
@@ -501,11 +510,10 @@ namespace EVEMon.SkillPlanner
 
                     // Update "show in skill browser" menu
                     showInBrowserMenu.Enabled = true;
-                    showInBrowserMenu.Text = "Show in Skill Browser";
+                    showInBrowserMenu.Text = "Show in Skill Browser...";
 
                     // Update "show in skill explorer" menu
                     showInExplorerMenu.Visible = true;
-                    showInExplorerMenu.Text = "Show in Skill Explorer";
                 }
             }
         }
@@ -526,11 +534,21 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Treeview's context menu > Expand All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
             this.treeView.ExpandAll();
         }
 
+        /// <summary>
+        /// Treeview's context menu > Collapse All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
             this.treeView.CollapseAll();
@@ -545,7 +563,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             Certificate cert = this.treeView.SelectedNode.Tag as Certificate;
             // When a certificate is selected, we select its class in the left tree
@@ -570,7 +589,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             // Open the skill explorer
             SkillLevel prereq = (SkillLevel)this.treeView.SelectedNode.Tag;

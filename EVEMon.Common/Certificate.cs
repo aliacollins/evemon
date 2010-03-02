@@ -125,7 +125,7 @@ namespace EVEMon.Common
 
         #region Core properties
         /// <summary>
-        /// Gets this skill's id
+        /// Gets this certificate's id
         /// </summary>
         public int ID
         {
@@ -133,7 +133,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's name
+        /// Gets this certificate's name
         /// </summary>
         public string Name
         {
@@ -141,7 +141,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's description
+        /// Gets this certificate's description
         /// </summary>
         public string Description
         {

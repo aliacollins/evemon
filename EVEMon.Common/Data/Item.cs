@@ -180,7 +180,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the skill used to rerocess those items.
+        /// Gets the skill used to reprocess those items.
         /// </summary>
         public StaticSkill ReprocessingSkill
         {
