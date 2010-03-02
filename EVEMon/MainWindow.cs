@@ -946,9 +946,12 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread.
             if (this.InvokeRequired)
             {
+                EveClient.Trace("MainWindow.OnUpdateAvailable - Invoke");
                 this.Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
                 return;
             }
+
+            EveClient.Trace("MainWindow.OnUpdateAvailable - Enter");
 
             // Did the user previously choose to ignore this version ?
             if (Settings.Updates.MostRecentDeniedUpdgrade != null)
@@ -958,21 +961,23 @@ namespace EVEMon
             }
 
             // Notify the user and prompt him
-            if (!m_isShowingUpdateWindow)
+            if (m_isShowingUpdateWindow)
+                return;
+
+            m_isShowingUpdateWindow = true;
+            using (UpdateNotifyForm f = new UpdateNotifyForm(e))
             {
-                m_isShowingUpdateWindow = true;
-                using (UpdateNotifyForm f = new UpdateNotifyForm(e))
+                f.ShowDialog();
+                if (f.DialogResult == DialogResult.OK)
                 {
-                    f.ShowDialog();
-                    if (f.DialogResult == DialogResult.OK)
-                    {
-                        m_isUpdating = true;
-                        Settings.SaveImmediate();
-                        this.Close();
-                    }
+                    m_isUpdating = true;
+                    Settings.SaveImmediate();
+                    this.Close();
                 }
-                m_isShowingUpdateWindow = false;
             }
+            m_isShowingUpdateWindow = false;
+
+            EveClient.Trace("MainWindow.OnUpdateAvailable - Done");
         }
 
 
@@ -986,25 +991,30 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread.
             if (this.InvokeRequired)
             {
+                EveClient.Trace("MainWindow.OnDataUpdateAvailable - Invoke");
                 this.Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
                 return;
             }
 
-            if (!m_isShowingDataUpdateWindow)
+            EveClient.Trace("MainWindow.OnDataUpdateAvailable - Enter");
+
+            if (m_isShowingDataUpdateWindow)
+                return;
+
+            m_isShowingDataUpdateWindow = true;
+            using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
             {
-                m_isShowingDataUpdateWindow = true;
-                using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
+                f.ShowDialog();
+                if (f.DialogResult == DialogResult.OK)
                 {
-                    f.ShowDialog();
-                    if (f.DialogResult == DialogResult.OK)
-                    {
-                        m_isUpdatingData = true;
-                        Settings.SaveImmediate();
-                        this.Close();
-                    }
+                    m_isUpdatingData = true;
+                    Settings.SaveImmediate();
+                    this.Close();
                 }
-                m_isShowingDataUpdateWindow = false;
             }
+            m_isShowingDataUpdateWindow = false;
+
+            EveClient.Trace("MainWindow.OnDataUpdateAvailable - Done");
         }
         #endregion
 
