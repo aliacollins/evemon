@@ -279,6 +279,26 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Treeview's context menu > Expand All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmExpandAll_Click(object sender, EventArgs e)
+        {
+            tvSkillList.ExpandAll();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmCollapseAll_Click(object sender, EventArgs e)
+        {
+            tvSkillList.CollapseAll();
+        }
+
+        /// <summary>
         /// Context > Plan To > Level N
         /// </summary>
         /// <param name="sender"></param>

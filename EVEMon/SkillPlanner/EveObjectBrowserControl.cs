@@ -70,7 +70,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveObjectBrowserControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             // Watch for selection changes
             this.m_selectControl.SelectionChanged += new EventHandler(OnSelectionChanged);

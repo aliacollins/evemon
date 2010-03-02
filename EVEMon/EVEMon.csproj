@@ -442,12 +442,6 @@
     <Compile Include="SkillPlanner\EveObjectBrowserControl.Designer.cs">
       <DependentUpon>EveObjectBrowserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\EveObjectBrowserSimple.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\EveObjectBrowserSimple.Designer.cs">
-      <DependentUpon>EveObjectBrowserSimple.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillPlanner\ItemSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -459,6 +453,12 @@
     </Compile>
     <Compile Include="SkillPlanner\PlanToOperationForm.Designer.cs">
       <DependentUpon>PlanToOperationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\RecommendedCertificatesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\RecommendedCertificatesControl.Designer.cs">
+      <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">
       <SubType>Form</SubType>
@@ -766,10 +766,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>EveObjectBrowserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\EveObjectBrowserSimple.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>EveObjectBrowserSimple.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\EveObjectSelectControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EveObjectSelectControl.cs</DependentUpon>
@@ -1069,6 +1065,9 @@
     <EmbeddedResource Include="SkillPlanner\PlanToOperationForm.resx">
       <DependentUpon>PlanToOperationForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\RecommendedCertificatesControl.resx">
+      <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">
       <DependentUpon>ShipSelectControl.cs</DependentUpon>
