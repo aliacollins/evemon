@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Globalization;
 using System.Diagnostics;
@@ -152,7 +153,7 @@ namespace EVEMon.XmlImporter
                 { 
                     ID = category.ID,
                     Name = category.CategoryName,
-                    Description = category.Description,
+                    Description = Regex.Replace(category.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
                 };
 
                 // Export certificates classes
@@ -169,7 +170,7 @@ namespace EVEMon.XmlImporter
                     {
                         ID = certClass.ID,
                         Name = certClass.ClassName,
-                        Description = certClass.Description,
+                        Description = Regex.Replace(certClass.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
                     };
 
                     // Export certificates
@@ -181,7 +182,7 @@ namespace EVEMon.XmlImporter
                         {
                             ID = certificate.ID,
                             Grade = GetGrade(certificate.Grade),
-                            Description = certificate.Description,
+                            Description = Regex.Replace(certificate.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
                         };
 
                         // Export prerequesities
@@ -335,7 +336,7 @@ namespace EVEMon.XmlImporter
                     {
                         ID = skill.ID,
                         Name = skill.Name,
-                        Description = skill.Description,
+                        Description = Regex.Replace(skill.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
                         Public = skill.Published == 1,
                         Cost = (long)skill.BasePrice,
                     };
@@ -804,7 +805,7 @@ namespace EVEMon.XmlImporter
             {
                 ID = srcItem.ID,
                 Name = srcItem.Name,
-                Description = srcItem.Description,
+                Description = Regex.Replace(srcItem.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
             };
 
             // Icon

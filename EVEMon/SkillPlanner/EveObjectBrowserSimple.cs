@@ -1,13 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.Common;
-using EVEMon.SkillPlanner;
-using System.Text.RegularExpressions;
 
 namespace EVEMon.SkillPlanner
 {
@@ -53,7 +44,7 @@ namespace EVEMon.SkillPlanner
             if (SelectedObject == null) return;
 
             // Description
-            tbDescription.Text = Regex.Replace(SelectedObject.Description, "<.+?>", String.Empty, RegexOptions.Singleline);
+            tbDescription.Text = SelectedObject.Description;
 
             // Required Skills
             requiredSkillsControl.Object = SelectedObject;
