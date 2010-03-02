@@ -766,21 +766,27 @@ namespace EVEMon
         /// <param name="e"></param>
         private void throbberContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            // Remove all the items after the separator
+            // Remove all the items including the separator
             int separatorIndex = throbberContextMenu.Items.IndexOf(throbberSeparator);
-            while(separatorIndex + 1 < throbberContextMenu.Items.Count)
+            while(separatorIndex > -1 && separatorIndex < throbberContextMenu.Items.Count)
             {
-                throbberContextMenu.Items.RemoveAt(separatorIndex + 1);
+                throbberContextMenu.Items.RemoveAt(separatorIndex);
             }
 
-            // Add menus
+            // Exit for non-CCP characters or no associated account
             var ccpCharacter = m_character as CCPCharacter;
-            
-            if (ccpCharacter == null)
+            if (ccpCharacter == null || ccpCharacter.Identity.Account == null)
                 return;
 
+            // Add new separator before monitor items
+            throbberSeparator = new ToolStripSeparator();
+            throbberSeparator.Name = "throbberSeparator";
+            throbberContextMenu.Items.Add(throbberSeparator);
+
+            // Add monitor items
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
+                // Skip market orders monitor if api key is a limited one
                 if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
                     continue;
 
@@ -795,8 +801,8 @@ namespace EVEMon
                 {
                     timeToNextUpdateText = String.Format("{0}m", Math.Floor(timeToNextUpdate.TotalMinutes));
                 }
-                
-                string menuText = String.Format("Update {0} ({1})", monitor.ToString(), timeToNextUpdateText);
+
+                string menuText = String.Format("Update {0} ({1})", monitor.ToString(), timeToNextUpdate > TimeSpan.Zero ? timeToNextUpdateText : "");
                 var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
                 throbberContextMenu.Items.Add(menu);
