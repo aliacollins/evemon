@@ -22,7 +22,7 @@ namespace EVEMon
         #region Constructors, disposing, global events
 
         /// <summary>
-        /// Creates the skill queue control without an associates skill queue
+        /// Creates the skill queue control without an associates skill queue.
         /// </summary>
         public SkillQueueControl()
         {
@@ -57,7 +57,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
-            if (DateTime.Now > m_nextRepainting) Invalidate();
+            if (DateTime.Now > m_nextRepainting)
+                Invalidate();
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace EVEMon
         private SkillQueue m_skillQueue;
 
         /// <summary>
-        /// Skill Queue to be rendered
+        /// Skill Queue to be rendered.
         /// </summary>
         [Category("Data")]
         [Description("Skill queue to render on the control canvas")]
@@ -115,7 +116,7 @@ namespace EVEMon
         private Color m_firstColor = Color.LightBlue;
         
         /// <summary>
-        /// The first of two colors to be used in the queue
+        /// The first of two colors to be used in the queue.
         /// </summary>
         [Category("Appearance")]
         [Description("First color of the component")]
@@ -136,7 +137,7 @@ namespace EVEMon
         private Color m_secondColor = Color.DarkBlue;
 
         /// <summary>
-        /// The second of two colours to be used in the queue
+        /// The second of two colours to be used in the queue.
         /// </summary>
         [Category("Appearance")]
         [Description("Second color of the component")]
@@ -197,7 +198,7 @@ namespace EVEMon
         
         #region Overridden Methods
         /// <summary>
-        /// Paint the skill queue to the control surface
+        /// Paint the skill queue to the control surface.
         /// </summary>
         /// <remarks>
         /// pe.Graphics is control suface. Width and Height are
@@ -233,7 +234,7 @@ namespace EVEMon
         SkillQueueToolTip m_toolTip;
 
         /// <summary>
-        /// Get the first of the two alternating colours
+        /// Get the first of the two alternating colours.
         /// </summary>
         /// <remarks>
         /// Implements safe for work functionality
@@ -252,7 +253,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the second of the two alternating colours
+        /// Gets the second of the two alternating colours.
         /// </summary>
         /// <remarks>
         /// Implements safe for work functionality
@@ -290,7 +291,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the border color
+        /// Gets the border color.
         /// </summary>
         /// <remarks>
         /// Implements safe for work functionality
@@ -309,7 +310,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Paints the point (right pointing arrow) on the canvas
+        /// Paints the point (right pointing arrow) on the canvas.
         /// </summary>
         /// <remarks>
         /// Actually paints an inverse triangle
@@ -359,8 +360,7 @@ namespace EVEMon
 
         /// <summary>
         /// Paints the first 24 hours of the skill queue including the
-        /// point if the queue has more than 24 hours contained within
-        /// it
+        /// point if the queue has more than 24 hours contained within it.
         /// </summary>
         /// <param name="g">Graphics canvas</param>
         /// <param name="width">Width of the canvas</param>
@@ -373,7 +373,8 @@ namespace EVEMon
             try
             {
                 int brushNumber = 0;
-                if (m_skillQueue == null) return;
+                if (m_skillQueue == null)
+                    return;
 
                 int lastX = 0;
                 foreach (QueuedSkill skill in m_skillQueue)
@@ -417,8 +418,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the rectangle a skill rendes in within a specified
-        /// rectange.
+        /// Gets the rectangle a skill rendes in within a specified rectange.
         /// </summary>
         /// <param name="skill">Skill that exists within the queue</param>
         /// <param name="width">Width of the canvas</param>
@@ -451,11 +451,9 @@ namespace EVEMon
             double Start = Math.Floor((relativeStart.TotalSeconds / TotalSeconds) * width);
             double Finish = Math.Floor((relativeFinish.TotalSeconds / TotalSeconds) * width);
 
-            // if the start time is before now set it to zero
+            // If the start time is before now set it to zero
             if (Start < 0)
-            {
                 Start = 0;
-            }
 
             return new Rectangle((int)Start, 0, (int)(Finish - Start), height);
         }
@@ -463,22 +461,24 @@ namespace EVEMon
         private Point m_lastLocation = new Point(-1, -1);
 
         /// <summary>
-        /// Triggers when the mouse is moved displays skill
+        /// Triggers when the mouse is moved displays skill.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (m_skillQueue == null) return;
+            if (m_skillQueue == null)
+                return;
 
-            // prevent rapid triggering of event when the mouse hasn't moved
-            if (e.Location == m_lastLocation) return;
+            // Prevent rapid triggering of event when the mouse hasn't moved
+            if (e.Location == m_lastLocation)
+                return;
 
             m_lastLocation = e.Location;
 
             int lastX = 0;
             foreach (QueuedSkill skill in m_skillQueue)
             {
-                // find the rectangle for the skill and paint it
+                // Find the rectangle for the skill and paint it
                 Rectangle skillRect = GetSkillRect(skill, this.Width, this.Height);
                 lastX = skillRect.Right;
 
@@ -518,7 +518,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Spit out a static skill queue for the designer
+        /// Spit out a static skill queue for the designer.
         /// </summary>
         /// <param name="g"></param>
         /// <param name="width"></param>

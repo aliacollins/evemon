@@ -48,7 +48,7 @@ namespace EVEMon.Common
                 // StartTime and EndTime were empty on the serialization object if the skill was paused.
                 // So we compute a "what if we start now" scenario
                 m_startTime = startTimeWhenPaused;
-                startTimeWhenPaused += m_skill.GetLeftTrainingTimeToNextLevel();
+                startTimeWhenPaused += m_skill.GetLeftTrainingTimeForLevelOnly(m_level);
                 m_endTime = startTimeWhenPaused;
             }
         }
@@ -149,10 +149,10 @@ namespace EVEMon.Common
                     }
                 }
 
-                // Computes esimated curent SP
+                // Computes estimated current SP
                 var spPerHour = m_owner.GetBaseSPPerHour(m_skill) * BaseCharacter.GetNewCharacterSkillTrainingBonus(totalSP, 0);
-                var esimatedSP = m_endSP - (m_endTime - DateTime.UtcNow).TotalHours * spPerHour;
-                return Math.Max((int)esimatedSP, m_startSP);
+                var estimatedSP = m_endSP - (m_endTime - DateTime.UtcNow).TotalHours * spPerHour;
+                return (m_skill.IsTraining ? Math.Max((int)estimatedSP, m_startSP) : m_startSP);
             }
         }
 

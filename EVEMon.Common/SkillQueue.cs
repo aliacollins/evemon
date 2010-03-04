@@ -58,22 +58,10 @@ namespace EVEMon.Common
         {
             get
             {
-                var endTime = DateTime.UtcNow;
-                if (m_isPaused)
-                {
-                    for (var i = 1; i < m_items.Count; i++)
-                    {
-                        endTime = m_items[i].EndTime;
-                    }
-                    return endTime += m_items[0].Skill.GetLeftTrainingTimeToNextLevel();
-                }
+                if (m_items.IsEmpty())
+                    return DateTime.UtcNow;
 
-                foreach (var skill in m_items)
-                {
-                    endTime = skill.EndTime;
-                }
-
-                return endTime;
+                return m_items[m_items.Count - 1].EndTime;
             }
         }
 
@@ -166,6 +154,8 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableQueuedSkill> serial)
         {
+            m_isPaused = false;
+
             // If the queue is paused, CCP sends empty start and end time.
             // So we base the start time on when the skill queue was started.
             var startTimeWhenPaused = startTime;
