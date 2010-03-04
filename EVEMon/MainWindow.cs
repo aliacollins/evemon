@@ -41,12 +41,13 @@ namespace EVEMon
         private bool m_isShowingUpdateWindow;
         private bool m_isShowingDataUpdateWindow;
         private bool m_isUpdatingTabOrder;
+        private bool m_isUpdateEventsSubscribed;
 
         private readonly List<Notification> m_popupNotifications = new List<Notification>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public MainWindow()
         {
@@ -69,7 +70,7 @@ namespace EVEMon
         }
         
         /// <summary>
-        /// Constructor for a minimized window
+        /// Constructor for a minimized window.
         /// </summary>
         public MainWindow(bool startMinimized)
             : this()
@@ -99,7 +100,7 @@ namespace EVEMon
         
         #region Loading, closing, resizing, etc
         /// <summary>
-        /// Once the window is loaded, we complete initialization
+        /// Once the window is loaded, we complete initialization.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -201,14 +202,14 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Ocurs when the form is going to be closed. 
-        /// We may decide to cancel the closing and rather minimize to tray bar
+        /// Occurs when the form is going to be closed. 
+        /// We may decide to cancel the closing and rather minimize to tray bar.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // is there a reason that we should really close the window
+            // Is there a reason that we should really close the window
             if (this.Visible &&                                                 // and main form is visible
                 !this.m_isUpdating &&                                           // and code auto-update not currently in process   
                 !this.m_isUpdatingData &&                                       // and data auto-update not currently in process
@@ -219,7 +220,7 @@ namespace EVEMon
                 // Should we actually just minimize ?
                 if (Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.Exit)    // and EVEMon is configured to close to system tray
                 {
-                    // if the user has right clicked the task bar item item while
+                    // If the user has right clicked the task bar item item while
                     // this window is minimized, and chosen close then then the
                     // following will evaluate to false and EVEMon will close.
                     if (this.WindowState != FormWindowState.Minimized)
@@ -235,7 +236,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When closing, ensures we're leaving with a proper state
+        /// When closing, ensures we're leaving with a proper state.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -250,7 +251,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On minimizing, we force garbage collection
+        /// On minimizing, we force garbage collection.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -262,7 +263,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Callback for time synchronization with Battleclinic check
+        /// Callback for time synchronization with Battleclinic check.
         /// </summary>
         /// <param name="isSynchronised"></param>
         /// <param name="serverTime"></param>
@@ -282,7 +283,7 @@ namespace EVEMon
 
         #region Tabs management
         /// <summary>
-        /// Occurs when the monitored characters collection is changed
+        /// Occurs when the monitored characters collection is changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -295,7 +296,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Rebuild the tab pages
+        /// Rebuild the tab pages.
         /// </summary>
         private void UpdateTabs()
         {
@@ -394,7 +395,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Creates the tab for the given character
+        /// Creates the tab for the given character.
         /// </summary>
         /// <param name="character">The character</param>
         private TabPage CreateTab(Character character)
@@ -408,7 +409,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When tabs are moved by the user (through drag'n drop), we update the settings
+        /// When tabs are moved by the user (through drag'n drop), we update the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -419,7 +420,8 @@ namespace EVEMon
             List<Character> order = new List<Character>();
             foreach (TabPage page in tcCharacterTabs.TabPages)
             {
-                if (page.Tag is Character) order.Add(page.Tag as Character);
+                if (page.Tag is Character)
+                    order.Add(page.Tag as Character);
             }
 
             m_isUpdatingTabOrder = true;
@@ -513,7 +515,7 @@ namespace EVEMon
 
         #region Notifications, server status change, skill completion sound
         /// <summary>
-        /// Occurs when the server status is updated
+        /// Occurs when the server status is updated.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -597,7 +599,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Displays the tooltip
+        /// Displays the tooltip.
         /// </summary>
         private void DisplayTooltipNotifications()
         {
@@ -694,23 +696,38 @@ namespace EVEMon
             m_popupNotifications.Clear();
         }
 
+        /// <summary>
+        /// Occurs when the alerts ballon icon is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void niAlertIcon_BalloonTipClicked(object sender, EventArgs e)
         {
             OnAlertBalloonClicked();
         }
 
+        /// <summary>
+        /// Occurs when the alerts icon is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void niAlertIcon_Click(object sender, EventArgs e)
         {
             OnAlertBalloonClicked();
         }
 
+        /// <summary>
+        /// Occurs when the alerts icon is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void niAlertIcon_MouseClick(object sender, MouseEventArgs e)
         {
             OnAlertBalloonClicked();
         }
 
         /// <summary>
-        /// Occurs when skills have been completed
+        /// Occurs when skills have been completed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -721,16 +738,18 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Checks whether a sound must be played on skill training
+        /// Checks whether a sound must be played on skill training.
         /// </summary>
         /// <returns></returns>
         private void TryPlaySkillCompletionSound()
         {
             // Returns if the user disabled the option
-            if (!Settings.Notifications.PlaySoundOnSkillCompletion) return;
+            if (!Settings.Notifications.PlaySoundOnSkillCompletion)
+                return;
 
             // Checks the schedule 
-            if (Scheduler.SilentMode) return;
+            if (Scheduler.SilentMode)
+                return;
 
             // Play the sound
             string skilltrained = Path.Combine(Application.ExecutablePath, "..\\Resources\\SkillTrained.wav");
@@ -744,7 +763,7 @@ namespace EVEMon
 
         #region Per-second updates
         /// <summary>
-        /// Occurs every second
+        /// Occurs every second.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -761,7 +780,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Updates the status bar
+        /// Updates the status bar.
         /// </summary>
         private void UpdateStatusLabel()
         {
@@ -863,10 +882,10 @@ namespace EVEMon
                     }
                 }
 
-                // if we go through the loop again we will remove another component of the TimeSpan
+                // If we go through the loop again we will remove another component of the TimeSpan
                 trimTimeSpanComponents++;
             }
-            // each pass we remove one component of the time span up untill the hours
+            // Each pass we remove one component of the time span up untill the hours
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
@@ -876,12 +895,12 @@ namespace EVEMon
                 builder.Append(appSuffix);
             }
 
-            // set the window title
+            // Set the window title
             this.Text = builder.ToString();
         }
 
         /// <summary>
-        /// Produces a sorted list of characters in training, ordered from the shortest to the longest training time
+        /// Produces a sorted list of characters in training, ordered from the shortest to the longest training time.
         /// </summary>
         /// <remarks>Pulled this code out of cm_ShortInfoChanged, as I needed to use the returned List in multiple places</remarks>
         /// <returns></returns>
@@ -913,7 +932,7 @@ namespace EVEMon
         /// <summary>
         /// Appends the given training time for the specified character to the provided <see cref="StringBuilder"/>. *
         /// Format is : "1d, 5h, 32m John Doe (Eidetic Memory)"
-        /// Used to update the window's title
+        /// Used to update the window's title.
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="character"></param>
@@ -926,9 +945,7 @@ namespace EVEMon
             builder.AppendFormat(CultureConstants.DefaultCulture,"{0} {1}", skillDescriptionText, character.Name);
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)
-            {
                 builder.AppendFormat(CultureConstants.DefaultCulture, " ({0})", character.CurrentlyTrainingSkill.SkillName);
-            }
 
             return builder.ToString();
         }
@@ -946,17 +963,14 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread.
             if (this.InvokeRequired)
             {
-                EveClient.Trace("MainWindow.OnUpdateAvailable - Invoke");
                 this.Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
                 return;
             }
 
-            EveClient.Trace("MainWindow.OnUpdateAvailable - Enter");
-
             // Did the user previously choose to ignore this version ?
-            if (Settings.Updates.MostRecentDeniedUpdgrade != null)
+            if (Settings.Updates.MostRecentDeniedUpgrade != null)
             {
-                if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpdgrade))
+                if (e.NewestVersion <= new Version(Settings.Updates.MostRecentDeniedUpgrade))
                     return;
             }
 
@@ -976,8 +990,6 @@ namespace EVEMon
                 }
             }
             m_isShowingUpdateWindow = false;
-
-            EveClient.Trace("MainWindow.OnUpdateAvailable - Done");
         }
 
 
@@ -991,12 +1003,9 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread.
             if (this.InvokeRequired)
             {
-                EveClient.Trace("MainWindow.OnDataUpdateAvailable - Invoke");
                 this.Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
                 return;
             }
-
-            EveClient.Trace("MainWindow.OnDataUpdateAvailable - Enter");
 
             if (m_isShowingDataUpdateWindow)
                 return;
@@ -1013,8 +1022,6 @@ namespace EVEMon
                 }
             }
             m_isShowingDataUpdateWindow = false;
-
-            EveClient.Trace("MainWindow.OnDataUpdateAvailable - Done");
         }
         #endregion
 
@@ -1032,7 +1039,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > exit
+        /// File > Exit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1076,7 +1083,8 @@ namespace EVEMon
         private void deleteCharacterMenu_Click(object sender, EventArgs e)
         {
             var character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             using (var window = new CharacterDeletionWindow(character))
             {
@@ -1093,7 +1101,8 @@ namespace EVEMon
         private void hideCharacterMenu_Click(object sender, EventArgs e)
         {
             var character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
             character.Monitored = false;
         }
 
@@ -1134,7 +1143,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Tools > Mineral Worksheet
+        /// Tools > Mineral Worksheet.
         /// Open the worksheet window.
         /// </summary>
         /// <param name="sender"></param>
@@ -1160,8 +1169,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Tools > Reset settings
-        /// Called when the user clickes the "reset cache" toolbar's button
+        /// Tools > Reset settings.
+        /// Called when the user clickes the "reset cache" toolbar's button.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1214,7 +1223,8 @@ namespace EVEMon
         {
             // Return if no selected tab (cannot infere which character the chart should represent)
             var character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             // Create the window
             WindowsFactory<SkillsPieChart>.ShowByTag(character);
@@ -1238,7 +1248,8 @@ namespace EVEMon
             Directory.SetCurrentDirectory(currentDirectory);
 
             // Copy settings if OK
-            if (result != DialogResult.OK) return;
+            if (result != DialogResult.OK)
+                return;
             Settings.CopySettings(saveFileDialog.FileName);
         }
 
@@ -1292,8 +1303,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Plan's menu drop down
-        /// Enable/disable menu items and rebuild items for plans
+        /// Plan's menu drop down.
+        /// Enable/disable menu items and rebuild items for plans.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1315,7 +1326,8 @@ namespace EVEMon
             }
 
             // Add new entries
-            if (character == null) return;
+            if (character == null)
+                return;
             character.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
         }
         
@@ -1356,7 +1368,7 @@ namespace EVEMon
         
         /// <summary>
         /// Plans > Manage...
-        /// Displays the "Manage Plans" window
+        /// Displays the "Manage Plans" window.
         /// </summary>
         /// <param name="sender">menu item clicked</param>
         /// <param name="e"></param>
@@ -1372,7 +1384,7 @@ namespace EVEMon
 
         /// <summary>
         /// Plans > New Plan...
-        /// Displays the "New Plan" window
+        /// Displays the "New Plan" window.
         /// </summary>
         /// <param name="sender">menu item clicked</param>
         /// <param name="e"></param>
@@ -1405,7 +1417,7 @@ namespace EVEMon
 
         /// <summary>
         /// Tools > Show owned skillbooks.
-        /// Displays a message box with the owned skills
+        /// Displays a message box with the owned skills.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1444,8 +1456,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Menu bar's context menu > Menubar
-        /// Hide/show the menu bar
+        /// Menu bar's context menu > Menubar.
+        /// Hide/show the menu bar.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1456,8 +1468,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Menu bar's context menu > Toolbar
-        /// Hide/show the tool bar
+        /// Menu bar's context menu > Toolbar.
+        /// Hide/show the tool bar.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1470,7 +1482,7 @@ namespace EVEMon
 
         /// <summary>
         /// Toolbar > Plans icon's dropdown opening.
-        /// Rebuild the menu items for plans
+        /// Rebuild the menu items for plans.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1498,8 +1510,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Edit's drop down menu openinig
-        /// Enabled/disable the items
+        /// Edit's drop down menu openinig.
+        /// Enabled/disable the items.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1510,7 +1522,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Edit > Copy skills to clipboard (BBCode format)
+        /// Edit > Copy skills to clipboard (BBCode format).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1545,7 +1557,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Help > Forums
+        /// Help > Forums.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1571,7 +1583,8 @@ namespace EVEMon
             foreach (IntPtr eveInstance in m_eveWindows)
             {
                 // Skip if null ptr
-                if (eveInstance == IntPtr.Zero) continue;
+                if (eveInstance == IntPtr.Zero)
+                    continue;
 
                 string windowDescription = Relocator.GetWindowDescription(eveInstance);
                 Rectangle instanceDimensions = Relocator.GetWindowDimensions(eveInstance);
@@ -1604,7 +1617,7 @@ namespace EVEMon
                 foundAny = true;
             }
 
-            // Displays a "no window" message when there were no windows opened.
+            // Displays a "no window" message when there were no windows opened
             if (!foundAny)
             {
                 var menu = new ToolStripMenuItem("No EVE clients are running.");
@@ -1614,7 +1627,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Thrown an exception just to test the exception handler is working
+        /// Thrown an exception just to test the exception handler is working.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1624,7 +1637,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Thrown an exception with an inner excetpion just to test the exception handler is working
+        /// Thrown an exception with an inner excetpion just to test the exception handler is working.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1638,15 +1651,15 @@ namespace EVEMon
 
         #region Tray icon
         /// <summary>
-        /// Remove the popup if its showing
+        /// Remove the popup if its showing.
         /// </summary>
         private void HidePopup()
         {
-            if (m_trayPopup != null)
-            {
-                m_trayPopup.Close();
-                m_trayPopup = null;
-            }
+            if (m_trayPopup == null)
+                return;
+
+            m_trayPopup.Close();
+            m_trayPopup = null;
         }
 
         /// <summary>
@@ -1658,7 +1671,8 @@ namespace EVEMon
         private void trayIcon_Click(object sender, EventArgs e)
         {
             // Returns for right-button click
-            if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right) return;
+            if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right)
+                return;
 
             // Restore the main window
             this.Visible = true;
@@ -1773,15 +1787,18 @@ namespace EVEMon
             // Updates manager.
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
 
-            if (Settings.Updates.CheckEVEMonVersion)
+            if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
                 UpdateManager.UpdateAvailable += new UpdateAvailableHandler(OnUpdateAvailable);
                 UpdateManager.DataUpdateAvailable += new DataUpdateAvailableHandler(OnDataUpdateAvailable);
+                m_isUpdateEventsSubscribed = true;
             }
-            else
+
+            if (!Settings.Updates.CheckEVEMonVersion && m_isUpdateEventsSubscribed)
             {
                 UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(OnUpdateAvailable);
                 UpdateManager.DataUpdateAvailable -= new DataUpdateAvailableHandler(OnDataUpdateAvailable);
+                m_isUpdateEventsSubscribed = false;
             }
 
             // IGB Server

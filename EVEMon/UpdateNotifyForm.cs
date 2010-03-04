@@ -10,19 +10,30 @@ namespace EVEMon
 {
     public partial class UpdateNotifyForm : EVEMonForm
     {
+        private UpdateAvailableEventArgs m_args;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public UpdateNotifyForm()
         {
             InitializeComponent();
         }
 
-        private UpdateAvailableEventArgs m_args;
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public UpdateNotifyForm(UpdateAvailableEventArgs args)
             : this()
         {
             m_args = args;
         }
 
+        /// <summary>
+        /// Occurs on "ignore" button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnIgnore_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show(
@@ -36,12 +47,17 @@ namespace EVEMon
             {
                 return;
             }
-            Settings.Updates.MostRecentDeniedUpdgrade = m_args.NewestVersion.ToString();
+            Settings.Updates.MostRecentDeniedUpgrade = m_args.NewestVersion.ToString();
             Settings.Save();
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
+        /// <summary>
+        /// Occurs on "update" button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
@@ -65,6 +81,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Initiates the auto installer.
+        /// </summary>
+        /// <param name="fn"></param>
+        /// <param name="args"></param>
         private void ExecPatcher(string fn, string args)
         {
             try
@@ -91,12 +112,22 @@ namespace EVEMon
             this.Close();
         }
 
+        /// <summary>
+        /// Occurs on "remind me later" button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
+        /// <summary>
+        /// On form shown we subcribe the event handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateNotifyForm_Shown(object sender, EventArgs e)
         {
             UpdateInformation();
@@ -104,6 +135,11 @@ namespace EVEMon
             UpdateManager.UpdateAvailable += new UpdateAvailableHandler(UpdateNotifyForm_UpdateAvailable);
         }
 
+        /// <summary>
+        /// When an update is available, we update the informations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateNotifyForm_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             m_args = e;
@@ -111,7 +147,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Initilizes the contents and state of the controls
+        /// Initilizes the contents and state of the controls.
         /// </summary>
         private void UpdateInformation()
         {
@@ -132,6 +168,11 @@ namespace EVEMon
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
         }
 
+        /// <summary>
+        /// On form closed we unsuscribe the event handler.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateNotifyForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(UpdateNotifyForm_UpdateAvailable);

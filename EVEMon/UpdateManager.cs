@@ -127,7 +127,7 @@ namespace EVEMon
             finally
             {
                 // Reschedule in one hour
-                Dispatcher.Schedule(TimeSpan.FromHours(2), () => BeginCheck());
+                Dispatcher.Schedule(TimeSpan.FromHours(1), () => BeginCheck());
             }
         }
 
@@ -205,18 +205,18 @@ namespace EVEMon
                                        Version newestVersion, Version currentVersion, bool canAutoInstall,
                                        string installArgs, string installUrl)
         {
-            if (UpdateAvailable != null)
-            {
-                UpdateAvailableEventArgs e = new UpdateAvailableEventArgs();
-                e.CurrentVersion = currentVersion;
-                e.NewestVersion = newestVersion;
-                e.UpdateMessage = updateMessage;
-                e.UpdateUrl = updateUrl;
-                e.CanAutoInstall = canAutoInstall;
-                e.AutoInstallUrl = installUrl;
-                e.AutoInstallArguments = installArgs;
-                UpdateAvailable(null, e);
-            }
+            if (UpdateAvailable == null)
+                return;
+
+            UpdateAvailableEventArgs e = new UpdateAvailableEventArgs();
+            e.CurrentVersion = currentVersion;
+            e.NewestVersion = newestVersion;
+            e.UpdateMessage = updateMessage;
+            e.UpdateUrl = updateUrl;
+            e.CanAutoInstall = canAutoInstall;
+            e.AutoInstallUrl = installUrl;
+            e.AutoInstallArguments = installArgs;
+            UpdateAvailable(null, e);
         }
 
         /// <summary>
@@ -225,13 +225,13 @@ namespace EVEMon
         /// <remarks>Invoked on the UI thread.</remarks>
         private static void OnDataUpdateAvailable(string updateUrl, List<DatafileVersion> changedFiles)
         {
-            if (DataUpdateAvailable != null)
-            {
-                DataUpdateAvailableEventArgs e = new DataUpdateAvailableEventArgs();
-                e.UpdateUrl = updateUrl;
-                e.ChangedFiles = changedFiles;
-                DataUpdateAvailable(null, e);
-            }
+            if (DataUpdateAvailable == null)
+                return;
+            
+            DataUpdateAvailableEventArgs e = new DataUpdateAvailableEventArgs();
+            e.UpdateUrl = updateUrl;
+            e.ChangedFiles = changedFiles;
+            DataUpdateAvailable(null, e);
         }
     }
 

@@ -45,7 +45,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets or sets the latest upgrade version the user choose to reject.
         /// </summary>
         [XmlElement("mostRecentDeniedUpdgrade")]
-        public string MostRecentDeniedUpdgrade
+        public string MostRecentDeniedUpgrade
         {
             get;
             set;
@@ -83,7 +83,7 @@ namespace EVEMon.Common.SettingsObjects
             var clone = new UpdateSettings();
             clone.CheckEVEMonVersion = this.CheckEVEMonVersion;
             clone.CheckTimeOnStartup = this.CheckTimeOnStartup;
-            clone.MostRecentDeniedUpdgrade = this.MostRecentDeniedUpdgrade;
+            clone.MostRecentDeniedUpgrade = this.MostRecentDeniedUpgrade;
             clone.HttpTimeout = this.HttpTimeout;
             clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
 

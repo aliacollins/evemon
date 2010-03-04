@@ -11,19 +11,30 @@ namespace EVEMon
 {
     public partial class DataUpdateNotifyForm : EVEMonForm
     {
+        private DataUpdateAvailableEventArgs m_args;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public DataUpdateNotifyForm()
         {
             InitializeComponent();
         }
 
-        private DataUpdateAvailableEventArgs m_args;
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public DataUpdateNotifyForm(DataUpdateAvailableEventArgs args)
             : this()
         {
             m_args = args;
         }
 
+        /// <summary>
+        /// On load we update the informations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataUpdateNotifyForm_Load(object sender, EventArgs e)
         {
             StringBuilder changedFiles = new StringBuilder();
@@ -37,6 +48,11 @@ namespace EVEMon
             tbNotes.Lines = notes.ToString().Split('\n');
         }
 
+        /// <summary>
+        /// Occurs on "update" button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             foreach (DatafileVersion dfv in m_args.ChangedFiles)
@@ -90,6 +106,11 @@ namespace EVEMon
             this.Close();
         }
 
+        /// <summary>
+        /// Occurs on "remind me later" button click.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
