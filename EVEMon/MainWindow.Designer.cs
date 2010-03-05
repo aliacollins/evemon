@@ -133,44 +133,44 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(153, 126);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(125, 104);
             this.trayIconToolStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
             this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.planToolStripMenuItem.Text = "Plans";
             // 
             // plansStripSeparator
             // 
             this.plansStripSeparator.Name = "plansStripSeparator";
-            this.plansStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.plansStripSeparator.Size = new System.Drawing.Size(121, 6);
             // 
             // relocatorTrayToolStripMenuItem
             // 
             this.relocatorTrayToolStripMenuItem.Name = "relocatorTrayToolStripMenuItem";
-            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.relocatorTrayToolStripMenuItem.Tag = "";
             this.relocatorTrayToolStripMenuItem.Text = "Relocator";
             // 
             // relocatorTrayToolStripSeparator
             // 
             this.relocatorTrayToolStripSeparator.Name = "relocatorTrayToolStripSeparator";
-            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(121, 6);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -520,10 +520,10 @@ namespace EVEMon
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem,
-            this.helpAboutKnownProblemsToolStripSeparator,
             this.knownProblemsMenu,
-            this.forumsMenu});
+            this.forumsMenu,
+            this.helpAboutKnownProblemsToolStripSeparator,
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";

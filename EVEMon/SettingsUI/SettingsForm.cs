@@ -533,7 +533,11 @@ namespace EVEMon.SettingsUI
             }
 
             // Selects the default API server if none selected
-            if (cbAPIServer.SelectedIndex == -1) cbAPIServer.SelectedIndex = 0;
+            if (cbAPIServer.SelectedIndex == -1)
+                cbAPIServer.SelectedIndex = 0;
+
+            // Disable the drop down box if ony one available
+            cbAPIServer.Enabled = cbAPIServer.Items.Count > 1;
         }
         #endregion
 
