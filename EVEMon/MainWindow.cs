@@ -1567,6 +1567,16 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Help > UserVoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void userVoiceMenuItem_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.EVEMonUserVoice);
+        }
+
+        /// <summary>
         /// Menu bar > Relocator.
         /// </summary>
         /// <param name="sender"></param>

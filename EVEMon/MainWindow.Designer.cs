@@ -79,10 +79,10 @@ namespace EVEMon
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relocatorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.knownProblemsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.forumsMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,6 +114,7 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
+            this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -520,42 +521,43 @@ namespace EVEMon
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.knownProblemsMenu,
-            this.forumsMenu,
+            this.knownProblemsMenuItem,
+            this.userVoiceMenuItem,
+            this.forumsMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
-            this.aboutToolStripMenuItem});
+            this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
-            // aboutToolStripMenuItem
+            // knownProblemsMenuItem
             // 
-            this.aboutToolStripMenuItem.Image = global::EVEMon.Properties.Resources.Help;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.aboutToolStripMenuItem.Text = "&About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.knownProblemsMenuItem.Image = global::EVEMon.Properties.Resources.Problem;
+            this.knownProblemsMenuItem.Name = "knownProblemsMenuItem";
+            this.knownProblemsMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.knownProblemsMenuItem.Text = "&Known problems and solutions";
+            this.knownProblemsMenuItem.Click += new System.EventHandler(this.knownProblemsMenu_Click);
+            // 
+            // forumsMenuItem
+            // 
+            this.forumsMenuItem.Image = global::EVEMon.Properties.Resources.Forum;
+            this.forumsMenuItem.Name = "forumsMenuItem";
+            this.forumsMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.forumsMenuItem.Text = "&Forums";
+            this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
             // 
             // helpAboutKnownProblemsToolStripSeparator
             // 
             this.helpAboutKnownProblemsToolStripSeparator.Name = "helpAboutKnownProblemsToolStripSeparator";
             this.helpAboutKnownProblemsToolStripSeparator.Size = new System.Drawing.Size(235, 6);
             // 
-            // knownProblemsMenu
+            // aboutMenuItem
             // 
-            this.knownProblemsMenu.Image = global::EVEMon.Properties.Resources.Problem;
-            this.knownProblemsMenu.Name = "knownProblemsMenu";
-            this.knownProblemsMenu.Size = new System.Drawing.Size(238, 22);
-            this.knownProblemsMenu.Text = "&Known problems and solutions";
-            this.knownProblemsMenu.Click += new System.EventHandler(this.knownProblemsMenu_Click);
-            // 
-            // forumsMenu
-            // 
-            this.forumsMenu.Image = global::EVEMon.Properties.Resources.Forum;
-            this.forumsMenu.Name = "forumsMenu";
-            this.forumsMenu.Size = new System.Drawing.Size(238, 22);
-            this.forumsMenu.Text = "&Forums";
-            this.forumsMenu.Click += new System.EventHandler(this.forumsMenu_Click);
+            this.aboutMenuItem.Image = global::EVEMon.Properties.Resources.Help;
+            this.aboutMenuItem.Name = "aboutMenuItem";
+            this.aboutMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.aboutMenuItem.Text = "&About...";
+            this.aboutMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
@@ -844,6 +846,13 @@ namespace EVEMon
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             // 
+            // userVoiceMenuItem
+            // 
+            this.userVoiceMenuItem.Name = "userVoiceMenuItem";
+            this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.userVoiceMenuItem.Text = "Suggest a Feature (UserVoice)";
+            this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -897,7 +906,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mineralWorksheetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem skillsPieChartMenu;
@@ -941,8 +950,8 @@ namespace EVEMon
         private System.Windows.Forms.TabPage tpOverview;
         private Overview overview;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem knownProblemsMenu;
-        private System.Windows.Forms.ToolStripMenuItem forumsMenu;
+        private System.Windows.Forms.ToolStripMenuItem knownProblemsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem forumsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolsOwnedOptionsToolStripSeparator;
         private NotificationList notificationList;
         private System.Windows.Forms.NotifyIcon niAlertIcon;
@@ -962,5 +971,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem relocatorTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator relocatorTrayToolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem userVoiceMenuItem;
     }
 }

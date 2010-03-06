@@ -187,4 +187,7 @@
   <data name="APIConquerableStationList" xml:space="preserve">
     <value>/eve/ConquerableStationList.xml.aspx</value>
   </data>
+  <data name="EVEMonUserVoice" xml:space="preserve">
+    <value>http://evemon.uservoice.com/</value>
+  </data>
 </root>

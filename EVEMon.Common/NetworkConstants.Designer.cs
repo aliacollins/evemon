@@ -250,6 +250,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://evemon.uservoice.com/.
+        /// </summary>
+        public static string EVEMonUserVoice {
+            get {
+                return ResourceManager.GetString("EVEMonUserVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://www.google.com/calendar/feeds/default/private/full.
         /// </summary>
         public static string GoogleCalendarURL {
