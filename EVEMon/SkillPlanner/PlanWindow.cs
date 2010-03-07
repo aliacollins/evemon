@@ -24,7 +24,7 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
         private bool m_obsDialogActive;
-
+        
 
         #region Initialization, loading, closing, entries validation checking
         /// <summary>
@@ -36,6 +36,10 @@ namespace EVEMon.SkillPlanner
             this.RememberPositionKey = "PlanWindow";
 
             this.ResizeEnd += new EventHandler(PlanWindow_ResizeEnd);
+
+            // ToolStripLabels don't support AutoEllipsis so we user a custom renderer
+            // via: http://discuss.joelonsoftware.com/default.asp?dotnet.12.597246.5
+            this.MainStatusStrip.Renderer = new AutoEllipsisToolStripRenderer();
         }
 
         /// <summary>
@@ -378,7 +382,6 @@ namespace EVEMon.SkillPlanner
         public void UpdateStatusBarSelected(String txt)
         {
             slblStatusText.Text = txt;
-            FixStatusBarTextLength();
         }
 
         /// <summary>
@@ -429,45 +432,6 @@ namespace EVEMon.SkillPlanner
                 }
             }
             else tslSuggestion.Visible = false;
-
-            FixStatusBarTextLength();
-        }
-
-        /// <summary>
-        /// Trims the status text in an ellipsis style to fit the windows width
-        /// </summary>
-        private void FixStatusBarTextLength()
-        {
-            string ellipsis = "…";
-
-            int suggestionTextWidth = (tslSuggestion.Visible ? tslSuggestion.Width : 0);
-            int statusTextWidth = TextRenderer.MeasureText(slblStatusText.Text, slblStatusText.Font).Width;
-            int statusBarTextWidth = statusTextWidth + suggestionTextWidth;
-            int ellipsisWidth = TextRenderer.MeasureText(ellipsis, slblStatusText.Font).Width;
-            float factor = (float)statusBarTextWidth / (float)slblStatusText.Text.Length;
-            int availableTextWidth = this.Width - slblStatusText.Height * 2 - (int)factor;
-
-            // We check the status text lenght to the windows width
-            if (statusBarTextWidth > availableTextWidth)
-            {
-                // We calculate the position to trim the text and remove it
-                int position = (int)(availableTextWidth / factor) - ellipsis.Length * 2 - (int)factor;
-
-                // the measurements are a bit of an inexact science
-                // check the position is still valid.
-                if (position < 0)
-                    return;
-
-                if (position >= slblStatusText.Text.Length)
-                    return;
-
-                // trim the text
-                string newStatusBarText = slblStatusText.Text.Remove(position);
-
-                // Adds the ellipsis
-                newStatusBarText += ellipsis;
-                slblStatusText.Text = newStatusBarText;
-            }
         }
         #endregion
 

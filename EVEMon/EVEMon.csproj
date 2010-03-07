@@ -401,6 +401,7 @@
     <Compile Include="SkillPlanner\AttributesOptimizationSettingsForm.Designer.cs">
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SkillPlanner\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
