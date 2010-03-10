@@ -18,7 +18,9 @@ namespace EVEMon.Common
 
         public override int Compare(MarketOrder x, MarketOrder y)
         {
-            if (m_isAscending) return CompareCore(x, y);
+            if (m_isAscending)
+                return CompareCore(x, y);
+
             return -CompareCore(x, y);
         }
 
@@ -74,6 +76,14 @@ namespace EVEMon.Common
 
                 case MarketOrderColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
+
+                case MarketOrderColumn.OrderRange:
+                    // Compare applies only to BuyOrder 
+                    return (x is BuyOrder ? ((BuyOrder)x).Range.CompareTo(((BuyOrder)y).Range) : 0);
+
+                case MarketOrderColumn.Escrow:
+                    // Compare applies only to BuyOrder 
+                    return (x is BuyOrder ? ((BuyOrder)x).Escrow.CompareTo(((BuyOrder)y).Escrow) : 0);
 
                 default:
                     return 0;
