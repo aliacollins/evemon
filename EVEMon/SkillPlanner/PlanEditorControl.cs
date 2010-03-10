@@ -47,7 +47,8 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm oldForm = null;
 
         /// <summary>
-        /// To enable the three-state columns, we need to persist the base plan, whose order is unchanged, and the sorted plan, which represents the plan the way it is displayed.
+        /// To enable the three-state columns, we need to persist the base plan,
+        /// whose order is unchanged, and the sorted plan, which represents the plan the way it is displayed.
         /// </summary>
         private PlanScratchpad m_displayPlan;
         private Plan m_plan;
@@ -68,7 +69,7 @@ namespace EVEMon.SkillPlanner
 
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public PlanEditorControl()
         {
@@ -111,7 +112,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On load, updates the controls
+        /// On load, updates the controls.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
@@ -183,7 +184,7 @@ namespace EVEMon.SkillPlanner
         }
         
         /// <summary>
-        /// Gets the cost of known skills selected
+        /// Gets the cost of known skills selected.
         /// </summary>
         public long SkillBooksCost
         {
@@ -191,7 +192,7 @@ namespace EVEMon.SkillPlanner
         }
         
         /// <summary>
-        /// Gets the cost of not known skills selected
+        /// Gets the cost of not known skills selected.
         /// </summary>
         public long NotKnownSkillBooksCost
         {
@@ -214,7 +215,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the plan changed, entries may have changed
+        /// When the plan changed, entries may have changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -222,11 +223,12 @@ namespace EVEMon.SkillPlanner
         {
             UpdateDisplayPlan();
             UpdateSkillList(true);
+            UpdateListColumns();
         }
 
         /// <summary>
         /// When the settings changed, the highlights and such may be different. 
-        /// Entries are still the same but we may need to update highlights and others
+        /// Entries are still the same but we may need to update highlights and others.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -307,7 +309,7 @@ namespace EVEMon.SkillPlanner
             lvSkills.BeginUpdate();
             try
             {
-                // Scroll through entries and their remapping points.
+                // Scroll through entries and their remapping points
                 List<ListViewItem> items = new List<ListViewItem>();
                 foreach (var entry in m_displayPlan)
                 {
@@ -340,13 +342,13 @@ namespace EVEMon.SkillPlanner
                         lvi.Font = m_prerequisiteSkillFont;
                     }
 
-                    // Gray out entries that cannot be trained immediately.
+                    // Gray out entries that cannot be trained immediately
                     if (!entry.CanTrainNow && Settings.UI.PlanWindow.DimUntrainable)
                     {
                         lvi.ForeColor = m_nonImmedTrainablePlanEntryColor;
                     }
 
-                    // Enable refresh every 30s if a skill is in training.
+                    // Enable refresh every 30s if a skill is in training
                     Skill skill = entry.CharacterSkill;
                     if (skill.IsTraining)
                         tmrAutoRefresh.Enabled = true;
@@ -376,6 +378,9 @@ namespace EVEMon.SkillPlanner
                     
                     lvSkills.Select();
                 }
+
+                // Enable the "Optimize learning skills order..." if a learning skill is in the plan
+                tsSortLearning.Enabled = m_displayPlan.Any(x => x.Skill.LearningClass != LearningClass.None);
             }
             finally
             {
@@ -566,7 +571,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the text to display in the given column for the provided entry
+        /// Gets the text to display in the given column for the provided entry.
         /// </summary>
         /// <param name="pe"></param>
         /// <param name="column"></param>
@@ -771,7 +776,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Removes all obsolete entries and rebuilds the plan 
+        /// Removes all obsolete entries and rebuilds the plan.
         /// </summary>
         public void ClearObsoleteEntries()
         {
@@ -781,7 +786,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the status bar
+        /// Updates the status bar.
         /// </summary>
         private void UpdateStatusBar()
         {
@@ -1334,7 +1339,7 @@ namespace EVEMon.SkillPlanner
 
         #region Context Menu
         /// <summary>
-        /// When the context menu is opened, we update the status of the menus
+        /// When the context menu is opened, we update the status of the menus.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1812,7 +1817,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Creates a plan entry and a list view item for it, from the given skill
+        /// Creates a plan entry and a list view item for it, from the given skill.
         /// </summary>
         /// <param name="gs"></param>
         /// <returns></returns>
@@ -1899,7 +1904,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Handles key press
+        /// Handles key press.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
