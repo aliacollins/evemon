@@ -11,7 +11,7 @@ using EVEMon.Common.Controls;
 namespace EVEMon
 {
     /// <summary>
-    /// Provides window-reloaction functionality through calls to User32
+    /// Provides window-relocation functionality through calls to User32.
     /// </summary>
     public static class Relocator
     {
@@ -20,8 +20,9 @@ namespace EVEMon
         private static bool m_initilized = false;
         private static readonly int m_pid = Application.ProductName.GetHashCode();
         private static readonly List<IntPtr> m_foundWindows = new List<IntPtr>();
-        private static bool m_autoRelocation;
+        private static int m_autoRelocateDefaultMonitor;
         private static int counter = 0;
+        private static bool m_autoRelocation;
         private static bool dialogActive;
 
         public static void Initialize()
@@ -38,7 +39,7 @@ namespace EVEMon
 
         #region Dimensions
         /// <summary>
-        /// Get the dimensions of the window specified by hWnd
+        /// Get the dimensions of the window specified by hWnd.
         /// </summary>
         /// <param name="hWnd">A valid window</param>
         /// <returns>new Rectangle(Left, Top, Width, Height)</returns>
@@ -50,7 +51,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Get the screen coordinates relative to the window
+        /// Get the screen coordinates relative to the window.
         /// </summary>
         /// <param name="hWnd">A valid window</param>
         /// <returns>new Rectangle(Left, Top, Right, Bottom) relative to the screen</returns>
@@ -69,7 +70,7 @@ namespace EVEMon
 
         #region Private functions
         /// <summary>
-        /// Callback function for finding all open EVE instance windows
+        /// Callback function for finding all open EVE instance windows.
         /// </summary>
         /// <param name="hwnd">the window information to be tested - automatically passed by EnumWindows</param>
         private static bool EnumWindowCallBack(int hwnd, int lParam)
@@ -97,7 +98,7 @@ namespace EVEMon
 
         #region Public functions
         /// <summary>
-        /// Identifies all open EVE instances
+        /// Identifies all open EVE instances.
         /// </summary>
         /// <returns>IntPtr array of EVE instances</returns>
         public static IEnumerable<IntPtr> FindEveWindows()
@@ -111,7 +112,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Position the window on the target screen
+        /// Position the window on the target screen.
         /// </summary>
         /// <param name="hWnd">EVE instance to be moved</param>
         /// <param name="targetScreen">Screen to be moved to</param>
@@ -142,7 +143,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Get's the title bar text and resolution of the specified window
+        /// Get's the title bar text and resolution of the specified window.
         /// </summary>
         /// <param name="hWnd">Passed EVE client instance</param>
         /// <returns>String containing the title bar text and resolution</returns>
@@ -168,7 +169,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Returns the resolution of the specified window
+        /// Returns the resolution of the specified window.
         /// </summary>
         /// <param name="hWnd">EVE client instance</param>
         /// <returns>Rectangle containing the resolution of the window</returns>
@@ -178,7 +179,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Returns the number and resolution of the passed screen number
+        /// Returns the number and resolution of the passed screen number.
         /// </summary>
         /// <param name="screen">Integer of the screen to be identified</param>
         /// <returns>Screen z - WidthxHeight</returns>
@@ -192,7 +193,7 @@ namespace EVEMon
 
         #region Automatic Relocation
         /// <summary>
-        /// Gets the state of autorelocation checkbox
+        /// Gets the state of autorelocation checkbox.
         /// </summary>  
         public static bool AutoRelocationEnabled
         {
@@ -201,12 +202,27 @@ namespace EVEMon
                 return m_autoRelocation = Settings.UI.MainWindow.EnableAutomaticRelocation;
             }
         }
-        
+
         /// <summary>
-        /// Perfoms the AutoRelocation
+        /// Gets the autorelocate default monitor.
+        /// </summary>  
+        public static int AutoRelocateDefaultMonitor
+        {
+            get
+            {
+                return m_autoRelocateDefaultMonitor = Settings.UI.MainWindow.AutoRelocateDefaultMonitor;
+            }
+        }
+
+        /// <summary>
+        /// Perfoms the AutoRelocation.
         /// </summary>
         private static void AutoRelocate()
         {
+            // TODO: Refactor this method into smaller more managable chunks
+            // Breaks []wiki:CodingGuidlines]]:
+            //  - Small methods (no more than 15 lines) is the ideal.
+
             int screenCount = Screen.AllScreens.Length;
             int sameResScr = 0;
 
@@ -249,6 +265,14 @@ namespace EVEMon
                             return;
                     }
 
+                    // Has the user set a default monitor to relocate ?
+                    if (AutoRelocateDefaultMonitor != 0 && AutoRelocateDefaultMonitor <= screenCount)
+                    {
+                        Relocate(eveInstance, m_autoRelocateDefaultMonitor - 1);
+                        return;
+                    }
+
+                    // Show the dialog window
                     if (!dialogActive)
                     {
                         dialogActive = true;
@@ -277,18 +301,27 @@ namespace EVEMon
 
         /// <summary>
         /// Shows a dialog to the user requesting
-        /// to which monitor to relocate the client
+        /// to which monitor to relocate the client.
         /// </summary>
         private static void ShowDialog(IntPtr eveInstance, int sameResScr)
         {
-            var buttonWidth = 0;
-            var buttonHeight = 0;
-            int hPad = (sameResScr > 2 ? 15 : 60);
-            int pad = 30;
-            
+            float dpi = 0;
+            float defaultDpi = 96;
+
             // We create a dialog for the user
             using (var dialog = new EVEMonForm())
             {
+                // Calculate the dpi used for better large font support
+                using (Graphics graphics = dialog.CreateGraphics())
+                {
+                    dpi = graphics.DpiX;
+                }
+                float scale = dpi / defaultDpi; 
+
+                int width = 0;
+                int height = 0;
+                int vpad = (int)(30 * scale);
+
                 // We add a panel to the form
                 Panel panel = new Panel();
                 panel.Dock = DockStyle.Fill;
@@ -297,29 +330,50 @@ namespace EVEMon
                 // Add label
                 Label label = new Label();
                 label.AutoSize = true;
-                label.Text = "EVEMon detected that you have more than one\rmonitor with the same resolution.\r\rChoose to which monitor to relocate the EVE client.";
+                label.Text = String.Format("EVEMon detected that you have more than one{0}monitor with the same resolution."+
+                    "\r\rChoose to which monitor to relocate the EVE client.",
+                    (sameResScr < 4 ? "\r" : " "));
                 panel.Controls.Add(label);
+                width += label.Width;
+                height += (label.Height + vpad);
 
                 // Add buttons
+                int buttonHeight = 0;
+                int selectedScreen = 0;
+                var buttons = new List<Button>();
+
                 for (int scr = 0; scr <= sameResScr - 1; scr++)
                 {
                     int screen = scr;
-                    int spacing = (scr == sameResScr ? 10 : 5);
+                    var sectionWidth = (width / sameResScr);
+                    var startPoint = sectionWidth * scr;
 
                     Button button = new Button();
+                    button.AutoSize = true;
                     button.Text = "Monitor " + (scr + 1);
-                    button.Location = new Point(hPad + buttonWidth, label.Height + pad);
-                    buttonWidth += button.Width + spacing;
+                    button.Location = new Point(startPoint + ((sectionWidth - button.Width) / 2), height);
                     buttonHeight = button.Height;
+                    buttons.Add(button);
                     panel.Controls.Add(button);
 
                     // Handles the button press
                     button.Click += (sender, args) =>
                     {
+                        selectedScreen = screen;
                         Relocate(eveInstance, screen);
                         dialog.Close();
                     };
                 }
+                height += (buttonHeight + (vpad / 2));
+
+                // Add checkbox
+                CheckBox checkbox = new CheckBox();
+                checkbox.AutoSize = true;
+                checkbox.TextAlign = ContentAlignment.MiddleLeft;
+                checkbox.Text = "Set my choice as the default monitor.";
+                checkbox.Location = new Point(10, height);
+                panel.Controls.Add(checkbox);
+                height += checkbox.Height + (vpad / 2);
 
                 // Sets form properties
                 dialog.StartPosition = FormStartPosition.CenterScreen;
@@ -327,8 +381,8 @@ namespace EVEMon
 
                 // Sets the size of the dialog
                 // and prevents manual resizing
-                int dialogWidth = Math.Max((label.Width + pad > buttonWidth + pad ? label.Width + pad : buttonWidth + pad), 220);
-                int dialogHeight = label.Height * 2 + buttonHeight * 2;
+                int dialogWidth = label.Width + vpad;
+                int dialogHeight = height + vpad;
 
                 dialog.Size = new Size(dialogWidth, dialogHeight);
                 dialog.MaximumSize = dialog.Size;
@@ -337,8 +391,21 @@ namespace EVEMon
                 // Centers the label to the panel
                 label.Location = new Point((panel.Width - label.Width) / 2, 10);
 
+                // Centers the buttons to the panel
+                foreach (var button in buttons)
+                {
+                    button.Location = new Point(label.Location.X + button.Location.X, button.Location.Y);
+                }
+
                 // We show the dialog
                 dialog.ShowDialog();
+
+                // Sets the autorelocate default monitor
+                if (checkbox.Checked)
+                {
+                    Settings.UI.MainWindow.AutoRelocateDefaultMonitor = selectedScreen + 1;
+                    Settings.SaveImmediate();
+                }
             }
         }
 
@@ -347,7 +414,7 @@ namespace EVEMon
         #region Event Handlers
 
         /// <summary>
-        /// Checks whether an AutoRelocation should occur
+        /// Checks whether an AutoRelocation should occur.
         /// </summary>
         /// <param name="interval">The length of time to wait between checks.</param>
         private static void EveClient_TimerTick(object sender, EventArgs e)
@@ -375,8 +442,14 @@ namespace EVEMon
         /// </summary>
         private static void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (m_autoRelocation) EveClient.Trace("AutoRelocation.Enabled");
-            else EveClient.Trace("AutoRelocation.Disabled");
+            if (m_autoRelocation)
+            {
+                EveClient.Trace("AutoRelocation.Enabled");
+            }
+            else
+            {
+                EveClient.Trace("AutoRelocation.Disabled");
+            }
         }
 
         #endregion

@@ -44,8 +44,15 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("autmoaticRelocationInterval")]
+        [XmlElement("automaticRelocationInterval")]
         public int AutomaticRelocationInterval
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("autoRelocateDefaultMonitor")]
+        public int AutoRelocateDefaultMonitor
         {
             get;
             set;
