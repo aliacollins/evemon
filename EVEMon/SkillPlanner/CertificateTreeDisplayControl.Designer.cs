@@ -59,6 +59,8 @@ namespace EVEMon.SkillPlanner
             this.treeView.SelectedImageIndex = 0;
             this.treeView.Size = new System.Drawing.Size(359, 441);
             this.treeView.TabIndex = 0;
+            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
+            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
             // 
             // cmListSkills
             // 
@@ -71,7 +73,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 148);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 126);
             // 
             // tsmAddToPlan
             // 
@@ -84,7 +86,7 @@ namespace EVEMon.SkillPlanner
             // showInMenuSeparator
             // 
             this.showInMenuSeparator.Name = "showInMenuSeparator";
-            this.showInMenuSeparator.Size = new System.Drawing.Size(182, 6);
+            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // showInBrowserMenu
             // 
@@ -104,19 +106,19 @@ namespace EVEMon.SkillPlanner
             // tsSeparator
             // 
             this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(182, 6);
+            this.tsSeparator.Size = new System.Drawing.Size(191, 6);
             // 
             // tsmExpandAll
             // 
             this.tsmExpandAll.Name = "tsmExpandAll";
-            this.tsmExpandAll.Size = new System.Drawing.Size(185, 22);
+            this.tsmExpandAll.Size = new System.Drawing.Size(194, 22);
             this.tsmExpandAll.Text = "&Expand all";
             this.tsmExpandAll.Click += new System.EventHandler(this.tsmExpandAll_Click);
             // 
             // tsmCollapseAll
             // 
             this.tsmCollapseAll.Name = "tsmCollapseAll";
-            this.tsmCollapseAll.Size = new System.Drawing.Size(185, 22);
+            this.tsmCollapseAll.Size = new System.Drawing.Size(194, 22);
             this.tsmCollapseAll.Text = "&Collapse all";
             this.tsmCollapseAll.Click += new System.EventHandler(this.tsmCollapseAll_Click);
             // 

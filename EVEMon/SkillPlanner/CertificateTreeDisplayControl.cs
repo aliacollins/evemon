@@ -59,7 +59,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets the current plan
+        /// Gets or sets the current plan.
         /// </summary>
         public Plan Plan
         {
@@ -82,7 +82,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets the certificate class (i.e. "Core competency")
+        /// Gets or sets the certificate class (i.e. "Core competency").
         /// </summary>
         public CertificateClass CertificateClass
         {
@@ -99,8 +99,8 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Gets the selected certificate, null if none is selected. 
-        /// Note that the selected certificate may be a prerequsite and therefore not have the same class than 
-        /// the one represented by this control.
+        /// Note that the selected certificate may be a prerequsite and therefore
+        /// not have the same class than the one represented by this control.
         /// </summary>
         public Certificate SelectedCertificate
         {
@@ -108,12 +108,13 @@ namespace EVEMon.SkillPlanner
             {
                 if (this.treeView.SelectedNode == null)
                     return null;
+
                 return this.treeView.SelectedNode.Tag as Certificate;
             }
         }
 
         /// <summary>
-        /// Gets cert of the displayed class which contains the current selection
+        /// Gets cert of the displayed class which contains the current selection.
         /// </summary>
         public Certificate SelectedCertificateLevel
         {
@@ -135,7 +136,7 @@ namespace EVEMon.SkillPlanner
 
         
         /// <summary>
-        /// Expands the node representing this certificate
+        /// Expands the node representing this certificate.
         /// </summary>
         /// <param name="cert"></param>
         public void ExpandCert(Certificate cert)
@@ -155,8 +156,9 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #region Event Handlers
         /// <summary>
-        /// Fired when one of the character changed (skill completion, update from CCP, etc)
+        /// Fired when one of the character changed (skill completion, update from CCP, etc).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -166,7 +168,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect due to custom draw
+        /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect due to custom draw.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -181,6 +183,7 @@ namespace EVEMon.SkillPlanner
                     // If the user clicked the "arrow zone", we do not change the selection and just return
                     if (e.X < (node.Bounds.Left - 32))
                         return;
+
                     selection = node;
                     break;
                 }
@@ -196,6 +199,29 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        /// <summary>
+        /// Forces the selection update when a node is right-clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                treeView.SelectedNode = e.Node;
+        }
+
+        /// <summary>
+        /// Event handler for treenode double click event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            showInBrowserMenu_Click(sender, e);
+        }
+        #endregion
+
 
         #region Tree building
         /// <summary>
@@ -518,6 +544,11 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Treeview's context menu > Plan "(selection)"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
             var cert = this.treeView.SelectedNode.Tag as Certificate;
