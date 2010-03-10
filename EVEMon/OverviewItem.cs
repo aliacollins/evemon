@@ -47,7 +47,7 @@ namespace EVEMon
 
         #region Initialization, destruction
         /// <summary>
-        /// Default constructor for designer
+        /// Default constructor for designer.
         /// </summary>
         public OverviewItem()
         {
@@ -73,7 +73,7 @@ namespace EVEMon
             m_portraitSize = 96;
 
             // Initialize the skill queue free room label text
-            lblSkillQueueFreeRoom.Text = "";
+            lblSkillQueueFreeRoom.Text = String.Empty;
 
             // Global events
             EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
@@ -99,7 +99,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Constructor used in-code
+        /// Constructor used in-code.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="settings"></param>
@@ -114,10 +114,20 @@ namespace EVEMon
             m_showPortrait = settings.ShowPortrait;
             m_showSkillQueueFreeRoom = settings.ShowSkillQueueFreeRoom;
             m_tooltip = true;
+
+            // Initializes colors
+            if (!Settings.UI.SystemTrayPopup.UseIncreasedContrast)
+                return;
+
+            lblBalance.ForeColor = Color.Black;
+            lblRemainingTime.ForeColor = Color.Black;
+            lblSkillInTraining.ForeColor = Color.Black;
+            lblCompletionTime.ForeColor = Color.Black;
+            m_lightForeColor = lblCompletionTime.ForeColor;
         }
 
         /// <summary>
-        /// Constructor used in-code
+        /// Constructor used in-code.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="settings"></param>
@@ -127,10 +137,20 @@ namespace EVEMon
             m_showWalletBalance = settings.ShowOverviewWallet;
             m_showPortrait = settings.ShowOverviewPortrait;
             m_showSkillQueueFreeRoom = settings.ShowOverviewSkillQueueFreeRoom;
+
+            // Initializes colors
+            if (!Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
+                return;
+
+            lblBalance.ForeColor = Color.Black;
+            lblRemainingTime.ForeColor = Color.Black;
+            lblSkillInTraining.ForeColor = Color.Black;
+            lblCompletionTime.ForeColor = Color.Black;
+            m_lightForeColor = lblCompletionTime.ForeColor;
         }
 
         /// <summary>
-        /// On dispose, unsubscrive events
+        /// On dispose, unsubscrive events.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -144,7 +164,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Completes initialization
+        /// Completes initialization.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
@@ -300,7 +320,6 @@ namespace EVEMon
 				}
 
 				lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
-				lblSkillQueueFreeRoom.ForeColor = Color.Red;
 				m_hasSkillQueueFreeRoom = true;
 			}
 			else
@@ -348,7 +367,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On skill completion
+        /// On skill completion.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -485,7 +504,7 @@ namespace EVEMon
 
         [Browsable(true), Description("When true, the skill currently in training will be displayed.")]
         /// <summary>
-        /// Gets or sets whether the skill currently in training must be displayed
+        /// Gets or sets whether the skill currently in training must be displayed.
         /// </summary>
         public bool ShowSkillInTraining
         {
@@ -499,7 +518,7 @@ namespace EVEMon
 
         [Browsable(true), Description("When true, the remaining training time will be displayed.")]
         /// <summary>
-        /// Gets or sets whether the remaining time must be displayed
+        /// Gets or sets whether the remaining time must be displayed.
         /// </summary>
         public bool ShowRemainingTime
         {
@@ -513,7 +532,7 @@ namespace EVEMon
 
         [Browsable(true), Description("When true, the training completion time will be displayed.")]
         /// <summary>
-        /// Gets or sets whether the training completion time must be displayed
+        /// Gets or sets whether the training completion time must be displayed.
         /// </summary>
         public bool ShowCompletionTime
         {
@@ -527,7 +546,7 @@ namespace EVEMon
 
         [Browsable(true), Description("When true, the wallet balance will be displayed.")]
         /// <summary>
-        /// Gets or sets whether the wallet balance must be displayed
+        /// Gets or sets whether the wallet balance must be displayed.
         /// </summary>
         public bool ShowWalletBalance
         {

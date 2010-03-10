@@ -53,7 +53,7 @@ namespace EVEMon
             this.lblSkillQueueFreeRoom.AutoEllipsis = true;
             this.lblSkillQueueFreeRoom.BackColor = System.Drawing.Color.Transparent;
             this.lblSkillQueueFreeRoom.Enabled = false;
-            this.lblSkillQueueFreeRoom.ForeColor = System.Drawing.Color.DimGray;
+            this.lblSkillQueueFreeRoom.ForeColor = System.Drawing.Color.Red;
             this.lblSkillQueueFreeRoom.Location = new System.Drawing.Point(107, 92);
             this.lblSkillQueueFreeRoom.Name = "lblSkillQueueFreeRoom";
             this.lblSkillQueueFreeRoom.Size = new System.Drawing.Size(186, 13);

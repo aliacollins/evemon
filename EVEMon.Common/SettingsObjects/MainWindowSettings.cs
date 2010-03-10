@@ -177,6 +177,12 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("useIncreasedContrastOnOverview")]
+        public bool UseIncreasedContrastOnOverview
+        {
+            get;
+            set;
+        }
 
         [XmlElement("marketOrders")]
         public MarketOrderSettings MarketOrders

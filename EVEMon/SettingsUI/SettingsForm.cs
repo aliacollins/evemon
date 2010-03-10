@@ -190,16 +190,19 @@ namespace EVEMon.SettingsUI
             cbTitleToTime.Checked = m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar;
             cbWindowsTitleList.SelectedIndex = (int)m_settings.UI.MainWindow.TitleFormat - 1;
             cbSkillInTitle.Checked = m_settings.UI.MainWindow.ShowSkillNameInWindowTitle;
+            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
+            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
+            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
+            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+            
+            // Main Window - Overview
             cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
+            cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
             overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
             overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
             overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
             overviewShowSkillQueueFreeRoomCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueFreeRoom;
             overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
-            cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
-            cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
-            cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
-            cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
 
             // IGB Server
             igbCheckBox.Checked = m_settings.IGB.IGBServerEnabled;
@@ -342,7 +345,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.ShowNonPublicSkills = cbShowNonPublicSkills.Checked;
             m_settings.UI.MainWindow.ShowPrereqMetSkills = cbShowPrereqMetSkills.Checked;
 
-            // System tray icon
+            // System tray icon behaviour
             if (rbSystemTrayOptionsNever.Checked)
             {
                 m_settings.UI.SystemTrayIcon = SystemTrayBehaviour.Disabled;
@@ -405,8 +408,9 @@ namespace EVEMon.SettingsUI
             m_settings.IGB.IGBServerPort = igbServerPort;
 
 
-            // Main window
+            // Main window - Overview
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;
+            m_settings.UI.MainWindow.UseIncreasedContrastOnOverview = cbUseIncreasedContrastOnOverview.Checked;
             m_settings.UI.MainWindow.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
             m_settings.UI.MainWindow.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
             m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;

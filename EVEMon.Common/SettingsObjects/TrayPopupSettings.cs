@@ -137,14 +137,21 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-		[XmlElement("IndentGroupedAccounts")]
+		[XmlElement("indentGroupedAccounts")]
 		public bool IndentGroupedAccounts
 		{
 			get;
 			set;
 		}
 
-		public TrayPopupSettings Clone()
+        [XmlElement("useIncreasedContrast")]
+        public bool UseIncreasedContrast
+        {
+            get;
+            set;
+        }
+
+        public TrayPopupSettings Clone()
         {
             return this.MemberwiseClone() as TrayPopupSettings;
         }

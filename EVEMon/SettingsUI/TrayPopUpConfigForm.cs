@@ -91,6 +91,7 @@ namespace EVEMon.SettingsUI
             cbShowTQStatus.Checked = config.ShowTQStatus;
             cbShowEveTime.Checked = config.ShowEveTime;
 			cbIndentGroupedAccounts.Checked = config.IndentGroupedAccounts;
+            cbUseIncreasedContrast.Checked = config.UseIncreasedContrast;
             UpdateEnables();
         }
 
@@ -112,6 +113,7 @@ namespace EVEMon.SettingsUI
             m_settings.ShowTQStatus = cbShowTQStatus.Checked;
             m_settings.ShowEveTime = cbShowEveTime.Checked;
 			m_settings.IndentGroupedAccounts = cbIndentGroupedAccounts.Checked;
+            m_settings.UseIncreasedContrast = cbUseIncreasedContrast.Checked;
         }
 
         private TrayPopupSort GetSortOrder(string selectedSortOrder)
@@ -224,4 +226,3 @@ namespace EVEMon.SettingsUI
 
     }
 }
-
