@@ -60,22 +60,14 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On visibility, we may need to refresh the display.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (this.Visible) UpdateContent();
-        }
-
-        /// <summary>
-        /// On load, read settings and update the content
+        /// On load, read settings and update the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             m_iconsFont = FontFactory.GetFont("Tahoma", 8.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 
@@ -99,19 +91,23 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets the current plan
+        /// Gets or sets the current plan.
         /// </summary>
         public Plan Plan
         {
             get { return m_plan; }
             set 
             {
-                if (m_plan == value) return;
+                if (m_plan == value)
+                    return;
+
                 m_plan = value;
 
                 // Gets the character from the plan
                 var character = (Character)m_plan.Character;
-                if (m_character == character) return;
+                if (m_character == character) 
+                    return;
+
                 m_character = character;
 
                 UpdateCategoryNodes();
@@ -119,7 +115,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets or sets the selected certificate class
+        /// Gets or sets the selected certificate class.
         /// </summary>
         public CertificateClass SelectedCertificateClass
         {
@@ -139,7 +135,8 @@ namespace EVEMon.SkillPlanner
                         lvSortedList.SelectedItems.Clear();
                         foreach (ListViewItem item in lvSortedList.Items)
                         {
-                            if (item.Tag == value) item.Selected = true;
+                            if (item.Tag == value)
+                                item.Selected = true;
                         }
 
                         lbSearchList.SelectedItem = value;
@@ -155,9 +152,10 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+
         #region Control events
         /// <summary>
-        /// When the combo filter changes, we need to refresh the display
+        /// When the combo filter changes, we need to refresh the display.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -209,7 +207,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the search text box changes, we update the settings with this new filter and we update the display
+        /// When the search text box changes, we update the settings with this new filter and we update the display.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -220,7 +218,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the "left button" key is pressed, we select the whole text (???)
+        /// When the "left button" key is pressed, we select the whole text. (???)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -261,13 +259,12 @@ namespace EVEMon.SkillPlanner
         private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
                 tvItems.SelectedNode = e.Node;
-            }
         }
 
         /// <summary>
-        /// When the treeview's selection is changed, we update the selected index. Also used to force node selection on a right click
+        /// When the treeview's selection is changed, we update the selected index.
+        /// Also used to force node selection on a right click.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -281,7 +278,7 @@ namespace EVEMon.SkillPlanner
 
         #region Display update
         /// <summary>
-        /// Update the root nodes for the treeview
+        /// Update the root nodes for the treeview.
         /// </summary>
         private void UpdateCategoryNodes()
         {
@@ -310,13 +307,16 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the display
+        /// Updates the display.
         /// </summary>
         private void UpdateContent()
         {
             // Not ready yet ? We leave
-            if (m_character == null) return;
-            if (m_iconsFont == null) return;
+            if (m_character == null)
+                return;
+
+            if (m_iconsFont == null)
+                return;
 
             IEnumerable<CertificateClass> classes = GetFilteredData();
 
@@ -434,7 +434,8 @@ namespace EVEMon.SkillPlanner
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
             string column = GetSortedListData(ref classes, ref labels);
-            if (labels == null) return;
+            if (labels == null)
+                return;
 
             lvSortedList.BeginUpdate();
             try
@@ -492,15 +493,13 @@ namespace EVEMon.SkillPlanner
 
             // When sorting by "time to...", filter completed items
             if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToEliteGrade || cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextGrade)
-            {
                 classes = classes.Where(x => !x.IsCompleted);
-            }
 
             return classes;
         }
 
         /// <summary>
-        /// Gets the items' filter 
+        /// Gets the items' filter.
         /// </summary>
         private Func<CertificateClass, bool> GetFilter()
         {
@@ -525,7 +524,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the data for the sorted list view
+        /// Gets the data for the sorted list view.
         /// </summary>
         /// <param name="classes"></param>
         /// <param name="labels"></param>
@@ -561,7 +560,9 @@ namespace EVEMon.SkillPlanner
                         var lastGrade = x.HighestGradeCertificate;
                         var status = lastGrade.Status;
 
-                        if (status == CertificateStatus.Granted || status == CertificateStatus.Claimable) return TimeSpan.Zero;
+                        if (status == CertificateStatus.Granted || status == CertificateStatus.Claimable)
+                            return TimeSpan.Zero;
+
                         return lastGrade.GetTrainingTime();
                     });
 
@@ -576,7 +577,8 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the image's index for the provided certificate class, lazily creating the images when they're needed
+        /// Gets the image's index for the provided certificate class,
+        /// lazily creating the images when they're needed.
         /// </summary>
         /// <param name="certClass"></param>
         /// <returns></returns>
@@ -608,12 +610,14 @@ namespace EVEMon.SkillPlanner
             }
 
             // Special cases where we return immediately
-            if (totalGranted == certs.Count) return tvItems.ImageList.Images.IndexOfKey("AllGranted");
+            if (totalGranted == certs.Count)
+                return tvItems.ImageList.Images.IndexOfKey("AllGranted");
 
             // Create key and retrieves its index, then returns if it already exists
             string key = new string(chars);
             index = tvItems.ImageList.Images.IndexOfKey(key);
-            if (index != -1) return index;
+            if (index != -1) 
+                return index;
 
             // Create the image if it does not exist yet
             const int ImageSize = 24;
@@ -663,71 +667,107 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
+        #region Selection Helper Methods
         /// <summary>
-        /// Called whenever the selection changes, fires the approriate event
+        /// Called whenever the selection changes,
+        /// fires the approriate event.
         /// </summary>
         private void OnSelectionChanged()
         {
             if (SelectionChanged != null)
-            {
                 SelectionChanged(this, new EventArgs());
-            }
         }
 
         /// <summary>
-        /// Updates the selection by pickking the good control (the one visible)
+        /// Updates the selection by pickking the good control (the one visible).
         /// </summary>
         private void UpdateSelectionFromControls()
         {
             if (lvSortedList.Visible)
             {
-                if (lvSortedList.SelectedItems.Count == 0) UpdateSelection(null);
-                else UpdateSelection(lvSortedList.SelectedItems[0].Tag);
+                if (lvSortedList.SelectedItems.Count == 0)
+                {
+                    UpdateSelection(null);
+                }
+                else
+                {
+                    UpdateSelection(lvSortedList.SelectedItems[0].Tag);
+                }
             }
             else if (lbSearchList.Visible)
             {
-                if (lbSearchList.SelectedItems.Count == 0) UpdateSelection(null);
-                else UpdateSelection(lbSearchList.SelectedItems[0]);
+                if (lbSearchList.SelectedItems.Count == 0)
+                {
+                    UpdateSelection(null);
+                }
+                else
+                {
+                    UpdateSelection(lbSearchList.SelectedItems[0]);
+                }
             }
             else
             {
-                if (tvItems.SelectedNode == null) UpdateSelection(null);
-                else UpdateSelection(tvItems.SelectedNode.Tag);
+                if (tvItems.SelectedNode == null)
+                {
+                    UpdateSelection(null);
+                }
+                else
+                {
+                    UpdateSelection(tvItems.SelectedNode.Tag);
+                }
             }
         }
 
         /// <summary>
-        /// Updates the selection with the provided item
+        /// Updates the selection with the provided item.
         /// </summary>
         /// <param name="selection"></param>
         private void UpdateSelection(object selection)
         {
             if (!m_blockSelectionReentrancy)
-            {
                 this.SelectedCertificateClass = selection as CertificateClass;
-            }
         }
 
+        /// <summary>
+        /// Updates the settings for the search text.
+        /// </summary>
+        /// <param name="textSearch"></param>
         private void UpdateSettingsForTextSearch(string textSearch)
         {
             Settings.UI.CertificateBrowser.TextSearch = textSearch;
         }
 
+        /// <summary>
+        /// Updates the settings for the filter.
+        /// </summary>
+        /// <param name="filterIndex"></param>
         private void UpdateSettingsForFilter(int filterIndex)
         {
             Settings.UI.CertificateBrowser.Filter = (CertificateFilter)filterIndex;
         }
 
+        /// <summary>
+        /// Updates the settings for the sort.
+        /// </summary>
+        /// <param name="sortIndex"></param>
         private void UpdateSettingsForSort(int sortIndex)
         {
             Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;
         }
+        #endregion
+
 
         #region Context menus
+        /// <summary>
+        /// When the tree's context menu opens,
+        /// we update the submenus' statuses.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             var certClass = this.SelectedCertificateClass;
-            if (certClass == null)
+            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass[CertificateGrade.Elite]))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = "Plan to...";
@@ -736,10 +776,10 @@ namespace EVEMon.SkillPlanner
             {
                 cmiLvPlanTo.Enabled = true;
                 cmiLvPlanTo.Text = "Plan \"" + certClass.Name + "\" to...";
-                SetAdditionMenuStatus(tsmLevel1, certClass, CertificateGrade.Basic);
-                SetAdditionMenuStatus(tsmLevel2, certClass, CertificateGrade.Standard);
-                SetAdditionMenuStatus(tsmLevel3, certClass, CertificateGrade.Improved);
-                SetAdditionMenuStatus(tsmLevel4, certClass, CertificateGrade.Elite);
+                SetAdditionMenuStatus(tsmLevel1, certClass[CertificateGrade.Basic]);
+                SetAdditionMenuStatus(tsmLevel2, certClass[CertificateGrade.Standard]);
+                SetAdditionMenuStatus(tsmLevel3, certClass[CertificateGrade.Improved]);
+                SetAdditionMenuStatus(tsmLevel4, certClass[CertificateGrade.Elite]);
             }
 
             this.tsSeparator.Visible = this.tvItems.Visible;
@@ -747,50 +787,84 @@ namespace EVEMon.SkillPlanner
             this.tsmCollapseAll.Visible = this.tvItems.Visible;
         }
 
-        private void SetAdditionMenuStatus(ToolStripMenuItem menu, CertificateClass certClass, CertificateGrade grade)
+        /// <summary>
+        /// Sets the visible status of the context menu submenu.
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="certClass"></param>
+        /// <param name="grade"></param>
+        private void SetAdditionMenuStatus(ToolStripMenuItem menu, Certificate cert)
         {
-            var cert = certClass[grade];
             if (cert == null)
             {
                 menu.Visible = false;
+                return;
             }
-            else
-            {
-                menu.Visible = true;
-                menu.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-            }
+
+            menu.Visible = true;
+            menu.Enabled = !m_plan.WillGrantEligibilityFor(cert);
 
         }
 
+        /// <summary>
+        /// Context menu > Plan to > Basic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmLevel1_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Basic]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Context menu > Plan to > Standard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmLevel2_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Standard]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Context menu > Plan to > Improved
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmLevel3_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Improved]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Context menu > Plan to > Elite
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmLevel4_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Elite]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Treeview's context menu > Expand All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
             this.tvItems.ExpandAll();
         }
 
+        /// <summary>
+        /// Treeview's context menu > Collapse All
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
             this.tvItems.CollapseAll();

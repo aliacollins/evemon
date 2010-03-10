@@ -27,6 +27,9 @@ namespace EVEMon.SkillPlanner
         public RequiredSkillsControl()
         {
             InitializeComponent();
+
+            tvSkillList.MouseDown += new MouseEventHandler(tvSkillList_MouseDown);
+
             this.Disposed += new EventHandler(OnDisposed);
             EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
         }
@@ -78,7 +81,6 @@ namespace EVEMon.SkillPlanner
                 UpdateDisplay();
             }
         }
-
         #endregion
 
         #region Content creation
@@ -126,7 +128,8 @@ namespace EVEMon.SkillPlanner
             // Set minimun control size
             Size timeRequiredTextSize = TextRenderer.MeasureText(lblTimeRequired.Text, Font);
             Size newMinimumSize = new Size(timeRequiredTextSize.Width + btnAddSkills.Width, 0);
-            if (this.MinimumSize.Width < newMinimumSize.Width) this.MinimumSize = newMinimumSize;
+            if (this.MinimumSize.Width < newMinimumSize.Width)
+                this.MinimumSize = newMinimumSize;
 
             // Enable / disable button
             btnAddSkills.Enabled = skillsUnplanned;
@@ -175,6 +178,33 @@ namespace EVEMon.SkillPlanner
 
             return node;
         }
+
+        /// <summary>
+        /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tvSkillList_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Perform the selection manually since the bound's width and x are incorrect
+            TreeNode selection = null;
+            for (TreeNode node = tvSkillList.TopNode; node != null; node = node.NextVisibleNode)
+            {
+                if (node.Bounds.Top <= e.Y && node.Bounds.Bottom >= e.Y)
+                {
+                    // If the user clicked the "arrow zone", we do not change the selection and just return
+                    if (e.X < (node.Bounds.Left - 32))
+                        return;
+
+                    selection = node;
+                    break;
+                }
+            }
+
+            // Updates the selection
+            if (selection != tvSkillList.SelectedNode)
+                tvSkillList.SelectedNode = selection;
+        }
         #endregion
 
         #region Controls' handlers
@@ -194,13 +224,14 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On a right-click, we ensure the node is selected before the menu is opened.
+        /// Forces the selection update when a node is right-clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tvSkillList_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            tvSkillList.SelectedNode = e.Node;
+            if (e.Button == MouseButtons.Right)
+                tvSkillList.SelectedNode = e.Node;
         }
 
         /// <summary>
@@ -233,16 +264,27 @@ namespace EVEMon.SkillPlanner
         {
             if (tvSkillList.SelectedNode == null)
             {
-                e.Cancel = true;
-                return;
-            }
+                planToMenu.Enabled = false;
 
-            // "Plan to N" menus
-            var skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
-            var skill = skillLevel.Skill;
-            for (int i = 0; i <= 5; i++)
+                // Update "show in..." menu
+                showInMenuSeparator.Visible = false;
+                showInSkillBrowserMenu.Visible = false;
+                showInSkillExplorerMenu.Visible = false;
+            }
+            else
             {
-                PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, skill, i);
+                planToMenu.Enabled = true;
+                showInMenuSeparator.Visible = true;
+                showInSkillBrowserMenu.Visible = true;
+                showInSkillExplorerMenu.Visible = true;
+                
+                // "Plan to N" menus
+                var skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
+                var skill = skillLevel.Skill;
+                for (int i = 0; i <= 5; i++)
+                {
+                    PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, skill, i);
+                }
             }
         }
 
@@ -255,7 +297,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             // Open the skill explorer
             var skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;
@@ -271,7 +314,8 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (npw == null || npw.IsDisposed) return;
+            if (npw == null || npw.IsDisposed)
+                return;
 
             // Open the skill explorer
             var skillLevel = (SkillLevel)tvSkillList.SelectedNode.Tag;

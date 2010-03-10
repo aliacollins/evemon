@@ -172,8 +172,8 @@ namespace EVEMon.SkillPlanner
             // tslbTextForEligibility
             // 
             this.tslbTextForEligibility.Name = "tslbTextForEligibility";
-            this.tslbTextForEligibility.Size = new System.Drawing.Size(199, 22);
-            this.tslbTextForEligibility.Text = "After this plan you wil be eligible to :";
+            this.tslbTextForEligibility.Size = new System.Drawing.Size(202, 22);
+            this.tslbTextForEligibility.Text = "After this plan you will be eligible to :";
             // 
             // tslbEligible
             // 

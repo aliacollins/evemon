@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
 
         #region Constructors
         /// <summary>
-        /// User control to display required certificates for a given eveobject and update a plan object for requirements not met
+        /// User control to display required certificates for a given eveobject and update a plan object for requirements not met.
         /// </summary>
         public RecommendedCertificatesControl()
         {
@@ -70,7 +70,7 @@ namespace EVEMon.SkillPlanner
 
         #region Public Properties
         /// <summary>
-        /// An EveObject for which we want to show required skills
+        /// An EveObject for which we want to show required skills.
         /// </summary>
         public Item Object
         {
@@ -82,7 +82,7 @@ namespace EVEMon.SkillPlanner
             }
         }
         /// <summary>
-        /// The target Plan object to add any required skills
+        /// The target Plan object to add any required skills.
         /// </summary>
         public Plan Plan
         {
@@ -97,7 +97,7 @@ namespace EVEMon.SkillPlanner
 
         #region Content creation
         /// <summary>
-        /// Updates control contents
+        /// Updates control contents.
         /// </summary>
         private void UpdateDisplay()
         {
@@ -155,7 +155,7 @@ namespace EVEMon.SkillPlanner
         }
         
         /// <summary>
-        /// Recursive method to generate treenodes for tvCertList
+        /// Recursive method to generate treenodes for tvCertList.
         /// </summary>
         /// <param name="certificate">An EntityRecommendedCertificate object</param>
         /// <returns></returns>
@@ -184,7 +184,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Recursive method to generate treenodes for tvCertList
+        /// Recursive method to generate treenodes for tvCertList.
         /// </summary>
         /// <param name="requiredSkill">An EntityRequiredSkill object</param>
         /// <returns></returns>
@@ -206,7 +206,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the index image of the specified node and its children
+        /// Updates the index image of the specified node and its children.
         /// </summary>
         /// <param name="node"></param>
         private void UpdateNode(TreeNode node, ref bool allCertsKnown, ref bool certsUnplanned)
@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Custom draw for the label
+        /// Custom draw for the label.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -356,7 +356,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect due to custom draw
+        /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect due to custom draw.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -371,6 +371,7 @@ namespace EVEMon.SkillPlanner
                     // If the user clicked the "arrow zone", we do not change the selection and just return
                     if (e.X < (node.Bounds.Left - 32))
                         return;
+
                     selection = node;
                     break;
                 }
@@ -384,7 +385,7 @@ namespace EVEMon.SkillPlanner
 
         #region Controls' handlers
         /// <summary>
-        /// Event handler method for Add Certs button
+        /// Event handler method for Add Certs button.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -407,17 +408,18 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On a right-click, we ensure the node is selected before the menu is opened.
+        /// Forces the selection update when a node is right-clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tvCertList_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            tvCertList.SelectedNode = e.Node;
+            if (e.Button == MouseButtons.Right)
+                tvCertList.SelectedNode = e.Node;
         }
 
         /// <summary>
-        /// Event handler for treenode double click event
+        /// Event handler for treenode double click event.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -530,7 +532,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context > Show in Skill Explorer
+        /// Context > Show in Skill Explorer.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -547,7 +549,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Expand All
+        /// Treeview's context menu > Expand All.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -557,7 +559,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Treeview's context menu > Collapse All
+        /// Treeview's context menu > Collapse All.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -567,7 +569,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context > Plan...
+        /// Context > Plan "(selection)"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -592,7 +594,7 @@ namespace EVEMon.SkillPlanner
 
     #region ReqCertificatesTreeView
     /// <summary>
-    /// Derived from TreeView class
+    /// Derived from TreeView class.
     /// <para>Overrides standard node double click behaviour to prevent node expand / collapse actions</para>
     /// </summary>
     class ReqCertificatesTreeView : System.Windows.Forms.TreeView
