@@ -8,10 +8,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-using EVEMon.XmlGenerator.Zofu;
-using EVEMon.XmlImporter.Zofu;
+using EVEMon.XmlGenerator.StaticData;
 
-namespace EVEMon.XmlImporter
+namespace EVEMon.XmlGenerator
 {
     public static class Util
     {
@@ -21,9 +20,9 @@ namespace EVEMon.XmlImporter
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        public static ZofuList<T> DeserializeList<T>(string filename)
+        public static SimpleList<T> DeserializeList<T>(string filename)
         {
-            return DeserializeXMLCore<ZofuList<T>>(filename);
+            return DeserializeXMLCore<SimpleList<T>>(filename);
         }
 
         /// <summary>
@@ -32,10 +31,10 @@ namespace EVEMon.XmlImporter
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        public static ZofuIndexedList<T> DeserializeIndexedList<T>(string filename)
+        public static IndexedList<T> DeserializeIndexedList<T>(string filename)
             where T : IHasID
         {
-            return DeserializeXMLCore<ZofuIndexedList<T>>(filename);
+            return DeserializeXMLCore<IndexedList<T>>(filename);
         }
 
         /// <summary>
@@ -44,10 +43,10 @@ namespace EVEMon.XmlImporter
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        public static ZofuRelations<T> DeserializeRelations<T>(string filename)
+        public static Relations<T> DeserializeRelations<T>(string filename)
             where T : class, IRelation
         {
-            return DeserializeXMLCore<ZofuRelations<T>>(filename);
+            return DeserializeXMLCore<Relations<T>>(filename);
         }
 
         /// <summary>

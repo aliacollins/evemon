@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Globalization;
-using System.Diagnostics;
 using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.XmlGenerator;
-using EVEMon.XmlGenerator.Zofu;
-using EVEMon.XmlImporter.Zofu;
+using EVEMon.XmlGenerator.StaticData;
 
-namespace EVEMon.XmlImporter
+namespace EVEMon.XmlGenerator
 {
     class Program
     {
@@ -47,89 +43,87 @@ namespace EVEMon.XmlImporter
         static void Main(string[] args)
         {
             // Setting a standard format for the generated files
-            Thread.CurrentThread.CurrentCulture = new CultureInfo ("en-US");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
-            // Zofu's data dumps are extracted from the game files themselves. They're available at :
-            // http://zofu.no-ip.de/
+            // Data dumps are available from CCP
 
-            Console.Write("Deserializing Data From Zofu's XML Files In Progress... ");
+            Console.Write("Loading Data SQL... ");
             
             // Read Zofu's XML
-            s_units = Util.DeserializeIndexedList<EveUnit>("eveUnits.xml").ToBag();
+            s_units = Database.Units();
             Console.Write("5%");
-            s_graphics = Util.DeserializeIndexedList<EveGraphic>("eveGraphics.xml").ToBag();
+            s_graphics = Database.Graphics();
             Console.SetCursorPosition(Console.CursorLeft - 2, Console.CursorTop);
             Console.Write("10%");
-            s_attributes = Util.DeserializeIndexedList<DgmAttribute>("dgmAttributeTypes.xml").ToBag();
+            s_attributes = Database.Attributes();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("15%");
-            s_attributeCategories = Util.DeserializeIndexedList<DgmAttributeCategory>("dgmAttributeCategories.xml").ToBag();
+            s_attributeCategories = Database.AttributeCategories();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("20%");
-            s_regions = Util.DeserializeIndexedList<MapRegion>("mapRegions.xml").ToBag();
+            s_regions = Database.Regions();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("25%");
-            s_constellations = Util.DeserializeIndexedList<MapConstellation>("mapConstellations.xml").ToBag();
+            s_constellations = Database.Constellations();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("30%");
-            s_solarSystems = Util.DeserializeIndexedList<MapSolarSystem>("mapSolarSystems.xml").ToBag();
+            s_solarSystems = Database.Solarsystems();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("35%");
-            s_stations = Util.DeserializeIndexedList<StaStation>("staStations.xml").ToBag();
+            s_stations = Database.Stations();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("40%");
-            s_jumps = Util.DeserializeList<MapSolarSystemJump>("mapSolarSystemJumps.xml").Items;
+            s_jumps = Database.Jumps();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("45%");
-            s_typeAttributes = Util.DeserializeRelations<DgmTypeAttribute>("dgmTypeAttributes.xml").ToSet();
+            s_typeAttributes = Database.TypeAttributes();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("50%");
-            s_marketGroups = Util.DeserializeIndexedList<InvMarketGroup>("invMarketGroups.xml").ToBag();
+            s_marketGroups = Database.MarketGroups();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("55%");
-            s_groups = Util.DeserializeIndexedList<InvGroup>("invGroups.xml").ToBag();
+            s_groups = Database.Groups();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("60%");
-            s_metaTypes = Util.DeserializeRelations<InvMetaType>("invMetaTypes.xml").ToSet();
+            s_metaTypes = Database.MetaTypes();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("65%");
-            s_typeEffects = Util.DeserializeRelations<DgmTypeEffect>("dgmTypeEffects.xml").ToSet();
+            s_typeEffects = Database.TypeEffects();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("70%");
-            s_types = Util.DeserializeIndexedList<InvType>("invTypes.xml").ToBag();
+            s_types = Database.Types();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("75%");
-            s_activities = Util.DeserializeList<TypeActivityMaterial>("ramTypeRequirements.xml").Items;
+            s_activities = Database.Materials();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("80%");
-            s_crtCategories = Util.DeserializeIndexedList<CrtCategories>("crtCategories.xml").ToBag();
+            s_crtCategories = Database.CertificateCategories();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("85%");
-            s_crtClasses = Util.DeserializeIndexedList<CrtClasses>("crtClasses.xml").ToBag();
+            s_crtClasses = Database.CertificateClasses();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("90%");
-            s_certificates = Util.DeserializeIndexedList<CrtCertificates>("crtCertificates.xml").ToBag();
+            s_certificates = Database.Certificates();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("95%");
-            s_crtRecommendations = Util.DeserializeIndexedList<CrtRecommendations>("crtRecommendations.xml").ToBag();
+            s_crtRecommendations = Database.CertificateRecommendations();
             Console.SetCursorPosition(Console.CursorLeft - 3, Console.CursorTop);
             Console.Write("100%");
-            s_crtRelationships = Util.DeserializeIndexedList<CrtRelationships>("crtRelationships.xml").ToBag();
+            s_crtRelationships = Database.CertificateRelationships();
             Console.WriteLine();
             Console.WriteLine();
-
-
+            
             // Generate datafiles
             Console.WriteLine("Datafile Generating In Progress");
             Console.WriteLine("(Please be patient as this process can take up to 5 minutes)");
             Console.WriteLine();
 
-            GenerateProperties(); // Keep this method on top of "GenerateItems()" as it affects it
-            GenerateItems();
+            GenerateProperties();
+            GenerateItems(); // Requires GenerateProperties()
             GenerateSkills();
             GenerateCertificates();
             GenerateGeography();
-            GenerateReprocessing();
+            GenerateReprocessing(); // Requires GenerateItems()
             
             GenerateMD5Sums();
 
@@ -153,7 +147,7 @@ namespace EVEMon.XmlImporter
                 { 
                     ID = category.ID,
                     Name = category.CategoryName,
-                    Description = Regex.Replace(category.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
+                    Description = category.Description
                 };
 
                 // Export certificates classes
@@ -170,7 +164,7 @@ namespace EVEMon.XmlImporter
                     {
                         ID = certClass.ID,
                         Name = certClass.ClassName,
-                        Description = Regex.Replace(certClass.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
+                        Description = certClass.Description
                     };
 
                     // Export certificates
@@ -182,7 +176,7 @@ namespace EVEMon.XmlImporter
                         {
                             ID = certificate.ID,
                             Grade = GetGrade(certificate.Grade),
-                            Description = Regex.Replace(certificate.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
+                            Description = certificate.Description
                         };
 
                         // Export prerequesities
@@ -336,8 +330,8 @@ namespace EVEMon.XmlImporter
                     {
                         ID = skill.ID,
                         Name = skill.Name,
-                        Description = Regex.Replace(skill.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
-                        Public = skill.Published == 1,
+                        Description = skill.Description,
+                        Public = skill.Published,
                         Cost = (long)skill.BasePrice,
                     };
 
@@ -707,7 +701,7 @@ namespace EVEMon.XmlImporter
                 });
 
             // Inject the missing ships that are missing from the output because their MarketGroupID is NULL
-            foreach (var srcItem in s_types.Where(x => x.Published != 0 && x.MarketGroupID == null))
+            foreach (var srcItem in s_types.Where(x => x.Published && x.MarketGroupID == null))
             {
                 switch (srcItem.ID)
                 {
@@ -740,7 +734,7 @@ namespace EVEMon.XmlImporter
 
                 // Add the items in this group
                 var items = new List<SerializableItem>();
-                foreach (var srcItem in s_types.Where(x => x.Published != 0 && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
+                foreach (var srcItem in s_types.Where(x => x.Published && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
                 {
                     CreateItem(srcItem, items);
                 }
@@ -805,7 +799,7 @@ namespace EVEMon.XmlImporter
             {
                 ID = srcItem.ID,
                 Name = srcItem.Name,
-                Description = Regex.Replace(srcItem.Description, "<.+?>", String.Empty, RegexOptions.Singleline),
+                Description = srcItem.Description
             };
 
             // Icon
@@ -935,8 +929,7 @@ namespace EVEMon.XmlImporter
 
                 // Other props
                 {
-                    string value = (srcProp.ValueInt.HasValue ? srcProp.ValueInt.ToString() : srcProp.ValueFloat.ToString());
-                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = value });
+                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
                 }
 
                 // Is metalevel property ?
@@ -974,7 +967,7 @@ namespace EVEMon.XmlImporter
             }
 
             // Add base price as a prop
-            props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.ToString() });
+            props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
 
             //Add prop to item
             item.Properties = props.ToArray();
@@ -1088,12 +1081,15 @@ namespace EVEMon.XmlImporter
             // Add this item
             groupItems.Add(item);
 
-            // Now look for variations which are not in any market group
-            if (srcItem.MarketGroupID == null) return;
+            // if the current item isn't in a market group then we are done
+            if (srcItem.MarketGroupID == null)
+                return;
+
+            // Look for variations which are not in any market group
             foreach (var variation in s_metaTypes.Where(x => x.ParentItemID == srcItem.ID))
             {
                 var srcVariationItem = s_types[variation.ItemID];
-                if (srcVariationItem.Published != 0 && srcVariationItem.MarketGroupID == null)
+                if (srcVariationItem.Published && srcVariationItem.MarketGroupID == null)
                 {
                     srcVariationItem.RaceID = 32;
                     CreateItem(srcVariationItem, groupItems);
@@ -1124,6 +1120,8 @@ namespace EVEMon.XmlImporter
             var types = new List<SerializableItemMaterials>();
 
             // Regions
+            var materialTypes = s_types.Where(x => x.Generated).Select(x => x.ID);
+
             foreach (var typeID in s_types.Where(x => x.Generated).Select(x => x.ID))
             {
                 var materials = new List<SerializableMaterialQuantity>();

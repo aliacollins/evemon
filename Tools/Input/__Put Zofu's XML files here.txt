@@ -1,2 +1,0 @@
-Zofu's data dumps are extracted from the game files themselves. They're available at :
-http://zofu.no-ip.de/

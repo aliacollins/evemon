@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using EVEMon.XmlImporter.Zofu;
+using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
 {
-
     /// <summary>
     /// A dictionary-based implementation.
     /// </summary>
@@ -20,7 +19,7 @@ namespace EVEMon.XmlGenerator
             m_items = new Dictionary<int, T>();
         }
 
-        public Bag(ZofuIndexedList<T> list)
+        public Bag(IndexedList<T> list)
             : this()
         {
             foreach (var item in list.Items)
@@ -46,7 +45,6 @@ namespace EVEMon.XmlGenerator
             }
         }
 
-
         public IEnumerator<T> GetEnumerator()
         {
             foreach (var T in m_items.Values)
@@ -54,7 +52,6 @@ namespace EVEMon.XmlGenerator
                 yield return T;
             }
         }
-
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {

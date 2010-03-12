@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EVEMon.XmlImporter.Zofu;
-using EVEMon.XmlGenerator.Zofu;
+﻿using System.Collections.Generic;
+using EVEMon.XmlGenerator.StaticData;
 
-namespace EVEMon.XmlImporter
+namespace EVEMon.XmlGenerator
 {
     public sealed class RelationSet<T> : IEnumerable<T>
         where T : class, IRelation
