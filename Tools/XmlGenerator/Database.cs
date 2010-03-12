@@ -27,7 +27,7 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// EVE Units
         /// </summary>
-        /// <returns>Bag of EVE Units</returns>
+        /// <returns><c>Bag</c> of EVE Units</returns>
         internal static Bag<EveUnit> Units()
         {
             IndexedList<EveUnit> list = new IndexedList<EveUnit>();
@@ -48,6 +48,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<EveUnit>(list);
         }
 
+        /// <summary>
+        /// EVE Graphics
+        /// </summary>
+        /// <returns><c>Bag</c> of graphics</returns>
         internal static Bag<EveGraphic> Graphics()
         {
             IndexedList<EveGraphic> list = new IndexedList<EveGraphic>();
@@ -66,6 +70,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<EveGraphic>(list);
         }
 
+        /// <summary>
+        /// EVE Attributes
+        /// </summary>
+        /// <returns><c>Bag</c> of Attributes</returns>
         internal static Bag<DgmAttribute> Attributes()
         {
             IndexedList<DgmAttribute> list = new IndexedList<DgmAttribute>();
@@ -95,6 +103,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<DgmAttribute>(list);
         }
 
+        /// <summary>
+        /// Attribute categories
+        /// </summary>
+        /// <returns><c>Bag</c> of Attribute Categories</returns>
         internal static Bag<DgmAttributeCategory> AttributeCategories()
         {
             IndexedList<DgmAttributeCategory> list = new IndexedList<DgmAttributeCategory>();
@@ -114,6 +126,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<DgmAttributeCategory>(list);
         }
 
+        /// <summary>
+        /// Regions in the EVE Universe
+        /// </summary>
+        /// <returns><c>Bag</c> of all regions in EVE</returns>
         internal static Bag<MapRegion> Regions()
         {
             IndexedList<MapRegion> list = new IndexedList<MapRegion>();
@@ -133,6 +149,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<MapRegion>(list);
         }
 
+        /// <summary>
+        /// Constallations in the EVE Universe
+        /// </summary>
+        /// <returns><c>Bag</c> of Constallations in EVE</returns>
         internal static Bag<MapConstellation> Constellations()
         {
             IndexedList<MapConstellation> list = new IndexedList<MapConstellation>();
@@ -154,6 +174,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<MapConstellation>(list);
         }
 
+        /// <summary>
+        /// Solar Systems in EVE
+        /// </summary>
+        /// <returns><c>Bag</c> of Solar Systems in the EVE</returns>
         internal static Bag<MapSolarSystem> Solarsystems()
         {
             IndexedList<MapSolarSystem> list = new IndexedList<MapSolarSystem>();
@@ -187,6 +211,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<MapSolarSystem>(list);
         }
 
+        /// <summary>
+        /// Stations in the EVE Universe
+        /// </summary>
+        /// <returns><c>Bag</c> of Stations in the EVE Universe</returns>
         internal static Bag<StaStation> Stations()
         {
             IndexedList<StaStation> list = new IndexedList<StaStation>();
@@ -217,6 +245,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<StaStation>(list);
         }
 
+        /// <summary>
+        /// Jumps between two solar systems in the EVE Universe
+        /// </summary>
+        /// <returns><c>List</c> of jumps between SolarSystems in EVE</returns>
         internal static List<MapSolarSystemJump> Jumps()
         {
             List<MapSolarSystemJump> list = new List<MapSolarSystemJump>();
@@ -235,6 +267,10 @@ namespace EVEMon.XmlGenerator
             return list;
         }
 
+        /// <summary>
+        /// Inventory Item Market Groups
+        /// </summary>
+        /// <returns><c>Bag</c> of Market Groups available on the market</returns>
         internal static Bag<InvMarketGroup> MarketGroups()
         {
             IndexedList<InvMarketGroup> list = new IndexedList<InvMarketGroup>();
@@ -256,6 +292,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<InvMarketGroup>(list);
         }
 
+        /// <summary>
+        /// Inventory Item Groups
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Groups</returns>
         internal static Bag<InvGroup> Groups()
         {
             IndexedList<InvGroup> list = new IndexedList<InvGroup>();
@@ -277,6 +317,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<InvGroup>(list);
         }
 
+        /// <summary>
+        /// Inventory Types
+        /// </summary>
+        /// <returns><c>Bag</c> of items from the Inventory</returns>
         internal static Bag<InvType> Types()
         {
             IndexedList<InvType> list = new IndexedList<InvType>();
@@ -317,6 +361,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<InvType>(list);
         }
 
+        /// <summary>
+        /// Materials used for an Activity
+        /// </summary>
+        /// <returns>List of Materials used for a particular activity.</returns>
         internal static List<TypeActivityMaterial> Materials()
         {
             List<TypeActivityMaterial> list = new List<TypeActivityMaterial>();
@@ -339,6 +387,10 @@ namespace EVEMon.XmlGenerator
             return list;
         }
 
+        /// <summary>
+        /// Certificate Categories
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Categories</returns>
         internal static Bag<CrtCategories> CertificateCategories()
         {
             IndexedList<CrtCategories> list = new IndexedList<CrtCategories>();
@@ -358,6 +410,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<CrtCategories>(list);
         }
 
+        /// <summary>
+        /// Certificate Classes
+        /// </summary>
+        /// <returns><c>Bag</c> of Classes of Certificate</returns>
         internal static Bag<CrtClasses> CertificateClasses()
         {
             IndexedList<CrtClasses> list = new IndexedList<CrtClasses>();
@@ -377,6 +433,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<CrtClasses>(list);
         }
 
+        /// <summary>
+        /// Certificates
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificates</returns>
         internal static Bag<CrtCertificates> Certificates()
         {
             IndexedList<CrtCertificates> list = new IndexedList<CrtCertificates>();
@@ -404,6 +464,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<CrtCertificates>(list);
         }
 
+        /// <summary>
+        /// Certificate Recommendations
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Recommendations</returns>
         internal static Bag<CrtRecommendations> CertificateRecommendations()
         {
             IndexedList<CrtRecommendations> list = new IndexedList<CrtRecommendations>();
@@ -428,6 +492,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<CrtRecommendations>(list);
         }
 
+        /// <summary>
+        /// Certificate Relationships
+        /// </summary>
+        /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
         internal static Bag<CrtRelationships> CertificateRelationships()
         {
             IndexedList<CrtRelationships> list = new IndexedList<CrtRelationships>();
@@ -453,6 +521,10 @@ namespace EVEMon.XmlGenerator
             return new Bag<CrtRelationships>(list);
         }
 
+        /// <summary>
+        /// Type Attribes
+        /// </summary>
+        /// <returns><c>RelationSet</c> of attributes for types</returns>
         internal static RelationSet<DgmTypeAttribute> TypeAttributes()
         {
             List<DgmTypeAttribute> list = new List<DgmTypeAttribute>();
@@ -473,6 +545,10 @@ namespace EVEMon.XmlGenerator
             return new RelationSet<DgmTypeAttribute>(list);
         }
 
+        /// <summary>
+        /// Meta Types
+        /// </summary>
+        /// <returns><c>RelationSet</c> parent-child relationships between types</returns>
         internal static RelationSet<InvMetaType> MetaTypes()
         {
             List<InvMetaType> list = new List<InvMetaType>();
@@ -492,6 +568,10 @@ namespace EVEMon.XmlGenerator
             return new RelationSet<InvMetaType>(list);
         }
 
+        /// <summary>
+        /// Effects of various types
+        /// </summary>
+        /// <returns><c>RelationSet</c> of Types and Effects</returns>
         internal static RelationSet<DgmTypeEffect> TypeEffects()
         {
             List<DgmTypeEffect> list = new List<DgmTypeEffect>();

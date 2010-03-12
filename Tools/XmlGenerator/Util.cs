@@ -20,6 +20,7 @@ namespace EVEMon.XmlGenerator
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
+        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
         public static SimpleList<T> DeserializeList<T>(string filename)
         {
             return DeserializeXMLCore<SimpleList<T>>(filename);
@@ -31,6 +32,7 @@ namespace EVEMon.XmlGenerator
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
+        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
         public static IndexedList<T> DeserializeIndexedList<T>(string filename)
             where T : IHasID
         {
@@ -43,6 +45,7 @@ namespace EVEMon.XmlGenerator
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
+        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
         public static Relations<T> DeserializeRelations<T>(string filename)
             where T : class, IRelation
         {
@@ -55,6 +58,7 @@ namespace EVEMon.XmlGenerator
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
         /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
+        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
         private static T DeserializeXMLCore<T>(string filename)
         {
             string path = Path.Combine(@"..\..\..\Input", filename);
