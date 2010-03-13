@@ -48,6 +48,7 @@
             this.listBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.listBox.Size = new System.Drawing.Size(318, 270);
             this.listBox.TabIndex = 0;
+            this.listBox.Resize += new System.EventHandler(this.listBox_Resize);
             // 
             // toolTip
             // 
