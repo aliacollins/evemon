@@ -299,6 +299,15 @@ namespace EVEMon.Common
         {
             get { return s_tranquilityServer; }
         }
+        
+        /// <summary>
+        /// Apply some settings changes
+        /// </summary>
+        private static void UpdateSettings()
+        {
+            s_httpWebService.State.Proxy = Settings.Proxy;
+        }
+
         #endregion
 
 
@@ -669,7 +678,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Stopps the logging of trace messages to a file
+        /// Stops the logging of trace messages to a file
         /// </summary>
         public static void StopTraceLogging()
         {
@@ -679,14 +688,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
-        /// <summary>
-        /// Apply some settings changes
-        /// </summary>
-        private static void UpdateSettings()
-        {
-            s_httpWebService.State.Proxy = Settings.Proxy;
-        }
 
     }
 }
