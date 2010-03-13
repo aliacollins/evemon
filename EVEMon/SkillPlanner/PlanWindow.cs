@@ -163,6 +163,9 @@ namespace EVEMon.SkillPlanner
                 // The tag is used by WindowsFactory.ShowByTag
                 this.Tag = value;
 
+                // Check to see if one or more obsolete entries were found
+                CheckObsoleteEntries();
+
                 // Assign the new plan to the children
                 planEditor.Plan = m_plan;
                 shipBrowser.Plan = m_plan;
@@ -188,9 +191,6 @@ namespace EVEMon.SkillPlanner
 
                 // Update controls
                 this.Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", this.Character.Name, m_plan.Name);
-
-                // Check to see if one or more obsolete entries were found
-                CheckObsoleteEntries();
 
                 // Check to see if one or more invalid entries were 
                 // found, we do this last so as not to cause problems
