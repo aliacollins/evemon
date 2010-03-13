@@ -234,44 +234,44 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Keep All Mouse Hover
+        /// Keep All Mouse Hover / Enter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void KeepAllButton_MouseHover(object sender, EventArgs e)
+        private void KeepAllButton_Focused(object sender, EventArgs e)
         {
             m_previewResult = ObsoleteEntriesAction.KeepAll;
             UpdateListView();
         }
 
         /// <summary>
-        /// Remove All Mouse Hover
+        /// Remove All Mouse Hover / Enter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RemoveAllButton_MouseHover(object sender, EventArgs e)
+        private void RemoveAllButton_Focused(object sender, EventArgs e)
         {
             m_previewResult = ObsoleteEntriesAction.RemoveAll;
             UpdateListView();
         }
 
         /// <summary>
-        /// Remove Confirmed Mouse Hover
+        /// Remove Confirmed Mouse Hover / Enter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RemoveConfirmedButton_MouseHover(object sender, EventArgs e)
+        private void RemoveConfirmedButton_Focused(object sender, EventArgs e)
         {
             m_previewResult = ObsoleteEntriesAction.RemoveConfirmed;
             UpdateListView();
         }
 
         /// <summary>
-        /// Any button Mouse Leave
+        /// Any button Mouse/Focus Leave 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AnyButton_MouseLeave(object sender, EventArgs e)
+        private void AnyButton_Leave(object sender, EventArgs e)
         {
             m_previewResult = ObsoleteEntriesAction.None;
             UpdateListView();

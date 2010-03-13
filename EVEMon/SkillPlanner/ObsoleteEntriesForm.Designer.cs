@@ -79,7 +79,7 @@
             this.ObsoleteEntriesListView.Margin = new System.Windows.Forms.Padding(10, 10, 10, 3);
             this.ObsoleteEntriesListView.Name = "ObsoleteEntriesListView";
             this.ObsoleteEntriesListView.Size = new System.Drawing.Size(375, 357);
-            this.ObsoleteEntriesListView.TabIndex = 1;
+            this.ObsoleteEntriesListView.TabIndex = 0;
             this.ObsoleteEntriesListView.UseCompatibleStateImageBehavior = false;
             this.ObsoleteEntriesListView.View = System.Windows.Forms.View.Details;
             // 
@@ -111,12 +111,14 @@
             this.KeepAllButton.Margin = new System.Windows.Forms.Padding(3, 3, 6, 8);
             this.KeepAllButton.Name = "KeepAllButton";
             this.KeepAllButton.Size = new System.Drawing.Size(108, 27);
-            this.KeepAllButton.TabIndex = 0;
+            this.KeepAllButton.TabIndex = 3;
             this.KeepAllButton.Text = "&Keep All";
             this.KeepAllButton.UseVisualStyleBackColor = true;
-            this.KeepAllButton.MouseLeave += new System.EventHandler(this.AnyButton_MouseLeave);
+            this.KeepAllButton.MouseLeave += new System.EventHandler(this.AnyButton_Leave);
             this.KeepAllButton.Click += new System.EventHandler(this.KeepAllButton_Click);
-            this.KeepAllButton.MouseHover += new System.EventHandler(this.KeepAllButton_MouseHover);
+            this.KeepAllButton.Leave += new System.EventHandler(this.AnyButton_Leave);
+            this.KeepAllButton.Enter += new System.EventHandler(this.KeepAllButton_Focused);
+            this.KeepAllButton.MouseHover += new System.EventHandler(this.KeepAllButton_Focused);
             // 
             // RemoveAllButton
             // 
@@ -125,12 +127,14 @@
             this.RemoveAllButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 8);
             this.RemoveAllButton.Name = "RemoveAllButton";
             this.RemoveAllButton.Size = new System.Drawing.Size(108, 27);
-            this.RemoveAllButton.TabIndex = 1;
+            this.RemoveAllButton.TabIndex = 2;
             this.RemoveAllButton.Text = "&Remove All";
             this.RemoveAllButton.UseVisualStyleBackColor = true;
-            this.RemoveAllButton.MouseLeave += new System.EventHandler(this.AnyButton_MouseLeave);
+            this.RemoveAllButton.MouseLeave += new System.EventHandler(this.AnyButton_Leave);
             this.RemoveAllButton.Click += new System.EventHandler(this.RemoveAllButton_Click);
-            this.RemoveAllButton.MouseHover += new System.EventHandler(this.RemoveAllButton_MouseHover);
+            this.RemoveAllButton.Leave += new System.EventHandler(this.AnyButton_Leave);
+            this.RemoveAllButton.Enter += new System.EventHandler(this.RemoveAllButton_Focused);
+            this.RemoveAllButton.MouseHover += new System.EventHandler(this.RemoveAllButton_Focused);
             // 
             // RemoveConfirmedButton
             // 
@@ -138,12 +142,14 @@
             this.RemoveConfirmedButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 8);
             this.RemoveConfirmedButton.Name = "RemoveConfirmedButton";
             this.RemoveConfirmedButton.Size = new System.Drawing.Size(108, 27);
-            this.RemoveConfirmedButton.TabIndex = 2;
+            this.RemoveConfirmedButton.TabIndex = 1;
             this.RemoveConfirmedButton.Text = "Remove &Confirmed";
             this.RemoveConfirmedButton.UseVisualStyleBackColor = true;
-            this.RemoveConfirmedButton.MouseLeave += new System.EventHandler(this.AnyButton_MouseLeave);
+            this.RemoveConfirmedButton.MouseLeave += new System.EventHandler(this.AnyButton_Leave);
             this.RemoveConfirmedButton.Click += new System.EventHandler(this.RemoveConfirmedButton_Click);
-            this.RemoveConfirmedButton.MouseHover += new System.EventHandler(this.RemoveConfirmedButton_MouseHover);
+            this.RemoveConfirmedButton.Leave += new System.EventHandler(this.AnyButton_Leave);
+            this.RemoveConfirmedButton.Enter += new System.EventHandler(this.RemoveConfirmedButton_Focused);
+            this.RemoveConfirmedButton.MouseHover += new System.EventHandler(this.RemoveConfirmedButton_Focused);
             // 
             // ObsoleteEntriesForm
             // 
