@@ -105,7 +105,7 @@ namespace EVEMon.SettingsUI
             treeNode13,
             treeNode14});
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Icons");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Icons", 14, 14);
             System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9, new System.Windows.Forms.TreeNode[] {
             treeNode17});
             System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
@@ -1337,6 +1337,7 @@ namespace EVEMon.SettingsUI
             treeNode16.Text = "Main Window";
             treeNode17.ImageIndex = 14;
             treeNode17.Name = "IconsNode";
+            treeNode17.SelectedImageIndex = 14;
             treeNode17.Tag = "iconsPage";
             treeNode17.Text = "Icons";
             treeNode18.ImageIndex = 9;
@@ -1402,7 +1403,7 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(11, "Settings.png");
             this.imageList.Images.SetKeyName(12, "Update3.png");
             this.imageList.Images.SetKeyName(13, "Email.png");
-            this.imageList.Images.SetKeyName(14, "book.ico");
+            this.imageList.Images.SetKeyName(14, "book.png");
             // 
             // leftPanel
             // 
@@ -1435,7 +1436,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.iconsPage;
+            this.multiPanel.SelectedPage = this.skillPlannerPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1578,8 +1579,8 @@ namespace EVEMon.SettingsUI
             this.RemoveAllLabel.Name = "RemoveAllLabel";
             this.RemoveAllLabel.Size = new System.Drawing.Size(394, 27);
             this.RemoveAllLabel.TabIndex = 5;
-            this.RemoveAllLabel.Text = "If EVEMon believes a skill has been completed, whether it has been confirmed by t" +
-                "he API or not it will be reomved when the plan is opened.";
+            this.RemoveAllLabel.Text = "If EVEMon believes a skill level has been completed, whether it has been confirme" +
+                "d by the API or not it will be removed when the plan is opened.";
             // 
             // AlwaysAskLabel
             // 
@@ -1588,7 +1589,7 @@ namespace EVEMon.SettingsUI
             this.AlwaysAskLabel.Size = new System.Drawing.Size(394, 27);
             this.AlwaysAskLabel.TabIndex = 4;
             this.AlwaysAskLabel.Text = "Always display the \"Obsolete Entries\" link at the bottom of the skill planner bef" +
-                "ore removing skills.";
+                "ore removing entries.";
             // 
             // RemoveConfirmedLabel
             // 
@@ -1596,8 +1597,8 @@ namespace EVEMon.SettingsUI
             this.RemoveConfirmedLabel.Name = "RemoveConfirmedLabel";
             this.RemoveConfirmedLabel.Size = new System.Drawing.Size(394, 27);
             this.RemoveConfirmedLabel.TabIndex = 3;
-            this.RemoveConfirmedLabel.Text = "Once the API has confirmed a skill has completed it is removed the next time a pl" +
-                "an is opened. This is the default behaviour.";
+            this.RemoveConfirmedLabel.Text = "Once the API has confirmed a skill level has completed it is removed the next tim" +
+                "e a plan is opened. This is the default behaviour.";
             // 
             // AlwaysAskRadioButton
             // 
@@ -1617,10 +1618,10 @@ namespace EVEMon.SettingsUI
             this.RemoveAllRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.RemoveAllRadioButton.Location = new System.Drawing.Point(7, 126);
             this.RemoveAllRadioButton.Name = "RemoveAllRadioButton";
-            this.RemoveAllRadioButton.Size = new System.Drawing.Size(196, 17);
+            this.RemoveAllRadioButton.Size = new System.Drawing.Size(245, 17);
             this.RemoveAllRadioButton.TabIndex = 1;
             this.RemoveAllRadioButton.TabStop = true;
-            this.RemoveAllRadioButton.Text = "Remove skills once completed";
+            this.RemoveAllRadioButton.Text = "Remove entry once training completes";
             this.RemoveAllRadioButton.UseVisualStyleBackColor = true;
             // 
             // RemoveConfirmedRadioButton
@@ -1629,10 +1630,10 @@ namespace EVEMon.SettingsUI
             this.RemoveConfirmedRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.RemoveConfirmedRadioButton.Location = new System.Drawing.Point(7, 21);
             this.RemoveConfirmedRadioButton.Name = "RemoveConfirmedRadioButton";
-            this.RemoveConfirmedRadioButton.Size = new System.Drawing.Size(261, 17);
+            this.RemoveConfirmedRadioButton.Size = new System.Drawing.Size(264, 17);
             this.RemoveConfirmedRadioButton.TabIndex = 0;
             this.RemoveConfirmedRadioButton.TabStop = true;
-            this.RemoveConfirmedRadioButton.Text = "Remove confirmed skills (Recommended)";
+            this.RemoveConfirmedRadioButton.Text = "Remove confirmed entry (Recommended)";
             this.RemoveConfirmedRadioButton.UseVisualStyleBackColor = true;
             // 
             // cbAdvanceEntryAdd
