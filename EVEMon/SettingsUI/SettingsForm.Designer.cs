@@ -39,24 +39,6 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.Label lblGeneralPage;
             System.Windows.Forms.Label lblEnvironment;
             System.Windows.Forms.Label lblSkillPlannerPage;
-            System.Windows.Forms.GroupBox gbSkillBrowserIconSet;
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode37 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode38 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode39 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode40 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode32,
-            treeNode33,
-            treeNode34,
-            treeNode35,
-            treeNode36,
-            treeNode37,
-            treeNode38,
-            treeNode39});
             System.Windows.Forms.Label lblNetworkPageAPIProvider;
             System.Windows.Forms.Label lblNetworkPageProxy;
             System.Windows.Forms.Label label12;
@@ -92,26 +74,47 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.FlowLayoutPanel flowLayoutPanel28;
             System.Windows.Forms.Label igbHelpLabel;
             System.Windows.Forms.Label lblRelocatorPage;
-            System.Windows.Forms.TreeNode treeNode41 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
-            System.Windows.Forms.TreeNode treeNode42 = new System.Windows.Forms.TreeNode("Network", 8, 8);
-            System.Windows.Forms.TreeNode treeNode43 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
-            System.Windows.Forms.TreeNode treeNode44 = new System.Windows.Forms.TreeNode("IGB Server", 4, 4);
-            System.Windows.Forms.TreeNode treeNode54 = new System.Windows.Forms.TreeNode("Relocator", 2, 2);
-            System.Windows.Forms.TreeNode treeNode55 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
-            treeNode41,
-            treeNode42,
-            treeNode43,
-            treeNode44,
-            treeNode54});
-            System.Windows.Forms.TreeNode treeNode56 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
-            System.Windows.Forms.TreeNode treeNode57 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9);
-            System.Windows.Forms.TreeNode treeNode58 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
-            System.Windows.Forms.TreeNode treeNode59 = new System.Windows.Forms.TreeNode("External Calendar", 6, 6);
-            System.Windows.Forms.TreeNode treeNode60 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
-            treeNode59});
-            System.Windows.Forms.TreeNode treeNode61 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 13, 13);
-            System.Windows.Forms.TreeNode treeNode62 = new System.Windows.Forms.TreeNode("Notifications", 10, 10, new System.Windows.Forms.TreeNode[] {
-            treeNode61});
+            System.Windows.Forms.GroupBox gbSkillBrowserIconSet;
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
+            System.Windows.Forms.Label label1;
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 8, 8);
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 4, 4);
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Relocator", 2, 2);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14});
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Icons");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9, new System.Windows.Forms.TreeNode[] {
+            treeNode17});
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("External Calendar", 6, 6);
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
+            treeNode20});
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 13, 13);
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Notifications", 10, 10, new System.Windows.Forms.TreeNode[] {
+            treeNode22});
             this.applyButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -124,13 +127,13 @@ namespace EVEMon.SettingsUI
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
             this.cbTitleToTime = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
-            this.tvlist = new System.Windows.Forms.TreeView();
             this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsMinimized = new System.Windows.Forms.RadioButton();
             this.igbUrlTextBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
+            this.tvlist = new System.Windows.Forms.TreeView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -161,6 +164,13 @@ namespace EVEMon.SettingsUI
             this.compatibilityCombo = new System.Windows.Forms.ComboBox();
             this.runAtStartupComboBox = new System.Windows.Forms.CheckBox();
             this.skillPlannerPage = new EVEMon.Controls.MultiPanelPage();
+            this.ObsoleteEntryRemovalGroupBox = new System.Windows.Forms.GroupBox();
+            this.RemoveAllLabel = new System.Windows.Forms.Label();
+            this.AlwaysAskLabel = new System.Windows.Forms.Label();
+            this.RemoveConfirmedLabel = new System.Windows.Forms.Label();
+            this.AlwaysAskRadioButton = new System.Windows.Forms.RadioButton();
+            this.RemoveAllRadioButton = new System.Windows.Forms.RadioButton();
+            this.RemoveConfirmedRadioButton = new System.Windows.Forms.RadioButton();
             this.cbAdvanceEntryAdd = new System.Windows.Forms.CheckBox();
             this.cbSummaryOnMultiSelectOnly = new System.Windows.Forms.CheckBox();
             this.cbHighlightQueuedSiklls = new System.Windows.Forms.CheckBox();
@@ -260,6 +270,7 @@ namespace EVEMon.SettingsUI
             this.relocationSecondsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.enableAutomaticRelocationCheckBox = new System.Windows.Forms.CheckBox();
             this.showRelocationMenuCheckbox = new System.Windows.Forms.CheckBox();
+            this.iconsPage = new EVEMon.Controls.MultiPanelPage();
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -268,7 +279,6 @@ namespace EVEMon.SettingsUI
             lblGeneralPage = new System.Windows.Forms.Label();
             lblEnvironment = new System.Windows.Forms.Label();
             lblSkillPlannerPage = new System.Windows.Forms.Label();
-            gbSkillBrowserIconSet = new System.Windows.Forms.GroupBox();
             lblNetworkPageAPIProvider = new System.Windows.Forms.Label();
             lblNetworkPageProxy = new System.Windows.Forms.Label();
             label12 = new System.Windows.Forms.Label();
@@ -304,13 +314,15 @@ namespace EVEMon.SettingsUI
             flowLayoutPanel28 = new System.Windows.Forms.FlowLayoutPanel();
             igbHelpLabel = new System.Windows.Forms.Label();
             lblRelocatorPage = new System.Windows.Forms.Label();
+            gbSkillBrowserIconSet = new System.Windows.Forms.GroupBox();
+            label1 = new System.Windows.Forms.Label();
             bottomPanel.SuspendLayout();
             groupBox15.SuspendLayout();
             groupBox7.SuspendLayout();
-            gbSkillBrowserIconSet.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
             systemTrayIconGroupBox.SuspendLayout();
             flowLayoutPanel28.SuspendLayout();
+            gbSkillBrowserIconSet.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
             this.leftPanel.SuspendLayout();
@@ -320,6 +332,7 @@ namespace EVEMon.SettingsUI
             this.overviewPanel.SuspendLayout();
             this.generalPage.SuspendLayout();
             this.skillPlannerPage.SuspendLayout();
+            this.ObsoleteEntryRemovalGroupBox.SuspendLayout();
             this.networkPage.SuspendLayout();
             this.ApiProxyGroupBox.SuspendLayout();
             this.ProxyServerGroupBox.SuspendLayout();
@@ -349,6 +362,7 @@ namespace EVEMon.SettingsUI
             this.flowLayoutPanel27.SuspendLayout();
             this.relocatorPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.relocationSecondsNumericUpDown)).BeginInit();
+            this.iconsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // bottomPanel
@@ -589,77 +603,8 @@ namespace EVEMon.SettingsUI
             lblSkillPlannerPage.Size = new System.Drawing.Size(424, 28);
             lblSkillPlannerPage.TabIndex = 19;
             lblSkillPlannerPage.Text = "You can select whether to highlight any entry in the Skill Planner according to i" +
-                "ts status and more. You can also select what kind of icons will be shown in the " +
-                "Skill Browser tree.\r\n";
-            // 
-            // gbSkillBrowserIconSet
-            // 
-            gbSkillBrowserIconSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            gbSkillBrowserIconSet.Controls.Add(this.tableLayoutPanel4);
-            gbSkillBrowserIconSet.Location = new System.Drawing.Point(0, 190);
-            gbSkillBrowserIconSet.Name = "gbSkillBrowserIconSet";
-            gbSkillBrowserIconSet.Size = new System.Drawing.Size(435, 223);
-            gbSkillBrowserIconSet.TabIndex = 13;
-            gbSkillBrowserIconSet.TabStop = false;
-            gbSkillBrowserIconSet.Text = "Skill Browser Icon Set";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.cbSkillIconSet, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(429, 203);
-            this.tableLayoutPanel4.TabIndex = 15;
-            // 
-            // cbSkillIconSet
-            // 
-            this.cbSkillIconSet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbSkillIconSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSkillIconSet.FormattingEnabled = true;
-            this.cbSkillIconSet.Location = new System.Drawing.Point(3, 3);
-            this.cbSkillIconSet.Name = "cbSkillIconSet";
-            this.cbSkillIconSet.Size = new System.Drawing.Size(423, 21);
-            this.cbSkillIconSet.TabIndex = 3;
-            this.cbSkillIconSet.SelectedIndexChanged += new System.EventHandler(this.skillIconSetComboBox_SelectedIndexChanged);
-            // 
-            // tvlist
-            // 
-            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvlist.Location = new System.Drawing.Point(3, 30);
-            this.tvlist.Name = "tvlist";
-            treeNode32.Name = "Node1";
-            treeNode32.Text = "Node1";
-            treeNode33.Name = "Node2";
-            treeNode33.Text = "Node2";
-            treeNode34.Name = "Node3";
-            treeNode34.Text = "Node3";
-            treeNode35.Name = "Node4";
-            treeNode35.Text = "Node4";
-            treeNode36.Name = "Node5";
-            treeNode36.Text = "Node5";
-            treeNode37.Name = "Node6";
-            treeNode37.Text = "Node6";
-            treeNode38.Name = "Node7";
-            treeNode38.Text = "Node7";
-            treeNode39.Name = "Node8";
-            treeNode39.Text = "Node8";
-            treeNode40.Name = "Node0";
-            treeNode40.Text = "Node0";
-            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode40});
-            this.tvlist.Size = new System.Drawing.Size(423, 170);
-            this.tvlist.TabIndex = 9;
+                "ts status and more. You can configure how EVEMon handles skills that appear to b" +
+                "e completed.";
             // 
             // lblNetworkPageAPIProvider
             // 
@@ -1089,6 +1034,87 @@ namespace EVEMon.SettingsUI
             lblRelocatorPage.TabIndex = 6;
             lblRelocatorPage.Text = resources.GetString("lblRelocatorPage.Text");
             // 
+            // gbSkillBrowserIconSet
+            // 
+            gbSkillBrowserIconSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            gbSkillBrowserIconSet.Controls.Add(this.tableLayoutPanel4);
+            gbSkillBrowserIconSet.Location = new System.Drawing.Point(7, 55);
+            gbSkillBrowserIconSet.Name = "gbSkillBrowserIconSet";
+            gbSkillBrowserIconSet.Size = new System.Drawing.Size(225, 204);
+            gbSkillBrowserIconSet.TabIndex = 14;
+            gbSkillBrowserIconSet.TabStop = false;
+            gbSkillBrowserIconSet.Text = "Skill Browser Icon Set";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.AutoSize = true;
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.cbSkillIconSet, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(219, 184);
+            this.tableLayoutPanel4.TabIndex = 15;
+            // 
+            // cbSkillIconSet
+            // 
+            this.cbSkillIconSet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbSkillIconSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSkillIconSet.FormattingEnabled = true;
+            this.cbSkillIconSet.Location = new System.Drawing.Point(3, 3);
+            this.cbSkillIconSet.Name = "cbSkillIconSet";
+            this.cbSkillIconSet.Size = new System.Drawing.Size(213, 21);
+            this.cbSkillIconSet.TabIndex = 3;
+            this.cbSkillIconSet.SelectedIndexChanged += new System.EventHandler(this.skillIconSetComboBox_SelectedIndexChanged);
+            // 
+            // tvlist
+            // 
+            this.tvlist.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvlist.Location = new System.Drawing.Point(3, 30);
+            this.tvlist.Name = "tvlist";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
+            this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode9});
+            this.tvlist.Size = new System.Drawing.Size(213, 151);
+            this.tvlist.TabIndex = 9;
+            // 
+            // label1
+            // 
+            label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            label1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            label1.Location = new System.Drawing.Point(4, 20);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(424, 32);
+            label1.TabIndex = 15;
+            label1.Text = "You can customize the icons used in the skill planner; if you have a good idea fo" +
+                "r a set of icons instructions to create your own can be found on BattleClinic.";
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSize = true;
@@ -1274,78 +1300,82 @@ namespace EVEMon.SettingsUI
             this.treeView.ItemHeight = 20;
             this.treeView.Location = new System.Drawing.Point(6, 6);
             this.treeView.Name = "treeView";
-            treeNode41.ImageIndex = 12;
-            treeNode41.Name = "Node9";
-            treeNode41.SelectedImageIndex = 12;
-            treeNode41.Tag = "updatesPage";
-            treeNode41.Text = "Updates";
-            treeNode42.ImageIndex = 8;
-            treeNode42.Name = "Node5";
-            treeNode42.SelectedImageIndex = 8;
-            treeNode42.Tag = "networkPage";
-            treeNode42.Text = "Network";
-            treeNode43.ImageIndex = 5;
-            treeNode43.Name = "g15Node";
-            treeNode43.SelectedImageIndex = 5;
-            treeNode43.Tag = "g15Page";
-            treeNode43.Text = "Logitech Keyboards";
-            treeNode44.ImageIndex = 4;
-            treeNode44.Name = "Node2";
-            treeNode44.SelectedImageIndex = 4;
-            treeNode44.Tag = "igbServerPage";
-            treeNode44.Text = "IGB Server";
-            treeNode54.ImageIndex = 2;
-            treeNode54.Name = "relocationNode";
-            treeNode54.SelectedImageIndex = 2;
-            treeNode54.Tag = "relocatorPage";
-            treeNode54.Text = "Relocator";
-            treeNode55.ImageIndex = 11;
-            treeNode55.Name = "generalNode";
-            treeNode55.SelectedImageIndex = 11;
-            treeNode55.Tag = "generalPage";
-            treeNode55.Text = "General";
-            treeNode56.ImageIndex = 7;
-            treeNode56.Name = "Node3";
-            treeNode56.SelectedImageIndex = 7;
-            treeNode56.Tag = "mainWindowPage";
-            treeNode56.Text = "Main Window";
-            treeNode57.ImageIndex = 9;
-            treeNode57.Name = "Node4";
-            treeNode57.SelectedImageIndex = 9;
-            treeNode57.Tag = "skillPlannerPage";
-            treeNode57.Text = "Skill Planner";
-            treeNode58.ImageIndex = 3;
-            treeNode58.Name = "trayIconNode";
-            treeNode58.SelectedImageIndex = 3;
-            treeNode58.Tag = "trayIconPage";
-            treeNode58.Text = "System Tray Icon";
-            treeNode59.ImageIndex = 6;
-            treeNode59.Name = "Node11";
-            treeNode59.SelectedImageIndex = 6;
-            treeNode59.Tag = "externalCalendarPage";
-            treeNode59.Text = "External Calendar";
-            treeNode60.ImageIndex = 1;
-            treeNode60.Name = "Node10";
-            treeNode60.SelectedImageIndex = 1;
-            treeNode60.Tag = "schedulerUIPage";
-            treeNode60.Text = "Scheduler";
-            treeNode61.ImageIndex = 13;
-            treeNode61.Name = "Node7";
-            treeNode61.SelectedImageIndex = 13;
-            treeNode61.Tag = "emailNotificationsPage";
-            treeNode61.Text = "Skill Completion Mails";
-            treeNode62.ImageIndex = 10;
-            treeNode62.Name = "Node2";
-            treeNode62.SelectedImageIndex = 10;
-            treeNode62.Tag = "notificationsPage";
-            treeNode62.Text = "Notifications";
+            treeNode10.ImageIndex = 12;
+            treeNode10.Name = "Node9";
+            treeNode10.SelectedImageIndex = 12;
+            treeNode10.Tag = "updatesPage";
+            treeNode10.Text = "Updates";
+            treeNode11.ImageIndex = 8;
+            treeNode11.Name = "Node5";
+            treeNode11.SelectedImageIndex = 8;
+            treeNode11.Tag = "networkPage";
+            treeNode11.Text = "Network";
+            treeNode12.ImageIndex = 5;
+            treeNode12.Name = "g15Node";
+            treeNode12.SelectedImageIndex = 5;
+            treeNode12.Tag = "g15Page";
+            treeNode12.Text = "Logitech Keyboards";
+            treeNode13.ImageIndex = 4;
+            treeNode13.Name = "Node2";
+            treeNode13.SelectedImageIndex = 4;
+            treeNode13.Tag = "igbServerPage";
+            treeNode13.Text = "IGB Server";
+            treeNode14.ImageIndex = 2;
+            treeNode14.Name = "relocationNode";
+            treeNode14.SelectedImageIndex = 2;
+            treeNode14.Tag = "relocatorPage";
+            treeNode14.Text = "Relocator";
+            treeNode15.ImageIndex = 11;
+            treeNode15.Name = "generalNode";
+            treeNode15.SelectedImageIndex = 11;
+            treeNode15.Tag = "generalPage";
+            treeNode15.Text = "General";
+            treeNode16.ImageIndex = 7;
+            treeNode16.Name = "Node3";
+            treeNode16.SelectedImageIndex = 7;
+            treeNode16.Tag = "mainWindowPage";
+            treeNode16.Text = "Main Window";
+            treeNode17.ImageIndex = 14;
+            treeNode17.Name = "IconsNode";
+            treeNode17.Tag = "iconsPage";
+            treeNode17.Text = "Icons";
+            treeNode18.ImageIndex = 9;
+            treeNode18.Name = "Node4";
+            treeNode18.SelectedImageIndex = 9;
+            treeNode18.Tag = "skillPlannerPage";
+            treeNode18.Text = "Skill Planner";
+            treeNode19.ImageIndex = 3;
+            treeNode19.Name = "trayIconNode";
+            treeNode19.SelectedImageIndex = 3;
+            treeNode19.Tag = "trayIconPage";
+            treeNode19.Text = "System Tray Icon";
+            treeNode20.ImageIndex = 6;
+            treeNode20.Name = "Node11";
+            treeNode20.SelectedImageIndex = 6;
+            treeNode20.Tag = "externalCalendarPage";
+            treeNode20.Text = "External Calendar";
+            treeNode21.ImageIndex = 1;
+            treeNode21.Name = "Node10";
+            treeNode21.SelectedImageIndex = 1;
+            treeNode21.Tag = "schedulerUIPage";
+            treeNode21.Text = "Scheduler";
+            treeNode22.ImageIndex = 13;
+            treeNode22.Name = "Node7";
+            treeNode22.SelectedImageIndex = 13;
+            treeNode22.Tag = "emailNotificationsPage";
+            treeNode22.Text = "Skill Completion Mails";
+            treeNode23.ImageIndex = 10;
+            treeNode23.Name = "Node2";
+            treeNode23.SelectedImageIndex = 10;
+            treeNode23.Tag = "notificationsPage";
+            treeNode23.Text = "Notifications";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode55,
-            treeNode56,
-            treeNode57,
-            treeNode58,
-            treeNode60,
-            treeNode62});
+            treeNode15,
+            treeNode16,
+            treeNode18,
+            treeNode19,
+            treeNode21,
+            treeNode23});
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
             this.treeView.ShowPlusMinus = false;
@@ -1372,6 +1402,7 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(11, "Settings.png");
             this.imageList.Images.SetKeyName(12, "Update3.png");
             this.imageList.Images.SetKeyName(13, "Email.png");
+            this.imageList.Images.SetKeyName(14, "book.ico");
             // 
             // leftPanel
             // 
@@ -1399,11 +1430,12 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Controls.Add(this.g15Page);
             this.multiPanel.Controls.Add(this.igbServerPage);
             this.multiPanel.Controls.Add(this.relocatorPage);
+            this.multiPanel.Controls.Add(this.iconsPage);
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.mainWindowPage;
+            this.multiPanel.SelectedPage = this.iconsPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1508,6 +1540,7 @@ namespace EVEMon.SettingsUI
             // 
             // skillPlannerPage
             // 
+            this.skillPlannerPage.Controls.Add(this.ObsoleteEntryRemovalGroupBox);
             this.skillPlannerPage.Controls.Add(this.cbAdvanceEntryAdd);
             this.skillPlannerPage.Controls.Add(this.cbSummaryOnMultiSelectOnly);
             this.skillPlannerPage.Controls.Add(lblSkillPlannerPage);
@@ -1516,7 +1549,6 @@ namespace EVEMon.SettingsUI
             this.skillPlannerPage.Controls.Add(this.cbHighlightConflicts);
             this.skillPlannerPage.Controls.Add(this.cbHighlightPrerequisites);
             this.skillPlannerPage.Controls.Add(this.cbHighlightPlannedSkills);
-            this.skillPlannerPage.Controls.Add(gbSkillBrowserIconSet);
             this.skillPlannerPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillPlannerPage.Location = new System.Drawing.Point(5, 5);
             this.skillPlannerPage.Name = "skillPlannerPage";
@@ -1525,10 +1557,88 @@ namespace EVEMon.SettingsUI
             this.skillPlannerPage.Text = "skillPlannerPage";
             this.skillPlannerPage.Visible = false;
             // 
+            // ObsoleteEntryRemovalGroupBox
+            // 
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveAllLabel);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.AlwaysAskLabel);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveConfirmedLabel);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.AlwaysAskRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveAllRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveConfirmedRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Location = new System.Drawing.Point(7, 221);
+            this.ObsoleteEntryRemovalGroupBox.Name = "ObsoleteEntryRemovalGroupBox";
+            this.ObsoleteEntryRemovalGroupBox.Size = new System.Drawing.Size(425, 187);
+            this.ObsoleteEntryRemovalGroupBox.TabIndex = 22;
+            this.ObsoleteEntryRemovalGroupBox.TabStop = false;
+            this.ObsoleteEntryRemovalGroupBox.Text = "Obsolete Plan Entry Removal";
+            // 
+            // RemoveAllLabel
+            // 
+            this.RemoveAllLabel.Location = new System.Drawing.Point(24, 144);
+            this.RemoveAllLabel.Name = "RemoveAllLabel";
+            this.RemoveAllLabel.Size = new System.Drawing.Size(394, 27);
+            this.RemoveAllLabel.TabIndex = 5;
+            this.RemoveAllLabel.Text = "If EVEMon believes a skill has been completed, whether it has been confirmed by t" +
+                "he API or not it will be reomved when the plan is opened.";
+            // 
+            // AlwaysAskLabel
+            // 
+            this.AlwaysAskLabel.Location = new System.Drawing.Point(24, 91);
+            this.AlwaysAskLabel.Name = "AlwaysAskLabel";
+            this.AlwaysAskLabel.Size = new System.Drawing.Size(394, 27);
+            this.AlwaysAskLabel.TabIndex = 4;
+            this.AlwaysAskLabel.Text = "Always display the \"Obsolete Entries\" link at the bottom of the skill planner bef" +
+                "ore removing skills.";
+            // 
+            // RemoveConfirmedLabel
+            // 
+            this.RemoveConfirmedLabel.Location = new System.Drawing.Point(24, 39);
+            this.RemoveConfirmedLabel.Name = "RemoveConfirmedLabel";
+            this.RemoveConfirmedLabel.Size = new System.Drawing.Size(394, 27);
+            this.RemoveConfirmedLabel.TabIndex = 3;
+            this.RemoveConfirmedLabel.Text = "Once the API has confirmed a skill has completed it is removed the next time a pl" +
+                "an is opened. This is the default behaviour.";
+            // 
+            // AlwaysAskRadioButton
+            // 
+            this.AlwaysAskRadioButton.AutoSize = true;
+            this.AlwaysAskRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.AlwaysAskRadioButton.Location = new System.Drawing.Point(7, 73);
+            this.AlwaysAskRadioButton.Name = "AlwaysAskRadioButton";
+            this.AlwaysAskRadioButton.Size = new System.Drawing.Size(88, 17);
+            this.AlwaysAskRadioButton.TabIndex = 2;
+            this.AlwaysAskRadioButton.TabStop = true;
+            this.AlwaysAskRadioButton.Text = "Always ask";
+            this.AlwaysAskRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // RemoveAllRadioButton
+            // 
+            this.RemoveAllRadioButton.AutoSize = true;
+            this.RemoveAllRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RemoveAllRadioButton.Location = new System.Drawing.Point(7, 126);
+            this.RemoveAllRadioButton.Name = "RemoveAllRadioButton";
+            this.RemoveAllRadioButton.Size = new System.Drawing.Size(196, 17);
+            this.RemoveAllRadioButton.TabIndex = 1;
+            this.RemoveAllRadioButton.TabStop = true;
+            this.RemoveAllRadioButton.Text = "Remove skills once completed";
+            this.RemoveAllRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // RemoveConfirmedRadioButton
+            // 
+            this.RemoveConfirmedRadioButton.AutoSize = true;
+            this.RemoveConfirmedRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.RemoveConfirmedRadioButton.Location = new System.Drawing.Point(7, 21);
+            this.RemoveConfirmedRadioButton.Name = "RemoveConfirmedRadioButton";
+            this.RemoveConfirmedRadioButton.Size = new System.Drawing.Size(261, 17);
+            this.RemoveConfirmedRadioButton.TabIndex = 0;
+            this.RemoveConfirmedRadioButton.TabStop = true;
+            this.RemoveConfirmedRadioButton.Text = "Remove confirmed skills (Recommended)";
+            this.RemoveConfirmedRadioButton.UseVisualStyleBackColor = true;
+            // 
             // cbAdvanceEntryAdd
             // 
             this.cbAdvanceEntryAdd.AutoSize = true;
-            this.cbAdvanceEntryAdd.Location = new System.Drawing.Point(7, 130);
+            this.cbAdvanceEntryAdd.Location = new System.Drawing.Point(14, 198);
             this.cbAdvanceEntryAdd.Name = "cbAdvanceEntryAdd";
             this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(160, 17);
             this.cbAdvanceEntryAdd.TabIndex = 21;
@@ -1538,7 +1648,7 @@ namespace EVEMon.SettingsUI
             // cbSummaryOnMultiSelectOnly
             // 
             this.cbSummaryOnMultiSelectOnly.AutoSize = true;
-            this.cbSummaryOnMultiSelectOnly.Location = new System.Drawing.Point(7, 107);
+            this.cbSummaryOnMultiSelectOnly.Location = new System.Drawing.Point(14, 175);
             this.cbSummaryOnMultiSelectOnly.Name = "cbSummaryOnMultiSelectOnly";
             this.cbSummaryOnMultiSelectOnly.Size = new System.Drawing.Size(230, 17);
             this.cbSummaryOnMultiSelectOnly.TabIndex = 20;
@@ -1548,7 +1658,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightQueuedSiklls
             // 
             this.cbHighlightQueuedSiklls.AutoSize = true;
-            this.cbHighlightQueuedSiklls.Location = new System.Drawing.Point(243, 107);
+            this.cbHighlightQueuedSiklls.Location = new System.Drawing.Point(14, 152);
             this.cbHighlightQueuedSiklls.Name = "cbHighlightQueuedSiklls";
             this.cbHighlightQueuedSiklls.Size = new System.Drawing.Size(133, 17);
             this.cbHighlightQueuedSiklls.TabIndex = 14;
@@ -1558,7 +1668,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightPartialSkills
             // 
             this.cbHighlightPartialSkills.AutoSize = true;
-            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(243, 84);
+            this.cbHighlightPartialSkills.Location = new System.Drawing.Point(14, 129);
             this.cbHighlightPartialSkills.Name = "cbHighlightPartialSkills";
             this.cbHighlightPartialSkills.Size = new System.Drawing.Size(172, 17);
             this.cbHighlightPartialSkills.TabIndex = 10;
@@ -1568,7 +1678,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightConflicts
             // 
             this.cbHighlightConflicts.AutoSize = true;
-            this.cbHighlightConflicts.Location = new System.Drawing.Point(7, 84);
+            this.cbHighlightConflicts.Location = new System.Drawing.Point(14, 83);
             this.cbHighlightConflicts.Name = "cbHighlightConflicts";
             this.cbHighlightConflicts.Size = new System.Drawing.Size(157, 17);
             this.cbHighlightConflicts.TabIndex = 9;
@@ -1578,7 +1688,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightPrerequisites
             // 
             this.cbHighlightPrerequisites.AutoSize = true;
-            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(243, 61);
+            this.cbHighlightPrerequisites.Location = new System.Drawing.Point(14, 106);
             this.cbHighlightPrerequisites.Name = "cbHighlightPrerequisites";
             this.cbHighlightPrerequisites.Size = new System.Drawing.Size(132, 17);
             this.cbHighlightPrerequisites.TabIndex = 8;
@@ -1588,7 +1698,7 @@ namespace EVEMon.SettingsUI
             // cbHighlightPlannedSkills
             // 
             this.cbHighlightPlannedSkills.AutoSize = true;
-            this.cbHighlightPlannedSkills.Location = new System.Drawing.Point(7, 61);
+            this.cbHighlightPlannedSkills.Location = new System.Drawing.Point(14, 60);
             this.cbHighlightPlannedSkills.Name = "cbHighlightPlannedSkills";
             this.cbHighlightPlannedSkills.Size = new System.Drawing.Size(133, 17);
             this.cbHighlightPlannedSkills.TabIndex = 0;
@@ -2709,6 +2819,17 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;
             // 
+            // iconsPage
+            // 
+            this.iconsPage.Controls.Add(label1);
+            this.iconsPage.Controls.Add(gbSkillBrowserIconSet);
+            this.iconsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.iconsPage.Location = new System.Drawing.Point(5, 5);
+            this.iconsPage.Name = "iconsPage";
+            this.iconsPage.Size = new System.Drawing.Size(435, 426);
+            this.iconsPage.TabIndex = 16;
+            this.iconsPage.Text = "iconsPage";
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -2734,13 +2855,13 @@ namespace EVEMon.SettingsUI
             groupBox15.PerformLayout();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
-            gbSkillBrowserIconSet.ResumeLayout(false);
-            gbSkillBrowserIconSet.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
             systemTrayIconGroupBox.ResumeLayout(false);
             systemTrayIconGroupBox.PerformLayout();
             flowLayoutPanel28.ResumeLayout(false);
             flowLayoutPanel28.PerformLayout();
+            gbSkillBrowserIconSet.ResumeLayout(false);
+            gbSkillBrowserIconSet.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel9.ResumeLayout(false);
@@ -2756,6 +2877,8 @@ namespace EVEMon.SettingsUI
             this.generalPage.PerformLayout();
             this.skillPlannerPage.ResumeLayout(false);
             this.skillPlannerPage.PerformLayout();
+            this.ObsoleteEntryRemovalGroupBox.ResumeLayout(false);
+            this.ObsoleteEntryRemovalGroupBox.PerformLayout();
             this.networkPage.ResumeLayout(false);
             this.ApiProxyGroupBox.ResumeLayout(false);
             this.ProxyServerGroupBox.ResumeLayout(false);
@@ -2808,6 +2931,7 @@ namespace EVEMon.SettingsUI
             this.relocatorPage.ResumeLayout(false);
             this.relocatorPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.relocationSecondsNumericUpDown)).EndInit();
+            this.iconsPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2844,9 +2968,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbWorksafeMode;
         private System.Windows.Forms.CheckBox cbHighlightPlannedSkills;
         private System.Windows.Forms.CheckBox cbHighlightPrerequisites;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.TreeView tvlist;
-        private System.Windows.Forms.ComboBox cbSkillIconSet;
         private System.Windows.Forms.TextBox emailPortTextBox;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.CheckBox runAtStartupComboBox;
@@ -2961,5 +3082,16 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbAdvanceEntryAdd;
         private System.Windows.Forms.CheckBox cbG15ShowEVETime;
         private System.Windows.Forms.CheckBox cbUseIncreasedContrastOnOverview;
+        private System.Windows.Forms.GroupBox ObsoleteEntryRemovalGroupBox;
+        private EVEMon.Controls.MultiPanelPage iconsPage;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.ComboBox cbSkillIconSet;
+        private System.Windows.Forms.TreeView tvlist;
+        private System.Windows.Forms.RadioButton RemoveAllRadioButton;
+        private System.Windows.Forms.RadioButton RemoveConfirmedRadioButton;
+        private System.Windows.Forms.Label RemoveAllLabel;
+        private System.Windows.Forms.Label AlwaysAskLabel;
+        private System.Windows.Forms.Label RemoveConfirmedLabel;
+        private System.Windows.Forms.RadioButton AlwaysAskRadioButton;
     }
 }

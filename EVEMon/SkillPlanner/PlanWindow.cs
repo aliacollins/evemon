@@ -205,7 +205,21 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public void CheckObsoleteEntries()
         {
-            obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
+            switch (Settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour)
+            {
+                case ObsoleteEntryRemovalBehaviour.AlwaysAsk:
+                    obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
+                    break;
+                case ObsoleteEntryRemovalBehaviour.RemoveAll:
+                    m_plan.CleanObsoleteEntries(ObsoleteRemovalPolicy.RemoveAll);
+                    break;
+                case ObsoleteEntryRemovalBehaviour.RemoveConfirmed:
+                    m_plan.CleanObsoleteEntries(ObsoleteRemovalPolicy.ConfirmedOnly);
+                    obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>

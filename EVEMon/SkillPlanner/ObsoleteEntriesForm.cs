@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
 using EVEMon.Common;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -74,6 +75,12 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
 
             m_plan = plan;
+
+            if (Settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed)
+            {
+                ObsoleteEntriesListView.Columns.RemoveAt(ObsoleteEntriesListView.Columns.Count - 1);
+                RemoveConfirmedButton.Visible = false;
+            }
 
             UpdateListView();
             AutoFitColumnHeaders();

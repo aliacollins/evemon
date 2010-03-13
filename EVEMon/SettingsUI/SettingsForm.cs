@@ -244,6 +244,10 @@ namespace EVEMon.SettingsUI
             cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
             cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
 
+            AlwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.AlwaysAsk);
+            RemoveAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveAll);
+            RemoveConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
+
             // Skill Browser Icon Set
             if (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGroupIndex > 0)
             {
@@ -336,6 +340,19 @@ namespace EVEMon.SettingsUI
             m_settings.UI.PlanWindow.HighlightQueuedSkills = cbHighlightQueuedSiklls.Checked;
             m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect = cbSummaryOnMultiSelectOnly.Checked;
             m_settings.UI.PlanWindow.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
+
+            if (AlwaysAskRadioButton.Checked)
+            {
+                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.AlwaysAsk;
+            }
+            else if (RemoveAllRadioButton.Checked)
+            {
+                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveAll;
+            }
+            else
+            {
+                m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
+            }
 
             // Skill Browser icon sets
             m_settings.UI.SkillBrowser.IconsGroupIndex = cbSkillIconSet.SelectedIndex + 1;

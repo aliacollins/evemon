@@ -1527,6 +1527,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miChangePriority_Click(object sender, EventArgs e)
         {
+            // TODO: Unscramble
+            
             var entries = SelectedEntries;
 
             using (PlanPrioritiesEditorForm form = new PlanPrioritiesEditorForm())
@@ -1548,7 +1550,6 @@ namespace EVEMon.SkillPlanner
                 if (!m_plan.TrySetPriority(m_displayPlan, entries, form.Priority))
                 {
                     bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
-                    DialogResult dlr = Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult;
 
                     if (showDialog)
                     {
@@ -1570,11 +1571,6 @@ namespace EVEMon.SkillPlanner
                         if (drb == DialogResult.Yes)
                             m_plan.SetPriority(m_displayPlan, entries, form.Priority);
 
-                    }
-                    else
-                    {
-                        if (dlr == DialogResult.Yes)
-                            m_plan.SetPriority(m_displayPlan, entries, form.Priority);
                     }
                 }
             }

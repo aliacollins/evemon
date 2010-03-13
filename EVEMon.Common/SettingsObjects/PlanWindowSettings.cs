@@ -13,7 +13,7 @@ namespace EVEMon.Common.SettingsObjects
             OnlyShowSelectionSummaryOnMultiSelect = true;
 
             PrioritiesMsgBox = new CustomMsgBoxSettings();
-            ObsEntriesMsgBox = new CustomMsgBoxSettings();
+            ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
             var displayedColumns = new PlanColumn[] { 
                 PlanColumn.Priority, 
@@ -92,8 +92,8 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("obsEntriesMsgBox")]
-        public CustomMsgBoxSettings ObsEntriesMsgBox
+        [XmlElement("obsoleteEntryRemovalBehaviour")]
+        public ObsoleteEntryRemovalBehaviour ObsoleteEntryRemovalBehaviour
         {
             get;
             set;
