@@ -420,7 +420,7 @@ namespace EVEMon
         private static void EveClient_TimerTick(object sender, EventArgs e)
         {
             var interval = TimeSpan.FromSeconds(Settings.UI.MainWindow.AutomaticRelocationInterval);
-            int m_checkInterval = (int)interval.Seconds;
+            int m_checkInterval = (int)interval.TotalSeconds;
 
             if (AutoRelocationEnabled)
             {
