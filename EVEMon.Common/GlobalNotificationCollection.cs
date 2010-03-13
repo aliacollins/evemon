@@ -25,7 +25,6 @@ namespace EVEMon.Common
         /// <param name="notification"></param>
         public void Notify(Notification notification)
         {
-            // 
             switch (notification.Behaviour)
             {
                 case NotificationBehaviour.Cohabitate:

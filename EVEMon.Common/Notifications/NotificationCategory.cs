@@ -49,6 +49,11 @@ namespace EVEMon.Common.Notifications
         /// Skill queue has room for more skills.
         /// </summary>
         [Header("Skill queue room availability")]
-        SkillQueueRoomAvailable = 7
+        SkillQueueRoomAvailable = 7,
+        /// <summary>
+        /// Testing notification.
+        /// </summary>
+        [Header("Test Notification")]
+        TestNofitication = 8
     }
 }

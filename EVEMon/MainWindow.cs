@@ -67,6 +67,8 @@ namespace EVEMon
         private void DisplayTestMenu()
         {
             testToolStripMenuItem.Visible = true;
+            testTrayToolStripMenuItem.Visible = true;
+            testsToolStripSeperator.Visible = true;
         }
         
         /// <summary>
@@ -218,7 +220,7 @@ namespace EVEMon
                 !(e.CloseReason == CloseReason.WindowsShutDown))                // and Windows is not shutting down
             {
                 // Should we actually just minimize ?
-                if (Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.Exit)    // and EVEMon is configured to close to system tray
+                if (Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.Exit)// and EVEMon is configured to close to system tray
                 {
                     // If the user has right clicked the task bar item item while
                     // this window is minimized, and chosen close then then the
@@ -1654,6 +1656,20 @@ namespace EVEMon
         private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             throw new Exception("Test Exception", new Exception("Inner Exception"));
+        }
+
+        /// <summary>
+        /// Tests notification display in the MainWindow
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var notification = new Notification(NotificationCategory.TestNofitication, null);
+            notification.Priority = NotificationPriority.Information;
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Description = "Test Notification";
+            EveClient.Notifications.Notify(notification);
         }
 
         #endregion
