@@ -59,9 +59,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Check for obsolete entries in plan
+        /// Does the plan contain obsolete entries.
         /// </summary>
-        public bool ObsoleteEntries
+        public bool ContainsObsoleteEntries
         {
             get
             {
@@ -77,6 +77,27 @@ namespace EVEMon.Common
                     }
                 }
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// List of Obsolete Entires.
+        /// </summary>
+        public IEnumerable<PlanEntry> ObsoleteEntries
+        {
+            get
+            {
+                using (SuspendingEvents())
+                {
+                    for (int i = 0; i < m_items.Count; i++)
+                    {
+                        PlanEntry pe = m_items[i];
+                        if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
+                        {
+                            yield return pe;
+                        }
+                    }
+                }
             }
         }
 
@@ -776,21 +797,25 @@ namespace EVEMon.Common
         /// <summary>
         /// Removes completed skills
         /// </summary>
-        public void CleanObsoleteEntries()
+        public void CleanObsoleteEntries(ObsoleteRemovalPolicy policy)
         {
             using (SuspendingEvents())
+            for (int i = 0; i < m_items.Count; i++)
             {
-                for (int i = 0; i < m_items.Count; i++)
+                PlanEntry pe = m_items[i];
+                if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
                 {
-                    PlanEntry pe = m_items[i];
-                    if (m_character.GetSkillLevel(pe.Skill) >= pe.Level)
-                    {
-                        m_items.RemoveAt(i);
-                        i--;
-                    }
+                    // Confirmed by API?
+                    if (policy == ObsoleteRemovalPolicy.ConfirmedOnly &&
+                        pe.CharacterSkill.LastConfirmedLvl < pe.Level)
+                        continue;
+
+                    m_items.RemoveAt(i);
+                    i--;
                 }
             }
         }
+
         #endregion
 
 

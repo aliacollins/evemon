@@ -25,7 +25,15 @@ namespace EVEMon.SkillPlanner
         {
             ToolStripStatusLabel label = e.Item as ToolStripStatusLabel;
 
+            // It's not a label, panic, wait no; just let the SystemRenderer do it's thing
             if (label == null)
+            {
+                base.OnRenderItemText(e);
+                return;
+            }
+
+            // If we are rendering a link we don't support AutoEllipsie
+            if (label.IsLink)
             {
                 base.OnRenderItemText(e);
                 return;

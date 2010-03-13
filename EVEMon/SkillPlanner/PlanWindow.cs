@@ -23,8 +23,6 @@ namespace EVEMon.SkillPlanner
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
-        private bool m_obsDialogActive;
-        
 
         #region Initialization, loading, closing, entries validation checking
         /// <summary>
@@ -151,14 +149,6 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the obsolete entries dialog box status
-        /// </summary>
-        public bool IsObsDialogActive
-        {
-            get { return m_obsDialogActive; }
-        }
-
-        /// <summary>
         /// Gets the plan represented by this window
         /// </summary>
         public Plan Plan
@@ -215,41 +205,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public void CheckObsoleteEntries()
         {
-            if (m_plan.ObsoleteEntries)
-            {
-                bool showDialog = Settings.UI.PlanWindow.ObsEntriesMsgBox.ShowDialogBox;
-                DialogResult dlr = Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult;
-
-                if (showDialog)
-                {
-                    m_obsDialogActive = true;
-
-                    string text = String.Concat("The plan contains one or more obsolete entries.",
-                        " (Obsolete entry is an entry for a skill level that is already trained).\r\n\r\n",
-                           "Do you wish them to be removed ?"),
-                    captionText = "Obsolete Entry",
-                    cbOptionText = "Do not show this dialog again";
-                    
-                    // Shows the custom dialog box
-                    MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
-                    DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                    Settings.UI.PlanWindow.ObsEntriesMsgBox.ShowDialogBox = MsgBoxCustom.cbUnchecked;
-
-                    // When the checkbox is checked we store the dialog result
-                    if (!MsgBoxCustom.cbUnchecked)
-                        Settings.UI.PlanWindow.ObsEntriesMsgBox.DialogResult = drb;
-
-                    if (drb == DialogResult.Yes)
-                        planEditor.ClearObsoleteEntries();
-
-                    m_obsDialogActive = false;
-                }
-                else
-                {
-                    if (dlr == DialogResult.Yes)
-                        planEditor.ClearObsoleteEntries();
-                }
-            }
+            obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
         }
 
         /// <summary>
@@ -494,7 +450,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Status bar > Suggestions button.
+        /// Status bar > Suggestions label.
         /// Open the suggestions window.
         /// </summary>
         /// <param name="sender"></param>
@@ -506,6 +462,30 @@ namespace EVEMon.SkillPlanner
                 DialogResult dr = f.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
+            }
+        }
+
+        /// <summary>
+        /// Status bar > Obsolete entries label.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void obsoleteEntriesToolStripStatusLabel_Click(object sender, EventArgs e)
+        {
+            ObsoleteEntriesAction action = ObsoleteEntriesForm.ShowDialog(m_plan);
+
+            switch (action)
+            {
+                case ObsoleteEntriesAction.RemoveAll:
+                    planEditor.ClearObsoleteEntries(ObsoleteRemovalPolicy.RemoveAll);
+                    obsoleteEntriesToolStripStatusLabel.Visible = false;
+                    break;
+                case ObsoleteEntriesAction.RemoveConfirmed:
+                    planEditor.ClearObsoleteEntries(ObsoleteRemovalPolicy.ConfirmedOnly);
+                    obsoleteEntriesToolStripStatusLabel.Visible = false;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -708,5 +688,6 @@ namespace EVEMon.SkillPlanner
             PlanPrinter.Print(m_plan);
         }
         #endregion
+
     }
 }

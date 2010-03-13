@@ -767,20 +767,15 @@ namespace EVEMon.SkillPlanner
             if (window == null)
                 return;
 
-            // We check for obsolete entries
-            // Skip if the dialog is already shown
-            if (!window.IsObsDialogActive)
-                window.CheckObsoleteEntries();
-
             UpdateListViewItems();
         }
 
         /// <summary>
         /// Removes all obsolete entries and rebuilds the plan.
         /// </summary>
-        public void ClearObsoleteEntries()
+        public void ClearObsoleteEntries(ObsoleteRemovalPolicy policy)
         {
-            m_plan.CleanObsoleteEntries();
+            m_plan.CleanObsoleteEntries(policy);
             UpdateDisplayPlan();
             UpdateSkillList(true);
         }

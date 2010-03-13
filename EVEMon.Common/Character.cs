@@ -603,11 +603,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Clean the obsolete entries in the plan.
         /// </summary>
-        internal void CleanObsoleteEntries()
+        internal void CleanObsoleteEntries(ObsoleteRemovalPolicy policy)
         {
             foreach (var plan in m_plans)
             {
-                plan.CleanObsoleteEntries();
+                plan.CleanObsoleteEntries(policy);
             }
         }
 
