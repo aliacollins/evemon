@@ -1925,6 +1925,12 @@ namespace EVEMon.SkillPlanner
                 case Keys.Delete:
                     RemoveSelectedEntries();
                     break;
+                case Keys.A:
+                    if (e.Control)
+                    {
+                        lvSkills.SelectAll();
+                    }
+                    break;
                 default:
                     break;
             }

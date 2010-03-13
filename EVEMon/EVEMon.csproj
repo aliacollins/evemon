@@ -651,6 +651,7 @@
       <DependentUpon>MainWindowSkillsQueueList.cs</DependentUpon>
     </Compile>
     <Compile Include="WindowsFactory.cs" />
+    <Compile Include="WinFormsExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="EVEMon.ico" />
