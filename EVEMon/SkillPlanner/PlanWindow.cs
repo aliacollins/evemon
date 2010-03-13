@@ -197,7 +197,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Update controls
-                this.Text = this.Character.Name + " [" + m_plan.Name + "] - EVEMon Skill Planner";
+                this.Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", this.Character.Name, m_plan.Name);
 
                 // Check to see if one or more obsolete entries were found
                 CheckObsoleteEntries();
