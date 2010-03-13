@@ -442,7 +442,7 @@ namespace EVEMon
         /// </summary>
         private static void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (m_autoRelocation)
+            if (AutoRelocationEnabled)
             {
                 EveClient.Trace("AutoRelocation.Enabled");
             }
