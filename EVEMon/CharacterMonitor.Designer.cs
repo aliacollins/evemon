@@ -791,6 +791,7 @@ namespace EVEMon
             this.notificationList.Name = "notificationList";
             this.notificationList.Size = new System.Drawing.Size(571, 72);
             this.notificationList.TabIndex = 13;
+            this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
             // 
             // toolStrip
             // 

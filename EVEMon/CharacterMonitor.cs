@@ -908,6 +908,17 @@ namespace EVEMon
 
             WindowsFactory<ExternalCalendarWindow>.ShowByTag(m_character);
         }
+
+        /// <summary>
+        /// Notification list was resized, this may affect the skills list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void notificationList_Resize(object sender, EventArgs e)
+        {
+            // Invalidate the skills list.
+            skillsList.Invalidate();
+        }
         #endregion
 
 
