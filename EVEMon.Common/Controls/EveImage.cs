@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
 using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
+
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Controls
 {
@@ -24,21 +21,22 @@ namespace EVEMon.Common.Controls
     {
 
         #region Private Properties
-        private bool m_PopUpEnabled;
-        private bool m_PopUpActive;
-        private EveImageSize m_ImageSize;
+        private bool m_popUpEnabled;
+        private bool m_popUpActive;
+        private EveImageSize m_imageSize;
         private Item m_item = null;
         #endregion
+
 
         #region Public Properties
         public enum EveImageSize { x0 = 0, x16 = 16, x32 = 32, x64 = 64, x128 = 128, x256 = 256 }
 
         public bool PopUpEnabled
         {
-            get { return m_PopUpEnabled; }
+            get { return m_popUpEnabled; }
             set
             {
-                m_PopUpEnabled = value;
+                m_popUpEnabled = value;
             }
         }
 
@@ -48,7 +46,7 @@ namespace EVEMon.Common.Controls
             set
             {
                 m_item = value;
-                if (m_ImageSize != EveImageSize.x0)
+                if (m_imageSize != EveImageSize.x0)
                 {
                     GetImage();
                 }
@@ -57,11 +55,11 @@ namespace EVEMon.Common.Controls
 
         public EveImageSize ImageSize
         {
-            get { return m_ImageSize; }
+            get { return m_imageSize; }
             set
             {
-                m_ImageSize = value;
-                pbImage.Size = new Size((int)m_ImageSize, (int)m_ImageSize);
+                m_imageSize = value;
+                pbImage.Size = new Size((int)m_imageSize, (int)m_imageSize);
                 this.Size = pbImage.Size;
             }
         }
@@ -71,11 +69,12 @@ namespace EVEMon.Common.Controls
             get { return base.Size; }
             set
             {
-                base.Size = new Size((int)m_ImageSize, (int)m_ImageSize);
+                base.Size = new Size((int)m_imageSize, (int)m_imageSize);
             }
         }
 
         #endregion
+
 
         #region Constructor
         /// <summary>
@@ -94,6 +93,7 @@ namespace EVEMon.Common.Controls
         }
 
         #endregion
+
 
         #region Image type configuration
         /// <summary>
@@ -184,6 +184,7 @@ namespace EVEMon.Common.Controls
 
         #endregion
 
+
         #region Image Retrieval and Pop Up
         /// <summary>
         /// Renders a BackColor square as a placeholder for the image
@@ -203,91 +204,92 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void GetImage()
         {
-            // Set to black image initially
-            ShowBlankImage();
-
             // Reset flags and cursor
-            m_PopUpActive = false;
+            m_popUpActive = false;
             toolTip1.Active = false;
             pbImage.Cursor = Cursors.Default;
 
-            if (m_item != null)
+            if (m_item == null)
+                return;
+
+            ImageType imageType = GetImageType(m_item);
+            ImageTypeData typeData = m_ImageTypeAttributes[imageType];
+
+            // Only display an image if the correct size is available
+            if (!typeData.validSizes.Contains(m_imageSize))
+                return;
+
+            // Set file & pathname variables
+            string eveSize = String.Format("{0}_{0}", (int)m_imageSize);
+
+            string imageWebName;
+            string imageResourceName;
+
+            if (typeData.imageNameFrom == ImageNameFrom.TypeID)
             {
-                ImageType imageType = GetImageType(m_item);
-                ImageTypeData typeData = m_ImageTypeAttributes[imageType];
+                imageWebName = m_item.ID.ToString();
+                imageResourceName = "_" + imageWebName;
+            }
+            else
+            {
+                imageWebName = "icon" + m_item.Icon.ToString();
+                imageResourceName = imageWebName;
+            }
 
-                // Only display an image if the correct size is available
-                if (typeData.validSizes.Contains(m_ImageSize))
+            // Try and get image from a local optional resources file (probably don't used anymore, not sure)
+            string localResources = String.Format(
+                "{1}Resources{0}Optional{0}{2}{3}.resources",
+                Path.DirectorySeparatorChar,
+                System.AppDomain.CurrentDomain.BaseDirectory,
+                typeData.localComponent,
+                eveSize);
+
+            // Try to get image from web (or local cache located in %APPDATA%\EVEMon) if not found yet
+            if (!FetchImageResource(imageResourceName, localResources))
+            {
+                // Result should be like :
+                // http://eve.no-ip.de/icons/32_32/icon22_08.png
+                // http://eve.no-ip.de/icons/32_32/7538.png
+                string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.urlPath, eveSize, imageWebName);
+
+                ImageService.GetImageAsync(imageURL, true, (img) => GotImage(m_item.ID, img));
+            }
+
+            // Enable pop up if required
+            if (m_popUpEnabled && typeData.validSizes.Contains(EveImageSize.x256))
+            {
+                toolTip1.Active = true;
+                m_popUpActive = true;
+                pbImage.Cursor = Cursors.Hand;
+            }
+        }
+
+        private bool FetchImageResource(string imageResourceName, string localResources)
+        {
+            bool foundResource = false;
+            try
+            {
+                if (File.Exists(localResources))
                 {
-                    // Set file & pathname variables
-                    string eveSize = ((int)m_ImageSize).ToString() + "_" + ((int)m_ImageSize).ToString();
-
-                    string imageWebName;
-                    string imageResourceName;
-                    if (typeData.imageNameFrom == ImageNameFrom.TypeID)
+                    System.Resources.IResourceReader basic;
+                    basic = new System.Resources.ResourceReader(localResources);
+                    System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
+                    while (basicx.MoveNext())
                     {
-                        imageWebName = m_item.ID.ToString();
-                        imageResourceName = "_" + imageWebName;
-                    }
-                    else
-                    {
-                        imageWebName = "icon" + m_item.Icon.ToString();
-                        imageResourceName = imageWebName;
-                    }
-
-                    // Try and get image from a local optional resources file (probably don't used anymore, not sure)
-                    string localResources = String.Format(
-                        "{1}Resources{0}Optional{0}{2}{3}.resources",
-                        Path.DirectorySeparatorChar,
-                        System.AppDomain.CurrentDomain.BaseDirectory,
-                        typeData.localComponent,
-                        eveSize);
-
-                    bool foundResource = false;
-                    try
-                    {
-                        if (System.IO.File.Exists(localResources))
+                        if (basicx.Key.ToString() == imageResourceName)
                         {
-                            System.Resources.IResourceReader basic;
-                            basic = new System.Resources.ResourceReader(localResources);
-                            System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
-                            while (basicx.MoveNext())
-                            {
-                                if (basicx.Key.ToString() == imageResourceName)
-                                {
-                                    pbImage.Image = (System.Drawing.Image)basicx.Value;
-                                    foundResource = true;
-                                    break;
-                                }
-                            }
+                            pbImage.Image = (System.Drawing.Image)basicx.Value;
+                            foundResource = true;
+                            break;
                         }
                     }
-                    catch
-                    {
-                    }
-
-
-                    // Try to get image from web (or local cache located in %APPDATA%\EVEMon) if not found yet
-                    if (!foundResource)
-                    {
-                        // Result should be like :
-                        // http://eve.no-ip.de/icons/32_32/icon22_08.png
-                        // http://eve.no-ip.de/icons/32_32/7538.png
-                        string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.urlPath, eveSize, imageWebName);
-
-                        ImageService.GetImageAsync(imageURL, true, (img) => GotImage(m_item.ID, img));
-                    }
-
-                    // Enable pop up if required
-                    if (m_PopUpEnabled && typeData.validSizes.Contains(EveImageSize.x256))
-                    {
-                        toolTip1.Active = true;
-                        m_PopUpActive = true;
-                        pbImage.Cursor = Cursors.Hand;
-                    }
-
                 }
             }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
+            return foundResource;
         }
 
         /// <summary>
@@ -312,7 +314,7 @@ namespace EVEMon.Common.Controls
         private void pbImage_DoubleClick(object sender, EventArgs e)
         {
             // Only display the pop up form if pop-ups are enabled and a suitable image can be retrieved
-            if (m_PopUpActive)
+            if (m_popUpActive)
             {
                 EveImagePopUp popup = new EveImagePopUp(m_item);
                 popup.FormClosed += delegate { popup.Dispose(); };
