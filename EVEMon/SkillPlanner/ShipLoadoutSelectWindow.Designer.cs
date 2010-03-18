@@ -112,6 +112,7 @@ namespace EVEMon.SkillPlanner
             // persistentSplitContainer1.Panel2
             // 
             this.persistentSplitContainer1.Panel2.Controls.Add(this.tvLoadout);
+            this.persistentSplitContainer1.RememberDistanceKey = null;
             this.persistentSplitContainer1.Size = new System.Drawing.Size(716, 342);
             this.persistentSplitContainer1.SplitterDistance = 373;
             this.persistentSplitContainer1.TabIndex = 5;
@@ -306,19 +307,19 @@ namespace EVEMon.SkillPlanner
             this.miShowInBrowser,
             this.miExportToEFT});
             this.cmNode.Name = "cmNode";
-            this.cmNode.Size = new System.Drawing.Size(204, 48);
+            this.cmNode.Size = new System.Drawing.Size(203, 70);
             // 
             // miShowInBrowser
             // 
             this.miShowInBrowser.Name = "miShowInBrowser";
-            this.miShowInBrowser.Size = new System.Drawing.Size(203, 22);
-            this.miShowInBrowser.Text = "Show Item In Browser...";
+            this.miShowInBrowser.Size = new System.Drawing.Size(202, 22);
+            this.miShowInBrowser.Text = "Show in Items Browser...";
             this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // miExportToEFT
             // 
             this.miExportToEFT.Name = "miExportToEFT";
-            this.miExportToEFT.Size = new System.Drawing.Size(203, 22);
+            this.miExportToEFT.Size = new System.Drawing.Size(202, 22);
             this.miExportToEFT.Text = "Export Loadout To EFT";
             this.miExportToEFT.Click += new System.EventHandler(this.miExportToEFT_Click);
             // 

@@ -73,7 +73,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void LoadoutSelect_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             // Subscribe global events
             EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
@@ -95,19 +96,19 @@ namespace EVEMon.SkillPlanner
             lblAuthor.Text = String.Empty;
             lbDate.Text = String.Empty;
             lblTrainTime.Text = "N/A";
-            lblShip.Text = "Fetching loadouts for " + m_ship.Name;
+            lblShip.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
             btnLoad.Enabled = false;
             btnPlan.Enabled = false;
 
             // Download the ship's image
-            ImageService.GetImageAsync(string.Format(NetworkConstants.CCPIconsBig, m_ship.ID.ToString()), true, (img) =>
+            ImageService.GetImageAsync(String.Format(CultureConstants.DefaultCulture, NetworkConstants.CCPIconsBig, m_ship.ID.ToString()), true, (img) =>
             {
                 pbShip.SizeMode = PictureBoxSizeMode.StretchImage;
                 pbShip.Image = img;
             });
 
             // Download the loadouts feed
-            string url = string.Format(NetworkConstants.BattleclinicLoadoutsFeed, m_ship.ID.ToString());
+            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed, m_ship.ID.ToString());
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutFeedDownloaded);
         }
 
@@ -130,7 +131,9 @@ namespace EVEMon.SkillPlanner
             get { return m_plan; }
             set
             {
-                if (m_plan == value) return;
+                if (m_plan == value)
+                    return;
+
                 m_plan = value;
                 UpdatePlanningControls();
             }
@@ -144,7 +147,9 @@ namespace EVEMon.SkillPlanner
             get { return m_ship; }
             set
             {
-                if (m_ship == value) return;
+                if (m_ship == value)
+                    return;
+
                 m_ship = value;
                 QueryLoadoutsFeed();
             }
@@ -160,7 +165,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private void OnLoadoutFeedDownloaded(SerializableLoadoutFeed feed, string errorMessage)
         {
-            if (this.IsDisposed) return;
+            if (this.IsDisposed)
+                return;
 
             // Restore the default cursor instead of the waiting one
             Cursor.Current = Cursors.Default;
@@ -171,14 +177,14 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                lblShip.Text = "There was a problem connecting to Battleclinic, it may be down for maintainance.\r\n" + errorMessage;
+                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to Battleclinic, it may be down for maintainance.\r\n{0}", errorMessage);
                 return;
             }
 
             // Are there no feeds ?
             if (feed.Race == null || feed.Race.Loadouts.Length == 0)
             {
-                lblShip.Text = "There are no loadouts for " + m_ship.Name + ", why not submit one to Battleclinic?";
+                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to Battleclinic?", m_ship.Name);
                 return;
             }
 
@@ -190,13 +196,13 @@ namespace EVEMon.SkillPlanner
                 lvi.Text = loadout.LoadoutName;
                 lvi.SubItems.Add(loadout.Author);
                 lvi.SubItems.Add(loadout.rating.ToString());
-                lvi.SubItems.Add(loadout.SubmissionDateString);
+                lvi.SubItems.Add(loadout.SubmissionDate.ToString());
                 lvi.Tag = loadout;
                 lvLoadouts.Items.Add(lvi);
             }
 
             // Update the header
-            lblShip.Text = "Found " + lvLoadouts.Items.Count.ToString() + " loadouts";
+            lblShip.Text = String.Format(CultureConstants.DefaultCulture, "Found {0} loadouts", lvLoadouts.Items.Count);
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
@@ -221,10 +227,10 @@ namespace EVEMon.SkillPlanner
             // Set the headings
             lblName.Text = m_selectedLoadout.LoadoutName;
             lblAuthor.Text = m_selectedLoadout.Author;
-            lbDate.Text = m_selectedLoadout.SubmissionDateString;
+            lbDate.Text = m_selectedLoadout.SubmissionDate.ToString();
 
             // Download the loadout details
-            string url = string.Format(NetworkConstants.BattleclinicLoadoutDetails, m_selectedLoadout.LoadoutId.ToString());
+            string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails, m_selectedLoadout.LoadoutId.ToString());
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutDownloaded);
         }
 
@@ -236,7 +242,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private void OnLoadoutDownloaded(SerializableLoadoutFeed loadoutFeed, string errorMessage)
         {
-            if (this.IsDisposed) return;
+            if (this.IsDisposed)
+                return;
 
             // Reset the controls
             btnPlan.Enabled = false;
@@ -247,7 +254,7 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race.Loadouts.Length == 0)
             {
-                lblTrainTime.Text = "Couldn't download that loadout.\r\n" + errorMessage;
+                lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.\r\n{0}", errorMessage);
                 lblTrainTime.Visible = true;
                 return;
             }
@@ -309,14 +316,22 @@ namespace EVEMon.SkillPlanner
 
             // Compute the training time
             var scratchpad = new CharacterScratchpad(m_character);
-            foreach (var entry in m_plan) scratchpad.Train(entry);
+            foreach (var entry in m_plan)
+            {
+                scratchpad.Train(entry);
+            }
+
             var startTime = scratchpad.TrainingTime;
-            foreach (var prereq in m_prerequisites) scratchpad.Train(prereq);
+            foreach (var prereq in m_prerequisites)
+            {
+                scratchpad.Train(prereq);
+            }
+
             var trainingTime = scratchpad.TrainingTime - startTime;
 
             // update the labels
             btnPlan.Enabled = true;
-            lblPlanned.Text = "";
+            lblPlanned.Text = String.Empty;
             lblPlanned.Visible = false;
             lblTrainTime.Visible = true;
             lblTrainTime.Text = Skill.TimeSpanToDescriptiveText(trainingTime, DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
@@ -332,9 +347,7 @@ namespace EVEMon.SkillPlanner
         void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             if (e.Plan == m_plan)
-            {
                 UpdatePlanningControls();
-            }
         }
         #endregion
         
@@ -359,7 +372,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if (lvLoadouts.SelectedItems.Count == 0) return;
+            if (lvLoadouts.SelectedItems.Count == 0)
+                return;
+
             var loadout = lvLoadouts.SelectedItems[0].Tag as SerializableLoadout;
 
             DownloadLoadout(loadout);
@@ -394,11 +409,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvLoadouts_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            // Is is the column we're already sorting by ? Then swap sort order
+            // Is the column we're already sorting by ? Then swap sort order
             if (e.Column == m_columnSorter.SortColumn)
             {
-                if (m_columnSorter.OrderOfSort == SortOrder.Ascending) m_columnSorter.OrderOfSort = SortOrder.Descending;
-                else m_columnSorter.OrderOfSort = SortOrder.Ascending;
+                m_columnSorter.OrderOfSort = (m_columnSorter.OrderOfSort == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
             }
             // Then the user wants to sort by a different column
             else
@@ -421,7 +435,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(string.Format(NetworkConstants.BattleclinicLoadoutTopic, m_selectedLoadout.Topic.ToString()));
+                Util.OpenURL(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic, m_selectedLoadout.Topic.ToString()));
             }
             else
             {
@@ -501,11 +515,9 @@ namespace EVEMon.SkillPlanner
         {
             ExportToEFT();
         }
-
         #endregion
        
         #region EFT Export Function
-        
         private void ExportToEFT()
         {
             Dictionary<String, List<string>> items;
@@ -549,7 +561,8 @@ namespace EVEMon.SkillPlanner
         {
             // Build the output format for EFT
             StringBuilder exportText = new StringBuilder();
-            exportText.AppendLine("[" + m_ship.Name + ", EVEMon " + lblName.Text + "]");
+            exportText.AppendFormat("[{0}, EVEMon {1}]", m_ship.Name, lblName.Text);
+            exportText.AppendLine();
 
             if (items.ContainsKey(s_typeMap["lo"]))
             {
@@ -575,7 +588,8 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (String s in items[s_typeMap["drone"]])
                 {
-                    exportText.AppendLine(s + " x1");
+                    exportText.AppendFormat("{0} x1", s);
+                    exportText.AppendLine();
                 }
             }
             return exportText.ToString();
@@ -675,9 +689,18 @@ namespace EVEMon.SkillPlanner
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text);
                         break;
                     case 2:  // Rating
-                        if (sla.rating < slb.rating) compareResult = -1;
-                        else if (sla.rating > slb.rating) compareResult = 1;
-                        else compareResult = 0;
+                        if (sla.rating < slb.rating)
+                        {
+                            compareResult = -1;
+                        }
+                        else if (sla.rating > slb.rating)
+                        {
+                            compareResult = 1;
+                        }
+                        else
+                        {
+                            compareResult = 0;
+                        }
                         break;
                     case 3:  // Date
                         compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
