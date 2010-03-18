@@ -79,9 +79,7 @@ namespace EVEMon.SkillPlanner
             // Reposition the help text along side the treeview
             Control[] result = this.m_selectControl.Controls.Find("panel2", true);
             if (result.Length > 0)
-            {
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
-            }
 
             // Updates the control
             EveClient_SettingsChanged(null, null);
@@ -107,9 +105,8 @@ namespace EVEMon.SkillPlanner
             {
                 eoImage.ImageSize = EveImage.EveImageSize.x64;
                 if (m_selectControl.SelectedObject != null)
-                {
                     eoImage.EveItem = m_selectControl.SelectedObject;
-                }
+
                 lblEveObjCategory.Location = new Point(70, lblEveObjCategory.Location.Y);
                 lblEveObjName.Location = new Point(70, lblEveObjName.Location.Y);
             }
@@ -146,12 +143,16 @@ namespace EVEMon.SkillPlanner
         {
             get 
             {
-                if (m_selectControl == null) return null;
+                if (m_selectControl == null) 
+                    return null;
+
                 return m_selectControl.SelectedObject; 
             }
             set 
             {
-                if (m_selectControl == null) return;
+                if (m_selectControl == null) 
+                    return;
+
                 m_selectControl.SelectedObject = value; 
             }
         }
@@ -203,6 +204,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePropertiesList()
         {
+            // TODO: Refactor into a shorter method
+
             m_propertiesList.BeginUpdate();
             try
             {
@@ -228,21 +231,24 @@ namespace EVEMon.SkillPlanner
                         bool visibleProperty = false;
 
                         // Some properties should be always visible (fitting, shields resists, etc)
-                        if (m_forceShipsPropertyToBeVisible) visibleProperty = prop.AlwaysVisibleForShips;
+                        if (m_forceShipsPropertyToBeVisible)
+                            visibleProperty = prop.AlwaysVisibleForShips;
 
                         // Or we check whether any object has this property
-                        if (!visibleProperty) visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
+                        if (!visibleProperty)
+                            visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue);
 
                         // Some properties should be hidden if they have the default value (sensor strenght, em damage, etc)
                         if (prop.HideIfDefault)
                             visibleProperty = m_selectControl.SelectedObjects.Any(x => x.Properties[prop].HasValue && (prop.DefaultValue != x.Properties[prop].Value.Value));
 
                         // Jump to next property if not visible
-                        if (!visibleProperty) continue;
+                        if (!visibleProperty)
+                            continue;
+
                         hasProps = true;
 
-
-                        // Retrieve the datas to put in the columns
+                        // Retrieve the data to put in the columns
                         var labels = m_selectControl.SelectedObjects.Select(x => prop.GetLabelOrDefault(x)).ToArray();
                         var values = m_selectControl.SelectedObjects.Select(x => prop.GetNumericValue(x)).ToArray();
                         var min = values.Min();
@@ -269,8 +275,15 @@ namespace EVEMon.SkillPlanner
                             var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
                             if (!allEqual)
                             {
-                                if (values[index] == max) subItem.ForeColor = Color.DarkGreen;
-                                else if (values[index] == min) subItem.ForeColor = Color.DarkRed;
+                                if (values[index] == max)
+                                {
+                                    subItem.ForeColor = Color.DarkGreen;
+                                }
+                                else if (values[index] == min)
+                                {
+                                    subItem.ForeColor = Color.DarkRed;
+                                }
+
                                 item.UseItemStyleForSubItems = false;
                             }
                             else if (m_selectControl.SelectedObjects.Count > 1)
@@ -278,6 +291,33 @@ namespace EVEMon.SkillPlanner
                                 subItem.ForeColor = Color.DarkGray;
                                 item.UseItemStyleForSubItems = false;
                             }
+
+                            item.SubItems.Add(subItem);
+                            index++;
+                        }
+                    }
+
+                    // Check if the objects belong to an item family that has fitting slot property 
+                    if (m_selectControl.SelectedObjects.Any(x => x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone))
+                    {
+                        // Create the list view item
+                        ListViewItem item = new ListViewItem(group);
+                        var labels = m_selectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
+                        if (category.Name == "General" && m_selectControl.SelectedObjects.Any(x => x.FittingSlot != ItemSlot.None && x.FittingSlot != ItemSlot.Empty))
+                        {
+                            item.ToolTipText = "The slot that this item fits in";
+                            item.Text = "Fitting Slot";
+                            items.Add(item);
+                        }
+
+                        // Add the value for every item
+                        int index = 0;
+                        foreach (var obj in m_selectControl.SelectedObjects)
+                        {
+                            // Create the subitem and choose its forecolor
+                            var subItem = new ListViewItem.ListViewSubItem(item, labels[index]);
+                            subItem.ForeColor = m_selectControl.SelectedObjects.Count > 1 ? Color.DarkGray : Color.Black;
+                            item.UseItemStyleForSubItems = false;
 
                             item.SubItems.Add(subItem);
                             index++;
