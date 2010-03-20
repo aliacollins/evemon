@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EVEMon.Common
 {
-    public class TimeUtil
+    public static class TimeUtil
     {
         /// <summary>
         /// Converts a UTC DateTime to the CCP API date/time string
