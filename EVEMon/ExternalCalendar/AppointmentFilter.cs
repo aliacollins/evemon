@@ -237,7 +237,7 @@ namespace SNCalendar
                 appointmentItem.Subject = subject;
                 appointmentItem.Start = startDate;
                 appointmentItem.End = endDate;
-                appointmentItem.Body = string.Format(CultureConstants.DefaultCulture, "Added: {0}", DateTime.Now);
+                appointmentItem.Body = String.Format(CultureConstants.DefaultCulture, "Added: {0}", DateTime.Now);
 
                 appointmentItem.ReminderSet = reminder;
 
@@ -278,7 +278,7 @@ namespace SNCalendar
             appointmentItem.Subject = subject;
             appointmentItem.Start = startDate;
             appointmentItem.End = endDate;
-            appointmentItem.Body = string.Format(CultureConstants.DefaultCulture, "{0} \r\nUpdated: {1}", appointmentItem.Body, DateTime.Now);
+            appointmentItem.Body = String.Format(CultureConstants.DefaultCulture, "{0} \r\nUpdated: {1}", appointmentItem.Body, DateTime.Now);
 
             appointmentItem.ReminderSet = reminder;
             if (reminder)
@@ -616,7 +616,7 @@ namespace SNCalendar
             {
                 // Change the reminder minutes so that it still gets set.
                 minutes = defaultMinutes;
-                throw new Exception(string.Format("Google could not cater for your early/late reminder. Defaulting to default reminder: {0} minutes", defaultMinutes));
+                throw new Exception(String.Format("Google could not cater for your early/late reminder. Defaulting to default reminder: {0} minutes", defaultMinutes));
             }
 
             // If what they sent us has changed....

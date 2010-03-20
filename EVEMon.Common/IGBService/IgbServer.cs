@@ -340,7 +340,7 @@ namespace EVEMon.Common.IgbService
             }
             else
             {
-                context = string.Format("/characters/{0}", HttpUtility.UrlEncode(character.Name));
+                context = String.Format("/characters/{0}", HttpUtility.UrlEncode(character.Name));
             }
             
             if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))

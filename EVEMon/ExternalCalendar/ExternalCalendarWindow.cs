@@ -105,7 +105,7 @@ namespace EVEMon.ExternalCalendar
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("{0} {1}{1} {2}", "There was a problem accessing the Outlook Libraries, is Outlook installed on this machine?", Environment.NewLine, ex.Message), "Problem intergrating to Outlook");
+                MessageBox.Show(String.Format("{0} {1}{1} {2}", "There was a problem accessing the Outlook Libraries, is Outlook installed on this machine?", Environment.NewLine, ex.Message), "Problem intergrating to Outlook");
                 return;
             }
         }
