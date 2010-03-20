@@ -84,9 +84,11 @@
     <None Include="Resources\testimage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CCPAPIDom103.xml" />
-    <Content Include="EVEMon128.xml" />
-    <Content Include="EVEMon130.xml" />
+    <Content Include="Resources\CCPAPIDom103.xml" />
+    <Content Include="Resources\EVEMon128.xml" />
+    <Content Include="Resources\EVEMon130.xml" />
+    <Content Include="Resources\MailMessages.xml" />
+    <Content Include="Resources\Notifications.xml" />
     <Content Include="TestResult.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
