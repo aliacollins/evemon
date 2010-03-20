@@ -22,7 +22,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Tranquility Status")]
         [Description("The status of the Tranquility server.")]
-        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1)]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
         ServerStatus = 1,
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Characters on Account")]
         [Description("The retrieval of the characters list available on every account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1)]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
         [ForcedOnStartup]
         CharacterList = 2,
 
@@ -39,7 +39,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Character Sheet")]
         [Description("A character sheet lists biography, skills, attributes and implants informations about a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         CharacterSheet = 3,
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Skill Queue")]
         [Description("A character skill queue.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         SkillQueue = 4,
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace EVEMon.Common
         [FullKey]
         [Header("Market Orders")]
         [Description("The market orders for a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1)]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
         MarketOrders = 5,
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Mail Messages")]
         [Description("Mail messages for a charater.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         [FullKey]
         MailMessages = 8,
 
@@ -85,7 +85,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("Notifications")]
         [Description("Notifications messages for a charater.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         [FullKey]
         Notifications = 9
     }

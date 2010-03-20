@@ -25,6 +25,7 @@ namespace EVEMon.Common
         protected QueryStatus m_status;
         protected DateTime m_lastUpdate;
         protected APIResult<T> m_lastResult;
+        protected CacheStyle m_cacheStyle;
         protected bool m_forceUpdate;
         protected bool m_retryOnForceUpdateError;
         protected bool m_isUpdating;
@@ -43,6 +44,15 @@ namespace EVEMon.Common
             m_forceUpdate = true;
             m_method = method;
             m_enabled = true;
+
+            if (m_method.HasAttribute<UpdateAttribute>())
+            {
+                m_cacheStyle = m_method.GetAttribute<UpdateAttribute>().CacheStyle;
+            }
+            else
+            {
+                m_cacheStyle = CacheStyle.Short;
+            }
 
             NetworkMonitor.Register(this);
         }
@@ -78,6 +88,14 @@ namespace EVEMon.Common
         public QueryStatus Status
         {
             get { return m_status; }
+        }
+
+        /// <summary>
+        /// For CacheStyle.Long API Methods only, will updating now cause the API to return an error.
+        /// </summary>
+        public bool ForceUpdateWillCauseError
+        {
+            get { return m_cacheStyle == CacheStyle.Long && DateTime.UtcNow < NextUpdate; }
         }
 
         /// <summary>
@@ -151,6 +169,12 @@ namespace EVEMon.Common
         /// </summary>
         internal void ForceUpdate(bool retryOnError)
         {
+            // If the cache style is long (Market Orders, Mail Messages,
+            // Notifications, etc.) and the cache timer has not expired
+            // give up as it will fail anyway.
+            if (ForceUpdateWillCauseError)
+                return;
+
             m_forceUpdate = true;
             m_retryOnForceUpdateError |= retryOnError;
             UpdateOnOneSecondTick();

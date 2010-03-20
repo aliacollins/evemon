@@ -797,6 +797,7 @@ namespace EVEMon
                 string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} ({1})", monitor.ToString(), timeToNextUpdate > TimeSpan.Zero ? timeToNextUpdateText : "");
                 var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
+
                 throbberContextMenu.Items.Add(menu);
             }
         }
