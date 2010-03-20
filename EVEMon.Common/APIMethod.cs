@@ -69,7 +69,25 @@ namespace EVEMon.Common
         /// The conquerable station list. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        ConquerableStationList = 7
+        ConquerableStationList = 7,
+
+        /// <summary>
+        /// Mail messages for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [Header("Mail Messages")]
+        [Description("Mail messages for a charater.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30)]
+        [FullKey]
+        MailMessages = 8,
+
+        /// <summary>
+        /// Notifications for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [Header("Notifications")]
+        [Description("Notifications messages for a charater.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30)]
+        [FullKey]
+        Notifications = 9
     }
 
     /// <summary>
