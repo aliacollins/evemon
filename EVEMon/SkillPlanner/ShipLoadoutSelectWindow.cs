@@ -561,7 +561,7 @@ namespace EVEMon.SkillPlanner
         {
             // Build the output format for EFT
             StringBuilder exportText = new StringBuilder();
-            exportText.AppendFormat("[{0}, EVEMon {1}]", m_ship.Name, lblName.Text);
+            exportText.AppendFormat(CultureConstants.DefaultCulture, "[{0}, EVEMon {1}]", m_ship.Name, lblName.Text);
             exportText.AppendLine();
 
             if (items.ContainsKey(s_typeMap["lo"]))
@@ -588,7 +588,7 @@ namespace EVEMon.SkillPlanner
             {
                 foreach (String s in items[s_typeMap["drone"]])
                 {
-                    exportText.AppendFormat("{0} x1", s);
+                    exportText.AppendFormat(CultureConstants.DefaultCulture, "{0} x1", s);
                     exportText.AppendLine();
                 }
             }

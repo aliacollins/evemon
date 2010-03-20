@@ -60,13 +60,13 @@ namespace EVEMon.Common.Controls
             sb.AppendLine();
             sb.Append("--------------------------------------------");
             sb.AppendLine();
-            sb.AppendFormat("EVEMon Version {0}", Application.ProductVersion);
+            sb.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version {0}", Application.ProductVersion);
             sb.AppendLine();
-            sb.AppendFormat("AutoUpdate {0}", Settings.Updates.CheckEVEMonVersion ? "Enabled" : "Disabled");
+            sb.AppendFormat(CultureConstants.DefaultCulture, "AutoUpdate {0}", Settings.Updates.CheckEVEMonVersion ? "Enabled" : "Disabled");
             sb.AppendLine();
             foreach (var datafile in EveClient.Datafiles)
             {
-                sb.AppendFormat("{0}: {1}", datafile.Filename, datafile.MD5Sum);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0}: {1}", datafile.Filename, datafile.MD5Sum);
                 sb.AppendLine();
             }
             errorMessageTextBox.Text = sb.ToString();

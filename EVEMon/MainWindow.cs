@@ -1455,7 +1455,7 @@ namespace EVEMon
 
                 firstSkill = false;
 
-                sb.AppendFormat("{0} {1}",skillName, sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}",skillName, sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
             }
 
             // Prints the message box

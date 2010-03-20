@@ -190,7 +190,7 @@ namespace EVEMon.SkillPlanner
             // "Level III :"
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("Level {0}: ",Skill.GetRomanForInt(level));
+            sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ",Skill.GetRomanForInt(level));
 
             // Is it already trained ?
             if (m_selectedSkill.Level >= level)
@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1) + timeForPrereqs;
             if (totalPrereqTime > TimeSpan.Zero)
             {
-                sb.AppendFormat(" (plus {0})", Skill.TimeSpanToDescriptiveText(totalPrereqTime, DescriptiveTextOptions.IncludeCommas));
+                sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})", Skill.TimeSpanToDescriptiveText(totalPrereqTime, DescriptiveTextOptions.IncludeCommas));
             }
             else
             {
@@ -217,7 +217,7 @@ namespace EVEMon.SkillPlanner
                 if (m_selectedSkill.Level != 5)
                 {
                     float percentDone = m_selectedSkill.FractionCompleted;
-                    sb.AppendFormat(" ({0} complete)", percentDone.ToString("P0"));
+                    sb.AppendFormat(CultureConstants.DefaultCulture, " ({0} complete)", percentDone.ToString("P0"));
                 }
             }
 

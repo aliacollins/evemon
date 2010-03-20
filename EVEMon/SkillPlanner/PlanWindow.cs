@@ -237,7 +237,7 @@ namespace EVEMon.SkillPlanner
 
                 foreach (var entry in m_plan.InvalidEntries)
                 {
-                    message.AppendFormat(" - {0} planned to {1}{2}", entry.SkillName, entry.PlannedLevel, Environment.NewLine);
+                    message.AppendFormat(CultureConstants.DefaultCulture, " - {0} planned to {1}{2}", entry.SkillName, entry.PlannedLevel, Environment.NewLine);
                 }
 
                 message.AppendLine();

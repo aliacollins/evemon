@@ -566,7 +566,7 @@ namespace EVEMon.Common.IgbService
                         if (entry.CharacterSkill.IsKnown || entry.Level != 1)
                             return;
 
-                        builder.AppendFormat(" <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>", 
+                        builder.AppendFormat(CultureConstants.DefaultCulture, " <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>", 
                                              context,
                                              entry.Skill.ID,
                                              !entry.CharacterSkill.IsOwned,

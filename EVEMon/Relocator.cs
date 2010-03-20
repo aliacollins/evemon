@@ -162,7 +162,7 @@ namespace EVEMon
             }
             else
             {
-                sb.AppendFormat("{0}x{1}", cr.Width, cr.Height);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0}x{1}", cr.Width, cr.Height);
             }
 
             return sb.ToString();

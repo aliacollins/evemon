@@ -403,7 +403,7 @@ namespace EVEMon
                     // Tooltip
                     StringBuilder builder = new StringBuilder();
                     builder.Append("Issued: ").AppendLine(order.Issued.ToLocalTime().ToString());
-                    builder.AppendFormat("Duration: {0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : String.Empty));
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : String.Empty));
                     builder.AppendLine();
                     builder.Append("Solar System: ").AppendLine(order.Station.SolarSystem.FullLocation);
                     builder.Append("Station: ").AppendLine(order.Station.Name);

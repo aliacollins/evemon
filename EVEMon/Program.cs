@@ -208,7 +208,7 @@ namespace EVEMon
                         StringBuilder MessageBuilder = new StringBuilder();
                         MessageBuilder.AppendLine("An error occured and EVEMon was unable to handle the error message gracefully");
                         MessageBuilder.AppendLine();
-                        MessageBuilder.AppendFormat("The exception encountered was '{0}'.", ex.Message);
+                        MessageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.", ex.Message);
                         MessageBuilder.AppendLine();
                         MessageBuilder.AppendLine();
                         MessageBuilder.AppendLine("Please report this on the EVEMon forums.");

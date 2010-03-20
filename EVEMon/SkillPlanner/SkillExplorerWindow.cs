@@ -634,14 +634,14 @@ namespace EVEMon.SkillPlanner
                 {
                     index++;
                     string level = prereq.Skill.Level > 1 ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
-                    sb.AppendFormat("{0}. {1} {2}\n", index, prereq.Skill.Name, level);
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} {2}\n", index, prereq.Skill.Name, level);
                 }
                 return;
             }
 
             // We don't know this prereq at all
             index++;
-            sb.AppendFormat("{0}. {1}", index, prereq.Skill.Name);
+            sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1}", index, prereq.Skill.Name);
             sb.Append(" (");
             sb.Append("Prereqs ");
 

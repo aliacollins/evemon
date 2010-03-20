@@ -83,10 +83,10 @@ namespace EVEMon
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport.AppendFormat("EVEMon Version: {0}{1}", Application.ProductVersion, Environment.NewLine);
-                exceptionReport.AppendFormat(".NET Runtime Version: {0}{1}", Environment.Version, Environment.NewLine);
-                exceptionReport.AppendFormat("Operating System: {0}{1}", os.VersionString, Environment.NewLine);
-                exceptionReport.AppendFormat("Executable Path: {0}{1}", Environment.CommandLine, Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion, Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version, Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString, Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine, Environment.NewLine);
                 exceptionReport.AppendLine();
                 exceptionReport.Append(RecursiveStackTrace).AppendLine();
                 exceptionReport.AppendLine();
@@ -121,7 +121,7 @@ namespace EVEMon
                         FileInfo info = new FileInfo(datafile);
                         Datafile file = new Datafile(Path.GetFileName(datafile));
 
-                        datafileReport.AppendFormat("  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, file.MD5Sum, Environment.NewLine);
+                        datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name, info.Length / 1024, file.MD5Sum, Environment.NewLine);
                     }
                 }
                 catch
