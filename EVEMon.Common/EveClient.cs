@@ -205,7 +205,7 @@ namespace EVEMon.Common
         {
             s_evePortraitCacheFolder = "";
             string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string EVEApplicationData = String.Format("{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
+            string EVEApplicationData = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
 
             // create a pattern that matches anything "*_tranquility"
             string filePattern = "*_tranquility";
@@ -221,7 +221,7 @@ namespace EVEMon.Common
             if (filesInEveCache.Length > 0)
             {
                 string PortraitCache = filesInEveCache[0].Name;
-                s_evePortraitCacheFolder = String.Format("{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
+                s_evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
                     Path.DirectorySeparatorChar, PortraitCache, EVEApplicationData);
 
                 return;
@@ -651,7 +651,7 @@ namespace EVEMon.Common
         public static void Trace(string message)
         {
             var time = DateTime.UtcNow - s_startTime;
-            string timeStr = String.Format("{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+            string timeStr = String.Format(CultureConstants.DefaultCulture, "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
             System.Diagnostics.Trace.WriteLine(timeStr + message);
         }
 

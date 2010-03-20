@@ -787,14 +787,14 @@ namespace EVEMon
 
                 if (timeToNextUpdate.TotalMinutes >= 60)
                 {
-                    timeToNextUpdateText = String.Format("{0}h", Math.Floor(timeToNextUpdate.TotalHours));
+                    timeToNextUpdateText = String.Format(CultureConstants.DefaultCulture, "{0}h", Math.Floor(timeToNextUpdate.TotalHours));
                 }
                 else
                 {
-                    timeToNextUpdateText = String.Format("{0}m", Math.Floor(timeToNextUpdate.TotalMinutes));
+                    timeToNextUpdateText = String.Format(CultureConstants.DefaultCulture, "{0}m", Math.Floor(timeToNextUpdate.TotalMinutes));
                 }
 
-                string menuText = String.Format("Update {0} ({1})", monitor.ToString(), timeToNextUpdate > TimeSpan.Zero ? timeToNextUpdateText : "");
+                string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} ({1})", monitor.ToString(), timeToNextUpdate > TimeSpan.Zero ? timeToNextUpdateText : "");
                 var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
                 throbberContextMenu.Items.Add(menu);

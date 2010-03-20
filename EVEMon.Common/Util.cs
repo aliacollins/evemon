@@ -162,12 +162,12 @@ namespace EVEMon.Common
             }
             catch (InvalidOperationException ex)
             {
-                String message = String.Format("An error occured decompressing {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                String message = String.Format(CultureConstants.DefaultCulture, "An error occured decompressing {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
             catch (XmlException ex)
             {
-                String message = String.Format("An error occured reading the XML from {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                String message = String.Format(CultureConstants.DefaultCulture, "An error occured reading the XML from {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
         }

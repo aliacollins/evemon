@@ -368,7 +368,7 @@ namespace EVEMon.Common
         internal void NotifyIgbServiceException(int port)
         {
             var notification = new Notification(NotificationCategory.IgbServiceException, null);
-            notification.Description = String.Format("Failed to start the IGB server on port {0}.", port);
+            notification.Description = String.Format(CultureConstants.DefaultCulture, "Failed to start the IGB server on port {0}.", port);
             notification.Behaviour = NotificationBehaviour.Overwrite;
             notification.Priority = NotificationPriority.Error;
             Notify(notification);

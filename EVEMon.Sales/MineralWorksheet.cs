@@ -46,7 +46,7 @@ namespace EVEMon.Sales
 				m_total += mt.Subtotal;
 			}
 
-			tslTotal.Text = String.Format("{0:N} ISK", m_total);
+			tslTotal.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", m_total);
 		}
 
 		private void MineralWorksheet_Load(object sender, EventArgs e)
@@ -187,8 +187,8 @@ namespace EVEMon.Sales
 
 		private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
 		{
-			copyFormattedTotalToolStripMenuItem.Text = String.Format("Formatted ({0:N} ISK)", m_total);
-			copyUnformattedTotalToolStripMenuItem.Text = String.Format("Unformatted ({0})", m_total);
+			copyFormattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture, "Formatted ({0:N} ISK)", m_total);
+			copyUnformattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture, "Unformatted ({0})", m_total);
 		}
 
 		private void copyFormattedTotalToolStripMenuItem_Click(object sender, EventArgs e)

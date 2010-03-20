@@ -239,7 +239,7 @@ namespace EVEMon.Common
             // Loading from file failed, we abort and keep our current settings
             if (settings == null)
             {
-                MessageBox.Show(String.Format("Cannot restore the settings from {0}, the file is corrupted.", filename), "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Cannot restore the settings from {0}, the file is corrupted.", filename), "Bad settings file.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -312,7 +312,7 @@ namespace EVEMon.Common
                     {
                         // Prompts the user to use the backup
                         String fileDate = backupInfo.LastWriteTime.ToLocalTime().ToShortDateString() + " at " + backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString();
-                        DialogResult dr = MessageBox.Show(String.Format("Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                         if (dr == DialogResult.No)
                         {
@@ -411,7 +411,7 @@ namespace EVEMon.Common
                     {
                         fileDialog.Title = "Settings file backup";
                         fileDialog.Filter = "Settings Backup Files (*.bak) | *.bak";
-                        fileDialog.FileName = String.Format("EVEMon_Settings_{0}.xml.bak", revision.ToString());
+                        fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision.ToString());
                         fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                         DialogResult saveFile = fileDialog.ShowDialog();
                         if (saveFile == DialogResult.OK)

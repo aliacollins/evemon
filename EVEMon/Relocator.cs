@@ -330,7 +330,7 @@ namespace EVEMon
                 // Add label
                 Label label = new Label();
                 label.AutoSize = true;
-                label.Text = String.Format("EVEMon detected that you have more than one{0}monitor with the same resolution."+
+                label.Text = String.Format(CultureConstants.DefaultCulture, "EVEMon detected that you have more than one{0}monitor with the same resolution."+
                     "\r\rChoose to which monitor to relocate the EVE client.",
                     (sameResScr < 4 ? "\r" : " "));
                 panel.Controls.Add(label);

@@ -14,7 +14,7 @@ namespace EVEMon.Common
         public static string ConvertDateTimeToCCPTimeString(DateTime timeUTC)
         {
             // timeUTC  = yyyy-mm-dd hh:mm:ss
-            string result = String.Format("{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
+            string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
                                           timeUTC.Year,
                                           timeUTC.Month,
                                           timeUTC.Day,

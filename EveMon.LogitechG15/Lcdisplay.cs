@@ -451,7 +451,7 @@ namespace EVEMon.LogitechG15
                     else
                     {
                         var time = Skill.TimeSpanToDescriptiveText(CurrentCharacter.SkillQueue.EndTime - DateTime.UtcNow, DescriptiveTextOptions.SpaceBetween, true);
-                        m_lcdLines.Add(new TextLine(String.Format("Queue populated for: {0}", time), m_defaultFont));
+                        m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "Queue populated for: {0}", time), m_defaultFont));
                     }
                 }
                 else
@@ -535,7 +535,7 @@ namespace EVEMon.LogitechG15
         {
             if (CurrentCharacter.IsTraining)
             {
-                string completionDateTime = String.Format("{0}  {1}",(DateTime.Now + TimeToComplete).ToShortDateString(), TimeExtensions.GetShortTimeString((DateTime.Now + TimeToComplete)));
+                string completionDateTime = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",(DateTime.Now + TimeToComplete).ToShortDateString(), TimeExtensions.GetShortTimeString((DateTime.Now + TimeToComplete)));
                 SizeF size = m_lcdCanvas.MeasureString(completionDateTime, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 22f);
@@ -591,7 +591,7 @@ namespace EVEMon.LogitechG15
 
             if (m_completedSkills > 1)
             {
-                m_lcdLines.Add(new TextLine(String.Format("{0} skills", m_completedSkills), m_defaultFont)); 
+                m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills), m_defaultFont)); 
             }
             else
             {
@@ -606,7 +606,7 @@ namespace EVEMon.LogitechG15
             }
             else
             {
-                m_lcdLines.Add(new TextLine(String.Format("{0} more skill{1} in queue", skillCount, skillCount == 1 ? String.Empty : "s"), m_defaultFont));
+                m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "{0} more skill{1} in queue", skillCount, skillCount == 1 ? String.Empty : "s"), m_defaultFont));
             }
 
             RenderLines();
@@ -670,7 +670,7 @@ namespace EVEMon.LogitechG15
             string statusMsg = String.Format(CultureConstants.DefaultCulture, "Autocycle is now {0}", status);
             m_lcdLines.Add(new TextLine(statusMsg, m_defaultFont));
             
-            string cycleMsg = String.Format("Cycle Time is: {0}s", m_cycleInterval);
+            string cycleMsg = String.Format(CultureConstants.DefaultCulture, "Cycle Time is: {0}s", m_cycleInterval);
             m_lcdLines.Add(new TextLine(cycleMsg, m_defaultFont));
 
             RenderLines();
@@ -812,7 +812,7 @@ namespace EVEMon.LogitechG15
                 timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
             }
 
-            string skillQueueFreemRoom = String.Format(String.Format("{0} free room in skill queue", timeLeftText));
+            string skillQueueFreemRoom = String.Format(String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText));
             SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
             RectangleF line = new RectangleF(new PointF(0f, 0f), size);
             line.Offset(0f, 11f);
@@ -843,13 +843,13 @@ namespace EVEMon.LogitechG15
                 switch (suffixIndex)
                 {
                     case 1:
-                        balance = String.Format("{0} K ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0} K ISK", value.ToString("#,###.#0"));
                         break;
                     case 2:
-                        balance = String.Format("{0} M ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0} M ISK", value.ToString("#,###.#0"));
                         break;
                     case 3:
-                        balance = String.Format("{0} B ISK", value.ToString("#,###.#0"));
+                        balance = String.Format(CultureConstants.DefaultCulture, "{0} B ISK", value.ToString("#,###.#0"));
                         break;
                     // We have no room to show the wallet balance
                     default:

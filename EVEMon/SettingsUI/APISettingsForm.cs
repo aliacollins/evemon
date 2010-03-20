@@ -185,7 +185,7 @@ namespace EVEMon.SettingsUI
         {
             if ((string)e.FormattedValue == string.Empty)
             {
-                ShowValidationError(dgMethods, String.Format("Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
+                ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture, "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
                 e.Cancel = true;
             }
         }

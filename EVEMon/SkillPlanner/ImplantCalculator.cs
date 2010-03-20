@@ -63,7 +63,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            gbAttributes.Text = String.Format("Attributes of \"{0}\"", m_set.Name);
+            gbAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Attributes of \"{0}\"", m_set.Name);
 
             m_isUpdating = true;
             nudCharisma.Value = m_characterScratchpad.Charisma.PreLearningEffectiveAttribute;

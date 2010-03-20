@@ -496,7 +496,7 @@ namespace EVEMon.SettingsUI
                 RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
                 if (runAtStartupComboBox.Checked)
                 {
-                    rk.SetValue("EVEMon", String.Format("\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
+                    rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture, "\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
                 }
                 else
                 {
@@ -623,7 +623,7 @@ namespace EVEMon.SettingsUI
             if ((port < System.Net.IPEndPoint.MinPort) || (port > System.Net.IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                    String.Format("{0} value must be between {1} and {2}", portName, System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort));
+                    String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName, System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort));
 
                 return false;
             }
@@ -842,7 +842,7 @@ namespace EVEMon.SettingsUI
         private void btnDeleteAPIServer_Click(object sender, EventArgs e)
         {
             string name = (string)cbAPIServer.SelectedItem;
-            var result = MessageBox.Show(String.Format("Delete API Server configuration \"{0}\"?", name),
+            var result = MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
                     "Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (result == DialogResult.Yes)

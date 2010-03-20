@@ -279,7 +279,7 @@ namespace EVEMon.Common.IgbService
                 if (m_port != 80)
                 {
                     // non-standard port - let's add it
-                    hostPort = String.Format("{0}:{1}",host,m_port);
+                    hostPort = String.Format(CultureConstants.DefaultCulture, "{0}:{1}",host,m_port);
                 }
             }
             return hostPort;
@@ -340,7 +340,7 @@ namespace EVEMon.Common.IgbService
             }
             else
             {
-                context = String.Format("/characters/{0}", HttpUtility.UrlEncode(character.Name));
+                context = String.Format(CultureConstants.DefaultCulture, "/characters/{0}", HttpUtility.UrlEncode(character.Name));
             }
             
             if (requestUrl.StartsWith("/plan/") || requestUrl.StartsWith("/shopping/") || requestUrl.StartsWith("/owned/"))

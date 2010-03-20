@@ -61,7 +61,7 @@ namespace EVEMon.ImplantControls
         private void ImpGroups_Load(object sender, EventArgs e)
         {
             // Header
-            headerLabel.Text = String.Format("{0} has the skill for {1:D} Jump Clones\n(plus 1 for the implants in your active body)",
+            headerLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} has the skill for {1:D} Jump Clones\n(plus 1 for the implants in your active body)",
                           m_character, maxJumpClones);
 
             // Populate implants combo boxes

@@ -640,7 +640,7 @@ namespace EVEMon
                         {
                             case 0:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format("by {0}.", notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "by {0}.", notification.SenderCharacter);
                                 break;
                             case 1:
                                 string character = notification.SenderCharacter.ToString();
@@ -648,7 +648,7 @@ namespace EVEMon
                                 break;
                             case 2:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format("of {0}.", notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "of {0}.", notification.SenderCharacter);
                                 break;
                         }
                     }

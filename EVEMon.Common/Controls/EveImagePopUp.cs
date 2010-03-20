@@ -26,7 +26,7 @@ namespace EVEMon.Common.Controls
             if (m_imageSource != null)
             {
                 // Set window title
-                this.Text = String.Format("{0} - {1}", m_imageSource.Name, titleBase);
+                this.Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, titleBase);
                 eveImage.EveItem = m_imageSource;
             }
             else

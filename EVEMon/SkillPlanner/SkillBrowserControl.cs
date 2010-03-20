@@ -149,7 +149,7 @@ namespace EVEMon.SkillPlanner
             {
                 descriptionTextBox.Text += " ** THIS IS A NON-PUBLIC SKILL **";
             }
-            lblAttributes.Text = String.Format("Primary: {0}, Secondary: {1} (SP/Hour: {2:#,##0})",
+            lblAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Primary: {0}, Secondary: {1} (SP/Hour: {2:#,##0})",
                                                     m_selectedSkill.PrimaryAttribute.ToString(),
                                                     m_selectedSkill.SecondaryAttribute.ToString(),
                                                     m_selectedSkill.SkillPointsPerHour);

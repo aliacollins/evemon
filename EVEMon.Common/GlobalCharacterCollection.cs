@@ -106,7 +106,7 @@ namespace EVEMon.Common
                         }
                         catch (NullReferenceException ex)
                         {
-                            callback(null, new UriCharacterEventArgs(uri, String.Format("Unable to load file (SerializableCCPCharacter). ({0})", ex.Message)));
+                            callback(null, new UriCharacterEventArgs(uri, String.Format(CultureConstants.DefaultCulture, "Unable to load file (SerializableCCPCharacter). ({0})", ex.Message)));
                         }
                         break;
                     case "character":
@@ -118,7 +118,7 @@ namespace EVEMon.Common
                         }
                         catch (NullReferenceException ex)
                         {
-                            callback(null, new UriCharacterEventArgs(uri, String.Format("Unable to load file (Character). ({0})", ex.Message)));
+                            callback(null, new UriCharacterEventArgs(uri, String.Format(CultureConstants.DefaultCulture, "Unable to load file (Character). ({0})", ex.Message)));
                         }
                         break;
                     default:

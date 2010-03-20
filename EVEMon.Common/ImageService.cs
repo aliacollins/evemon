@@ -126,7 +126,7 @@ namespace EVEMon.Common
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)
             {
-                sb.Append(String.Format("{0:x2}", hash[i]));
+                sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", hash[i]));
             }
             sb.Append(ext);
             return sb.ToString();

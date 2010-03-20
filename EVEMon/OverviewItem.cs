@@ -319,7 +319,7 @@ namespace EVEMon
 					timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
 				}
 
-				lblSkillQueueFreeRoom.Text = String.Format("{0} free room in skill queue", timeLeftText);
+				lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
 				m_hasSkillQueueFreeRoom = true;
 			}
 			else

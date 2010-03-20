@@ -220,7 +220,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Set file & pathname variables
-            string eveSize = String.Format("{0}_{0}", (int)m_imageSize);
+            string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
 
             string imageWebName;
             string imageResourceName;

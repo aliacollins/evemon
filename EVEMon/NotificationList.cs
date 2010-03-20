@@ -398,7 +398,7 @@ namespace EVEMon
                 StringBuilder builder = new StringBuilder();
                 foreach (var skill in skillNotifications.Skills.Reverse())
                 {
-                    builder.AppendLine(String.Format("{0} {1} completed.", skill.Skill.Name, Skill.GetRomanForInt(skill.Level)));
+                    builder.AppendLine(String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.Skill.Name, Skill.GetRomanForInt(skill.Level)));
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());    
                 toolTip.Active = true;

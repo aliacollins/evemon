@@ -616,7 +616,7 @@ namespace SNCalendar
             {
                 // Change the reminder minutes so that it still gets set.
                 minutes = defaultMinutes;
-                throw new Exception(String.Format("Google could not cater for your early/late reminder. Defaulting to default reminder: {0} minutes", defaultMinutes));
+                throw new Exception(String.Format(CultureConstants.DefaultCulture, "Google could not cater for your early/late reminder. Defaulting to default reminder: {0} minutes", defaultMinutes));
             }
 
             // If what they sent us has changed....

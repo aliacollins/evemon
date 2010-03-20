@@ -313,7 +313,7 @@ namespace EVEMon.Common.Data
             get
             {
                 if (m_cost == 0) return "0";
-                return String.Format("{0:0,0,0}", m_cost);
+                return String.Format(CultureConstants.DefaultCulture, "{0:0,0,0}", m_cost);
             }
         }
 

@@ -360,7 +360,7 @@ namespace EVEMon
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
             bool hasQueuedSkill = group.Any(x=> x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill) skillInTrainingSuffix = ", ( 1 in training )";
-            if (hasQueuedSkill) skillInTrainingSuffix += String.Format(", ( {0} in queue )", group.Count(x=> x.IsQueued && !x.IsTraining));
+            if (hasQueuedSkill) skillInTrainingSuffix += String.Format(CultureConstants.DefaultCulture, ", ( {0} in queue )", group.Count(x=> x.IsQueued && !x.IsTraining));
 
             // Draws the rest of the text header
             string detailText = String.Format(CultureConstants.DefaultCulture,

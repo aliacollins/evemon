@@ -39,7 +39,7 @@ namespace EVEMon.Common.Net
             }
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
-                errorMsg = String.Format("\"{0}\" is not a well-formed URL.", url);
+                errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a well-formed URL.", url);
                 return false;
             }
             try
@@ -47,13 +47,13 @@ namespace EVEMon.Common.Net
                 Uri tempUri = new Uri(url);
                 if (tempUri.Scheme != Uri.UriSchemeHttp)
                 {
-                    errorMsg = String.Format("The specified scheme ({0}) is not supported.", tempUri.Scheme);
+                    errorMsg = String.Format(CultureConstants.DefaultCulture, "The specified scheme ({0}) is not supported.", tempUri.Scheme);
                     return false;
                 }
             }
             catch (Exception)
             {
-                errorMsg = String.Format("\"{0}\" is not a valid URL for an HTTP request.", url);
+                errorMsg = String.Format(CultureConstants.DefaultCulture, "\"{0}\" is not a valid URL for an HTTP request.", url);
                 return false;
             }
             errorMsg = String.Empty;

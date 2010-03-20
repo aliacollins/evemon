@@ -633,7 +633,7 @@ namespace EVEMon.SkillPlanner
                 if (!prereq.IsKnown)
                 {
                     index++;
-                    string level = prereq.Skill.Level > 1 ? String.Format("(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
+                    string level = prereq.Skill.Level > 1 ? String.Format(CultureConstants.DefaultCulture, "(Trained to level {0})", prereq.Skill.RomanLevel) : "(Not yet trained)";
                     sb.AppendFormat("{0}. {1} {2}\n", index, prereq.Skill.Name, level);
                 }
                 return;

@@ -102,7 +102,7 @@ namespace EVEMon.Common.Controls
             get
             {
                 if (m_character == null) return String.Empty;
-                var cacheDir = String.Format("{1}{0}cache{0}portraits", Path.DirectorySeparatorChar, EveClient.EVEMonDataDir);
+                var cacheDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}cache{0}portraits", Path.DirectorySeparatorChar, EveClient.EVEMonDataDir);
                 if (!Directory.Exists(cacheDir))
                 {
                     Directory.CreateDirectory(cacheDir);

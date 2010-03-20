@@ -478,7 +478,7 @@ namespace EVEMon.SkillPlanner
                 {
                     // Update "add to" menu
                     tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-                    tsmAddToPlan.Text = String.Format("Plan \"{0}\"", cert.ToString());
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert.ToString());
 
                     // Update "show in..." menu
                     showInBrowserMenu.Text = "Show in Certificates";
@@ -493,7 +493,7 @@ namespace EVEMon.SkillPlanner
                     var prereq = (SkillLevel)tvCertList.SelectedNode.Tag;
                     var skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
-                    tsmAddToPlan.Text = String.Format("Plan \"{0} {1}\"", skill.ToString(), Skill.GetRomanForInt(prereq.Level));
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0} {1}\"", skill.ToString(), Skill.GetRomanForInt(prereq.Level));
 
                     // Update "show in..." menu
                     showInBrowserMenu.Enabled = true;

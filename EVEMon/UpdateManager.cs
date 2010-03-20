@@ -166,7 +166,7 @@ namespace EVEMon
                 if (additionalArgs != null && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
                 {
                     string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-                    installArgs = String.Format("{0} {1}", installArgs, additionalArgs);
+                    installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
                     installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
                 }
             }

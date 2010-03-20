@@ -135,7 +135,7 @@ namespace EVEMon
             {
                 characterSaveDialog.Title = "Save After Plan Character Info";
                 characterSaveDialog.Filter = "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
-                characterSaveDialog.FileName = String.Format(" {0} (after plan {1})", character.Name, plan.Name);
+                characterSaveDialog.FileName = String.Format(CultureConstants.DefaultCulture, " {0} (after plan {1})", character.Name, plan.Name);
                 characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.EVEMonXML;
 
                 var result = characterSaveDialog.ShowDialog();
