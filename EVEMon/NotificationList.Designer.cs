@@ -38,6 +38,7 @@
             this.listBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listBox.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.listBox.FormattingEnabled = true;
             this.listBox.IntegralHeight = false;
             this.listBox.ItemHeight = 24;
@@ -48,7 +49,6 @@
             this.listBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.listBox.Size = new System.Drawing.Size(318, 270);
             this.listBox.TabIndex = 0;
-            this.listBox.Resize += new System.EventHandler(this.listBox_Resize);
             // 
             // toolTip
             // 

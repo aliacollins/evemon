@@ -147,9 +147,7 @@ namespace EVEMon
         protected override void OnVisibleChanged(EventArgs e)
         {
             if (m_pendingUpdate)
-            {
                 UpdateContent();
-            }
 
             base.OnVisibleChanged(e);
         }
@@ -431,43 +429,28 @@ namespace EVEMon
         /// </summary>
         private void UpdatePageControls()
         {
-            // Checks if there are skills to display
-            IEnumerable<Skill> skills = m_character.Skills;
-            var skillsCount = skills.Count();
-
             // Enables/Disables the skill page controls
-            if (skillsCount == 0) toggleSkillsIcon.Enabled = false;
-            else toggleSkillsIcon.Enabled = true;
+            toggleSkillsIcon.Enabled = m_character.Skills.Count > 0;
 
-            // if its a CCPCharacter we display the market orders
+            // Exit if it's a non-CCPCharacter
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter != null)
-            {
-                // Checks if there are orders to display
-                IEnumerable<MarketOrder> orders = ccpCharacter.MarketOrders;
-                var ordersCount = orders.Count();
-            
-                // Enables/Disables the market orders page controls
-                if (ordersCount == 0)
-                {
-                    ordersGroupMenu.Enabled = false;
-                    searchTextBox.Enabled = false;
-                    preferencesMenu.Enabled = false;
-                }
-                else
-                {
-                    ordersGroupMenu.Enabled = true;
-                    searchTextBox.Enabled = true;
-                    preferencesMenu.Enabled = true;
+            if (ccpCharacter == null)
+                return;
 
-                    // Saves any changes we've made to the market columns
-                    // (I've tried to find a better way to deal with this but failed)
-                    if (multiPanel.SelectedPage == ordersPage)
-                    {
-                        Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
-                        m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
-                    }
-                }
+            // Enables/Disables the market orders page controls
+            ordersGroupMenu.Enabled = ccpCharacter.MarketOrders.Count > 0;
+            searchTextBox.Enabled = ccpCharacter.MarketOrders.Count > 0;
+            preferencesMenu.Enabled = ccpCharacter.MarketOrders.Count > 0;
+
+            if (ccpCharacter.MarketOrders.Count == 0)
+                return;
+
+            // Saves any changes we've made to the market columns
+            // (I've tried to find a better way to deal with this but failed)
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
+                m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
             }
         }
 
@@ -484,6 +467,7 @@ namespace EVEMon
         {
             if (e.Character != m_character)
                 return;
+
             UpdateContent();
         }
 
@@ -694,13 +678,21 @@ namespace EVEMon
                         var remainingTime = autoUpdate.NextUpdate - DateTime.UtcNow;
 
                         if (remainingTime.Minutes > 0)
+                        {
                             sb.AppendLine(Skill.TimeSpanToDescriptiveText(remainingTime,
-                               DescriptiveTextOptions.FullText | 
-                               DescriptiveTextOptions.SpaceText | 
+                               DescriptiveTextOptions.FullText |
+                               DescriptiveTextOptions.SpaceText |
                                DescriptiveTextOptions.SpaceBetween, false));
-                        else sb.AppendLine("Less than a minute");
+                        }
+                        else
+                        {
+                            sb.AppendLine("Less than a minute");
+                        }
                     }
-                    else sb.AppendLine("Never");
+                    else
+                    {
+                        sb.AppendLine("Never");
+                    }
                 }
                 // ...or we display the status (updating, no network, full key needed, etc)
                 else
@@ -884,7 +876,9 @@ namespace EVEMon
             {
                 int count = m_character.GetSkillCountAtLevel(i);
 
-                if (i > 1) sb.Append("\n");
+                if (i > 1)
+                    sb.Append("\n");
+
                 sb.AppendFormat(CultureInfo.CurrentCulture, "{0} Skills at Level {1}", count, i);
             }
 
@@ -916,7 +910,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void notificationList_Resize(object sender, EventArgs e)
         {
-            // Invalidate the skills list.
+            UpdateNotifications();
             skillsList.Invalidate();
         }
         #endregion
@@ -950,6 +944,11 @@ namespace EVEMon
 
 
         # region Control/Component Event Handlers
+        /// <summary>
+        /// On opening we create the menu items for "Group By..." in market orders panel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ordersGroupMenu_DropDownOpening(object sender, System.EventArgs e)
         {
             ordersGroupMenu.DropDownItems.Clear();
@@ -963,6 +962,11 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Occurs when the user click an item in the "Group By..." menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ordersGroupMenu_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
         {
             var item = e.ClickedItem;
@@ -970,12 +974,22 @@ namespace EVEMon
             ordersList.Grouping = grouping;
         }
 
+        /// <summary>
+        /// Occurs when the search text changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void searchTextBox_TextChanged(object sender, System.EventArgs e)
         {
             ordersList.TextFilter = searchTextBox.Text;
         }
 
-        private void columnSettingsMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Display the window to select columns.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void columnSettingsMenuItem_Click(object sender, EventArgs e)
         {
             using (var f = new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
             {
@@ -988,7 +1002,12 @@ namespace EVEMon
             }
         }
 
-        private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
+        /// <summary>
+        /// On menu opening we update the menu items.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
@@ -996,7 +1015,12 @@ namespace EVEMon
             numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
         }
         
-        private void hideInactiveOrdersMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Hide/Show the inactive orders.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void hideInactiveOrdersMenuItem_Click(object sender, EventArgs e)
         {
             bool hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             hideInactiveOrdersMenuItem.Text = (!hideInactive ? "Unhide Inactive Orders" : "Hide Inactive Orders");
@@ -1004,7 +1028,12 @@ namespace EVEMon
             ordersList.UpdateContent();
         }
 
-        private void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Switches between Abbreviating/Full number format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
         {
             bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
             numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
@@ -1013,5 +1042,21 @@ namespace EVEMon
         }
         # endregion
 
+
+        #region Testing Function
+        /// <summary>
+        /// Tests character's notification display in the Character Monitor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void TestCharacterNotification()
+        {
+            var notification = new Notification(NotificationCategory.TestNofitication, m_character);
+            notification.Priority = NotificationPriority.Warning;
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Description = "Test Character Notification.";
+            EveClient.Notifications.Notify(notification);
+        }
+        #endregion
     }
 }

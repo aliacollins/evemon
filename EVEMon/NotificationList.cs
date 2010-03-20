@@ -41,7 +41,6 @@ namespace EVEMon
             listBox.MouseMove += new MouseEventHandler(listBox_MouseMove);
             listBox.MouseDown += new MouseEventHandler(listBox_MouseDown);
             listBox.MouseLeave += new EventHandler(listBox_MouseLeave);
-            listBox.Resize += new EventHandler(listBox_Resize);
         }
 
         /// <summary>
@@ -111,7 +110,8 @@ namespace EVEMon
             {
                 string text = item.ToString();
                 Size textSize = TextRenderer.MeasureText(text, font);
-                if (textSize.Width > maxTextLength) maxTextLength = (int)textSize.Width;
+                if (textSize.Width > maxTextLength)
+                    maxTextLength = (int)textSize.Width;
             }
 
             return maxTextLength;
@@ -122,6 +122,9 @@ namespace EVEMon
         /// </summary>
         private void CalculateFontSize()
         {
+            if (this.Width == 0)
+                return;
+
             Font font = this.Font;
             var fontSize = font.Size;
             int magnifierIconSize = 0;
@@ -156,8 +159,12 @@ namespace EVEMon
         /// </summary>
         private void UpdateContent()
         {
-            m_pendingUpdate = true;
-            if (!this.Visible) return;
+            if (!this.Visible)
+            {
+                m_pendingUpdate = true;
+                return;
+            }
+
             m_pendingUpdate = false;
 
             listBox.BeginUpdate();
@@ -195,11 +202,14 @@ namespace EVEMon
         /// <param name="e"></param>
         private void listBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index == -1) return;
+            if (e.Index == -1)
+                return;
+
             var g = e.Graphics;
 
             var notification = listBox.Items[e.Index] as Notification;
-            if (notification == null) return;
+            if (notification == null)
+                return;
 
             // Retrieves the icon and background color
             Image icon;
@@ -232,8 +242,7 @@ namespace EVEMon
             g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + LeftPadding, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Delete icon
-            if (m_hoveredIndex == e.Index) icon = Properties.Resources.CrossBlack;
-            else icon = Properties.Resources.CrossGray;
+            icon = (m_hoveredIndex == e.Index ? Properties.Resources.CrossBlack : Properties.Resources.CrossGray);
             g.DrawImageUnscaled(icon, new Point(e.Bounds.Right - IconDeletePositionFromRight, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Magnifier icon
@@ -418,9 +427,8 @@ namespace EVEMon
                         // Expired :    12k/15k invulnerability fields at Pator V - Tech School
                         // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                         if (order.State == OrderState.Expired)
-                        {
                             builder.Append(MarketOrder.Format(order.RemainingVolume, format)).Append("/");
-                        }
+                        
                         builder.Append(MarketOrder.Format(order.InitialVolume, format)).Append(" ");
                         builder.Append(order.Item.Name).Append(" at ");
                         builder.AppendLine(order.Station.Name);
@@ -445,16 +453,6 @@ namespace EVEMon
                 m_hoveredIndex = -1;
                 listBox.Invalidate();
             }
-        }
-
-        /// <summary>
-        /// When the listbox resizes we force it to redraw itself
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void listBox_Resize(object sender, EventArgs e)
-        {
-            UpdateSize();
         }
 
         /// <summary>
@@ -493,7 +491,9 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible && m_pendingUpdate) this.UpdateContent();
+            if (this.Visible && m_pendingUpdate)
+                this.UpdateContent();
+
             base.OnVisibleChanged(e);
         }
     }

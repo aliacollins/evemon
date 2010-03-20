@@ -36,6 +36,7 @@ namespace EVEMon
             this.relocatorTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relocatorTrayToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.testTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +91,7 @@ namespace EVEMon
             this.exceptionWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testCharacterNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ttMainWindow = new System.Windows.Forms.ToolTip(this.components);
             this.standardToolbar = new System.Windows.Forms.ToolStrip();
             this.accountsManagementTbMenu = new System.Windows.Forms.ToolStripButton();
@@ -113,12 +115,12 @@ namespace EVEMon
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
-            this.tesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcCharacterTabs = new EVEMon.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
+            this.trayTestCharacterNotificationTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -140,59 +142,67 @@ namespace EVEMon
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(125, 132);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(153, 154);
             this.trayIconToolStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
             this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.planToolStripMenuItem.Text = "Plans";
             // 
             // plansStripSeparator
             // 
             this.plansStripSeparator.Name = "plansStripSeparator";
-            this.plansStripSeparator.Size = new System.Drawing.Size(121, 6);
+            this.plansStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // relocatorTrayToolStripMenuItem
             // 
             this.relocatorTrayToolStripMenuItem.Name = "relocatorTrayToolStripMenuItem";
-            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.relocatorTrayToolStripMenuItem.Tag = "";
             this.relocatorTrayToolStripMenuItem.Text = "Relocator";
             // 
             // relocatorTrayToolStripSeparator
             // 
             this.relocatorTrayToolStripSeparator.Name = "relocatorTrayToolStripSeparator";
-            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(121, 6);
+            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // testTrayToolStripMenuItem
             // 
             this.testTrayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tesToolStripMenuItem});
+            this.tesToolStripMenuItem,
+            this.trayTestCharacterNotificationTSMI});
             this.testTrayToolStripMenuItem.Name = "testTrayToolStripMenuItem";
-            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.testTrayToolStripMenuItem.Text = "Test";
             this.testTrayToolStripMenuItem.Visible = false;
+            // 
+            // tesToolStripMenuItem
+            // 
+            this.tesToolStripMenuItem.Name = "tesToolStripMenuItem";
+            this.tesToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.tesToolStripMenuItem.Text = "Notification";
+            this.tesToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
             // 
             // testsToolStripSeperator
             // 
             this.testsToolStripSeperator.Name = "testsToolStripSeperator";
-            this.testsToolStripSeperator.Size = new System.Drawing.Size(121, 6);
+            this.testsToolStripSeperator.Size = new System.Drawing.Size(149, 6);
             this.testsToolStripSeperator.Visible = false;
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -592,11 +602,13 @@ namespace EVEMon
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exceptionWindowToolStripMenuItem,
             this.exceptionWindowRecursiveExceptionToolStripMenuItem,
-            this.testNotificationToolStripMenuItem});
+            this.testNotificationToolStripMenuItem,
+            this.testCharacterNotificationToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.testToolStripMenuItem.Text = "Te&st";
             this.testToolStripMenuItem.Visible = false;
+            this.testToolStripMenuItem.DropDownOpening += new System.EventHandler(this.testToolStripMenuItem_DropDownOpening);
             // 
             // exceptionWindowToolStripMenuItem
             // 
@@ -618,6 +630,13 @@ namespace EVEMon
             this.testNotificationToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
             this.testNotificationToolStripMenuItem.Text = "Notification";
             this.testNotificationToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
+            // 
+            // testCharacterNotificationToolStripMenuItem
+            // 
+            this.testCharacterNotificationToolStripMenuItem.Name = "testCharacterNotificationToolStripMenuItem";
+            this.testCharacterNotificationToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.testCharacterNotificationToolStripMenuItem.Text = "Character Notification";
+            this.testCharacterNotificationToolStripMenuItem.Click += new System.EventHandler(this.testCharacterNotificationToolStripMenuItem_Click);
             // 
             // standardToolbar
             // 
@@ -824,13 +843,6 @@ namespace EVEMon
             this.ofdOpenDialog.Filter = "Plan Files (*.emp)|*.emp|Plan Files (*.xml)|*.xml|All Files (*.*)|*.*";
             this.ofdOpenDialog.Title = "Open Plan File";
             // 
-            // tesToolStripMenuItem
-            // 
-            this.tesToolStripMenuItem.Name = "tesToolStripMenuItem";
-            this.tesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.tesToolStripMenuItem.Text = "Notification";
-            this.tesToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
-            // 
             // tcCharacterTabs
             // 
             this.tcCharacterTabs.AllowDrop = true;
@@ -888,6 +900,13 @@ namespace EVEMon
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
+            // 
+            // trayTestCharacterNotificationTSMI
+            // 
+            this.trayTestCharacterNotificationTSMI.Name = "trayTestCharacterNotificationTSMI";
+            this.trayTestCharacterNotificationTSMI.Size = new System.Drawing.Size(191, 22);
+            this.trayTestCharacterNotificationTSMI.Text = "Character Notification";
+            this.trayTestCharacterNotificationTSMI.Click += new System.EventHandler(this.testCharacterNotificationToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -1012,5 +1031,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem testNotificationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testCharacterNotificationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
     }
 }

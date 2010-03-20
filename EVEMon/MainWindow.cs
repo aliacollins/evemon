@@ -62,14 +62,6 @@ namespace EVEMon
 
             DisplayTestMenu();
         }
-
-        [Conditional("DEBUG")]
-        private void DisplayTestMenu()
-        {
-            testToolStripMenuItem.Visible = true;
-            testTrayToolStripMenuItem.Visible = true;
-            testsToolStripSeperator.Visible = true;
-        }
         
         /// <summary>
         /// Constructor for a minimized window.
@@ -185,7 +177,6 @@ namespace EVEMon
 
         /// <summary>
         /// Occurs whenever the window is resized.
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -193,6 +184,7 @@ namespace EVEMon
         {
             UpdateStatusLabel();
             UpdateWindowTitle();
+            UpdateNotifications();
             
             // Updates tray icon visibility
             if (this.WindowState == FormWindowState.Minimized && Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
@@ -379,9 +371,7 @@ namespace EVEMon
 
                 // Reselect
                 if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
-                {
                     tcCharacterTabs.SelectedTab = selectedTab;
-                }
 
                 // Dispose the removed tabs
                 foreach (var page in pages.Values)
@@ -508,8 +498,12 @@ namespace EVEMon
         /// <returns></returns>
         public CharacterMonitor GetCurrentMonitor()
         {
-            if (tcCharacterTabs.SelectedTab == null) return null;
-            if (tcCharacterTabs.SelectedTab.Controls.Count == 0) return null;
+            if (tcCharacterTabs.SelectedTab == null)
+                return null;
+
+            if (tcCharacterTabs.SelectedTab.Controls.Count == 0)
+                return null;
+
             return tcCharacterTabs.SelectedTab.Controls[0] as CharacterMonitor;
         }
         #endregion
@@ -549,7 +543,8 @@ namespace EVEMon
             // Takes care of the tooltip
             var catSettings = Settings.Notifications.Categories[e.Category];
             var behaviour = catSettings.ToolTipBehaviour;
-            if (e.UserValidated || behaviour == ToolTipNotificationBehaviour.Never) return;
+            if (e.UserValidated || behaviour == ToolTipNotificationBehaviour.Never)
+                return;
 
             // Add and reorder by account and character
             m_popupNotifications.Add(e);
@@ -557,9 +552,15 @@ namespace EVEMon
             // Group by account
             var groups = m_popupNotifications.GroupBy(x => 
                 {
-                    if (x.Sender == null) return 0;
-                    if (x.SenderAccount != null) return x.SenderAccount.UserID;
-                    if (x.SenderCharacter.Identity.Account == null) return 1;
+                    if (x.Sender == null)
+                        return 0;
+
+                    if (x.SenderAccount != null)
+                        return x.SenderAccount.UserID;
+
+                    if (x.SenderCharacter.Identity.Account == null)
+                        return 1;
+
                     return x.SenderCharacter.Identity.Account.UserID;
                 }).ToArray();
 
@@ -578,13 +579,13 @@ namespace EVEMon
             {
                 Dispatcher.Schedule(TimeSpan.FromSeconds(60), () =>
                 {
-                    if (!m_popupNotifications.Contains(e)) return;
+                    if (!m_popupNotifications.Contains(e))
+                        return;
+
                     m_popupNotifications.Remove(e);
 
                     if (m_popupNotifications.Count == 0)
-                    {
                         niAlertIcon.Visible = false;
-                    }
                 });
             }
 
@@ -628,7 +629,9 @@ namespace EVEMon
                     maxlevel = Math.Max(maxlevel, (int)notification.Priority);
                     level = (int)notification.Priority;
 
-                    if (notification.Sender != lastSender) builder.AppendLine();
+                    if (notification.Sender != lastSender)
+                        builder.AppendLine();
+
                     lastSender = notification.Sender;
 
                     if (senderIsCharacter)
@@ -893,9 +896,7 @@ namespace EVEMon
             // Adds EVEMon at the end if there is space in the title bar
             string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", Application.ProductName);
             if (builder.Length + appSuffix.Length <= MaxTitleLength)
-            {
                 builder.Append(appSuffix);
-            }
 
             // Set the window title
             this.Text = builder.ToString();
@@ -1105,6 +1106,7 @@ namespace EVEMon
             var character = GetCurrentCharacter();
             if (character == null)
                 return;
+
             character.Monitored = false;
         }
 
@@ -1183,9 +1185,7 @@ namespace EVEMon
                 "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
-            {
                 Settings.Reset();
-            }
         }
 
         /// <summary>
@@ -1252,6 +1252,7 @@ namespace EVEMon
             // Copy settings if OK
             if (result != DialogResult.OK)
                 return;
+
             Settings.CopySettings(saveFileDialog.FileName);
         }
 
@@ -1273,7 +1274,8 @@ namespace EVEMon
             Directory.SetCurrentDirectory(currentDirectory);
 
             // Load settings if OK
-            if (result != DialogResult.OK) return;
+            if (result != DialogResult.OK)
+                return;
 
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
@@ -1287,7 +1289,9 @@ namespace EVEMon
         private void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
         {
             var character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
+
             UIHelper.ExportCharacter(character);
         }
 
@@ -1299,7 +1303,8 @@ namespace EVEMon
         private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            if (character == null) return;
+            if (character == null)
+                return;
 
             WindowsFactory<ImplantSetsWindow>.ShowByTag(character);
         }
@@ -1330,6 +1335,7 @@ namespace EVEMon
             // Add new entries
             if (character == null)
                 return;
+
             character.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
         }
         
@@ -1349,7 +1355,8 @@ namespace EVEMon
 
             // Load from file and returns if an error occured (user has already been warned)
             var serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
-            if (serial == null) return;
+            if (serial == null)
+                return;
 
             // Imports the plan
             Plan loadedPlan = new Plan(character);
@@ -1403,6 +1410,7 @@ namespace EVEMon
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
                     return;
+
                 planName = npw.Result;
             }
 
@@ -1434,9 +1442,7 @@ namespace EVEMon
             foreach (var skill in character.Skills)
             {
                 if (skill.IsOwned && !skill.IsKnown)
-                {
                     sortedSkills.Add(skill.Name, skill.ArePrerequisitesMet);
-                }
             }
 
             // Build a string representation of the list
@@ -1444,17 +1450,19 @@ namespace EVEMon
             StringBuilder sb = new StringBuilder();
             foreach (string skillName in sortedSkills.Keys)
             {
-                if (!firstSkill) sb.Append("\n");
+                if (!firstSkill)
+                    sb.Append("\n");
+
                 firstSkill = false;
 
-                sb.Append(skillName);
-                if (sortedSkills[skillName]) sb.Append(" (prereqs met)");
-                else sb.Append(" (prereqs not met)");
+                sb.AppendFormat("{0} {1}",skillName, sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
             }
 
             // Prints the message box
-            if (firstSkill) sb.Append("You don't have any skills marked as \"Owned\".");
-            MessageBox.Show(sb.ToString(), "Skills owned by " + character.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (firstSkill)
+                sb.Append("You don't have any skill books marked as \"Owned\".");
+
+            MessageBox.Show(sb.ToString(), "Skill books owned by " + character.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -1512,7 +1520,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Edit's drop down menu openinig.
+        /// Edit's drop down menu opening.
         /// Enabled/disable the items.
         /// </summary>
         /// <param name="sender"></param>
@@ -1637,41 +1645,6 @@ namespace EVEMon
                 rootMenu.DropDownItems.Add(menu);
             }
         }
-
-        /// <summary>
-        /// Thrown an exception just to test the exception handler is working.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ExceptionWindowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new Exception("Test Exception");
-        }
-
-        /// <summary>
-        /// Thrown an exception with an inner excetpion just to test the exception handler is working.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new Exception("Test Exception", new Exception("Inner Exception"));
-        }
-
-        /// <summary>
-        /// Tests notification display in the MainWindow
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var notification = new Notification(NotificationCategory.TestNofitication, null);
-            notification.Priority = NotificationPriority.Information;
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Description = "Test Notification";
-            EveClient.Notifications.Notify(notification);
-        }
-
         #endregion
 
 
@@ -1700,15 +1673,15 @@ namespace EVEMon
             if (e is MouseEventArgs && ((MouseEventArgs)e).Button == MouseButtons.Right)
                 return;
 
+            // Update the tray icon's visibility
+            this.trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+            HidePopup();
+
             // Restore the main window
             this.Visible = true;
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
             this.Activate();
-
-            // Update the tray icon's visibility
-            this.trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
-            HidePopup();
         }
 
         /// <summary>
@@ -1729,9 +1702,13 @@ namespace EVEMon
 
             // Create the popup.
             if (Settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm)
+            {
                 m_trayPopup = new TrayPopUpWindow();
+            }
             else
+            {
                 m_trayPopup = new TrayTooltipWindow();
+            }
 
             m_trayPopup.Show();
         }
@@ -1771,9 +1748,7 @@ namespace EVEMon
 
             // Create the Relocator sub-menu
             if (Settings.UI.MainWindow.ShowRelocationMenu)
-            {
                 relocationMenu_DropDownOpening(relocatorTrayToolStripMenuItem, e);
-            }
         }
 
         /// <summary>
@@ -1853,11 +1828,75 @@ namespace EVEMon
 
             // Rebuild tabs (the overview may have been removed)
             if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
-            {
                 UpdateTabs();
-            }
         }
         #endregion
 
+
+        #region Testing Functions
+        [Conditional("DEBUG")]
+        private void DisplayTestMenu()
+        {
+            testToolStripMenuItem.Visible = true;
+            testTrayToolStripMenuItem.Visible = true;
+            testsToolStripSeperator.Visible = true;
+            testCharacterNotificationToolStripMenuItem.Visible = true;
+        }
+        
+        /// <summary>
+        /// Enables the character notification if the current character is valid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void testToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            testCharacterNotificationToolStripMenuItem.Enabled = GetCurrentCharacter() != null;
+        }
+
+        /// <summary>
+        /// Thrown an exception just to test the exception handler is working.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExceptionWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new Exception("Test Exception");
+        }
+
+        /// <summary>
+        /// Thrown an exception with an inner excetpion just to test the exception handler is working.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exceptionWindowRecursiveExceptionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new Exception("Test Exception", new Exception("Inner Exception"));
+        }
+
+        /// <summary>
+        /// Tests notification display in the MainWindow.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var notification = new Notification(NotificationCategory.TestNofitication, null);
+            notification.Priority = NotificationPriority.Information;
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Description = "Test Notification";
+            EveClient.Notifications.Notify(notification);
+        }
+
+        /// <summary>
+        /// Tests character's notification display in the Character Monitor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void testCharacterNotificationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var monitor = GetCurrentMonitor();
+            monitor.TestCharacterNotification();
+        }
+        #endregion
     }
 }

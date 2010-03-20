@@ -51,7 +51,6 @@ namespace EVEMon
             this.upperTable = new System.Windows.Forms.TableLayoutPanel();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
-            this.throbber = new EVEMon.Controls.Throbber();
             this.throbberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.miQueryEverything = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,19 +72,7 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
-            this.skillQueueControl = new EVEMon.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.skillsPanel = new EVEMon.Controls.BorderPanel();
-            this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new EVEMon.Controls.MultiPanel();
-            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
-            this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
-            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.warningLabel = new System.Windows.Forms.Label();
-            this.notificationList = new EVEMon.NotificationList();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
@@ -97,6 +84,19 @@ namespace EVEMon
             this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.ordersGroupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.skillsPanel = new EVEMon.Controls.BorderPanel();
+            this.corePanel = new System.Windows.Forms.Panel();
+            this.multiPanel = new EVEMon.Controls.MultiPanel();
+            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
+            this.skillsList = new EVEMon.MainWindowSkillsList();
+            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
+            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
+            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
+            this.warningLabel = new System.Windows.Forms.Label();
+            this.notificationList = new EVEMon.NotificationList();
+            this.skillQueueControl = new EVEMon.SkillQueueControl();
+            this.throbber = new EVEMon.Controls.Throbber();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -107,20 +107,20 @@ namespace EVEMon
             this.upperTable.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
             this.flpThrobber.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.throbberContextMenu.SuspendLayout();
             this.lowerTable.SuspendLayout();
             this.attributesFlowPanel.SuspendLayout();
             this.skillQueuePanel.SuspendLayout();
             this.skillQueueTimePanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.skillsPanel.SuspendLayout();
             this.corePanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
             this.skillsPage.SuspendLayout();
             this.ordersPage.SuspendLayout();
             this.skillQueuePage.SuspendLayout();
-            this.toolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripSeparator1
@@ -393,23 +393,6 @@ namespace EVEMon
             this.flpThrobber.TabIndex = 0;
             this.flpThrobber.WrapContents = false;
             // 
-            // throbber
-            // 
-            this.throbber.BackColor = System.Drawing.Color.Transparent;
-            this.throbber.ContextMenuStrip = this.throbberContextMenu;
-            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
-            this.throbber.Location = new System.Drawing.Point(5, 0);
-            this.throbber.Margin = new System.Windows.Forms.Padding(0);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
-            this.throbber.TabIndex = 18;
-            this.throbber.TabStop = false;
-            this.throbber.Text = "throbber1";
-            this.ttToolTip.SetToolTip(this.throbber, "Click to update everything now.");
-            // 
             // throbberContextMenu
             // 
             this.throbberContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -643,20 +626,6 @@ namespace EVEMon
             this.lblQueueRemaining.TabIndex = 16;
             this.lblQueueRemaining.Text = "Nothing";
             // 
-            // skillQueueControl
-            // 
-            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
-            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
-            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
-            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
-            this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
-            this.skillQueueControl.SkillQueue = null;
-            this.skillQueueControl.TabIndex = 13;
-            // 
             // lowerPanel
             // 
             this.lowerPanel.Controls.Add(this.skillsPanel);
@@ -667,6 +636,128 @@ namespace EVEMon
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(574, 333);
             this.lowerPanel.TabIndex = 3;
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.skillsIcon,
+            this.skillQueueIcon,
+            this.ordersIcon,
+            toolStripSeparator1,
+            this.toggleSkillsIcon,
+            this.preferencesMenu,
+            this.searchTextBox,
+            this.ordersGroupMenu});
+            this.toolStrip.Location = new System.Drawing.Point(0, 141);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(574, 25);
+            this.toolStrip.TabIndex = 13;
+            // 
+            // skillsIcon
+            // 
+            this.skillsIcon.Checked = true;
+            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
+            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillsIcon.Name = "skillsIcon";
+            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
+            this.skillsIcon.Tag = "skillsPage";
+            this.skillsIcon.Text = "Skills";
+            this.skillsIcon.ToolTipText = "Display skills list";
+            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // skillQueueIcon
+            // 
+            this.skillQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
+            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillQueueIcon.Name = "skillQueueIcon";
+            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
+            this.skillQueueIcon.Tag = "skillQueuePage";
+            this.skillQueueIcon.Text = "Queue";
+            this.skillQueueIcon.ToolTipText = "Display skills in queue";
+            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // ordersIcon
+            // 
+            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
+            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ordersIcon.Name = "ordersIcon";
+            this.ordersIcon.Size = new System.Drawing.Size(102, 22);
+            this.ordersIcon.Tag = "ordersPage";
+            this.ordersIcon.Text = "Market Orders";
+            this.ordersIcon.ToolTipText = "Display market orders";
+            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // toggleSkillsIcon
+            // 
+            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
+            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
+            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
+            this.toggleSkillsIcon.Text = "Toggle All Skills";
+            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
+            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
+            // 
+            // preferencesMenu
+            // 
+            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnSettingsMenuItem,
+            this.hideInactiveOrdersMenuItem,
+            this.numberAbsFormatMenuItem});
+            this.preferencesMenu.Image = global::EVEMon.Properties.Resources.Settings;
+            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.preferencesMenu.Name = "preferencesMenu";
+            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
+            this.preferencesMenu.Text = "Preferences";
+            this.preferencesMenu.ToolTipText = "Preferences";
+            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
+            // 
+            // columnSettingsMenuItem
+            // 
+            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.columnSettingsMenuItem.Text = "Column Settings";
+            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
+            // 
+            // hideInactiveOrdersMenuItem
+            // 
+            this.hideInactiveOrdersMenuItem.Name = "hideInactiveOrdersMenuItem";
+            this.hideInactiveOrdersMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.hideInactiveOrdersMenuItem.Text = "Hide Inactive Orders";
+            this.hideInactiveOrdersMenuItem.Click += new System.EventHandler(this.hideInactiveOrdersMenuItem_Click);
+            // 
+            // numberAbsFormatMenuItem
+            // 
+            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
+            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
+            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
+            // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+            this.searchTextBox.AutoSize = false;
+            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // ordersGroupMenu
+            // 
+            this.ordersGroupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ordersGroupMenu.Image = ((System.Drawing.Image)(resources.GetObject("ordersGroupMenu.Image")));
+            this.ordersGroupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ordersGroupMenu.Name = "ordersGroupMenu";
+            this.ordersGroupMenu.Size = new System.Drawing.Size(94, 20);
+            this.ordersGroupMenu.Text = "Group By...";
+            this.ordersGroupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ordersGroupMenu_DropDownItemClicked);
+            this.ordersGroupMenu.DropDownOpening += new System.EventHandler(this.ordersGroupMenu_DropDownOpening);
             // 
             // skillsPanel
             // 
@@ -793,127 +884,36 @@ namespace EVEMon
             this.notificationList.TabIndex = 13;
             this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
             // 
-            // toolStrip
+            // skillQueueControl
             // 
-            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skillsIcon,
-            this.skillQueueIcon,
-            this.ordersIcon,
-            toolStripSeparator1,
-            this.toggleSkillsIcon,
-            this.preferencesMenu,
-            this.searchTextBox,
-            this.ordersGroupMenu});
-            this.toolStrip.Location = new System.Drawing.Point(0, 141);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(574, 25);
-            this.toolStrip.TabIndex = 13;
+            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
+            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
+            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
+            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.Name = "skillQueueControl";
+            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
+            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.SkillQueue = null;
+            this.skillQueueControl.TabIndex = 13;
             // 
-            // skillsIcon
+            // throbber
             // 
-            this.skillsIcon.Checked = true;
-            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
-            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillsIcon.Name = "skillsIcon";
-            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
-            this.skillsIcon.Tag = "skillsPage";
-            this.skillsIcon.Text = "Skills";
-            this.skillsIcon.ToolTipText = "Display skills list";
-            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // skillQueueIcon
-            // 
-            this.skillQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
-            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillQueueIcon.Name = "skillQueueIcon";
-            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
-            this.skillQueueIcon.Tag = "skillQueuePage";
-            this.skillQueueIcon.Text = "Queue";
-            this.skillQueueIcon.ToolTipText = "Display skills in queue";
-            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // ordersIcon
-            // 
-            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
-            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ordersIcon.Name = "ordersIcon";
-            this.ordersIcon.Size = new System.Drawing.Size(102, 22);
-            this.ordersIcon.Tag = "ordersPage";
-            this.ordersIcon.Text = "Market Orders";
-            this.ordersIcon.ToolTipText = "Display market orders";
-            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // toggleSkillsIcon
-            // 
-            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
-            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
-            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
-            this.toggleSkillsIcon.Text = "Toggle All Skills";
-            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
-            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
-            // 
-            // preferencesMenu
-            // 
-            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.columnSettingsMenuItem,
-            this.hideInactiveOrdersMenuItem,
-            this.numberAbsFormatMenuItem});
-            this.preferencesMenu.Image = global::EVEMon.Properties.Resources.Settings;
-            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.preferencesMenu.Name = "preferencesMenu";
-            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
-            this.preferencesMenu.Text = "Preferences";
-            this.preferencesMenu.ToolTipText = "Preferences";
-            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
-            // 
-            // columnSettingsMenuItem
-            // 
-            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
-            this.columnSettingsMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.columnSettingsMenuItem.Text = "Column Settings";
-            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
-            // 
-            // hideInactiveOrdersMenuItem
-            // 
-            this.hideInactiveOrdersMenuItem.Name = "hideInactiveOrdersMenuItem";
-            this.hideInactiveOrdersMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.hideInactiveOrdersMenuItem.Text = "Hide Inactive Orders";
-            this.hideInactiveOrdersMenuItem.Click += new System.EventHandler(this.hideInactiveOrdersMenuItem_Click);
-            // 
-            // numberAbsFormatMenuItem
-            // 
-            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
-            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
-            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
-            // 
-            // searchTextBox
-            // 
-            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
-            this.searchTextBox.AutoSize = false;
-            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
-            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
-            // 
-            // ordersGroupMenu
-            // 
-            this.ordersGroupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ordersGroupMenu.Image = ((System.Drawing.Image)(resources.GetObject("ordersGroupMenu.Image")));
-            this.ordersGroupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ordersGroupMenu.Name = "ordersGroupMenu";
-            this.ordersGroupMenu.Size = new System.Drawing.Size(94, 20);
-            this.ordersGroupMenu.Text = "Group By...";
-            this.ordersGroupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ordersGroupMenu_DropDownItemClicked);
-            this.ordersGroupMenu.DropDownOpening += new System.EventHandler(this.ordersGroupMenu_DropDownOpening);
+            this.throbber.BackColor = System.Drawing.Color.Transparent;
+            this.throbber.ContextMenuStrip = this.throbberContextMenu;
+            this.throbber.Dock = System.Windows.Forms.DockStyle.Right;
+            this.throbber.Location = new System.Drawing.Point(5, 0);
+            this.throbber.Margin = new System.Windows.Forms.Padding(0);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            this.throbber.TabIndex = 18;
+            this.throbber.TabStop = false;
+            this.throbber.Text = "throbber1";
+            this.ttToolTip.SetToolTip(this.throbber, "Click to update everything now.");
             // 
             // CharacterMonitor
             // 
@@ -943,7 +943,6 @@ namespace EVEMon
             this.flpCharacterInfo.PerformLayout();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.throbberContextMenu.ResumeLayout(false);
             this.lowerTable.ResumeLayout(false);
             this.lowerTable.PerformLayout();
@@ -954,14 +953,15 @@ namespace EVEMon
             this.skillQueueTimePanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             this.lowerPanel.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.skillsPanel.ResumeLayout(false);
             this.corePanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
             this.skillsPage.ResumeLayout(false);
             this.ordersPage.ResumeLayout(false);
             this.skillQueuePage.ResumeLayout(false);
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
