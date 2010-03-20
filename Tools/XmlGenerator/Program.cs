@@ -520,7 +520,7 @@ namespace EVEMon.XmlGenerator
                     prop.ID = srcProp.ID;
 
                     // Unit
-                    if (srcProp.UnitID == null) prop.Unit = "";
+                    if (srcProp.UnitID == null) prop.Unit = String.Empty;
                     else
                     {
                         prop.Unit = s_units[srcProp.UnitID.Value].DisplayName;
@@ -529,7 +529,7 @@ namespace EVEMon.XmlGenerator
                     if (srcProp.ID == 1281) prop.Unit = "AU/S";
 
                     // Icon
-                    if (srcProp.GraphicID == null) prop.Icon = "";
+                    if (srcProp.GraphicID == null) prop.Icon = String.Empty;
                     else prop.Icon = s_graphics[srcProp.GraphicID.Value].Icon;
 
                     // Reordering some properties

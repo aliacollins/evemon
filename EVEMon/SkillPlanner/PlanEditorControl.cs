@@ -488,7 +488,7 @@ namespace EVEMon.SkillPlanner
                             else
                             {
                                 TimeSpan timeDifference;
-                                string result = "";
+                                string result = String.Empty;
                                 if (entry.OldTrainingTime < entry.TrainingTime)
                                 {
                                     result = "+";
@@ -634,7 +634,7 @@ namespace EVEMon.SkillPlanner
 
                 case PlanColumn.Notes:
                     if (String.IsNullOrEmpty(entry.Notes))
-                        return "";
+                        return String.Empty;
 
                     string result = Regex.Replace(entry.Notes, @"(\r|\n)+", " ", RegexOptions.None);
                     if (result.Length <= MaxNotesLength)
@@ -644,9 +644,9 @@ namespace EVEMon.SkillPlanner
 
                 case PlanColumn.Cost:
                     if (entry.Level != 1)
-                        return "";
+                        return String.Empty;
                     if (entry.CharacterSkill.IsKnown)
-                        return "";
+                        return String.Empty;
                     if (entry.CharacterSkill.IsOwned)
                         return "Owned";
 
@@ -822,9 +822,9 @@ namespace EVEMon.SkillPlanner
             StringBuilder sb = new StringBuilder();
                 sb.AppendFormat(CultureConstants.DefaultCulture, "{0} Skill{1} selected ({2} Unique Skill{3}). Training time: {4}. ", 
                     entriesCount,
-                    entriesCount == 1 ? "" : "s",
-                    UniqueSkillsCount, 
-                    UniqueSkillsCount == 1 ? "" : "s",
+                    entriesCount == 1 ? String.Empty : "s",
+                    UniqueSkillsCount,
+                    UniqueSkillsCount == 1 ? String.Empty : "s",
                     Skill.TimeSpanToDescriptiveText(selectedTrainTime, DescriptiveTextOptions.IncludeCommas));
 
             if (selectedTimeWithLearning != selectedTrainTime)
@@ -835,12 +835,12 @@ namespace EVEMon.SkillPlanner
             
             if (sbcost > 0)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ", UniqueSkillsCount == 1 ? "" : "s", sbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ", UniqueSkillsCount == 1 ? String.Empty : "s", sbcost);
             }
 
             if (entriesCount > 1 && nksbcost > 0)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ", NotKnownSkillsCount == 1 ? "" : "s", nksbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ", NotKnownSkillsCount == 1 ? String.Empty : "s", nksbcost);
             }
             
             window.UpdateStatusBarSelected(sb.ToString());

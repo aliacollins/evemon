@@ -51,8 +51,8 @@ namespace EVEMon.Common
 
             // Initialize constants
             string lineFeed = Environment.NewLine;
-            string boldStart = "";
-            string boldEnd = "";
+            string boldStart = String.Empty;
+            string boldEnd = String.Empty;
 
             switch (settings.Markup)
             {

@@ -58,7 +58,7 @@ namespace EVEMon.Common
             // Next skills in queue
             if (queueList[0] != null)
             {
-                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}", (queueList.Count > 1 ? "s" : ""), Environment.NewLine);
+                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}", (queueList.Count > 1 ? "s" : String.Empty), Environment.NewLine);
                 foreach (var qskill in queueList)
                 {
                     body.AppendFormat(CultureConstants.DefaultCulture, "- {0}{1}", qskill, Environment.NewLine);

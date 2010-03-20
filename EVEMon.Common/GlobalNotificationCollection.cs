@@ -330,7 +330,7 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyServerStatusChange(ServerStatus status)
         {
-            string text = "";
+            string text = String.Empty;
             switch(status)
             {
                 default:

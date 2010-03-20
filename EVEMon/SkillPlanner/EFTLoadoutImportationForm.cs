@@ -24,7 +24,7 @@ namespace EVEMon.SkillPlanner
     {
         private Plan m_plan;
         private BaseCharacter m_character;
-        private string m_loadoutName = "";
+        private string m_loadoutName = String.Empty;
         private readonly List<Item> m_objects = new List<Item>();
         private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
 
@@ -152,7 +152,7 @@ namespace EVEMon.SkillPlanner
         private void tbEFTLoadout_TextChanged(object sender, EventArgs e)
         {
             m_objects.Clear();
-            m_loadoutName = "";
+            m_loadoutName = String.Empty;
             ResultsTreeView.Nodes.Clear();
 
             // If the box is empty, error
@@ -227,7 +227,7 @@ namespace EVEMon.SkillPlanner
             if (item != null)
             {
                 // Retrieve the tree node name for the slot
-                string slotNodeName = "";
+                string slotNodeName = String.Empty;
                 switch (item.FittingSlot)
                 {
                     case ItemSlot.High:
@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 AddToPlanButton.Enabled = true;
-                PlanedLabel.Text = "";
+                PlanedLabel.Text = String.Empty;
                 PlanedLabel.Visible = false;
                 TrainTimeLabel.Visible = true;
 

@@ -152,10 +152,10 @@ namespace SNCalendar
         {
             startDate = DateTime.Now;
             endDate = DateTime.Now.AddDays(1);
-            subject = "";
+            subject = String.Empty;
             reminder = true;
             minutes = 5;
-            entryID = "";
+            entryID = String.Empty;
             alternateReminder = false;
             earlyReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
             lateReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);
@@ -216,10 +216,10 @@ namespace SNCalendar
         {
 /*            startDate = DateTime.Now;
             endDate = DateTime.Now.AddDays(1);
-            subject = "";
+            subject = String.Empty;
             reminder = true;
             minutes = 5;
-            entryID = "";
+            entryID = String.Empty;
             alternateReminder = false;
             earlyReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
             lateReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);*/
@@ -243,7 +243,7 @@ namespace SNCalendar
 
                 appointmentItem.BusyStatus = Outlook.OlBusyStatus.olBusy;
                 appointmentItem.AllDayEvent = false;
-                appointmentItem.Location = "";
+                appointmentItem.Location = String.Empty;
 
                 if (alternateReminder)
                 {
@@ -288,7 +288,7 @@ namespace SNCalendar
 
             appointmentItem.BusyStatus = Outlook.OlBusyStatus.olBusy;
             appointmentItem.AllDayEvent = false;
-            appointmentItem.Location = "";
+            appointmentItem.Location = String.Empty;
 
             if (alternateReminder)
             {
@@ -347,7 +347,7 @@ namespace SNCalendar
             calendarItems.IncludeRecurrences = true;
 
             // Must use 'like' comparison for Find/FindNext
-            string subjectFilter = "";
+            string subjectFilter = String.Empty;
             if (String.IsNullOrEmpty(subject))
             {
                 subjectFilter = "@SQL="
@@ -442,8 +442,8 @@ namespace SNCalendar
         #region Constructor
         public GoogleAppointmentFilter(string serviceName)
         {
-            userName = "";
-            password = "";
+            userName = String.Empty;
+            password = String.Empty;
             uri = NetworkConstants.GoogleCalendarURL;
             service = new CalendarService(serviceName);
             appointmentItem = new EventEntry();

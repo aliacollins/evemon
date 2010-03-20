@@ -48,7 +48,7 @@ namespace EVEMon.Common
             m_level = level;
 
             m_priority = DefaultPriority;
-            m_notes = "";
+            m_notes = String.Empty;
 
             m_oldTrainingTime = TimeSpan.Zero;
             m_trainingTime = TimeSpan.Zero;

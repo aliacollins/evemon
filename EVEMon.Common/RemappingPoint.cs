@@ -20,7 +20,7 @@ namespace EVEMon.Common
         }
 
         private PointStatus m_status;
-        private string m_description = "";
+        private string m_description = String.Empty;
         private int[] m_attributes = new int[5];
         private Guid m_guid = Guid.NewGuid();
 

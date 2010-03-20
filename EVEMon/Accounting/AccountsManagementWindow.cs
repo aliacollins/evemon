@@ -309,7 +309,7 @@ namespace EVEMon.Accounting
 
                     // Retrieve the texts for the different columns.
                     var account = character.Identity.Account;
-                    var accountText = (account == null ? "" : account.UserID.ToString());
+                    var accountText = (account == null ? String.Empty : account.UserID.ToString());
                     var typeText = "CCP";
                     var uriText = "-";
 

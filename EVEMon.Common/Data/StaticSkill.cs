@@ -392,7 +392,7 @@ namespace EVEMon.Common.Data
             string[] words = text.Split(' ');
             List<string> lines = new List<string>(text.Length / maxLength);
             int currentLineLength = 0;
-            string currentLine = "";
+            string currentLine = String.Empty;
             bool InTag = false;
 
             foreach (string currentWord in words)
@@ -436,14 +436,14 @@ namespace EVEMon.Common.Data
                     }
                 }
             }
-            if (currentLine != "")
+            if (currentLine != String.Empty)
             {
                 lines.Add(currentLine);
             }
             string[] textLinesStr = new string[lines.Count];
             lines.CopyTo(textLinesStr, 0);
 
-            string strWrapped = "";
+            string strWrapped = String.Empty;
             foreach (string line in textLinesStr)
             {
                 strWrapped += line + "\n";

@@ -76,7 +76,7 @@ namespace EVEMon.Common.Controls
 
             if (SpecifyFolderRadioButton.Checked)
             {
-                OKButton.Enabled = (FilenameTextBox.Text != "");
+                OKButton.Enabled = (FilenameTextBox.Text != String.Empty);
             }
         }
 

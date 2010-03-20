@@ -157,7 +157,7 @@ namespace EVEMon
                 }
                 else
                 {
-                    m_lcd.CurrentSkillTrainingText = "";
+                    m_lcd.CurrentSkillTrainingText = String.Empty;
                     m_lcd.TimeToComplete = TimeSpan.Zero;
                     m_lcd.CurrentCharacterTrainingProgression = 0;
                 }

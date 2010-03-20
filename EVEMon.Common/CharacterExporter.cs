@@ -71,7 +71,7 @@ namespace EVEMon.Common
                 }
 
                 builder.AppendFormat(CultureInfo.CurrentCulture, "{0}, {1} Skill{2}, {3} Points{4}",
-                             skillGroup.Name, count, count > 1 ? "s" : "",
+                             skillGroup.Name, count, count > 1 ? "s" : String.Empty,
                              skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
 
                 // Skills

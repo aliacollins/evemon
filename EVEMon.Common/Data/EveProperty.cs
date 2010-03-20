@@ -279,7 +279,7 @@ namespace EVEMon.Common.Data
         public float GetNumericValue(Item obj)
         {
             // Retrieve the string for the number
-            string number = "";
+            string number = String.Empty;
             var value = obj.Properties[this];
             if (value == null)
             {

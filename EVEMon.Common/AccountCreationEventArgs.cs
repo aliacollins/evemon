@@ -32,7 +32,7 @@ namespace EVEMon.Common
             m_apiKey = apiKey;
             m_serialCharacterList = serialCharacterList;
             m_keyLevel = CredentialsLevel.Unknown;
-            m_fullKeyError = "";
+            m_fullKeyError = String.Empty;
 
             // Didn't test whether the ley was full because the character list was not retrieved.
             if (serialBalanceList == null)

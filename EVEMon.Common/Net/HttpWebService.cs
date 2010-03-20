@@ -56,7 +56,7 @@ namespace EVEMon.Common.Net
                 errorMsg = String.Format("\"{0}\" is not a valid URL for an HTTP request.", url);
                 return false;
             }
-            errorMsg = "";
+            errorMsg = String.Empty;
             return true;
         }
 

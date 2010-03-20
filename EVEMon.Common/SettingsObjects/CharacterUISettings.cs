@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
         public CharacterUISettings()
         {
             CollapsedGroups = new List<String>();
-            SelectedPage = "";
+            SelectedPage = String.Empty;
         }
 
         [XmlElement("selectedPage")]

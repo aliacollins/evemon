@@ -127,7 +127,7 @@ namespace EVEMon.SkillPlanner
 
             panelRight.Visible = true;
             var firstCert = certClass.LowestGradeCertificate;
-            lblName.Text = certClass.Name + (firstCert == null ? "" : " " + firstCert.Grade.ToString());
+            lblName.Text = certClass.Name + (firstCert == null ? String.Empty : " " + firstCert.Grade.ToString());
             lblCategory.Text = certClass.Category.Name;
 
             // Initialize the labels' text for every existing grade
@@ -238,8 +238,8 @@ namespace EVEMon.SkillPlanner
             if (cert == null || cert.Class != certClass)
             {
                 var firstCert = certClass.LowestGradeCertificate;
-                textboxDescription.Text = (firstCert == null ? "" : firstCert.Description);
-                lblName.Text = certClass.Name + (firstCert == null ? "" : " " + firstCert.Grade.ToString());
+                textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
+                lblName.Text = certClass.Name + (firstCert == null ? String.Empty : " " + firstCert.Grade.ToString());
             }
             // So, one of our cert class's grades has been selected, we use its description
             else

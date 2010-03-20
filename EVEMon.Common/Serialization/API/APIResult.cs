@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.API
     public sealed class APIResult<T> : IAPIResult
     {
         private APIErrors m_error = APIErrors.None;
-        private readonly string m_errorMessage = "";
+        private readonly string m_errorMessage = String.Empty;
 
         #region Constructors
         /// <summary>
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult()
         {
             m_error = APIErrors.None;
-            m_errorMessage = "";
+            m_errorMessage = String.Empty;
         }
 
         /// <summary>

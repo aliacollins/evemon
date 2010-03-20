@@ -96,7 +96,7 @@ namespace EVEMon.Common.Controls
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public DialogResult Show(IWin32Window owner, string text, string caption)
         {
-            return Show(owner, text, caption, "", MessageBoxButtons.OK, MessageBoxIcon.None);
+            return Show(owner, text, caption, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Controls
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public DialogResult Show(IWin32Window owner, string text)
         {
-            return Show(owner, text, "", "", MessageBoxButtons.OK, MessageBoxIcon.None);
+            return Show(owner, text, String.Empty, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
 
         # region EventHandlers

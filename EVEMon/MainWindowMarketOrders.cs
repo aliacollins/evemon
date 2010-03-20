@@ -26,7 +26,7 @@ namespace EVEMon
         private MarketOrderColumn m_sortCriteria;
         private Character m_character;
 
-        private string m_textFilter = "";
+        private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
         private bool m_hideInactive;
@@ -354,7 +354,7 @@ namespace EVEMon
             // Add the groups.
             foreach (var group in groups)
             {
-                string groupText = "";
+                string groupText = String.Empty;
                 if (group.Key is OrderState)
                     groupText = ((OrderState)(Object)group.Key).GetHeader().ToString();
                 else if (group.Key is DateTime)
@@ -403,7 +403,7 @@ namespace EVEMon
                     // Tooltip
                     StringBuilder builder = new StringBuilder();
                     builder.Append("Issued: ").AppendLine(order.Issued.ToLocalTime().ToString());
-                    builder.AppendFormat("Duration: {0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : ""));
+                    builder.AppendFormat("Duration: {0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : String.Empty));
                     builder.AppendLine();
                     builder.Append("Solar System: ").AppendLine(order.Station.SolarSystem.FullLocation);
                     builder.Append("Station: ").AppendLine(order.Station.Name);
@@ -456,7 +456,7 @@ namespace EVEMon
             switch (column)
             {
                 case MarketOrderColumn.Duration:
-                    item.Text = String.Format(CultureInfo.CurrentCulture, "{0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : ""));
+                    item.Text = String.Format(CultureInfo.CurrentCulture, "{0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : String.Empty));
                     break;
 
                 case MarketOrderColumn.Expiration:

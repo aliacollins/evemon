@@ -388,7 +388,7 @@ namespace EVEMon.Schedule
         {
             if (lbEntries.SelectedIndex == -1)
             {
-                lblEntryDescription.Text = "";
+                lblEntryDescription.Text = String.Empty;
                 return;
             }
 

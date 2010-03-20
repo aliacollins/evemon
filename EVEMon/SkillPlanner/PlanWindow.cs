@@ -366,9 +366,9 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
             slblStatusText.Text = String.Format("{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}. ",
                                                 m_plan.Count,
-                                                m_plan.Count == 1 ? "" : "s",
+                                                m_plan.Count == 1 ? String.Empty : "s",
                                                 m_plan.UniqueSkillsCount,
-                                                m_plan.UniqueSkillsCount == 1 ? "" : "s",
+                                                m_plan.UniqueSkillsCount == 1 ? String.Empty : "s",
                                                 Skill.TimeSpanToDescriptiveText(totalTime, DescriptiveTextOptions.IncludeCommas));
 
             // Books cost
@@ -377,13 +377,13 @@ namespace EVEMon.SkillPlanner
             if (totalcost > 0)
             {
                 slblStatusText.Text += String.Format("Total skill book{0} cost: {1:0,0,0} ISK. ",
-                    m_plan.UniqueSkillsCount == 1 ? "" : "s", totalcost);
+                    m_plan.UniqueSkillsCount == 1 ? String.Empty : "s", totalcost);
             }
 
             if (cost > 0)
             {
                 slblStatusText.Text += String.Format("Not known skill book{0} cost: {1:0,0,0} ISK. ",
-                    m_plan.NotKnownSkillsCount == 1 ? "" : "s", cost);
+                    m_plan.NotKnownSkillsCount == 1 ? String.Empty : "s", cost);
             }
 
             // Suggestions

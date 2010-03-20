@@ -101,7 +101,7 @@ namespace EVEMon.Common.Controls
         {
             get
             {
-                if (m_character == null) return "";
+                if (m_character == null) return String.Empty;
                 var cacheDir = String.Format("{1}{0}cache{0}portraits", Path.DirectorySeparatorChar, EveClient.EVEMonDataDir);
                 if (!Directory.Exists(cacheDir))
                 {
@@ -319,7 +319,7 @@ namespace EVEMon.Common.Controls
 
                     // Search for the biggest portrait
                     int bestSize = 0;
-                    string bestFile = "";
+                    string bestFile = String.Empty;
                     int charIDLength = m_id.ToString().Length;
                     foreach (FileInfo file in filesInEveCache)
                     {

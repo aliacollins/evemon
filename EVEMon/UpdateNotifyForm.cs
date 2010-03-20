@@ -162,7 +162,7 @@ namespace EVEMon
 
             // Set the detailed update information (from the XML)
             string updMessage = m_args.UpdateMessage;
-            updMessage.Replace("\r", "");
+            updMessage.Replace("\r", String.Empty);
             textBox1.Lines = updMessage.Split('\n');
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;

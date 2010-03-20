@@ -17,7 +17,7 @@ namespace EVEMon
         Control m_owner;
         bool m_canceled = false;
         Size m_size = new Size(0, 0);
-        string m_text = "";
+        string m_text = String.Empty;
 
         /// <summary>
         /// Initializes <see cref="SkillQueueToolTip"/> instance.
@@ -45,7 +45,7 @@ namespace EVEMon
                 m_size = e.ToolTipSize;
                 e.Cancel = true;
                 m_canceled = true;
-                m_text = "";
+                m_text = String.Empty;
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace EVEMon
         public void Hide()
         {
             m_toolTip.Hide(m_owner);
-            m_text = "";
+            m_text = String.Empty;
         }
 
         /// <summary>

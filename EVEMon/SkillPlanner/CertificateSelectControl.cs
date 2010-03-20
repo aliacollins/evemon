@@ -535,7 +535,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Sort by name, default, occurs on initialization
                 default:
-                    return "";
+                    return String.Empty;
 
                 // Sort by time to next grade
                 case CertificateSort.TimeToNextGrade:

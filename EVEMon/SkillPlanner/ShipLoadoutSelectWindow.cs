@@ -605,7 +605,7 @@ namespace EVEMon.SkillPlanner
 
                 if (prop.Property.Name.Contains("High Slots"))
                 {
-                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
                     while (items.ContainsKey("high") && items["high"].Count < highSlots)
                     {
                         items["high"].Add("[empty high slot]");
@@ -613,7 +613,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Med Slots"))
                 {
-                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
                     while (items.ContainsKey("med") && items["med"].Count < medSlots)
                     {
                         items["med"].Add("[empty med slot]");
@@ -621,7 +621,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Low Slots"))
                 {
-                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
                     while (items.ContainsKey("lo") && items["lo"].Count < lowSlots)
                     {
                         items["lo"].Add("[empty low slot]");
@@ -629,7 +629,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Rig Slots"))
                 {
-                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
                     while (items.ContainsKey("rig") && items["rig"].Count < rigsSlots)
                     {
                         items["rig"].Add("[empty rig slot]");
@@ -637,10 +637,10 @@ namespace EVEMon.SkillPlanner
                 }
                 else if (prop.Property.Name.Contains("Sub System Slots"))
                 {
-                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", ""));
+                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty));
                     while (items.ContainsKey("subSystem") && items["subSystem"].Count < subSysSlots)
                     {
-                        items["subSystem"].Add("");
+                        items["subSystem"].Add(String.Empty);
                     }
                 }
             }

@@ -171,7 +171,7 @@ namespace EVEMon.Controls
         /// <returns></returns>
         public override string GetTextValue()
         {
-            if (m_listBox.SelectedItem == null) return "";
+            if (m_listBox.SelectedItem == null) return String.Empty;
             return m_listBox.SelectedItem.ToString();
         }
 

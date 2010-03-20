@@ -381,7 +381,7 @@ namespace EVEMon
             {
                 // Store the existing icon text, then reset it
                 trayIcon.iconText = trayIcon.notifyIcon.Text;
-                trayIcon.notifyIcon.Text = "";
+                trayIcon.notifyIcon.Text = String.Empty;
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure
                 // initialisation completes before the timeout occurs

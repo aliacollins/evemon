@@ -70,7 +70,7 @@ namespace EVEMon.ImplantControls
                 var combo = control as DropDownMouseMoveComboBox;
                 if (combo == null) continue;
 
-                int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", "")) - 1;
+                int slotIndex = Int32.Parse(combo.Name.Replace("cbSlot", String.Empty)) - 1;
                 var slot = (ImplantSlots)slotIndex;
 
                 combo.Tag = (object)slot;
@@ -333,12 +333,12 @@ namespace EVEMon.ImplantControls
         private void setsGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var row = setsGrid.Rows[e.RowIndex];
-            var text = (e.FormattedValue == null ? "" : e.FormattedValue.ToString());
+            var text = (e.FormattedValue == null ? String.Empty : e.FormattedValue.ToString());
 
             // If the user forgets the edition and there is no bound set, we replace <New set> by an empty value
             if (row.Tag == null && text == PhantomSetName)
             {
-                row.Cells[0].Value = "";
+                row.Cells[0].Value = String.Empty;
                 return;
             }
 

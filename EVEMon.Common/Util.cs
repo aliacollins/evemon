@@ -361,7 +361,7 @@ namespace EVEMon.Common
             (asyncResult, userState) =>
             {
                 T result = null;
-                string errorMessage = "";
+                string errorMessage = String.Empty;
 
                 // Was there an HTTP error ??
                 if (asyncResult.Error != null)

@@ -423,7 +423,7 @@ namespace EVEMon
             
             if (!Settings.UI.SystemTrayPopup.ShowTQStatus)
             {
-                m_serverStatusLabel.Text = "";
+                m_serverStatusLabel.Text = String.Empty;
             }
             else
             {

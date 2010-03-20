@@ -77,7 +77,7 @@ namespace EVEMon.Common.Notifications
             }
             else
             {
-                m_description = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} completed.", m_skills.Count, m_skills.Count > 1 ? "s" : "");
+                m_description = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} completed.", m_skills.Count, m_skills.Count > 1 ? "s" : String.Empty);
             }
         }
     }

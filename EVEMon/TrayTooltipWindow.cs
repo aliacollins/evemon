@@ -19,7 +19,7 @@ namespace EVEMon
     public partial class TrayTooltipWindow : Form
     {
         private List<Character> m_characters = new List<Character>();
-        private String m_tooltipFormat = "";
+        private String m_tooltipFormat = String.Empty;
         private bool m_updatePending;
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace EVEMon
                 switch(m.Groups[1].Value[0])
                 {
                     default:
-                        return "";
+                        return String.Empty;
                     case 'n':
                         return character.Name;
                     case 'b':
@@ -216,11 +216,11 @@ namespace EVEMon
                         case 'r':
                             return Skill.GetRomanForInt(level);
                         default:
-                            return "";
+                            return String.Empty;
                     }
                 }
 
-                return "";
+                return String.Empty;
             }), RegexOptions.Compiled));
 
             return sb.ToString();

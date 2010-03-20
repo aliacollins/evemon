@@ -59,7 +59,7 @@ namespace EVEMon.Common
             : this()
         {
             m_userId = userID;
-            m_apiKey = "";
+            m_apiKey = String.Empty;
         }
 
         /// <summary>

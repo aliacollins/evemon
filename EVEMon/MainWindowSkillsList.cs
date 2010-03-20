@@ -356,7 +356,7 @@ namespace EVEMon
             Rectangle titleTopLeftInt = new Rectangle(
                 e.Bounds.Left + 3, e.Bounds.Top + ((e.Bounds.Height / 2) - (titleSizeInt.Height / 2)), titleSizeInt.Width + PadRight, titleSizeInt.Height);
 
-            string skillInTrainingSuffix = "";
+            string skillInTrainingSuffix = String.Empty;
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
             bool hasQueuedSkill = group.Any(x=> x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill) skillInTrainingSuffix = ", ( 1 in training )";

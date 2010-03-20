@@ -71,7 +71,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public static bool SkillIsBlockedAt(DateTime time, out string blockingEntry)
         {
-            blockingEntry = "";
+            blockingEntry = String.Empty;
 
             // Checks whether it will be on downtime
             if (time.ToUniversalTime().Hour == EveConstants.DowntimeHour)

@@ -38,12 +38,12 @@ namespace EVEMon {
                 for (int LINE = 0; LINE < aListViewToExport.Items.Count; LINE++) {
                     // Test to see if each value of the line column 1 to N contains one space and the unit is the same throughout
                     bool hasCommonUnit = true;
-                    string UNIT = "";
+                    string UNIT = String.Empty;
                     for (int COLUMN = 1; (COLUMN < aListViewToExport.Items[LINE].SubItems.Count) && hasCommonUnit; COLUMN++) {
                         string[] ELEMENTS = aListViewToExport.Items[LINE].SubItems[COLUMN].Text.Split(" ".ToCharArray());
                         hasCommonUnit = ELEMENTS.Length == 2;
                         if (hasCommonUnit)
-                            if (UNIT == "")
+                            if (UNIT == String.Empty)
                                 UNIT = ELEMENTS[1];
                             else
                                 hasCommonUnit = (ELEMENTS[1] == UNIT);
@@ -59,7 +59,7 @@ namespace EVEMon {
                         try {
                             string[] ELEMENTS = aListViewToExport.Items[LINE].SubItems[SUBITEM].Text.Split(" ".ToCharArray());
                             if (hasCommonUnit && ELEMENTS.Length == 2 && ELEMENTS[1] == UNIT) {
-                                SB.Append(MakeCSVNumber(aFirst, Convert.ToDouble(ELEMENTS[0].Replace(",", "")).ToString()));
+                                SB.Append(MakeCSVNumber(aFirst, Convert.ToDouble(ELEMENTS[0].Replace(",", String.Empty)).ToString()));
                             }
                             else {
                                 SB.Append(MakeCSVNumber(aFirst, Convert.ToDouble(aListViewToExport.Items[LINE].SubItems[SUBITEM].Text).ToString()));
@@ -86,7 +86,7 @@ namespace EVEMon {
         }
 
         private static string MakeCSVNumber(bool aIgnoreComma, string aWhat) {
-            return ((aIgnoreComma) ? "" : ",") + aWhat;
+            return ((aIgnoreComma) ? String.Empty : ",") + aWhat;
 
         }
     }

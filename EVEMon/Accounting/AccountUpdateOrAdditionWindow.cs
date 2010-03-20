@@ -47,8 +47,8 @@ namespace EVEMon.Accounting
 
             // Update controls depending on the update mode
             removalWarningLabel.Visible = m_updateMode;
-            apiKeyTextBox.Text = (m_account != null ? m_account.APIKey : "");
-            userIDTextBox.Text = (m_account != null ? m_account.UserID.ToString() : "");
+            apiKeyTextBox.Text = (m_account != null ? m_account.APIKey : String.Empty);
+            userIDTextBox.Text = (m_account != null ? m_account.UserID.ToString() : String.Empty);
             userIDTextBox.ReadOnly = m_updateMode;
             charactersListView.Items.Clear();
 

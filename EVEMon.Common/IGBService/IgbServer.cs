@@ -201,7 +201,7 @@ namespace EVEMon.Common.IgbService
 
             if (headerStr.IndexOf('\r') != -1)
             {
-                headerStr = headerStr.Replace("\r", "");
+                headerStr = headerStr.Replace("\r", String.Empty);
             }
 
             bool first = true;
@@ -309,7 +309,7 @@ namespace EVEMon.Common.IgbService
 
             string headerCharacterName;
             if (!headers.TryGetValue("eve_charname", out headerCharacterName))
-                headerCharacterName = "";
+                headerCharacterName = String.Empty;
 
             if (string.IsNullOrEmpty(headerCharacterName) || // no character in header
                 (EveClient.Characters.FirstOrDefault(x => x.Name == headerCharacterName) == null)) // character is not listed
@@ -318,7 +318,7 @@ namespace EVEMon.Common.IgbService
                 return;
             }
 
-            var context = "";
+            var context = String.Empty;
             var characterName = headerCharacterName;
             var contextRegex = new Regex(@"(?'context'\/characters(\/(?'charName'[^\/]*))?)?(?'request'.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
             var match = contextRegex.Match(requestUrl);

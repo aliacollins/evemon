@@ -518,7 +518,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Sort by name, default, occurs on initialization
                 default:
-                    return "";
+                    return String.Empty;
 
                 // Time to next level
                 case SkillSort.TimeToNextLevel:
