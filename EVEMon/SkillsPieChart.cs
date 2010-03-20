@@ -190,10 +190,10 @@ namespace EVEMon
                 decimal destSP = targetSkillPoints[i];
 
                 StringBuilder description = new StringBuilder();
-                description.AppendFormat(CultureInfo.CurrentCulture, "{0} ({1} skills, {2:#,###} skillpoints", names[i], skillCounts[i], srcSP);
+                description.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1} skills, {2:#,###} skillpoints", names[i], skillCounts[i], srcSP);
                 if (srcSP != destSP)
                 {
-                    description.AppendFormat(CultureInfo.CurrentCulture, " / {0:#,###} after plan completion", destSP);
+                    description.AppendFormat(CultureConstants.DefaultCulture, " / {0:#,###} after plan completion", destSP);
                 }
                 description.Append(")");
                 descriptions[i] = description.ToString();

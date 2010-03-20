@@ -237,7 +237,7 @@ namespace SNCalendar
                 appointmentItem.Subject = subject;
                 appointmentItem.Start = startDate;
                 appointmentItem.End = endDate;
-                appointmentItem.Body = string.Format(CultureInfo.CurrentCulture, "Added: {0}", DateTime.Now);
+                appointmentItem.Body = string.Format(CultureConstants.DefaultCulture, "Added: {0}", DateTime.Now);
 
                 appointmentItem.ReminderSet = reminder;
 
@@ -278,7 +278,7 @@ namespace SNCalendar
             appointmentItem.Subject = subject;
             appointmentItem.Start = startDate;
             appointmentItem.End = endDate;
-            appointmentItem.Body = string.Format(CultureInfo.CurrentCulture, "{0} \r\nUpdated: {1}", appointmentItem.Body, DateTime.Now);
+            appointmentItem.Body = string.Format(CultureConstants.DefaultCulture, "{0} \r\nUpdated: {1}", appointmentItem.Body, DateTime.Now);
 
             appointmentItem.ReminderSet = reminder;
             if (reminder)
@@ -338,7 +338,7 @@ namespace SNCalendar
             // Use a Jet Query to filter the details we need initially between
             // the two spcified dates.
             string dateFilter = String.Format(
-                CultureInfo.CurrentCulture, 
+                CultureConstants.DefaultCulture, 
                 "[Start] >= '{0:g}' and [End] <= '{1:g}'", 
                 startDate, 
                 endDate);

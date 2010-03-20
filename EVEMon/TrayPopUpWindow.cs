@@ -409,7 +409,7 @@ namespace EVEMon
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
             {
                 DateTime now = DateTime.Now.ToUniversalTime();
-                m_eveTimeLabel.Text = String.Format(CultureInfo.CurrentCulture, "EVE Time: {0:HH:mm}", now);
+                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
             }
         }
 

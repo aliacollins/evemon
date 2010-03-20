@@ -167,7 +167,7 @@ namespace EVEMon
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionLabel.Text = String.Format(CultureInfo.CurrentCulture, VersionLabel.Text, currentVersion.ToString());
+            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion.ToString());
 
             AddDevelopersToListView();
             AddDebugTag();
@@ -213,7 +213,7 @@ namespace EVEMon
         [Conditional("DEBUG")]
         private void AddDebugTag()
         {
-            VersionLabel.Text = String.Format(CultureInfo.CurrentCulture, "{0} (Debug)", VersionLabel.Text);
+            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} (Debug)", VersionLabel.Text);
         }
 
         /// <summary>

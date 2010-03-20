@@ -181,15 +181,15 @@ namespace EVEMon.Common.Data
                 {
                     // Format a value of Structure Volume
                     if (m_id == 161)
-                        return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0##} {1}", m_value, m_unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", m_value, m_unit);
 
                     // Format a value of Capacitor Capacity
                     if (m_id == 482)
-                        return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", Math.Floor(m_value), m_unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", Math.Floor(m_value), m_unit);
 
                     // Format a value of Ships Warp Speed
                     if (m_id == 1281)
-                        return String.Format(CultureInfo.CurrentCulture, "{0:0.0#} {1}", m_value, m_unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:0.0#} {1}", m_value, m_unit);
 
                     switch (m_unitID)
                     {
@@ -197,32 +197,32 @@ namespace EVEMon.Common.Data
                         case 2:
                             if (m_value <= 1000)
                             {
-                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.0#} {1}", m_value, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0#} {1}", m_value, m_unit);
                             }
                             else
                             {
-                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", m_value, m_unit);
                             }
 
                         // Format a value of Millseconds
                         case 101:
-                            return String.Format(CultureInfo.CurrentCulture, "{0:#,##0.00} {1}", m_value / 1000, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", m_value / 1000, m_unit);
 
                         // Format a value of Absolute Percentage
                         case 127:
-                            return String.Format(CultureInfo.CurrentCulture, "{0} {1}", (m_value) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (m_value) * 100, m_unit);
 
                         // Format a value of Inverse Absolute Percentage
                         case 108:
-                            return String.Format(CultureInfo.CurrentCulture, "{0} {1}", (1 - m_value) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - m_value) * 100, m_unit);
 
                         // Format a value of Modifier Percentage
                         case 109:
-                            return String.Format(CultureInfo.CurrentCulture, "{0:0.###} {1}", (m_value - 1) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (m_value - 1) * 100, m_unit);
 
                         // Format a value of Inverse Modifier Percentage
                         case 111:
-                            return String.Format(CultureInfo.CurrentCulture, "{0:0.###} {1}", (1 - m_value) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - m_value) * 100, m_unit);
 
                         // A reference to a group, it has been pre-transformed on XmlGenerator.
                         case 115: // "groupID"
@@ -254,11 +254,11 @@ namespace EVEMon.Common.Data
                         default:
                             if (m_value < 1000)
                             {
-                                return String.Format(CultureInfo.CurrentCulture, "{0} {1}", m_value, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_value, m_unit);
                             }
                             else
                             {
-                                return String.Format(CultureInfo.CurrentCulture, "{0:#,##0} {1}", m_value, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", m_value, m_unit);
                             }
                     }
                 }

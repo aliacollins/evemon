@@ -41,7 +41,7 @@ namespace EVEMon
             StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
             foreach (DatafileVersion dfv in m_args.ChangedFiles)
             {
-                changedFiles.AppendFormat(CultureInfo.CurrentCulture, "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}", dfv.Name, dfv.DateChanged, dfv.Url, Environment.NewLine);
+                changedFiles.AppendFormat(CultureConstants.DefaultCulture, "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}", dfv.Name, dfv.DateChanged, dfv.Url, Environment.NewLine);
                 notes.AppendLine(dfv.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
@@ -57,10 +57,10 @@ namespace EVEMon
         {
             foreach (DatafileVersion dfv in m_args.ChangedFiles)
             {
-                string urn = String.Format(CultureInfo.CurrentCulture, "{0}/{1}", dfv.Url, dfv.Name);
+                string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
                 string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
 
-                string newFilename = String.Format(CultureInfo.CurrentCulture, "{0}.tmp", oldFilename);
+                string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
                 bool checksumOK = false;
                 int attempt = 0;
                 do

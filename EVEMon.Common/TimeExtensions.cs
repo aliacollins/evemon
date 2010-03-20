@@ -145,20 +145,20 @@ namespace EVEMon.Common
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == DateTime.Now.Date.AddDays(-1))
             {
-                return String.Format(CultureInfo.CurrentCulture, "{0} Yesterday", shortTime);
+                return String.Format(CultureConstants.DefaultCulture, "{0} Yesterday", shortTime);
             }
 
             // Today (i.e. before 00:00 tomorrow)
             if (absoluteDateTime.Date == DateTime.Now.Date)
             {
-                return String.Format(CultureInfo.CurrentCulture, "{0} Today", shortTime);
+                return String.Format(CultureConstants.DefaultCulture, "{0} Today", shortTime);
             }
 
             // Tomorrow (i.e. after 23:59 today but before 00:00 the day after tomorrow)
             DateTime tomorrow = DateTime.Now.Date.AddDays(1);
             if (absoluteDateTime.Date == tomorrow)
             {
-                return String.Format(CultureInfo.CurrentCulture, "{0} Tomorrow", shortTime);
+                return String.Format(CultureConstants.DefaultCulture, "{0} Tomorrow", shortTime);
             }
 
             // After tomorrow but within 7 days
@@ -168,17 +168,17 @@ namespace EVEMon.Common
                 string dayOfWeek = absoluteDateTime.DayOfWeek.ToString();
                 if (absoluteDateTime.Date < sevenDays)
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "{0} This {1}", shortTime, dayOfWeek);
+                    return String.Format(CultureConstants.DefaultCulture, "{0} This {1}", shortTime, dayOfWeek);
                 }
                 if (absoluteDateTime.Date == sevenDays)
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "{0} Next {1}", shortTime, dayOfWeek);
+                    return String.Format(CultureConstants.DefaultCulture, "{0} Next {1}", shortTime, dayOfWeek);
                 }
             }
 
             // More than seven days away or more than one day ago
-            string shortDate = absoluteDateTime.ToString("d", CultureInfo.CurrentCulture);
-            return String.Format(CultureInfo.CurrentCulture, "{0} {1}", shortTime, shortDate);
+            string shortDate = absoluteDateTime.ToString("d", CultureConstants.DefaultCulture);
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", shortTime, shortDate);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace EVEMon.Common
         /// <returns>String containing formatted text</returns>
         public static string GetShortTimeString(DateTime shortTimeString)
         {
-            DateTimeFormatInfo dateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat;
+            DateTimeFormatInfo dateTimeFormat = CultureConstants.DefaultCulture.DateTimeFormat;
             
             // Get the LongTimePattern and remove :ss and :s
             string shortTimePattern = dateTimeFormat.LongTimePattern.Replace(":ss", String.Empty);

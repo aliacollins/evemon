@@ -793,7 +793,7 @@ namespace EVEMon
                 return;
 
             DateTime now = DateTime.Now.ToUniversalTime();
-            lblStatus.Text = String.Format(CultureInfo.CurrentCulture, "EVE Time: {0:HH:mm}", now);
+            lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
         }
 
         /// <summary>

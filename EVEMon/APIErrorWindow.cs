@@ -51,22 +51,22 @@ namespace EVEMon
                     switch (value.Result.ErrorType)
                     {
                         case APIErrors.CCP:
-                            errorLabel.Text += String.Format(CultureInfo.CurrentCulture, 
+                            errorLabel.Text += String.Format(CultureConstants.DefaultCulture, 
                                 "CCP Error {0} : {1}", 
                                 value.Result.CCPError.ErrorCode, 
                                 value.Result.CCPError.ErrorMessage);
                             break;
 
                         case APIErrors.Http:
-                            errorLabel.Text += String.Format(CultureInfo.CurrentCulture, "HTTP error: {0}", value.Result.ErrorMessage);
+                            errorLabel.Text += String.Format(CultureConstants.DefaultCulture, "HTTP error: {0}", value.Result.ErrorMessage);
                             break;
 
                         case APIErrors.Xml:
-                            errorLabel.Text += String.Format(CultureInfo.CurrentCulture, "XML error: {0}", value.Result.ErrorMessage);
+                            errorLabel.Text += String.Format(CultureConstants.DefaultCulture, "XML error: {0}", value.Result.ErrorMessage);
                             break;
 
                         case APIErrors.Xslt:
-                            errorLabel.Text += String.Format(CultureInfo.CurrentCulture, "XSLT error: {0}", value.Result.ErrorMessage);
+                            errorLabel.Text += String.Format(CultureConstants.DefaultCulture, "XSLT error: {0}", value.Result.ErrorMessage);
                             break;
 
                         default:

@@ -57,21 +57,21 @@ namespace EVEMon.Schedule
         {
             // Months names
             nudMonth.Items.Clear();
-            string[] monthNames = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames;
+            string[] monthNames = CultureConstants.DefaultCulture.DateTimeFormat.MonthNames;
 
             // Days names
             nudMonth.Items.Add(monthNames[0]);
-            for (int i = 1; i <= CultureInfo.CurrentCulture.Calendar.GetMonthsInYear(m_currentDate.Year); i++)
+            for (int i = 1; i <= CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year); i++)
             {
                 nudMonth.Items.Add(
-                    monthNames[((CultureInfo.CurrentCulture.Calendar.GetMonthsInYear(m_currentDate.Year)) - i)]);
+                    monthNames[((CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year)) - i)]);
             }
 
             // Set controls to current date
-            nudMonth.Items.Add(monthNames[CultureInfo.CurrentCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - 1]);
+            nudMonth.Items.Add(monthNames[CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - 1]);
             nudYear.Value = m_currentDate.Year;
             nudMonth.SelectedIndex = ((nudMonth.Items.Count - 1) - m_currentDate.Month);
-            nudDay.Maximum = CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+            nudDay.Maximum = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
             nudDay.Value = m_currentDate.Day;
             calControl.Date = m_currentDate;
 
@@ -480,12 +480,12 @@ namespace EVEMon.Schedule
             int oldyearnum = m_currentDate.Year;
             m_currentDate = m_currentDate.AddYears((int)nudYear.Value - m_currentDate.Year);
             if (m_currentDate.Month == 2 &&
-                (CultureInfo.CurrentCulture.Calendar.IsLeapYear(m_currentDate.Year) ||
-                 CultureInfo.CurrentCulture.Calendar.IsLeapYear(oldyearnum)))
+                (CultureConstants.DefaultCulture.Calendar.IsLeapYear(m_currentDate.Year) ||
+                 CultureConstants.DefaultCulture.Calendar.IsLeapYear(oldyearnum)))
             {
                 nudDay.Maximum =
-                    CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
-                if (CultureInfo.CurrentCulture.Calendar.IsLeapYear(oldyearnum) && nudDay.Value > nudDay.Maximum)
+                    CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+                if (CultureConstants.DefaultCulture.Calendar.IsLeapYear(oldyearnum) && nudDay.Value > nudDay.Maximum)
                 {
                     nudDay.Value = nudDay.Maximum;
                 }
@@ -510,11 +510,11 @@ namespace EVEMon.Schedule
                 }
                 m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
                 nudDay.Maximum =
-                    CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+                    CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
                 if (nudDay.Value == 0)
                 {
                     nudDay.Value =
-                        CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
+                        CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
                 }
                 donex = true;
             }
@@ -523,7 +523,7 @@ namespace EVEMon.Schedule
                 if (nudMonth.SelectedIndex == 1 && nudYear.Value == nudYear.Maximum)
                 {
                     nudDay.Value =
-                        CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
+                        CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
                     doney = true;
                 }
                 else if (!doney)
@@ -531,7 +531,7 @@ namespace EVEMon.Schedule
                     m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
                     nudDay.Value = 1;
                     nudDay.Maximum =
-                        CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+                        CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
                 }
                 donex = true;
             }
@@ -541,7 +541,7 @@ namespace EVEMon.Schedule
             }
             calControl.Date = m_currentDate;
             nudYear.Value = m_currentDate.Year;
-            nudMonth.SelectedIndex = (CultureInfo.CurrentCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
+            nudMonth.SelectedIndex = (CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
                                       m_currentDate.Month) + 1;
         }
 
@@ -564,11 +564,11 @@ namespace EVEMon.Schedule
                 m_currentDate.AddMonths((((nudMonth.Items.Count - 1) - nudMonth.SelectedIndex) - m_currentDate.Month));
             nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) +
                                      1;
-            if (nudDay.Value > CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month))
+            if (nudDay.Value > CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month))
             {
-                nudDay.Value = CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
+                nudDay.Value = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
             }
-            nudDay.Maximum = CultureInfo.CurrentCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+            nudDay.Maximum = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
             calControl.Date = m_currentDate;
             nudYear.Value = m_currentDate.Year;
         }

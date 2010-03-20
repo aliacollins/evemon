@@ -32,17 +32,17 @@ namespace EVEMon.Common
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("BASIC INFO");
             builder.AppendLine(Separator);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "     Name: {0}{1}", character.Name, Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "   Gender: {0}{1}", character.Gender, Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "     Race: {0}{1}", character.Race, Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "Bloodline: {0}{1}", character.Bloodline, Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "  Balance: {0} ISK{1}", character.Balance.ToString("#,##0.00"), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "     Name: {0}{1}", character.Name, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "   Gender: {0}{1}", character.Gender, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "     Race: {0}{1}", character.Race, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Bloodline: {0}{1}", character.Bloodline, Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "  Balance: {0} ISK{1}", character.Balance.ToString("#,##0.00"), Environment.NewLine);
             builder.AppendLine();
-            builder.AppendFormat(CultureInfo.CurrentCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "    Charisma: {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "  Perception: {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "      Memory: {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            builder.AppendFormat(CultureInfo.CurrentCulture, "   Willpower: {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "    Charisma: {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "  Perception: {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "      Memory: {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            builder.AppendFormat(CultureConstants.DefaultCulture, "   Willpower: {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
             builder.AppendLine();
 
             // Implants
@@ -53,7 +53,7 @@ namespace EVEMon.Common
                 builder.AppendLine(Separator);
                 foreach (var implant in implants)
                 {
-                    builder.AppendFormat(CultureInfo.CurrentCulture, "+{0} {1} : {2}{3}", implant.Bonus, implant.Slot.ToString().PadRight(13), implant.Name, Environment.NewLine);
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "+{0} {1} : {2}{3}", implant.Bonus, implant.Slot.ToString().PadRight(13), implant.Name, Environment.NewLine);
                 }
                 builder.AppendLine();
             }
@@ -70,7 +70,7 @@ namespace EVEMon.Common
                         count++;
                 }
 
-                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}, {1} Skill{2}, {3} Points{4}",
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3} Points{4}",
                              skillGroup.Name, count, count > 1 ? "s" : String.Empty,
                              skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
 
@@ -82,7 +82,7 @@ namespace EVEMon.Common
                         continue;
 
                     string skillDesc = skill.ToString() + " (" + skill.Rank.ToString() + ")";
-                    builder.AppendFormat(CultureInfo.CurrentCulture, ": {0} L{1} {2}/{3} Points{4}",
+                    builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2}/{3} Points{4}",
                         skillDesc.PadRight(45), mergedSkill.Level.ToString().PadRight(5), mergedSkill.Skillpoints.ToString("#,##0"),
                         skill.StaticData.GetPointsRequiredForLevel(5).ToString("#,##0"), Environment.NewLine);
 
@@ -90,7 +90,7 @@ namespace EVEMon.Common
                     if (skill.IsTraining)
                     {
                         DateTime adjustedEndTime = character.CurrentlyTrainingSkill.EndTime.ToLocalTime();
-                        builder.AppendFormat(CultureInfo.CurrentCulture, ":  (Currently training to level {0}, completes {1}){2}",
+                        builder.AppendFormat(CultureConstants.DefaultCulture, ":  (Currently training to level {0}, completes {1}){2}",
                                      Skill.GetRomanForInt(character.CurrentlyTrainingSkill.Level), adjustedEndTime, Environment.NewLine);
                     }
                 }
@@ -115,14 +115,14 @@ namespace EVEMon.Common
                                                                         && x.Group.ID != DBConstants.SocialSkillsGroupID
                                                                         && x.Group.ID != DBConstants.TradeSkillsGroupID).Select(x => GetMergedSkill(plan, x)))
             {
-                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}={1}{2}", skill.Name, skill.Level, Environment.NewLine);
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0}={1}{2}", skill.Name, skill.Level, Environment.NewLine);
             }
 
             if (character.Identity.Account != null)
             {
-                builder.AppendFormat(CultureInfo.CurrentCulture, "UserID={0}{1}", character.Identity.Account.UserID, Environment.NewLine);
-                builder.AppendFormat(CultureInfo.CurrentCulture, "APIKey={0}{1}", character.Identity.Account.APIKey, Environment.NewLine);
-                builder.AppendFormat(CultureInfo.CurrentCulture, "CharID={0}{1}", character.CharacterID, Environment.NewLine);
+                builder.AppendFormat(CultureConstants.DefaultCulture, "UserID={0}{1}", character.Identity.Account.UserID, Environment.NewLine);
+                builder.AppendFormat(CultureConstants.DefaultCulture, "APIKey={0}{1}", character.Identity.Account.APIKey, Environment.NewLine);
+                builder.AppendFormat(CultureConstants.DefaultCulture, "CharID={0}{1}", character.CharacterID, Environment.NewLine);
             }
 
             return builder.ToString();
@@ -256,14 +256,14 @@ namespace EVEMon.Common
         {
             StringBuilder result = new StringBuilder();
 
-            result.AppendFormat(CultureInfo.CurrentCulture, "[b]{0}[/b]{1}", character.Name, Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "[b]{0}[/b]{1}", character.Name, Environment.NewLine);
             result.AppendLine();
             result.AppendLine("[b]Attributes[/b]");
-            result.AppendFormat(CultureInfo.CurrentCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Perception:   {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Charisma:     {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Willpower:    {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Memory:       {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Perception:   {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Charisma:     {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Willpower:    {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Memory:       {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
 
             foreach (var skillGroup in character.SkillGroups)
             {
@@ -275,30 +275,30 @@ namespace EVEMon.Common
                         if (!skillGroupAppended)
                         {
                             result.AppendLine();
-                            result.AppendFormat(CultureInfo.CurrentCulture, "[b]{0}[/b]{1}", skillGroup.Name, Environment.NewLine);
+                            result.AppendFormat(CultureConstants.DefaultCulture, "[b]{0}[/b]{1}", skillGroup.Name, Environment.NewLine);
 
                             skillGroupAppended = true;
                         }
 
-                        result.AppendFormat(CultureInfo.CurrentCulture, "[img]{0}{1}.gif[/img] {2}{3}", NetworkConstants.MyEVELevelImage, skill.Level, skill.Name, Environment.NewLine);
+                        result.AppendFormat(CultureConstants.DefaultCulture, "[img]{0}{1}.gif[/img] {2}{3}", NetworkConstants.MyEVELevelImage, skill.Level, skill.Name, Environment.NewLine);
                     }
                 }
 
                 if (skillGroupAppended)
                 {
-                    result.AppendFormat(CultureInfo.CurrentCulture, "Total Skillpoints in Group: {0}{1}", skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
+                    result.AppendFormat(CultureConstants.DefaultCulture, "Total Skillpoints in Group: {0}{1}", skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
                 }
             }
 
             result.AppendLine();
-            result.AppendFormat(CultureInfo.CurrentCulture, "Total Skillpoints: {0}{1}", character.SkillPoints.ToString("#,##0"), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Total Number of Skills: {0}{1}", character.KnownSkillCount.ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Total Skillpoints: {0}{1}", character.SkillPoints.ToString("#,##0"), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Total Number of Skills: {0}{1}", character.KnownSkillCount.ToString(), Environment.NewLine);
             result.AppendLine();
-            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 1: {0}{1}", character.GetSkillCountAtLevel(1).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 2: {0}{1}", character.GetSkillCountAtLevel(2).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 3: {0}{1}", character.GetSkillCountAtLevel(3).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 4: {0}{1}", character.GetSkillCountAtLevel(4).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level 5: {0}{1}", character.GetSkillCountAtLevel(5).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 1: {0}{1}", character.GetSkillCountAtLevel(1).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 2: {0}{1}", character.GetSkillCountAtLevel(2).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 3: {0}{1}", character.GetSkillCountAtLevel(3).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 4: {0}{1}", character.GetSkillCountAtLevel(4).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 5: {0}{1}", character.GetSkillCountAtLevel(5).ToString(), Environment.NewLine);
 
             return result.ToString();
         }

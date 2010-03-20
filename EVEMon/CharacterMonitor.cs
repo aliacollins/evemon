@@ -197,11 +197,11 @@ namespace EVEMon
         public void UpdateCharacterInfo()
         {
             // Gender, race, bloodline, corporation
-            lblBioInfo.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
-            lblCorpInfo.Text = String.Format(CultureInfo.CurrentCulture, "Corporation: {0}", m_character.CorporationName);
+            lblBioInfo.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
+            lblCorpInfo.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", m_character.CorporationName);
 
             // Balance
-            lblBalance.Text = String.Format(CultureInfo.CurrentCulture, "Balance: {0:#,##0.00} ISK", m_character.Balance);
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "Balance: {0:#,##0.00} ISK", m_character.Balance);
 
             // Name
             lblCharacterName.Text = m_character.AdornedName;
@@ -222,10 +222,10 @@ namespace EVEMon
             // Update the known skills count, total SP, skills at lv5, clone limit
             StringBuilder header = new StringBuilder();
 
-            header.AppendFormat(CultureInfo.CurrentCulture, "Known Skills: {0}{1}", m_character.KnownSkillCount, Environment.NewLine);
-            header.AppendFormat(CultureInfo.CurrentCulture, "Skills at Level V: {0}{1}", m_character.GetSkillCountAtLevel(5), Environment.NewLine);
-            header.AppendFormat(CultureInfo.CurrentCulture, "Total SP: {0:#,##0}{1}", m_character.SkillPoints, Environment.NewLine);
-            header.AppendFormat(CultureInfo.CurrentCulture, "Clone Limit: {0:#,##0}{1}", m_character.CloneSkillPoints, Environment.NewLine);
+            header.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}{1}", m_character.KnownSkillCount, Environment.NewLine);
+            header.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}{1}", m_character.GetSkillCountAtLevel(5), Environment.NewLine);
+            header.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}{1}", m_character.SkillPoints, Environment.NewLine);
+            header.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}{1}", m_character.CloneSkillPoints, Environment.NewLine);
             header.Append(m_character.CloneName);
 
             lblSkillHeader.Text = header.ToString();
@@ -238,7 +238,7 @@ namespace EVEMon
         /// <param name="eveAttribute">The eve attribute.</param>
         private void SetAttributeLabel(Label lblAttrib, EveAttribute eveAttribute)
         {
-            lblAttrib.Text = String.Format(CultureInfo.CurrentCulture, "{0}: {1:0.00}", eveAttribute, m_character[eveAttribute].EffectiveValue);
+            lblAttrib.Text = String.Format(CultureConstants.DefaultCulture, "{0}: {1:0.00}", eveAttribute, m_character[eveAttribute].EffectiveValue);
         }
 
         /// <summary>
@@ -255,8 +255,8 @@ namespace EVEMon
                 var completionTime = training.EndTime.ToLocalTime();
 
                 lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureInfo.CurrentCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
-                lblTrainingEst.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", completionTime.ToString("ddd"), completionTime.ToString("G"));
+                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
+                lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", completionTime.ToString("ddd"), completionTime.ToString("G"));
 
                 string conflictMessage;
                 if (Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage))
@@ -272,7 +272,7 @@ namespace EVEMon
                 if (ccpCharacter != null)
                 {
                     var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-                    lblQueueCompletionTime.Text = String.Format(CultureInfo.CurrentCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
+                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
                     if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
                         skillQueueControl.Invalidate();
                     skillQueuePanel.Visible = true;
@@ -289,7 +289,7 @@ namespace EVEMon
             {
                 var training = ccpCharacter.SkillQueue.CurrentlyTraining;
                 lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureInfo.CurrentCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
+                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
 
                 lblTrainingRemain.Text = "Paused";
                 lblTrainingEst.Text = "";
@@ -369,10 +369,10 @@ namespace EVEMon
                 }
                 else
                 {
-                    string hours = timeLeft.Hours.ToString("d2", CultureInfo.CurrentCulture);
-                    string minutes = timeLeft.Minutes.ToString("d2", CultureInfo.CurrentCulture);
-                    string seconds = timeLeft.Seconds.ToString("d2", CultureInfo.CurrentCulture);
-                    lblUpdateTimer.Text = String.Format(CultureInfo.CurrentCulture, "{0}:{1}:{2}", hours, minutes, seconds);
+                    string hours = timeLeft.Hours.ToString("d2", CultureConstants.DefaultCulture);
+                    string minutes = timeLeft.Minutes.ToString("d2", CultureConstants.DefaultCulture);
+                    string seconds = timeLeft.Seconds.ToString("d2", CultureConstants.DefaultCulture);
+                    lblUpdateTimer.Text = String.Format(CultureConstants.DefaultCulture, "{0}:{1}:{2}", hours, minutes, seconds);
                 }
                 lblUpdateTimer.Visible = true;
             }
@@ -879,7 +879,7 @@ namespace EVEMon
                 if (i > 1)
                     sb.Append("\n");
 
-                sb.AppendFormat(CultureInfo.CurrentCulture, "{0} Skills at Level {1}", count, i);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} Skills at Level {1}", count, i);
             }
 
             ttToolTip.SetToolTip(sender as Label, sb.ToString());

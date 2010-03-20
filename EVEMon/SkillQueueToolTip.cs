@@ -64,7 +64,7 @@ namespace EVEMon
             string skillStart = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.StartTime.ToLocalTime()) : "Paused");
             string skillEnd = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.EndTime.ToLocalTime()) : "Paused");
             string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
-            string text = String.Format(CultureInfo.CurrentCulture, format, skillName, skillLevel, startText, skillStart, skillEnd);
+            string text = String.Format(CultureConstants.DefaultCulture, format, skillName, skillLevel, startText, skillStart, skillEnd);
             Display(text, pt);
         }
 

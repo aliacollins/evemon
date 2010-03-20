@@ -92,7 +92,7 @@ namespace EVEMon
             :this()
         {
             m_character = character;
-            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureInfo.CurrentCulture);
+            m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.DefaultCulture);
 
             pbCharacterPortrait.Visible = false;
             pbCharacterPortrait.Character = character;
@@ -216,7 +216,7 @@ namespace EVEMon
             m_pendingUpdate = false;
 
             lblCharName.Text = m_character.Name;
-            lblBalance.Text = String.Format(CultureInfo.CurrentCulture, "{0:#,##0.00} ISK", m_character.Balance);
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} ISK", m_character.Balance);
 
             // Character in training ? We have labels to fill
             if (m_character.IsTraining)
@@ -229,12 +229,12 @@ namespace EVEMon
                 // Update the completion time
                 if (m_portraitSize > 80)
                 {
-                    lblCompletionTime.Text = String.Concat(endTime.ToString("ddd ", CultureInfo.CurrentCulture),
-                                                           endTime.ToString(CultureInfo.CurrentCulture));
+                    lblCompletionTime.Text = String.Concat(endTime.ToString("ddd ", CultureConstants.DefaultCulture),
+                                                           endTime.ToString(CultureConstants.DefaultCulture));
                 }
                 else
                 {
-                    lblCompletionTime.Text = endTime.ToString(CultureInfo.CurrentCulture);
+                    lblCompletionTime.Text = endTime.ToString(CultureConstants.DefaultCulture);
                 }
 
                 // Changes the completion time color on scheduling block.
@@ -491,10 +491,10 @@ namespace EVEMon
         [Browsable(true), Description("The size of a portrait.")]
         public PortraitSizes PortraitSize
         {
-            get { return (PortraitSizes)Enum.Parse(typeof(PortraitSizes), String.Format(CultureInfo.CurrentCulture, "x{0}", m_portraitSize)); }
+            get { return (PortraitSizes)Enum.Parse(typeof(PortraitSizes), String.Format(CultureConstants.DefaultCulture, "x{0}", m_portraitSize)); }
             set
             {
-                var portraitSize = Int32.Parse(value.ToString().Substring(1), CultureInfo.CurrentCulture);
+                var portraitSize = Int32.Parse(value.ToString().Substring(1), CultureConstants.DefaultCulture);
                 if (m_portraitSize == portraitSize) return;
                 m_portraitSize = portraitSize;
 
