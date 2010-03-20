@@ -161,6 +161,13 @@ namespace EVEMon.SkillPlanner
                 node.SelectedImageIndex = 2;
                 allSkillsKnown = false;
             }
+            // Requirement not met, but trainable
+            else if (skill.Level < prereq.Level && skill.IsKnown)
+            {
+                node.ImageIndex = 3;
+                node.SelectedImageIndex = 3;
+                allSkillsKnown = false;
+            }
             // Requirement not met
             else
             {

@@ -31,17 +31,11 @@ namespace EVEMon.SkillPlanner
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RequiredSkillsControl));
             this.btnAddSkills = new System.Windows.Forms.Button();
-            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblTimeRequired = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmExpand = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmCollapse = new System.Windows.Forms.ToolStripMenuItem();
             this.tvSkillList = new EVEMon.SkillPlanner.ReqSkillsTreeView();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.level0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +43,13 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmExpand = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmCollapse = new System.Windows.Forms.ToolStripMenuItem();
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.contextMenu.SuspendLayout();
@@ -65,15 +65,6 @@ namespace EVEMon.SkillPlanner
             this.btnAddSkills.Text = "Add All To Plan";
             this.btnAddSkills.UseVisualStyleBackColor = true;
             this.btnAddSkills.Click += new System.EventHandler(this.btnAddSkills_Click);
-            // 
-            // ilIcons
-            // 
-            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
-            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilIcons.Images.SetKeyName(0, "Cross");
-            this.ilIcons.Images.SetKeyName(1, "Tick");
-            this.ilIcons.Images.SetKeyName(2, "Plan.png");
-            this.ilIcons.Images.SetKeyName(3, "Planned");
             // 
             // panel1
             // 
@@ -104,51 +95,6 @@ namespace EVEMon.SkillPlanner
             this.panel2.Size = new System.Drawing.Size(244, 127);
             this.panel2.TabIndex = 5;
             // 
-            // contextMenu
-            // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.planToMenu,
-            this.showInMenuSeparator,
-            this.showInSkillBrowserMenu,
-            this.showInSkillExplorerMenu,
-            this.toolStripSeparator1,
-            this.tsmExpand,
-            this.tsmCollapse});
-            this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(195, 126);
-            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // showInMenuSeparator
-            // 
-            this.showInMenuSeparator.Name = "showInMenuSeparator";
-            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
-            // 
-            // showInSkillBrowserMenu
-            // 
-            this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
-            this.showInSkillBrowserMenu.Size = new System.Drawing.Size(194, 22);
-            this.showInSkillBrowserMenu.Text = "Show in Skill &Browser...";
-            this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(191, 6);
-            // 
-            // tsmExpand
-            // 
-            this.tsmExpand.Name = "tsmExpand";
-            this.tsmExpand.Size = new System.Drawing.Size(194, 22);
-            this.tsmExpand.Text = "&Expand all";
-            this.tsmExpand.Click += new System.EventHandler(this.tsmExpandAll_Click);
-            // 
-            // tsmCollapse
-            // 
-            this.tsmCollapse.Name = "tsmCollapse";
-            this.tsmCollapse.Size = new System.Drawing.Size(194, 22);
-            this.tsmCollapse.Text = "&Collapse all";
-            this.tsmCollapse.Click += new System.EventHandler(this.tsmCollapseAll_Click);
-            // 
             // tvSkillList
             // 
             this.tvSkillList.ContextMenuStrip = this.contextMenu;
@@ -163,6 +109,20 @@ namespace EVEMon.SkillPlanner
             this.tvSkillList.TabIndex = 0;
             this.tvSkillList.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSkillList_NodeMouseDoubleClick);
             this.tvSkillList.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSkillList_NodeMouseClick);
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.planToMenu,
+            this.showInMenuSeparator,
+            this.showInSkillBrowserMenu,
+            this.showInSkillExplorerMenu,
+            this.toolStripSeparator1,
+            this.tsmExpand,
+            this.tsmCollapse});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(195, 126);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // planToMenu
             // 
@@ -220,6 +180,18 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.planToMenuItem_Click);
             // 
+            // showInMenuSeparator
+            // 
+            this.showInMenuSeparator.Name = "showInMenuSeparator";
+            this.showInMenuSeparator.Size = new System.Drawing.Size(191, 6);
+            // 
+            // showInSkillBrowserMenu
+            // 
+            this.showInSkillBrowserMenu.Name = "showInSkillBrowserMenu";
+            this.showInSkillBrowserMenu.Size = new System.Drawing.Size(194, 22);
+            this.showInSkillBrowserMenu.Text = "Show in Skill &Browser...";
+            this.showInSkillBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
+            // 
             // showInSkillExplorerMenu
             // 
             this.showInSkillExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
@@ -227,6 +199,34 @@ namespace EVEMon.SkillPlanner
             this.showInSkillExplorerMenu.Size = new System.Drawing.Size(194, 22);
             this.showInSkillExplorerMenu.Text = "Show in Skill &Explorer...";
             this.showInSkillExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(191, 6);
+            // 
+            // tsmExpand
+            // 
+            this.tsmExpand.Name = "tsmExpand";
+            this.tsmExpand.Size = new System.Drawing.Size(194, 22);
+            this.tsmExpand.Text = "&Expand all";
+            this.tsmExpand.Click += new System.EventHandler(this.tsmExpandAll_Click);
+            // 
+            // tsmCollapse
+            // 
+            this.tsmCollapse.Name = "tsmCollapse";
+            this.tsmCollapse.Size = new System.Drawing.Size(194, 22);
+            this.tsmCollapse.Text = "&Collapse all";
+            this.tsmCollapse.Click += new System.EventHandler(this.tsmCollapseAll_Click);
+            // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "Untrainable");
+            this.ilIcons.Images.SetKeyName(1, "Trained");
+            this.ilIcons.Images.SetKeyName(2, "Planned");
+            this.ilIcons.Images.SetKeyName(3, "Trainable");
             // 
             // RequiredSkillsControl
             // 
@@ -249,7 +249,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTimeRequired;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ImageList ilIcons;
         private ReqSkillsTreeView tvSkillList;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem planToMenu;
@@ -265,5 +264,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem tsmExpand;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapse;
+        private System.Windows.Forms.ImageList ilIcons;
     }
 }
