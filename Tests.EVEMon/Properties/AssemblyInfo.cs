@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tests.EVEMon")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("EVEMon Unit Tests")]
+[assembly: AssemblyDescription("EVEMon Unit Tests")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Tests.EVEMon")]
-[assembly: AssemblyCopyright("Copyright ©  2008")]
+[assembly: AssemblyCompany("EVEMon Developement Team")]
+[assembly: AssemblyProduct("EVEMon")]
+[assembly: AssemblyCopyright("©2010 EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
