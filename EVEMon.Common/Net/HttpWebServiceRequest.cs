@@ -72,8 +72,16 @@ namespace EVEMon.Common.Net
         /// </summary>
         public bool Cancelled
         {
-            get { lock(m_syncLock) return m_cancelled; }
-            set { lock(m_syncLock) m_cancelled = value; }
+            get
+            {
+                lock(m_syncLock)
+                    return m_cancelled;
+            }
+            set
+            { 
+                lock(m_syncLock)
+                    m_cancelled = value;
+            }
         }
 
         /// <summary>
