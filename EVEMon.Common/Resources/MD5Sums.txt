@@ -1,5 +1,5 @@
 7f261f740cebf34985e69f0281912a8c *eve-certificates-en-US.xml.gz
-4d6c9fe0ca780b963297d20bda4d7c8a *eve-geography-en-US.xml.gz
+87525056318f7956e2b52bbed1947abc *eve-geography-en-US.xml.gz
 4880b372fb5ea4f0b1447bd3d3fede85 *eve-items-en-US.xml.gz
 07f9c3dd51720d4b9b320a0212fb5820 *eve-properties-en-US.xml.gz
 849194ce54105d8e5fb1d507a0171772 *eve-reprocessing-en-US.xml.gz
