@@ -119,6 +119,16 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         /// <summary>
+        /// Which this order was issued for.
+        /// </summary>
+        [XmlAttribute("issuedFor")]
+        public OrderIssuedFor IssuedFor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The time this order was issued.
         /// </summary>
         [XmlAttribute("lastStateChange")]

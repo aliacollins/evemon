@@ -115,6 +115,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /corp/MarketOrders.xml.aspx.
+        /// </summary>
+        public static string APICorporationMarketOrders {
+            get {
+                return ResourceManager.GetString("APICorporationMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/MarketOrders.xml.aspx.
         /// </summary>
         public static string APIMarketOrders {

@@ -29,8 +29,9 @@ namespace EVEMon.SettingsUI
             var methods = Enum.GetValues(typeof(APIMethods)).Cast<APIMethods>();
             foreach (var method in methods)
             {
-                // Skip if there is no header.
-                if (!method.HasHeader()) continue;
+                // Skip if there is no header
+                if (!method.HasHeader())
+                    continue;
 
                 // Add the icon
                 var icon = Properties.Resources.APIKeyLimited16;
@@ -67,9 +68,8 @@ namespace EVEMon.SettingsUI
                 {
                     var header = period.GetHeader();
                     if (period == UpdatePeriod.Never && method.HasAttribute<ForcedOnStartupAttribute>())
-                    {
                         header = "On Startup";
-                    }
+
                     combo.Items.Add(header);
                 }
 
@@ -101,7 +101,8 @@ namespace EVEMon.SettingsUI
             set
             {
                 m_settings = value;
-                if (value == null) return;
+                if (value == null)
+                    return;
 
                 foreach (var combo in m_combos)
                 {
@@ -123,7 +124,12 @@ namespace EVEMon.SettingsUI
             var method = (APIMethods)combo.Tag;
             var periods = GetUpdatePeriods(method);
 
-            if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count) return;
+            if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
+                return;
+
+            if (method == APIMethods.MarketOrders)
+                m_settings.Periods[APIMethods.CorporationMarketOrders] = periods[combo.SelectedIndex];
+
             m_settings.Periods[method] = periods[combo.SelectedIndex];
         }
 
@@ -146,7 +152,8 @@ namespace EVEMon.SettingsUI
                 if (period != UpdatePeriod.Never)
                 {
                     int index = (int)period;
-                    if (index >= min && index <= max) periods.Add(period);
+                    if (index >= min && index <= max)
+                        periods.Add(period);
                 }
             }
 

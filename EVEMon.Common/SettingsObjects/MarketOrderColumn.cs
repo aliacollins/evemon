@@ -46,41 +46,45 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Issue Date")]
         Issued = 8,
 
+        [Header("Issued For")]
+        [Description("Issued For")]
+        IssuedFor = 9,
+
         [Header("Expires In")]
         [Description("Expires In")]
-        Expiration = 9,
+        Expiration = 10,
 
         [Header("Duration")]
         [Description("Duration")]
-        Duration = 10,
+        Duration = 11,
 
         [Header("Quantity")]
         [Description("Quantity (Remaining / Initial)")]
-        Volume = 11,
+        Volume = 12,
 
         [Header("Min")]
         [Description("Quantity (Minimum)")]
-        MinimumVolume = 12,
+        MinimumVolume = 13,
 
         [Header("Rem")]
         [Description("Quantity (Remaining)")]
-        RemainingVolume = 13,
+        RemainingVolume = 14,
 
         [Header("Initial")]
         [Description("Quantity (Initial)")]
-        InitialVolume = 14,
+        InitialVolume = 15,
 
         [Header("Last Change")]
         [Description("Last Order State Change")]
-        LastStateChange = 15,
+        LastStateChange = 16,
 
         [Header("Range")]
         [Description("Order Range")]
-        OrderRange = 16,
+        OrderRange = 17,
 
         [Header("Escrow")]
         [Description("Escrow")]
-        Escrow = 17
+        Escrow = 18
 
     }
 }

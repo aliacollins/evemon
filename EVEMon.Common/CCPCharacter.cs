@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -16,14 +18,21 @@ namespace EVEMon.Common
         private readonly SkillQueue m_queue;
         private readonly CharacterQueryMonitor<SerializableSkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacter> m_charSheetMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIOrderList> m_marketOrdersMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIOrderList> m_charMarketOrdersMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIOrderList> m_corpMarketOrdersMonitor;
         private readonly MarketOrderCollection m_marketOrders;
         private readonly QueryMonitorCollection m_monitors;
 
+        private List<SerializableAPIOrder> m_orders = new List<SerializableAPIOrder>();
         private APIMethods m_errorNotifiedMethod;
+        private bool m_charOrdersUpdated;
+        private bool m_corpOrdersUpdated;
+        private bool m_charOrdersAdded;
+        private bool m_corpOrdersAdded;
+
 
         /// <summary>
-        /// Base constructor
+        /// Base constructor.
         /// </summary>
         /// <param name="identity"></param>
         /// <param name="guid"></param>
@@ -43,15 +52,19 @@ namespace EVEMon.Common
             m_skillQueueMonitor.Updated += new QueryCallback<SerializableSkillQueue>(OnSkillQueueUpdated);
             m_monitors.Add(m_skillQueueMonitor);
 
-            m_marketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIOrderList>(this, APIMethods.MarketOrders);
-            m_marketOrdersMonitor.Updated += new QueryCallback<SerializableAPIOrderList>(OnMarketOrdersUpdated);
-            m_monitors.Add(m_marketOrdersMonitor);
+            m_charMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIOrderList>(this, APIMethods.MarketOrders);
+            m_charMarketOrdersMonitor.Updated += new QueryCallback<SerializableAPIOrderList>(OnCharacterMarketOrdersUpdated);
+            m_monitors.Add(m_charMarketOrdersMonitor);
+
+            m_corpMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIOrderList>(this, APIMethods.CorporationMarketOrders);
+            m_corpMarketOrdersMonitor.Updated += new QueryCallback<SerializableAPIOrderList>(OnCorporationMarketOrdersUpdated);
+            m_monitors.Add(m_corpMarketOrdersMonitor);
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
-        /// <param name="identity">The identitiy for this character</param>
+        /// <param name="identity">The identity for this character</param>
         /// <param name="serial">A deserialization object for characters</param>
         internal CCPCharacter(CharacterIdentity identity, SerializableCCPCharacter serial)
             : this(identity, serial.Guid)
@@ -76,7 +89,9 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError) return m_name + " (cached)";
+                if (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError)
+                    return String.Format("{0} (cached)", m_name);
+
                 return m_name; 
             }
         }
@@ -114,6 +129,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets true when the character is in a NPC corporation, false otherwise.
+        /// </summary>
+        public bool IsInNPCCorporation
+        {
+            get { return StaticGeography.AllStations.Any(x => x.CorporationID == this.CorporationID); }
+        }
+
+        /// <summary>
         /// Create a serializable character sheet for this character
         /// </summary>
         /// <returns></returns>
@@ -143,8 +166,10 @@ namespace EVEMon.Common
         {
             Import((SerializableSettingsCharacter)serial);
 
-            // Training queue
+            // Market orders
             m_marketOrders.Import(serial.MarketOrders);
+            
+            // Skill queue
             m_queue.Import(serial.SkillQueue);
             m_queue.UpdateOnTimerTick();
 
@@ -152,7 +177,8 @@ namespace EVEMon.Common
             foreach(var lastUpdate in serial.LastUpdates)
             {
                 var monitor = m_monitors[lastUpdate.Method] as IQueryMonitorEx;
-                if (monitor != null) monitor.Reset(lastUpdate.Time);
+                if (monitor != null)
+                    monitor.Reset(lastUpdate.Time);
             }
 
             // Fire the global event
@@ -173,7 +199,9 @@ namespace EVEMon.Common
         /// </summary>
         internal override void UpdateOnOneSecondTick()
         {
-            if (!this.Monitored) return;
+            if (!this.Monitored)
+                return;
+
             m_monitors.UpdateOnOneSecondTick();
             m_queue.UpdateOnTimerTick();
         }
@@ -186,12 +214,11 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.CharacterSheet))
-            {
                 EveClient.Notifications.NotifyCharacterSheetError(this, result);
-            }
 
             // Quits if there is an error
-            if (result.HasError) return;
+            if (result.HasError)
+                return;
 
             // Imports the data
             this.Import(result);
@@ -215,12 +242,11 @@ namespace EVEMon.Common
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.SkillQueue))
-            {
                 EveClient.Notifications.NotifySkillQueueError(this, result);
-            }
 
             // Quits if there is an error
-            if (result.HasError) return;
+            if (result.HasError)
+                return;
 
             // Import the data
             m_queue.Import(result.Result.Queue);
@@ -248,32 +274,53 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried market orders.
+        /// Processes the queried character's personal market orders.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMarketOrdersUpdated(APIResult<SerializableAPIOrderList> result)
+        /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
+        private void OnCharacterMarketOrdersUpdated(APIResult<SerializableAPIOrderList> result)
         {
+            m_charOrdersUpdated = true;
+
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.MarketOrders))
+                EveClient.Notifications.NotifyCharacterMarketOrdersError(this, result);
+
+            // Add orders to list
+            m_charOrdersAdded = AddOrders(result, m_corpOrdersAdded, OrderIssuedFor.Character);
+
+            // Import the data if all queried and there are orders to import 
+            if (m_corpOrdersUpdated && m_orders.Count != 0)
+                Import(m_orders);
+        }
+
+        /// <summary>
+        /// Processes the queried character's corporation market orders.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
+        private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIOrderList> result)
+        {
+            m_corpOrdersUpdated = true;
+
+            // Character is not in NPC corporation
+            if (!IsInNPCCorporation)
             {
-                EveClient.Notifications.NotifyMarketOrdersError(this, result);
+                // We don't want to be notified about corp roles error
+                if (result.CCPError != null && !result.CCPError.IsOrdersRelatedCorpRolesError)
+                {
+                    // Notify an error occured
+                    if (ShouldNotifyError(result, APIMethods.CorporationMarketOrders))
+                        EveClient.Notifications.NotifyCorporationMarketOrdersError(this, result);
+                }
+
+                // Add orders to list
+                m_corpOrdersAdded = AddOrders(result, m_charOrdersAdded, OrderIssuedFor.Corporation);
             }
 
-            // Quits if there is an error
-            if (result.HasError) return;
-
-            // Import the data
-            var endedOrders = new List<MarketOrder>();
-            m_marketOrders.Import(result.Result.Orders, endedOrders);
-
-            // Sends a notification
-            if (endedOrders.Count != 0)
-            {
-                EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
-            }
-
-            // Fires the event regarding market orders update.
-            EveClient.OnCharacterMarketOrdersChanged(this);
+            // Import the data if all queried and there are orders to import 
+            if (m_charOrdersUpdated && m_orders.Count != 0)
+                Import(m_orders);
         }
 
         /// <summary>
@@ -286,7 +333,8 @@ namespace EVEMon.Common
             // Notify an error occured
             if (result.HasError)
             {
-                if (m_errorNotifiedMethod != APIMethods.None) return false;
+                if (m_errorNotifiedMethod != APIMethods.None)
+                    return false;
 
                 m_errorNotifiedMethod = method;
                 return true;
@@ -299,6 +347,69 @@ namespace EVEMon.Common
                 m_errorNotifiedMethod = APIMethods.None;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Add the queried orders to a list.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="ordersAdded"></param>
+        /// <param name="issuedFor"></param>
+        /// <returns>True if orders get added, false otherwise</returns>
+        private bool AddOrders(APIResult<SerializableAPIOrderList> result, bool ordersAdded, OrderIssuedFor issuedFor)
+        {           
+            // Add orders if there isn't an error
+            if (result.HasError)
+                return false;
+
+            // Check to see if other market
+            // orders have been added before
+            if (!ordersAdded)
+                m_orders.Clear();
+
+            // Add orders in list
+            foreach (var order in result.Result.Orders)
+            {
+                order.IssuedFor = issuedFor;
+            }
+
+            m_orders.AddRange(result.Result.Orders);
+            return true;
+        }
+
+        /// <summary>
+        /// Import the orders from both market orders querying.
+        /// </summary>
+        /// <param name="orders"></param>
+        private void Import(List<SerializableAPIOrder> orders)
+        {
+            // Exclude orders that wheren't issued by this character
+            var characterOrders = orders.Where(x => x.OwnerID == m_characterID);
+
+            var endedOrders = new List<MarketOrder>();
+            m_marketOrders.Import(characterOrders, endedOrders);
+
+            NotifyOnEndedOrders(endedOrders);
+
+            // Reset flags
+            m_charOrdersUpdated = false;
+            m_corpOrdersUpdated = false;
+            m_charOrdersAdded = false;
+            m_corpOrdersAdded = false;
+        }
+
+        /// <summary>
+        /// Notify the user which orders has ended.
+        /// </summary>
+        /// <param name="endedOrders"></param>
+        private void NotifyOnEndedOrders(List<MarketOrder> endedOrders)
+        {
+            // Sends a notification
+            if (endedOrders.Count != 0)
+                EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
+
+            // Fires the event regarding market orders update.
+            EveClient.OnCharacterMarketOrdersChanged(this);
         }
         #endregion
     }

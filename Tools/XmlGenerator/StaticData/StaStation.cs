@@ -17,6 +17,9 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("security")]
         public int SecurityLevel;
 
+        [XmlElement("corporationID")]
+        public int CorporationID;
+
         [XmlElement("solarSystemID")]
         public int SolarSystemID;
 

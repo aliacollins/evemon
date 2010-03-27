@@ -666,6 +666,12 @@ namespace EVEMon
             var sb = new StringBuilder();
             foreach (var autoUpdate in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
             {
+                // Skip character's corporation market orders monitor,
+                // there is no need to show it as it's bind
+                // with the characters personal market orders monitor
+                if (autoUpdate.Method == APIMethods.CorporationMarketOrders)
+                    continue;
+
                 var description = autoUpdate.ToString();
                 sb.Append(description).Append(": ");
 
@@ -782,6 +788,12 @@ namespace EVEMon
                 if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
                     continue;
 
+                // Skip character's corporation market orders monitor,
+                // there is no need to show it as it's bind
+                // with the character's personal market orders monitor
+                if (monitor.Method == APIMethods.CorporationMarketOrders)
+                    continue;
+
                 TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
                 string timeToNextUpdateText;
 
@@ -794,7 +806,8 @@ namespace EVEMon
                     timeToNextUpdateText = String.Format(CultureConstants.DefaultCulture, "{0}m", Math.Floor(timeToNextUpdate.TotalMinutes));
                 }
 
-                string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} ({1})", monitor.ToString(), timeToNextUpdate > TimeSpan.Zero ? timeToNextUpdateText : "");
+                string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} {1}", monitor.ToString(),
+                    timeToNextUpdate > TimeSpan.Zero ? String.Format(CultureConstants.DefaultCulture, "({0})", timeToNextUpdateText) : String.Empty);
                 var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
 
@@ -818,6 +831,8 @@ namespace EVEMon
                 var method = (APIMethods)e.ClickedItem.Tag;
                 throbber.State = ThrobberState.Rotating;
                 ccpCharacter.QueryMonitors.Query(method);
+                if (method == APIMethods.MarketOrders)
+                    ccpCharacter.QueryMonitors.Query(APIMethods.CorporationMarketOrders);
             }
 
         }
@@ -953,7 +968,7 @@ namespace EVEMon
         void ordersGroupMenu_DropDownOpening(object sender, System.EventArgs e)
         {
             ordersGroupMenu.DropDownItems.Clear();
-            foreach(var grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
+            foreach (var grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
             {
                 var menu = new ToolStripButton(grouping.GetHeader());
                 menu.Checked = (ordersList.Grouping == grouping);
@@ -1015,7 +1030,7 @@ namespace EVEMon
             hideInactiveOrdersMenuItem.Text = (hideInactive ? "Unhide Inactive Orders" : "Hide Inactive Orders");
             numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
         }
-        
+
         /// <summary>
         /// Hide/Show the inactive orders.
         /// </summary>
@@ -1040,6 +1055,28 @@ namespace EVEMon
             numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
             Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
             ordersList.UpdateContent();
+        }
+
+        /// <summary>
+        /// Displays only the market orders issued for character.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void showOnlyCharOrdersMenuItem_Click(object sender, EventArgs e)
+        {
+            ordersList.ShowIssuedFor = (showOnlyCharOrdersMenuItem.Checked == true ? OrderIssuedFor.Character : OrderIssuedFor.All);
+            showOnlyCorpOrdersMenuItem.Checked = false;
+        }
+
+        /// <summary>
+        /// Displays only the market orders issued for corporation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void showOnlyCorpOrdersMenuItem_Click(object sender, EventArgs e)
+        {
+            ordersList.ShowIssuedFor = (showOnlyCorpOrdersMenuItem.Checked == true ? OrderIssuedFor.Corporation : OrderIssuedFor.All);
+            showOnlyCharOrdersMenuItem.Checked = false;
         }
         # endregion
 

@@ -152,13 +152,25 @@ namespace EVEMon.Common.Serialization.API
             set;
         }
 
+        /// <summary>
+        /// Which this order was issued for.
+        /// </summary>
+        [XmlIgnore]
+        public OrderIssuedFor IssuedFor
+        {
+            get;
+            set;
+        }
+
         [XmlAttribute("issued")]
         public string _Issued
         {
             get { return TimeUtil.ConvertDateTimeToCCPTimeString(Issued); }
             set
             {
-                if (String.IsNullOrEmpty(value)) return;
+                if (String.IsNullOrEmpty(value))
+                    return;
+
                 Issued = TimeUtil.ConvertCCPTimeStringToDateTime(value);
             }
         }

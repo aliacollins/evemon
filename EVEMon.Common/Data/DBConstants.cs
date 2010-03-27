@@ -21,9 +21,9 @@ namespace EVEMon.Common.Data
 
         public const int SubsystemsCategoryID = 989;
         public const int MetaLevelPropertyID = 633;
-        public const int CargoCapacityID = 38;
-        public const int VolumeID = 161;
-        public const int MassID = 4;
+        public const int CargoCapacityPropertyID = 38;
+        public const int VolumePropertyID = 161;
+        public const int MassPropertyID = 4;
 
         public const int LowSlotEffectID = 11;
         public const int MedSlotEffectID = 13;
@@ -49,6 +49,15 @@ namespace EVEMon.Common.Data
         public const int ImplantsAndBoostersGroupID = 24;
         public const int StarbaseStructuresGroupID = 477;
         public const int ShipModificationsGroupID = 955;
+
+        public const int MiningBargesGroupID = 495;
+        public const int ExhumersGroupID = 875;
+        public const int CapitalIndustrialsGroupID = 1048;
+
+        public const int ShipBonusPirateFactionPropertyID = 793;
+
+        public const int WarpSpeedMultiplierPropertyID = 600;
+        public const int ShipWarpSpeedPropertyID = 1281;
 
         public const int CPUOutputPropertyID = 48;
         public const int PGOutputPropertyID = 11;

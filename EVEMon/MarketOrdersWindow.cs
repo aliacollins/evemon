@@ -30,6 +30,15 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Gets or sets the showIssuedFor mode.
+        /// </summary>
+        public OrderIssuedFor ShowIssuedFor
+        {
+            get { return ordersList.ShowIssuedFor; }
+            set { ordersList.ShowIssuedFor = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the enumeration of orders to display.
         /// </summary>
         [Browsable(false)]

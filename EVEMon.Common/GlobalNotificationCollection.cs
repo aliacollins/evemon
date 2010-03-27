@@ -232,10 +232,24 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
+        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
         {
             var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the market orders.";
+            notification.Description = "An error occured while querying the personal market orders.";
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Priority = NotificationPriority.Error;
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a market orders querying error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
+        {
+            var notification = new APIErrorNotification(character, result);
+            notification.Description = "An error occured while querying the corporation market orders.";
             notification.Behaviour = NotificationBehaviour.Overwrite;
             notification.Priority = NotificationPriority.Error;
             Notify(notification);

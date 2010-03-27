@@ -63,7 +63,7 @@ namespace EVEMon.Common.Serialization
         }
 
         [XmlElement("corporationID")]
-        public long CorporationID
+        public int CorporationID
         {
             get;
             set;

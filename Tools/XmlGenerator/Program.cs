@@ -14,7 +14,7 @@ namespace EVEMon.XmlGenerator
     {
         private static int s_propBasePriceID = 0;
         private static int baseWarpSpeed = 3;
-        private static double warpSpeedMod;
+        private static double warpSpeedMultiplier;
 
         private static Bag<EveUnit> s_units;
         private static Bag<EveGraphic> s_graphics;
@@ -157,7 +157,8 @@ namespace EVEMon.XmlGenerator
                 {
                     // Exclude unused classes
                     int id = certClass.ID;
-                    if (id == 104 || id == 106 || id == 111) continue;
+                    if (id == 104 || id == 106 || id == 111)
+                        continue;
                     
                     SerializableCertificateClass crtClasses = new SerializableCertificateClass
                     {
@@ -273,11 +274,16 @@ namespace EVEMon.XmlGenerator
         {
             switch (gradeValue)
             {
-                case 1: return CertificateGrade.Basic;
-                case 2: return CertificateGrade.Standard;
-                case 3: return CertificateGrade.Improved;
-                case 5: return CertificateGrade.Elite;
-                default: throw new NotImplementedException();
+                case 1: 
+                    return CertificateGrade.Basic;
+                case 2: 
+                    return CertificateGrade.Standard;
+                case 3: 
+                    return CertificateGrade.Improved;
+                case 5: 
+                    return CertificateGrade.Elite;
+                default: 
+                    throw new NotImplementedException();
             }
         }
 
@@ -370,9 +376,7 @@ namespace EVEMon.XmlGenerator
                             InvType prereqSkillName = s_types.First(x => x.ID == skillAttributes[prereqSkillAttrs[i]]);
 
                             if (prereqSkillName != null)
-                            {
                                 preReq.Name = prereqSkillName.Name;
-                            }
 
                             // Add prerequesities
                             listOfPrerequsites.Add(preReq);
@@ -403,12 +407,18 @@ namespace EVEMon.XmlGenerator
         {
             switch (attributeValue)
             {
-                case 164: return EveAttribute.Charisma;
-                case 165: return EveAttribute.Intelligence;
-                case 166: return EveAttribute.Memory;
-                case 167: return EveAttribute.Perception;
-                case 168: return EveAttribute.Willpower;
-                default: return EveAttribute.None;
+                case 164: 
+                    return EveAttribute.Charisma;
+                case 165: 
+                    return EveAttribute.Intelligence;
+                case 166: 
+                    return EveAttribute.Memory;
+                case 167: 
+                    return EveAttribute.Perception;
+                case 168: 
+                    return EveAttribute.Willpower;
+                default: 
+                    return EveAttribute.None;
             }
         }
 
@@ -520,42 +530,97 @@ namespace EVEMon.XmlGenerator
                     prop.ID = srcProp.ID;
 
                     // Unit
-                    if (srcProp.UnitID == null) prop.Unit = String.Empty;
+                    if (srcProp.UnitID == null)
+                    {
+                        prop.Unit = String.Empty;
+                    }
                     else
                     {
                         prop.Unit = s_units[srcProp.UnitID.Value].DisplayName;
                         prop.UnitID = srcProp.UnitID.Value;
                     }
-                    if (srcProp.ID == 1281) prop.Unit = "AU/S";
+
+                    // Ship warp speed unit
+                    if (srcProp.ID == DBConstants.ShipWarpSpeedPropertyID)
+                        prop.Unit = "AU/S";
 
                     // Icon
-                    if (srcProp.GraphicID == null) prop.Icon = String.Empty;
-                    else prop.Icon = s_graphics[srcProp.GraphicID.Value].Icon;
+                    prop.Icon = (srcProp.GraphicID == null ? String.Empty : s_graphics[srcProp.GraphicID.Value].Icon);
 
                     // Reordering some properties
                     int index = properties.IndexOf(prop);
                     switch (srcProp.ID)
                     {
-                        case 9: properties.Insert(0, prop); properties.RemoveAt(index + 1); break;
-                        case 37: p_properties.Insert(0, prop); properties.RemoveAt(index); break;
-                        case 38: properties.Insert(1, prop); properties.RemoveAt(index + 1); break;
-                        case 48: properties.Insert(0, prop); properties.RemoveAt(index + 1); break;
-                        case 70: properties.Insert(3, prop); properties.RemoveAt(index + 1); break;
-                        case 161: properties.Insert(3, prop); properties.RemoveAt(index + 1); break;
-                        case 422: g_properties.Insert(0, prop); properties.RemoveAt(index); break;
-                        case 479: properties.Insert(6, prop); properties.RemoveAt(index + 1); break;
-                        case 482: properties.Insert(0, prop); properties.RemoveAt(index + 1); break;
-                        case 564: properties.Insert(4, prop); properties.RemoveAt(index + 1); break;
-                        case 633: g_properties.Insert(1, prop); properties.RemoveAt(index); break;
-                        case 974: properties.Insert(5, prop); properties.RemoveAt(index + 1); break;
-                        case 975: properties.Insert(6, prop); properties.RemoveAt(index + 1); break;
-                        case 976: properties.Insert(7, prop); properties.RemoveAt(index + 1); break;
-                        case 977: properties.Insert(8, prop); properties.RemoveAt(index + 1); break;
-                        case 1132: properties.Insert(2, prop); properties.RemoveAt(index + 1); break;
-                        case 1137: properties.Insert(10, prop); properties.RemoveAt(index + 1); break;
-                        case 1281: p_properties.Insert(1, prop); properties.RemoveAt(index); break;
-                        case 1547: properties.Insert(11, prop); properties.RemoveAt(index + 1); break;
-                        default: break;
+                        case 9: 
+                            properties.Insert(0, prop); 
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 37:
+                            p_properties.Insert(0, prop); 
+                            properties.RemoveAt(index); 
+                            break;
+                        case 38: 
+                            properties.Insert(1, prop); 
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 48: 
+                            properties.Insert(0, prop); 
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 70: 
+                            properties.Insert(3, prop); 
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 161: 
+                            properties.Insert(3, prop);
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 422: 
+                            g_properties.Insert(0, prop);
+                            properties.RemoveAt(index);
+                            break;
+                        case 479: 
+                            properties.Insert(6, prop); 
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 482: 
+                            properties.Insert(0, prop); 
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 564: 
+                            properties.Insert(4, prop);
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 633: 
+                            g_properties.Insert(1, prop); 
+                            properties.RemoveAt(index);
+                            break;
+                        case 974: properties.Insert(5, prop);
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 975: properties.Insert(6, prop);
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 976: properties.Insert(7, prop);
+                            properties.RemoveAt(index + 1);
+                            break;
+                        case 977: properties.Insert(8, prop);
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 1132: properties.Insert(2, prop);
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 1137: properties.Insert(10, prop);
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        case 1281: p_properties.Insert(1, prop);
+                            properties.RemoveAt(index);
+                            break;
+                        case 1547: properties.Insert(11, prop); 
+                            properties.RemoveAt(index + 1); 
+                            break;
+                        default:
+                            break;
                     }
 
                     // New ID
@@ -565,8 +630,8 @@ namespace EVEMon.XmlGenerator
             }
 
             // Add EVEMon custom properties (Base Price)
-            s_propBasePriceID = newID + 1;
             var gprop = new SerializableProperty();
+            s_propBasePriceID = newID + 1;
             g_properties.Insert(0, gprop);
             gprop.ID = s_propBasePriceID;
             gprop.Name = "Base Price";
@@ -642,7 +707,8 @@ namespace EVEMon.XmlGenerator
                             var station = new SerializableStation
                             {
                                 ID = srcStation.ID,
-                                Name = srcStation.Name, 
+                                Name = srcStation.Name,
+                                CorporationID = srcStation.CorporationID,
                                 ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
                                 ReprocessingStationsTake = srcStation.ReprocessingStationsTake
                             };
@@ -663,9 +729,7 @@ namespace EVEMon.XmlGenerator
             {
                 // In CCP tables, every jump is included twice, we only need one.
                 if (srcJump.A < srcJump.B)
-                {
                     jumps.Add(new SerializableJump { FirstSystemID = srcJump.A, SecondSystemID = srcJump.B });
-                }
             }
 
             // Serialize
@@ -704,24 +768,78 @@ namespace EVEMon.XmlGenerator
             {
                 switch (srcItem.ID)
                 {
-                    case 17703: srcItem.MarketGroupID = 72; srcItem.RaceID = 32; break; // Amarr Navy Slicer
-                    case 17619: srcItem.MarketGroupID = 61; srcItem.RaceID = 32; break; // Caldari Navy Hookbill
-                    case 17841: srcItem.MarketGroupID = 77; srcItem.RaceID = 32; break; // Gallente Navy Comet
-                    case 17812: srcItem.MarketGroupID = 64; srcItem.RaceID = 32; break; // Republic Fleet Firetail
-                    case 17736: srcItem.MarketGroupID = 79; srcItem.RaceID = 32; break; // Nightmare
-                    case 17738: srcItem.MarketGroupID = 78; srcItem.RaceID = 32; break; // Machariel
-                    case 17932: srcItem.MarketGroupID = 64; srcItem.RaceID = 32; break; // Dramiel
-                    case 17926: srcItem.MarketGroupID = 72; srcItem.RaceID = 32; break; // Cruor
-                    case 17924: srcItem.MarketGroupID = 72; srcItem.RaceID = 32; break; // Succubus
-                    case 17928: srcItem.MarketGroupID = 64; srcItem.RaceID = 32; break; // Daredevil
-                    case 17720: srcItem.MarketGroupID = 73; srcItem.RaceID = 32; break; // Cynabal
-                    case 17922: srcItem.MarketGroupID = 74; srcItem.RaceID = 32; break; // Ashimmu
-                    case 17718: srcItem.MarketGroupID = 74; srcItem.RaceID = 32; break; // Phantasm
-                    case 21097: srcItem.MarketGroupID = 396; srcItem.RaceID = 32; break; // Goru's Shuttle
-                    case 21628: srcItem.MarketGroupID = 396; srcItem.RaceID = 32; break; // Guristas Shuttle
-                    case 30842: srcItem.MarketGroupID = 395; srcItem.RaceID = 32; break; // Interbus Shuttle
-                    case 29266: srcItem.MarketGroupID = 10001; srcItem.RaceID = 32; break; // Apotheosis
-                    case 2078: srcItem.MarketGroupID = 10001; srcItem.RaceID = 32; break; // Zephyr
+                    case 17703: // Amarr Navy Slicer
+                        srcItem.MarketGroupID = 72;
+                        srcItem.RaceID = 32;
+                        break; 
+                    case 17619: // Caldari Navy Hookbill
+                        srcItem.MarketGroupID = 61;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17841: // Gallente Navy Comet
+                        srcItem.MarketGroupID = 77;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17812: // Republic Fleet Firetail
+                        srcItem.MarketGroupID = 64;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17736: // Nightmare
+                        srcItem.MarketGroupID = 79;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17738: // Machariel
+                        srcItem.MarketGroupID = 78;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17932: // Dramiel
+                        srcItem.MarketGroupID = 64;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17926: // Cruor
+                        srcItem.MarketGroupID = 72;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17924: // Succubus
+                        srcItem.MarketGroupID = 72;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17928: // Daredevil
+                        srcItem.MarketGroupID = 64;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17720: // Cynabal
+                        srcItem.MarketGroupID = 73;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17922: // Ashimmu
+                        srcItem.MarketGroupID = 74;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 17718: // Phantasm
+                        srcItem.MarketGroupID = 74;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 21097: // Goru's Shuttle
+                        srcItem.MarketGroupID = 396;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 21628: // Guristas Shuttle
+                        srcItem.MarketGroupID = 396;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 30842: // Interbus Shuttle
+                        srcItem.MarketGroupID = 395;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 29266: // Apotheosis
+                        srcItem.MarketGroupID = 10001;
+                        srcItem.RaceID = 32;
+                        break;
+                    case 2078: // Zephyr
+                        srcItem.MarketGroupID = 10001;
+                        srcItem.RaceID = 32;
+                        break;
                 }
             }
             
@@ -750,9 +868,7 @@ namespace EVEMon.XmlGenerator
                         // Check the slot matches
                         var slotAttrib = s_typeAttributes.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID);
                         if (slotAttrib != null && slotAttrib.GetIntValue() == slot)
-                        {
                             CreateItem(srcItem, items);
-                        }
                     }
                 }
 
@@ -803,9 +919,7 @@ namespace EVEMon.XmlGenerator
 
             // Icon
             if (srcItem.GraphicID.HasValue)
-            {
                 item.Icon = s_graphics[srcItem.GraphicID.Value].Icon;
-            }
 
             // Add the properties and prereqs
             bool hasCapacity = false;
@@ -918,52 +1032,42 @@ namespace EVEMon.XmlGenerator
                     continue;
                 }
 
-                // We calculate the Ships Warp Speed
-                if (srcProp.AttributeID == 600) warpSpeedMod = srcProp.ValueFloat.Value;
-                if (srcProp.AttributeID == 1281)
-                {
-                    string value = (baseWarpSpeed * warpSpeedMod).ToString();
-                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = value });
-                }
+                // Get the warp speed multiplier
+                if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID)
+                    warpSpeedMultiplier = srcProp.ValueFloat.Value;
 
+                // We calculate the Ships Warp Speed
+                if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
+                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = (baseWarpSpeed * warpSpeedMultiplier).ToString() });
+                
                 // Other props
-                {
-                    props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
-                }
+                props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
 
                 // Is metalevel property ?
                 if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
-                {
                     item.MetaLevel = propIntValue;
-                }
 
                 // Is Mass ?
-                hasMass |= (srcProp.AttributeID == DBConstants.MassID);
+                hasMass |= (srcProp.AttributeID == DBConstants.MassPropertyID);
 
                 // Is Cargo capacity ?
-                hasCapacity |= (srcProp.AttributeID == DBConstants.CargoCapacityID);
+                hasCapacity |= (srcProp.AttributeID == DBConstants.CargoCapacityPropertyID);
 
                 // Is Volume ?
-                hasVolume |= (srcProp.AttributeID == DBConstants.VolumeID);
+                hasVolume |= (srcProp.AttributeID == DBConstants.VolumePropertyID);
             }
 
             // Ensures there is a mass and add it to prop
             if (!hasMass && srcItem.Mass != 0)
-            {
-                props.Add(new SerializablePropertyValue { ID = DBConstants.MassID, Value = srcItem.Mass.ToString() });
-            }
+                props.Add(new SerializablePropertyValue { ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString() });
 
             // Ensures there is a cargo capacity and add it to prop
             if (!hasCapacity && srcItem.Capacity != 0)
-            {
-                props.Add(new SerializablePropertyValue { ID = DBConstants.CargoCapacityID, Value = srcItem.Capacity.ToString() });
-            }
+                props.Add(new SerializablePropertyValue { ID = DBConstants.CargoCapacityPropertyID, Value = srcItem.Capacity.ToString() });
 
             // Ensures there is a volume and add it to prop
             if (!hasVolume && srcItem.Volume != 0)
-            {
-                props.Add(new SerializablePropertyValue { ID = DBConstants.VolumeID, Value = srcItem.Volume.ToString() });
-            }
+                props.Add(new SerializablePropertyValue { ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString() });
 
             // Add base price as a prop
             props.Add(new SerializablePropertyValue { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
@@ -976,9 +1080,7 @@ namespace EVEMon.XmlGenerator
             for (int i = 0; i < prereqSkills.Length; i++)
             {
                 if (prereqSkills[i] != 0)
-                {
                     prereqs.Add(new SerializablePrerequisiteSkill { Level = prereqLevels[i], ID = prereqSkills[i] });
-                }
 
             }
 
@@ -1017,10 +1119,9 @@ namespace EVEMon.XmlGenerator
                         break;
                 }
             }
+
             if (item.MetaGroup == ItemMetaGroup.Empty)
-            {
                 item.MetaGroup = ItemMetaGroup.T1;
-            }
 
             // Race ID
             switch (srcItem.RaceID)
@@ -1054,33 +1155,43 @@ namespace EVEMon.XmlGenerator
                     break;
             }
 
-            // set race to ORE if it is in the ORE market
+            // Set race to ORE if it is in the ORE market
             // groups within mining barges, exhumers or capital
             // industrial ships
-            if (srcItem.MarketGroupID == 1048 || srcItem.MarketGroupID == 875 || srcItem.MarketGroupID == 495)
-            {
+            if (srcItem.MarketGroupID == DBConstants.MiningBargesGroupID
+                || srcItem.MarketGroupID == DBConstants.ExhumersGroupID
+                || srcItem.MarketGroupID == DBConstants.CapitalIndustrialsGroupID)
                 item.Race = Race.Ore;
-            }
 
-            // set race to Faction if ship has Pirate Faction property
+            // Set race to Faction if ship has Pirate Faction property
             foreach (var prop in props)
             {
-                if (prop.ID == 793)
-                {
+                if (prop.ID == DBConstants.ShipBonusPirateFactionPropertyID)
                     item.Race = Race.Faction;
-                }
             }
 
             // Look for slots
-            if (s_typeEffects.Contains(srcItem.ID, DBConstants.LowSlotEffectID)) item.Slot = ItemSlot.Low;
-            else if (s_typeEffects.Contains(srcItem.ID, DBConstants.MedSlotEffectID)) item.Slot = ItemSlot.Medium;
-            else if (s_typeEffects.Contains(srcItem.ID, DBConstants.HiSlotEffectID)) item.Slot = ItemSlot.High;
-            else item.Slot = ItemSlot.None;
+            if (s_typeEffects.Contains(srcItem.ID, DBConstants.LowSlotEffectID))
+            {
+                item.Slot = ItemSlot.Low;
+            }
+            else if (s_typeEffects.Contains(srcItem.ID, DBConstants.MedSlotEffectID))
+            {
+                item.Slot = ItemSlot.Medium;
+            }
+            else if (s_typeEffects.Contains(srcItem.ID, DBConstants.HiSlotEffectID))
+            {
+                item.Slot = ItemSlot.High;
+            }
+            else
+            {
+                item.Slot = ItemSlot.None;
+            }
 
             // Add this item
             groupItems.Add(item);
 
-            // if the current item isn't in a market group then we are done
+            // If the current item isn't in a market group then we are done
             if (srcItem.MarketGroupID == null)
                 return;
 
@@ -1103,8 +1214,15 @@ namespace EVEMon.XmlGenerator
         /// <param name="itemFamily"></param>
         private static void SetItemFamilyByMarketGroup(SerializableMarketGroup group, ItemFamily itemFamily)
         {
-            foreach (var item in group.Items) item.Family = itemFamily;
-            foreach (var childGroup in group.SubGroups) SetItemFamilyByMarketGroup(childGroup, itemFamily);
+            foreach (var item in group.Items)
+            {
+                item.Family = itemFamily;
+            }
+
+            foreach (var childGroup in group.SubGroups)
+            {
+                SetItemFamilyByMarketGroup(childGroup, itemFamily);
+            }
         }
 
         #endregion

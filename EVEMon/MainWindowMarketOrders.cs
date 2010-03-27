@@ -24,6 +24,7 @@ namespace EVEMon
 
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
+        private OrderIssuedFor m_showIssuedFor;
         private Character m_character;
 
         private string m_textFilter = String.Empty;
@@ -99,6 +100,19 @@ namespace EVEMon
             set
             {
                 m_grouping = value;
+                UpdateContent();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets which "Issued for" orders to display.
+        /// </summary>
+        public OrderIssuedFor ShowIssuedFor
+        {
+            get { return m_showIssuedFor; }
+            set
+            {
+                m_showIssuedFor = value;
                 UpdateContent();
             }
         }
@@ -224,9 +238,10 @@ namespace EVEMon
                     switch (column.Column)
                     {
                         case MarketOrderColumn.Issued:
+                        case MarketOrderColumn.IssuedFor:
                         case MarketOrderColumn.LastStateChange:
                         case MarketOrderColumn.InitialVolume:
-                        case MarketOrderColumn.RemainingVolume:                        
+                        case MarketOrderColumn.RemainingVolume:
                         case MarketOrderColumn.TotalPrice:
                         case MarketOrderColumn.Escrow:
                         case MarketOrderColumn.UnitaryPrice:
@@ -241,7 +256,7 @@ namespace EVEMon
                 // We update the content
                 UpdateContent();
 
-                // Force the auto-update of the columns with -1 width
+                // Force the auto-resize of the columns with -1 width
                 var resizeStyle = (listView.Items.Count == 0 ?
                     ColumnHeaderAutoResizeStyle.HeaderSize :
                     ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -250,9 +265,8 @@ namespace EVEMon
                 foreach (var column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
-                    {
                         listView.AutoResizeColumn(index, resizeStyle);
-                    }
+
                     index++;
                 }
             }
@@ -286,6 +300,17 @@ namespace EVEMon
                 var orders = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
                 if (m_character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
+
+                switch (m_showIssuedFor)
+                {
+                    case OrderIssuedFor.Character:
+                        orders = orders.Where(x => x.IssuedFor == OrderIssuedFor.Character);
+                        break;
+                    case OrderIssuedFor.Corporation:
+                        orders = orders.Where(x => x.IssuedFor == OrderIssuedFor.Corporation);
+                        break;
+                }
+
                 noOrdersLabel.Visible = orders.IsEmpty();
                 listView.Visible = !orders.IsEmpty();
                 
@@ -321,11 +346,11 @@ namespace EVEMon
                         UpdateContent(groups5);
                         break;
                     case MarketOrderGrouping.Location:
-                        var groups6 = orders.GroupBy(x => x.Station).OrderBy(x => x.Key);
+                        var groups6 = orders.GroupBy(x => x.Station).OrderBy(x => x.Key.Name);
                         UpdateContent(groups6);
                         break;
                     case MarketOrderGrouping.LocationDesc:
-                        var groups7 = orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key);
+                        var groups7 = orders.GroupBy(x => x.Station).OrderByDescending(x => x.Key.Name);
                         UpdateContent(groups7);
                         break;
                     case MarketOrderGrouping.OrderType:
@@ -376,15 +401,11 @@ namespace EVEMon
 
                     // Display text as dimmed if the order is no longer available.
                     if (!order.IsAvailable)
-                    {
                         item.ForeColor = SystemColors.GrayText;
-                    }
 
                     // Display text highlighted if the order is modified.
                     if (order.State == OrderState.Modified)
-                    {
                         item.ForeColor = SystemColors.HotTrack;
-                    }
 
                     // Add enough subitems to match the number of columns
                     while (item.SubItems.Count < listView.Columns.Count + 1)
@@ -402,6 +423,7 @@ namespace EVEMon
 
                     // Tooltip
                     StringBuilder builder = new StringBuilder();
+                    builder.Append("Issued For: ").AppendLine(order.IssuedFor.ToString());
                     builder.Append("Issued: ").AppendLine(order.Issued.ToLocalTime().ToString());
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration, (order.Duration > 1 ? "s" : String.Empty));
                     builder.AppendLine();
@@ -474,6 +496,10 @@ namespace EVEMon
 
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
+                    break;
+
+                case MarketOrderColumn.IssuedFor:
+                    item.Text = order.IssuedFor.ToString();
                     break;
 
                 case MarketOrderColumn.Item:
@@ -593,8 +619,10 @@ namespace EVEMon
         {
             if (m_isUpdatingColumns)
                 return;
+
             if (m_columns.Count <= e.ColumnIndex)
                 return;
+
             m_columns[e.ColumnIndex].Width = listView.Columns[e.ColumnIndex].Width;
         }
 

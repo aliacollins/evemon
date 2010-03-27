@@ -366,6 +366,7 @@ namespace EVEMon
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 window.Grouping = MarketOrderGrouping.State;
+                window.ShowIssuedFor = OrderIssuedFor.All;
                 return;
             }
         }

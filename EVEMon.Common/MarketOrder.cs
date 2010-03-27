@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
+using System.Collections.Generic;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
-using System.Globalization;
 using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common
@@ -33,6 +33,7 @@ namespace EVEMon.Common
         protected readonly int m_initialVolume;
         protected readonly int m_minVolume;
         protected readonly int m_duration;
+        protected readonly OrderIssuedFor m_issuedFor;
 
         protected int m_remainingVolume;
         protected decimal m_unitaryPrice;
@@ -56,6 +57,7 @@ namespace EVEMon.Common
             m_minVolume = src.MinVolume;
             m_duration = src.Duration;
             m_issued = src.Issued;
+            m_issuedFor = src.IssuedFor;
         }
 
         /// <summary>
@@ -77,6 +79,7 @@ namespace EVEMon.Common
             m_minVolume = src.MinVolume;
             m_duration = src.Duration;
             m_issued = src.Issued;
+            m_issuedFor = (src.IssuedFor == OrderIssuedFor.None ? OrderIssuedFor.Character : src.IssuedFor);
         }
 
         /// <summary>
@@ -104,6 +107,7 @@ namespace EVEMon.Common
             src.MinVolume = m_minVolume;
             src.Duration = m_duration;
             src.Issued = m_issued;
+            src.IssuedFor = m_issuedFor;
         }
 
         /// <summary>
@@ -116,47 +120,54 @@ namespace EVEMon.Common
             // Note that, before a match is found, all ignored orders have been marked for deletion : m_markedForDeletion == true
 
             // Checks whether ID is the same (IDs can be recycled ?)
-            if (this.MatchesWith(src))
+            if (!this.MatchesWith(src))
+                return false;
+
+            // Update infos (if ID is the same it may have been modified either by the market 
+            // or by the user [modify order] so we update the orders info that are changeable)
+            if (this.IsModified(src))
             {
-                // Update infos (if ID is the same it may have been modified either by the market 
-                // or by the user [modify order] so we update the orders info that are changeable)
-                if (this.IsModified(src))
-                {
-                    m_unitaryPrice = src.UnitaryPrice;
-                    m_remainingVolume = src.RemainingVolume;
-                    m_issued = src.Issued;
-                    m_state = OrderState.Modified;
-                }
-                else if (m_state == OrderState.Modified) m_state = OrderState.Active;
+                // If its a buying order, escrow may have changed
+                if (src.IsBuyOrder != 0)
+                    ((BuyOrder)this).Escrow = src.Escrow;
+                
+                m_unitaryPrice = src.UnitaryPrice;
+                m_remainingVolume = src.RemainingVolume;
+                m_issued = src.Issued;
+                m_state = OrderState.Modified;
+            }
+            else if (m_state == OrderState.Modified)
+            {
+                m_state = (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Active);
+            }
 
-                // Canceled orders are left as marked for deletion.
-                OrderState state = GetState(src);
-                if (state == OrderState.Canceled || (state == OrderState.Expired && Expiration > DateTime.UtcNow))
-                {
-                    m_state = OrderState.Canceled;
-                    m_markedForDeletion = true;
-                    return true;
-                }
-
-                // Prevent deletion
-                m_markedForDeletion = false;
-
-                // Update state
-                if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
-                {
-                    m_state = state;
-                    m_lastStateChange = DateTime.UtcNow;
-
-                    // Should we notify it to the user ?
-                    if (state == OrderState.Expired || state == OrderState.Fulfilled)
-                    {
-                        if (!m_ignored) endedOrders.Add(this);
-                    }
-                }
-
+            // Canceled orders are left as marked for deletion.
+            OrderState state = GetState(src);
+            if (state == OrderState.Canceled || (state == OrderState.Expired && Expiration > DateTime.UtcNow))
+            {
+                m_state = OrderState.Canceled;
+                m_markedForDeletion = true;
                 return true;
             }
-            return false;
+
+            // Prevent deletion
+            m_markedForDeletion = false;
+
+            // Update state
+            if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
+            {
+                m_state = state;
+                m_lastStateChange = DateTime.UtcNow;
+
+                // Should we notify it to the user ?
+                if (state == OrderState.Expired || state == OrderState.Fulfilled)
+                {
+                    if (!m_ignored)
+                        endedOrders.Add(this);
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -247,8 +258,7 @@ namespace EVEMon.Common
                     return OrderState.Active;
 
                 case CCPOrderState.ExpiredOrFulfilled:
-                    if (src.RemainingVolume == 0) return OrderState.Fulfilled;
-                    else return OrderState.Expired;
+                    return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
 
                 default:
                     throw new NotImplementedException();
@@ -280,7 +290,9 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (IsExpired && m_state == OrderState.Active) return OrderState.Expired;
+                if (IsExpired && m_state == OrderState.Active)
+                    return OrderState.Expired;
+
                 return m_state; 
             }
         }
@@ -365,6 +377,14 @@ namespace EVEMon.Common
             get { return m_issued; }
         }
 
+        /// <summary>
+        /// Gets for which the order was issued.
+        /// </summary>
+        public OrderIssuedFor IssuedFor
+        {
+            get { return m_issuedFor; }
+        }
+        
         /// <summary>
         /// Gets the estimated expiration time.
         /// </summary>
@@ -455,20 +475,66 @@ namespace EVEMon.Common
             // So we do the truncation at hand for the number of digits we exactly request.
 
             var abs = Math.Abs(value);
-            if (abs < 1.0M) return (((int)value * 100) / 100.0M).ToString("0.##") + suffix;
-            if (abs < 10.0M) return (((int)value * 1000) / 1000.0M).ToString("#.##") + suffix;
-            if (abs < 100.0M) return (((int)value * 1000)/1000.0M).ToString("##.#") + suffix;
+            if (abs < 1.0M)
+                return (((int)value * 100) / 100.0M).ToString("0.##") + suffix;
+            if (abs < 10.0M)
+                return (((int)value * 1000) / 1000.0M).ToString("#.##") + suffix;
+            if (abs < 100.0M)
+                return (((int)value * 1000)/1000.0M).ToString("##.#") + suffix;
+
             return (((int)value * 1000) / 1000.0M).ToString("###") + suffix;
         }
     }
     #endregion
 
 
+    #region AbbreviationFormat
+    /// <summary>
+    /// The abbreviation format status of a market orders value.
+    /// </summary>
     public enum AbbreviationFormat
     {
         AbbreviationWords,
         AbbreviationSymbols
     }
+    #endregion
+
+
+    #region OrderState
+    /// <summary>
+    /// The status of a market order.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum OrderState
+    {
+        [Header("Active orders")]
+        Active = 0,
+        [Header("Canceled orders")]
+        Canceled = 1,
+        [Header("Expired orders")]
+        Expired = 2,
+        [Header("Fulfilled orders")]
+        Fulfilled = 3,
+        [Header("Modified orders")]
+        Modified = 4
+    }
+    #endregion
+
+
+    #region OrderIssuedFor
+    /// <summary>
+    /// For which the order was issued.
+    /// </summary>
+    /// <remarks>No need for integer value as we don't use the "Key" enum anywhere in the code for this</remarks>
+    public enum OrderIssuedFor
+    {
+        None,
+        Character,
+        Corporation,
+        All
+    }
+    #endregion
+
 
     #region BuyOrder
     /// <summary>
@@ -476,7 +542,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class BuyOrder : MarketOrder
     {
-        private readonly decimal m_escrow;
+        private decimal m_escrow;
         private readonly int m_range;
 
         /// <summary>
@@ -507,6 +573,7 @@ namespace EVEMon.Common
         public decimal Escrow
         {
             get { return m_escrow; }
+            internal set { m_escrow = value; }
         }
 
         /// <summary>
@@ -524,11 +591,19 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_range == -1) return "Station";
-                if (m_range == 0) return "Solar System";
-                if (m_range == 1) return m_range.ToString() + " jump";
-                if (m_range == EveConstants.RegionRange) return "Region";
-                return m_range.ToString() + " jumps";
+                switch (m_range)
+                { 
+                    case -1:
+                        return "Station";
+                    case 0:
+                        return "Solar System";
+                    case 1:
+                        return String.Format("{0} jump", m_range.ToString()); 
+                    case EveConstants.RegionRange:
+                        return "Region";
+                    default:
+                        return  String.Format("{0} jumps", m_range.ToString());
+                }
             }
         }
 
@@ -582,27 +657,6 @@ namespace EVEMon.Common
             this.Export(serial);
             return serial;
         }
-    }
-    #endregion
-
-
-    #region OrderState
-    /// <summary>
-    /// The status of a market order.
-    /// </summary>
-    /// <remarks>The integer value determines the sort order.</remarks>
-    public enum OrderState
-    {
-        [Header("Active orders")]
-        Active = 0,
-        [Header("Canceled orders")]
-        Canceled = 1,
-        [Header("Expired orders")]
-        Expired = 2,
-        [Header("Fulfilled orders")]
-        Fulfilled = 3,
-        [Header("Modified orders")]
-        Modified = 4
     }
     #endregion
 }

@@ -39,6 +39,7 @@ namespace EVEMon.Common
         protected string m_bloodLine;
         protected string m_gender;
         protected string m_corporationName;
+        protected int m_corporationID;
         protected string m_cloneName;
         protected int m_cloneSkillPoints;
         protected bool m_isUpdatingPortrait;
@@ -196,6 +197,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the id of the character's corporation
+        /// </summary>
+        public int CorporationID
+        {
+            get { return m_corporationID; }
+        }
+
+        /// <summary>
         /// Gets the name of the clone.
         /// </summary>
         /// <value>The name of the clone.</value>
@@ -296,7 +305,10 @@ namespace EVEMon.Common
         protected override int GetTotalSkillPoints()
         {
             int sp = 0;
-            foreach(var skill in m_skills) sp += skill.SkillPoints;
+            foreach (var skill in m_skills)
+            {
+                sp += skill.SkillPoints;
+            }
             return sp; 
         }
 
@@ -310,7 +322,8 @@ namespace EVEMon.Common
                 int count = 0;
                 foreach (var skill in m_skills)
                 {
-                    if (skill.IsKnown) count++;
+                    if (skill.IsKnown)
+                        count++;
                 }
                 return count;
             }
@@ -326,7 +339,8 @@ namespace EVEMon.Common
             int count = 0;
             foreach (var skill in m_skills)
             {
-                if (skill.LastConfirmedLvl == level) count++;
+                if (skill.LastConfirmedLvl == level)
+                    count++;
             }
             return count;
         }
@@ -431,6 +445,7 @@ namespace EVEMon.Common
             serial.Gender = m_gender;
             serial.BloodLine = m_bloodLine;
             serial.CorporationName = m_corporationName;
+            serial.CorporationID = m_corporationID;
             serial.CloneSkillPoints = m_cloneSkillPoints;
             serial.CloneName = m_cloneName;
             serial.Balance = m_balance;
@@ -459,7 +474,8 @@ namespace EVEMon.Common
             serial.Skills = new List<SerializableCharacterSkill>();
             foreach(var skill in this.Skills)
             {
-                if (skill.IsKnown || skill.IsOwned) serial.Skills.Add(skill.Export());
+                if (skill.IsKnown || skill.IsOwned)
+                    serial.Skills.Add(skill.Export());
             }
         }
 
@@ -515,6 +531,7 @@ namespace EVEMon.Common
             m_balance = serial.Balance;
             m_bloodLine = serial.BloodLine;
             m_corporationName = serial.CorporationName;
+            m_corporationID = serial.CorporationID;
             m_cloneName = serial.CloneName;
             m_cloneSkillPoints = serial.CloneSkillPoints;
 
@@ -526,21 +543,31 @@ namespace EVEMon.Common
             m_attributes[(int)EveAttribute.Memory].Base = serial.Attributes.Memory;
 
             // Skills : reset all > update all
-            foreach (var skill in m_skills) skill.Reset(fromCCP);
+            foreach (var skill in m_skills)
+            {
+                skill.Reset(fromCCP);
+            }
+            
             foreach (var serialSkill in serial.Skills)
             {
                 // Take care of the new skills not in our datafiles yet. Update if it exists.
                 var foundSkill = m_skills[serialSkill.ID];
-                if (foundSkill != null) foundSkill.Import(serialSkill, fromCCP);
+                if (foundSkill != null)
+                    foundSkill.Import(serialSkill, fromCCP);
             }
 
             // Certificates : reset > mark the granted ones > update the other ones
-            foreach (var cert in m_certificates) cert.Reset();
+            foreach (var cert in m_certificates)
+            {
+                cert.Reset();
+            }
+
             foreach (var serialCert in serial.Certificates)
             {
                 // Take care of the new certs not in our datafiles yet. Mark as granted if it exists.
                 var foundCert = m_certificates[serialCert.CertificateID];
-                if (foundCert != null) foundCert.MarkAsGranted();
+                if (foundCert != null)
+                    foundCert.MarkAsGranted();
             }
 
             while (true)
@@ -550,7 +577,8 @@ namespace EVEMon.Common
                 {
                     updatedAnything |= cert.TryUpdateCertificateStatus();
                 }
-                if (!updatedAnything) break;
+                if (!updatedAnything)
+                    break;
             }
 
             // Not from CCP ?

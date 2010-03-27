@@ -15,7 +15,7 @@ namespace EVEMon.Common
     /// </summary>
     public enum APIMethods
     {
-        None = 0,
+        None,
 
         /// <summary>
         /// The Tranquility server status
@@ -23,7 +23,7 @@ namespace EVEMon.Common
         [Header("Tranquility Status")]
         [Description("The status of the Tranquility server.")]
         [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
-        ServerStatus = 1,
+        ServerStatus,
 
         /// <summary>
         /// The characters available on an account.
@@ -32,62 +32,70 @@ namespace EVEMon.Common
         [Description("The retrieval of the characters list available on every account.")]
         [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
         [ForcedOnStartup]
-        CharacterList = 2,
+        CharacterList,
 
         /// <summary>
         /// A character sheet (bio, skills, implants, etc).
         /// </summary>
         [Header("Character Sheet")]
-        [Description("A character sheet lists biography, skills, attributes and implants informations about a character.")]
+        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        CharacterSheet = 3,
+        CharacterSheet,
 
         /// <summary>
         /// A character's skill queue.
         /// </summary>
         [Header("Skill Queue")]
-        [Description("A character skill queue.")]
+        [Description("A character's skill queue.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        SkillQueue = 4,
+        SkillQueue,
+ 
+        /// <summary>
+        /// /// Mail messages for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Mail Messages")]
+        [Description("Mail messages for a charater.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        MailMessages,
 
         /// <summary>
-        /// The market orders for a character.
+        /// Notifications for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Notifications")]
+        [Description("Notifications messages for a charater.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        Notifications,
+
+        /// <summary>
+        /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         [Header("Market Orders")]
-        [Description("The market orders for a character.")]
+        [Description("The market orders of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        MarketOrders = 5,
+        MarketOrders,
 
         /// <summary>
         /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
         /// </summary>
         [FullKey]
-        CharacterAccountBalance = 6,
+        CharacterAccountBalance,
+
+        /// <summary>
+        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders,
 
         /// <summary>
         /// The conquerable station list. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        ConquerableStationList = 7,
+        ConquerableStationList
 
-        /// <summary>
-        /// Mail messages for a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [Header("Mail Messages")]
-        [Description("Mail messages for a charater.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        [FullKey]
-        MailMessages = 8,
-
-        /// <summary>
-        /// Notifications for a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [Header("Notifications")]
-        [Description("Notifications messages for a charater.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
-        [FullKey]
-        Notifications = 9
     }
 
     /// <summary>

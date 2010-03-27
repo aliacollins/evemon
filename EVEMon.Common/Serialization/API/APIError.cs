@@ -50,5 +50,14 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return (ErrorCode == 200); }
         }
+
+        /// <summary>
+        /// Gets true when character has no corporation roles for market orders.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsOrdersRelatedCorpRolesError
+        {
+            get { return (ErrorCode == 208); }
+        }
     }
 }

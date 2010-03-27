@@ -31,12 +31,14 @@
             this.ordersList = new EVEMon.MainWindowMarketOrdersList();
             this.SuspendLayout();
             // 
-            // mainWindowMarketOrders1
+            // ordersList
             // 
+            this.ordersList.Character = null;
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "mainWindowMarketOrders1";
+            this.ordersList.Name = "ordersList";
+            this.ordersList.ShowIssuedFor = EVEMon.Common.OrderIssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(292, 266);
             this.ordersList.TabIndex = 0;
             this.ordersList.TextFilter = "";
@@ -50,7 +52,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MarketOrdersWindow";
-            this.Text = "Notifcation Details";
+            this.Text = "Notification Details";
             this.ResumeLayout(false);
 
         }

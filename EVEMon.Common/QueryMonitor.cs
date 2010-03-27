@@ -40,19 +40,13 @@ namespace EVEMon.Common
         {
             m_lastUpdate = DateTime.MinValue;
             m_isFullKeyNeeded = method.HasAttribute<FullKeyAttribute>();
-            m_methodHeader = method.GetHeader();
+            m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
             m_method = method;
             m_enabled = true;
 
-            if (m_method.HasAttribute<UpdateAttribute>())
-            {
-                m_cacheStyle = m_method.GetAttribute<UpdateAttribute>().CacheStyle;
-            }
-            else
-            {
-                m_cacheStyle = CacheStyle.Short;
-            }
+            bool methodHasAttribute = m_method.HasAttribute<UpdateAttribute>();
+            m_cacheStyle = (methodHasAttribute ? m_method.GetAttribute<UpdateAttribute>().CacheStyle : CacheStyle.Short);
 
             NetworkMonitor.Register(this);
         }
@@ -171,8 +165,8 @@ namespace EVEMon.Common
         {
             // If the cache style is long (Market Orders, Mail Messages,
             // Notifications, etc.) and the cache timer has not expired
-            // give up as it will fail anyway.
-            if (ForceUpdateWillCauseError)
+            // give up as it will fail anyway (if APIProvider is CCP)
+            if (ForceUpdateWillCauseError && EveClient.APIProviders.CurrentProvider == APIProvider.DefaultProvider)
                 return;
 
             m_forceUpdate = true;
@@ -188,6 +182,7 @@ namespace EVEMon.Common
             // Are we already updating ?
             if (m_isUpdating)
                 return;
+
             m_isCanceled = false;
 
             // Is it enabled ?
@@ -284,18 +279,17 @@ namespace EVEMon.Common
             }
 
             // Was it canceled ?
-            if (m_isCanceled) return;
+            if (m_isCanceled)
+                return;
 
-            // Updates the stored data.
+            // Updates the stored data
             m_retryOnForceUpdateError = false;
             m_lastUpdate = DateTime.UtcNow;
             m_lastResult = result;
 
             // Notify subscribers
             if (Updated != null)
-            {
                 Updated(result);
-            }
         }
 
         /// <summary>
