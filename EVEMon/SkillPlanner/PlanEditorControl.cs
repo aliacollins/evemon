@@ -976,6 +976,8 @@ namespace EVEMon.SkillPlanner
             Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
         }
 
+        // TODO: Refactor Move Up, Move Down and Move To Top into a single method.
+
         /// <summary>
         /// When the user click moves up, we move the list view items and rebuild the plan from this.
         /// </summary>
@@ -1036,6 +1038,40 @@ namespace EVEMon.SkillPlanner
                 {
                     items.RemoveAt(index);
                     items.Insert(index + 1, item);
+                }
+                index--;
+            }
+
+            // Rebuild the plan
+            RebuildPlanFromListViewOrder(items);
+        }
+
+        /// <summary>
+        /// Moves the currently selected skill to the top of the plan
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MoveToTopMenuItem_Click(object sender, EventArgs e)
+        {
+            var items = lvSkills.Items.Cast<ListViewItem>().ToList();
+
+            // Skip the tail
+            int index = items.Count - 1;
+            while (index >= 0)
+            {
+                if (!items[index].Selected)
+                    break;
+                index--;
+            }
+
+            // Move up the following items
+            while (index >= 0)
+            {
+                var item = items[index];
+                if (item.Selected)
+                {
+                    items.RemoveAt(index);
+                    items.Insert(0, item);
                 }
                 index--;
             }
@@ -1371,6 +1407,7 @@ namespace EVEMon.SkillPlanner
                 miChangePriority.Enabled = true;
                 miShowInSkillBrowser.Enabled = true;
                 miShowInSkillExplorer.Enabled = true;
+                MoveToTopMenuItem.Enabled = true;
 
                 // "Change note"
                 miChangeNote.Enabled = true;
@@ -2198,5 +2235,6 @@ namespace EVEMon.SkillPlanner
                 cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
         }
         #endregion
+
     }
 }
