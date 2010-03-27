@@ -1,14 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Text;
+using System.Linq;
+using System.Drawing;
 using System.Windows.Forms;
-using EVEMon.Common;
 using System.Globalization;
-using EVEMon.Common.Controls;
+using System.ComponentModel;
+using System.Collections.Generic;
+
+using EVEMon.Common;
 using EVEMon.Common.Data;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
@@ -103,7 +105,7 @@ namespace EVEMon.SkillPlanner
                 if (m_object != null && m_plan != null)
                 {
                     // Recursively create nodes
-                    foreach (StaticSkillLevel prereq in m_object.Prerequisites)
+                    foreach (StaticSkillLevel prereq in m_object.Prerequisites.Where(x=> x.Level != 0))
                     {
                         tvSkillList.Nodes.Add(GetSkillNode(prereq, ref allSkillsKnown, ref skillsUnplanned));
                     }
@@ -167,6 +169,7 @@ namespace EVEMon.SkillPlanner
                 node.ImageIndex = 3;
                 node.SelectedImageIndex = 3;
                 allSkillsKnown = false;
+                skillsUnplanned = true;
             }
             // Requirement not met
             else
