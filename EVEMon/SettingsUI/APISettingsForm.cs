@@ -30,20 +30,20 @@ namespace EVEMon.SettingsUI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            Initialise();
+            Initialize();
         }
 
         /// <summary>
         /// Form initialisation. Populates and enables the main form elements using the provided APIConfiguration instance.
         /// The Name property of the APIConfiguration instance may only be changed if it has not been previously assigned.
         /// </summary>
-        private void Initialise()
+        private void Initialize()
         {
             if (m_provider != null)
             {
                 txtConfigurationName.Text = m_provider.Name;
                 txtAPIHost.Text = m_provider.Url;
-                InitialiseDataGrid();
+                InitializeDataGrid();
             }
         }
 
@@ -51,7 +51,7 @@ namespace EVEMon.SettingsUI
         /// Populates the DataGridView control with APIMethod details from the specified APIConfiguration instance.
         /// The APIMethod is stored in the DataGridViewRow.Tag property for reference.
         /// </summary>
-        private void InitialiseDataGrid()
+        private void InitializeDataGrid()
         {
             dgMethods.Rows.Clear();
             foreach (var method in m_provider.Methods)

@@ -170,7 +170,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Query the conquerable station list.
         /// </summary>
-        public APIResult<SerializableConquerableStationList> QueryConquerableSationList()
+        public APIResult<SerializableConquerableStationList> QueryConquerableStationList()
         {
             return QueryMethod<SerializableConquerableStationList>(APIMethods.ConquerableStationList, null, RowsetsTransform);
         }

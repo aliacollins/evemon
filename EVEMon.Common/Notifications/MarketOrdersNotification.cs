@@ -29,7 +29,10 @@ namespace EVEMon.Common.Notifications
         {
             get 
             {
-                foreach (var order in m_orders) yield return order;
+                foreach (var order in m_orders)
+                {
+                    yield return order;
+                }
             }
         }
 

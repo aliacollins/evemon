@@ -56,6 +56,10 @@ namespace EVEMon.Common.SettingsObjects
         }
     }
 
+    /// <summary>
+    /// Enumeration for the market orders to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
     public enum MarketOrderGrouping
     {
         [Header("Group by order status")]
