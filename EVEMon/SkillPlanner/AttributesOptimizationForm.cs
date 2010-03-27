@@ -238,9 +238,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the plan order's column
             if (m_planEditor != null && (remapping != null || remappingList.Count != 0))
-            {
                 this.m_planEditor.ShowWithPluggable(this);
-            }
         }
 
         /// <summary>
@@ -467,13 +465,13 @@ namespace EVEMon.SkillPlanner
             if (m_areRemappingPointsActive)
             {
                 plan.UpdateStatistics(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), true, true);
-                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), false, true);
             }
             else
             {
                 plan.UpdateStatistics(m_statisticsScratchpad.Clone(), false, true);
-                plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), true, true);
             }
+
+            plan.UpdateOldTrainingTimes(new CharacterScratchpad(m_baseCharacter.After(plan.ChosenImplantSet)), false, true);
         }
 
         /// <summary>

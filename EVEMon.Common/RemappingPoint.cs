@@ -15,8 +15,8 @@ namespace EVEMon.Common
         /// </summary>
         public enum PointStatus
         {
-            NotComputed = 0,
-            UpToDate = 1
+            NotComputed,
+            UpToDate
         }
 
         private PointStatus m_status;
@@ -42,6 +42,7 @@ namespace EVEMon.Common
             m_attributes[(int)EveAttribute.Willpower] = serial.Willpower;
             m_attributes[(int)EveAttribute.Charisma] = serial.Charisma;
             m_attributes[(int)EveAttribute.Memory] = serial.Memory;
+            m_description = serial.Description;
             m_status = serial.Status;
         }
 
@@ -74,18 +75,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the description of the point
-        /// </summary>
-        public string AttributesDescription
-        {
-            get { return this.m_description; }
-        }
-
-        /// <summary>
         /// Gets a short string representation of the point ("i5 p7 c8 w9 m5")
         /// </summary>
         /// <returns></returns>
-        public string ToShortString()
+        private string ToShortString()
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("i").Append(this.m_attributes[(int)EveAttribute.Intelligence].ToString()).
@@ -95,27 +88,6 @@ namespace EVEMon.Common
                 Append(" m").Append(this.m_attributes[(int)EveAttribute.Memory].ToString());
 
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Gets a string representation of this point. Two possible formats : 
-        /// <list type="">
-        /// <item>"Remapping (not computed, use the attributes optimizer)"</item>
-        /// <item>"Remapping (active) : i5 p7 c8 w9 m5"</item>
-        /// </list>
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            switch (m_status)
-            {
-                case PointStatus.NotComputed:
-                    return "Remapping (not computed, use the attributes optimizer)";
-                case PointStatus.UpToDate:
-                    return "Remapping (active) : " + ToShortString();
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         /// <summary>
@@ -133,7 +105,28 @@ namespace EVEMon.Common
                 case PointStatus.NotComputed:
                     return "Remapping (not computed, use the attributes optimizer)";
                 case PointStatus.UpToDate:
-                    return "Remapping : " + m_description;
+                    return String.Format("Remapping : {0}", m_description);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Gets a string representation of this point. Two possible formats : 
+        /// <list type="">
+        /// <item>"Remapping (not computed, use the attributes optimizer)"</item>
+        /// <item>"Remapping (active) : i5 p7 c8 w9 m5"</item>
+        /// </list>
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            switch (m_status)
+            {
+                case PointStatus.NotComputed:
+                    return "Remapping (not computed, use the attributes optimizer)";
+                case PointStatus.UpToDate:
+                    return String.Format("Remapping (active) : {0}", ToShortString());
                 default:
                     throw new NotImplementedException();
             }
@@ -157,7 +150,6 @@ namespace EVEMon.Common
             {
                 // Compute the new base attribute
                 EveAttribute attrib = (EveAttribute)i;
-                var bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
                 m_attributes[i] = newScratchpad[attrib].Base;
 
                 // Update description
@@ -177,10 +169,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad, CharacterScratchpad newScratchpad)
         {
-            var bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
+            int bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
+
             if (bonusDifference == 0)
             {
-                return newScratchpad[attrib].ToString("%N (-) = %e = (%b + %s + %i) * %f");
+                return newScratchpad[attrib].ToString("%N (0) = %e = (%b + %s + %i) * %f");
             }
             else if (bonusDifference > 0)
             {
@@ -226,6 +219,7 @@ namespace EVEMon.Common
             serial.Willpower = m_attributes[(int)EveAttribute.Willpower];
             serial.Charisma = m_attributes[(int)EveAttribute.Charisma];
             serial.Memory = m_attributes[(int)EveAttribute.Memory];
+            serial.Description = m_description;
             serial.Status = m_status;
             return serial;
         }

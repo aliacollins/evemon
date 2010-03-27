@@ -229,6 +229,13 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlAttribute("description")]
+        public string Description
+        {
+            get;
+            set;
+        }
+
         public SerializableRemappingPoint Clone()
         {
             return (SerializableRemappingPoint)this.MemberwiseClone();
