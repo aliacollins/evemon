@@ -250,16 +250,9 @@ namespace EVEMon.Common.Data
                                     return "Unknown";
                             }
 
-                        // Format all other values (use of thousand separator if over 1000)
+                        // Format all other values (use of thousand and decimal separator)
                         default:
-                            if (m_value < 1000)
-                            {
-                                return String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_value, m_unit);
-                            }
-                            else
-                            {
-                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", m_value, m_unit);
-                            }
+                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", m_value, m_unit);
                     }
                 }
                 catch
@@ -281,18 +274,11 @@ namespace EVEMon.Common.Data
             // Retrieve the string for the number
             string number = String.Empty;
             var value = obj.Properties[this];
-            if (value == null)
-            {
-                number = m_defaultValue;
-            }
-            else
-            {
-                number = value.Value.Value;
-            }
+            number = (value == null ? m_defaultValue : value.Value.Value);
 
             // Try to parse it as a float
             float result = float.NaN;
-            float.TryParse(number, out result);
+            float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
             return result;
         }
     }
