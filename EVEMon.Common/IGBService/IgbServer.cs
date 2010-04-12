@@ -20,8 +20,8 @@ namespace EVEMon.Common.IgbService
     public class IgbServer
     {
         private int m_port;
-        private bool m_isPublic = false;
-        private bool m_running = false;
+        private bool m_isPublic;
+        private bool m_running;
         private IgbTcpListener m_listener;
         private Dictionary<IgbTcpClient, byte[]> m_clients = new Dictionary<IgbTcpClient, byte[]>();
 
@@ -36,6 +36,14 @@ namespace EVEMon.Common.IgbService
             m_port = port;
             m_isPublic = isPublic;
             CreateListener();
+        }
+
+        /// <summary>
+        /// Gets the active IGB Server port.
+        /// </summary>
+        public int IgbServerPort
+        {
+            get { return m_port; }
         }
 
         /// <summary>

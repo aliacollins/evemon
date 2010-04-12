@@ -14,7 +14,7 @@ namespace EVEMon.Common.IgbService
     {
         private readonly Object m_syncLock = new Object();
 
-        private bool m_running = false;
+        private bool m_running;
         private IPEndPoint m_listenEndpoint;
         private TcpListener m_listener;
 

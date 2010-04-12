@@ -1805,32 +1805,44 @@ namespace EVEMon
             }
 
             // IGB Server
-            if (Settings.IGB.IGBServerEnabled)
-            {
-                if (m_igbServer == null)
-                {
-                    m_igbServer = new IgbServer(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
-                }
-                else
-                {
-                    m_igbServer.Stop();
-                    m_igbServer.Reset(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
-                }
+            ConfigureIgbServer();
 
-                m_igbServer.Start();
-            }
-            else
+            // Rebuild tabs (the overview may have been removed)
+            if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
+                UpdateTabs();
+        }
+
+        /// <summary>
+        /// Configures the IGB server based upon the current configuration
+        /// </summary>
+        private void ConfigureIgbServer()
+        {
+            // not using the IGB server? stop it if it is running.
+            if (!Settings.IGB.IGBServerEnabled)
             {
                 if (m_igbServer != null)
                 {
                     m_igbServer.Stop();
                     m_igbServer = null;
                 }
+
+                return;
             }
 
-            // Rebuild tabs (the overview may have been removed)
-            if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
-                UpdateTabs();
+            // we are using the IGB server create one if we don't already have one
+            if (m_igbServer == null)
+            {
+                m_igbServer = new IgbServer(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
+            }
+            else if (Settings.IGB.IGBServerPort != m_igbServer.IgbServerPort)
+            {
+                // the port has changed reset the IGB server
+                m_igbServer.Stop();
+                m_igbServer.Reset(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
+            }
+
+            // finally start the service
+            m_igbServer.Start();
         }
         #endregion
 
