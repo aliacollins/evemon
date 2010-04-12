@@ -356,7 +356,10 @@ namespace EVEMon
 
             // Display the remaining time
             throbber.State = ThrobberState.Stopped;
-            ttToolTip.SetToolTip(throbber, "Click to update now");
+            
+            // Set the tooltip text
+            string throbberTooltipText = (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError) ? String.Empty : "Click to update now");
+            ttToolTip.SetToolTip(throbber, throbberTooltipText);
 
             // Updates the next autoupdate timer label
             var nextMonitor = ccpCharacter.QueryMonitors.NextUpdate;
@@ -749,7 +752,8 @@ namespace EVEMon
             if (throbber.State != ThrobberState.Strobing && m_character is CCPCharacter) 
             {
                 var ccpCharacter = (CCPCharacter)m_character;
-                ccpCharacter.QueryMonitors.QueryEverything();
+                if (!ccpCharacter.QueryMonitors.Any(x=> x.ForceUpdateWillCauseError))
+                    ccpCharacter.QueryMonitors.QueryEverything();
             }
             else
             {
@@ -775,6 +779,9 @@ namespace EVEMon
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null || ccpCharacter.Identity.Account == null)
                 return;
+
+            // Enables/disables the "query everything" menu item
+            miQueryEverything.Enabled = !ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError);
 
             // Add new separator before monitor items
             throbberSeparator = new ToolStripSeparator();
@@ -810,6 +817,7 @@ namespace EVEMon
                     timeToNextUpdate > TimeSpan.Zero ? String.Format(CultureConstants.DefaultCulture, "({0})", timeToNextUpdateText) : String.Empty);
                 var menu = new ToolStripMenuItem(menuText);
                 menu.Tag = (object)monitor.Method;
+                menu.Enabled = !monitor.ForceUpdateWillCauseError;
 
                 throbberContextMenu.Items.Add(menu);
             }

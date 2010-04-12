@@ -40,6 +40,11 @@ namespace EVEMon.Common
         /// Gets true whether a full key is needed.
         /// </summary>
         bool IsFullKeyNeeded { get; }
+
+        /// <summary>
+        /// Gets true when a force update is within CCP cache time.
+        /// </summary>
+        bool ForceUpdateWillCauseError { get; }
     }
 
     /// <summary>
