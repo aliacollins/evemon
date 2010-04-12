@@ -479,22 +479,21 @@ namespace EVEMon.XmlGenerator
             s_attributes[50].HigherIsBetter = false; // PG usage
             s_attributes[161].HigherIsBetter = false; // Volume
             s_attributes[4].HigherIsBetter = false; // Mass
+            s_attributes[70].HigherIsBetter = false; // Inertia Modifier
             s_attributes[6].HigherIsBetter = false; // Activation Cost
             s_attributes[55].HigherIsBetter = false; // Capacitor recharge time
             s_attributes[479].HigherIsBetter = false; // Shield recharge time
             s_attributes[552].HigherIsBetter = false; // Signature radius
             s_attributes[560].HigherIsBetter = false; // Sensor Recalibration Time
             s_attributes[1082].HigherIsBetter = false; // CPU Penalty
-            s_attributes[1105].HigherIsBetter = false; // Armor HP Penalty
             s_attributes[1153].HigherIsBetter = false; // Calibration cost
             s_attributes[1272].HigherIsBetter = false; // Bandwidth Needed
             s_attributes[1416].HigherIsBetter = false; // Target Switch Timer
-            s_attributes[616].HigherIsBetter = false; // Shield Booster Penalty
             s_attributes[73].HigherIsBetter = false; // Activation time / duration
-            s_attributes[306].HigherIsBetter = false; // Maximum Velocity Penalty
             s_attributes[556].HigherIsBetter = false; // Anchoring Delay
             s_attributes[676].HigherIsBetter = false; // Unanchoring Delay
             s_attributes[677].HigherIsBetter = false; // Onlining Delay
+            s_attributes[780].HigherIsBetter = false; // Cycle Time bonus
 
             // Export attribute categories
             var categories = new List<SerializablePropertyCategory>();
@@ -595,28 +594,36 @@ namespace EVEMon.XmlGenerator
                             g_properties.Insert(1, prop); 
                             properties.RemoveAt(index);
                             break;
-                        case 974: properties.Insert(5, prop);
+                        case 974:
+                            properties.Insert(5, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 975: properties.Insert(6, prop);
+                        case 975:
+                            properties.Insert(6, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 976: properties.Insert(7, prop);
+                        case 976:
+                            properties.Insert(7, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 977: properties.Insert(8, prop);
+                        case 977:
+                            properties.Insert(8, prop);
                             properties.RemoveAt(index + 1); 
                             break;
-                        case 1132: properties.Insert(2, prop);
+                        case 1132:
+                            properties.Insert(2, prop);
                             properties.RemoveAt(index + 1); 
                             break;
-                        case 1137: properties.Insert(10, prop);
+                        case 1137:
+                            properties.Insert(10, prop);
                             properties.RemoveAt(index + 1); 
                             break;
-                        case 1281: p_properties.Insert(1, prop);
+                        case 1281:
+                            p_properties.Insert(1, prop);
                             properties.RemoveAt(index);
                             break;
-                        case 1547: properties.Insert(11, prop); 
+                        case 1547:
+                            properties.Insert(11, prop); 
                             properties.RemoveAt(index + 1); 
                             break;
                         default:
@@ -922,9 +929,6 @@ namespace EVEMon.XmlGenerator
                 item.Icon = s_graphics[srcItem.GraphicID.Value].Icon;
 
             // Add the properties and prereqs
-            bool hasCapacity = false;
-            bool hasMass = false;
-            bool hasVolume = false;
             var props = new List<SerializablePropertyValue>();
             var prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Length];
             var prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
@@ -1046,27 +1050,18 @@ namespace EVEMon.XmlGenerator
                 // Is metalevel property ?
                 if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
                     item.MetaLevel = propIntValue;
-
-                // Is Mass ?
-                hasMass |= (srcProp.AttributeID == DBConstants.MassPropertyID);
-
-                // Is Cargo capacity ?
-                hasCapacity |= (srcProp.AttributeID == DBConstants.CargoCapacityPropertyID);
-
-                // Is Volume ?
-                hasVolume |= (srcProp.AttributeID == DBConstants.VolumePropertyID);
             }
 
             // Ensures there is a mass and add it to prop
-            if (!hasMass && srcItem.Mass != 0)
+            if (srcItem.Mass != 0)
                 props.Add(new SerializablePropertyValue { ID = DBConstants.MassPropertyID, Value = srcItem.Mass.ToString() });
 
             // Ensures there is a cargo capacity and add it to prop
-            if (!hasCapacity && srcItem.Capacity != 0)
+            if (srcItem.Capacity != 0)
                 props.Add(new SerializablePropertyValue { ID = DBConstants.CargoCapacityPropertyID, Value = srcItem.Capacity.ToString() });
 
             // Ensures there is a volume and add it to prop
-            if (!hasVolume && srcItem.Volume != 0)
+            if (srcItem.Volume != 0)
                 props.Add(new SerializablePropertyValue { ID = DBConstants.VolumePropertyID, Value = srcItem.Volume.ToString() });
 
             // Add base price as a prop
