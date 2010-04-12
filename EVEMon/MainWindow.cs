@@ -832,37 +832,39 @@ namespace EVEMon
 
                     TimeSpan trimmedTime = ts;
 
-                    // first pass we remove the seconds from the TimeSpan
-                    if (trimTimeSpanComponents >= 1)
+                    // First pass we remove the seconds from the TimeSpan,
+                    // if training time is over one minute
+                    if (trimTimeSpanComponents >= 1 && ts.Hours >= 0 && ts.Minutes > 0)
                         trimmedTime = trimmedTime.Add(TimeSpan.FromSeconds(0 - ts.Seconds));
 
-                    // second pass we remove the minutes from the TimeSpan
-                    if (trimTimeSpanComponents >= 2)
+                    // Second pass we remove the minutes from the TimeSpan,
+                    // if training time is over one hour
+                    if (trimTimeSpanComponents >= 2 && ts.Hours > 0)
                         trimmedTime = trimmedTime.Add(TimeSpan.FromMinutes(0 - ts.Minutes));
 
                     switch (Settings.UI.MainWindow.TitleFormat)
                     {
-                        // (default) single Char - finishing skill next
+                        // (Default) Single Char - finishing skill next
                         case MainWindowTitleFormat.Default:
                         case MainWindowTitleFormat.NextCharToFinish:
                             if (builder.Length == 0)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // single Char - selected char
+                        // Single Char - selected char
                         case MainWindowTitleFormat.SelectedChar:
                             if (selectedChar == character)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // multi Char - finishing skill next first
+                        // Multi Char - finishing skill next first
                         case MainWindowTitleFormat.AllCharacters:
                             if (builder.Length > 0)
                                 builder.Append(" | ");
                             builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                        // multi Char - selected char first
+                        // Multi Char - selected char first
                         case MainWindowTitleFormat.AllCharactersButSelectedOneAhead:
                             // Selected char ? Insert at the beginning
                             if (selectedChar == character)
@@ -890,7 +892,7 @@ namespace EVEMon
                 // If we go through the loop again we will remove another component of the TimeSpan
                 trimTimeSpanComponents++;
             }
-            // Each pass we remove one component of the time span up untill the hours
+            // Each pass we remove one component of the time span up until the hours
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
