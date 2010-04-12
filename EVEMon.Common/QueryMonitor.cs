@@ -15,7 +15,6 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber
     {
-        public const int MinutesBeforeRetryOnError = 60;
         public event QueryCallback<T> Updated;
 
         protected readonly APIMethods m_method;
@@ -85,11 +84,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// For CacheStyle.Long API Methods only, will updating now cause the API to return an error.
+        /// Gets true when the API provider is CCP and a force update is triggered before the next available update.
         /// </summary>
         public bool ForceUpdateWillCauseError
         {
-            get { return m_cacheStyle == CacheStyle.Long && DateTime.UtcNow < NextUpdate; }
+            get 
+            {
+                var cachedTime = (m_lastResult == null ? NextUpdate : m_lastResult.CachedUntil);
+                return EveClient.APIProviders.CurrentProvider == APIProvider.DefaultProvider && DateTime.UtcNow < cachedTime; 
+            }
         }
 
         /// <summary>
@@ -99,11 +102,10 @@ namespace EVEMon.Common
         {
             get
             {
-                // If there was an error on last try, we use the cached time with a minimum 60 minutes delay
-                if (m_lastResult != null && m_lastResult.HasError)
-                {
-                    return m_lastUpdate.AddMinutes(MinutesBeforeRetryOnError);
-                }
+                // If there was an error on last try, we use the cached time
+                // (we exclude the corporation roles error for characters corporation issued orders)
+                if (m_lastResult != null && m_lastResult.HasError && m_lastResult.CCPError != null && !m_lastResult.CCPError.IsOrdersRelatedCorpRolesError)
+                    return m_lastResult.CachedUntil;
 
                 // No error ? Then we compute the next update according to the settings.
                 var period = Settings.Updates.Periods[m_method];
@@ -114,9 +116,8 @@ namespace EVEMon.Common
 
                 // If CCP "cached until" is greater than what we computed, return CCP cached time.
                 if (m_lastResult != null && m_lastResult.CachedUntil > nextUpdate)
-                {
                     return m_lastResult.CachedUntil;
-                }
+
                 return nextUpdate;
             }
         }
@@ -163,10 +164,9 @@ namespace EVEMon.Common
         /// </summary>
         internal void ForceUpdate(bool retryOnError)
         {
-            // If the cache style is long (Market Orders, Mail Messages,
-            // Notifications, etc.) and the cache timer has not expired
+            // If the cache timer has not expired
             // give up as it will fail anyway (if APIProvider is CCP)
-            if (ForceUpdateWillCauseError && EveClient.APIProviders.CurrentProvider == APIProvider.DefaultProvider)
+            if (ForceUpdateWillCauseError)
                 return;
 
             m_forceUpdate = true;
@@ -269,14 +269,7 @@ namespace EVEMon.Common
             m_status = QueryStatus.Pending;
 
             // Do we need to retry the force update ?
-            if (m_retryOnForceUpdateError)
-            {
-                m_forceUpdate = result.HasError;
-            }
-            else
-            {
-                m_forceUpdate = false;
-            }
+            m_forceUpdate = (m_retryOnForceUpdateError ? result.HasError : false);
 
             // Was it canceled ?
             if (m_isCanceled)
