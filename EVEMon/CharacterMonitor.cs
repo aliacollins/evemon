@@ -201,7 +201,17 @@ namespace EVEMon
             lblCorpInfo.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", m_character.CorporationName);
 
             // Balance
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "Balance: {0:#,##0.00} ISK", m_character.Balance);
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "Balance: {0:N} ISK", m_character.Balance);
+            var ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter != null && ccpCharacter.HasInsufficientBalance)
+            {
+                lblBalance.Select(9, lblBalance.TextLength);
+                lblBalance.SelectionColor = Color.Orange;
+                lblBalance.SelectionFont = new Font(Font, FontStyle.Bold);
+                lblBalance.Select(lblBalance.TextLength - 4, lblBalance.TextLength);
+                lblBalance.SelectionColor = SystemColors.ControlText;
+                lblBalance.SelectionFont = new Font(Font, FontStyle.Regular);
+            }
 
             // Name
             lblCharacterName.Text = m_character.AdornedName;
@@ -433,7 +443,7 @@ namespace EVEMon
         private void UpdatePageControls()
         {
             // Enables/Disables the skill page controls
-            toggleSkillsIcon.Enabled = m_character.Skills.Count > 0;
+            toggleSkillsIcon.Enabled = !m_character.Skills.IsEmpty();
 
             // Exit if it's a non-CCPCharacter
             var ccpCharacter = m_character as CCPCharacter;
@@ -441,11 +451,11 @@ namespace EVEMon
                 return;
 
             // Enables/Disables the market orders page controls
-            ordersGroupMenu.Enabled = ccpCharacter.MarketOrders.Count > 0;
-            searchTextBox.Enabled = ccpCharacter.MarketOrders.Count > 0;
-            preferencesMenu.Enabled = ccpCharacter.MarketOrders.Count > 0;
+            ordersGroupMenu.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
+            searchTextBox.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
+            preferencesMenu.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
 
-            if (ccpCharacter.MarketOrders.Count == 0)
+            if (ccpCharacter.MarketOrders.IsEmpty())
                 return;
 
             // Saves any changes we've made to the market columns
@@ -524,25 +534,6 @@ namespace EVEMon
             if (!this.Visible)
                 return;
 
-            // Is the character in training ?
-            if (m_character.IsTraining)
-            {
-                // Remaining training time label
-                var training = m_character.CurrentlyTrainingSkill;
-                lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription();
-
-                // Remaining queue time label
-                CCPCharacter ccpCharacter = m_character as CCPCharacter;
-				if (ccpCharacter != null)
-				{
-					var queueEndTime = ccpCharacter.SkillQueue.EndTime;
-					lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription();
-				}
-
-                // Update total SP
-                UpdateSkillHeaderStats();
-            }
-
             // Update the training info
             UpdateTrainingInfo();
 
@@ -555,6 +546,31 @@ namespace EVEMon
             // Update the page controls
             UpdatePageControls();
 
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter == null)
+                return;
+            
+            // Update character's balance info
+            if (ccpCharacter.MarketOrdersUpdated)
+            {
+                UpdateCharacterInfo();
+                ccpCharacter.MarketOrdersUpdated = false;
+            }
+
+            // Is the character in training ?
+            if (ccpCharacter.IsTraining)
+            {
+                // Remaining training time label
+                var training = m_character.CurrentlyTrainingSkill;
+                lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription();
+
+                // Remaining queue time label
+                var queueEndTime = ccpCharacter.SkillQueue.EndTime;
+                lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription();
+
+                // Update total SP
+                UpdateSkillHeaderStats();
+            }
         }
 
         /// <summary>
@@ -1049,7 +1065,7 @@ namespace EVEMon
             bool hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             hideInactiveOrdersMenuItem.Text = (!hideInactive ? "Unhide Inactive Orders" : "Hide Inactive Orders");
             Settings.UI.MainWindow.MarketOrders.HideInactiveOrders = !hideInactive;
-            ordersList.UpdateContent();
+            ordersList.UpdateColumns();
         }
 
         /// <summary>
@@ -1062,7 +1078,7 @@ namespace EVEMon
             bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
             numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
             Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
-            ordersList.UpdateContent();
+            ordersList.UpdateColumns();
         }
 
         /// <summary>

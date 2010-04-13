@@ -216,7 +216,12 @@ namespace EVEMon
             m_pendingUpdate = false;
 
             lblCharName.Text = m_character.Name;
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} ISK", m_character.Balance);
+
+            var ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter != null)
+                lblBalance.ForeColor = (ccpCharacter.HasInsufficientBalance ? Color.Orange : lblBalance.ForeColor);
+            
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", m_character.Balance);
 
             // Character in training ? We have labels to fill
             if (m_character.IsTraining)

@@ -281,6 +281,30 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Insufficient Balance
+        /// <summary>
+        /// Invalidates the notification for an insufficient balance.
+        /// </summary>
+        internal void InvalidateInsufficientBalance(CCPCharacter character)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.InsufficientBalance));
+        }
+
+        /// <summary>
+        /// Notifies an account has an insufficient balance.
+        /// </summary>
+        /// <param name="account"></param>
+        internal void NotifyInsufficientBalance(CCPCharacter character)
+        {
+            var notification = new Notification(NotificationCategory.InsufficientBalance, character);
+            notification.Description = "This character has insufficient balance to fulfill its buying orders.";
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Priority = NotificationPriority.Warning;
+            Notify(notification);
+        }
+        #endregion
+
+
         #region Insufficient clone
         /// <summary>
         /// Invalidates the notification for an insufficient clone.

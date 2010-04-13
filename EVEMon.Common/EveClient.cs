@@ -203,7 +203,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static void InitializeEvePortraitCachePath()
         {
-            s_evePortraitCacheFolder = "";
+            s_evePortraitCacheFolder = String.Empty;
             string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string EVEApplicationData = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
 

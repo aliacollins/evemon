@@ -225,7 +225,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the current character's wallet balance
         /// </summary>
-        public Decimal Balance
+        public decimal Balance
         {
             get { return m_balance; }
         }

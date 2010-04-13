@@ -29,6 +29,7 @@ namespace EVEMon.Common
         private bool m_corpOrdersUpdated;
         private bool m_charOrdersAdded;
         private bool m_corpOrdersAdded;
+        private bool m_ordersUpdated;
 
 
         /// <summary>
@@ -134,6 +135,31 @@ namespace EVEMon.Common
         public bool IsInNPCCorporation
         {
             get { return StaticGeography.AllStations.Any(x => x.CorporationID == this.CorporationID); }
+        }
+
+        /// <summary>
+        /// Gets true when character has insufficient balance to complete its buy orders.
+        /// </summary>
+        public bool HasInsufficientBalance
+        {
+            get
+            {
+                var activeBuyOrdersIssuedForCharacter = m_marketOrders.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) 
+                    && x is BuyOrder && x.IssuedFor == OrderIssuedFor.Character);
+                decimal additionalToCover = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice) - activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
+                
+                return m_balance < additionalToCover;
+            }
+        }
+
+        /// <summary>
+        /// Gets or set whether the market orders have been updated.
+        /// </summary>
+        /// <remarks>This is used to update the character's low balance warning</remarks>
+        public bool MarketOrdersUpdated
+        {
+            get { return m_ordersUpdated; }
+            set { m_ordersUpdated = value; }
         }
 
         /// <summary>
@@ -318,7 +344,7 @@ namespace EVEMon.Common
                 m_corpOrdersAdded = AddOrders(result, m_charOrdersAdded, OrderIssuedFor.Corporation);
             }
 
-            // Import the data if all queried and there are orders to import 
+            // Import the data if all queried and there are orders to import
             if (m_charOrdersUpdated && m_orders.Count != 0)
                 Import(m_orders);
         }
@@ -391,11 +417,25 @@ namespace EVEMon.Common
 
             NotifyOnEndedOrders(endedOrders);
 
+            // Check the character has sufficient balance
+            // for its buying orders or send a notification
+            if (HasInsufficientBalance)
+            {
+                EveClient.Notifications.NotifyInsufficientBalance(this);
+            }
+            else
+            {
+                EveClient.Notifications.InvalidateInsufficientBalance(this);
+            }
+
             // Reset flags
             m_charOrdersUpdated = false;
             m_corpOrdersUpdated = false;
             m_charOrdersAdded = false;
             m_corpOrdersAdded = false;
+
+            // Raise flag
+            m_ordersUpdated = true;
         }
 
         /// <summary>
