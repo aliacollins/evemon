@@ -67,5 +67,16 @@ namespace EVEMon.Common.Data
 
         public const int ReprocessingSkillPropertyID = 790;
         public const int ScrapMetalProcessingSkillID = 12196;
+
+        public const int TradeSkillID = 3443;
+        public const int RetailSkillID = 3444;
+        public const int BrokerRelationsSkillID = 3446;
+        public const int WholesaleSkillID = 16596;
+        public const int AccountingSkillID = 16622;
+        public const int TycconSkillID = 18580;
+        public const int MarketingSkillID = 16598;
+        public const int ProcurementSkillID = 16594;
+        public const int DaytradingSkillID = 16595;
+        public const int VisibilitySkillID = 3447;
     }
 }

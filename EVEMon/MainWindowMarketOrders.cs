@@ -7,9 +7,11 @@ using System.Data;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+
 using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.Common.Data;
+using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon
@@ -34,6 +36,21 @@ namespace EVEMon
         private bool m_numberFormat;
         private bool m_updatePending;
         private bool m_isUpdatingColumns;
+
+        // Panel info variables
+        private int m_skillBasedOrders;
+        private float m_baseBrokerFee, m_transactionTax;
+        private int m_askRange, m_bidRange, m_modificationRange, m_remoteBidRange;
+        private int m_activeOrdersIssuedForCharacter, m_activeOrdersIssuedForCorporation;
+        private int m_activeSellOrdersIssuedForCharacterCount, m_activeSellOrdersIssuedForCorporationCount;
+        private int m_activeBuyOrdersIssuedForCharacterCount, m_activeBuyOrdersIssuedForCorporationCount;
+        private decimal m_sellOrdersIssuedForCharacterTotal, m_sellOrdersIssuedForCorporationTotal;
+        private decimal m_buyOrdersIssuedForCharacterTotal, m_buyOrdersIssuedForCorporationTotal;
+        private decimal m_issuedForCharacterTotalEscrow, m_issuedForCorporationTotalEscrow;
+        private decimal m_issuedForCharacterEscrowAdditionalToCover, m_issuedForCorporationEscrowAdditionalToCover;
+
+
+        # region Constructor
 
         /// <summary>
         /// Constructor.
@@ -87,7 +104,7 @@ namespace EVEMon
             set
             {
                 m_textFilter = value;
-                UpdateContent();
+                UpdateColumns();
             }
         }
 
@@ -100,7 +117,7 @@ namespace EVEMon
             set
             {
                 m_grouping = value;
-                UpdateContent();
+                UpdateColumns();
             }
         }
 
@@ -113,7 +130,20 @@ namespace EVEMon
             set
             {
                 m_showIssuedFor = value;
-                UpdateContent();
+                UpdateColumns();
+            }
+        }
+
+        /// <summary>
+        /// Gets true when character has active issued order for corporation.
+        /// </summary>
+        public bool HasActiveCorporationIssuedOrders
+        {
+            get 
+            { 
+                return m_list.Any(x=>
+                (x.State == OrderState.Active || x.State == OrderState.Modified)
+                && x.IssuedFor == OrderIssuedFor.Corporation); 
             }
         }
 
@@ -172,19 +202,25 @@ namespace EVEMon
                 m_columns.Clear();
                 if (value != null)
                     m_columns.AddRange(value.Select(x => x.Clone()));
+
                 UpdateColumns();
             }
         }
 
+        #endregion
+
+
         # region Inherited Events
+
         /// <summary>
-        /// On load, we update the content
+        /// On load, we update the content.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            UpdateContent();
+            UpdateColumns();
+            InitilizeExpandablePanelControls();
         }
 
         /// <summary>
@@ -203,18 +239,24 @@ namespace EVEMon
                 this.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 this.Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
 
-                UpdateContent();
+                UpdateColumns();
+                UpdateExpPanelContent();
             }
 
             if (m_updatePending)
-                UpdateContent();
+            {
+                UpdateColumns();
+                UpdateExpPanelContent();
+            }
 
             base.OnVisibleChanged(e);
         }
+
         # endregion
 
 
-        #region Updates on global events
+        #region Updates Main Market Window On Global Events
+
         /// <summary>
         /// <summary>
         /// Updates the columns.
@@ -370,7 +412,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of the listview.
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="groups"></param>
@@ -586,8 +628,35 @@ namespace EVEMon
                     throw new NotImplementedException();
             }
         }
-        # endregion
 
+        #endregion
+
+
+        # region Helper Methods
+
+        /// <summary>
+        /// The description of the range.
+        /// </summary>
+        public string GetRange(int range)
+        {
+            switch (range)
+            {
+                case 0:
+                    return "stations";
+                case 1:
+                    return "solar systems";
+                case 2:
+                    return "5 jumps";
+                case 3:
+                    return "10 jumps";
+                case 4:
+                    return "20 jumps";
+                case 5:
+                    return "regions";
+                default:
+                    return String.Empty; 
+            }
+        }
 
         /// <summary>
         /// Checks the given text matches the item.
@@ -597,19 +666,23 @@ namespace EVEMon
         /// <returns></returns>
         private bool IsTextMatching(MarketOrder x, string text)
         {
-            if (String.IsNullOrEmpty(text)) return true;
+            if (String.IsNullOrEmpty(text)
+                || x.Item.Name.ToLowerInvariant().Contains(text)
+                || x.Item.Description.ToLowerInvariant().Contains(text)
+                || x.Station.Name.ToLowerInvariant().Contains(text)
+                || x.Station.SolarSystem.Name.ToLowerInvariant().Contains(text)
+                || x.Station.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
+                || x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text))
+                return true;
 
-            if (x.Item.Name.ToLowerInvariant().Contains(text)) return true;
-            if (x.Item.Description.ToLowerInvariant().Contains(text)) return true;
-            if (x.Station.Name.ToLowerInvariant().Contains(text)) return true;
-            if (x.Station.SolarSystem.Name.ToLowerInvariant().Contains(text)) return true;
-            if (x.Station.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)) return true;
-            if (x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text)) return true;
             return false;
         }
 
+        #endregion
+
 
         #region Event Handlers
+
         /// <summary>
         /// When the user manually resizes a column, we make sure to update the column preferences.
         /// </summary>
@@ -617,10 +690,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
-            if (m_isUpdatingColumns)
-                return;
-
-            if (m_columns.Count <= e.ColumnIndex)
+            if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
             m_columns[e.ColumnIndex].Width = listView.Columns[e.ColumnIndex].Width;
@@ -676,7 +746,29 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the market orders are changed, update the list.
+        /// Occurs on a mouse click in the expandable panel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void marketExpPanelControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            // We do this to avoid drawing border traces on the background
+            // when there are no market orders present
+            if (marketExpPanelControl.IsExpanded && noOrdersLabel.Visible)
+                noOrdersLabel.BringToFront();
+
+            // Reduce the label's mouse coordinate to panel's
+            int positionX = (sender is Label ? ((Label)sender).Location.X + e.X : e.X);
+            int positionY = (sender is Label ? ((Label)sender).Location.Y + e.Y : e.Y);
+            var arg = new MouseEventArgs(e.Button, 1, positionX, positionY, 3);
+
+            marketExpPanelControl.expandablePanelControl_MouseClick(sender, arg);
+            noOrdersLabel.SendToBack();
+        }
+
+        /// <summary>
+        /// When the market orders are changed,
+        /// update the list and the expandable panel info.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -686,9 +778,355 @@ namespace EVEMon
             if (e.Character != ccpCharacter)
                 return;
             
-            this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
-            UpdateContent();
+            this.Orders = ccpCharacter.MarketOrders;
+            UpdateColumns();
+            UpdateExpPanelContent();
         }
+
         # endregion
+
+
+        #region Updates Expandable Panel On Global Events
+
+        /// <summary>
+        /// Updates the content of the expandable panel.
+        /// </summary>
+        private void UpdateExpPanelContent()
+        {
+            if (m_character == null)
+            {
+                marketExpPanelControl.Visible = false;
+                return;
+            }
+
+            marketExpPanelControl.Visible = true;
+
+            // Calculate the related info for the panel
+            CalculatePanelInfo();
+
+            // Update the info in the panel
+            UpdatePanelInfo();
+
+            // Header text
+            int baseOrders = 5;
+            int maxOrders = baseOrders + m_skillBasedOrders;
+            int activeOrders = m_activeOrdersIssuedForCharacter + m_activeOrdersIssuedForCorporation;
+            int remainingOrders = maxOrders - activeOrders;
+            decimal activeSellOrdersTotal = m_sellOrdersIssuedForCharacterTotal + m_sellOrdersIssuedForCorporationTotal;
+            decimal activeBuyOrdersTotal = m_buyOrdersIssuedForCharacterTotal + m_buyOrdersIssuedForCorporationTotal;
+
+            string ordersRemainingText = String.Format(CultureConstants.DefaultCulture, "Orders Remaining: {0} out of {1} max", remainingOrders, maxOrders);
+            string activeSellOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Sell Orders Total: {0:N} ISK", activeSellOrdersTotal);
+            string activeBuyOrdersTotalText = String.Format(CultureConstants.DefaultCulture, "Buy Orders Total: {0:N} ISK", activeBuyOrdersTotal);
+            marketExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{3,5}{1}{3,5}{2}", ordersRemainingText, activeSellOrdersTotalText, activeBuyOrdersTotalText, String.Empty);
+
+            // Update label position
+            UpdatePanelControlPosition();
+
+            // Force to redraw
+            marketExpPanelControl.Invalidate();
+            marketExpPanelControl.Update();
+        }
+
+        /// <summary>
+        /// Updates the labels text in the panel.
+        /// </summary>
+        private void UpdatePanelInfo()
+        {
+            // Update text
+            decimal totalEscrow = m_issuedForCharacterTotalEscrow + m_issuedForCorporationTotalEscrow;
+            decimal escrowAdditionalToCover = m_issuedForCharacterEscrowAdditionalToCover + m_issuedForCorporationEscrowAdditionalToCover;
+            int activeSellOrdersCount = m_activeSellOrdersIssuedForCharacterCount + m_activeSellOrdersIssuedForCorporationCount;
+            int activeBuyOrdersCount = m_activeBuyOrdersIssuedForCharacterCount + m_activeBuyOrdersIssuedForCorporationCount;
+            bool marketingFirstLevelIsTrained = (m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.MarketingSkillID).LastConfirmedLvl > 0);
+            string askRange = GetRange(m_askRange);
+            string bidRange = GetRange(m_bidRange);
+            string modificationRange = GetRange(m_modificationRange);
+            string remoteBidRange = GetRange(m_remoteBidRange);
+
+            // Basic label text
+            lblTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Total in Escrow: {0:N} ISK (additional {1:N} ISK to cover)", totalEscrow, escrowAdditionalToCover);
+            lblBaseBrokerFee.Text = String.Format(CultureConstants.DefaultCulture, "Base Broker Fee: {0:0.0#}% of order value", m_baseBrokerFee);
+            lblTransactionTax.Text = String.Format(CultureConstants.DefaultCulture, "Transaction Tax: {0:0.0#}% of sales value", m_transactionTax);
+            lblActiveSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Active Sell Orders: {0}", activeSellOrdersCount);
+            lblActiveBuyOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Active Buy Orders: {0}", activeBuyOrdersCount);
+            lblAskRange.Text = String.Format(CultureConstants.DefaultCulture, "Ask Range: limited to {0}", askRange);
+            lblBidRange.Text = String.Format(CultureConstants.DefaultCulture, "Bid Range: limited to {0}", bidRange);
+            lblModificationRange.Text = String.Format(CultureConstants.DefaultCulture, "Modification Range: limited to {0}", modificationRange);
+            lblRemoteBidRange.Text = (marketingFirstLevelIsTrained ? String.Format(CultureConstants.DefaultCulture, "Remote Bid Range: limited to {0}", remoteBidRange) : String.Empty);
+
+            // Supplemental label text
+            lblCharTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0:N} ISK (additional {1:N} ISK to cover)", m_issuedForCharacterTotalEscrow, m_issuedForCharacterEscrowAdditionalToCover);
+            lblCorpTotalEscrow.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0:N} ISK (additional {1:N} ISK to cover)", m_issuedForCorporationTotalEscrow, m_issuedForCorporationEscrowAdditionalToCover);
+            lblActiveCharSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeSellOrdersIssuedForCharacterCount);
+            lblActiveCorpSellOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}", m_activeSellOrdersIssuedForCorporationCount);
+            lblActiveCharBuyOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}", m_activeBuyOrdersIssuedForCharacterCount);
+            lblActiveCorpBuyOrdersCount.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}", m_activeBuyOrdersIssuedForCorporationCount);
+            lblActiveCharSellOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_sellOrdersIssuedForCharacterTotal);
+            lblActiveCorpSellOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_sellOrdersIssuedForCorporationTotal);
+            lblActiveCharBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_buyOrdersIssuedForCharacterTotal);
+            lblActiveCorpBuyOrdersTotal.Text = String.Format(CultureConstants.DefaultCulture, "Total: {0:N} ISK", m_buyOrdersIssuedForCorporationTotal);
+        }
+
+        /// <summary>
+        /// Updates expandable panel controls positions.
+        /// </summary>
+        private void UpdatePanelControlPosition()
+        {
+            var pad = 5;
+            var height = (marketExpPanelControl.ExpandDirection == Direction.Up ? pad : marketExpPanelControl.HeaderHeight);
+
+            lblTotalEscrow.Location = new Point(5, height);
+            height += lblTotalEscrow.Height;
+            if (HasActiveCorporationIssuedOrders)
+            {
+                lblCharTotalEscrow.Location = new Point(15, height);
+                lblCharTotalEscrow.Visible = true;
+                height += lblCharTotalEscrow.Height;
+
+                lblCorpTotalEscrow.Location = new Point(15, height);
+                lblCorpTotalEscrow.Visible = true;
+                height += lblCorpTotalEscrow.Height;
+            }
+            else
+            {
+                lblCharTotalEscrow.Visible = false;
+                lblCorpTotalEscrow.Visible = false;
+            }
+
+            height += pad;
+
+            lblBaseBrokerFee.Location = new Point(5, height);
+            lblAskRange.Location = new Point(lblAskRange.Location.X, height);
+            height += lblBaseBrokerFee.Height;
+
+            lblTransactionTax.Location = new Point(5, height);
+            lblBidRange.Location = new Point(lblBidRange.Location.X, height);
+            height += lblTransactionTax.Height;
+
+            lblModificationRange.Location = new Point(lblModificationRange.Location.X, height);
+            height += lblModificationRange.Height;
+
+            lblActiveSellOrdersCount.Location = new Point(5, height);
+            lblRemoteBidRange.Location = new Point(lblRemoteBidRange.Location.X, height);
+            height += lblActiveSellOrdersCount.Height;
+
+            if (HasActiveCorporationIssuedOrders)
+            {
+                lblActiveCharSellOrdersCount.Location = new Point(15, height);
+                lblActiveCharSellOrdersTotal.Location = new Point(150, height);
+                lblActiveCharSellOrdersCount.Visible = true;
+                lblActiveCharSellOrdersTotal.Visible = true;
+                height += lblCharTotalEscrow.Height;
+
+                lblActiveCorpSellOrdersCount.Location = new Point(15, height);
+                lblActiveCorpSellOrdersTotal.Location = new Point(150, height);
+                lblActiveCorpSellOrdersCount.Visible = true;
+                lblActiveCorpSellOrdersTotal.Visible = true;
+                height += lblCorpTotalEscrow.Height + pad;
+            }
+            else
+            {
+                lblActiveCharSellOrdersCount.Visible = false;
+                lblActiveCharSellOrdersTotal.Visible = false;
+                lblActiveCorpSellOrdersCount.Visible = false;
+                lblActiveCorpSellOrdersTotal.Visible = false;
+            }
+
+            lblActiveBuyOrdersCount.Location = new Point(5, height);
+            height += lblActiveBuyOrdersCount.Height;
+
+            if (HasActiveCorporationIssuedOrders)
+            {
+                lblActiveCharBuyOrdersCount.Location = new Point(15, height);
+                lblActiveCharBuyOrdersTotal.Location = new Point(150, height);
+                lblActiveCharBuyOrdersCount.Visible = true;
+                lblActiveCharBuyOrdersTotal.Visible = true;
+                height += lblCharTotalEscrow.Height;
+
+                lblActiveCorpBuyOrdersCount.Location = new Point(15, height);
+                lblActiveCorpBuyOrdersTotal.Location = new Point(150, height);
+                lblActiveCorpBuyOrdersCount.Visible = true;
+                lblActiveCorpBuyOrdersTotal.Visible = true;
+                height += lblCorpTotalEscrow.Height;
+            }
+            else
+            {
+                lblActiveCharBuyOrdersCount.Visible = false;
+                lblActiveCharBuyOrdersTotal.Visible = false;
+                lblActiveCorpBuyOrdersCount.Visible = false;
+                lblActiveCorpBuyOrdersTotal.Visible = false;
+            }
+            height += pad;
+
+            // Update panel's expanded height
+            marketExpPanelControl.ExpandedHeight = height + (marketExpPanelControl.ExpandDirection == Direction.Up ? marketExpPanelControl.HeaderHeight : pad);
+        }
+
+        /// <summary>
+        /// Calculates the market orders related info for the panel.
+        /// </summary>
+        private void CalculatePanelInfo()
+        {
+            var activeSellOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                && x is SellOrder && x.IssuedFor == OrderIssuedFor.Character);
+            var activeSellOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                && x is SellOrder && x.IssuedFor == OrderIssuedFor.Corporation);
+            var activeBuyOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                && x is BuyOrder && x.IssuedFor == OrderIssuedFor.Character);
+            var activeBuyOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
+                && x is BuyOrder && x.IssuedFor == OrderIssuedFor.Corporation);
+
+            // Calculate character's max orders
+            m_skillBasedOrders = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.TradeSkillID).LastConfirmedLvl * 4
+                + m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.RetailSkillID).LastConfirmedLvl * 8
+                + m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.WholesaleSkillID).LastConfirmedLvl * 16
+                + m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.TycconSkillID).LastConfirmedLvl * 32;
+
+            // Calculate character's base broker fee
+            m_baseBrokerFee = 1 - (m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.BrokerRelationsSkillID).LastConfirmedLvl * 0.05f);
+
+            // Calculate character's transaction tax
+            m_transactionTax = 1 - (m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.AccountingSkillID).LastConfirmedLvl * 0.1f);
+
+            // Calculate character's ask range
+            m_askRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.MarketingSkillID).LastConfirmedLvl;
+
+            // Calculate character's bid range
+            m_bidRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.ProcurementSkillID).LastConfirmedLvl;
+
+            // Calculate character's modification range
+            m_modificationRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.DaytradingSkillID).LastConfirmedLvl;
+
+            // Calculate character's remote bid range
+            m_remoteBidRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.VisibilitySkillID).LastConfirmedLvl;
+
+            // Calculate active sell & buy orders total price (character & corporation issued separately)
+            m_sellOrdersIssuedForCharacterTotal = activeSellOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
+            m_sellOrdersIssuedForCorporationTotal = activeSellOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
+            m_buyOrdersIssuedForCharacterTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
+            m_buyOrdersIssuedForCorporationTotal = activeBuyOrdersIssuedForCorporation.Sum(x => x.TotalPrice);
+
+            // Calculate active sell & buy orders count (character & corporation issued separately)
+            m_activeSellOrdersIssuedForCharacterCount = activeSellOrdersIssuedForCharacter.Count();
+            m_activeSellOrdersIssuedForCorporationCount = activeSellOrdersIssuedForCorporation.Count();
+            m_activeBuyOrdersIssuedForCharacterCount = activeBuyOrdersIssuedForCharacter.Count();
+            m_activeBuyOrdersIssuedForCorporationCount = activeBuyOrdersIssuedForCorporation.Count();
+
+            // Calculate active orders (character & corporation issued separately)
+            m_activeOrdersIssuedForCharacter = m_activeSellOrdersIssuedForCharacterCount + m_activeBuyOrdersIssuedForCharacterCount;
+            m_activeOrdersIssuedForCorporation = m_activeSellOrdersIssuedForCorporationCount + m_activeBuyOrdersIssuedForCorporationCount;
+
+            // Calculate total escrow (character & corporation issued separately)
+            m_issuedForCharacterTotalEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
+            m_issuedForCorporationTotalEscrow = activeBuyOrdersIssuedForCorporation.Sum(x => ((BuyOrder)x).Escrow);
+
+            // Calculate escrow additional to cover (character & corporation issued separately)
+            m_issuedForCharacterEscrowAdditionalToCover = m_buyOrdersIssuedForCharacterTotal - m_issuedForCharacterTotalEscrow;
+            m_issuedForCorporationEscrowAdditionalToCover = m_buyOrdersIssuedForCorporationTotal - m_issuedForCorporationTotalEscrow;
+        }
+
+        # endregion
+
+
+        #region Initilize Expandable Panel Controls
+
+        // Basic labels constructor
+        private Label lblTotalEscrow = new Label();
+        private Label lblBaseBrokerFee = new Label();
+        private Label lblTransactionTax = new Label();
+        private Label lblActiveSellOrdersCount = new Label();
+        private Label lblActiveBuyOrdersCount = new Label();
+        private Label lblAskRange = new Label();
+        private Label lblBidRange = new Label();
+        private Label lblModificationRange = new Label();
+        private Label lblRemoteBidRange = new Label();
+
+        // Supplemental labels constructor
+        private Label lblCharTotalEscrow = new Label();
+        private Label lblCorpTotalEscrow = new Label();
+        private Label lblActiveCharSellOrdersTotal = new Label();
+        private Label lblActiveCorpSellOrdersTotal = new Label();
+        private Label lblActiveCharBuyOrdersTotal = new Label();
+        private Label lblActiveCorpBuyOrdersTotal = new Label();
+        private Label lblActiveCharSellOrdersCount = new Label();
+        private Label lblActiveCorpSellOrdersCount = new Label();
+        private Label lblActiveCharBuyOrdersCount = new Label();
+        private Label lblActiveCorpBuyOrdersCount = new Label();
+
+        private void InitilizeExpandablePanelControls()
+        {
+            // Add basic labels to panel
+            marketExpPanelControl.Controls.AddRange(new Label[]
+            { 
+                lblTotalEscrow,
+                lblBaseBrokerFee,
+                lblTransactionTax,
+                lblActiveSellOrdersCount,
+                lblActiveBuyOrdersCount,
+                lblAskRange,
+                lblBidRange,
+                lblModificationRange,
+                lblRemoteBidRange,
+            });
+
+            // Add supplemental labels to panel
+            marketExpPanelControl.Controls.AddRange(new Label[]
+            { 
+                lblCharTotalEscrow,
+                lblCorpTotalEscrow,
+                lblActiveCharSellOrdersTotal,
+                lblActiveCorpSellOrdersTotal,
+                lblActiveCharBuyOrdersTotal,
+                lblActiveCorpBuyOrdersTotal,
+                lblActiveCharSellOrdersCount,
+                lblActiveCorpSellOrdersCount,
+                lblActiveCharBuyOrdersCount,
+                lblActiveCorpBuyOrdersCount,
+            });
+
+            // Apply properties
+            foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())
+            {
+                label.ForeColor = SystemColors.ControlText;
+                label.BackColor = Color.Transparent;
+                label.AutoSize = true;
+            }
+
+            // Special properties
+            lblAskRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblBidRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblModificationRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblRemoteBidRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblAskRange.Location = new Point(370, 0);
+            lblBidRange.Location = new Point(370, 0);
+            lblModificationRange.Location = new Point(370, 0);
+            lblRemoteBidRange.Location = new Point(370, 0);
+
+            // Subscribe events
+            marketExpPanelControl.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            marketExpPanelControl.Header.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblBaseBrokerFee.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblTransactionTax.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblAskRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblBidRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblModificationRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblRemoteBidRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblCharTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblCorpTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCharSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCorpSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCharBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCorpBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCharSellOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCorpSellOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCharBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            lblActiveCorpBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+        }
+
+        #endregion
     }
 }

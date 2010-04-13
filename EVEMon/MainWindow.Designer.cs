@@ -919,7 +919,7 @@ namespace EVEMon
             this.Controls.Add(this.standardToolbar);
             this.Controls.Add(this.mainMenuBar);
             this.MainMenuStrip = this.mainMenuBar;
-            this.MinimumSize = new System.Drawing.Size(425, 350);
+            this.MinimumSize = new System.Drawing.Size(455, 350);
             this.Name = "MainWindow";
             this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);

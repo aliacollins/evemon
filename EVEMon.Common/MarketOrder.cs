@@ -130,7 +130,7 @@ namespace EVEMon.Common
                 // If its a buying order, escrow may have changed
                 if (src.IsBuyOrder != 0)
                     ((BuyOrder)this).Escrow = src.Escrow;
-                
+
                 m_unitaryPrice = src.UnitaryPrice;
                 m_remainingVolume = src.RemainingVolume;
                 m_issued = src.Issued;
@@ -290,7 +290,7 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (IsExpired && m_state == OrderState.Active)
+                if (IsExpired && (m_state == OrderState.Active || m_state == OrderState.Modified))
                     return OrderState.Expired;
 
                 return m_state; 
@@ -434,8 +434,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool IsModified (SerializableAPIOrder src)
         {
-            return (src.UnitaryPrice != m_unitaryPrice && src.Issued != m_issued)
-                || (src.RemainingVolume != m_remainingVolume && src.RemainingVolume != 0);
+            return src.RemainingVolume != 0 && (src.UnitaryPrice != m_unitaryPrice && src.Issued != m_issued 
+                || src.RemainingVolume != m_remainingVolume);
         }
 
         /// <summary>

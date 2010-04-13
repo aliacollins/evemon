@@ -37,8 +37,9 @@
             this.volumeColumn = new System.Windows.Forms.ColumnHeader();
             this.priceColumn = new System.Windows.Forms.ColumnHeader();
             this.locationColumn = new System.Windows.Forms.ColumnHeader();
-            this.noOrdersLabel = new System.Windows.Forms.Label();
             this.ilListIcons = new System.Windows.Forms.ImageList(this.components);
+            this.noOrdersLabel = new System.Windows.Forms.Label();
+            this.marketExpPanelControl = new EVEMon.Controls.ExpandablePanelControl();
             this.SuspendLayout();
             // 
             // listView
@@ -60,7 +61,7 @@
             listViewGroup2});
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(454, 434);
+            this.listView.Size = new System.Drawing.Size(454, 334);
             this.listView.SmallImageList = this.ilListIcons;
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
@@ -86,6 +87,14 @@
             this.locationColumn.Text = "System";
             this.locationColumn.Width = 80;
             // 
+            // ilListIcons
+            // 
+            this.ilListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilListIcons.ImageStream")));
+            this.ilListIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilListIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilListIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilListIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
             // noOrdersLabel
             // 
             this.noOrdersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -97,21 +106,29 @@
             this.noOrdersLabel.Text = "No market orders are available.";
             this.noOrdersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ilListIcons
+            // marketExpPanelControl
             // 
-            this.ilListIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilListIcons.ImageStream")));
-            this.ilListIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilListIcons.Images.SetKeyName(0, "arrow_up.png");
-            this.ilListIcons.Images.SetKeyName(1, "arrow_down.png");
-            this.ilListIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            this.marketExpPanelControl.AnimationSpeed = EVEMon.Controls.AnimationSpeed.Medium;
+            this.marketExpPanelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.marketExpPanelControl.EnableContextMenu = false;
+            this.marketExpPanelControl.ExpandDirection = EVEMon.Controls.Direction.Down;
+            this.marketExpPanelControl.ExpandedOnStartup = false;
+            this.marketExpPanelControl.HeaderHeight = 30;
+            this.marketExpPanelControl.ImageCollapse = global::EVEMon.Properties.Resources.Expand;
+            this.marketExpPanelControl.ImageExpand = global::EVEMon.Properties.Resources.Collapse;
+            this.marketExpPanelControl.Location = new System.Drawing.Point(0, 334);
+            this.marketExpPanelControl.Name = "marketExpPanelControl";
+            this.marketExpPanelControl.Size = new System.Drawing.Size(454, 100);
+            this.marketExpPanelControl.TabIndex = 2;
             // 
-            // MainWindowMarketOrders
+            // MainWindowMarketOrdersList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listView);
+            this.Controls.Add(this.marketExpPanelControl);
             this.Controls.Add(this.noOrdersLabel);
-            this.Name = "MainWindowMarketOrders";
+            this.Name = "MainWindowMarketOrdersList";
             this.Size = new System.Drawing.Size(454, 434);
             this.ResumeLayout(false);
 
@@ -126,5 +143,6 @@
         private System.Windows.Forms.ColumnHeader locationColumn;
         private System.Windows.Forms.ColumnHeader priceColumn;
         private System.Windows.Forms.ImageList ilListIcons;
+        private EVEMon.Controls.ExpandablePanelControl marketExpPanelControl;
     }
 }
