@@ -152,12 +152,18 @@
     <Compile Include="Controls\DraggableTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ExpandablePanelControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\ColumnSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NoFlickerPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
