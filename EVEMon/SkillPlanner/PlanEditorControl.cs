@@ -149,6 +149,9 @@ namespace EVEMon.SkillPlanner
                 // Update Implant Set control
                 UpdateImplantSetList();
                 cbChooseImplantSet.SelectedIndex = 0;
+
+                // Update the columns
+                UpdateListColumns();
             }
         }
 
