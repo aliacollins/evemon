@@ -1993,7 +1993,11 @@ namespace EVEMon.SkillPlanner
             {
                 tsbMoveUp.Enabled = false;
                 tsbMoveDown.Enabled = false;
-                UpdateListViewItems();
+                ResetPrereqMarks();
+            }
+            else if (lvSkills.SelectedItems[0].Tag is RemappingPoint || lvSkills.SelectedItems.Count > 0)
+            {
+                ResetPrereqMarks();
             }
             else
             {
@@ -2050,6 +2054,18 @@ namespace EVEMon.SkillPlanner
             }
 
             UpdateStatusBar();
+        }
+
+        /// <summary>
+        /// Resets the prerequisites marks.
+        /// </summary>
+        private void ResetPrereqMarks()
+        {
+            // We avoid using Invalidate() as it cause the whole listview to flicker 
+            foreach (ListViewItem current in lvSkills.Items)
+            {
+                current.ImageIndex = -1;
+            }
         }
 
         /// <summary>
