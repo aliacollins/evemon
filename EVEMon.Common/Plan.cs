@@ -778,6 +778,47 @@ namespace EVEMon.Common
             }
             return skill;
         }
+
+        /// <summary>
+        /// Calculates the time to train specified entries assuming preceding learning skills were trained first.
+        /// </summary>
+        /// <param name="Entries">IEnumerable of skills</param>
+        /// <returns>TimeSpan representing the time to train specified entries</returns>
+        public TimeSpan TimeWithPrecedingLearning(IEnumerable<PlanEntry> Entries)
+        {
+            // Build a temporary plan to calculate the learning skills
+            List<PlanEntry> selectedPlusLearning = new List<PlanEntry>();
+            Plan planSelectedPlusLearning = new Plan(this.Character);
+
+            int selectedSkillCount = Entries.Count();
+
+            // Go through the entries one at a time so that we maintain the sequence
+            foreach (var entry in this)
+            {
+                if (selectedSkillCount <= 0)
+                    continue;
+
+                // If this is one of the selected skills add it to the plan
+                foreach (var selectedEntry in Entries)
+                {
+                    if (selectedEntry.Skill == entry.Skill && selectedEntry.Level == entry.Level)
+                    {
+                        selectedPlusLearning.Add(new PlanEntry(planSelectedPlusLearning, entry.Skill, entry.Level));
+                        selectedSkillCount--;
+                        continue;
+                    }
+                }
+
+                // If this is a learning skill add it to the plan
+                if (entry.Skill.LearningClass != LearningClass.None)
+                    selectedPlusLearning.Add(new PlanEntry(planSelectedPlusLearning, entry.Skill, entry.Level));
+            }
+
+            planSelectedPlusLearning.RebuildPlanFrom(selectedPlusLearning);
+            planSelectedPlusLearning.ChosenImplantSet = this.ChosenImplantSet;
+
+            return planSelectedPlusLearning.TotalTrainingTime;
+        }
     }
 
     /// <summary>

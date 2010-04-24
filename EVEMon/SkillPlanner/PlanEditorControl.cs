@@ -810,8 +810,9 @@ namespace EVEMon.SkillPlanner
             foreach (var entry in SelectedEntries)
             {
                 selectedTrainTime += entry.TrainingTime;
-                selectedTimeWithLearning += entry.TrainingTimeWithLearning;
             }
+
+            selectedTimeWithLearning = this.Plan.TimeWithPrecedingLearning(SelectedEntries);
 
             // Appends the string to display in the status bar.
             StringBuilder sb = new StringBuilder();
@@ -824,7 +825,7 @@ namespace EVEMon.SkillPlanner
 
             if (selectedTimeWithLearning != selectedTrainTime)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "({0} with preceding learning skills). ",
+                sb.AppendFormat(CultureConstants.DefaultCulture, "({0} including preceding learning skills). ",
                     Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning, DescriptiveTextOptions.IncludeCommas));
             }
             
@@ -947,7 +948,9 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                return lvSkills.SelectedItems.Cast<ListViewItem>().Where(x => x.Tag is PlanEntry).Select(x => x.Tag as PlanEntry);
+                return lvSkills.SelectedItems.Cast<ListViewItem>()
+                    .Where(x => x.Tag is PlanEntry)
+                    .Select(x => x.Tag as PlanEntry);
             }
         }
         #endregion
