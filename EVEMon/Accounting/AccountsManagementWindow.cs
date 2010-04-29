@@ -88,14 +88,7 @@ namespace EVEMon.Accounting
         void EveClient_AccountCollectionChanged(object sender, EventArgs e)
         {
             accountsListBox.Accounts = EveClient.Accounts;
-            if (EveClient.Accounts.Count == 0)
-            {
-                accountsMultiPanel.SelectedPage = noAccountsPage;
-            }
-            else
-            {
-                accountsMultiPanel.SelectedPage = accountsListPage;
-            }
+            accountsMultiPanel.SelectedPage = (EveClient.Accounts.IsEmpty() ? noAccountsPage : accountsListPage);
         }
 
         /// <summary>

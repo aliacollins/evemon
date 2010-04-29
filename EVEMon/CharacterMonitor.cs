@@ -302,9 +302,10 @@ namespace EVEMon
                 lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
 
                 lblTrainingRemain.Text = "Paused";
-                lblTrainingEst.Text = "";
-                skillQueuePanel.Visible = true;
+                lblTrainingEst.Text = String.Empty;
+                lblScheduleWarning.Visible = false;
                 skillQueueTimePanel.Visible = false;
+                skillQueuePanel.Visible = true;
                 lblPaused.Visible = true;
                 pnlTraining.Visible = true;
                 return;

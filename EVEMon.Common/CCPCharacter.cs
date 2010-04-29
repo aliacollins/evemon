@@ -277,16 +277,9 @@ namespace EVEMon.Common
             // Import the data
             m_queue.Import(result.Result.Queue);
 
-            // Check the account is in training or send a notification
+            // Check the account is in training
             var account = m_identity.Account;
-            if (account.TrainingCharacter == null && !account.CharacterIdentities.IsEmpty())
-            {
-                EveClient.Notifications.NotifyAccountNotInTraining(account);
-            }
-            else
-            {
-                EveClient.Notifications.InvalidateAccountNotInTraining(account);
-            }
+            account.CharacterInTraining();
 
             // Check the character has room in skill queue
             if (IsTraining && (SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))

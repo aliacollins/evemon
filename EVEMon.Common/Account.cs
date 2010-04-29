@@ -20,6 +20,9 @@ namespace EVEMon.Common
         private string m_apiKey;
         private CredentialsLevel m_keyLevel;
 
+        private bool m_hasCharacterInTraining;
+        private int m_counter;
+
         private readonly AccountIgnoreList m_ignoreList;
         private readonly AccountQueryMonitor<SerializableCharacterList> m_charactersListMonitor;
 
@@ -95,6 +98,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets true if this account has a character in training
+        /// </summary>
+        public bool HasCharacterInTraining
+        {
+            get{ return m_hasCharacterInTraining; }
+        }
+
+        /// <summary>
         /// Gets the character identities for this account
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
@@ -104,9 +115,7 @@ namespace EVEMon.Common
                 foreach (var characterID in EveClient.CharacterIdentities)
                 {
                     if (characterID.Account == this)
-                    {
                         yield return characterID;
-                    }
                 }
             }
         }
@@ -129,8 +138,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character in training on this account, or null if none are in traininig.
+        /// Gets the character in training on this account, or null if none are in training.
         /// </summary>
+        /// <remarks>Returns null if the character is in the ignored list.</remarks>
         public CCPCharacter TrainingCharacter
         {
             get
@@ -140,11 +150,26 @@ namespace EVEMon.Common
                 {
                     var ccpCharacter = id.CCPCharacter;
                     if (ccpCharacter != null && ccpCharacter.IsTraining)
-                    {
                         return ccpCharacter;
-                    }
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Query each account character's skill in training.
+        /// </summary>
+        internal void CharacterInTraining()
+        {
+            m_counter = 0;
+            
+            foreach (var id in CharacterIdentities)
+            {
+                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
+                    APIMethods.CharacterSkillInTraining, m_userId, m_apiKey, id.CharacterID,
+                    OnSkillInTrainingUpdated);
+
+                m_counter++;
             }
         }
 
@@ -167,16 +192,15 @@ namespace EVEMon.Common
                 if (characterID == null)
                     return;
 
-                // Query the wallet balance.
+                // Query the wallet balance
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAccountBalanceList>(
                     APIMethods.CharacterAccountBalance, m_userId, m_apiKey, characterID.CharacterID,
                     OnKeyLevelUpdated);
             }
-
         }
 
         /// <summary>
-        /// Used when the character list has been queries
+        /// Used when the character list has been queried.
         /// </summary>
         /// <param name="result"></param>
         private void OnCharactersListUpdated(APIResult<SerializableCharacterList> result)
@@ -191,6 +215,9 @@ namespace EVEMon.Common
             // Invalidates the notification and update
             EveClient.Notifications.InvalidateAccountError(this);
             this.Import(result);
+
+            // Has character in training ?
+            CharacterInTraining();
         }
 
         /// <summary>
@@ -202,21 +229,43 @@ namespace EVEMon.Common
             m_lastKeyLevelUpdate = DateTime.UtcNow;
             m_keyLevel = GetCredentialsLevel(result);
 
-            // Notify error if any.
+            // Notify error if any
             if (m_keyLevel == CredentialsLevel.Unknown)
             {
                 EveClient.Notifications.NotifyKeyLevelError(this, result);
                 return;
             }
 
-            // Notify characters changed.
+            // Notify characters changed
             foreach (var id in this.CharacterIdentities)
             {
                 var ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter != null)
-                {
                     EveClient.OnCharacterChanged(ccpCharacter);
-                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the account is in training or send a notification.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result)
+        {
+            // Return on error
+            if (result.HasError)
+                return;
+
+            m_hasCharacterInTraining |= result.Result.SkillInTraining != 0;
+            m_counter--;
+
+            // Notify on account none character in training
+            if (!m_hasCharacterInTraining && m_counter == 0)
+            {
+                EveClient.Notifications.NotifyAccountNotInTraining(this);
+            }
+            else
+            {
+                EveClient.Notifications.InvalidateAccountNotInTraining(this);
             }
         }
 
@@ -234,9 +283,7 @@ namespace EVEMon.Common
 
             // Error code 200 means it was a limited key
             if (result.CCPError != null && result.CCPError.IsLimitedKeyError) 
-            {
                 return CredentialsLevel.Limited;
-            }
 
             // Another error occured 
             return CredentialsLevel.Unknown;
@@ -280,9 +327,8 @@ namespace EVEMon.Common
             {
                 var id = EveClient.CharacterIdentities[serialID.ID];
                 if (id == null)
-                {
                     id = EveClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
-                }
+
                 id.Account = this;
             }
         }
@@ -359,23 +405,18 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            string description = m_userId.ToString();
-
-            // If no characters on this ccount, return a "no characters" mention
+            // If no characters on this account, return a "no characters" mention
             if (this.CharacterIdentities.Count() == 0)
-            {
-                return description + " (no characters)";
-            }
+                return String.Format("{0} (no characters)", m_userId);
 
             // Otherwise, return the chars' names into parenthesis.
-            string sep = " (";
+            string names = String.Empty;
             foreach (var id in this.CharacterIdentities)
             {
-                description += sep;
-                description += id.Name;
-                sep = ", ";
+                names += id.Name;
+                names += ", ";
             }
-            return description + ")";
+            return String.Format("{0} ({1})", m_userId, names.TrimEnd(", ".ToCharArray()));
         }
     }
 }

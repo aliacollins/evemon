@@ -35,7 +35,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Removes this character and attempts to return a CCP character. 
         /// The resulting character will be the existing one matching this id, or if it does not exist, a new character. 
-        /// If the identity was not in the collection, the method won't attempt to create a new character and will return eithe the existing one or null.
+        /// If the identity was not in the collection, the method won't attempt to create a new character and will return either the existing one or null.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

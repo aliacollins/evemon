@@ -55,7 +55,7 @@ namespace EVEMon.Common
         /// </summary>
         [FullKey]
         [Header("Mail Messages")]
-        [Description("Mail messages for a charater.")]
+        [Description("Mail messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         MailMessages,
 
@@ -64,7 +64,7 @@ namespace EVEMon.Common
         /// </summary>
         [FullKey]
         [Header("Notifications")]
-        [Description("Notifications messages for a charater.")]
+        [Description("Notifications messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         Notifications,
 
@@ -94,7 +94,12 @@ namespace EVEMon.Common
         /// The conquerable station list. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        ConquerableStationList
+        ConquerableStationList,
+
+        /// <summary>
+        /// The skill in training of a character.
+        /// </summary>
+        CharacterSkillInTraining
 
     }
 

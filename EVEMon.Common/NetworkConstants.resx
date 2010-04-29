@@ -193,4 +193,8 @@
   <data name="EVEMonUserVoice" xml:space="preserve">
     <value>http://evemon.uservoice.com/</value>
   </data>
+  <data name="APICharacterSkillInTraining" xml:space="preserve">
+    <value>/char/SkillInTraining.xml.aspx</value>
+    <comment>Used to check whether a character is training a skill or not.</comment>
+  </data>
 </root>

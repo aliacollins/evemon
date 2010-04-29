@@ -32,7 +32,7 @@ namespace EVEMon.Common
         private static GlobalAccountCollection s_accounts;
         private static GlobalNotificationCollection s_notifications;
         private static GlobalCharacterIdentityCollection s_identities;
-        private static GlobalMonitoredCharacterCollection s_sources;
+        private static GlobalMonitoredCharacterCollection s_monitoredCharacters;
         private static GlobalAPIProviderCollection s_apiProviders;
         private static GlobalDatafileCollection s_datafiles;
         private static GlobalCharacterCollection s_characters;
@@ -61,7 +61,7 @@ namespace EVEMon.Common
                 // Members instantiations
                 s_httpWebService = new HttpWebService();
                 s_apiProviders = new GlobalAPIProviderCollection();
-                s_sources = new GlobalMonitoredCharacterCollection();
+                s_monitoredCharacters = new GlobalMonitoredCharacterCollection();
                 s_identities = new GlobalCharacterIdentityCollection();
                 s_notifications = new GlobalNotificationCollection();
                 s_characters = new GlobalCharacterCollection();
@@ -341,7 +341,7 @@ namespace EVEMon.Common
         /// </summary>
         public static GlobalMonitoredCharacterCollection MonitoredCharacters
         {
-            get { return s_sources; }
+            get { return s_monitoredCharacters; }
         }
 
         /// <summary>

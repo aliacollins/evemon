@@ -323,6 +323,7 @@
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
     <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
+    <Compile Include="Serialization\API\SerializableSkillInTraining.cs" />
     <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

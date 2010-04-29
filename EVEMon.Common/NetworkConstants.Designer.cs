@@ -106,6 +106,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/SkillInTraining.xml.aspx.
+        /// </summary>
+        public static string APICharacterSkillInTraining {
+            get {
+                return ResourceManager.GetString("APICharacterSkillInTraining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /eve/ConquerableStationList.xml.aspx.
         /// </summary>
         public static string APIConquerableStationList {

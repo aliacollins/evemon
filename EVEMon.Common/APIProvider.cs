@@ -157,6 +157,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Query the characters skill in training.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="charID"></param>
+        /// <returns></returns>
+        public APIResult<SerializableSkillInTraining> QuerySkillInTraining(long userID, string apiKey, long charID)
+        {
+            HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
+            return QueryMethod<SerializableSkillInTraining>(APIMethods.CharacterSkillInTraining, postData, RowsetsTransform);
+        }
+
+        /// <summary>
         /// Query the characters list for the provided account.
         /// </summary>
         /// <param name="userID">The account's ID</param>
@@ -234,9 +247,7 @@ namespace EVEMon.Common
 
             // On failure with a custom method, fallback to CCP
             if (ShouldRetryWithCCP(result))
-            {
                 return s_ccpProvider.QueryMethod<T>(method, postData, transform);
-            }
 
             // If the result is a character sheet, we store the result
             if (method == APIMethods.CharacterSheet && !result.HasError)
@@ -247,9 +258,7 @@ namespace EVEMon.Common
 
             // If the result is a conquerable station list, we store the result
             if (method == APIMethods.ConquerableStationList && !result.HasError)
-            {
                 LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-            }
 
             // Returns
             return result;
@@ -267,9 +276,7 @@ namespace EVEMon.Common
         {
             // Check callback not null
             if (callback == null)
-            {
                 throw new ArgumentNullException("The callback cannot be null.", "callback");
-            }
 
             // Lazy download
             string url = GetMethodUrl(method);
@@ -277,9 +284,7 @@ namespace EVEMon.Common
             {
                 // On failure with a custom method, fallback to CCP
                 if (ShouldRetryWithCCP(result))
-                {
                     result = s_ccpProvider.QueryMethod<T>(method, postData, transform);
-                }
 
                 // If the result is a character sheet, we store the result
                 if (method == APIMethods.CharacterSheet && !result.HasError)
@@ -290,9 +295,7 @@ namespace EVEMon.Common
 
                 // If the result is a conquerable station list, we store the result
                 if (method == APIMethods.ConquerableStationList && !result.HasError)
-                {
                     LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-                }
 
                 // Invokes the callback
                 callback(result);
@@ -317,9 +320,7 @@ namespace EVEMon.Common
             get
             {
                 if (m_rowsetsTransform == null)
-                {
                     m_rowsetsTransform = Util.LoadXSLT(EVEMon.Common.Properties.Resources.RowsetsXSLT);
-                }
 
                 return m_rowsetsTransform;
             }

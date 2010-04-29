@@ -32,7 +32,7 @@ namespace EVEMon.Common
         {
             message = String.Empty;
 
-            var accountsNotTraining = EveClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && x.TrainingCharacter == null);
+            var accountsNotTraining = EveClient.Accounts.Where(x => !x.CharacterIdentities.IsEmpty() && !x.HasCharacterInTraining);
 
             // All accounts are training ?
             if (accountsNotTraining.Count() == 0)
@@ -42,7 +42,7 @@ namespace EVEMon.Common
             StringBuilder builder = new StringBuilder();
             if (accountsNotTraining.Count() == 1)
             {
-                builder.Append("One of your account is not in training.");
+                builder.AppendFormat("{0} is not in training", (EveClient.Accounts.Count == 1 ? "Your account" : "One of your accounts"));
             }
             else
             {
