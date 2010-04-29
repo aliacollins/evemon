@@ -1998,14 +1998,11 @@ namespace EVEMon.SkillPlanner
                 tsbMoveDown.Enabled = false;
                 ResetPrereqMarks();
             }
-            else if (lvSkills.SelectedItems[0].Tag is RemappingPoint || lvSkills.SelectedItems.Count > 0)
-            {
-                ResetPrereqMarks();
-            }
             else
             {
                 tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
                 tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] != lvSkills.Items.Count - 1);
+                ResetPrereqMarks();
             }
 
             // Creates the prerequisite indicators
