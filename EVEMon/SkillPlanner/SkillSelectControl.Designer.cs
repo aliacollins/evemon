@@ -41,7 +41,7 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.level5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsSeparatorBrowser = new System.Windows.Forms.ToolStripSeparator();
             this.showInSkillBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInSkillExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,7 +142,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.cmSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiPlanTo,
-            this.toolStripSeparator1,
+            this.tsSeparatorBrowser,
             this.showInSkillBrowserMenu,
             this.showInSkillExplorerMenu,
             this.cmiExpandSelected,
@@ -212,8 +212,8 @@ namespace EVEMon.SkillPlanner
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(182, 6);
+            this.tsSeparatorBrowser.Name = "toolStripSeparator1";
+            this.tsSeparatorBrowser.Size = new System.Drawing.Size(182, 6);
             // 
             // showInSkillBrowserMenu
             // 
@@ -581,7 +581,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator tsSeparatorBrowser;
         private System.Windows.Forms.ToolStripMenuItem cmiPlanTo;
         private System.Windows.Forms.ToolStripMenuItem level1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem level2ToolStripMenuItem;

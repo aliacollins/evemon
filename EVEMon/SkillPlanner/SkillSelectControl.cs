@@ -20,6 +20,7 @@ namespace EVEMon.SkillPlanner
         public event EventHandler<EventArgs> SelectedSkillChanged;
 
         private bool m_hostedInSkillBrowser;
+        private bool m_allExpanded;
         private Character m_character;
         private Skill m_selectedSkill;
         private Plan m_plan;
@@ -639,14 +640,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbSearchList.SelectedIndex >= 0)
-            {
-                SelectedSkill = lbSearchList.Items[lbSearchList.SelectedIndex] as Skill;
-            }
-            else
-            {
-                SelectedSkill = null;
-            }
+            SelectedSkill = (lbSearchList.SelectedIndex >= 0 ? (Skill) lbSearchList.Items[lbSearchList.SelectedIndex] : null);
         }
 
         /// <summary>
@@ -740,9 +734,7 @@ namespace EVEMon.SkillPlanner
         private void tvItems_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
                 tvItems.SelectedNode = e.Node;
-            }
         }
 
         /// <summary>
@@ -759,9 +751,7 @@ namespace EVEMon.SkillPlanner
         private void lbSearchList_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
                 lbSearchList.SelectedIndex = lbSearchList.IndexFromPoint(e.Location);
-            }
         }
 
         /// <summary>
@@ -772,6 +762,9 @@ namespace EVEMon.SkillPlanner
         private void tvItems_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var node = tvItems.SelectedNode as TreeNode;
+            if (node == null)
+                return;
+
             if (node.Nodes.Count == 0)
             {
                 Skill skill = node.Tag as Skill;
@@ -797,15 +790,22 @@ namespace EVEMon.SkillPlanner
             if (node != null)
                 skill = tvItems.SelectedNode.Tag as Skill;
 
+            tsSeparatorBrowser.Visible = (node != null);
+
             // "Show in skill browser/explorer"
             showInSkillExplorerMenu.Visible = (skill != null);
             showInSkillBrowserMenu.Visible = (skill != null && !m_hostedInSkillBrowser);
 
-
             // "Collapse" and "Expand" menus
-            cmiCollapseSelected.Visible = (skill == null && node != null && tvItems.SelectedNode.IsExpanded);
-            cmiExpandSelected.Visible = (skill == null && node != null && !tvItems.SelectedNode.IsExpanded);
+            cmiCollapseSelected.Visible = (skill == null && node != null && node.IsExpanded);
+            cmiExpandSelected.Visible = (skill == null && node != null && !node.IsExpanded);
 
+            cmiExpandSelected.Text = (node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
+            cmiCollapseSelected.Text = (node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
+
+            // "Expand All" and "Collapse All" menus
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
             cmiPlanTo.Enabled = skill != null;
@@ -870,7 +870,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cmiExpandSelected_Click(object sender, EventArgs e)
         {
-            tvItems.SelectedNode.ExpandAll();
+            tvItems.SelectedNode.Expand();
         }
 
         /// <summary>
@@ -881,6 +881,7 @@ namespace EVEMon.SkillPlanner
         private void cmiExpandAll_Click(object sender, EventArgs e)
         {
             tvItems.ExpandAll();
+            m_allExpanded = true;
         }
 
         /// <summary>
@@ -891,6 +892,7 @@ namespace EVEMon.SkillPlanner
         private void cmiCollapseAll_Click(object sender, EventArgs e)
         {
             tvItems.CollapseAll();
+            m_allExpanded = false;
         }
 
         /// <summary>
