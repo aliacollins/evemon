@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="2.2.34.0" xmlns="http://joel.fjorden.se/CodeStyleEnforcer">
+  <Rule CodeType="PrivateReadonlyField">
+    <AllowedVisibility>Private</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Variable">
+    <AllowedVisibility>Private</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Parameter">
+    <AllowedVisibility>Private</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="EventHandler">
+    <AllowedVisibility>Private</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Field">
+    <AllowedVisibility>Protected Private Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="ConstantField">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="ReadonlyField">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Property">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Method">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Structure">
+    <AllowedVisibility>Public Internal Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Interface">
+    <AllowedVisibility>Public Internal Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Class">
+    <AllowedVisibility>Public Internal Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Enumeration">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Delegate">
+    <AllowedVisibility>Public Internal ProtectedInternal Protected Private All Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Exception">
+    <AllowedVisibility>Public Internal Explicit</AllowedVisibility>
+  </Rule>
+  <Rule CodeType="Attribute">
+    <AllowedVisibility>Public Internal Explicit</AllowedVisibility>
+  </Rule>
+</Rules>

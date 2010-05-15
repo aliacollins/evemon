@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Rules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="2.2.34.0" xmlns="http://joel.fjorden.se/CodeStyleEnforcer">
+  <Rule CodeType="Method">
+    <AllowedInterfaceImplementation>Any</AllowedInterfaceImplementation>
+  </Rule>
+  <Rule CodeType="Property">
+    <AllowedInterfaceImplementation>Any</AllowedInterfaceImplementation>
+  </Rule>
+  <Rule CodeType="Event">
+    <AllowedInterfaceImplementation>Any</AllowedInterfaceImplementation>
+  </Rule>
+</Rules>
