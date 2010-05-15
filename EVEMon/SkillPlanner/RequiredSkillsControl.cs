@@ -1,16 +1,11 @@
 using System;
-using System.Data;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Globalization;
 using System.ComponentModel;
-using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 using EVEMon.Common;
 using EVEMon.Common.Data;
-using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
@@ -19,10 +14,12 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class RequiredSkillsControl : UserControl
     {
+        private BlueprintActivity m_activity;
         private Item m_object;
         private Plan m_plan;
 
-        #region Constructors
+        #region Object Lifecycle
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -56,9 +53,24 @@ namespace EVEMon.SkillPlanner
         {
             UpdateDisplay();
         }
+
         #endregion
 
+
         #region Public Properties
+
+        /// <summary>
+        /// </summary>
+        public BlueprintActivity Activity
+        {
+            get { return m_activity; }
+            set
+            { 
+                m_activity = value;
+                UpdateDisplay();
+            }
+        }
+
         /// <summary>
         /// An EveObject for which we want to show required skills
         /// </summary>
@@ -71,6 +83,7 @@ namespace EVEMon.SkillPlanner
                 UpdateDisplay();
             }
         }
+
         /// <summary>
         /// The target Plan object to add any required skills
         /// </summary>
@@ -83,14 +96,21 @@ namespace EVEMon.SkillPlanner
                 UpdateDisplay();
             }
         }
+
         #endregion
 
+
         #region Content creation
+
         /// <summary>
         /// Updates control contents
         /// </summary>
         private void UpdateDisplay()
         {
+            // We have nothing to display
+            if (m_object == null || m_plan == null)
+                return;
+
             // Default all known flag to true. Will be set to false in getSkillNode() if a requirement is not met
             bool allSkillsKnown = true;
 
@@ -102,13 +122,15 @@ namespace EVEMon.SkillPlanner
             try
             {
                 tvSkillList.Nodes.Clear();
-                if (m_object != null && m_plan != null)
+
+                var prerequisites = (Activity == BlueprintActivity.None ?
+                    m_object.Prerequisites.Where(x => x.Level != 0 && x.Activity == Activity) :
+                    m_object.Prerequisites.Where(x => x.Level != 0 && x.Activity == Activity).OrderBy(x => x.Skill.Name));
+
+                // Recursively create nodes
+                foreach (StaticSkillLevel prereq in prerequisites)
                 {
-                    // Recursively create nodes
-                    foreach (StaticSkillLevel prereq in m_object.Prerequisites.Where(x=> x.Level != 0))
-                    {
-                        tvSkillList.Nodes.Add(GetSkillNode(prereq, ref allSkillsKnown, ref skillsUnplanned));
-                    }
+                    tvSkillList.Nodes.Add(GetSkillNode(prereq, ref allSkillsKnown, ref skillsUnplanned));
                 }
             }
             finally
@@ -215,9 +237,12 @@ namespace EVEMon.SkillPlanner
             if (selection != tvSkillList.SelectedNode)
                 tvSkillList.SelectedNode = selection;
         }
+
         #endregion
 
-        #region Controls' handlers
+
+        #region Event Handlers
+
         /// <summary>
         /// Event handler method for Add Skills button
         /// </summary>
@@ -226,7 +251,7 @@ namespace EVEMon.SkillPlanner
         private void btnAddSkills_Click(object sender, EventArgs e)
         {
             // Add skills to plan
-            var operation = m_plan.TryAddSet(m_object.Prerequisites, m_object.Name);
+            var operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x=> x.Activity == Activity), m_object.Name);
             PlanHelper.Perform(operation);
 
             // Refresh display to reflect plan changes
@@ -255,16 +280,20 @@ namespace EVEMon.SkillPlanner
             TreeNode thisNode = e.Node as TreeNode;
 
             // Make sure we have a skill to use
-            if (thisNode.Tag == null) return;
+            if (thisNode.Tag == null)
+                return;
 
             // Open skill browser tab for this skill
             PlanWindow pw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             Skill skill = ((SkillLevel) thisNode.Tag).Skill;
             pw.ShowSkillInBrowser(skill);
         }
+
         #endregion
 
+
         #region Context menu
+
         /// <summary>
         /// Context menu opening, updates the "plan to" menus
         /// </summary>
@@ -363,49 +392,8 @@ namespace EVEMon.SkillPlanner
             var operation = (IPlanOperation)menu.Tag;
             PlanHelper.SelectPerform(operation);
         }
+
         #endregion
+
     }
-    
-    #region ReqSkillsTreeView
-    /// <summary>
-    /// Derived from TreeView class
-    /// <para>Overrides standard node double click behaviour to prevent node expand / collapse actions</para>
-    /// </summary>
-    class ReqSkillsTreeView : System.Windows.Forms.TreeView
-    {
-        private const int WM_LBUTTONDBLCLK = 0x203;
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WM_LBUTTONDBLCLK)
-            {
-                handleDoubleClick(ref m);
-            }
-            else { base.WndProc(ref m); };
-        }
-
-        private void handleDoubleClick(ref Message m)
-        {
-            // Get mouse location from message.lparam
-            // x is low order word, y is high order word
-            string lparam = m.LParam.ToString("X08");
-            int x = int.Parse(lparam.Substring(4, 4), NumberStyles.HexNumber);
-            int y = int.Parse(lparam.Substring(0, 4), NumberStyles.HexNumber);
-            // Test for a treenode at this location
-            TreeViewHitTestInfo info = this.HitTest(x, y);
-            if (info.Node != null)
-            {
-                // Raise NodeMouseDoubleClick event
-                TreeNodeMouseClickEventArgs e = new TreeNodeMouseClickEventArgs(info.Node, MouseButtons.Left, 2, x, y);
-                this.OnNodeMouseDoubleClick(e);
-            }
-        }
-
-        protected override void CreateHandle()
-       {
-           if (!this.IsDisposed)
-               base.CreateHandle();
-       }
-    }
-    #endregion
 }

@@ -25,6 +25,8 @@ namespace EVEMon.SkillPlanner
         private Skill m_selectedSkill;
         private Plan m_plan;
 
+        #region Lifecycle
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -80,6 +82,11 @@ namespace EVEMon.SkillPlanner
             UpdateContent();
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the plan.
         /// </summary>
@@ -130,6 +137,9 @@ namespace EVEMon.SkillPlanner
             get { return m_hostedInSkillBrowser; }
             set { m_hostedInSkillBrowser = value; }
         }
+
+
+        #endregion
 
 
         #region Icon set
@@ -591,7 +601,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Controls' handlers
+        #region Event Handlers
         /// <summary>
         /// When the user click the text search hint, he actually wants to select the text box.
         /// </summary>
@@ -800,8 +810,8 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = (skill == null && node != null && node.IsExpanded);
             cmiExpandSelected.Visible = (skill == null && node != null && !node.IsExpanded);
 
-            cmiExpandSelected.Text = (node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
-            cmiCollapseSelected.Text = (node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
+            cmiExpandSelected.Text = (skill == null && node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
+            cmiCollapseSelected.Text = (skill == null && node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
@@ -927,7 +937,6 @@ namespace EVEMon.SkillPlanner
             npw.ShowSkillInExplorer(this.SelectedSkill);
         }
         #endregion
-
 
     }
 }

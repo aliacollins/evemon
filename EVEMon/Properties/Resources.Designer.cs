@@ -123,6 +123,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Blueprint {
+            get {
+                object obj = ResourceManager.GetObject("Blueprint", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Bug {
             get {
                 object obj = ResourceManager.GetObject("Bug", resourceCulture);

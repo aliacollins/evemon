@@ -36,6 +36,9 @@ namespace EVEMon.SkillPlanner
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSeparatorToggle = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,11 +72,14 @@ namespace EVEMon.SkillPlanner
             this.showInMenuSeparator,
             this.showInBrowserMenu,
             this.showInExplorerMenu,
+            this.tsSeparatorToggle,
+            this.tsmExpandSelected,
+            this.tsmCollapseSelected,
             this.tsSeparator,
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 126);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 198);
             // 
             // tsmAddToPlan
             // 
@@ -103,6 +109,25 @@ namespace EVEMon.SkillPlanner
             this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
             this.showInExplorerMenu.Click += new System.EventHandler(this.showInExplorerMenu_Click);
             // 
+            // tsSeparatorToggle
+            // 
+            this.tsSeparatorToggle.Name = "tsSeparatorToggle";
+            this.tsSeparatorToggle.Size = new System.Drawing.Size(191, 6);
+            // 
+            // tsmExpandSelected
+            // 
+            this.tsmExpandSelected.Name = "tsmExpandSelected";
+            this.tsmExpandSelected.Size = new System.Drawing.Size(194, 22);
+            this.tsmExpandSelected.Text = "Expand Selected";
+            this.tsmExpandSelected.Click += new System.EventHandler(this.tsmExpandSelected_Click);
+            // 
+            // tsmCollapseSelected
+            // 
+            this.tsmCollapseSelected.Name = "tsmCollapseSelected";
+            this.tsmCollapseSelected.Size = new System.Drawing.Size(194, 22);
+            this.tsmCollapseSelected.Text = "Collapse Selected";
+            this.tsmCollapseSelected.Click += new System.EventHandler(this.tsmCollapseSelected_Click);
+            // 
             // tsSeparator
             // 
             this.tsSeparator.Name = "tsSeparator";
@@ -112,14 +137,14 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsmExpandAll.Name = "tsmExpandAll";
             this.tsmExpandAll.Size = new System.Drawing.Size(194, 22);
-            this.tsmExpandAll.Text = "&Expand all";
+            this.tsmExpandAll.Text = "&Expand All";
             this.tsmExpandAll.Click += new System.EventHandler(this.tsmExpandAll_Click);
             // 
             // tsmCollapseAll
             // 
             this.tsmCollapseAll.Name = "tsmCollapseAll";
             this.tsmCollapseAll.Size = new System.Drawing.Size(194, 22);
-            this.tsmCollapseAll.Text = "&Collapse all";
+            this.tsmCollapseAll.Text = "&Collapse All";
             this.tsmCollapseAll.Click += new System.EventHandler(this.tsmCollapseAll_Click);
             // 
             // imageList
@@ -159,5 +184,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem showInBrowserMenu;
         private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
         private System.Windows.Forms.ToolStripMenuItem showInExplorerMenu;
+        private System.Windows.Forms.ToolStripSeparator tsSeparatorToggle;
+        private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
+        private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
     }
 }

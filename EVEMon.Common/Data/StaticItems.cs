@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Represents all the items (not ships or implants, see <see cref="StaticShips"/> and <see cref="StaticImplants"/> for that) loaded from the datafiles. 
-    /// Not that not all items are present, only the ones you can use for your ship. 
+    /// Not that all items are present, only the ones you can use for your ship. 
     /// </summary>
     public static class StaticItems
     {
+        private static readonly Dictionary<int, MarketGroup> s_groupsByID = new Dictionary<int, MarketGroup>();
         private static readonly Dictionary<int, Item> s_itemsByID = new Dictionary<int, Item>();
         private static readonly ImplantSlot[] s_implantSlots = new ImplantSlot[10];
 
@@ -20,14 +19,29 @@ namespace EVEMon.Common.Data
 
         private static bool s_reprocessingInitialized = false;
 
+        #region Public Properties
+
         /// <summary>
         /// Gets the root category, containing all the top level categories
         /// </summary>
         public static MarketGroupCollection MarketGroups
         {
-            get 
+            get { return s_roots; }
+        }
+
+        /// <summary>
+        /// Gets the collection of all the market groups in this category and its descendants.
+        /// </summary>
+        public static IEnumerable<MarketGroup> AllGroups
+        {
+            get
             {
-                return s_roots; 
+                foreach (var group in s_groupsByID.Values)
+                {
+                    yield return group;
+                }
+
+
             }
         }
 
@@ -53,6 +67,11 @@ namespace EVEMon.Common.Data
             get { return s_shipsGroup; }
         }
 
+        #endregion
+
+
+        #region Public Finders
+
         /// <summary>
         /// Gets the collection of implants for the given slot.
         /// </summary>
@@ -73,7 +92,8 @@ namespace EVEMon.Common.Data
         {
             foreach (var item in s_itemsByID.Values)
             {
-                if (item.Name == itemName) return item;
+                if (item.Name == itemName)
+                    return item;
             }
             return null;
         }
@@ -91,12 +111,18 @@ namespace EVEMon.Common.Data
             return value;
         }
 
+        #endregion
+
+
+        #region Initializer
+
         /// <summary>
         /// Initialize static items
         /// </summary>
         internal static void Load()
         {
-            if (s_roots != null) return;
+            if (s_roots != null)
+                return;
 
             // Create the implants slots
             for (int i = 0; i < s_implantSlots.Length; i++)
@@ -106,7 +132,7 @@ namespace EVEMon.Common.Data
             }
 
             // Deserialize the items datafile
-            var datafile = Util.DeserializeDatafile<ItemsDatafiles>(DatafileConstants.ItemsDatafile);
+            var datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
             s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
 
             // Gather the items into a by-ID dictionary.
@@ -124,10 +150,10 @@ namespace EVEMon.Common.Data
         {
             // Special groups
             if (group.ID == DBConstants.ShipsGroupID)
-            {
                 s_shipsGroup = group;
-            }
-
+            
+            s_groupsByID[group.ID] = group;
+            
             foreach (var item in group.Items)
             {
                 s_itemsByID[item.ID] = item;
@@ -144,13 +170,16 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static bool EnsureReprocessingInitialized()
         {
-            if (s_reprocessingInitialized) return false;
+            if (s_reprocessingInitialized)
+                return false;
+
             var datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
 
             foreach (var itemMaterials in datafile.Items)
             {
                 // Skip if no materials
-                if (itemMaterials.Materials == null) continue;
+                if (itemMaterials.Materials == null)
+                    continue;
 
                 var item = s_itemsByID[itemMaterials.ID];
                 item.InitializeReprocessing(itemMaterials.Materials);
@@ -159,5 +188,8 @@ namespace EVEMon.Common.Data
             s_reprocessingInitialized = true;
             return true;
         }
+
+        #endregion
+
     }
 }

@@ -4,6 +4,9 @@ namespace EVEMon.SkillPlanner
 {
     public partial class ItemBrowserControl : EveObjectBrowserControl
     {
+
+        #region Constructors
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -14,16 +17,10 @@ namespace EVEMon.SkillPlanner
             this.Initialize(lvItemProperties, itemSelectControl, false);
         }
 
+        #endregion
+
+
         #region Event Handlers
-        /// <summary>
-        /// Updates Required Skills control when selected plan is changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveObjectBrowserSimple_PlanChanged(object sender, EventArgs e)
-        {
-            this.requiredSkillsControl.Plan = this.Plan;
-        }
 
         /// <summary>
         /// Exports item info to CSV format.
@@ -32,9 +29,12 @@ namespace EVEMon.SkillPlanner
         {
             ListViewExporter.CreateCSV(lvItemProperties);
         }
+
         #endregion
 
+
         #region Methods
+
         /// <summary>
         /// Updates the controls when the selection is changed.
         /// </summary>
@@ -67,6 +67,8 @@ namespace EVEMon.SkillPlanner
             scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth ?
                                          reqSkillPanelMinWidth : reqSkillControlMinWidth );
         }
+
         #endregion
+
     }
 }

@@ -17,6 +17,9 @@ namespace EVEMon.Common.Scheduling
         Monthly
     }
 
+    /// <summary>
+    /// Describes the options of a schedule entry
+    /// </summary>
     [Flags]
     public enum ScheduleEntryOptions
     {
@@ -35,6 +38,9 @@ namespace EVEMon.Common.Scheduling
         EVETime = 4
     }
 
+    /// <summary>
+    /// Describes the behaviour when a month is overflowed
+    /// </summary>
     public enum MonthlyOverflowResolution
     {
         /// <summary>

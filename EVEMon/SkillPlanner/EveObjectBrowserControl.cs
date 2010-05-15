@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
@@ -25,8 +24,11 @@ namespace EVEMon.SkillPlanner
     {
         private bool m_forceShipsPropertyToBeVisible;
         private EveObjectSelectControl m_selectControl;
-        private ListView m_propertiesList;
-        private Plan m_plan;
+
+        protected Plan m_plan;
+        protected ListView m_propertiesList;
+
+        #region Initialization
 
         /// <summary>
         /// Default constructor.
@@ -40,6 +42,7 @@ namespace EVEMon.SkillPlanner
             this.Disposed += new EventHandler(OnDisposed);
         }
 
+
         /// <summary>
         /// Unsubscribe events on disposing
         /// </summary>
@@ -50,6 +53,7 @@ namespace EVEMon.SkillPlanner
             EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
             this.Disposed -= new EventHandler(OnDisposed);
         }
+
 
         /// <summary>
         /// Used to complete the control's intialization before <see cref="OnLoad"/>.
@@ -77,7 +81,7 @@ namespace EVEMon.SkillPlanner
             this.m_selectControl.SelectionChanged += new EventHandler(OnSelectionChanged);
 
             // Reposition the help text along side the treeview
-            Control[] result = this.m_selectControl.Controls.Find("panel2", true);
+            Control[] result = this.m_selectControl.Controls.Find("lowerPanel", true);
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
@@ -87,6 +91,11 @@ namespace EVEMon.SkillPlanner
             // Force a refresh
             OnSelectionChanged(null, null);
         }
+
+        #endregion
+
+
+        #region Event Handlers
 
         /// <summary>
         /// Occurs when the settings changed.
@@ -112,6 +121,11 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the current plan for this planner window.
         /// </summary>
@@ -126,12 +140,18 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #endregion
+
+
+        #region Events
+
         /// <summary>
         /// Called whenever the plan changes.
         /// </summary>
-        protected virtual void OnPlanChanged()
-        {
-        }
+        /// <remarks>This virtual method is implemented in classes that inherit from EveObjectBrowserControl.</remarks>
+        protected virtual void OnPlanChanged() { }
+
+        #endregion
 
 
         #region Selection management
@@ -158,7 +178,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// 
+        /// Updates the controls when the selection is changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -169,8 +189,8 @@ namespace EVEMon.SkillPlanner
             if (firstSelected == null)
             {
                 // Hide details and header
-                pnlBrowserHeader.Visible = false;
                 pnlDetails.Visible = false;
+                pnlBrowserHeader.Visible = false;
 
                 // View help message
                 lblHelp.Visible = true;
@@ -186,21 +206,25 @@ namespace EVEMon.SkillPlanner
             lblHelp.Visible = false;
 
             // View details and header
-            pnlDetails.Visible = true;
             pnlBrowserHeader.Visible = true;
+            pnlDetails.Visible = true;
 
             // Display details
             eoImage.EveItem = firstSelected;
             lblEveObjName.Text = firstSelected.Name;
             lblEveObjCategory.Text = firstSelected.GetCategoryPath();
 
+            // Stop here if it's the blueprint tab
+            if (m_selectControl is BlueprintSelectControl)
+                return;
+            
             // Fill the list view
             UpdatePropertiesList();
 
         }
 
         /// <summary>
-        /// Refresh the properties list
+        /// Refresh the properties list.
         /// </summary>
         private void UpdatePropertiesList()
         {
@@ -326,9 +350,7 @@ namespace EVEMon.SkillPlanner
 
                     // Add properties
                     if (hasProps)
-                    {
                         m_propertiesList.Groups.Add(group);
-                    }
                 }
 
                 // Fetch the new items to the list view

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Resources;
 using System.Windows.Forms;
 
 using EVEMon.Common.Data;
@@ -13,49 +14,71 @@ namespace EVEMon.Common.Controls
     /// Displays an image for a given EveObject
     /// </summary>
     /// <remarks>
-    /// Setting the PopUpEnabled property to true enables a pop-up window for EveObjects with a 256 x 256 image available, accessed
-    /// via the user double-clicking the image.
-    /// Image size must be set using the ImageSize property. The default Size property is overriden.
+    /// Setting the PopUpEnabled property to true enables a pop-up
+    /// window for EveObjects with a 256 x 256 image available, accessed
+    /// via the user double-clicking the image. Image size must be
+    /// set using the ImageSize property. The default Size property is
+    /// overriden.
     /// </remarks>
     public partial class EveImage : UserControl
     {
 
-        #region Private Properties
         private bool m_popUpEnabled;
         private bool m_popUpActive;
         private EveImageSize m_imageSize;
         private Item m_item = null;
+
+
+        #region Public Enumerations
+
+        public enum EveImageSize { x0 = 0, x16 = 16, x32 = 32, x64 = 64, x128 = 128, x256 = 256 }
+
         #endregion
 
 
         #region Public Properties
-        public enum EveImageSize { x0 = 0, x16 = 16, x32 = 32, x64 = 64, x128 = 128, x256 = 256 }
 
+        /// <summary>
+        /// Is the popup dialog enabled.
+        /// </summary>
         public bool PopUpEnabled
         {
-            get { return m_popUpEnabled; }
+            get
+            {
+                return m_popUpEnabled;
+            }
             set
             {
                 m_popUpEnabled = value;
             }
         }
 
+        /// <summary>
+        /// Item to display an image for.
+        /// </summary>
         public Item EveItem
         {
-            get { return m_item; }
+            get
+            {
+                return m_item;
+            }
             set
             {
                 m_item = value;
                 if (m_imageSize != EveImageSize.x0)
-                {
                     GetImage();
-                }
             }
         }
 
+        /// <summary>
+        /// Size of the image in eve parlance.
+        /// </summary>
         public EveImageSize ImageSize
         {
-            get { return m_imageSize; }
+            get
+            {
+                return m_imageSize;
+            }
             set
             {
                 m_imageSize = value;
@@ -64,9 +87,15 @@ namespace EVEMon.Common.Controls
             }
         }
 
+        /// <summary>
+        /// Size of the image in pixels.
+        /// </summary>
         new public Size Size
         {
-            get { return base.Size; }
+            get
+            {
+                return base.Size;
+            }
             set
             {
                 base.Size = new Size((int)m_imageSize, (int)m_imageSize);
@@ -77,6 +106,7 @@ namespace EVEMon.Common.Controls
 
 
         #region Constructor
+
         /// <summary>
         /// Initialise the control
         /// </summary>
@@ -95,11 +125,12 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region Image type configuration
+        #region Private Enumerations, Member Variables and Structs
+
         /// <summary>
         /// Identifies the image type being handled
         /// </summary>
-        private enum ImageType { Ship, Drone, Structure, Item, None }
+        private enum ImageType { Ship, Drone, Structure, Item, Blueprint, None }
 
         /// <summary>
         /// Indicates the source of the .png image name
@@ -130,6 +161,11 @@ namespace EVEMon.Common.Controls
             }
         }
 
+        #endregion
+
+
+        #region Private Methods
+
         /// <summary>
         /// Builds the m_ImageTypeAttributes dictionary
         /// </summary>
@@ -137,6 +173,7 @@ namespace EVEMon.Common.Controls
         {
             ArrayList validSizes;
             m_ImageTypeAttributes = new Dictionary<ImageType, ImageTypeData>();
+            
             // Ships
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize.x32);
@@ -144,6 +181,7 @@ namespace EVEMon.Common.Controls
             validSizes.Add(EveImageSize.x128);
             validSizes.Add(EveImageSize.x256);
             m_ImageTypeAttributes.Add(ImageType.Ship, new ImageTypeData("Ships", "icons", ImageNameFrom.TypeID, validSizes));
+            
             // Items
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize.x16);
@@ -151,6 +189,7 @@ namespace EVEMon.Common.Controls
             validSizes.Add(EveImageSize.x64);
             validSizes.Add(EveImageSize.x128);
             m_ImageTypeAttributes.Add(ImageType.Item, new ImageTypeData("Items", "icons", ImageNameFrom.Icon, validSizes));
+            
             // Drones
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize.x32);
@@ -158,6 +197,7 @@ namespace EVEMon.Common.Controls
             validSizes.Add(EveImageSize.x128);
             validSizes.Add(EveImageSize.x256);
             m_ImageTypeAttributes.Add(ImageType.Drone, new ImageTypeData("Drones", "icons", ImageNameFrom.TypeID, validSizes));
+            
             // Structures
             validSizes = new ArrayList();
             validSizes.Add(EveImageSize.x32);
@@ -165,6 +205,11 @@ namespace EVEMon.Common.Controls
             validSizes.Add(EveImageSize.x128);
             validSizes.Add(EveImageSize.x256);
             m_ImageTypeAttributes.Add(ImageType.Structure, new ImageTypeData("", "icons", ImageNameFrom.TypeID, validSizes));
+
+            // Blueprints
+            validSizes = new ArrayList();
+            validSizes.Add(EveImageSize.x64);
+            m_ImageTypeAttributes.Add(ImageType.Blueprint, new ImageTypeData("Blueprints", "icons", ImageNameFrom.TypeID, validSizes));
         }
 
         private ImageType GetImageType(Item item)
@@ -177,15 +222,13 @@ namespace EVEMon.Common.Controls
                     return ImageType.Drone;
                 case ItemFamily.StarbaseStructure:
                     return ImageType.Structure;
+                case ItemFamily.Bpo:
+                    return ImageType.Blueprint;
                 default:
                     return ImageType.Item;
             }
         }
 
-        #endregion
-
-
-        #region Image Retrieval and Pop Up
         /// <summary>
         /// Renders a BackColor square as a placeholder for the image
         /// </summary>
@@ -239,10 +282,7 @@ namespace EVEMon.Common.Controls
             // Try and get image from a local optional resources file (probably don't used anymore, not sure)
             string localResources = String.Format(
                 "{1}Resources{0}Optional{0}{2}{3}.resources",
-                Path.DirectorySeparatorChar,
-                System.AppDomain.CurrentDomain.BaseDirectory,
-                typeData.localComponent,
-                eveSize);
+                Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory, typeData.localComponent, eveSize);
 
             // Try to get image from web (or local cache located in %APPDATA%\EVEMon) if not found yet
             if (!FetchImageResource(imageResourceName, localResources))
@@ -264,6 +304,12 @@ namespace EVEMon.Common.Controls
             }
         }
 
+        /// <summary>
+        /// Find an image resource from local resource files
+        /// </summary>
+        /// <param name="imageResourceName">Resource name for the image</param>
+        /// <param name="localResources">Local resource</param>
+        /// <returns></returns>
         private bool FetchImageResource(string imageResourceName, string localResources)
         {
             bool foundResource = false;
@@ -271,14 +317,13 @@ namespace EVEMon.Common.Controls
             {
                 if (File.Exists(localResources))
                 {
-                    System.Resources.IResourceReader basic;
-                    basic = new System.Resources.ResourceReader(localResources);
+                    IResourceReader basic = new System.Resources.ResourceReader(localResources);
                     System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
                     while (basicx.MoveNext())
                     {
                         if (basicx.Key.ToString() == imageResourceName)
                         {
-                            pbImage.Image = (System.Drawing.Image)basicx.Value;
+                            pbImage.Image = (Image)basicx.Value;
                             foundResource = true;
                             break;
                         }
@@ -301,10 +346,13 @@ namespace EVEMon.Common.Controls
         {
             // Only display the image if the id matches the current EveObject
             if (i != null && m_item.ID == id)
-            {
                 pbImage.Image = i;
-            }
         }
+
+        #endregion
+
+
+        #region Public Event Handlers
 
         /// <summary>
         /// Event handler for image double click
@@ -321,6 +369,7 @@ namespace EVEMon.Common.Controls
                 popup.Show();
             }
         }
+
         #endregion
 
     }

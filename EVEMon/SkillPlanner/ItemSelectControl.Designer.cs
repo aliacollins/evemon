@@ -42,8 +42,8 @@ namespace EVEMon.SkillPlanner
             this.pnlPowergrid = new System.Windows.Forms.Panel();
             this.numPowergrid = new System.Windows.Forms.NumericUpDown();
             this.showAllGroupsCheckbox = new System.Windows.Forms.CheckBox();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.upperPanel.SuspendLayout();
+            this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlCPU.SuspendLayout();
@@ -79,31 +79,31 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Size = new System.Drawing.Size(224, 239);
             this.lbSearchList.TabIndex = 0;
             // 
-            // panel1
+            // upperPanel
             // 
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Controls.Add(this.ccbGroupFilter);
-            this.panel1.Controls.Add(this.cbSlotFilter);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Size = new System.Drawing.Size(224, 162);
-            this.panel1.TabIndex = 0;
-            this.panel1.Controls.SetChildIndex(this.label4, 0);
-            this.panel1.Controls.SetChildIndex(this.label2, 0);
-            this.panel1.Controls.SetChildIndex(this.cbSlotFilter, 0);
-            this.panel1.Controls.SetChildIndex(this.label1, 0);
-            this.panel1.Controls.SetChildIndex(this.ccbGroupFilter, 0);
-            this.panel1.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
-            this.panel1.Controls.SetChildIndex(this.pbSearchImage, 0);
-            this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
-            this.panel1.Controls.SetChildIndex(this.lbSearchTextHint, 0);
-            this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
+            this.upperPanel.Controls.Add(this.tableLayoutPanel1);
+            this.upperPanel.Controls.Add(this.ccbGroupFilter);
+            this.upperPanel.Controls.Add(this.cbSlotFilter);
+            this.upperPanel.Controls.Add(this.label2);
+            this.upperPanel.Controls.Add(this.label4);
+            this.upperPanel.Size = new System.Drawing.Size(224, 162);
+            this.upperPanel.TabIndex = 0;
+            this.upperPanel.Controls.SetChildIndex(this.label4, 0);
+            this.upperPanel.Controls.SetChildIndex(this.label2, 0);
+            this.upperPanel.Controls.SetChildIndex(this.cbSlotFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.lblFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.ccbGroupFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
+            this.upperPanel.Controls.SetChildIndex(this.pbSearchImage, 0);
+            this.upperPanel.Controls.SetChildIndex(this.tbSearchText, 0);
+            this.upperPanel.Controls.SetChildIndex(this.lbSearchTextHint, 0);
+            this.upperPanel.Controls.SetChildIndex(this.cbUsabilityFilter, 0);
             // 
-            // panel2
+            // lowerPanel
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 162);
-            this.panel2.Size = new System.Drawing.Size(224, 239);
-            this.panel2.TabIndex = 0;
+            this.lowerPanel.Location = new System.Drawing.Point(0, 162);
+            this.lowerPanel.Size = new System.Drawing.Size(224, 239);
+            this.lowerPanel.TabIndex = 0;
             // 
             // lbSearchTextHint
             // 
@@ -114,18 +114,16 @@ namespace EVEMon.SkillPlanner
             // 
             this.pbSearchImage.Location = new System.Drawing.Point(9, 135);
             // 
-            // label1
+            // lblFilter
             // 
-            this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label1.TabIndex = 0;
+            this.lblFilter.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lblFilter.TabIndex = 0;
             // 
-            // cbSkillFilter
+            // cbUsabilityFilter
             // 
-            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbSkillFilter.Size = new System.Drawing.Size(179, 21);
-            this.cbSkillFilter.TabIndex = 1;
-            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
+            this.cbUsabilityFilter.Size = new System.Drawing.Size(179, 21);
+            this.cbUsabilityFilter.TabIndex = 1;
+            this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
             // cbSlotFilter
             // 
@@ -134,7 +132,7 @@ namespace EVEMon.SkillPlanner
             this.cbSlotFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSlotFilter.FormattingEnabled = true;
             this.cbSlotFilter.Items.AddRange(new object[] {
-            "All Items",
+            "All Slots",
             "High Slot",
             "Medium Slot",
             "Low Slot",
@@ -169,7 +167,6 @@ namespace EVEMon.SkillPlanner
             this.ccbGroupFilter.FormattingEnabled = true;
             this.ccbGroupFilter.IntegralHeight = false;
             this.ccbGroupFilter.Items.AddRange(new object[] {
-            "Named",
             "Faction",
             "Officer",
             "Deadspace"});
@@ -331,12 +328,12 @@ namespace EVEMon.SkillPlanner
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ItemSelectControl";
             this.Size = new System.Drawing.Size(224, 418);
-            this.Controls.SetChildIndex(this.panel1, 0);
+            this.Controls.SetChildIndex(this.upperPanel, 0);
             this.Controls.SetChildIndex(this.showAllGroupsCheckbox, 0);
-            this.Controls.SetChildIndex(this.panel2, 0);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this.Controls.SetChildIndex(this.lowerPanel, 0);
+            this.upperPanel.ResumeLayout(false);
+            this.upperPanel.PerformLayout();
+            this.lowerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

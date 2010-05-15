@@ -27,7 +27,7 @@ namespace EVEMon.Common
     public sealed class APIProvider
     {
         private static APIProvider s_ccpProvider;
-        private static XslCompiledTransform m_rowsetsTransform;
+        private static XslCompiledTransform s_rowsetsTransform;
 
         private List<APIMethod> m_methods;
         private string m_url;
@@ -319,10 +319,10 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_rowsetsTransform == null)
-                    m_rowsetsTransform = Util.LoadXSLT(EVEMon.Common.Properties.Resources.RowsetsXSLT);
+                if (s_rowsetsTransform == null)
+                    s_rowsetsTransform = Util.LoadXSLT(EVEMon.Common.Properties.Resources.RowsetsXSLT);
 
-                return m_rowsetsTransform;
+                return s_rowsetsTransform;
             }
         }
         #endregion

@@ -24,7 +24,8 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
 
-        #region Initialization, loading, closing, entries validation checking
+        #region Initialization and Lifecycle
+
         /// <summary>
         /// Default constructor for designer
         /// </summary>
@@ -172,6 +173,7 @@ namespace EVEMon.SkillPlanner
                 itemBrowser.Plan = m_plan;
                 certBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
+                blueprintBrowser.Plan = m_plan;
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
                 if (loadoutSelect != null)
                 {
@@ -198,6 +200,61 @@ namespace EVEMon.SkillPlanner
                 CheckInvalidEntries();
             }
         }
+
+        #endregion
+
+
+        #region Helper methods
+
+        /// <summary>
+        /// Opens this skill in the skill browser and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowSkillInBrowser(Skill gs)
+        {
+            tabControl.SelectedTab = tpSkillBrowser;
+            skillBrowser.SelectedSkill = gs;
+        }
+
+        /// <summary>
+        /// Opens this skill in the skill explorer and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowSkillInExplorer(Skill gs)
+        {
+            skillBrowser.ShowSkillInExplorer(gs);
+        }
+
+        /// <summary>
+        /// Opens this ship in the ship browser and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowShipInBrowser(Item s)
+        {
+            tabControl.SelectedTab = tpShipBrowser;
+            shipBrowser.SelectedObject = s;
+        }
+
+        /// <summary>
+        /// Opens this item in the item browser and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowItemInBrowser(Item i)
+        {
+            tabControl.SelectedTab = tpItemBrowser;
+            itemBrowser.SelectedObject = i;
+        }
+
+        /// <summary>
+        /// Opens this certificate in the certificate browser and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowCertInBrowser(Certificate c)
+        {
+            tabControl.SelectedTab = tpCertificateBrowser;
+            certBrowser.SelectedCertificate = c;
+        }
+
 
         /// <summary>
         /// Identifies if there are obsolete entries in the skill plan,
@@ -255,62 +312,12 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
-        #endregion
 
-
-        #region Helper methods
-        /// <summary>
-        /// Opens this skill in the skill browser and switches to this tab.
-        /// </summary>
-        /// <param name="gs"></param>
-        public void ShowSkillInBrowser(Skill gs)
-        {
-            tabControl.SelectedTab = tpSkillBrowser;
-            skillBrowser.SelectedSkill = gs;
-        }
-
-        /// <summary>
-        /// Opens this skill in the skill explorer and switches to this tab.
-        /// </summary>
-        /// <param name="gs"></param>
-        public void ShowSkillInExplorer(Skill gs)
-        {
-            skillBrowser.ShowSkillInExplorer(gs);
-        }
-
-        /// <summary>
-        /// Opens this ship in the ship browser and switches to this tab.
-        /// </summary>
-        /// <param name="gs"></param>
-        public void ShowShipInBrowser(Item s)
-        {
-            tabControl.SelectedTab = tpShipBrowser;
-            shipBrowser.SelectedObject = s;
-        }
-
-        /// <summary>
-        /// Opens this item in the item browser and switches to this tab.
-        /// </summary>
-        /// <param name="gs"></param>
-        public void ShowItemInBrowser(Item i)
-        {
-            tabControl.SelectedTab = tpItemBrowser;
-            itemBrowser.SelectedObject = i;
-        }
-
-        /// <summary>
-        /// Opens this certificate in the certificate browser and switches to this tab.
-        /// </summary>
-        /// <param name="gs"></param>
-        public void ShowCertInBrowser(Certificate c)
-        {
-            tabControl.SelectedTab = tpCertificateBrowser;
-            certBrowser.SelectedCertificate = c;
-        }
         #endregion
 
 
         #region Global events
+
         /// <summary>
         /// Occurs when a plan changed.
         /// </summary>
@@ -332,10 +339,12 @@ namespace EVEMon.SkillPlanner
         {
             UpdateStatusBar();
         }
+
         #endregion
 
 
         #region Content creation
+
         /// <summary>
         /// Enables or disabled some menus.
         /// </summary>
@@ -403,10 +412,12 @@ namespace EVEMon.SkillPlanner
             }
             else tslSuggestion.Visible = false;
         }
+
         #endregion
 
 
         #region Controls handlers
+
         /// <summary>
         /// Toolbar > Delete.
         /// Prompts the user and delete the currently selected plan.
@@ -701,6 +712,7 @@ namespace EVEMon.SkillPlanner
         {
             PlanPrinter.Print(m_plan);
         }
+
         #endregion
 
     }

@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Xml.Serialization;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -22,10 +16,11 @@ namespace EVEMon.Common.Data
         internal Ship(MarketGroup group, SerializableItem src)
             : base(group, src)
         {
+
         }
 
         /// <summary>
-        /// Gets the receommended certificates
+        /// Gets the recommended certificates
         /// </summary>
         public StaticRecommendations<StaticCertificate> Recommendations
         {

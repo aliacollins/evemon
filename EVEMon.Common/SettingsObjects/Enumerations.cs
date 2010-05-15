@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml.Schema;
-using System.Xml;
-
-namespace EVEMon.Common.SettingsObjects
+﻿namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
     /// Describes the target platform to allow EVEMon to apply different tweaks at runtime
@@ -22,6 +15,9 @@ namespace EVEMon.Common.SettingsObjects
         Wine = 1
     }
 
+    /// <summary>
+    /// Describes the behaviour employed to remove Obsolete Entries from plans.
+    /// </summary>
     public enum ObsoleteEntryRemovalBehaviour
     {
         /// <summary>
@@ -36,5 +32,43 @@ namespace EVEMon.Common.SettingsObjects
         /// Always remove all entries automatically.
         /// </summary>
         RemoveAll = 2
+    }
+
+    /// <summary>
+    /// Represents the behaviour for the system tray icon
+    /// </summary>
+    public enum SystemTrayBehaviour
+    {
+        /// <summary>
+        /// The tray icon is always hidden
+        /// </summary>
+        Disabled = 0,
+        /// <summary>
+        /// The tray icon is visible when the main window is minimized
+        /// </summary>
+        ShowWhenMinimized = 1,
+        /// <summary>
+        /// The tray icon is always visible
+        /// </summary>
+        AlwaysVisible = 2
+    }
+
+    /// <summary>
+    /// Represents the behaviour when closing the main form
+    /// </summary>
+    public enum CloseBehaviour
+    {
+        /// <summary>
+        /// Exit the application
+        /// </summary>
+        Exit = 0,
+        /// <summary>
+        /// Minimize to the system tray
+        /// </summary>
+        MinimizeToTray = 1,
+        /// <summary>
+        /// Minimize to the task bar
+        /// </summary>
+        MinimizeToTaskbar = 2
     }
 }

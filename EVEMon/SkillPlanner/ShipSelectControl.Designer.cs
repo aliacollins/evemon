@@ -30,8 +30,8 @@
             this.cbORE = new System.Windows.Forms.CheckBox();
             this.cbAmarr = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.upperPanel.SuspendLayout();
+            this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -57,21 +57,21 @@
             // 
             this.lbSearchList.Size = new System.Drawing.Size(224, 256);
             // 
-            // panel1
+            // upperPanel
             // 
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Size = new System.Drawing.Size(224, 162);
-            this.panel1.Controls.SetChildIndex(this.cbSkillFilter, 0);
-            this.panel1.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
-            this.panel1.Controls.SetChildIndex(this.pbSearchImage, 0);
-            this.panel1.Controls.SetChildIndex(this.tbSearchText, 0);
-            this.panel1.Controls.SetChildIndex(this.lbSearchTextHint, 0);
-            this.panel1.Controls.SetChildIndex(this.label1, 0);
+            this.upperPanel.Controls.Add(this.tableLayoutPanel1);
+            this.upperPanel.Size = new System.Drawing.Size(224, 162);
+            this.upperPanel.Controls.SetChildIndex(this.cbUsabilityFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
+            this.upperPanel.Controls.SetChildIndex(this.pbSearchImage, 0);
+            this.upperPanel.Controls.SetChildIndex(this.tbSearchText, 0);
+            this.upperPanel.Controls.SetChildIndex(this.lbSearchTextHint, 0);
+            this.upperPanel.Controls.SetChildIndex(this.lblFilter, 0);
             // 
-            // panel2
+            // lowerPanel
             // 
-            this.panel2.Location = new System.Drawing.Point(0, 162);
-            this.panel2.Size = new System.Drawing.Size(224, 256);
+            this.lowerPanel.Location = new System.Drawing.Point(0, 162);
+            this.lowerPanel.Size = new System.Drawing.Size(224, 256);
             // 
             // lbSearchTextHint
             // 
@@ -81,16 +81,14 @@
             // 
             this.pbSearchImage.Location = new System.Drawing.Point(9, 135);
             // 
-            // label1
+            // lblFilter
             // 
-            this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lblFilter.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             // 
-            // cbSkillFilter
+            // cbUsabilityFilter
             // 
-            this.cbSkillFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbSkillFilter.Size = new System.Drawing.Size(179, 21);
-            this.cbSkillFilter.SelectedIndexChanged += new System.EventHandler(this.cbSkillFilter_SelectedIndexChanged);
+            this.cbUsabilityFilter.Size = new System.Drawing.Size(179, 21);
+            this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
             // cbCaldari
             // 
@@ -195,9 +193,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "ShipSelectControl";
             this.Size = new System.Drawing.Size(224, 418);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
+            this.upperPanel.ResumeLayout(false);
+            this.upperPanel.PerformLayout();
+            this.lowerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

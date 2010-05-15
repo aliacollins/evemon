@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
@@ -40,6 +41,7 @@ namespace EVEMon.Common
 
 
         #region Initialization and threading
+
         /// <summary>
         /// Initializes paths, static objects, check and load datafiles, etc.
         /// </summary>
@@ -50,6 +52,7 @@ namespace EVEMon.Common
             {
                 if (s_initialized)
                     return;
+
                 s_initialized = true;
 
                 Trace("EveClient.Initialize() - begin");
@@ -69,12 +72,13 @@ namespace EVEMon.Common
                 s_accounts = new GlobalAccountCollection();
                 s_tranquilityServer = new EveServer();
 
-                // Load static datas (min order to follow : skills before anything else, ships before certs)
+                // Load static datas (min order to follow : skills before anything else, items before certs)
                 Trace("Load Datafiles - begin");
                 StaticProperties.Load();
                 StaticSkills.Load();
                 StaticItems.Load();
                 StaticCertificates.Load();
+                StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
 
                 // Network monitoring (connection availability changes)
@@ -115,10 +119,12 @@ namespace EVEMon.Common
         {
             get { return s_closed; }
         }
+
         #endregion
 
 
         #region File paths
+
         private static string s_evePortraitCacheFolder;
         private static string s_settingsFile;
         private static string s_dataDir;
@@ -173,7 +179,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Retrieves the settings file path
         /// </summary>
-        /// <returns></returns>
         private static void InitializeEVEMonPaths()
         {
             // If settings.xml exists in the app's directory, we use this one
@@ -182,39 +187,34 @@ namespace EVEMon.Common
 
             // Else, we use %APPDATA%\EVEMon
             if (!File.Exists(settingsFile))
-            {
                 s_dataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
-            }
+            
             // Create the directory if it does not exist already
             if (!Directory.Exists(s_dataDir))
-            {
                 Directory.CreateDirectory(s_dataDir);
-            }
+            
             // Create the cache subfolder
             if (!Directory.Exists(Path.Combine(s_dataDir, "cache")))
-            {
                 Directory.CreateDirectory(Path.Combine(s_dataDir, "cache"));
-            }
         }
 
         /// <summary>
         /// Retrieves the protrait cache folder, from the game installation.
         /// </summary>
-        /// <returns></returns>
         private static void InitializeEvePortraitCachePath()
         {
             s_evePortraitCacheFolder = String.Empty;
             string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string EVEApplicationData = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
 
-            // create a pattern that matches anything "*_tranquility"
+            // Create a pattern that matches anything "*_tranquility"
             string filePattern = "*_tranquility";
 
-            // check folder exists
+            // Check folder exists
             if (!Directory.Exists(EVEApplicationData))
                 return;
 
-            // enumerate files in the EVE cache directory
+            // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationData);
             DirectoryInfo[] filesInEveCache = di.GetDirectories(filePattern);
 
@@ -260,10 +260,12 @@ namespace EVEMon.Common
         {
             get { return Path.Combine(s_dataDir, s_traceFile); }
         }
+
         #endregion
 
 
         #region Services
+
         /// <summary>
         /// Gets an enumeration over the datafiles checksums.
         /// </summary>
@@ -312,6 +314,7 @@ namespace EVEMon.Common
 
 
         #region Accounts management
+
         /// <summary>
         /// Gets the collection of all known accounts.
         /// </summary>
@@ -381,10 +384,12 @@ namespace EVEMon.Common
             // Check for settings save
             Settings.UpdateOnOneSecondTick();
         }
+
         #endregion
 
 
         #region Events firing
+
         /// <summary>
         /// Occurs every second.
         /// </summary>
@@ -639,10 +644,12 @@ namespace EVEMon.Common
             if (NotificationInvalidated != null)
                 NotificationInvalidated(null, args);
         }
+
         #endregion 
 
 
         #region Diagnostics
+
         /// <summary>
         /// Sends a message to the trace with the prepended time since
         /// startup.

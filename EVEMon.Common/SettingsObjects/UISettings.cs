@@ -5,8 +5,17 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
 {
+    /// <summary>
+    /// Root UI Settings Class
+    /// </summary>
     public sealed class UISettings
     {
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public UISettings()
         {
             MainWindowCloseBehaviour = CloseBehaviour.Exit;
@@ -15,6 +24,7 @@ namespace EVEMon.Common.SettingsObjects
             Splitters = new SerializableDictionary<string, int>();
 
             CertificateBrowser = new CertificateBrowserSettings();
+            BlueprintBrowser = new BlueprintBrowserSettings();
             SystemTrayTooltip = new TrayTooltipSettings();
             SkillPieChart = new SkillPieChartSettings();
             SystemTrayPopup = new TrayPopupSettings();
@@ -28,6 +38,11 @@ namespace EVEMon.Common.SettingsObjects
 
             UseStoredSearchFilters = true;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// When true, removes images and colours to make EVEMon looks like some boring business application.
@@ -95,6 +110,13 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("blueprintBrowser")]
+        public BlueprintBrowserSettings BlueprintBrowser
+        {
+            get;
+            set;
+        }
+
         [XmlElement("systemTrayIcon")]
         public SystemTrayBehaviour SystemTrayIcon
         {
@@ -152,6 +174,11 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        #endregion
+
+
+        #region Helper Methods
+
         internal UISettings Clone()
         {
             var clone = new UISettings();
@@ -166,6 +193,7 @@ namespace EVEMon.Common.SettingsObjects
 
             clone.CertificateBrowser = this.CertificateBrowser.Clone();
             clone.SystemTrayTooltip = this.SystemTrayTooltip.Clone();
+            clone.BlueprintBrowser = this.BlueprintBrowser.Clone();
             clone.SystemTrayPopup = this.SystemTrayPopup.Clone();
             clone.SkillPieChart = this.SkillPieChart.Clone();
             clone.SkillBrowser = this.SkillBrowser.Clone();
@@ -177,43 +205,8 @@ namespace EVEMon.Common.SettingsObjects
 
             return clone;
         }
-    }
+        
+        #endregion
 
-    /// <summary>
-    /// Represents the behaviour for the system tray icon
-    /// </summary>
-    public enum SystemTrayBehaviour
-    {
-        /// <summary>
-        /// The tray icon is always hidden
-        /// </summary>
-        Disabled = 0,
-        /// <summary>
-        /// The tray icon is visible when the main window is minimized
-        /// </summary>
-        ShowWhenMinimized = 1,
-        /// <summary>
-        /// The tray icon is always visible
-        /// </summary>
-        AlwaysVisible = 2
-    }
-
-    /// <summary>
-    /// Represents the behaviour when closing the main form
-    /// </summary>
-    public enum CloseBehaviour
-    {
-        /// <summary>
-        /// Exit the application
-        /// </summary>
-        Exit = 0,
-        /// <summary>
-        /// Minimize to the system tray
-        /// </summary>
-        MinimizeToTray = 1,
-        /// <summary>
-        /// Minimize to the task bar
-        /// </summary>
-        MinimizeToTaskbar = 2
     }
 }

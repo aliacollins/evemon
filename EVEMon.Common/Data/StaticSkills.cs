@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -14,7 +13,9 @@ namespace EVEMon.Common.Data
         private static StaticSkill[] m_skills;
         private static readonly Dictionary<int, StaticSkill> m_skillsById = new Dictionary<int, StaticSkill>();
         private static readonly Dictionary<string, StaticSkill> m_skillsByName = new Dictionary<string, StaticSkill>();
-        private static readonly Dictionary<string, StaticSkillGroup> m_allGroupsByName = new Dictionary<string, StaticSkillGroup>();
+        private static readonly Dictionary<int, StaticSkillGroup> m_allGroupsById = new Dictionary<int, StaticSkillGroup>();
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the total number of zero-based indices given to skills (for optimization purposes, it allows the use of arrays for computations)
@@ -31,7 +32,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var group in m_allGroupsByName.Values)
+                foreach (var group in m_allGroupsById.Values)
                 {
                     yield return group;
                 }
@@ -45,7 +46,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var group in m_allGroupsByName.Values)
+                foreach (var group in m_allGroupsById.Values)
                 {
                     foreach (var skill in group)
                     {
@@ -54,6 +55,27 @@ namespace EVEMon.Common.Data
                 }
             }
         }
+        
+        /// <summary>
+        /// Gets the "learning" skill
+        /// </summary>
+        public static StaticSkill LearningSkill
+        {
+            get { return m_skillsById[DBConstants.LearningSkillID]; }
+        }
+
+        /// <summary>
+        /// Gets the "learning" skill group
+        /// </summary>
+        public static StaticSkillGroup LearningSkillGroup
+        {
+            get { return m_allGroupsById[DBConstants.LearningSkillsGroupID]; }
+        }
+
+        #endregion
+
+
+        #region Public Finders
 
         /// <summary>
         /// Gets a skill by its name
@@ -90,22 +112,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the "learning" skill
-        /// </summary>
-        public static StaticSkill LearningSkill
-        {
-            get { return m_skillsByName["Learning"]; }
-        }
-
-        /// <summary>
-        /// Gets the "learning" skill group
-        /// </summary>
-        public static StaticSkillGroup LearningSkillGroup
-        {
-            get { return m_allGroupsByName["Learning"]; }
-        }
-
-        /// <summary>
         /// Gets the low-tier learning skill for the given attribute.
         /// </summary>
         /// <param name="attrib"></param>
@@ -115,15 +121,15 @@ namespace EVEMon.Common.Data
             switch (attrib)
             {
                 case EveAttribute.Charisma:
-                    return m_skillsByName["Empathy"];
+                    return m_skillsById[DBConstants.EmpathySkillID];
                 case EveAttribute.Intelligence:
-                    return m_skillsByName["Analytical Mind"];
+                    return m_skillsById[DBConstants.AnalyticalMindSkillID];
                 case EveAttribute.Memory:
-                    return m_skillsByName["Instant Recall"];
+                    return m_skillsById[DBConstants.InstantRecallSkillID];
                 case EveAttribute.Perception:
-                    return m_skillsByName["Spatial Awareness"];
+                    return m_skillsById[DBConstants.SpatialAwarenessSkillID];
                 case EveAttribute.Willpower:
-                    return m_skillsByName["Iron Will"];
+                    return m_skillsById[DBConstants.IronWillSkillID];
                 default:
                     return null;
             }
@@ -139,15 +145,15 @@ namespace EVEMon.Common.Data
             switch (attrib)
             {
                 case EveAttribute.Charisma:
-                    return m_skillsByName["Presence"];
+                    return m_skillsById[DBConstants.PresenceSkillID];
                 case EveAttribute.Intelligence:
-                    return m_skillsByName["Logic"];
+                    return m_skillsById[DBConstants.LogicSkillID];
                 case EveAttribute.Memory:
-                    return m_skillsByName["Eidetic Memory"];
+                    return m_skillsById[DBConstants.EideticMemorySkillID];
                 case EveAttribute.Perception:
-                    return m_skillsByName["Clarity"];
+                    return m_skillsById[DBConstants.ClaritySkillID];
                 case EveAttribute.Willpower:
-                    return m_skillsByName["Focus"];
+                    return m_skillsById[DBConstants.FocusSkillID];
                 default:
                     return null;
             }
@@ -158,12 +164,17 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static StaticSkillGroup GetGroupByName(string name)
+        public static StaticSkillGroup GetGroupByID(int groupId)
         {
             StaticSkillGroup group = null;
-            m_allGroupsByName.TryGetValue(name, out group);
+            m_allGroupsById.TryGetValue(groupId, out group);
             return group;
         }
+
+        #endregion
+
+
+        #region Initializers
 
         /// <summary>
         /// Initialize static skills
@@ -178,7 +189,7 @@ namespace EVEMon.Common.Data
             foreach (var srcGroup in datafile.Groups)
             {
                 var group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
-                m_allGroupsByName[group.Name] = group;
+                m_allGroupsById[group.ID] = group;
 
                 // Store skills
                 foreach (var skill in group)
@@ -202,5 +213,8 @@ namespace EVEMon.Common.Data
                 m_skills[ss.ArrayIndex] = ss;
             }
         }
+
+        #endregion
+
     }
 }

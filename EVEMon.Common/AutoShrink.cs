@@ -38,9 +38,9 @@ namespace EVEMon.Common
         /// seconds.  By calling Dirty() at the start of a network operation, we're most likely going to clean up after WCF has
         /// completed processing either the successful call or the timeout.
         /// </remarks>
-        public static TimeSpan IdleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
-        private static readonly TimeSpan Infinite = new TimeSpan(0, 0, 0, 0, -1);
-        private static readonly Timer dirtyTimer = new Timer(DirtyCallback);
+        private static TimeSpan m_idleMillisecondsBeforeClean = new TimeSpan(0, 0, 0, 0, 65000);
+        private static readonly TimeSpan m_infinite = new TimeSpan(0, 0, 0, 0, -1);
+        private static readonly Timer m_dirtyTimer = new Timer(DirtyCallback);
 
         /// <summary>
         /// Call this method after an operation has occured that might have increased the working set of the application
@@ -58,7 +58,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Dirty()
         {
-            dirtyTimer.Change(IdleMillisecondsBeforeClean, Infinite);
+            m_dirtyTimer.Change(m_idleMillisecondsBeforeClean, m_infinite);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         /// </param>
         public static void Dirty(TimeSpan idleMillisecondsBeforeClean)
         {
-            dirtyTimer.Change(idleMillisecondsBeforeClean, Infinite);
+            m_dirtyTimer.Change(idleMillisecondsBeforeClean, m_infinite);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace EVEMon.Common
         public static void DirtyImmediate()
         {
             DirtyCallback(null);
-            dirtyTimer.Change(Infinite, Infinite);
+            m_dirtyTimer.Change(m_infinite, m_infinite);
         }
 
         private static void DirtyCallback(object state)

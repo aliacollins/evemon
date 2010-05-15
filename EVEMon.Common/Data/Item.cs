@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Xml.Serialization;
-using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 using System.Text;
+
+using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -31,8 +28,10 @@ namespace EVEMon.Common.Data
         protected readonly FastList<StaticSkillLevel> m_prerequisites;
         protected readonly FastList<Material> m_reprocessing;
 
+        #region Constructors
+
         /// <summary>
-        /// Base constructor for default items
+        /// Base constructor for default items.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -46,17 +45,38 @@ namespace EVEMon.Common.Data
             m_prerequisites = new FastList<StaticSkillLevel>(0);
         }
 
+        /// <summary>
+        /// Base constructor for blueprints.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        internal Item(BlueprintMarketGroup group, SerializableBlueprint src)
+            :this(src.ID, src.Name)
+        {           
+            m_icon = src.Icon;
+            m_metaGroup = src.MetaGroup;
+            m_marketGroup = group;
+            m_family = ItemFamily.Bpo;
+
+            m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Length : 0);
+            if (src.PrereqSkill == null)
+                return;
+
+            foreach (var prereq in src.PrereqSkill)
+            {
+                m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level, prereq.Activity));
+            }
+        }
 
         /// <summary>
-        /// Base deserialization constructor
+        /// Base deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
         internal Item(MarketGroup group, SerializableItem src)
+            : this(src.ID, src.Name)
         {
             m_marketGroup = group;
 
-            m_id = src.ID;
-            m_name = src.Name;
             m_icon = src.Icon;
             m_race = src.Race;
             m_slot = src.Slot;
@@ -71,13 +91,19 @@ namespace EVEMon.Common.Data
 
             // Skills prerequisites
             m_prerequisites = new FastList<StaticSkillLevel>((src.Prereqs != null ? src.Prereqs.Length : 0));
-            if (src.Prereqs == null) return;
+            if (src.Prereqs == null)
+                return;
 
             foreach (var prereq in src.Prereqs)
             {
                 m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level));
             }
         }
+
+        #endregion
+
+
+        #region Internal Initilizatiors
 
         /// <summary>
         /// Initializes the reprocessing informations.
@@ -90,6 +116,11 @@ namespace EVEMon.Common.Data
                 m_reprocessing.Add(new Material(src));
             }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets this object's ID
@@ -189,7 +220,8 @@ namespace EVEMon.Common.Data
                 var property = m_properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
 
                 // Returns scrap metal processing by default.
-                if (property == null) return StaticSkills.GetSkillById(DBConstants.ScrapMetalProcessingSkillID);
+                if (property == null)
+                    return StaticSkills.GetSkillById(DBConstants.ScrapMetalProcessingSkillID);
 
                 // Returns the reprocessing skill specified by the property.
                 int id = property.Value.IValue;
@@ -216,6 +248,11 @@ namespace EVEMon.Common.Data
                 yield return new Material(new SerializableMaterialQuantity { ID = 35, Quantity = 20 });
             }
         }
+
+        #endregion
+
+
+        #region Public Methods
 
         /// <summary>
         ///   Evaluates whether this item can be activated if the given CPU
@@ -252,71 +289,17 @@ namespace EVEMon.Common.Data
                     //We have information about this item, see if it fits
                     bool fits = true;
                     if (cpuAvailable != null)
-                    {
                         fits &= cpuRequired <= cpuAvailable;
-                    }
+
                     if (gridAvailable != null)
-                    {
                         fits &= gridRequired <= gridAvailable;
-                    }
+
                     return fits;
                 }
             }
             //We lack information about this item, or this item isn't fittable. 
             //Return false as specced in the method docs.
             return false;
-        }
-
-        /// <summary>
-        /// Tries to strip the given tail from the end of some string.
-        /// </summary>
-        /// <param name="stripMe">The string to evaluate</param>
-        /// <param name="tail">The &quot;tail&quot; to try and remove</param>
-        /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
-        /// end in tail, stripMe-with-tail-removed otherwise.</returns>
-        private static String TryStripTail(String stripMe, String tail)
-        {
-            if (stripMe == null) return null;
-            if (tail == null) return stripMe;
-            if (stripMe.EndsWith(tail)) return stripMe.Remove(stripMe.Length - tail.Length);
-            return stripMe;
-        }
-
-        /// <summary>
-        /// Try to parse a String as a double. Returns null for any kind of
-        /// invalid input.
-        /// </summary>
-        /// <param name="parseMe">The string to try and parse.</param>
-        /// <returns>The string as double, or null if failed to parse.</returns>
-        private static double? TryParseNullable(String parseMe)
-        {
-            double? result = null;
-            double tempValue;
-            if (Double.TryParse(parseMe, out tempValue))
-                result = tempValue;
-            return result;
-        }
-
-        /// <summary>
-        /// Searches _properties for a property with the given property name and
-        /// returns its value. If the property isn't found, it returns the given
-        /// default value. If the property occurs more than once, only the first
-        /// occurance is considered.
-        /// </summary>
-        /// <param name="property">The property name to look for.</param>
-        /// <param name="defaultValue">The value to return if the property isn't found.</param>
-        /// <returns>Either the value of the named property, or the given default value.</returns>
-        private String FindProperty(EveProperty property, String defaultValue)
-        {
-            String result = defaultValue;
-            foreach (EvePropertyValue prop in m_properties)
-            {
-                if (prop.Property != property) continue;
-
-                result = prop.Value;
-                break;
-            }
-            return result;
         }
 
         /// <summary>
@@ -333,55 +316,96 @@ namespace EVEMon.Common.Data
                 sb.Insert(0, cat.Name);
                 cat = cat.ParentGroup;
                 if (cat != null)
-                {
                     sb.Insert(0, " > ");
-                }
             }
             return sb.ToString();
         }
+
+        #endregion
+
+
+        #region Private Static Methods
+
+        /// <summary>
+        /// Tries to strip the given tail from the end of some string.
+        /// </summary>
+        /// <param name="stripMe">The string to evaluate</param>
+        /// <param name="tail">The &quot;tail&quot; to try and remove</param>
+        /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
+        /// end in tail, stripMe-with-tail-removed otherwise.</returns>
+        private static String TryStripTail(String stripMe, String tail)
+        {
+            if (stripMe == null)
+                return null;
+
+            if (tail == null)
+                return stripMe;
+
+            if (stripMe.EndsWith(tail))
+                return stripMe.Remove(stripMe.Length - tail.Length);
+
+            return stripMe;
+        }
+
+        /// <summary>
+        /// Try to parse a String as a double. Returns null for any kind of
+        /// invalid input.
+        /// </summary>
+        /// <param name="parseMe">The string to try and parse.</param>
+        /// <returns>The string as double, or null if failed to parse.</returns>
+        private static double? TryParseNullable(String parseMe)
+        {
+            double? result = null;
+            double tempValue;
+            if (Double.TryParse(parseMe, out tempValue))
+                result = tempValue;
+
+            return result;
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Searches _properties for a property with the given property name and
+        /// returns its value. If the property isn't found, it returns the given
+        /// default value. If the property occurs more than once, only the first
+        /// occurance is considered.
+        /// </summary>
+        /// <param name="property">The property name to look for.</param>
+        /// <param name="defaultValue">The value to return if the property isn't found.</param>
+        /// <returns>Either the value of the named property, or the given default value.</returns>
+        private String FindProperty(EveProperty property, String defaultValue)
+        {
+            String result = defaultValue;
+            foreach (EvePropertyValue prop in m_properties)
+            {
+                if (prop.Property != property)
+                    continue;
+
+                result = prop.Value;
+                break;
+            }
+            return result;
+        }
+
+        #endregion
+
+
+        #region Overridden Methods
+
         /// <summary>
         /// Gets a string representation of this object
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Name of the Item</returns>
         public override string ToString()
         {
             return m_name;
         }
+
+        #endregion
+
     }
-
-
-
-    #region ItemCollection
-    /// <summary>
-    /// Represents a read-only collection of items
-    /// </summary>
-    public sealed class ItemCollection : ReadonlyCollection<Item>
-    {
-        /// <summary>
-        /// Deserialization constructor
-        /// </summary>
-        /// <param name="src"></param>
-        internal ItemCollection(MarketGroup group, SerializableItem[] src)
-            : base(src == null ? 0 : src.Length)
-        {
-            if (src == null) return;
-
-            foreach (var item in src)
-            {
-                switch (item.Family)
-                {
-                    default:
-                        m_items.Add(new Item(group, item));
-                        break;
-                    case ItemFamily.Implant:
-                        m_items.Add(new Implant(group, item));
-                        break;
-                    case ItemFamily.Ship:
-                        m_items.Add(new Ship(group, item));
-                        break;
-                }
-            }
-        }
-    }
-    #endregion
 }

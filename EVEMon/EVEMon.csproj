@@ -408,6 +408,18 @@
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\AutoEllipsisToolStripRenderer.cs" />
+    <Compile Include="SkillPlanner\BlueprintBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\BlueprintBrowserControl.designer.cs">
+      <DependentUpon>BlueprintBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\BlueprintSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\BlueprintSelectControl.designer.cs">
+      <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -472,6 +484,9 @@
     </Compile>
     <Compile Include="SkillPlanner\RecommendedCertificatesControl.Designer.cs">
       <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\ReqSkillsTreeView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">
       <SubType>Form</SubType>
@@ -927,6 +942,7 @@
     <Content Include="Resources\icons\APIKeyLimited16.png" />
     <Content Include="Resources\icons\APIKeyWrong.png" />
     <Content Include="Resources\icons\AttributeOptimize.png" />
+    <None Include="Resources\icons\Blueprint.png" />
     <Content Include="Resources\icons\Calendar.png" />
     <Content Include="Resources\icons\Certificate-24.png" />
     <None Include="Resources\icons\Copy.png" />
@@ -1075,6 +1091,12 @@
     <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
       <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\BlueprintBrowserControl.resx">
+      <DependentUpon>BlueprintBrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\BlueprintSelectControl.resx">
+      <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ObsoleteEntriesForm.resx">
       <DependentUpon>ObsoleteEntriesForm.cs</DependentUpon>

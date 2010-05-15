@@ -19,17 +19,6 @@ namespace EVEMon.SkillPlanner
 
         #region Event Handlers
         /// <summary>
-        /// Updates Required Skills control when selected plan is changed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveObjectBrowserSimple_PlanChanged(object sender, EventArgs e)
-        {
-            this.recommendedCertificatesControl.Plan = this.Plan;
-            this.requiredSkillsControl.Plan = this.Plan;
-        }
-
-        /// <summary>
         /// Opens the BattleClinic Loadout window.
         /// </summary>
         private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

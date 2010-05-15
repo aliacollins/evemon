@@ -12,13 +12,12 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         [XmlElement("categoryID")]
-        public int CategoryID
-        {
-            get;
-            set;
-        }
+        public int CategoryID;
 
         [XmlElement("groupName")]
         public string Name;
+
+        [XmlElement("published")]
+        public bool Published;
     }
 }

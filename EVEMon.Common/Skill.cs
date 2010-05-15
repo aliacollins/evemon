@@ -9,7 +9,7 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a skill bound to a character, not only including the skill static data (represented by <see cref="StaticSkill"/>) but also the number of SP and level the character has. 
+    /// Represents a skill bound to a character, not only including the skill static data (represented by <see cref="StaticSkill" />) but also the number of SP and level the character has. 
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class Skill : IStaticSkill
@@ -27,11 +27,13 @@ namespace EVEMon.Common
         private bool m_known;
 
         #region Construction, initialization, exportation, updates
+
         /// <summary>
         /// Internal constructor, only used for character creation and updates
         /// </summary>
         /// <param name="owner"></param>
-        /// <param name="src"></param>
+        /// <param name="group"></param>
+        /// <param name="skill"></param>
         internal Skill(Character owner, SkillGroup group, StaticSkill skill)
         {
             m_character = owner;
@@ -52,6 +54,7 @@ namespace EVEMon.Common
         /// Imports and updates from the provided deserialization object
         /// </summary>
         /// <param name="src"></param>
+        /// <param name="fromCCP"></param>
         internal void Import(SerializableCharacterSkill src, bool fromCCP)
         {
             m_owned = src.OwnsBook;
@@ -118,10 +121,12 @@ namespace EVEMon.Common
                 EveClient.OnCharacterChanged(m_character);
             }
         }
+
         #endregion
 
 
         #region Core properties
+
         /// <summary>
         /// Gets the character this skill is bound to.
         /// </summary>
@@ -340,10 +345,12 @@ namespace EVEMon.Common
                 return (int) Math.Round(spPerHour) * m_character.GetNewCharacterSkillTrainingBonus(this.GetLeftPointsRequiredToLevel(level));
             }
         }
+
         #endregion
 
 
         #region Helper properties and methods
+
         /// <summary>
         /// Return current Level in Roman
         /// </summary>
@@ -550,14 +557,10 @@ namespace EVEMon.Common
             BuildDescriptiveFragment(sb, ts.Minutes, dto, "minutes");
             
             if (includeSeconds)
-            {
                 BuildDescriptiveFragment(sb, ts.Seconds, dto, "seconds");
-            }
 
             if (sb.Length == 0)
-            {
                 sb.Append("(none)");
-            }
 
             return sb.ToString();
         }
@@ -572,41 +575,32 @@ namespace EVEMon.Common
         private static void BuildDescriptiveFragment(StringBuilder sb, int p, DescriptiveTextOptions dto, string dstr)
         {
             if (((dto & DescriptiveTextOptions.IncludeZeroes) == 0) && p == 0)
-            {
                 return;
-            }
 
             if ((dto & DescriptiveTextOptions.IncludeCommas) != 0)
             {
                 if (sb.Length > 0)
-                {
                     sb.Append(", ");
-                }
             }
 
             if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
-            {
                 sb.Append(" ");
-            }        
 
             sb.Append(p.ToString());
 
             if ((dto & DescriptiveTextOptions.SpaceText) != 0)
-            {
                 sb.Append(' ');
-            }
+
+            if ((dto & DescriptiveTextOptions.FirstLetterUppercase) != 0)
+                dstr = char.ToUpper(dstr[0]) + dstr.Substring(1);
 
             if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
-            {
                 dstr = dstr.ToUpper();
-            }
 
             if ((dto & DescriptiveTextOptions.FullText) != 0)
             {
                 if (p == 1)
-                {
                     dstr = dstr.Substring(0, dstr.Length - 1);
-                }
 
                 sb.Append(dstr);
             }
@@ -676,10 +670,12 @@ namespace EVEMon.Common
         {
             return character.Skills[m_staticData.ArrayIndex];
         }
+
         #endregion
 
 
         #region Computations
+
         /// <summary>
         /// Calculate the time it will take to train a certain amount of skill points.
         /// </summary>
@@ -762,10 +758,12 @@ namespace EVEMon.Common
 
             return GetLeftTrainingTimeToLevel(Level + 1);
         }
+
         #endregion
 
 
         #region Conversion operators
+
         /// <summary>
         /// Returns the static skill the provided skill is based on.
         /// </summary>
@@ -775,10 +773,12 @@ namespace EVEMon.Common
         {
             return s.m_staticData; 
         }
+
         #endregion
 
 
         #region IStaticSkill Members
+
         IEnumerable<StaticSkillLevel> IStaticSkill.Prerequisites
         {
             get { return m_staticData.Prerequisites; }
@@ -788,6 +788,8 @@ namespace EVEMon.Common
         {
             get { return m_staticData.Group; }
         }
+
         #endregion
+
     }
 }

@@ -14,16 +14,18 @@ namespace EVEMon.SkillPlanner
     public partial class CertificateSelectControl : UserControl
     {
         private readonly char[] UpperCertificatesLetters = new char[] { 'B', 'S', 'I', 'E' };
-        private readonly char[] LowerCertificatesLetters = new char[] { '1', '2', '3', '4' };   // Stupid insensitive images keys' comparison, we cannot use bsie
+        private readonly char[] LowerCertificatesLetters = new char[] { '1', '2', '3', '4' }; // Stupid insensitive images keys' comparison, we cannot use bsie
 
         private Plan m_plan;
         private Character m_character;
         private CertificateClass m_selectedCertificateClass;
         private Font m_iconsFont;
         private bool m_blockSelectionReentrancy;
+        private bool m_allExpanded;
 
         public event EventHandler<EventArgs> SelectionChanged;
 
+        #region Constructors
 
         /// <summary>
         /// Constructor
@@ -41,6 +43,11 @@ namespace EVEMon.SkillPlanner
             this.cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
             this.Disposed += new EventHandler(OnDisposed);
         }
+
+        #endregion
+
+
+        #region Events
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -89,6 +96,11 @@ namespace EVEMon.SkillPlanner
             // Updates the display
             UpdateContent();
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the current plan.
@@ -151,6 +163,8 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        #endregion
 
 
         #region Control events
@@ -766,6 +780,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
+            var node = tvItems.SelectedNode;
             var certClass = this.SelectedCertificateClass;
             if (certClass == null || m_plan.WillGrantEligibilityFor(certClass[CertificateGrade.Elite]))
             {
@@ -782,9 +797,20 @@ namespace EVEMon.SkillPlanner
                 SetAdditionMenuStatus(tsmLevel4, certClass[CertificateGrade.Elite]);
             }
 
-            this.tsSeparator.Visible = this.tvItems.Visible;
-            this.tsmExpandAll.Visible = this.tvItems.Visible;
-            this.tsmCollapseAll.Visible = this.tvItems.Visible;
+            this.tsSeparatorPlanTo.Visible = (certClass == null && node != null);
+
+            // "Expand" and "Collapse" selected menu
+            this.tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
+            this.tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
+
+            this.tsmExpandSelected.Text = (certClass == null && node != null && !node.IsExpanded ?
+                String.Format("Expand {0}", node.Text) : String.Empty);
+            this.tsmCollapseSelected.Text = (certClass == null && node != null && node.IsExpanded ?
+                String.Format("Collapse {0}", node.Text) : String.Empty);
+
+            // "Expand All" and "Collapse All" menu
+            this.tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
+            this.tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
         }
 
         /// <summary>
@@ -851,6 +877,26 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Treeview's context menu > Expand
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmExpandSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.Expand();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmCollapseSelected_Click(object sender, EventArgs e)
+        {
+            tvItems.SelectedNode.Collapse();
+        }
+
+        /// <summary>
         /// Treeview's context menu > Expand All
         /// </summary>
         /// <param name="sender"></param>
@@ -858,6 +904,7 @@ namespace EVEMon.SkillPlanner
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
             this.tvItems.ExpandAll();
+            m_allExpanded = true;
         }
 
         /// <summary>
@@ -868,7 +915,9 @@ namespace EVEMon.SkillPlanner
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
             this.tvItems.CollapseAll();
+            m_allExpanded = false;
         }
         #endregion
+
     }
 }

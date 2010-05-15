@@ -1,16 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Drawing;
-using System.Collections;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
-using EVEMon.Common.Serialization.Datafiles;
 
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -37,6 +29,8 @@ namespace EVEMon.Common.Data
 
         private bool m_trainableOnTrialAccount;
         private string m_descriptionNL;
+
+        #region Constructors
 
         /// <summary>
         /// Deserialization constructor from datafiles.
@@ -123,6 +117,11 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        #region Initializer
+
         /// <summary>
         /// Completes the initialization by updating the prequisites and checking trainability on trial account
         /// </summary>
@@ -131,7 +130,7 @@ namespace EVEMon.Common.Data
             if (prereqs == null) return;
 
             // Create the prerequisites list
-            m_prereqs.AddRange(prereqs.Select(x => new StaticSkillLevel(StaticSkills.GetSkillByName(x.Name), x.Level)));
+            m_prereqs.AddRange(prereqs.Select(x => new StaticSkillLevel(StaticSkills.GetSkillById(x.ID), x.Level)));
 
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
             if (m_trainableOnTrialAccount)
@@ -146,6 +145,11 @@ namespace EVEMon.Common.Data
                 }
             }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the ID of this skill
@@ -325,7 +329,11 @@ namespace EVEMon.Common.Data
             get { return m_bonusAttribute; }
         }
 
-        #region Computations
+        #endregion
+
+
+        #region Public Methods - Computations
+
         /// <summary>
         /// Calculates the cumulative points required for a level of this skill (starting from a zero level).
         /// </summary>
@@ -370,8 +378,11 @@ namespace EVEMon.Common.Data
             if (level == 0) return 0;
             return GetPointsRequiredForLevel(level) - GetPointsRequiredForLevelOnly(level - 1);
         }
+
         #endregion
 
+
+        #region Private Methods
 
         /// <summary>
         /// Remove line feeds and some other characters to format the string. Honestly, I don't understand the point.
@@ -452,6 +463,11 @@ namespace EVEMon.Common.Data
             return strWrapped;
         }
 
+        #endregion
+
+
+        #region Public Methods
+
         /// <summary>
         /// Gets this skill's representation for the provided character
         /// </summary>
@@ -462,13 +478,21 @@ namespace EVEMon.Common.Data
             return character.Skills.GetByArrayIndex(m_arrayIndex);
         }
 
+        #endregion
+
+
+        #region Overridden Methods
+
         /// <summary>
         /// Gets a string representation for this skill (the name of the skill).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Name of the Static Skill.</returns>
         public override string ToString()
         {
             return m_name;
         }
+
+        #endregion
+
     }
 }

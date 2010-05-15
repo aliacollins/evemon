@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
+
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
-    #region MarketGroup
     /// <summary>
     /// Represents an item category
     /// </summary>
-    public sealed class MarketGroup
+    public class MarketGroup
     {
         private readonly MarketGroupCollection m_subCategories;
         private readonly ItemCollection m_items;
@@ -18,10 +16,13 @@ namespace EVEMon.Common.Data
         private readonly string m_name;
         private readonly int m_id;
 
+
+        #region Constructors
+
         /// <summary>
         /// Deserialization constructor for root category only
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="src">Source Serializable Market Group</param>
         public MarketGroup(SerializableMarketGroup src)
         {
             m_id = src.ID;
@@ -33,12 +34,39 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Deserialization constructor
         /// </summary>
-        /// <param name="src"></param>
+        /// <param name="parent">The Market Group this Market Group is contained within</param>
+        /// <param name="src">Source Serializable Market Group</param>
         public MarketGroup(MarketGroup parent, SerializableMarketGroup src)
             : this(src)
         {
             m_parent = parent;
         }
+
+        /// <summary>
+        /// Deserialization constructor for root category only
+        /// </summary>
+        /// <param name="src"></param>
+        public MarketGroup(SerializableBlueprintGroup src)
+        {
+            m_id = src.ID;
+            m_name = src.Name;
+        }
+
+        /// <summary>
+        /// Deserialization constructor
+        /// </summary>
+        /// <param name="parent">The Market Group this Market Group is contained within</param>
+        /// <param name="src">Source Blueprint Group</param>
+        public MarketGroup(MarketGroup parent, SerializableBlueprintGroup src)
+            :this (src)
+        {
+            m_parent = parent;
+        }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the group ID.
@@ -57,7 +85,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the sub categories
+        /// Gets the sub categories.
         /// </summary>
         public MarketGroupCollection SubGroups
         {
@@ -65,11 +93,43 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the items in this category
+        /// Gets the items in this category.
         /// </summary>
         public ItemCollection Items
         {
             get { return m_items; }
+        }
+
+        /// <summary>
+        /// Gets this category's name.
+        /// </summary>
+        public string Name
+        {
+            get { return m_name; }
+        }
+
+        /// <summary>
+        /// Gets this category full category name.
+        /// </summary>
+        public string FullCategoryName
+        {
+            get
+            {
+                StringBuilder fullPathName = new StringBuilder();
+                MarketGroup parent = m_parent;
+
+                fullPathName.Append(m_name);
+                
+                while (parent != null)
+                {
+                    if (parent != null)
+                        fullPathName.Insert(0, " > ");
+                    fullPathName.Insert(0, parent.Name);
+                    parent = parent.ParentGroup;
+                }
+
+                return fullPathName.ToString();
+            }
         }
 
         /// <summary>
@@ -91,51 +151,24 @@ namespace EVEMon.Common.Data
                         yield return subItem;
                     }
                 }
-
             }
         }
 
-        /// <summary>
-        /// Gets this category's name
-        /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        #endregion
+
+
+        #region Overidden Methods
 
         /// <summary>
-        /// gets the name of this item.
+        /// Gets the name of this item.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Name of the Market Group.</returns>
         public override string ToString()
         {
             return m_name;
         }
+
+        #endregion
+
     }
-    #endregion
-
-
-
-    #region MarketGroupCollection
-    /// <summary>
-    /// Represents a read-only collection of items
-    /// </summary>
-    public sealed class MarketGroupCollection : ReadonlyCollection<MarketGroup>
-    {
-        /// <summary>
-        /// Deserialization constructor
-        /// </summary>
-        /// <param name="src"></param>
-        internal MarketGroupCollection(MarketGroup cat, SerializableMarketGroup[] src)
-            : base(src == null ? 0 : src.Length)
-        {
-            if (src == null) return;
-
-            foreach (var subCat in src)
-            {
-                m_items.Add(new MarketGroup(cat, subCat));
-            }
-        }
-    }
-    #endregion
 }

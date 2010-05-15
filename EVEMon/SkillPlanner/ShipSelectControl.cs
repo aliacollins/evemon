@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Windows.Forms;
+
 using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Data;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
@@ -14,6 +14,7 @@ namespace EVEMon.SkillPlanner
         private bool m_isLoaded;
 
         #region Initialisation
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -30,7 +31,8 @@ namespace EVEMon.SkillPlanner
         protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
@@ -39,15 +41,16 @@ namespace EVEMon.SkillPlanner
             BuildTreeView();
 
             // Initialize the "skills" combo box
-            this.cbSkillFilter.Items[0] = "All Ships";
-            this.cbSkillFilter.Items[1] = "Ships I can fly";
-            this.cbSkillFilter.Items[2] = "Ships I cannot fly";
+            this.cbUsabilityFilter.Items[0] = "All Ships";
+            this.cbUsabilityFilter.Items[1] = "Ships I can fly";
+            this.cbUsabilityFilter.Items[2] = "Ships I cannot fly";
 
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
-                cbSkillFilter.SelectedIndex = (int)Settings.UI.ShipBrowser.UsabilityFilter;
+                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.ShipBrowser.UsabilityFilter;
                 tbSearchText.Text = Settings.UI.ShipBrowser.TextSearch;
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
                 this.cbAmarr.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Amarr) != Race.None;
                 this.cbCaldari.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Caldari) != Race.None;
@@ -58,26 +61,30 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                cbSkillFilter.SelectedIndex = 0;
+                cbUsabilityFilter.SelectedIndex = 0;
             }
         }
+
         #endregion
 
+
         #region Callbacks
+
         /// <summary>
         /// When the combo for filter changes, we update the settings and the control content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbUsabilityFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update settings
-            Settings.UI.ShipBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbSkillFilter.SelectedIndex;
+            Settings.UI.ShipBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
 
             // Update the filter delegate
             switch (Settings.UI.ShipBrowser.UsabilityFilter)
             {
-                case ObjectUsabilityFilter.All: m_usabilityPredicate = SelectAll;
+                case ObjectUsabilityFilter.All:
+                    m_usabilityPredicate = SelectAll;
                     break;
 
                 case ObjectUsabilityFilter.Usable:
@@ -105,12 +112,18 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the race
             Race race = Race.None;
-            if (cbAmarr.Checked) race |= Race.Amarr;
-            if (cbCaldari.Checked) race |= Race.Caldari;
-            if (cbGallente.Checked) race |= Race.Gallente;
-            if (cbMinmatar.Checked) race |= Race.Minmatar;
-            if (cbFaction.Checked) race |= Race.Faction;
-            if (cbORE.Checked) race |= Race.Ore;
+            if (cbAmarr.Checked)
+                race |= Race.Amarr;
+            if (cbCaldari.Checked)
+                race |= Race.Caldari;
+            if (cbGallente.Checked)
+                race |= Race.Gallente;
+            if (cbMinmatar.Checked)
+                race |= Race.Minmatar;
+            if (cbFaction.Checked)
+                race |= Race.Faction;
+            if (cbORE.Checked)
+                race |= Race.Ore;
 
             // Update the settings
             Settings.UI.ShipBrowser.RacesFilter |= race;
@@ -133,15 +146,20 @@ namespace EVEMon.SkillPlanner
             Settings.UI.ShipBrowser.TextSearch = tbSearchText.Text;
             base.tbSearchText_TextChanged(sender, e);
         }
+
         #endregion
 
+
         #region Content creation
+
         /// <summary>
         /// Refresh the controls
         /// </summary>
         private void UpdateContent()
         {
-            if (!m_isLoaded) return;
+            if (!m_isLoaded)
+                return;
+
             BuildTreeView();
             BuildListView();
         }
@@ -151,6 +169,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void BuildTreeView()
         {
+            int numberOfItems = 0;
             tvItems.BeginUpdate();
             tvItems.Nodes.Clear();
             try
@@ -162,18 +181,20 @@ namespace EVEMon.SkillPlanner
                     TreeNode typeNode = new TreeNode(typeGroup.Name);
                     foreach (var raceGroup in typeGroup.SubGroups)
                     {
-                        // items
+                        // Items
                         TreeNode raceNode = new TreeNode(raceGroup.Name);
                         foreach (var ship in raceGroup.Items.Where(m_usabilityPredicate).Where(m_racePredicate))
                         {
                             TreeNode shipNode = new TreeNode(ship.Name);
                             shipNode.Tag = ship;
 
+                            numberOfItems++;
                             raceNode.Nodes.Add(shipNode);
                         }
 
-                        // dont display empty nodes
-                        if (raceNode.Nodes.Count != 0) typeNode.Nodes.Add(raceNode);
+                        // Dont display empty nodes
+                        if (raceNode.Nodes.Count != 0)
+                            typeNode.Nodes.Add(raceNode);
                     }
 
                     // Items
@@ -182,18 +203,26 @@ namespace EVEMon.SkillPlanner
                         TreeNode shipNode = new TreeNode(ship.Name);
                         shipNode.Tag = ship;
 
+                        numberOfItems++;
                         typeNode.Nodes.Add(shipNode);
                     }
 
-                    // dont display empty nodes
-                    if (typeNode.Nodes.Count != 0) tvItems.Nodes.Add(typeNode);
+                    // Dont display empty nodes
+                    if (typeNode.Nodes.Count != 0)
+                        tvItems.Nodes.Add(typeNode);
                 }
             }
             finally
             {
                 tvItems.EndUpdate();
+
+                // If the filtered set is small enough to fit all nodes on screen, call expandAll()
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                    tvItems.ExpandAll();
             }
         }
+
         #endregion
+
     }
 }

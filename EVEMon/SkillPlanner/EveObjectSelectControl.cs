@@ -17,48 +17,79 @@ namespace EVEMon.SkillPlanner
         protected List<Item> m_selectedObjects = null;
         protected Plan m_plan;
 
+        private bool m_allExpanded;
+
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public EveObjectSelectControl()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets or sets the plan.
+        /// </summary>
         public Plan Plan
         {
             get { return m_plan; }
             set { m_plan = value; }
         }
 
+        /// <summary>
+        /// Occurs when the control is loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             m_usabilityPredicate = SelectAll;
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
         }
 
         #region Search
+        /// <summary>
+        /// Occurs when clicking on the search text control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void lbSearchTextHint_Click(object sender, EventArgs e)
         {
             tbSearchText.Focus();
         }
 
+        /// <summary>
+        /// Occurs upon entering the search text control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void tbSearchText_Enter(object sender, EventArgs e)
         {
             lbSearchTextHint.Visible = false;
         }
 
+        /// <summary>
+        /// Occurs upon leaving the search text control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void tbSearchText_Leave(object sender, EventArgs e)
         {
             lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
         }
 
+        /// <summary>
+        /// Occurs when the search text changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             if (!tbSearchText.Focused)
-            {
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
-            }
+
             BuildListView();
         }
 
@@ -77,11 +108,12 @@ namespace EVEMon.SkillPlanner
                 lbNoMatches.Visible = false;
                 return;
             }
-            // find everything in the current tree that matches the search string
+
+            // Find everything in the current tree that matches the search string
             List<Item> filteredItems = new List<Item>();
             foreach (TreeNode n in tvItems.Nodes)
             {
-                SearchNode(n,searchText, filteredItems);
+                SearchNode(n, searchText, filteredItems);
             }
             filteredItems.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
 
@@ -106,6 +138,12 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = (filteredItems.Count == 0);
         }
 
+        /// <summary>
+        /// Creates the node.
+        /// </summary>
+        /// <param name="tn"></param>
+        /// <param name="searchText"></param>
+        /// <param name="filteredItems"></param>
         private void SearchNode(TreeNode tn, string searchText, List<Item> filteredItems)
         {
             Item itm = tn.Tag as Item;
@@ -117,12 +155,18 @@ namespace EVEMon.SkillPlanner
                 }
                 return;
             }
+
             if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
             {
                 filteredItems.Add(itm);
             }
         }
         
+        /// <summary>
+        /// Occurs when pressing a key while inside the search text control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 0x01)
@@ -153,13 +197,17 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (m_selectedObjects == null || m_selectedObjects.Count == 0) return null;
+                if (m_selectedObjects == null || m_selectedObjects.Count == 0)
+                    return null;
+
                 return m_selectedObjects[0];
             }
             set
             {
                 List<Item> selectedObjects = new List<Item>();
-                if (value != null) selectedObjects.Add(value);
+                if (value != null)
+                    selectedObjects.Add(value);
+
                 SetSelectedObjects(selectedObjects);
             }
         }
@@ -188,6 +236,9 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Update the selected tree node.
+        /// </summary>
         private void UpdateSelectedTreeNodes()
         {
             if (tvItems.SelectedNodes.Count != 0)
@@ -208,11 +259,22 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         #region Events
+
+        /// <summary>
+        /// Occurs when selection changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tvItems_SelectionsChanged(object sender, EventArgs e)
         {
             UpdateSelectedTreeNodes();
         }
 
+        /// <summary>
+        /// Occurs when the search list selection changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lbSearchList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbSearchList.SelectedItems.Count != 0)
@@ -230,39 +292,74 @@ namespace EVEMon.SkillPlanner
                 SetSelectedObjects(null);
             }
         }
+
         #endregion
 
+        /// <summary>
+        /// Treeview's context menu > Expand all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmiExpandAll_Click(object sender, EventArgs e)
         {
             tvItems.ExpandAll();
+            m_allExpanded = true;
         }
 
+        /// <summary>
+        /// Treeview's context menu > Collapse all.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmiCollapseAll_Click(object sender, EventArgs e)
         {
             tvItems.CollapseAll();
+            m_allExpanded = false;
         }
 
+        /// <summary>
+        /// Treeview's context menu > Expand.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmiExpandSelected_Click(object sender, EventArgs e)
         {
-            tvItems.SelectedNode.ExpandAll();
+            tvItems.SelectedNode.Expand();
         }
 
+        /// <summary>
+        /// Treeview's context menu > Collapse.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmiCollapseSelected_Click(object sender, EventArgs e)
         {
             tvItems.SelectedNode.Collapse();
         }
 
-        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        /// <summary>
+        /// Occurs upon opening the context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            cmiExpandSelected.Enabled = cmiCollapseSelected.Enabled = (tvItems.SelectedNode != null && tvItems.SelectedNode.GetNodeCount(true) > 0);
-            string aString;
-            if (cmiCollapseSelected.Enabled)
-                aString = tvItems.SelectedNode.Text;
-            else
-                aString = "Selected";
+            var node = tvItems.SelectedNode;
 
-            cmiExpandSelected.Text = "Expand " + aString;
-            cmiCollapseSelected.Text = "Collapse " + aString;
+            tsSeparator.Visible = (node != null && node.GetNodeCount(true) > 0);
+
+            // "Expand" and "Collapse" selected menu
+            cmiExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
+            cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
+
+            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded ?
+                String.Format("Expand {0}", node.Text) : String.Empty);
+            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded ?
+                String.Format("Collapse {0}", node.Text) : String.Empty);
+
+            // "Expand All" and "Collapse All" menu
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
         }
 
 
@@ -272,7 +369,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="eo"></param>
         /// <returns></returns>
-        protected bool SelectAll(Item eo) { return true; }
+        protected bool SelectAll(Item eo)
+        { 
+            return true;
+        }
 
         /// <summary>
         /// Filter for items which can be used (prereqs met)
@@ -284,13 +384,14 @@ namespace EVEMon.SkillPlanner
             foreach (var prereq in eo.Prerequisites)
             {
                 int level = m_plan.Character.GetSkillLevel(prereq.Skill);
-                if (level < prereq.Level) return false;
+                if (level < prereq.Level)
+                    return false;
             }
             return true;
         }
 
         /// <summary>
-        /// Filter for items wich canniot be used (prereqs not met).
+        /// Filter for items which can not be used (prereqs not met).
         /// </summary>
         /// <param name="eo"></param>
         /// <returns></returns>

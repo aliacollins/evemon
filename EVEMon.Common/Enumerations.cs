@@ -1,5 +1,9 @@
-using System.Xml.Serialization;
 using System;
+using System.ComponentModel;
+using System.Xml.Serialization;
+
+using EVEMon.Common.Attributes;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -46,12 +50,12 @@ namespace EVEMon.Common
     [Flags]
     public enum Race
     {
-        [XmlEnum("Amarr")]
-        Amarr = 4,
-        [XmlEnum("Minmatar")]
-        Minmatar = 2,
         [XmlEnum("Caldari")]
         Caldari = 1,
+        [XmlEnum("Minmatar")]
+        Minmatar = 2,
+        [XmlEnum("Amarr")]
+        Amarr = 4,
         [XmlEnum("Gallente")]
         Gallente = 8,
         [XmlEnum("Jove")]
@@ -116,7 +120,8 @@ namespace EVEMon.Common
         SpaceText = 4,
         IncludeCommas = 8,
         IncludeZeroes = 16,
-        SpaceBetween = 32
+        SpaceBetween = 32,
+        FirstLetterUppercase = 64
     }
 
     /// <summary>
@@ -290,4 +295,112 @@ namespace EVEMon.Common
         Full = 2
     }
 
+    /// <summary>
+    /// Represents the activity of a blueprint.
+    /// </summary>
+    public enum BlueprintActivity
+    {
+        None = 0,
+        Manufacturing = 1,
+        ResearchingTechnology = 2,
+        ResearchingTimeProductivity = 3,
+        ResearchingMaterialProductivity = 4,
+        Copying = 5,
+        Duplicating = 6,
+        ReverseEngineering = 7,
+        Invention = 8
+    }
+
+    /// <summary>
+    /// Enumeration of the supported API methods. Each method should have an entry in APIMethods and
+    /// an equivalent string entry in APIConstants indicating the default path of the method.
+    /// </summary>
+    public enum APIMethods
+    {
+        None,
+
+        /// <summary>
+        /// The Tranquility server status
+        /// </summary>
+        [Header("Tranquility Status")]
+        [Description("The status of the Tranquility server.")]
+        [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
+        ServerStatus,
+
+        /// <summary>
+        /// The characters available on an account.
+        /// </summary>
+        [Header("Characters on Account")]
+        [Description("The retrieval of the characters list available on every account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        CharacterList,
+
+        /// <summary>
+        /// A character sheet (bio, skills, implants, etc).
+        /// </summary>
+        [Header("Character Sheet")]
+        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        CharacterSheet,
+
+        /// <summary>
+        /// A character's skill queue.
+        /// </summary>
+        [Header("Skill Queue")]
+        [Description("A character's skill queue.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        SkillQueue,
+
+        /// <summary>
+        /// /// Mail messages for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Mail Messages")]
+        [Description("Mail messages for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        MailMessages,
+
+        /// <summary>
+        /// Notifications for a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Notifications")]
+        [Description("Notifications messages for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        Notifications,
+
+        /// <summary>
+        /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Market Orders")]
+        [Description("The market orders of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        MarketOrders,
+
+        /// <summary>
+        /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
+        /// </summary>
+        [FullKey]
+        CharacterAccountBalance,
+
+        /// <summary>
+        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders,
+
+        /// <summary>
+        /// The conquerable station list. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        ConquerableStationList,
+
+        /// <summary>
+        /// The skill in training of a character.
+        /// </summary>
+        CharacterSkillInTraining
+    }
 }

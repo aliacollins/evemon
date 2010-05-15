@@ -74,13 +74,13 @@ namespace EVEMon.XmlGenerator
         /// EVE Attributes
         /// </summary>
         /// <returns><c>Bag</c> of Attributes</returns>
-        internal static Bag<DgmAttribute> Attributes()
+        internal static Bag<DgmAttributeTypes> Attributes()
         {
-            IndexedList<DgmAttribute> list = new IndexedList<DgmAttribute>();
+            IndexedList<DgmAttributeTypes> list = new IndexedList<DgmAttributeTypes>();
 
             foreach (var attribute in context.dgmAttributeTypes)
             {
-                DgmAttribute item = new DgmAttribute()
+                DgmAttributeTypes item = new DgmAttributeTypes()
                 {
                     ID = attribute.attributeID,
                     CategoryID = attribute.categoryID,
@@ -100,7 +100,7 @@ namespace EVEMon.XmlGenerator
                 list.Items.Add(item);
             }
 
-            return new Bag<DgmAttribute>(list);
+            return new Bag<DgmAttributeTypes>(list);
         }
 
         /// <summary>
@@ -268,6 +268,38 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Inventory Blueprint Types
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Blueprint Types</returns>
+        internal static Bag<InvBlueprintTypes> BlueprintTypes()
+        {
+            IndexedList<InvBlueprintTypes> list = new IndexedList<InvBlueprintTypes>();
+
+            foreach (var blueprint in context.invBlueprintTypes)
+            {
+                InvBlueprintTypes item = new InvBlueprintTypes()
+                {
+                    ID = blueprint.blueprintTypeID,
+                    ParentID = blueprint.parentBlueprintTypeID,
+                    ProductTypeID = blueprint.productTypeID.Value,
+                    ProductionTime = blueprint.productionTime.Value,
+                    TechLevel = blueprint.techLevel.Value,
+                    ResearchProductivityTime = blueprint.researchProductivityTime.Value,
+                    ResearchMaterialTime = blueprint.researchMaterialTime.Value,
+                    ResearchCopyTime = blueprint.researchCopyTime.Value,
+                    ResearchTechTime = blueprint.researchTechTime.Value,
+                    ProductivityModifier = blueprint.productivityModifier.Value,
+                    WasteFactor = blueprint.wasteFactor.Value,
+                    MaxProductionLimit = blueprint.maxProductionLimit.Value
+                };
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<InvBlueprintTypes>(list);
+        }
+
+        /// <summary>
         /// Inventory Item Market Groups
         /// </summary>
         /// <returns><c>Bag</c> of Market Groups available on the market</returns>
@@ -305,7 +337,8 @@ namespace EVEMon.XmlGenerator
                 InvGroup item = new InvGroup()
                 {
                     ID = group.groupID,
-                    Name = group.groupName
+                    Name = group.groupName,
+                    Published = group.published.Value
                 };
 
                 if (group.categoryID.HasValue)
@@ -362,24 +395,50 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Materials used for an Activity
+        /// Requirements used for an Activity
         /// </summary>
-        /// <returns>List of Materials used for a particular activity.</returns>
-        internal static List<TypeActivityMaterial> Materials()
+        /// <returns>List of Requirements needed for a particular activity.</returns>
+        internal static List<RamTypeRequirements> TypeRequirements()
         {
-            List<TypeActivityMaterial> list = new List<TypeActivityMaterial>();
+            List<RamTypeRequirements> list = new List<RamTypeRequirements>();
 
-            foreach (var material in context.ramTypeRequirements)
+            foreach (var requirement in context.ramTypeRequirements)
             {
-                TypeActivityMaterial item = new TypeActivityMaterial()
+                RamTypeRequirements item = new RamTypeRequirements()
                 {
-                    ActivityID = material.activityID,
-                    RequiredTypeID = material.requiredTypeID,
-                    TypeID = material.typeID
+                    TypeID = requirement.typeID,
+                    ActivityID = requirement.activityID,
+                    RequiredTypeID = requirement.requiredTypeID
                 };
 
-                if (material.quantity.HasValue)
-                    item.Quantity = material.quantity.Value;
+                if (requirement.quantity.HasValue)
+                    item.Quantity = requirement.quantity.Value;
+                
+                if (requirement.damagePerJob.HasValue)
+                    item.DamagePerJob = requirement.damagePerJob.Value;
+
+                list.Add(item);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Materials 
+        /// </summary>
+        /// <returns>List of Materials.</returns>
+        internal static List<InvTypeMaterials> TypeMaterials()
+        {
+            List<InvTypeMaterials> list = new List<InvTypeMaterials>();
+
+            foreach (var material in context.invTypeMaterials)
+            {
+                InvTypeMaterials item = new InvTypeMaterials()
+                {
+                    TypeID = material.typeID,
+                    MaterialTypeID = material.materialTypeID,
+                    Quantity = material.quantity
+                };
 
                 list.Add(item);
             }

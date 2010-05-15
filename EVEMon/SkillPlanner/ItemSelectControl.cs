@@ -38,7 +38,8 @@ namespace EVEMon.SkillPlanner
         protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
             
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
@@ -60,20 +61,20 @@ namespace EVEMon.SkillPlanner
             this.ccbGroupFilter.ToolTip = this.toolTip;
 
             // Initialize the "skills" combo box
-            this.cbSkillFilter.Items[0] = "All Items";
-            this.cbSkillFilter.Items[1] = "Items I can use";
-            this.cbSkillFilter.Items[2] = "Items I cannot use";
+            this.cbUsabilityFilter.Items[0] = "All Items";
+            this.cbUsabilityFilter.Items[1] = "Items I can use";
+            this.cbUsabilityFilter.Items[2] = "Items I cannot use";
             
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
             {
                 // Usability combo
-                cbSkillFilter.SelectedIndex = (int)Settings.UI.ItemBrowser.UsabilityFilter;
+                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.ItemBrowser.UsabilityFilter;
 
                 // Metagroups combo
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
-                    this.ccbGroupFilter.SetItemChecked(i, (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
+                    this.ccbGroupFilter.SetItemChecked(i, (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.None);
                 }
 
                 // Slots combo
@@ -103,7 +104,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                cbSkillFilter.SelectedIndex = 0;
+                cbUsabilityFilter.SelectedIndex = 0;
                 cbSlotFilter.SelectedIndex = 0;
             }
 
@@ -123,9 +124,7 @@ namespace EVEMon.SkillPlanner
         protected override void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             if (m_isLoaded)
-            {
                 Settings.UI.ItemBrowser.TextSearch = tbSearchText.Text;
-            }
 
             base.tbSearchText_TextChanged(sender, e);
         }
@@ -139,9 +138,7 @@ namespace EVEMon.SkillPlanner
         {
             // Update the settings
             if (m_isLoaded)
-            {
-                Settings.UI.ItemBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbSkillFilter.SelectedIndex;
-            }
+                Settings.UI.ItemBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
 
             // Update the predicate
             switch (Settings.UI.ItemBrowser.UsabilityFilter)
@@ -222,15 +219,13 @@ namespace EVEMon.SkillPlanner
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
                     if (this.ccbGroupFilter.GetItemChecked(i))
-                    {
                         Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
-                    }
                 }
             }
 
             // Update the predicate
             var filter = Settings.UI.ItemBrowser.MetagroupFilter;
-            m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
+            m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.None;
 
             // Update the control's content
             UpdateContent();
@@ -305,10 +300,12 @@ namespace EVEMon.SkillPlanner
             else
             {
                 double? gridAvailable = null;
-                if (numPowergrid.Enabled) gridAvailable = (double)numPowergrid.Value;
+                if (numPowergrid.Enabled)
+                    gridAvailable = (double)numPowergrid.Value;
 
                 double? cpuAvailable = null;
-                if (numCPU.Enabled) cpuAvailable = (double)numCPU.Value;
+                if (numCPU.Enabled)
+                    cpuAvailable = (double)numCPU.Value;
 
                 this.m_fittingPredicate = (item) => item.CanActivate(cpuAvailable, gridAvailable);
             }
@@ -340,7 +337,8 @@ namespace EVEMon.SkillPlanner
                 foreach (var group in StaticItems.MarketGroups)
                 {
                     // Skip some groups
-                    if (!showAllGroupsCheckbox.Checked && !m_presetGroups.Contains(group)) continue;
+                    if (!showAllGroupsCheckbox.Checked && !m_presetGroups.Contains(group))
+                        continue;
 
                     TreeNode node = new TreeNode();
                     node.Text = group.Name;
@@ -359,21 +357,19 @@ namespace EVEMon.SkillPlanner
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
                 if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
-                {
                     tvItems.ExpandAll();
-                }
             }
         }
 
         /// <summary>
-        /// Create the tree nodes for the given caegory and add them to the given nodes collection
+        /// Create the tree nodes for the given category and add them to the given nodes collection
         /// </summary>
         /// <param name="cat"></param>
         /// <param name="nodeCollection"></param>
         /// <returns></returns>
         private int BuildSubtree(MarketGroup group, TreeNodeCollection nodeCollection)
         {
-            // Total items count in this cateory and its subcategories
+            // Total items count in this category and its subcategories
             int result = 0; 
 
             // Add all subcategories
@@ -383,14 +379,12 @@ namespace EVEMon.SkillPlanner
                 TreeNode tn = new TreeNode();
                 tn.Text = childGroup.Name;
 
-                // add this subcateory's items count
+                // Add this subcategory's items count
                 result += BuildSubtree(childGroup, tn.Nodes);
 
                 // Only add if this subcategory has children
                 if (tn.GetNodeCount(true) > 0)
-                {
                     nodeCollection.Add(tn);
-                }
             }
 
             // Add all items

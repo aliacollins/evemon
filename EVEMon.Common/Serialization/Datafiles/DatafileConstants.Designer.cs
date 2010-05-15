@@ -61,6 +61,15 @@ namespace EVEMon.Common.Serialization.Datafiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to eve-blueprints-en-US.xml.gz.
+        /// </summary>
+        public static string BlueprintsDatafile {
+            get {
+                return ResourceManager.GetString("BlueprintsDatafile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to eve-certificates-en-US.xml.gz.
         /// </summary>
         public static string CertificatesDatafile {

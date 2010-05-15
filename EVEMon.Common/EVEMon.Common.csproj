@@ -230,11 +230,18 @@
     </Compile>
     <Compile Include="CultureConstants.cs" />
     <Compile Include="ConquerableStation.cs" />
+    <Compile Include="Data\Blueprint.cs" />
+    <Compile Include="Data\BlueprintCollection.cs" />
+    <Compile Include="Data\BlueprintMarketGroupCollection.cs" />
     <Compile Include="Data\Constellation.cs" />
     <Compile Include="Data\DBConstants.cs" />
     <Compile Include="Data\EveProperty.cs" />
     <Compile Include="Data\EvePropertyCategory.cs" />
     <Compile Include="Data\EvePropertyValue.cs" />
+    <Compile Include="Data\BlueprintMarketGroup.cs" />
+    <Compile Include="Data\ItemCollection.cs" />
+    <Compile Include="Data\MarketGroupCollection.cs" />
+    <Compile Include="Data\StaticBlueprints.cs" />
     <Compile Include="Data\StaticGeography.cs" />
     <Compile Include="Data\Implant.cs" />
     <Compile Include="Data\Item.cs" />
@@ -252,6 +259,7 @@
     <Compile Include="Data\StaticItems.cs" />
     <Compile Include="Data\StaticProperties.cs" />
     <Compile Include="Data\StaticRecommendations.cs" />
+    <Compile Include="Data\StaticRequiredMaterial.cs" />
     <Compile Include="Data\StaticSkill.cs" />
     <Compile Include="Data\StaticSkillEnumerableExtensions.cs" />
     <Compile Include="Data\StaticSkillGroup.cs" />
@@ -323,6 +331,7 @@
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
     <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
+    <Compile Include="Serialization\Datafiles\BlueprintsDatafile.cs" />
     <Compile Include="Serialization\API\SerializableSkillInTraining.cs" />
     <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -330,6 +339,9 @@
       <DependentUpon>DatafileConstants.resx</DependentUpon>
     </Compile>
     <Compile Include="Serialization\Datafiles\GeoDatafile.cs" />
+    <Compile Include="Serialization\Datafiles\ItemsDatafile.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Serialization\Datafiles\PropertiesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\ReprocessingDatafile.cs" />
     <Compile Include="Serialization\Exportation\OutputCharacter.cs" />
@@ -347,6 +359,7 @@
     <Compile Include="Serialization\Importation\OldExportedSkill.cs" />
     <Compile Include="Serialization\Importation\OldExportedSkillGroup.cs" />
     <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
+    <Compile Include="SettingsObjects\BlueprintBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />
@@ -368,7 +381,6 @@
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
     <Compile Include="Serialization\Battleclinic\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
-    <Compile Include="Serialization\Datafiles\ItemsDatafiles.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacter.cs" />
     <Compile Include="Serialization\API\SerializableAttributes.cs" />
     <Compile Include="Serialization\API\SerializableCertificate.cs" />
@@ -523,6 +535,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\eve-blueprints-en-US.xml.gz" />
     <None Include="Resources\eve-certificates-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

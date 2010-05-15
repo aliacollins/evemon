@@ -9,6 +9,9 @@ using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// UserControl to display a tree of certificates
+    /// </summary>
     public partial class CertificateTreeDisplayControl : UserControl
     {
         private const int GrantedIcon = 0;
@@ -23,7 +26,11 @@ namespace EVEMon.SkillPlanner
         private CertificateClass m_class;
         private Font m_boldFont;
 
+        private bool m_allExpanded;
+
         public event EventHandler SelectionChanged;
+
+        #region Constructors
 
         /// <summary>
         /// Constructor
@@ -46,6 +53,11 @@ namespace EVEMon.SkillPlanner
             EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
             this.Disposed += new EventHandler(OnDisposed);
         }
+
+        #endregion
+
+
+        #region Events
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -80,6 +92,11 @@ namespace EVEMon.SkillPlanner
 
             }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the certificate class (i.e. "Core competency").
@@ -133,8 +150,7 @@ namespace EVEMon.SkillPlanner
                 return null;
             }
         }
-
-        
+                
         /// <summary>
         /// Expands the node representing this certificate.
         /// </summary>
@@ -155,6 +171,9 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        #endregion
+
 
         #region Event Handlers
         /// <summary>
@@ -292,12 +311,14 @@ namespace EVEMon.SkillPlanner
         private TreeNode CreateNode(Certificate cert)
         {
             TreeNode node = new TreeNode();
+            node.Text = cert.ToString();
             node.Tag = cert;
 
             foreach (var prereqCert in cert.PrerequisiteCertificates)
             {
                 node.Nodes.Add(CreateNode(prereqCert));
             }
+
             foreach (var prereqSkill in cert.PrerequisiteSkills)
             {
                 node.Nodes.Add(CreateNode(prereqSkill));
@@ -314,6 +335,7 @@ namespace EVEMon.SkillPlanner
         private TreeNode CreateNode(SkillLevel skillPrereq)
         {
             TreeNode node = new TreeNode();
+            node.Text = skillPrereq.ToString();
             node.Tag = skillPrereq;
 
             // Add this skill's prerequisites
@@ -494,7 +516,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
-            if (this.treeView.SelectedNode == null)
+            var node = this.treeView.SelectedNode;
+
+            if (node == null)
             {
                 // Update "add to" menu
                 tsmAddToPlan.Enabled = false;
@@ -507,7 +531,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                var cert = this.treeView.SelectedNode.Tag as Certificate;
+                var cert = node.Tag as Certificate;
                 showInMenuSeparator.Visible = true;
                 showInBrowserMenu.Visible = true;
 
@@ -529,7 +553,7 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     // Update "add to" menu
-                    var prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
+                    var prereq = (SkillLevel)node.Tag;
                     var skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
                     tsmAddToPlan.Text = "Plan \"" + skill.ToString() + " " + Skill.GetRomanForInt(prereq.Level) + "\"";
@@ -542,6 +566,22 @@ namespace EVEMon.SkillPlanner
                     showInExplorerMenu.Visible = true;
                 }
             }
+
+            tsSeparatorToggle.Visible = (node != null && node.GetNodeCount(true) > 0);
+
+            // "Collapse" and "Expand" menus
+            tsmCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
+            tsmExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
+
+            tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded ?
+                String.Format("Expand {0}", node.Text) : String.Empty);
+            tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded ?
+                String.Format("Collapse {0}", node.Text) : String.Empty);
+
+            // "Expand All" and "Collapse All" menus
+            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
+            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
+
         }
 
         /// <summary>
@@ -566,6 +606,26 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Treeview's context menu > Expand
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmExpandSelected_Click(object sender, EventArgs e)
+        {
+            treeView.SelectedNode.Expand();
+        }
+
+        /// <summary>
+        /// Treeview's context menu > Collapse
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmCollapseSelected_Click(object sender, EventArgs e)
+        {
+            treeView.SelectedNode.Collapse();
+        }
+
+        /// <summary>
         /// Treeview's context menu > Expand All
         /// </summary>
         /// <param name="sender"></param>
@@ -573,6 +633,7 @@ namespace EVEMon.SkillPlanner
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
             this.treeView.ExpandAll();
+            m_allExpanded = true;
         }
 
         /// <summary>
@@ -583,6 +644,7 @@ namespace EVEMon.SkillPlanner
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
             this.treeView.CollapseAll();
+            m_allExpanded = false;
         }
 
         /// <summary>

@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
@@ -28,6 +27,8 @@ namespace EVEMon.SkillPlanner
         private readonly List<Item> m_objects = new List<Item>();
         private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
 
+        #region Constructors
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -43,7 +44,12 @@ namespace EVEMon.SkillPlanner
             EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
         }
 
-		/// <summary>
+        #endregion
+
+
+        #region Overridden Methods
+
+        /// <summary>
 		/// Checks and pastes loadout from clipboard.
 		/// </summary>
 		/// <param name="e"></param>
@@ -79,6 +85,11 @@ namespace EVEMon.SkillPlanner
             base.OnClosing(e);
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets the plan to which the extracted skills of the loadout should be added.
         /// </summary>
@@ -95,6 +106,11 @@ namespace EVEMon.SkillPlanner
                 }
             }
         }
+
+        #endregion
+
+
+        #region Event Handlers
 
         /// <summary>
         /// When the plan changed, we need to update the training time and such.
@@ -116,32 +132,6 @@ namespace EVEMon.SkillPlanner
             if (e.Character != m_character) return;
             UpdatePlanStatus();
         }
-
-		/// <summary>
-		/// Checks loadout for valid header.
-		/// </summary>
-		/// <param name="text">Loadout text.</param>
-		/// <returns>Is loadout valid.</returns>
-		private bool IsLoadout(string text)
-		{
-			string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-			if (lines.Length == 0)
-				return false;
-
-			// Error on first line ?
-			string line = lines[0];
-			if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
-				return false;
-
-			// Retrieve the ship
-			int commaIndex = line.IndexOf(',');
-			string shipTypeName = line.Substring(1, commaIndex - 1);
-			Item ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
-			if (ship == null)
-				return false;
-
-			return true;
-		}
 
         /// <summary>
         /// Occur when the user changed the text box whiere he should paste the data from EFT.
@@ -190,7 +180,7 @@ namespace EVEMon.SkillPlanner
 
             // Retrieve the loadout name
             int lineLength = line.Length;
-            m_loadoutName = line.Substring(commaIndex + 1, (lineLength - commaIndex - 2)); 
+            m_loadoutName = line.Substring(commaIndex + 1, (lineLength - commaIndex - 2));
 
             // Add the items
             for (int i = 1; i < PasteTextBox.Lines.Length; i++)
@@ -203,7 +193,104 @@ namespace EVEMon.SkillPlanner
             UpdatePlanStatus();
             ResultsTreeView.ExpandAll();
             ResultsTreeView.Enabled = true;
-            Cursor.Current = Cursors.Default; 
+            Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Sets the DialogResult to Cancel and closes the form.
+        /// </summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        /// <summary>
+        /// Adds the required skills to the Plan specified by the Plan property.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPlan_Click(object sender, EventArgs e)
+        {
+            var operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
+            PlanHelper.Perform(operation);
+            UpdatePlanStatus();
+        }
+
+        /// <summary>
+        /// Browses the form that opened this instance of EFTLoadout to
+        /// the item that was double clicked in the TreeView.
+        /// </summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
+        private void tvLoadout_DoubleClick(object sender, EventArgs e)
+        {
+            if (ResultsTreeView.SelectedNode != null)
+            {
+                Item item = ResultsTreeView.SelectedNode.Tag as Item;
+                if (item != null)
+                {
+                    PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+                    opener.ShowItemInBrowser(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pops up the context menu for the TreeView.
+        /// </summary>
+        /// <param name="sender">Source of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
+        private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // Show menu only if the right mouse button is clicked.
+            if (e.Button == MouseButtons.Right)
+            {
+                // Point where the mouse is clicked.
+                Point p = new Point(e.X, e.Y);
+
+                // Get the node that the user has clicked.
+                TreeNode node = ResultsTreeView.GetNodeAt(p);
+                if (node != null && node.Tag != null)
+                {
+                    // Select the node the user has clicked.
+                    ResultsTreeView.SelectedNode = node;
+                    RightClickContextMenuStrip.Show(ResultsTreeView, p);
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+		/// Checks loadout for valid header.
+		/// </summary>
+		/// <param name="text">Loadout text.</param>
+		/// <returns>Is loadout valid.</returns>
+		private bool IsLoadout(string text)
+		{
+			string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+			if (lines.Length == 0)
+				return false;
+
+			// Error on first line ?
+			string line = lines[0];
+			if (String.IsNullOrEmpty(line) || !line.StartsWith("[") || !line.Contains(","))
+				return false;
+
+			// Retrieve the ship
+			int commaIndex = line.IndexOf(',');
+			string shipTypeName = line.Substring(1, commaIndex - 1);
+			Item ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
+			if (ship == null)
+				return false;
+
+			return true;
         }
 
         /// <summary>
@@ -222,7 +309,7 @@ namespace EVEMon.SkillPlanner
 
             Item item = StaticItems.GetItemByName(itemName);
             Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;
-            
+
             // Regular item ?
             if (item != null)
             {
@@ -325,70 +412,7 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        /// <summary>
-        /// Sets the DialogResult to Cancel and closes the form.
-        /// </summary>
-        /// <param name="sender">Source of the event.</param>
-        /// <param name="e">Arguments of the event.</param>
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
+        #endregion
 
-        /// <summary>
-        /// Adds the required skills to the Plan specified by the Plan property.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnPlan_Click(object sender, EventArgs e)
-        {
-            var operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
-            PlanHelper.Perform(operation);
-            UpdatePlanStatus();
-        }
-
-        /// <summary>
-        /// Browses the form that opened this instance of EFTLoadout to
-        /// the item that was double clicked in the TreeView.
-        /// </summary>
-        /// <param name="sender">Source of the event.</param>
-        /// <param name="e">Arguments of the event.</param>
-        private void tvLoadout_DoubleClick(object sender, EventArgs e)
-        {
-            if (ResultsTreeView.SelectedNode != null)
-            {
-                Item item = ResultsTreeView.SelectedNode.Tag as Item;
-                if (item != null)
-                {
-                    PlanWindow opener = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-                    opener.ShowItemInBrowser(item);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Pops up the context menu for the TreeView.
-        /// </summary>
-        /// <param name="sender">Source of the event.</param>
-        /// <param name="e">Arguments of the event.</param>
-        private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            // Show menu only if the right mouse button is clicked.
-            if (e.Button == MouseButtons.Right)
-            {
-                // Point where the mouse is clicked.
-                Point p = new Point(e.X, e.Y);
-
-                // Get the node that the user has clicked.
-                TreeNode node = ResultsTreeView.GetNodeAt(p);
-                if (node != null && node.Tag != null)
-                {
-                    // Select the node the user has clicked.
-                    ResultsTreeView.SelectedNode = node;
-                    RightClickContextMenuStrip.Show(ResultsTreeView, p);
-                }
-            }
-        }
     }
 }

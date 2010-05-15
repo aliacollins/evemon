@@ -37,22 +37,25 @@ namespace EVEMon.SkillPlanner
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.cbSkillFilter = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.upperPanel = new System.Windows.Forms.Panel();
+            this.cbUsabilityFilter = new System.Windows.Forms.ComboBox();
+            this.lblFilter = new System.Windows.Forms.Label();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.lowerPanel = new System.Windows.Forms.Panel();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
             this.contextMenu.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.upperPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.lowerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
             // 
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 29);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(0);
             this.tbSearchText.Name = "tbSearchText";
@@ -110,10 +113,11 @@ namespace EVEMon.SkillPlanner
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiExpandSelected,
             this.cmiCollapseSelected,
+            this.tsSeparator,
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(167, 92);
+            this.contextMenu.Size = new System.Drawing.Size(167, 120);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiExpandSelected
@@ -130,6 +134,11 @@ namespace EVEMon.SkillPlanner
             this.cmiCollapseSelected.Text = "Collapse Selected";
             this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
             // 
+            // tsSeparator
+            // 
+            this.tsSeparator.Name = "tsSeparator";
+            this.tsSeparator.Size = new System.Drawing.Size(163, 6);
+            // 
             // cmiExpandAll
             // 
             this.cmiExpandAll.Name = "cmiExpandAll";
@@ -144,43 +153,45 @@ namespace EVEMon.SkillPlanner
             this.cmiCollapseAll.Text = "Collapse All";
             this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
             // 
-            // panel1
+            // upperPanel
             // 
-            this.panel1.Controls.Add(this.cbSkillFilter);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.lbSearchTextHint);
-            this.panel1.Controls.Add(this.tbSearchText);
-            this.panel1.Controls.Add(this.pbSearchImage);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(185, 54);
-            this.panel1.TabIndex = 26;
+            this.upperPanel.Controls.Add(this.cbUsabilityFilter);
+            this.upperPanel.Controls.Add(this.lblFilter);
+            this.upperPanel.Controls.Add(this.lbSearchTextHint);
+            this.upperPanel.Controls.Add(this.tbSearchText);
+            this.upperPanel.Controls.Add(this.pbSearchImage);
+            this.upperPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.upperPanel.Location = new System.Drawing.Point(0, 0);
+            this.upperPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.upperPanel.Name = "upperPanel";
+            this.upperPanel.Size = new System.Drawing.Size(185, 54);
+            this.upperPanel.TabIndex = 26;
             // 
-            // cbSkillFilter
+            // cbUsabilityFilter
             // 
-            this.cbSkillFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSkillFilter.FormattingEnabled = true;
-            this.cbSkillFilter.Items.AddRange(new object[] {
+            this.cbUsabilityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbUsabilityFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbUsabilityFilter.FormattingEnabled = true;
+            this.cbUsabilityFilter.Items.AddRange(new object[] {
             "All",
             "Can",
             "Can not"});
-            this.cbSkillFilter.Location = new System.Drawing.Point(45, 3);
-            this.cbSkillFilter.Margin = new System.Windows.Forms.Padding(0);
-            this.cbSkillFilter.Name = "cbSkillFilter";
-            this.cbSkillFilter.Size = new System.Drawing.Size(140, 21);
-            this.cbSkillFilter.TabIndex = 0;
+            this.cbUsabilityFilter.Location = new System.Drawing.Point(45, 3);
+            this.cbUsabilityFilter.Margin = new System.Windows.Forms.Padding(0);
+            this.cbUsabilityFilter.Name = "cbUsabilityFilter";
+            this.cbUsabilityFilter.Size = new System.Drawing.Size(140, 21);
+            this.cbUsabilityFilter.TabIndex = 0;
             // 
-            // label1
+            // lblFilter
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(32, 13);
-            this.label1.TabIndex = 24;
-            this.label1.Text = "Filter:";
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(6, 6);
+            this.lblFilter.Margin = new System.Windows.Forms.Padding(0);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(32, 13);
+            this.lblFilter.TabIndex = 24;
+            this.lblFilter.Text = "Filter:";
             // 
             // pbSearchImage
             // 
@@ -194,18 +205,18 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage.TabIndex = 20;
             this.pbSearchImage.TabStop = false;
             // 
-            // panel2
+            // lowerPanel
             // 
-            this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.lbNoMatches);
-            this.panel2.Controls.Add(this.lbSearchList);
-            this.panel2.Controls.Add(this.tvItems);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 54);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(185, 344);
-            this.panel2.TabIndex = 27;
+            this.lowerPanel.AutoSize = true;
+            this.lowerPanel.Controls.Add(this.lbNoMatches);
+            this.lowerPanel.Controls.Add(this.lbSearchList);
+            this.lowerPanel.Controls.Add(this.tvItems);
+            this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lowerPanel.Location = new System.Drawing.Point(0, 54);
+            this.lowerPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.lowerPanel.Name = "lowerPanel";
+            this.lowerPanel.Size = new System.Drawing.Size(185, 344);
+            this.lowerPanel.TabIndex = 27;
             // 
             // tvItems
             // 
@@ -225,17 +236,17 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lowerPanel);
+            this.Controls.Add(this.upperPanel);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EveObjectSelectControl";
             this.Size = new System.Drawing.Size(185, 398);
             this.Load += new System.EventHandler(this.EveObjectSelectControl_Load);
             this.contextMenu.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.upperPanel.ResumeLayout(false);
+            this.upperPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
-            this.panel2.ResumeLayout(false);
+            this.lowerPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,19 +255,20 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         protected System.Windows.Forms.TextBox tbSearchText;
-        protected EVEMon.Common.Controls.TreeView tvItems;
         protected System.Windows.Forms.Label lbNoMatches;
         protected System.Windows.Forms.ListBox lbSearchList;
-        protected System.Windows.Forms.Panel panel1;
-        protected System.Windows.Forms.Panel panel2;
+        protected System.Windows.Forms.Panel upperPanel;
+        protected System.Windows.Forms.Panel lowerPanel;
         protected System.Windows.Forms.Label lbSearchTextHint;
         protected System.Windows.Forms.PictureBox pbSearchImage;
-        protected System.Windows.Forms.Label label1;
+        protected System.Windows.Forms.Label lblFilter;
+        protected System.Windows.Forms.ComboBox cbUsabilityFilter;
+        protected internal EVEMon.Common.Controls.TreeView tvItems;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
-        protected System.Windows.Forms.ComboBox cbSkillFilter;
+        private System.Windows.Forms.ToolStripSeparator tsSeparator;
     }
 }

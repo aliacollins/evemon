@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace EVEMon.Common.Data
 {
+    /// <summary>
+    /// Extension methods for objects of <see cref="StaticSkillLevel">StaticSkillLevel</see> objects.
+    /// </summary>
     public static class StaticSkillLevelEnumerableExtensions
     {
+        
+        #region Methods on Enumerations of StaticSkillLevel
+
         /// <summary>
-        /// Rreturns an equivalent enumeration with character skills.
+        /// Returns an equivalent enumeration with character skills.
         /// </summary>
         /// <param name="src"></param>
         /// <param name="character"></param>
@@ -43,12 +47,18 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        #region Internal Static Methods
+
         /// <summary>
         /// Add the item, its previous levels and its prerequisites to the given set and list.
         /// </summary>
         /// <param name="set"></param>
         /// <param name="list"></param>
         /// <param name="item"></param>
+        /// <param name="includeRoots"></param>
         internal static void FillDependencies(SkillLevelSet<StaticSkillLevel> set, List<StaticSkillLevel> list, StaticSkillLevel item, bool includeRoots)
         {
             var skill = item.Skill;
@@ -84,6 +94,8 @@ namespace EVEMon.Common.Data
                 }
             }
         }
+
+        #endregion
 
     }
 }

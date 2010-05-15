@@ -42,7 +42,9 @@ namespace EVEMon.SkillPlanner
         private Skill m_skill;
         private bool m_hasItems = true;
         private bool m_hasShips = true;
-        
+
+        #region Lifecycle
+
         /// <summary>
         /// Constructor for designer.
         /// </summary>
@@ -80,6 +82,11 @@ namespace EVEMon.SkillPlanner
             base.OnClosing(e);
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the represented skill.
         /// </summary>
@@ -109,6 +116,9 @@ namespace EVEMon.SkillPlanner
                 UpdateContent();
             }
         }
+
+        #endregion
+
 
         #region Content creation and update
         /// <summary>
@@ -313,7 +323,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 List<Item> items = new List<Item>(StaticItems.AllItems.
-                    Where(x => x.MarketGroup.ParentGroup.ID != DBConstants.SkillGroupID). // exclude skills
+                    Where(x => x.MarketGroup.ParentGroup != null && x.MarketGroup.ParentGroup.ID != DBConstants.SkillGroupID). // exclude skills
                     Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData)).
                     Where(x => !cbShowBaseOnly.Checked || x.MetaGroup == ItemMetaGroup.T1 || x.MetaGroup == ItemMetaGroup.T2));
 

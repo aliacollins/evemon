@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents our skills datafile
+    /// Root SkillsDatafile Serialization Class
     /// </summary>
     [XmlRoot("skills")]
     public sealed class SkillsDatafile
@@ -24,15 +21,15 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </summary>
     public sealed class SerializableSkillGroup
     {
-        [XmlAttribute("name")]
-        public string Name
+        [XmlAttribute("id")]
+        public int ID
         {
             get;
             set;
         }
 
-        [XmlAttribute("id")]
-        public int ID
+        [XmlAttribute("name")]
+        public string Name
         {
             get;
             set;
@@ -133,6 +130,13 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </summary>
     public struct SerializableSkillPrerequisite
     {
+        [XmlAttribute("id")]
+        public int ID
+        {
+            get;
+            set;
+        }
+
         [XmlAttribute("name")]
         public string Name
         {

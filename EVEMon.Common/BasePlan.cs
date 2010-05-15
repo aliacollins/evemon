@@ -29,8 +29,7 @@ namespace EVEMon.Common
         protected readonly BaseCharacter m_character = null;
         protected readonly PlanEntry[] m_lookup;
         private ImplantSet m_chosenImplantSet;
-
-
+        
         /// <summary>
         /// Constructor
         /// </summary>
