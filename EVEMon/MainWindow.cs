@@ -26,6 +26,7 @@ using EVEMon.Sales;
 using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
+using EVEMon.WindowsApi;
 
 namespace EVEMon
 {
@@ -130,7 +131,10 @@ namespace EVEMon
             UpdateTabs();
 
             // Initialize G15
-            G15Handler.Init();
+            if (OsFeatureCheck.IsWindowsNT)
+            {
+                G15Handler.Init();
+            }
 
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();

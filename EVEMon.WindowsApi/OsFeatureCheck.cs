@@ -7,12 +7,12 @@ namespace EVEMon.WindowsApi
     /// <summary>
     /// Allows for quick checks for support of various opperating system features
     /// </summary>
-    internal static class OsFeatureCheck
+    public static class OsFeatureCheck
     {
         /// <summary>
         /// Checks to see if the current opperating system is Windows
         /// </summary>
-        internal static bool IsWindows
+        public static bool IsWindows
         {
             get
             {
@@ -32,7 +32,7 @@ namespace EVEMon.WindowsApi
         /// <summary>
         /// Checks to see if the current opperating system is Windows NT
         /// </summary>
-        internal static bool IsWindowsNT
+        public static bool IsWindowsNT
         {
             get
             {
@@ -47,7 +47,7 @@ namespace EVEMon.WindowsApi
         /// Checks to see if the Windows 7 Taskbar is supported in the
         /// current operating system.
         /// </summary>
-        internal static bool TaskbarSupported
+        public static bool TaskbarSupported
         {
             get
             {
