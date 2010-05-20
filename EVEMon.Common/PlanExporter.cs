@@ -105,16 +105,21 @@ namespace EVEMon.Common
 
                 // Entry's index
                 index++;
-                if (settings.EntryNumber) { builder.AppendFormat(CultureConstants.DefaultCulture, "{0}. ", index); }
+                if (settings.EntryNumber)
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}. ", index);
 
                 // Name
                 builder.Append(boldStart);
 
-                if (settings.Markup == MarkupType.Html) { builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">", entry.Skill.ID); }
-                builder.Append(entry.Skill.Name);
-                if (settings.Markup == MarkupType.Html) { builder.Append("</a>"); }
+                if (settings.Markup == MarkupType.Html)
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">", entry.Skill.ID);
 
-                if (!settings.ShoppingList) { builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanForInt(entry.Level)); }
+                builder.Append(entry.Skill.Name);
+                if (settings.Markup == MarkupType.Html)
+                    builder.Append("</a>");
+
+                if (!settings.ShoppingList)
+                    builder.AppendFormat(CultureConstants.DefaultCulture, " {0}", Skill.GetRomanForInt(entry.Level));
 
                 builder.Append(boldEnd);
 
@@ -128,13 +133,15 @@ namespace EVEMon.Common
                     if (settings.EntryTrainingTimes)
                     {
                         needComma = true;
-                        builder.Append(Skill.TimeSpanToDescriptiveText(entry.TrainingTime, timeFormat));
+                        builder.Append(entry.TrainingTime.ToDescriptiveText(timeFormat));
                     }
 
                     // Training start date
                     if (settings.EntryStartDate)
                     {
-                        if (needComma) builder.Append("; ");
+                        if (needComma)
+                            builder.Append("; ");
+
                         needComma = true;
 
                         builder.AppendFormat(CultureConstants.DefaultCulture, "Start: {0}", entry.StartTime);
@@ -143,7 +150,9 @@ namespace EVEMon.Common
                     // Training end date
                     if (settings.EntryFinishDate)
                     {
-                        if (needComma) builder.Append("; ");
+                        if (needComma)
+                            builder.Append("; ");
+
                         needComma = true;
 
                         builder.AppendFormat(CultureConstants.DefaultCulture, "Finish: {0}", entry.EndTime);
@@ -152,7 +161,9 @@ namespace EVEMon.Common
                     // Skill cost
                     if (settings.EntryCost && shoppingListCandidate)
                     {
-                        if (needComma) builder.Append("; ");
+                        if (needComma)
+                            builder.Append("; ");
+
                         needComma = true;
 
                         builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ISK",  entry.Skill.FormattedCost);
@@ -162,9 +173,7 @@ namespace EVEMon.Common
                 }
 
                 if (exportActions != null)
-                {
                     exportActions(builder, entry, settings);
-                }
 
                 builder.Append(lineFeed);
 
@@ -189,16 +198,21 @@ namespace EVEMon.Common
                 // Plan's training duration
                 if (settings.FooterTotalTime)
                 {
-                    if (needComma) builder.Append("; ");
+                    if (needComma)
+                        builder.Append("; ");
+
                     needComma = true;
 
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}", boldStart, Skill.TimeSpanToDescriptiveText(plan.GetTotalTime(null, true), timeFormat), boldEnd);
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "Total time: {0}{1}{2}",
+                        boldStart, plan.GetTotalTime(null, true).ToDescriptiveText(timeFormat), boldEnd);
                 }
 
                 // End training date
                 if (settings.FooterDate)
                 {
-                    if (needComma) builder.Append("; ");
+                    if (needComma)
+                        builder.Append("; ");
+
                     needComma = true;
 
                     builder.AppendFormat(CultureConstants.DefaultCulture, "Completion: {0}{1}{2}", boldStart, endTime, boldEnd);
@@ -207,7 +221,9 @@ namespace EVEMon.Common
                 // Total books cost
                 if (settings.FooterCost)
                 {
-                    if (needComma) builder.Append("; ");
+                    if (needComma)
+                        builder.Append("; ");
+
                     needComma = true;
 
                     string formattedIsk = String.Format(CultureConstants.TidyInteger, "{0:n}", plan.NotKnownSkillBooksCost);
@@ -217,9 +233,7 @@ namespace EVEMon.Common
                 // Warning about skill costs
                 builder.Append(lineFeed);
                 if (settings.FooterCost || settings.EntryCost)
-                {
                     builder.Append("N.B. Skill costs are based on CCP's database and are indicative only");
-                }
             }
 
             // Returns the text representation.

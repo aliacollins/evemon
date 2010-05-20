@@ -949,8 +949,8 @@ namespace EVEMon
         private string AppendCharacterTrainingTime(CCPCharacter character, TimeSpan time)
         {
             StringBuilder builder = new StringBuilder();
-            
-            string skillDescriptionText = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+
+            string skillDescriptionText = time.ToDescriptiveText(DescriptiveTextOptions.Default);
             builder.AppendFormat(CultureConstants.DefaultCulture,"{0} {1}", skillDescriptionText, character.Name);
 
             if (Settings.UI.MainWindow.ShowSkillNameInWindowTitle)

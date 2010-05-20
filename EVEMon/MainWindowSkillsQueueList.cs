@@ -573,7 +573,9 @@ namespace EVEMon
             int nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             int pointsLeft = nextLevelSP - sp;
 
-            string remainingTimeText = Skill.TimeSpanToDescriptiveText(skill.Skill.GetTimeSpanForPoints(pointsLeft), DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
+            var timeSpanFromPoints = skill.Skill.GetTimeSpanForPoints(pointsLeft);
+            string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(
+                DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
             
             if (sp < skill.Skill.StaticData.GetPointsRequiredForLevel(1))
             {

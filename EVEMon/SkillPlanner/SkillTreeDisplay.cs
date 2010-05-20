@@ -5,9 +5,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using EVEMon.Common;
+using System.Text;
 
 namespace EVEMon.SkillPlanner
 {
+
     #region SkillTreeDisplay
     /// <summary>
     /// Represents the diagram displayed on the skill browser.
@@ -491,11 +493,18 @@ namespace EVEMon.SkillPlanner
             Brush fillBrush = null;
             try
             {
+                StringBuilder currentLevelText = new StringBuilder();
+                
                 // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
-                string currentLevelText = "Current Level: " + Skill.GetRomanForInt(cell.Skill.Level);
+                currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
+                    "Current Level: {0}",
+                    Skill.GetRomanForInt(cell.Skill.Level));
+
                 if (m_plan.GetPlannedLevel(cell.Skill) > 0)
                 {
-                    currentLevelText += " (Planned To: " + Skill.GetRomanForInt(m_plan.GetPlannedLevel(cell.Skill)) + ")";
+                    currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
+                        " (Planned To: {0})",
+                        Skill.GetRomanForInt(m_plan.GetPlannedLevel(cell.Skill)));
                 }
 
                 // Retrieves the output and colors for the lower lines
@@ -505,12 +514,15 @@ namespace EVEMon.SkillPlanner
                 if (cell.RequiredLevel > 0)
                 {
                     // Third line : "Required Level : V"
-                    requiredLevel = "Required Level: " + Skill.GetRomanForInt(cell.RequiredLevel);
+                    requiredLevel = String.Format(CultureConstants.DefaultCulture, "Required Level: {0}",
+                        Skill.GetRomanForInt(cell.RequiredLevel));
+
                     if (cell.RequiredLevel > cell.Skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
                         TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
-                        thisRequiredTime = "This Time: " + Skill.TimeSpanToDescriptiveText(ts, TimeFormat);
+                        thisRequiredTime = String.Format(CultureConstants.DefaultCulture, "This Time: {0}",
+                            ts.ToDescriptiveText(TimeFormat));
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
@@ -546,7 +558,7 @@ namespace EVEMon.SkillPlanner
                 if (!cell.Skill.ArePrerequisitesMet)
                 {
                     TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
-                    prereqTime = "Prerequisite: " + Skill.TimeSpanToDescriptiveText(pts, TimeFormat);
+                    prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}", pts.ToDescriptiveText(TimeFormat));
                 }
 
 
@@ -565,7 +577,7 @@ namespace EVEMon.SkillPlanner
                 Size sz = MeasureAndDrawText(g, cell.Skill.Name, boldFont, drawPoint, stdTextColor);
                 drawPoint.Y += sz.Height;
 
-                sz = MeasureAndDrawText(g, currentLevelText, this.Font, drawPoint, stdTextColor);
+                sz = MeasureAndDrawText(g, currentLevelText.ToString(), this.Font, drawPoint, stdTextColor);
                 drawPoint.Y += sz.Height;
 
                 if (!String.IsNullOrEmpty(requiredLevel))
@@ -780,4 +792,5 @@ namespace EVEMon.SkillPlanner
         }
     }
     #endregion
+
 }

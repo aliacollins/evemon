@@ -504,7 +504,7 @@ namespace EVEMon.SkillPlanner
                                     lvi.SubItems[columnIndex].ForeColor = lvi.ForeColor;
                                 }
 
-                                result += Skill.TimeSpanToDescriptiveText(timeDifference, DescriptiveTextOptions.IncludeCommas);
+                                result += timeDifference.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                                 lvi.SubItems[columnIndex].Text = result;
                             }
                         }
@@ -582,10 +582,10 @@ namespace EVEMon.SkillPlanner
                     return entry.PlanGroupsDescription;
 
                 case PlanColumn.TrainingTime:
-                    return Skill.TimeSpanToDescriptiveText(entry.TrainingTime, DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
                 case PlanColumn.TrainingTimeNatural:
-                    return Skill.TimeSpanToDescriptiveText(entry.NaturalTrainingTime, DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
                 case PlanColumn.EarliestStart:
                     return entry.StartTime.ToString("ddd ") + entry.StartTime.ToString();
@@ -821,22 +821,24 @@ namespace EVEMon.SkillPlanner
                     entriesCount == 1 ? String.Empty : "s",
                     UniqueSkillsCount,
                     UniqueSkillsCount == 1 ? String.Empty : "s",
-                    Skill.TimeSpanToDescriptiveText(selectedTrainTime, DescriptiveTextOptions.IncludeCommas));
+                    selectedTrainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
 
             if (selectedTimeWithLearning != selectedTrainTime)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "({0} including preceding learning skills). ",
-                    Skill.TimeSpanToDescriptiveText(selectedTimeWithLearning, DescriptiveTextOptions.IncludeCommas));
+                    selectedTimeWithLearning.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             
             if (sbcost > 0)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ", UniqueSkillsCount == 1 ? String.Empty : "s", sbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ",
+                    UniqueSkillsCount == 1 ? String.Empty : "s", sbcost);
             }
 
             if (entriesCount > 1 && nksbcost > 0)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ", NotKnownSkillsCount == 1 ? String.Empty : "s", nksbcost);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ",
+                    NotKnownSkillsCount == 1 ? String.Empty : "s", nksbcost);
             }
             
             window.UpdateStatusBarSelected(sb.ToString());

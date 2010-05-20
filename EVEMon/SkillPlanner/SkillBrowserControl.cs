@@ -202,14 +202,15 @@ namespace EVEMon.SkillPlanner
             // Left training time for level only
             bool isPlanned = m_plan.IsPlanned(m_selectedSkill, level);
             TimeSpan timeOfLevelOnly = m_selectedSkill.GetLeftTrainingTimeForLevelOnly(level);
-            sb.Append(Skill.TimeSpanToDescriptiveText(timeOfLevelOnly, DescriptiveTextOptions.IncludeCommas, false));
+            sb.Append(timeOfLevelOnly.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
             // Total training time or completion percentage
             TimeSpan timeForPrereqs = m_selectedSkill.Character.GetTrainingTimeToMultipleSkills(m_selectedSkill.Prerequisites);
-            TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1) + timeForPrereqs;
+            TimeSpan totalPrereqTime = m_selectedSkill.GetLeftTrainingTimeToLevel(level - 1).Add(timeForPrereqs);
             if (totalPrereqTime > TimeSpan.Zero)
             {
-                sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})", Skill.TimeSpanToDescriptiveText(totalPrereqTime, DescriptiveTextOptions.IncludeCommas));
+                sb.AppendFormat(CultureConstants.DefaultCulture, " (plus {0})",
+                    totalPrereqTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
             {

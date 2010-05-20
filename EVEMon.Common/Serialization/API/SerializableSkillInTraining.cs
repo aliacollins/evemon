@@ -76,22 +76,22 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public DateTime CurrentServerTime
         {
-            get { return TimeUtil.ConvertCCPTimeStringToDateTime(CurrentTQTime); }
-            set { CurrentTQTime = TimeUtil.ConvertDateTimeToCCPTimeString(value); }
+            get { return CurrentTQTime.CCPTimeStringToDateTime(); }
+            set { CurrentTQTime = value.ToCCPTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime StartTime
         {
-            get { return TimeUtil.ConvertCCPTimeStringToDateTime(TrainingStartTime); }
-            set { TrainingStartTime = TimeUtil.ConvertDateTimeToCCPTimeString(value); }
+            get { return TrainingStartTime.CCPTimeStringToDateTime(); }
+            set { TrainingStartTime = value.ToCCPTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime EndTime
         {
-            get { return TimeUtil.ConvertCCPTimeStringToDateTime(TrainingEndTime); }
-            set { TrainingEndTime = TimeUtil.ConvertDateTimeToCCPTimeString(value); }
+            get { return TrainingEndTime.CCPTimeStringToDateTime(); }
+            set { TrainingEndTime = value.ToCCPTimeString(); }
         }
 
         #region ISynchronizableWithLocalClock Members

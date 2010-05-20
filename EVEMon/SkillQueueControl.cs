@@ -496,7 +496,7 @@ namespace EVEMon
             if (emptyRect.Contains(e.Location))
             {
                 var leftTime = (m_skillQueue.IsPaused ? m_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
-                var text = "Free room:" + Skill.TimeSpanToDescriptiveText(leftTime, DescriptiveTextOptions.SpaceBetween, false);
+                var text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}", leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
                 Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2, e.Location.Y);
                 m_toolTip.Display(text, tipPoint);
                 base.OnMouseMove(e);

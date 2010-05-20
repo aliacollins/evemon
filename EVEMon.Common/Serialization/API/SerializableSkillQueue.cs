@@ -94,15 +94,15 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public DateTime StartTime
         {
-            get { return TimeUtil.ConvertCCPTimeStringToDateTime(CCPStartTime); }
-            set { CCPStartTime = TimeUtil.ConvertDateTimeToCCPTimeString(value); }
+            get { return CCPStartTime.CCPTimeStringToDateTime(); }
+            set { CCPStartTime = value.ToCCPTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime EndTime
         {
-            get { return TimeUtil.ConvertCCPTimeStringToDateTime(CCPEndTime); }
-            set { CCPEndTime = TimeUtil.ConvertDateTimeToCCPTimeString(value); }
+            get { return CCPEndTime.CCPTimeStringToDateTime(); }
+            set { CCPEndTime = value.ToCCPTimeString(); }
         }
 
         #region ISynchronizableWithLocalClock Members

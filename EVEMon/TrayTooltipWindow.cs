@@ -160,7 +160,7 @@ namespace EVEMon
 
                 tooltip = Regex.Replace(tooltip, 
                     '%' + character.CharacterID.ToString() + 'r',
-                    Skill.TimeSpanToDescriptiveText(remainingTime, DescriptiveTextOptions.IncludeCommas), 
+                    remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), 
                     RegexOptions.Compiled);
             }
 

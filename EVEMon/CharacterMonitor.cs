@@ -705,7 +705,7 @@ namespace EVEMon
 
                         if (remainingTime.Minutes > 0)
                         {
-                            sb.AppendLine(Skill.TimeSpanToDescriptiveText(remainingTime,
+                            sb.AppendLine(remainingTime.ToDescriptiveText(
                                DescriptiveTextOptions.FullText |
                                DescriptiveTextOptions.SpaceText |
                                DescriptiveTextOptions.SpaceBetween, false));

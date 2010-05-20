@@ -439,7 +439,7 @@ namespace EVEMon.SkillPlanner
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
                 {
                     var time = cert.GetTrainingTime();
-                    line2 = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.IncludeCommas);
+                    line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
             // Or a skill prerequsiite ?
@@ -455,7 +455,7 @@ namespace EVEMon.SkillPlanner
                 if (!skillPrereq.IsKnown)
                 {
                     var time = skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
-                    line2 = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.IncludeCommas);
+                    line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
 

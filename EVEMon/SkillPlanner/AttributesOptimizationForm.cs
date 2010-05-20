@@ -306,26 +306,25 @@ namespace EVEMon.SkillPlanner
                 savedTime += (remap.BaseDuration - remap.BestDuration);
             }
 
-            this.lvPoints.Items.Add(new ListViewItem("Current time : " +
-                Skill.TimeSpanToDescriptiveText(baseDuration, DescriptiveTextOptions.IncludeCommas), globalGroup));
+            this.lvPoints.Items.Add(new ListViewItem(String.Format(CultureConstants.DefaultCulture, "Current time : {0}",
+                baseDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), globalGroup)));
 
             if (savedTime != TimeSpan.Zero)
             {
-                this.lvPoints.Items.Add(new ListViewItem("Optimized time : " +
-                    Skill.TimeSpanToDescriptiveText(baseDuration - savedTime, DescriptiveTextOptions.IncludeCommas), globalGroup));
+                this.lvPoints.Items.Add(new ListViewItem(String.Format(CultureConstants.DefaultCulture, "Optimized time : {0}",
+                    baseDuration.Subtract(savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), globalGroup)));
 
                 if (savedTime < TimeSpan.Zero)
                 {
                     ListViewItem savedTimeItem = this.lvPoints.Items.Add(new ListViewItem(
-                        Skill.TimeSpanToDescriptiveText(-savedTime, DescriptiveTextOptions.IncludeCommas) +
-                        " slower than current", globalGroup));
+                        String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
+                        (-savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), globalGroup)));
                     savedTimeItem.ForeColor = Color.DarkRed;
                 }
                 else
                 {
-                    this.lvPoints.Items.Add(new ListViewItem(
-                        Skill.TimeSpanToDescriptiveText(savedTime, DescriptiveTextOptions.IncludeCommas) +
-                        " better than current", globalGroup));
+                    this.lvPoints.Items.Add(new ListViewItem(String.Format(CultureConstants.DefaultCulture, "{0} better than current",
+                        savedTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), globalGroup)));
                 }
             }
             else
@@ -356,7 +355,8 @@ namespace EVEMon.SkillPlanner
         private void AddSummaryForRemapping(AttributesOptimizer.RemappingResult remap, ref TimeSpan lastRemap)
         {
             // Create the group
-            string text = remap.ToString(m_character) + " at " + Skill.TimeSpanToDescriptiveText(remap.StartTime, DescriptiveTextOptions.IncludeCommas);
+            string text = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
+                remap.ToString(m_character), remap.StartTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             ListViewGroup group = new ListViewGroup(text);
             this.lvPoints.Groups.Add(group);
 
@@ -371,7 +371,8 @@ namespace EVEMon.SkillPlanner
             TimeSpan timeSinceLastRemap = remap.StartTime - lastRemap;
             if (timeSinceLastRemap < TimeSpan.FromDays(365.0) && lastRemap != TimeSpan.Zero)
             {
-                var item = new ListViewItem("The previous remap was only " + Skill.TimeSpanToDescriptiveText(timeSinceLastRemap, DescriptiveTextOptions.IncludeCommas) + " ago.", group);
+                var item = new ListViewItem(String.Format(CultureConstants.DefaultCulture, "The previous remap was only {0} ago.",
+                    timeSinceLastRemap.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), group));
                 item.ForeColor = Color.DarkRed;
                 lvPoints.Items.Add(item);
             }

@@ -479,7 +479,7 @@ namespace EVEMon.Common.IgbService
                 sw.Write("</td>");
 
                 sw.Write("<td>");
-                sw.Write(Skill.TimeSpanToDescriptiveText(s.GetLeftTrainingTimeToNextLevel(),
+                sw.Write(s.GetLeftTrainingTimeToNextLevel().ToDescriptiveText(
                                                     DescriptiveTextOptions.FullText |
                                                     DescriptiveTextOptions.IncludeCommas |
                                                     DescriptiveTextOptions.SpaceText));

@@ -200,8 +200,10 @@ namespace EVEMon.SkillPlanner
                 bool needComma = false;
                 if (m_settings.EntryTrainingTimes)
                 {
-                    size = Print(g, Skill.TimeSpanToDescriptiveText(pe.TrainingTime,
-                        DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), m_point);
+                    size = Print(g, pe.TrainingTime.ToDescriptiveText(
+                        DescriptiveTextOptions.FullText |
+                        DescriptiveTextOptions.IncludeCommas |
+                        DescriptiveTextOptions.SpaceText), m_point);
                     m_point.X += (int)size.Width;
                     needComma = true;
                 }
@@ -295,8 +297,11 @@ namespace EVEMon.SkillPlanner
                     size = Print(g, "Total time: ", m_point);
                     m_point.X += (int)size.Width;
 
-                    size = Print(g, Skill.TimeSpanToDescriptiveText(m_trainingTime,
-                            DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText), m_point);
+                    size = Print(g, m_trainingTime.ToDescriptiveText(
+                            DescriptiveTextOptions.FullText
+                            | DescriptiveTextOptions.IncludeCommas
+                            | DescriptiveTextOptions.SpaceText),
+                            m_point);
 
                     m_point.X += (int)size.Width;
 

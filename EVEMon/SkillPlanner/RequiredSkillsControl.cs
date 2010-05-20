@@ -146,7 +146,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 TimeSpan trainTime = m_plan.Character.GetTrainingTimeToMultipleSkills(m_object.Prerequisites);
-                lblTimeRequired.Text = Skill.TimeSpanToDescriptiveText(trainTime, DescriptiveTextOptions.IncludeCommas);
+                lblTimeRequired.Text = trainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
             }
 
             // Set minimun control size

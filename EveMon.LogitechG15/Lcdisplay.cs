@@ -441,6 +441,7 @@ namespace EVEMon.LogitechG15
             {
                 if (m_showingCycledQueueInfo)
                 {
+                    var skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime;
                     bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
 
                     if (freeTime)
@@ -450,8 +451,10 @@ namespace EVEMon.LogitechG15
                     }
                     else
                     {
-                        var time = Skill.TimeSpanToDescriptiveText(CurrentCharacter.SkillQueue.EndTime - DateTime.UtcNow, DescriptiveTextOptions.SpaceBetween, true);
-                        m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "Queue populated for: {0}", time), m_defaultFont));
+                        var time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
+                            DescriptiveTextOptions.SpaceBetween, true);
+                        m_lcdLines.Add(new TextLine(
+                            String.Format(CultureConstants.DefaultCulture, "Queue populated for: {0}", time), m_defaultFont));
                     }
                 }
                 else
@@ -460,7 +463,8 @@ namespace EVEMon.LogitechG15
                     m_lcdLines.Add(new TextLine(skill.ToString(), m_defaultFont));
                 }
 
-                m_lcdLines.Add(new TextLine(Skill.TimeSpanToDescriptiveText(TimeToComplete, DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
+                m_lcdLines.Add(new TextLine(TimeToComplete.ToDescriptiveText(
+                    DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
             }
             else
             {
@@ -535,7 +539,7 @@ namespace EVEMon.LogitechG15
         {
             if (CurrentCharacter.IsTraining)
             {
-                string completionDateTime = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",(DateTime.Now + TimeToComplete).ToShortDateString(), TimeExtensions.GetShortTimeString((DateTime.Now + TimeToComplete)));
+                string completionDateTime = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",(DateTime.Now + TimeToComplete).ToShortDateString(), TimeExtensions.ToShortTimeString((DateTime.Now + TimeToComplete)));
                 SizeF size = m_lcdCanvas.MeasureString(completionDateTime, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 22f);
@@ -559,7 +563,7 @@ namespace EVEMon.LogitechG15
         {
             if (m_showTime)
             {
-                string curTime = TimeExtensions.GetShortTimeString(DateTime.Now);
+                string curTime = TimeExtensions.ToShortTimeString(DateTime.Now);
                 SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 32f);
@@ -804,15 +808,15 @@ namespace EVEMon.LogitechG15
             // Less than minute ? Display seconds
             if (timeLeft < TimeSpan.FromMinutes(1))
             {
-                timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
+                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
             }
             // Display time without seconds
             else
             {
-                timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
+                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
             }
 
-            string skillQueueFreemRoom = String.Format(String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText));
+            string skillQueueFreemRoom = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
             SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
             RectangleF line = new RectangleF(new PointF(0f, 0f), size);
             line.Offset(0f, 11f);

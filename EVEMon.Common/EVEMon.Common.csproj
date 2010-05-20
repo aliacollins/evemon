@@ -177,7 +177,6 @@
     <Compile Include="Controls\StaticDataErrorForm.Designer.cs">
       <DependentUpon>StaticDataErrorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TimeUtil.cs" />
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>

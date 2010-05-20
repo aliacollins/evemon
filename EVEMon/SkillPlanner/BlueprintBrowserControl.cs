@@ -524,7 +524,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string TimeSpanToText(TimeSpan time, bool includeSeconds)
         {
-            return Skill.TimeSpanToDescriptiveText(time,
+            return time.ToDescriptiveText(
                 DescriptiveTextOptions.FirstLetterUppercase
                 | DescriptiveTextOptions.SpaceText
                 | DescriptiveTextOptions.FullText

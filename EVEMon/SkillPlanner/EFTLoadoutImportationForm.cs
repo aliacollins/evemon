@@ -408,7 +408,8 @@ namespace EVEMon.SkillPlanner
 
                 // Compute training time
                 TimeSpan trainingTime = m_character.GetTrainingTimeToMultipleSkills(m_skillsToAdd);
-                TrainTimeLabel.Text = Skill.TimeSpanToDescriptiveText(trainingTime, DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+                TrainTimeLabel.Text = trainingTime.ToDescriptiveText(
+                    DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
             }
         }
 

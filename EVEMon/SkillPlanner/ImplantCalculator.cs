@@ -136,14 +136,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Red;
-                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(thisSpan - baseSpan,DescriptiveTextOptions.IncludeCommas) 
-                    + " slower than current base";
+                lblComparedToBase.Text = String.Format("{0} slower than current base",
+                    thisSpan.Subtract(baseSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < baseSpan)
             {
                 lblComparedToBase.ForeColor = Color.Green;
-                lblComparedToBase.Text = Skill.TimeSpanToDescriptiveText(baseSpan - thisSpan, DescriptiveTextOptions.IncludeCommas)
-                    + " faster than current base";
+                lblComparedToBase.Text = String.Format("{0} faster than current base",
+                    baseSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
             {
@@ -155,14 +155,14 @@ namespace EVEMon.SkillPlanner
             if (thisSpan > currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.DarkRed;
-                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(thisSpan - currentSpan, DescriptiveTextOptions.IncludeCommas) 
-                    + " slower than current";
+                lblComparedToCurrent.Text = String.Format("{0} slower than current",
+                    thisSpan.Subtract(currentSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else if (thisSpan < currentSpan)
             {
                 lblComparedToCurrent.ForeColor = Color.DarkGreen;
-                lblComparedToCurrent.Text = Skill.TimeSpanToDescriptiveText(currentSpan - thisSpan, DescriptiveTextOptions.IncludeCommas)
-                    + " faster than current";
+                lblComparedToCurrent.Text = String.Format("{0} faster than current",
+                    currentSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
             { 
@@ -184,7 +184,7 @@ namespace EVEMon.SkillPlanner
             TimeSpan ts = character.GetTrainingTimeToMultipleSkills(m_plan);
             DateTime dt = DateTime.Now + ts;
 
-            lblSpan.Text = Skill.TimeSpanToDescriptiveText(ts, DescriptiveTextOptions.IncludeCommas);
+            lblSpan.Text = ts.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
             lblDate.Text = dt.ToString();
 
             return ts;

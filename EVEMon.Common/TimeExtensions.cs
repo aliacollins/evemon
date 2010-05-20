@@ -8,6 +8,47 @@ namespace EVEMon.Common
     public static class TimeExtensions
     {
         /// <summary>
+        /// Converts a UTC DateTime to the CCP API date/time string
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <returns></returns>
+        public static string ToCCPTimeString(this DateTime timeUTC)
+        {
+            // timeUTC  = yyyy-mm-dd hh:mm:ss
+            string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
+                                          timeUTC.Year,
+                                          timeUTC.Month,
+                                          timeUTC.Day,
+                                          timeUTC.Hour,
+                                          timeUTC.Minute,
+                                          timeUTC.Second);
+            return result;
+        }
+
+        /// <summary>
+        /// Converts a CCP API date/time string to a UTC DateTime
+        /// </summary>
+        /// <param name="timeUTC"></param>
+        /// <returns></returns>
+        public static DateTime CCPTimeStringToDateTime(this String timeUTC)
+        {
+            // timeUTC  = yyyy-mm-dd hh:mm:ss
+            if (String.IsNullOrEmpty(timeUTC))
+                return DateTime.MinValue;
+
+            DateTime dt = new DateTime(
+                Int32.Parse(timeUTC.Substring(0, 4)),
+                Int32.Parse(timeUTC.Substring(5, 2)),
+                Int32.Parse(timeUTC.Substring(8, 2)),
+                Int32.Parse(timeUTC.Substring(11, 2)),
+                Int32.Parse(timeUTC.Substring(14, 2)),
+                Int32.Parse(timeUTC.Substring(17, 2)),
+                0,
+                DateTimeKind.Utc);
+            return dt;
+        }
+        
+        /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats : 
         /// <list type="bullet">
         /// <item>1d3h5m6s</item>
@@ -140,7 +181,7 @@ namespace EVEMon.Common
         /// <returns>String representation of the time and relative date</returns>
         public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime)
         {
-            string shortTime = GetShortTimeString(absoluteDateTime);
+            string shortTime = ToShortTimeString(absoluteDateTime);
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == DateTime.Now.Date.AddDays(-1))
@@ -191,7 +232,7 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="ShortTimeString">DateTime to be formatted</param>
         /// <returns>String containing formatted text</returns>
-        public static string GetShortTimeString(DateTime shortTimeString)
+        public static string ToShortTimeString(DateTime shortTimeString)
         {
             DateTimeFormatInfo dateTimeFormat = CultureConstants.DefaultCulture.DateTimeFormat;
             
@@ -200,6 +241,85 @@ namespace EVEMon.Common
             shortTimePattern = shortTimePattern.Replace(":s", String.Empty);
 
             return shortTimeString.ToString(shortTimePattern);
+        }
+
+        /// <summary>
+        /// Convert a timespan into English text.
+        /// </summary>
+        /// <param name="ts">The timespan.</param>
+        /// <param name="dto">Formatting options.</param>
+        /// <returns>Timespan formatted as English text.</returns>
+        public static string ToDescriptiveText(this TimeSpan ts, DescriptiveTextOptions dto)
+        {
+            return ToDescriptiveText(ts, dto, true);
+        }
+
+        /// <summary>
+        /// Convert a timespan into English text.
+        /// </summary>
+        /// <param name="ts">The timespan.</param>
+        /// <param name="dto">Formatting options.</param>
+        /// <returns>Timespan formatted as English text.</returns>
+        public static string ToDescriptiveText(this TimeSpan ts, DescriptiveTextOptions dto, bool includeSeconds)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            BuildDescriptiveFragment(sb, ts.Days, dto, "days");
+            BuildDescriptiveFragment(sb, ts.Hours, dto, "hours");
+            BuildDescriptiveFragment(sb, ts.Minutes, dto, "minutes");
+
+            if (includeSeconds)
+                BuildDescriptiveFragment(sb, ts.Seconds, dto, "seconds");
+
+            if (sb.Length == 0)
+                sb.Append("(none)");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Builds the string representation for this string, just for one part of the time (may be the days, the hours, the mins, etc)
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="p"></param>
+        /// <param name="dto"></param>
+        /// <param name="dstr"></param>
+        private static void BuildDescriptiveFragment(StringBuilder sb, int p, DescriptiveTextOptions dto, string dstr)
+        {
+            if (((dto & DescriptiveTextOptions.IncludeZeroes) == 0) && p == 0)
+                return;
+
+            if ((dto & DescriptiveTextOptions.IncludeCommas) != 0)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+            }
+
+            if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
+                sb.Append(" ");
+
+            sb.Append(p.ToString());
+
+            if ((dto & DescriptiveTextOptions.SpaceText) != 0)
+                sb.Append(' ');
+
+            if ((dto & DescriptiveTextOptions.FirstLetterUppercase) != 0)
+                dstr = char.ToUpper(dstr[0]) + dstr.Substring(1);
+
+            if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
+                dstr = dstr.ToUpper();
+
+            if ((dto & DescriptiveTextOptions.FullText) != 0)
+            {
+                if (p == 1)
+                    dstr = dstr.Substring(0, dstr.Length - 1);
+
+                sb.Append(dstr);
+            }
+            else
+            {
+                sb.Append(dstr[0]);
+            }
         }
     }
 }

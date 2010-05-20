@@ -10,10 +10,40 @@ namespace Tests.EVEMon.Common
     [TestFixture]
     public class TimeUtilTests
     {
-        // Some constants for testing
-        private readonly DateTime pointInTime = new DateTime(2010, 05, 07, 18, 23, 32);
-        private const string validCcpDateTime = "2010-05-07 18:23:32";
-        private const string invalidCcpDateTime = "18:23:32 2010-05-07";
+        
+        /// <summary>
+        /// Valid time as returned by CCP.
+        /// </summary>
+        private string ValidCcpDateTime
+        {
+            get
+            {
+                return "2010-05-07 18:23:32";
+            }
+        }
+
+        /// <summary>
+        /// Invalid time, wrong format.
+        /// </summary>
+        private string InvalidCcpDateTime
+        {
+            get
+            {
+                return "18:23:32 2010-05-07";
+            }
+        }
+
+        /// <summary>
+        /// A point in time.
+        /// </summary>
+        private DateTime PointInTime
+        {
+            get
+            {
+                return new DateTime(2010, 05, 07, 18, 23, 32);;
+            }
+        }
+
 
         /// <summary>
         /// Able to convert a <c>DateTime</c> to a CCPTime.
@@ -21,8 +51,8 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertDateTimeToCCPDateTime()
         {
-            string result = TimeUtil.ConvertDateTimeToCCPTimeString(pointInTime);
-            Assert.AreEqual(validCcpDateTime, result);
+            string result = PointInTime.ToCCPTimeString();
+            Assert.AreEqual(ValidCcpDateTime, result);
         }
 
         /// <summary>
@@ -31,8 +61,8 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertValidCCPDateTimeToDateTime()
         {
-            DateTime result = TimeUtil.ConvertCCPTimeStringToDateTime(validCcpDateTime);
-            Assert.AreEqual(pointInTime, result);
+            DateTime result = ValidCcpDateTime.CCPTimeStringToDateTime();
+            Assert.AreEqual(PointInTime, result);
         }
 
         /// <summary>
@@ -47,7 +77,7 @@ namespace Tests.EVEMon.Common
             Assert.Throws<FormatException>
                 (delegate()
                 {
-                    TimeUtil.ConvertCCPTimeStringToDateTime(invalidCcpDateTime);
+                    InvalidCcpDateTime.CCPTimeStringToDateTime();
                 }
             );
         }

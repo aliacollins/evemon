@@ -152,22 +152,26 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("currentTime")]
         public string _CurrentTime
         {
-            get { return TimeUtil.ConvertDateTimeToCCPTimeString(CurrentTime); }
+            get { return CurrentTime.ToCCPTimeString(); }
             set
             {
-                if (String.IsNullOrEmpty(value)) return;
-                CurrentTime = TimeUtil.ConvertCCPTimeStringToDateTime(value); 
+                if (String.IsNullOrEmpty(value))
+                    return;
+
+                CurrentTime = value.CCPTimeStringToDateTime(); 
             }
         }
 
         [XmlElement("cachedUntil")]
         public string _CachedUntil
         {
-            get { return TimeUtil.ConvertDateTimeToCCPTimeString(CachedUntil); }
+            get { return CachedUntil.ToCCPTimeString(); }
             set
             {
-                if (String.IsNullOrEmpty(value)) return;
-                CachedUntil = TimeUtil.ConvertCCPTimeStringToDateTime(value);
+                if (String.IsNullOrEmpty(value))
+                    return;
+
+                CachedUntil = value.CCPTimeStringToDateTime();
             }
         }
 

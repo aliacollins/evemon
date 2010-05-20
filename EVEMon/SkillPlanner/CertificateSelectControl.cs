@@ -564,7 +564,7 @@ namespace EVEMon.SkillPlanner
                     Array.Sort(timesArray, classesArray);
 
                     classes = classesArray;
-                    labels = timesArray.Select(x => Skill.TimeSpanToDescriptiveText(x, DescriptiveTextOptions.IncludeCommas));
+                    labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                     return "Time";
 
                 // Sort by time to elite (or highest) grade
@@ -585,7 +585,7 @@ namespace EVEMon.SkillPlanner
                     Array.Sort(timesArray, classesArray);
 
                     classes = classesArray;
-                    labels = timesArray.Select(x => Skill.TimeSpanToDescriptiveText(x, DescriptiveTextOptions.IncludeCommas));
+                    labels = timesArray.Select(x => x.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                     return "Time to Elite";
             }
         }

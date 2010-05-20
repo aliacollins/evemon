@@ -549,7 +549,9 @@ namespace EVEMon.SkillPlanner
                         }
                         else
                         {
-                            labelsArray[i] = Skill.GetRomanForInt(skillsArray[i].Level + 1) + ": " + Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                            labelsArray[i] = String.Format(CultureConstants.DefaultCulture, "{0}: {1}",
+                                Skill.GetRomanForInt(skillsArray[i].Level + 1),
+                                time.ToDescriptiveText(DescriptiveTextOptions.Default));
                         }
                     }
 
@@ -576,7 +578,7 @@ namespace EVEMon.SkillPlanner
                         }
                         else
                         {
-                            labelsArray[i] = Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.Default);
+                            labelsArray[i] = time.ToDescriptiveText(DescriptiveTextOptions.Default);
                         }
                     }
 

@@ -53,11 +53,11 @@ namespace EVEMon.SkillPlanner
             // Update the times labels
             CharacterScratchpad character = m_plan.Character.After(m_plan.ChosenImplantSet);
             TimeSpan preTime = m_plan.GetTotalTime(character, true);
-            TimeSpan postTime = preTime - m_suggestions.TimeBenefit;
+            TimeSpan postTime = preTime.Subtract(m_suggestions.TimeBenefit);
 
-            lblBeforeTime.Text = Skill.TimeSpanToDescriptiveText(preTime, DescriptiveTextOptions.IncludeCommas);
-            lblAfterTime.Text = Skill.TimeSpanToDescriptiveText(postTime, DescriptiveTextOptions.IncludeCommas);
-            lblDiffTime.Text = Skill.TimeSpanToDescriptiveText(m_suggestions.TimeBenefit, DescriptiveTextOptions.IncludeCommas);
+            lblBeforeTime.Text = preTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lblAfterTime.Text = postTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lblDiffTime.Text = m_suggestions.TimeBenefit.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
         }
 
         /// <summary>

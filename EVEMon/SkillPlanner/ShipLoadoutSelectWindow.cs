@@ -327,14 +327,15 @@ namespace EVEMon.SkillPlanner
                 scratchpad.Train(prereq);
             }
 
-            var trainingTime = scratchpad.TrainingTime - startTime;
+            var trainingTime = scratchpad.TrainingTime.Subtract(startTime);
 
             // update the labels
             btnPlan.Enabled = true;
             lblPlanned.Text = String.Empty;
             lblPlanned.Visible = false;
             lblTrainTime.Visible = true;
-            lblTrainTime.Text = Skill.TimeSpanToDescriptiveText(trainingTime, DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
+            lblTrainTime.Text = trainingTime.ToDescriptiveText(
+                DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
         }
         #endregion
         

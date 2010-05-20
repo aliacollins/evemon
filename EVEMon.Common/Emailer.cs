@@ -46,10 +46,11 @@ namespace EVEMon.Common
             string charName = character.Name;
             string skillName = skill.SkillName;
             string skillLevelString = Skill.GetRomanForInt(skill.Level);
-			
-            bool freeTime = ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - ccpCharacter.SkillQueue.EndTime;
-            string timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
+
+            var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
+            bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
+            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
+            string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 
             // Message's first line
             StringBuilder body = new StringBuilder();
@@ -71,7 +72,8 @@ namespace EVEMon.Common
             }
 
             // Free room in skill queue
-            if (freeTime) body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText, Environment.NewLine);
+            if (freeTime)
+                body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText, Environment.NewLine);
 
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)

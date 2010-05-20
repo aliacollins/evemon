@@ -84,24 +84,24 @@ namespace EVEMon.SkillPlanner
             this.labelDescription.Text = description;
             
             // Update the current time control
-            this.lbCurrentTime.Text = Skill.TimeSpanToDescriptiveText(remapping.BaseDuration, DescriptiveTextOptions.IncludeCommas);
+            this.lbCurrentTime.Text = remapping.BaseDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Update the optimized time control
-            this.lbOptimizedTime.Text = Skill.TimeSpanToDescriptiveText(remapping.BestDuration, DescriptiveTextOptions.IncludeCommas);
+            this.lbOptimizedTime.Text = remapping.BestDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Update the time benefit control
             if (remapping.BestDuration < remapping.BaseDuration)
             {
                 this.lbGain.ForeColor = Color.Black;
-                this.lbGain.Text = Skill.TimeSpanToDescriptiveText(remapping.BaseDuration - remapping.BestDuration,
-                    DescriptiveTextOptions.IncludeCommas) + " better than current";
+                this.lbGain.Text = String.Format("{0} better than current",
+                    remapping.BaseDuration.Subtract(remapping.BestDuration).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
                 if (remapping.BaseDuration < remapping.BestDuration)
                 {
                     this.lbGain.ForeColor = Color.DarkRed;
-                    this.lbGain.Text = Skill.TimeSpanToDescriptiveText(remapping.BestDuration - remapping.BaseDuration,
-                    DescriptiveTextOptions.IncludeCommas) + " slower than current";
+                    this.lbGain.Text = String.Format("{0} slower than current",
+                        remapping.BestDuration.Subtract(remapping.BaseDuration).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                 }
                 else
                 {

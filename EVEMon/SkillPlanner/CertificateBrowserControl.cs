@@ -139,7 +139,8 @@ namespace EVEMon.SkillPlanner
             {
                 var label = labels[lbIndex];
                 var time = cert.GetTrainingTime();
-                label.Text = cert.Grade + " : " + Skill.TimeSpanToDescriptiveText(time, DescriptiveTextOptions.IncludeCommas, false);
+                label.Text = String.Format("{0} : {1}",
+                    cert.Grade, time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
                 label.Visible = true;
                 lbIndex++;
 
@@ -153,7 +154,7 @@ namespace EVEMon.SkillPlanner
                     Label tsl = new Label();
                     tsl.AutoSize = true;
                     tsl.Dock = DockStyle.Top;
-                    tsl.Text = "Recommends " + cert.Grade.ToString() + ":";
+                    tsl.Text = String.Format("Recommends {0}:", cert.Grade.ToString());
                     tsl.Font = new Font(tsl.Font, FontStyle.Bold);
                     tsl.Padding = new Padding(5);
                     newItems.Add(tsl);

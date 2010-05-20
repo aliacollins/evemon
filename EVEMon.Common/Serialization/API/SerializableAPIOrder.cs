@@ -165,13 +165,13 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("issued")]
         public string _Issued
         {
-            get { return TimeUtil.ConvertDateTimeToCCPTimeString(Issued); }
+            get { return Issued.ToCCPTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))
                     return;
 
-                Issued = TimeUtil.ConvertCCPTimeStringToDateTime(value);
+                Issued = value.CCPTimeStringToDateTime();
             }
         }
     }

@@ -378,7 +378,7 @@ namespace EVEMon.SkillPlanner
                                                 m_plan.Count == 1 ? String.Empty : "s",
                                                 m_plan.UniqueSkillsCount,
                                                 m_plan.UniqueSkillsCount == 1 ? String.Empty : "s",
-                                                Skill.TimeSpanToDescriptiveText(totalTime, DescriptiveTextOptions.IncludeCommas));
+                                                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
 
             // Books cost
             long totalcost = m_plan.TotalBooksCost;

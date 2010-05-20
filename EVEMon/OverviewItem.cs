@@ -254,7 +254,7 @@ namespace EVEMon
                 }
 
                 // Updates the time remaining label
-                lblRemainingTime.Text = Skill.TimeSpanToDescriptiveText(trainingSkill.RemainingTime, DescriptiveTextOptions.IncludeCommas);
+                lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
                 // Show the training labels
                 m_hasSkillInTraining = true;
@@ -302,11 +302,12 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            bool freeTime = ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+            var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
+            bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
 
 			if (freeTime)
 			{
-				TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - ccpCharacter.SkillQueue.EndTime;
+                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
 				string timeLeftText;
 
 				// Prevents the "(none)" text from being displayed
@@ -316,12 +317,12 @@ namespace EVEMon
 				// Less than minute ? Display seconds
 				if (timeLeft < TimeSpan.FromMinutes(1))
 				{
-					timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas);
+					timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 				}
 				// Display time without seconds
 				else
 				{
-					timeLeftText = Skill.TimeSpanToDescriptiveText(timeLeft, DescriptiveTextOptions.IncludeCommas, false);
+                    timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
 				}
 
 				lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
@@ -346,7 +347,7 @@ namespace EVEMon
             if (m_character.IsTraining)
             {
                 var remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
-                lblRemainingTime.Text = Skill.TimeSpanToDescriptiveText(remainingTime, DescriptiveTextOptions.IncludeCommas);
+                lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
                 UpdateSkillQueueFreeRoom();
 

@@ -130,7 +130,7 @@ namespace EVEMon.SkillPlanner
                     // Create the item and add it.
                     ListViewItem lvi = new ListViewItem(plan.Name);
                     lvi.Tag = plan;
-                    lvi.SubItems.Add(Skill.TimeSpanToDescriptiveText(plan.GetTotalTime(null, true),
+                    lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
                         DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString());
                     lbPlanList.Items.Add(lvi);
