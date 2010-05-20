@@ -53,59 +53,59 @@ namespace EVEMon.Common.Data
             m_arrayIndex = arrayIndex;
             m_group = group;
 
-            switch (m_name)
+            switch (m_id)
             {
-                case "Analytical Mind":
+                case DBConstants.AnalyticalMindSkillID:
                     m_bonusAttribute = EveAttribute.Intelligence;
                     m_learningClass = LearningClass.LowerTierAttribute;
                     break;
 
-                case "Logic":
+                case DBConstants.LogicSkillID:
                     m_bonusAttribute = EveAttribute.Intelligence;
                     m_learningClass = LearningClass.UpperTierAttribute;
                     break;
 
-                case "Empathy":
+                case DBConstants.EmpathySkillID:
                     m_bonusAttribute = EveAttribute.Charisma;
                     m_learningClass = LearningClass.LowerTierAttribute;
                     break;
 
-                case "Presence":
+                case DBConstants.PresenceSkillID:
                     m_bonusAttribute = EveAttribute.Charisma;
                     m_learningClass = LearningClass.UpperTierAttribute;
                     break;
 
-                case "Instant Recall":
+                case DBConstants.InstantRecallSkillID:
                     m_bonusAttribute = EveAttribute.Memory;
                     m_learningClass = LearningClass.LowerTierAttribute;
                     break;
 
-                case "Eidetic Memory":
+                case DBConstants.EideticMemorySkillID:
                     m_bonusAttribute = EveAttribute.Memory;
                     m_learningClass = LearningClass.UpperTierAttribute;
                     break;
 
-                case "Iron Will":
+                case DBConstants.IronWillSkillID:
                     m_bonusAttribute = EveAttribute.Willpower;
                     m_learningClass = LearningClass.LowerTierAttribute;
                     break;
 
-                case "Focus":
+                case DBConstants.FocusSkillID:
                     m_bonusAttribute = EveAttribute.Willpower;
                     m_learningClass = LearningClass.UpperTierAttribute;
                     break;
 
-                case "Spatial Awareness":
+                case DBConstants.SpatialAwarenessSkillID:
                     m_bonusAttribute = EveAttribute.Perception;
                     m_learningClass = LearningClass.LowerTierAttribute;
                     break;
 
-                case "Clarity":
+                case DBConstants.ClaritySkillID:
                     m_bonusAttribute = EveAttribute.Perception;
                     m_learningClass = LearningClass.UpperTierAttribute;
                     break;
 
-                case "Learning":
+                case DBConstants.LearningSkillID:
                     m_bonusAttribute = EveAttribute.None;
                     m_learningClass = LearningClass.Learning;
                     break;
@@ -127,10 +127,11 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal void CompleteInitialization(SerializableSkillPrerequisite[] prereqs)
         {
-            if (prereqs == null) return;
+            if (prereqs == null)
+                return;
 
             // Create the prerequisites list
-            m_prereqs.AddRange(prereqs.Select(x => new StaticSkillLevel(StaticSkills.GetSkillById(x.ID), x.Level)));
+            m_prereqs.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
 
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
             if (m_trainableOnTrialAccount)
@@ -199,9 +200,8 @@ namespace EVEMon.Common.Data
             get
             {
                 if (m_descriptionNL == null)
-                {
                     m_descriptionNL = WordWrap(m_description, 100);
-                }
+
                 return m_descriptionNL;
             }
         }
@@ -316,7 +316,9 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                if (m_cost == 0) return "0";
+                if (m_cost == 0)
+                    return "0";
+
                 return String.Format(CultureConstants.DefaultCulture, "{0:0,0,0}", m_cost);
             }
         }
@@ -375,7 +377,9 @@ namespace EVEMon.Common.Data
         /// <returns>The required nr. of points.</returns>
         public int GetPointsRequiredForLevelOnly(int level)
         {
-            if (level == 0) return 0;
+            if (level == 0)
+                return 0;
+
             return GetPointsRequiredForLevel(level) - GetPointsRequiredForLevelOnly(level - 1);
         }
 
@@ -408,16 +412,15 @@ namespace EVEMon.Common.Data
 
             foreach (string currentWord in words)
             {
-                //ignore html
+                //Ignore html
                 if (currentWord.Length > 0)
                 {
                     if (currentWord.Substring(0, 1) == "<")
-                    {
                         InTag = true;
-                    }
+
                     if (InTag)
                     {
-                        //handle filenames inside html tags
+                        //Handle filenames inside html tags
                         if (currentLine.EndsWith("."))
                         {
                             currentLine += currentWord;
@@ -426,10 +429,9 @@ namespace EVEMon.Common.Data
                         {
                             currentLine += " " + currentWord;
                         }
+
                         if (currentWord.IndexOf(">") > -1)
-                        {
                             InTag = false;
-                        }
                     }
                     else
                     {
@@ -447,10 +449,10 @@ namespace EVEMon.Common.Data
                     }
                 }
             }
+
             if (currentLine != String.Empty)
-            {
                 lines.Add(currentLine);
-            }
+
             string[] textLinesStr = new string[lines.Count];
             lines.CopyTo(textLinesStr, 0);
 

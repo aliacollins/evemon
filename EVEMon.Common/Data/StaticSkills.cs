@@ -76,6 +76,21 @@ namespace EVEMon.Common.Data
 
 
         #region Public Finders
+        
+        /// <summary>
+        /// Gets a skill by its id or its name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
+        {
+            StaticSkill skill = GetSkillById(src.ID);
+
+            if (skill == null)
+                skill = GetSkillByName(src.Name);
+
+            return skill;
+        }
 
         /// <summary>
         /// Gets a skill by its name

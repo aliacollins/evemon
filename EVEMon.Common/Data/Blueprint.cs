@@ -63,7 +63,7 @@ namespace EVEMon.Common.Data
             
             foreach (var prereq in src.ReqMaterial)
             {
-                m_materialRequirements.Add(new StaticRequiredMaterial(prereq.ID, prereq.Quantity, prereq.DamagePerJob, prereq.Activity));
+                m_materialRequirements.Add(new StaticRequiredMaterial(prereq));
             }
         }
 

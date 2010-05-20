@@ -19,12 +19,24 @@ namespace EVEMon.Common.Data
         /// <param name="quantity"></param>
         /// <param name="dmgPerJob"></param>
         /// <param name="activityId"></param>
-        internal StaticRequiredMaterial(int id, int quantity, double dmgPerJob, int activityId)
-            : base(id, StaticItems.GetItemByID(id).Name)
+        internal StaticRequiredMaterial(SerializableRequiredMaterial src)
+            : base(src.ID,  GetName(src.ID))
         {
-            this.Quantity = quantity;
-            this.DamagePerJob = dmgPerJob;
-            this.Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
+            this.Quantity = src.Quantity;
+            this.DamagePerJob = src.DamagePerJob;
+            this.Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.Activity);
+        }
+
+        #endregion
+
+
+        #region Private Finders
+
+        private static string GetName(int id)
+        {
+            Item item = StaticItems.GetItemByID(id);
+
+            return (item != null ? item.Name : String.Empty);
         }
 
         #endregion
