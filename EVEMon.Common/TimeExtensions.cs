@@ -60,10 +60,14 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ToRemainingTimeShortDescription(this DateTime t)
         {
+            // small chance that the function could cross over the
+            // second boundry, and have an inconsistent result.
+            DateTime now = DateTime.Now;
+
             StringBuilder sb = new StringBuilder();
-            if (t > DateTime.Now)
+            if (t > now)
             {
-                TimeSpan ts = t.ToUniversalTime() - DateTime.Now.ToUniversalTime();
+                TimeSpan ts = t.ToUniversalTime() - now.ToUniversalTime();
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());

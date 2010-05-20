@@ -10,7 +10,9 @@ namespace Tests.EVEMon.Common
     [TestFixture]
     public class TimeUtilTests
     {
-        
+
+        #region Helper Variables
+
         /// <summary>
         /// Valid time as returned by CCP.
         /// </summary>
@@ -44,6 +46,10 @@ namespace Tests.EVEMon.Common
             }
         }
 
+        #endregion
+
+
+        #region Tests
 
         /// <summary>
         /// Able to convert a <c>DateTime</c> to a CCPTime.
@@ -81,5 +87,127 @@ namespace Tests.EVEMon.Common
                 }
             );
         }
+
+        /// <summary>
+        /// Handles an empty string by returning DateTime.MinValue.
+        /// </summary>
+        [Test]
+        public void ConvertEmptyCCPDateTimeToDateTime()
+        {
+            DateTime result = String.Empty.CCPTimeStringToDateTime();
+            Assert.AreEqual(DateTime.MinValue, result);
+        }
+
+        /// <summary>
+        /// If the time being tested is in the past expect "Done" to be returned.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsDone()
+        {
+            string result = DateTime.Now.AddHours(-1).ToRemainingTimeShortDescription();
+            Assert.AreEqual("Done", result);
+        }
+
+        /// <summary>
+        /// Test 1s is returned when there is 1 minute to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsSecond()
+        {
+            DateTime future = DateTime.Now.AddSeconds(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1s", result);
+        }
+        
+        /// <summary>
+        /// Test 1m is returned when there is 1 minute to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsMinute()
+        {
+            DateTime future = DateTime.Now.AddMinutes(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1m ", result);
+        }
+
+        /// <summary>
+        /// Test 1h is returned when there is 1 hour to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsHour()
+        {
+            DateTime future = DateTime.Now.AddHours(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1h ", result);
+        }
+
+        /// <summary>
+        /// Test 1d is returned when there is 1 day to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsDay()
+        {
+            DateTime future = DateTime.Now.AddDays(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1d ", result);
+        }
+        
+        /// <summary>
+        /// Test 1m 1s is returned when there is 1 minute, 1 second to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsMinuteSecond()
+        {
+            DateTime future = DateTime.Now.AddMinutes(1).AddSeconds(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1m 1s", result);
+        }
+
+        /// <summary>
+        /// Test 1h 1m 1s is returned when there is 1 hour, 1 minute, 1 second to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsHourMinuteSecond()
+        {
+            DateTime future = DateTime.Now.AddHours(1).AddMinutes(1).AddSeconds(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1h 1m 1s", result);
+        }
+
+        /// <summary>
+        /// Test 1d 1h 1m 1s is returned when there is 1 day, 1 hour, 1 minute, 1 second to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsDayHourMinuteSecond()
+        {
+            DateTime future = DateTime.Now.AddDays(1).AddHours(1).AddMinutes(1).AddSeconds(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1d 1h 1m 1s", result);
+        }
+        
+        /// <summary>
+        /// Test 1d 1m 1s is returned when there is 1 hour, 1 minute, 1 second to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsDayMinuteSecond()
+        {
+            DateTime future = DateTime.Now.AddDays(1).AddMinutes(1).AddSeconds(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1d 1m 1s", result);
+        }
+
+        /// <summary>
+        /// Test 1d 1m is returned when there is 1 hour, 1 minute to go.
+        /// </summary>
+        [Test]
+        public void ToRemainingTimeShortDescriptionReturnsDayMinute()
+        {
+            DateTime future = DateTime.Now.AddDays(1).AddMinutes(1);
+            string result = future.ToRemainingTimeShortDescription();
+            Assert.AreEqual("1d 1m ", result);
+        }
+
+        #endregion
+
     }
 }
