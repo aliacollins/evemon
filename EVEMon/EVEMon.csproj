@@ -976,6 +976,7 @@
     <None Include="Resources\icons\SchedulerDelete.png" />
     <None Include="Resources\icons\Reset.png" />
     <None Include="Resources\icons\Relocation.png" />
+    <Content Include="Resources\icons\messagebox.png" />
     <Content Include="Resources\icons\Window.png" />
     <None Include="Resources\icons\Mineral.png" />
     <Content Include="Resources\icons\Money.png" />

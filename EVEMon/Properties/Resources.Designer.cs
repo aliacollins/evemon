@@ -389,6 +389,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap messagebox {
+            get {
+                object obj = ResourceManager.GetObject("messagebox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Mineral {
             get {
                 object obj = ResourceManager.GetObject("Mineral", resourceCulture);

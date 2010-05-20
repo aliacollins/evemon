@@ -44,7 +44,7 @@ namespace EVEMon.SettingsUI
                 treeView.Nodes["generalNode"].Nodes["relocationNode"].Remove();
             }
 
-            // Ran with Mono ?
+            // Run with Mono ?
             if (Type.GetType("Mono.Runtime") != null)
             {
                 treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
@@ -172,7 +172,7 @@ namespace EVEMon.SettingsUI
             {
                 rbExitEVEMon.Checked = true;
             }
-            
+
             // G15
             g15CheckBox.Checked = m_settings.G15.Enabled;
             cbG15ACycle.Checked = m_settings.G15.UseCharactersCycle;
@@ -194,7 +194,7 @@ namespace EVEMon.SettingsUI
             cbColorPartialSkills.Checked = m_settings.UI.MainWindow.HighlightPartialSkills;
             cbColorQueuedSkills.Checked = m_settings.UI.MainWindow.HighlightQueuedSkills;
             cbAlwaysShowSkillQueueTime.Checked = m_settings.UI.MainWindow.AlwaysShowSkillQueueTime;
-            
+
             // Main Window - Overview
             cbShowOverViewTab.Checked = m_settings.UI.MainWindow.ShowOverview;
             cbUseIncreasedContrastOnOverview.Checked = m_settings.UI.MainWindow.UseIncreasedContrastOnOverview;
@@ -650,7 +650,9 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void OnMustEnableOrDisable(object sender, EventArgs e)
         {
-            if (m_isLoading) return;
+            if (m_isLoading)
+                return;
+
             UpdateDisables();
         }
 
@@ -717,7 +719,7 @@ namespace EVEMon.SettingsUI
         {
             NotificationSettings configuredValues = new NotificationSettings();
             PopulateNotificationsFromControls(out configuredValues);
-            
+
             if (!Emailer.SendTestMail(configuredValues))
             {
                 MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -868,6 +870,17 @@ namespace EVEMon.SettingsUI
 
             }
         }
+
+        /// <summary>
+        /// Reset the priorities conflict custom message box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPrioritiesReset_Click(object sender, EventArgs e)
+        {
+            Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = true;
+            Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = DialogResult.None;
+        }
         #endregion
 
 
@@ -963,7 +976,6 @@ namespace EVEMon.SettingsUI
                 color.BackColor = colorDialog.Color;
             }
         }
-        #endregion
 
         /// <summary>
         /// Selects the proper page.
@@ -1006,5 +1018,7 @@ namespace EVEMon.SettingsUI
                 panelCycleQueueInfo.Enabled = true;
             }
         }
+
+        #endregion
     }
 }
