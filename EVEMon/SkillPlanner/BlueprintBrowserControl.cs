@@ -400,7 +400,7 @@ namespace EVEMon.SkillPlanner
                         if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.ComponentsGroupID }))
                             cbFacility.Items.Add("Component Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.AdvancedSubsystemsGroupID }))
+                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.StategicComponentsGroupIDs))
                             cbFacility.Items.Add("Subsystem Assembly Array");
 
                         if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.SmallToXLargeShipsGroupIDs))

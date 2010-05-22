@@ -29,6 +29,8 @@ namespace EVEMon.Common.Data
         public static readonly int[] ProductionRawMaterialGroupIDs = new int[]
             { 18, 476, 499, 780, 781, 942, 1096, 1098, 1144, 1147 };
 
+        public static readonly int[] StategicComponentsGroupIDs = new int[] { 1112, 1138 };
+
         public static readonly int[] SmallToXLargeShipsGroupIDs = new int[]
             { 5, 6, 7, 8, 391, 464, 469, 494, 761, 766, 817, 840, 1047, 1310};
 

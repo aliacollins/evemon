@@ -133,11 +133,11 @@ namespace EVEMon.SkillPlanner
             // scObjectBrowser.Panel1
             // 
             this.scObjectBrowser.Panel1.Controls.Add(this.blueprintSelectControl);
-            this.scObjectBrowser.Size = new System.Drawing.Size(650, 713);
+            this.scObjectBrowser.Size = new System.Drawing.Size(650, 642);
             // 
             // pnlDetails
             // 
-            this.pnlDetails.Size = new System.Drawing.Size(482, 643);
+            this.pnlDetails.Size = new System.Drawing.Size(482, 572);
             this.pnlDetails.TabIndex = 1;
             // 
             // scDetailsRight
@@ -146,8 +146,8 @@ namespace EVEMon.SkillPlanner
             // scDetailsRight.Panel2
             // 
             this.scDetailsRight.Panel2.Controls.Add(this.gbRequiredSkills);
-            this.scDetailsRight.Size = new System.Drawing.Size(240, 643);
-            this.scDetailsRight.SplitterDistance = 535;
+            this.scDetailsRight.Size = new System.Drawing.Size(240, 572);
+            this.scDetailsRight.SplitterDistance = 464;
             // 
             // scDetails
             // 
@@ -156,19 +156,19 @@ namespace EVEMon.SkillPlanner
             // 
             this.scDetails.Panel1.Controls.Add(this.tabControl);
             this.scDetails.Panel1.Controls.Add(this.tlpModifiers);
-            this.scDetails.Size = new System.Drawing.Size(482, 643);
+            this.scDetails.Size = new System.Drawing.Size(482, 572);
             // 
             // gbDescription
             // 
             this.gbDescription.Controls.Add(this.pnlAttributes);
-            this.gbDescription.Size = new System.Drawing.Size(240, 535);
+            this.gbDescription.Size = new System.Drawing.Size(240, 464);
             this.gbDescription.Controls.SetChildIndex(this.tbDescription, 0);
             this.gbDescription.Controls.SetChildIndex(this.pnlAttributes, 0);
             // 
             // tbDescription
             // 
             this.tbDescription.BackColor = System.Drawing.SystemColors.Control;
-            this.tbDescription.Size = new System.Drawing.Size(234, 516);
+            this.tbDescription.Size = new System.Drawing.Size(234, 445);
             // 
             // gbRequiredSkills
             // 
@@ -205,7 +205,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Location = new System.Drawing.Point(0, 118);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(238, 525);
+            this.tabControl.Size = new System.Drawing.Size(238, 454);
             this.tabControl.TabIndex = 1;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -215,7 +215,7 @@ namespace EVEMon.SkillPlanner
             this.tpManufacturing.Location = new System.Drawing.Point(4, 22);
             this.tpManufacturing.Name = "tpManufacturing";
             this.tpManufacturing.Padding = new System.Windows.Forms.Padding(3);
-            this.tpManufacturing.Size = new System.Drawing.Size(230, 499);
+            this.tpManufacturing.Size = new System.Drawing.Size(230, 428);
             this.tpManufacturing.TabIndex = 0;
             this.tpManufacturing.Text = "Manufacturing";
             this.tpManufacturing.UseVisualStyleBackColor = true;
@@ -226,7 +226,7 @@ namespace EVEMon.SkillPlanner
             this.gbManufBoM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbManufBoM.Location = new System.Drawing.Point(3, 3);
             this.gbManufBoM.Name = "gbManufBoM";
-            this.gbManufBoM.Size = new System.Drawing.Size(224, 493);
+            this.gbManufBoM.Size = new System.Drawing.Size(224, 422);
             this.gbManufBoM.TabIndex = 1;
             this.gbManufBoM.TabStop = false;
             this.gbManufBoM.Text = "Bill of Materials";
@@ -242,7 +242,7 @@ namespace EVEMon.SkillPlanner
             this.lvManufacturing.Location = new System.Drawing.Point(3, 16);
             this.lvManufacturing.MultiSelect = false;
             this.lvManufacturing.Name = "lvManufacturing";
-            this.lvManufacturing.Size = new System.Drawing.Size(218, 474);
+            this.lvManufacturing.Size = new System.Drawing.Size(218, 403);
             this.lvManufacturing.TabIndex = 0;
             this.lvManufacturing.UseCompatibleStateImageBehavior = false;
             this.lvManufacturing.View = System.Windows.Forms.View.Details;
@@ -560,7 +560,7 @@ namespace EVEMon.SkillPlanner
             this.blueprintSelectControl.Name = "blueprintSelectControl";
             this.blueprintSelectControl.Plan = null;
             this.blueprintSelectControl.SelectedObject = null;
-            this.blueprintSelectControl.Size = new System.Drawing.Size(163, 713);
+            this.blueprintSelectControl.Size = new System.Drawing.Size(163, 642);
             this.blueprintSelectControl.TabIndex = 0;
             // 
             // lblProduce
@@ -905,7 +905,7 @@ namespace EVEMon.SkillPlanner
             this.pnlAttributes.Location = new System.Drawing.Point(3, 16);
             this.pnlAttributes.Name = "pnlAttributes";
             this.pnlAttributes.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.pnlAttributes.Size = new System.Drawing.Size(234, 516);
+            this.pnlAttributes.Size = new System.Drawing.Size(234, 445);
             this.pnlAttributes.TabIndex = 1;
             // 
             // gbInvention
@@ -953,7 +953,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.DoubleBuffered = true;
             this.Name = "BlueprintBrowserControl";
-            this.Size = new System.Drawing.Size(650, 713);
+            this.Size = new System.Drawing.Size(650, 642);
             this.scObjectBrowser.Panel1.ResumeLayout(false);
             this.scObjectBrowser.Panel1.PerformLayout();
             this.scObjectBrowser.Panel2.ResumeLayout(false);
