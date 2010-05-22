@@ -39,11 +39,4 @@ namespace EVEMon.Common.SettingsObjects
             return (ShipBrowserSettings)MemberwiseClone();
         }
     }
-
-    public enum ObjectUsabilityFilter
-    {
-        All = 0,
-        Usable = 1,
-        Unusable = 2
-    }
 }

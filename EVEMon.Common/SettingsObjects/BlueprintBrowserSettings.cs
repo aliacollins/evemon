@@ -17,6 +17,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             UsabilityFilter = ObjectUsabilityFilter.All;
             MetagroupFilter = ItemMetaGroup.All;
+            ActivityFilter = ObjectActivityFilter.Any;
         }
 
         #endregion
@@ -33,6 +34,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("usabilityFilter")]
         public ObjectUsabilityFilter UsabilityFilter
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("activityFilter")]
+        public ObjectActivityFilter ActivityFilter
         {
             get;
             set;

@@ -47,32 +47,4 @@ namespace EVEMon.Common.SettingsObjects
             return (SkillBrowserSettings)MemberwiseClone();
         }
     }
-
-    public enum SkillFilter
-    {
-        All = 0,
-        NoLv5 = 1,
-        Known = 2,
-        Lv1Ready = 3,
-        Unknown = 4,
-        UnknownButOwned = 5,
-        UnknownButTrainable = 6,
-        UnknownAndNotOwned = 7,
-        UnknownAndNotTrainable = 8,
-        NotPlanned = 9,
-        NotPlannedButTrainable = 10,
-        PartiallyTrained = 11,
-        Planned = 12,
-        Trainable = 13,
-        TrailAccountFriendly = 14
-    }
-
-    public enum SkillSort
-    {
-        None = 0,
-        TimeToNextLevel = 1,
-        TimeToLevel5 = 2,
-        Rank = 3,
-        SPPerHour = 4
-    }
 }

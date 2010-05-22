@@ -48,6 +48,7 @@ namespace EVEMon.SkillPlanner
             if (Settings.UI.UseStoredSearchFilters)
             {
                 cbUsabilityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.UsabilityFilter;
+                cbActivityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.ActivityFilter;           
                 tbSearchText.Text = Settings.UI.BlueprintBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
@@ -60,6 +61,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cbUsabilityFilter.SelectedIndex = 0;
+                cbActivityFilter.SelectedIndex = 0;
             }
         }
 
@@ -77,6 +79,9 @@ namespace EVEMon.SkillPlanner
         {
             // Update settings
             Settings.UI.BlueprintBrowser.UsabilityFilter = (ObjectUsabilityFilter)cbUsabilityFilter.SelectedIndex;
+
+            // Enable/Disable the activity filter
+            cbActivityFilter.Enabled = Settings.UI.BlueprintBrowser.UsabilityFilter != ObjectUsabilityFilter.All;
 
             // Update the filter delegate
             switch (Settings.UI.BlueprintBrowser.UsabilityFilter)
@@ -99,6 +104,47 @@ namespace EVEMon.SkillPlanner
 
             // Update content
             UpdateContent();
+        }
+
+        /// <summary>
+        /// When the combo for activity filter changes, we update the settings and the control content.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbActivity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Update settings
+            Settings.UI.BlueprintBrowser.ActivityFilter = (ObjectActivityFilter)cbActivityFilter.SelectedIndex;
+            m_activityFilter = Settings.UI.BlueprintBrowser.ActivityFilter;
+
+            switch (m_activityFilter)
+            {               
+                case ObjectActivityFilter.Manufacturing:
+                    m_activity = BlueprintActivity.Manufacturing;
+                    break;
+
+                case ObjectActivityFilter.Copying:
+                    m_activity = BlueprintActivity.Copying;
+                    break;
+
+                case ObjectActivityFilter.ResearchingMaterialProductivity:
+                    m_activity = BlueprintActivity.ResearchingMaterialProductivity;
+                    break;
+
+                case ObjectActivityFilter.ResearchingTimeProductivity:
+                    m_activity = BlueprintActivity.ResearchingTimeProductivity;
+                    break;
+
+                case ObjectActivityFilter.Invention:
+                    m_activity = BlueprintActivity.Invention;
+                    break;
+
+                default:
+                    m_activity = BlueprintActivity.None;
+                    break;
+            }
+
+            cbUsabilityFilter_SelectedIndexChanged(sender, e);
         }
 
         /// <summary>
@@ -234,6 +280,5 @@ namespace EVEMon.SkillPlanner
         }
       
         #endregion
-
     }
 }

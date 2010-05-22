@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 using EVEMon.Common;
-using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
@@ -15,6 +16,8 @@ namespace EVEMon.SkillPlanner
 
         protected Func<Item, Boolean> m_usabilityPredicate;
         protected List<Item> m_selectedObjects = null;
+        protected ObjectActivityFilter m_activityFilter;
+        protected BlueprintActivity m_activity;
         protected Plan m_plan;
 
         private bool m_allExpanded;
@@ -177,6 +180,7 @@ namespace EVEMon.SkillPlanner
         }
         #endregion 
 
+
         #region Selected Objects
         /// <summary>
         /// All the selected objects (through multi-select)
@@ -231,9 +235,7 @@ namespace EVEMon.SkillPlanner
 
             // Notify subscribers
             if (SelectionChanged != null)
-            {
                 SelectionChanged(this, new EventArgs());
-            }
         }
 
         /// <summary>
@@ -247,7 +249,8 @@ namespace EVEMon.SkillPlanner
                 foreach (TreeNode node in tvItems.SelectedNodes)
                 {
                     var obj = node.Tag as Item;
-                    if (obj != null) selectedObjects.Add(obj);
+                    if (obj != null)
+                        selectedObjects.Add(obj);
                 }
                 SetSelectedObjects(selectedObjects);
             }
@@ -257,6 +260,7 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion
+
 
         #region Events
 
@@ -292,8 +296,6 @@ namespace EVEMon.SkillPlanner
                 SetSelectedObjects(null);
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Treeview's context menu > Expand all.
@@ -362,6 +364,8 @@ namespace EVEMon.SkillPlanner
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
         }
 
+        #endregion
+
 
         #region Predicates
         /// <summary>
@@ -381,13 +385,72 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CanUse(Item eo)
         {
-            foreach (var prereq in eo.Prerequisites)
+            var prerequisites = eo.Prerequisites.Where(x=> !x.Activity.Equals(BlueprintActivity.ReverseEngineering));
+            bool hasSelectedActivity = true;
+            bool bpBrowserControl = this is BlueprintSelectControl;
+
+            // Is item a blueprint and supports the selected activity ?  
+            if (bpBrowserControl)
             {
-                int level = m_plan.Character.GetSkillLevel(prereq.Skill);
-                if (level < prereq.Level)
+                hasSelectedActivity = prerequisites.Any(x => x.Activity.Equals(m_activity))
+                       || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity.Equals(m_activity));
+
+                // Can not be used when item doesn't support the selected activity
+                if (!m_activityFilter.Equals(ObjectActivityFilter.All) && !m_activityFilter.Equals(ObjectActivityFilter.Any)
+                    && !hasSelectedActivity)
                     return false;
+
+                // Enumerates the prerequisites skills to the selected activity 
+                if (!m_activityFilter.Equals(ObjectActivityFilter.All) && !m_activityFilter.Equals(ObjectActivityFilter.Any))
+                    prerequisites = prerequisites.Where(x => x.Activity.Equals(m_activity));
             }
-            return true;
+
+            // Item doesn't have prerequisites skills
+            if (prerequisites.IsEmpty())
+                return true;
+
+            // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
+            List<Boolean> prereqTrained = new List<Boolean>();
+            if (bpBrowserControl && m_activityFilter.Equals(ObjectActivityFilter.Any))
+            {               
+                List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
+
+                // Create a list with the activities this item supports
+                foreach (var prereq in prerequisites.Where(x => !prereqActivity.Contains(x.Activity)))
+                {
+                    prereqActivity.Add(prereq.Activity);
+                }
+
+                // Create a list with each prereq skill trained status for the questioned activity
+                foreach (var activity in prereqActivity)
+                {
+                    prereqTrained.Clear();
+
+                    foreach (var prereq in prerequisites.Where(x => x.Activity.Equals(activity)))
+                    {
+                        int level = m_plan.Character.GetSkillLevel(prereq.Skill);
+                        prereqTrained.Add(level >= prereq.Level);
+                    }
+
+                    // Has the character trained all prereq skills for this activity ?
+                    if (prerequisites.IsEmpty() || prereqTrained.All(x => x.Equals(true)))
+                        return true;
+                }
+                return false;
+            }
+            // Do a simple predication
+            else
+            {
+                // Create a list with each prereq skill trained status
+                foreach (var prereq in prerequisites)
+                {
+                    int level = m_plan.Character.GetSkillLevel(prereq.Skill);
+                    prereqTrained.Add(level >= prereq.Level);
+                }
+            }
+
+            // Has the character trained all prereq skills ?
+            return (prereqTrained.All(x=> x.Equals(true)));
         }
 
         /// <summary>

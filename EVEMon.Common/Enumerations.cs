@@ -125,6 +125,34 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// Represents the options one can use with <see cref="CharacterSchartchpad.Learn()"/>. Those are only optimizations
+    /// </summary>
+    [Flags] 
+    public enum LearningOptions
+    {
+        /// <summary>
+        /// None, regular learning.
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// Do not update the total SP count.
+        /// </summary>
+        FreezeSP = 1,
+        /// <summary>
+        /// Do not update the training time and the trained skills enumeration.
+        /// </summary>
+        IgnoreTraining = 2,
+        /// <summary>
+        /// Assume the prerequisites are already known.
+        /// </summary>
+        IgnorePrereqs = 4,
+        /// <summary>
+        /// Ignore the changes when the given target level is lower than the current one
+        /// </summary>
+        UpgradeOnly = 8
+    }
+
+    /// <summary>
     /// Represents the type of an item.
     /// </summary>
     public enum ItemFamily
@@ -182,32 +210,6 @@ namespace EVEMon.Common
         UpperTierAttribute
     }
 
-    /// <summary>
-    /// Represents the options one can use with <see cref="CharacterSchartchpad.Learn()"/>. Those are only optimizations
-    /// </summary>
-    [Flags] public enum LearningOptions
-    {
-        /// <summary>
-        /// None, regular learning.
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// Do not update the total SP count.
-        /// </summary>
-        FreezeSP = 1,
-        /// <summary>
-        /// Do not update the training time and the trained skills enumeration.
-        /// </summary>
-        IgnoreTraining = 2,
-        /// <summary>
-        /// Assume the prerequisites are already known.
-        /// </summary>
-        IgnorePrereqs = 4,
-        /// <summary>
-        /// Ignore the changes when the given target level is lower than the current one
-        /// </summary>
-        UpgradeOnly = 8
-    }
 
     /// <summary>
     /// Represents how much current SP and levels are taken into account for a training time computation.
@@ -296,19 +298,86 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// Enumeration of skill browser filter.
+    /// </summary>
+    public enum SkillFilter
+    {
+        All = 0,
+        NoLv5 = 1,
+        Known = 2,
+        Lv1Ready = 3,
+        Unknown = 4,
+        UnknownButOwned = 5,
+        UnknownButTrainable = 6,
+        UnknownAndNotOwned = 7,
+        UnknownAndNotTrainable = 8,
+        NotPlanned = 9,
+        NotPlannedButTrainable = 10,
+        PartiallyTrained = 11,
+        Planned = 12,
+        Trainable = 13,
+        TrailAccountFriendly = 14
+    }
+
+    /// <summary>
+    /// Enumeration of skill browser sorter.
+    /// </summary>
+    public enum SkillSort
+    {
+        None = 0,
+        TimeToNextLevel = 1,
+        TimeToLevel5 = 2,
+        Rank = 3,
+        SPPerHour = 4
+    }
+
+    /// <summary>
+    /// Enumeration of browser usability filter.
+    /// </summary>
+    public enum ObjectUsabilityFilter
+    {
+        All = 0,
+        Usable = 1,
+        Unusable = 2
+    }
+
+    /// <summary>
+    /// Enumeration of blueprint browser activity filter.
+    /// </summary>
+    public enum ObjectActivityFilter
+    {
+        Any = 0,
+        All = 1,
+        Manufacturing = 2,
+        Copying = 3,
+        ResearchingMaterialProductivity = 4,
+        ResearchingTimeProductivity = 5,
+        Invention = 6,
+    }
+
+    /// <summary>
     /// Represents the activity of a blueprint.
     /// </summary>
     public enum BlueprintActivity
     {
+        [Description("None")]
         None = 0,
+        [Description("Manufacturing")]
         Manufacturing = 1,
+        [Description("Researching Technology")]
         ResearchingTechnology = 2,
+        [Description("Time Efficiency Research")]
         ResearchingTimeProductivity = 3,
+        [Description("Material Research")]
         ResearchingMaterialProductivity = 4,
+        [Description("Copying")]
         Copying = 5,
+        [Description("Duplicating")]
         Duplicating = 6,
+        [Description("Reverse Engineering")]
         ReverseEngineering = 7,
-        Invention = 8
+        [Description("Invention")]
+        Invention = 8,
     }
 
     /// <summary>
