@@ -390,12 +390,20 @@ namespace EVEMon.Common.IgbService
             WriteDocumentFooter(sw);
         }
 
+        /// <summary>
+        /// Outputs the documents footer
+        /// </summary>
+        /// <param name="sw"></param>
         private static void WriteDocumentFooter(StreamWriter sw)
         {
             sw.WriteLine("  </body>");
             sw.WriteLine("</html>");
         }
 
+        /// <summary>
+        /// Outputs the document header
+        /// </summary>
+        /// <param name="sw"></param>
         private static void WriteDocumentHeader(StreamWriter sw)
         {
             sw.WriteLine("<html>");
@@ -536,19 +544,22 @@ namespace EVEMon.Common.IgbService
                         {
                             sw.WriteLine("Sorry, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as not owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name));
                         }
-                        sw.WriteLine("<hr/>");
                     }
                     else
                     {
-                        // maybe we should do nothing in this case?
+                        // Display an error message
+                        sw.WriteLine("<h2>Error Message</h2>");
                         sw.WriteLine("Skill with id '{0}' could not be found", skillId);
                     }
+                    sw.WriteLine("<hr/>");
                 }
 
                 Plan p = character.Plans[planName];
                 if (p == null)
                 {
-                    sw.WriteLine("A plan named \"{0}\" do not exist.", HttpUtility.HtmlEncode(planName));
+                    // Display an error message
+                    sw.WriteLine("<h2>Error Message</h2>");
+                    sw.WriteLine("A plan named \"{0}\" does not exist.", HttpUtility.HtmlEncode(planName));
                 }
                 else
                 {
@@ -570,7 +581,7 @@ namespace EVEMon.Common.IgbService
                         if (settings.Markup != MarkupType.Html)
                             return;
 
-                        // skill is known
+                        // Skill is known
                         if (entry.CharacterSkill.IsKnown || entry.Level != 1)
                             return;
 
@@ -586,6 +597,7 @@ namespace EVEMon.Common.IgbService
             }
             else
             {
+                sw.WriteLine("<h2>Error Message</h2>");
                 sw.WriteLine("Invalid request");
             }
 
