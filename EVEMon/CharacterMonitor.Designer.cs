@@ -34,7 +34,6 @@ namespace EVEMon
             this.lblCharacterName = new System.Windows.Forms.Label();
             this.lblBioInfo = new System.Windows.Forms.Label();
             this.lblCorpInfo = new System.Windows.Forms.Label();
-            this.lblBalance = new System.Windows.Forms.RichTextBox();
             this.pnlTraining = new System.Windows.Forms.Panel();
             this.tlpStatus = new System.Windows.Forms.TableLayoutPanel();
             this.flpStatusLabels = new System.Windows.Forms.FlowLayoutPanel();
@@ -50,13 +49,16 @@ namespace EVEMon
             this.tlpInfo = new System.Windows.Forms.TableLayoutPanel();
             this.upperTable = new System.Windows.Forms.TableLayoutPanel();
             this.flpCharacterInfo = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlBalance = new System.Windows.Forms.Panel();
+            this.lblBalanceText = new System.Windows.Forms.Label();
+            this.lblBalanceAmount = new System.Windows.Forms.Label();
+            this.lblBalanceISK = new System.Windows.Forms.Label();
             this.flpThrobber = new System.Windows.Forms.FlowLayoutPanel();
             this.throbberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miChangeInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.miQueryEverything = new System.Windows.Forms.ToolStripMenuItem();
             this.throbberSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.lblUpdateTimer = new System.Windows.Forms.Label();
-            this.pbCharImage = new EVEMon.Common.Controls.CharacterPortrait();
             this.lowerTable = new System.Windows.Forms.TableLayoutPanel();
             this.lblSkillHeader = new System.Windows.Forms.Label();
             this.attributesFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -88,6 +90,7 @@ namespace EVEMon
             this.showOnlyCorpOrdersMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.ordersGroupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.pbCharImage = new EVEMon.Common.Controls.CharacterPortrait();
             this.skillsPanel = new EVEMon.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Controls.MultiPanel();
@@ -110,6 +113,7 @@ namespace EVEMon
             this.tlpInfo.SuspendLayout();
             this.upperTable.SuspendLayout();
             this.flpCharacterInfo.SuspendLayout();
+            this.pnlBalance.SuspendLayout();
             this.flpThrobber.SuspendLayout();
             this.throbberContextMenu.SuspendLayout();
             this.lowerTable.SuspendLayout();
@@ -161,23 +165,6 @@ namespace EVEMon
             this.lblCorpInfo.Size = new System.Drawing.Size(82, 13);
             this.lblCorpInfo.TabIndex = 2;
             this.lblCorpInfo.Text = "Corporation Info";
-            // 
-            // lblBalance
-            // 
-            this.lblBalance.AutoSize = true;
-            this.lblBalance.BackColor = System.Drawing.SystemColors.Window;
-            this.lblBalance.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lblBalance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblBalance.Location = new System.Drawing.Point(3, 39);
-            this.lblBalance.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-            this.lblBalance.Multiline = false;
-            this.lblBalance.Name = "lblBalance";
-            this.lblBalance.ReadOnly = true;
-            this.lblBalance.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.lblBalance.Size = new System.Drawing.Size(250, 13);
-            this.lblBalance.TabIndex = 3;
-            this.lblBalance.Text = "Balance: 0.00 ISK";
-            this.lblBalance.WordWrap = false;
             // 
             // pnlTraining
             // 
@@ -367,7 +354,7 @@ namespace EVEMon
             this.upperTable.Name = "upperTable";
             this.upperTable.RowCount = 1;
             this.upperTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.upperTable.Size = new System.Drawing.Size(438, 55);
+            this.upperTable.Size = new System.Drawing.Size(438, 52);
             this.upperTable.TabIndex = 13;
             // 
             // flpCharacterInfo
@@ -380,14 +367,57 @@ namespace EVEMon
             this.flpCharacterInfo.Controls.Add(this.lblCharacterName);
             this.flpCharacterInfo.Controls.Add(this.lblBioInfo);
             this.flpCharacterInfo.Controls.Add(this.lblCorpInfo);
-            this.flpCharacterInfo.Controls.Add(this.lblBalance);
+            this.flpCharacterInfo.Controls.Add(this.pnlBalance);
             this.flpCharacterInfo.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpCharacterInfo.Location = new System.Drawing.Point(0, 0);
             this.flpCharacterInfo.Margin = new System.Windows.Forms.Padding(0);
             this.flpCharacterInfo.Name = "flpCharacterInfo";
-            this.flpCharacterInfo.Size = new System.Drawing.Size(409, 55);
+            this.flpCharacterInfo.Size = new System.Drawing.Size(409, 52);
             this.flpCharacterInfo.TabIndex = 18;
             this.flpCharacterInfo.WrapContents = false;
+            // 
+            // pnlBalance
+            // 
+            this.pnlBalance.AutoSize = true;
+            this.pnlBalance.Controls.Add(this.lblBalanceISK);
+            this.pnlBalance.Controls.Add(this.lblBalanceAmount);
+            this.pnlBalance.Controls.Add(this.lblBalanceText);
+            this.flpCharacterInfo.SetFlowBreak(this.pnlBalance, true);
+            this.pnlBalance.Location = new System.Drawing.Point(0, 39);
+            this.pnlBalance.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlBalance.Name = "pnlBalance";
+            this.pnlBalance.Size = new System.Drawing.Size(93, 13);
+            this.pnlBalance.TabIndex = 4;
+            // 
+            // lblBalanceText
+            // 
+            this.lblBalanceText.AutoSize = true;
+            this.lblBalanceText.Location = new System.Drawing.Point(0, 0);
+            this.lblBalanceText.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBalanceText.Name = "lblBalanceText";
+            this.lblBalanceText.Size = new System.Drawing.Size(49, 13);
+            this.lblBalanceText.TabIndex = 0;
+            this.lblBalanceText.Text = "Balance:";
+            // 
+            // lblBalanceAmount
+            // 
+            this.lblBalanceAmount.AutoSize = true;
+            this.lblBalanceAmount.Location = new System.Drawing.Point(45, 0);
+            this.lblBalanceAmount.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBalanceAmount.Name = "lblBalanceAmount";
+            this.lblBalanceAmount.Size = new System.Drawing.Size(28, 13);
+            this.lblBalanceAmount.TabIndex = 1;
+            this.lblBalanceAmount.Text = "0.00";
+            // 
+            // lblBalanceISK
+            // 
+            this.lblBalanceISK.AutoSize = true;
+            this.lblBalanceISK.Location = new System.Drawing.Point(69, 0);
+            this.lblBalanceISK.Margin = new System.Windows.Forms.Padding(0);
+            this.lblBalanceISK.Name = "lblBalanceISK";
+            this.lblBalanceISK.Size = new System.Drawing.Size(24, 13);
+            this.lblBalanceISK.TabIndex = 2;
+            this.lblBalanceISK.Text = "ISK";
             // 
             // flpThrobber
             // 
@@ -449,19 +479,6 @@ namespace EVEMon
             this.lblUpdateTimer.Visible = false;
             this.lblUpdateTimer.MouseHover += new System.EventHandler(this.lblUpdateTimer_MouseHover);
             // 
-            // pbCharImage
-            // 
-            this.pbCharImage.Character = null;
-            this.pbCharImage.CharacterID = ((long)(-1));
-            this.pbCharImage.Location = new System.Drawing.Point(0, 0);
-            this.pbCharImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
-            this.pbCharImage.MinimumSize = new System.Drawing.Size(128, 128);
-            this.pbCharImage.Name = "pbCharImage";
-            this.tlpInfo.SetRowSpan(this.pbCharImage, 2);
-            this.pbCharImage.Size = new System.Drawing.Size(128, 128);
-            this.pbCharImage.TabIndex = 0;
-            this.pbCharImage.TabStop = false;
-            // 
             // lowerTable
             // 
             this.lowerTable.AutoSize = true;
@@ -472,12 +489,12 @@ namespace EVEMon
             this.lowerTable.Controls.Add(this.lblSkillHeader, 0, 0);
             this.lowerTable.Controls.Add(this.attributesFlowPanel, 0, 0);
             this.lowerTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lowerTable.Location = new System.Drawing.Point(136, 60);
+            this.lowerTable.Location = new System.Drawing.Point(136, 57);
             this.lowerTable.Margin = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.lowerTable.Name = "lowerTable";
             this.lowerTable.RowCount = 1;
             this.lowerTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.lowerTable.Size = new System.Drawing.Size(438, 71);
+            this.lowerTable.Size = new System.Drawing.Size(438, 74);
             this.lowerTable.TabIndex = 15;
             // 
             // lblSkillHeader
@@ -487,7 +504,7 @@ namespace EVEMon
             this.lblSkillHeader.Location = new System.Drawing.Point(347, 0);
             this.lblSkillHeader.Margin = new System.Windows.Forms.Padding(0);
             this.lblSkillHeader.Name = "lblSkillHeader";
-            this.lblSkillHeader.Size = new System.Drawing.Size(91, 71);
+            this.lblSkillHeader.Size = new System.Drawing.Size(91, 74);
             this.lblSkillHeader.TabIndex = 2;
             this.lblSkillHeader.Text = "0 Known Skills\r\n0 Skills at Level V\r\n0 Total SP\r\n0 Clone Limit";
             this.lblSkillHeader.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -801,6 +818,19 @@ namespace EVEMon
             this.ordersGroupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ordersGroupMenu_DropDownItemClicked);
             this.ordersGroupMenu.DropDownOpening += new System.EventHandler(this.ordersGroupMenu_DropDownOpening);
             // 
+            // pbCharImage
+            // 
+            this.pbCharImage.Character = null;
+            this.pbCharImage.CharacterID = ((long)(-1));
+            this.pbCharImage.Location = new System.Drawing.Point(0, 0);
+            this.pbCharImage.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.pbCharImage.MinimumSize = new System.Drawing.Size(128, 128);
+            this.pbCharImage.Name = "pbCharImage";
+            this.tlpInfo.SetRowSpan(this.pbCharImage, 2);
+            this.pbCharImage.Size = new System.Drawing.Size(128, 128);
+            this.pbCharImage.TabIndex = 0;
+            this.pbCharImage.TabStop = false;
+            // 
             // skillsPanel
             // 
             this.skillsPanel.BackColor = System.Drawing.SystemColors.Window;
@@ -984,6 +1014,8 @@ namespace EVEMon
             this.upperTable.PerformLayout();
             this.flpCharacterInfo.ResumeLayout(false);
             this.flpCharacterInfo.PerformLayout();
+            this.pnlBalance.ResumeLayout(false);
+            this.pnlBalance.PerformLayout();
             this.flpThrobber.ResumeLayout(false);
             this.flpThrobber.PerformLayout();
             this.throbberContextMenu.ResumeLayout(false);
@@ -1015,7 +1047,6 @@ namespace EVEMon
         private System.Windows.Forms.Label lblCharacterName;
         private System.Windows.Forms.Label lblBioInfo;
         private System.Windows.Forms.Label lblCorpInfo;
-        private System.Windows.Forms.RichTextBox lblBalance;
         private MainWindowSkillsList skillsList;
         private System.Windows.Forms.Panel pnlTraining;
         private System.Windows.Forms.Label lblTrainingEst;
@@ -1081,5 +1112,9 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator tsOptionsSeparator;
         private System.Windows.Forms.ToolStripMenuItem showOnlyCharOrdersMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlyCorpOrdersMenuItem;
+        private System.Windows.Forms.Panel pnlBalance;
+        private System.Windows.Forms.Label lblBalanceISK;
+        private System.Windows.Forms.Label lblBalanceAmount;
+        private System.Windows.Forms.Label lblBalanceText;
     }
 }

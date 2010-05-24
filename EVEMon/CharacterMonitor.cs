@@ -201,17 +201,17 @@ namespace EVEMon
             lblCorpInfo.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", m_character.CorporationName);
 
             // Balance
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "Balance: {0:N} ISK", m_character.Balance);
+            lblBalanceAmount.Text = String.Format(CultureConstants.DefaultCulture, "{0:N}", m_character.Balance);
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter != null && ccpCharacter.HasInsufficientBalance)
             {
-                lblBalance.Select(9, lblBalance.TextLength);
-                lblBalance.SelectionColor = Color.Orange;
-                lblBalance.SelectionFont = new Font(Font, FontStyle.Bold);
-                lblBalance.Select(lblBalance.TextLength - 4, lblBalance.TextLength);
-                lblBalance.SelectionColor = SystemColors.ControlText;
-                lblBalance.SelectionFont = new Font(Font, FontStyle.Regular);
+                lblBalanceAmount.ForeColor = Color.Orange;
+                lblBalanceAmount.Font = new Font(Font, FontStyle.Bold);
             }
+
+            //Assigning new positions to labels as the designer fails to position them correctly
+            lblBalanceAmount.Location = new Point(lblBalanceText.Width - 4);
+            lblBalanceISK.Location = new Point(lblBalanceAmount.Location.X + lblBalanceAmount.Width - 4);
 
             // Name
             lblCharacterName.Text = m_character.AdornedName;
@@ -984,7 +984,7 @@ namespace EVEMon
         # endregion
 
 
-        # region Control/Component Event Handlers
+        # region Multi Panel Control/Component Event Handlers
         /// <summary>
         /// On opening we create the menu items for "Group By..." in market orders panel.
         /// </summary>
