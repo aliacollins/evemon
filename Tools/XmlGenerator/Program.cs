@@ -1345,10 +1345,7 @@ namespace EVEMon.XmlGenerator
                     case 29267: // Apotheosis Blueprint
                         item.MarketGroupID = 20001;
                         break;
-                    case 22330: // 'Alpha' Codebreaker I Blueprint
-                    case 22328: // 'Codex' Codebreaker I Blueprint
-                    case 22326: // 'Daemon' Codebreaker I Blueprint
-                    case 22332: // 'Libram' Codebreaker I Blueprint
+                    case 22924: // 'Wild' Miner I Blueprint
                         item.MarketGroupID = 20003;
                         break;
                     case 17704: // Imperial Navy Slicer Blueprint
@@ -1366,6 +1363,7 @@ namespace EVEMon.XmlGenerator
                     case 17719: // Phantasm Blueprint
                     case 21098: // Goru's Shuttle Blueprint
                     case 21629: // Guristas Shuttle Blueprint
+                    case 21842: // Gallente Mining Laser Blueprint
                     case 30843: // Interbus Shuttle Blueprint
                         item.MarketGroupID = 20004;
                         break;
