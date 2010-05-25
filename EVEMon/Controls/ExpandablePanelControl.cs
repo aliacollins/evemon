@@ -483,12 +483,13 @@ namespace EVEMon.Controls
             // It can be set to a manual height by replacing "Height" with the number of your choice
             m_expandedHeight = Height;
 
-            // Set the animation speed
-            UpdateAnimationSpeed();
-
             // Set the panel status for startup
+            m_animationStep = m_expandedHeight;
             m_status = (m_beginExpanded ? PanelStatus.Collapsed : PanelStatus.Expanded);
             SwitchStatus();
+
+            // Set the animation speed
+            UpdateAnimationSpeed();
 
             base.OnCreateControl();
         }

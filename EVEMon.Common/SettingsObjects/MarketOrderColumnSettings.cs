@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
+
 using EVEMon.Common;
 
 namespace EVEMon.Common.SettingsObjects

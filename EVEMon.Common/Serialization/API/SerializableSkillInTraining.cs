@@ -102,8 +102,11 @@ namespace EVEMon.Common.Serialization.API
         /// <param name="drift"></param>
         void ISynchronizableWithLocalClock.SynchronizeWithLocalClock(TimeSpan drift)
         {
-            if (!String.IsNullOrEmpty(TrainingStartTime)) StartTime -= drift;
-            if (!String.IsNullOrEmpty(TrainingEndTime)) EndTime -= drift;
+            if (!String.IsNullOrEmpty(TrainingStartTime))
+                StartTime -= drift;
+
+            if (!String.IsNullOrEmpty(TrainingEndTime))
+                EndTime -= drift;
         }
 
         #endregion

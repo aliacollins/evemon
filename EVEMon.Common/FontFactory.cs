@@ -11,9 +11,6 @@ namespace EVEMon.Common
     /// </summary>
     public static class FontFactory
     {
-
-        
-        
         /// <summary>
         /// Variable to store default font in
         /// </summary>

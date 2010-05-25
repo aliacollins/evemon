@@ -95,7 +95,6 @@ namespace EVEMon.Common
             if (m_isPaused)
                 return;
 
-            DateTime now = DateTime.UtcNow;
             List<QueuedSkill> skillsCompleted = new List<QueuedSkill>();
 
             // Pops all the completed skills
@@ -104,14 +103,12 @@ namespace EVEMon.Common
                 QueuedSkill skill = m_items[0];
 
                 // If the skill is not completed, we jump out of the loop
-                if (skill.EndTime > now)
+                if (skill.EndTime > DateTime.UtcNow)
                     break;
 
                 // The skill has been completed
                 if (skill.Skill != null)
-                {
                     skill.Skill.MarkAsCompleted();
-                }
 
                 skillsCompleted.Add(skill);
                 m_lastCompleted = skill;
@@ -119,9 +116,7 @@ namespace EVEMon.Common
 
                 // Sends an email alert
                 if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
-                {
                     Emailer.SendSkillCompletionMail(m_items, skill, m_character);
-                }
 
                 // Sends a notification
                 EveClient.Notifications.NotifySkillCompletion(m_character, skillsCompleted);
@@ -129,9 +124,7 @@ namespace EVEMon.Common
 
             // At least one skill completed ?
             if (skillsCompleted.Count != 0)
-            {
                 EveClient.OnCharacterQueuedSkillsCompleted(m_character, skillsCompleted);
-            }
         }
 
         /// <summary>
@@ -167,9 +160,7 @@ namespace EVEMon.Common
                 // When the skill queue is paused, startTime and endTime are empty in the XML document.
                 // As a result, the serialization leaves the DateTime with its default value.
                 if (serialSkill.EndTime == default(DateTime))
-                {
                     m_isPaused = true;
-                }
 
                 // Creates the skill queue
                 m_items.Add(new QueuedSkill(m_character, serialSkill, m_isPaused, ref startTimeWhenPaused));

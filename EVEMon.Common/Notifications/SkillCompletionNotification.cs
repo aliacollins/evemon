@@ -60,7 +60,8 @@ namespace EVEMon.Common.Notifications
             var skills = ((SkillCompletionNotification)other).m_skills;
             foreach (var skill in skills)
             {
-                if (!m_skills.Contains(skill)) m_skills.Add(skill);
+                if (!m_skills.Contains(skill))
+                    m_skills.Add(skill);
             }
             UpdateDescription();
         }

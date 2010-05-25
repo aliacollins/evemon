@@ -77,9 +77,7 @@ namespace EVEMon.Common
             foreach (var entry in entries)
             {
                 if (entry.CharacterSkill.Level < entry.Level && !m_plan.IsPlanned(entry.Skill, entry.Level))
-                {
                     entriesToAdd.Add(entry);
-                }
             }
 
             // Check which is the best level to train
@@ -110,6 +108,7 @@ namespace EVEMon.Common
                 // Stop when we reached the desired entries count
                 if (entriesCount == bestEntriesCount)
                     break;
+
                 entriesCount++;
 
                 m_items.Add(entry);
