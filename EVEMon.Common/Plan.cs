@@ -1,17 +1,18 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Text;
-using EVEMon.Common.Serialization;
+using System.Threading;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using EVEMon.Common.Data;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Serialization.API;
-using System.Threading;
+using EVEMon.Common.Serialization;
 using EVEMon.Common.SettingsObjects;
-using System.Collections.ObjectModel;
-using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -173,10 +174,12 @@ namespace EVEMon.Common
             public void PerformSuppression(bool removePrerequisites)
             {
                 // Checks this operation is an addition
-                if (m_type == PlanOperations.Addition) throw new InvalidOperationException("The represented operation is an addition.");
+                if (m_type == PlanOperations.Addition)
+                    throw new InvalidOperationException("The represented operation is an addition.");
 
                 // No entries ? Quit
-                if (m_skillsToRemove.Count == 0) return;
+                if (m_skillsToRemove.Count == 0)
+                    return;
 
 
                 using (m_plan.SuspendingEvents())
@@ -185,7 +188,8 @@ namespace EVEMon.Common
                     foreach (PlanEntry entry in m_allEntriesToRemove)
                     {
                         var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                        if (existingEntry != null) m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
+                        if (existingEntry != null)
+                            m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
                     }
 
                     // Also remove the prerequisites if the caller requested it.
@@ -194,7 +198,8 @@ namespace EVEMon.Common
                         foreach (PlanEntry entry in m_removablePrerequisites)
                         {
                             var existingEntry = m_plan.GetEntry(entry.Skill, entry.Level);
-                            if (existingEntry != null) m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
+                            if (existingEntry != null)
+                                m_plan.RemoveCore(m_plan.IndexOf(existingEntry));
                         }
                     }
                 }
@@ -207,10 +212,12 @@ namespace EVEMon.Common
             public void PerformAddition(int priority)
             {
                 // Checks this operation is an addition
-                if (m_type == PlanOperations.Suppression) throw new InvalidOperationException("The represented operation is a suppression.");
+                if (m_type == PlanOperations.Suppression)
+                    throw new InvalidOperationException("The represented operation is a suppression.");
 
                 // No entries ? Quit
-                if (m_allEntriesToAdd.Count == 0) return;
+                if (m_allEntriesToAdd.Count == 0)
+                    return;
 
                 // Fixes priority
                 priority = Math.Max(priority, m_highestPriorityForAddition);
@@ -236,7 +243,8 @@ namespace EVEMon.Common
                             }
 
                             // Update the priority
-                            if (existingEntry.Priority > priority) existingEntry.Priority = priority;
+                            if (existingEntry.Priority > priority)
+                                existingEntry.Priority = priority;
                         }
                         else
                         {
@@ -331,7 +339,8 @@ namespace EVEMon.Common
             m_invalidEntries = invalidEntries.ToArray();
 
             // Notify name change
-            if (m_isConnected) EveClient.OnPlanNameChanged(this);
+            if (m_isConnected)
+                EveClient.OnPlanNameChanged(this);
         }
 
         /// <summary>
@@ -365,9 +374,7 @@ namespace EVEMon.Common
 
                 // Remapping point
                 if (entry.Remapping != null)
-                {
                     serialEntry.Remapping = entry.Remapping.Export();
-                }
 
                 serial.Entries.Add(serialEntry);
             }
@@ -407,7 +414,8 @@ namespace EVEMon.Common
             set 
             { 
                 m_name = value;
-                if (m_isConnected) EveClient.OnPlanNameChanged(this);
+                if (m_isConnected)
+                    EveClient.OnPlanNameChanged(this);
             }
         }
 
@@ -453,10 +461,8 @@ namespace EVEMon.Common
 
             return new DisposableWithCallback(() =>
                 {
-                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0)
-                    {
-                        if (m_change != PlanChange.None) OnChanged(m_change);
-                    }
+                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 && m_change != PlanChange.None)
+                        OnChanged(m_change);
                 });
         }
 
@@ -478,15 +484,12 @@ namespace EVEMon.Common
 
             // Add missing prerequisites
             if ((change & PlanChange.Prerequisites) != PlanChange.None)
-            {
                 FixPrerequisites();
-            }
 
             // Notify changes
             if ((change & PlanChange.Notification) != PlanChange.None)
-            {
-                if (m_isConnected) EveClient.OnPlanChanged(this);
-            }
+                if (m_isConnected)
+                    EveClient.OnPlanChanged(this);
 
         }
         #endregion
@@ -515,7 +518,8 @@ namespace EVEMon.Common
         public void PlanTo(StaticSkill skill, int level, int priority, string noteForNewEntries)
         {
             int plannedLevel = GetPlannedLevel(skill);
-            if (level == plannedLevel) return;
+            if (level == plannedLevel)
+                return;
 
             using (SuspendingEvents())
             {
@@ -537,7 +541,8 @@ namespace EVEMon.Common
                     for (int i = 5; i > level; i--)
                     {
                         PlanEntry entry = GetEntry(skill, i);
-                        if (entry == null) continue;
+                        if (entry == null)
+                            continue;
 
                         RemoveCore(m_items.IndexOf(entry));
                     }
@@ -568,7 +573,8 @@ namespace EVEMon.Common
         public IPlanOperation TryPlanTo(Skill skill, int level, string noteForNewEntries)
         {
             int plannedLevel = GetPlannedLevel(skill);
-            if (level == plannedLevel) return new PlanOperation(this);
+            if (level == plannedLevel)
+                return new PlanOperation(this);
 
             // Addition
             if (level > plannedLevel)
@@ -626,7 +632,10 @@ namespace EVEMon.Common
             // Creates a plan where the entries and their dependencies have been removed
             var freePlan = new PlanScratchpad(m_character);
             freePlan.RebuildPlanFrom(m_items);
-            foreach (var entry in allEntriesToRemove) freePlan.Remove(entry);
+            foreach (var entry in allEntriesToRemove)
+            {
+                freePlan.Remove(entry);
+            }
 
             // Gather removables prerequisites now useless
             var removablePrerequisites = new List<PlanEntry>();
@@ -635,14 +644,17 @@ namespace EVEMon.Common
                 foreach (var prereq in m_items)
                 {
                     // Skip if this skill was not dependent of the prereq.
-                    if (!entryToRemove.IsDependentOf(prereq)) continue;
+                    if (!entryToRemove.IsDependentOf(prereq))
+                        continue;
 
                     // Skip if still required
-                    if (freePlan.GetMinimumLevel(prereq.Skill) != 0) continue;
+                    if (freePlan.GetMinimumLevel(prereq.Skill) != 0)
+                        continue;
 
                     // Add the entry if its type is Prerequisite
                     var prereqEntry = freePlan.GetEntry(prereq.Skill, prereq.Level);
-                    if (prereqEntry == null) continue;
+                    if (prereqEntry == null)
+                        continue;
 
                     // Adds it as a removable prerequisite
                     if (prereqEntry.Type == PlanEntryType.Prerequisite)
@@ -819,24 +831,5 @@ namespace EVEMon.Common
 
             return planSelectedPlusLearning.TotalTrainingTime;
         }
-    }
-
-    /// <summary>
-    /// Represents the type of a plan operation
-    /// </summary>
-    public enum PlanOperations
-    {
-        /// <summary>
-        /// None, there is nothing to do.
-        /// </summary>
-        None,
-        /// <summary>
-        /// The operation is an addition.
-        /// </summary>
-        Addition,
-        /// <summary>
-        /// The operation is a suppression.
-        /// </summary>
-        Suppression
     }
 }

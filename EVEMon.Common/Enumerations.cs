@@ -7,42 +7,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4, matching the attributes order on the ingame character sheets.
-    /// </summary>
-    public enum EveAttribute
-    {
-        [XmlEnum("perception")]
-        Perception = 1,
-        [XmlEnum("memory")]
-        Memory = 4,
-        [XmlEnum("willpower")]
-        Willpower = 3,
-        [XmlEnum("intelligence")]
-        Intelligence = 0,
-        [XmlEnum("charisma")]
-        Charisma = 2,
-        [XmlEnum("none")]
-        None = -1
-    }
-
-    /// <summary>
-    /// Enumerations of the implants slots. None is -1, other range from 0 to 4, matching the order of the implants ingame
-    /// </summary>
-    public enum ImplantSlots
-    {
-        None = -1,
-        Perception = 0,
-        Memory = 1,
-        Willpower = 2,
-        Intelligence = 3,
-        Charisma = 4,
-        Slot6 = 5,
-        Slot7 = 6,
-        Slot8 = 7,
-        Slot9 = 8,
-        Slot10 = 9
-    }
+    # region Flag Enumerations
 
     /// <summary>
     /// Flags for the races.
@@ -66,9 +31,8 @@ namespace EVEMon.Common
         Ore = 64,
 
         None = 0,
-        All = Amarr|Minmatar|Caldari|Gallente|Faction|Jove|Ore
+        All = Amarr | Minmatar | Caldari | Gallente | Faction | Jove | Ore
     }
-
 
     /// <summary>
     /// Represents the metagroup of an item
@@ -127,7 +91,7 @@ namespace EVEMon.Common
     /// <summary>
     /// Represents the options one can use with <see cref="CharacterSchartchpad.Learn()"/>. Those are only optimizations
     /// </summary>
-    [Flags] 
+    [Flags]
     public enum LearningOptions
     {
         /// <summary>
@@ -150,6 +114,48 @@ namespace EVEMon.Common
         /// Ignore the changes when the given target level is lower than the current one
         /// </summary>
         UpgradeOnly = 8
+    }
+
+    # endregion
+
+
+    #region Simple Enumerations
+
+    /// <summary>
+    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4, matching the attributes order on the ingame character sheets.
+    /// </summary>
+    public enum EveAttribute
+    {
+        [XmlEnum("perception")]
+        Perception = 1,
+        [XmlEnum("memory")]
+        Memory = 4,
+        [XmlEnum("willpower")]
+        Willpower = 3,
+        [XmlEnum("intelligence")]
+        Intelligence = 0,
+        [XmlEnum("charisma")]
+        Charisma = 2,
+        [XmlEnum("none")]
+        None = -1
+    }
+
+    /// <summary>
+    /// Enumerations of the implants slots. None is -1, other range from 0 to 4, matching the order of the implants ingame
+    /// </summary>
+    public enum ImplantSlots
+    {
+        None = -1,
+        Perception = 0,
+        Memory = 1,
+        Willpower = 2,
+        Intelligence = 3,
+        Charisma = 4,
+        Slot6 = 5,
+        Slot7 = 6,
+        Slot8 = 7,
+        Slot9 = 8,
+        Slot10 = 9
     }
 
     /// <summary>
@@ -234,30 +240,62 @@ namespace EVEMon.Common
         FromPreviousLevelOrCurrent
     }
 
+    /// <summary>
+    /// Represents the type of a plan operation
+    /// </summary>
+    public enum PlanOperations
+    {
+        /// <summary>
+        /// None, there is nothing to do.
+        /// </summary>
+        None,
+        /// <summary>
+        /// The operation is an addition.
+        /// </summary>
+        Addition,
+        /// <summary>
+        /// The operation is a suppression.
+        /// </summary>
+        Suppression
+    }
+
+    /// <summary>
+    /// Describes whether this entry is a prerequisite of another entry 
+    /// </summary>
+    public enum PlanEntryType
+    {
+        /// <summary>
+        /// This entry is a top-level one, no entries depend on it.
+        /// </summary>
+        Planned,
+        /// <summary>
+        /// This entry is required by another entry
+        /// </summary>
+        Prerequisite
+    }
 
     /// <summary>
     /// Represents a server status
     /// </summary>
-    public enum ServerStatus 
-    { 
+    public enum ServerStatus
+    {
         /// <summary>
         /// The server is offline
         /// </summary>
-        Offline, 
+        Offline,
         /// <summary>
         /// The server is online
         /// </summary>
-        Online, 
+        Online,
         /// <summary>
         /// The API couldn't be queried or has not been queried yet.
         /// </summary>
-        Unknown, 
+        Unknown,
         /// <summary>
         /// The server's status checks have been disabled.
         /// </summary>
-        CheckDisabled 
+        CheckDisabled
     }
-
 
     /// <summary>
     /// Represents the status of the Internet connection
@@ -354,6 +392,10 @@ namespace EVEMon.Common
         ResearchingTimeProductivity = 5,
         Invention = 6,
     }
+    #endregion
+
+
+    #region Enumerations with attributes
 
     /// <summary>
     /// Represents the activity of a blueprint.
@@ -472,4 +514,6 @@ namespace EVEMon.Common
         /// </summary>
         CharacterSkillInTraining
     }
+
+    #endregion
 }

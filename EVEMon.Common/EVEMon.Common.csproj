@@ -297,6 +297,7 @@
     <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
     <Compile Include="Notifications\NotificationPriority.cs" />
     <Compile Include="ObsoleteRemovalPolicy.cs" />
+    <Compile Include="PlanEntryExtensions.cs" />
     <Compile Include="PlanScratchpad.cs" />
     <Compile Include="Controls\CharacterPortrait.cs">
       <SubType>UserControl</SubType>

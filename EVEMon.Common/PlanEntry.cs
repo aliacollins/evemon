@@ -27,7 +27,6 @@ namespace EVEMon.Common
         private string m_notes;
 
         // Statistics computed on Plan.UpdateTrainingTimes
-        private TimeSpan m_trainingTimeWithLearning;
         private TimeSpan m_naturalTrainingTime;
         private TimeSpan m_oldTrainingTime;
         private TimeSpan m_trainingTime;
@@ -35,7 +34,7 @@ namespace EVEMon.Common
         private DateTime m_endTime;
         private int m_spPerHour;
         private int m_totalSP;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -113,12 +112,13 @@ namespace EVEMon.Common
         /// </summary>
         public Skill CharacterSkill
         {
-            get 
+            get
             {
                 var character = m_owner.Character as Character;
                 if (character == null)
                     return null;
-                return m_skill.ToCharacter(character); 
+
+                return m_skill.ToCharacter(character);
             }
         }
 
@@ -154,9 +154,9 @@ namespace EVEMon.Common
         public string Notes
         {
             get { return m_notes; }
-            set 
-            { 
-                m_notes = value; 
+            set
+            {
+                m_notes = value;
                 if (m_owner != null)
                     m_owner.OnChanged(BasePlan.PlanChange.Notification);
             }
@@ -168,7 +168,7 @@ namespace EVEMon.Common
         public RemappingPoint Remapping
         {
             get { return m_remapping; }
-            set 
+            set
             {
                 m_remapping = value;
                 if (m_owner != null)
@@ -201,7 +201,7 @@ namespace EVEMon.Common
                 }
                 else
                 {
-                    return "Multiple (" + m_planGroups.Count + ")";
+                    return String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
                 }
             }
         }
@@ -216,12 +216,12 @@ namespace EVEMon.Common
                 var character = Character;
 
                 // Checks all the prerequisites are trained
-                bool Prereqmet = m_skill.Prerequisites.All(x => character.GetSkillLevel(x.Skill) >= x. Level);
-                if (Prereqmet)
-                {
-                    // Checks the skill has the previous level
-                    if (m_level != 0 && character.GetSkillLevel(m_skill) >= m_level - 1) return true;
-                }
+                bool Prereqmet = m_skill.Prerequisites.All(x => character.GetSkillLevel(x.Skill) >= x.Level);
+
+                // Checks the skill has the previous level
+                if (Prereqmet && m_level != 0 && character.GetSkillLevel(m_skill) >= m_level - 1)
+                    return true;
+
                 return false;
             }
         }
@@ -233,15 +233,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static StaticSkill GetSkill(SerializablePlanEntry serial)
         {
-            StaticSkill skill = null;
-
             // Try get skill by its ID
-            skill = StaticSkills.GetSkillById(serial.ID);
+            StaticSkill skill = StaticSkills.GetSkillById(serial.ID);
 
             // We failed? Try get skill by its name
-            if(skill == null)
+            if (skill == null)
                 skill = StaticSkills.GetSkillByName(serial.SkillName);
-            
+
             return skill;
         }
 
@@ -256,13 +254,6 @@ namespace EVEMon.Common
         }
 
         #region Computations done when UpdateTrainingTime is called
-        /// <summary>
-        /// Gets the training time computed with preceding learning skills.
-        /// </summary>
-        public TimeSpan TrainingTimeWithLearning
-        {
-            get { return m_trainingTimeWithLearning; }
-        }
 
         /// <summary>
         /// Gets the training time computed the last time the <see cref="Plan.UpdateStatistics"/> was called.
@@ -328,7 +319,7 @@ namespace EVEMon.Common
             get
             {
                 if (m_level == (CharacterSkill.Level + 1))
-                    return (float) CharacterSkill.FractionCompleted;
+                    return (float)CharacterSkill.FractionCompleted;
 
                 //Not partially trained? Then it's 0.0
                 return 0.0f;
@@ -346,9 +337,8 @@ namespace EVEMon.Common
             var sp = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
             m_totalSP = character.SkillPoints + sp;
             m_trainingTime = character.GetTrainingTime(m_skill, m_level);
-            m_trainingTimeWithLearning = character.GetTrainingTimeWithLearning(m_owner, m_skill, m_level);
             m_naturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
-            m_spPerHour = (int) Math.Round(character.GetBaseSPPerHour(m_skill)) * character.GetNewCharacterSkillTrainingBonus(sp);
+            m_spPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill)) * character.GetNewCharacterSkillTrainingBonus(sp);
             m_endTime = time + m_trainingTime;
             m_startTime = time;
             time = m_endTime;
@@ -379,7 +369,8 @@ namespace EVEMon.Common
         /// <returns>Hull Upgrades IV</returns>
         public override string ToString()
         {
-            return m_skill.Name + " " + EVEMon.Common.Skill.GetRomanForInt(m_level);
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                m_skill.Name, EVEMon.Common.Skill.GetRomanForInt(m_level));
         }
 
         /// <summary>
@@ -418,116 +409,6 @@ namespace EVEMon.Common
         public static implicit operator StaticSkillLevel(PlanEntry entry)
         {
             return new StaticSkillLevel(entry.Skill, entry.Level);
-        }
-    }
-
-    /// <summary>
-    /// Describes whether this entry is a prerequisite of another entry 
-    /// </summary>
-    public enum PlanEntryType
-    {
-        /// <summary>
-        /// This entry is a top-level one, no entries depend on it.
-        /// </summary>
-        Planned,
-        /// <summary>
-        /// This entry is required by another entry
-        /// </summary>
-        Prerequisite
-    }
-
-    public static class PlanEntryExtensions
-    {
-        /// <summary>
-        /// Gets the total number of unique skills (two levels of same skill counts for one unique skill).
-        /// </summary>
-        public static int GetUniqueSkillsCount(this IEnumerable<PlanEntry> items)
-        {
-            int count = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through entries
-            foreach (var pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index])
-                {
-                    counted[index] = true;
-                    count++;
-                }
-            }
-
-            // Return the count
-            return count;
-        }
-
-        /// <summary>
-        /// Gets the number of not known skills selected (two levels of same skill counts for one unique skill).
-        /// </summary>
-        public static int GetNotKnownSkillsCount(this IEnumerable<PlanEntry> items)
-        {
-            int count = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through selection
-            foreach (var pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                {
-                    counted[index] = true;
-                    count++;
-                }
-            }
-
-            // Return the count
-            return count;
-        }
-
-        /// <summary>
-        /// Gets the total cost of the skill books, in ISK
-        /// </summary>
-        public static long GetTotalBooksCost(this IEnumerable<PlanEntry> items)
-        {
-            long cost = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through entries
-            foreach (var pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index])
-                {
-                    counted[index] = true;
-                    cost += pe.Skill.Cost;
-                }
-            }
-
-            // Return the cost
-            return cost;
-        }
-
-        /// <summary>
-        /// Gets the cost of the not known skill books, in ISK
-        /// </summary>
-        public static long GetNotKnownSkillBooksCost(this IEnumerable<PlanEntry> items)
-        {
-            long cost = 0;
-            bool[] counted = new bool[StaticSkills.ArrayIndicesCount];
-
-            // Scroll through entries
-            foreach (var pe in items)
-            {
-                int index = pe.Skill.ArrayIndex;
-                if (!counted[index] && !pe.CharacterSkill.IsKnown && !pe.CharacterSkill.IsOwned)
-                {
-                    counted[index] = true;
-                    cost += pe.Skill.Cost;
-                }
-            }
-
-            // Return the cost
-            return cost;
         }
     }
 }
