@@ -19,6 +19,12 @@ namespace EVEMon.Common.Controls
         public MessageBoxCustom()
         {
             InitializeComponent();
+
+            msgText.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
+            cbOption.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
+            button1.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
+            button2.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
+            button3.Font = FontFactory.GetFont("Segoe UI", 9f, FontStyle.Regular, GraphicsUnit.Point);
         }
 
 

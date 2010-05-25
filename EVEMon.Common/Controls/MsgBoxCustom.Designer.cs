@@ -47,7 +47,6 @@
             // 
             this.cbOption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbOption.AutoSize = true;
-            this.cbOption.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.cbOption.Location = new System.Drawing.Point(12, 17);
             this.cbOption.Name = "cbOption";
             this.cbOption.Size = new System.Drawing.Size(77, 19);
@@ -59,7 +58,6 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Location = new System.Drawing.Point(299, 9);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(90, 27);
@@ -70,7 +68,6 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.button1.Location = new System.Drawing.Point(395, 9);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 27);
@@ -104,7 +101,6 @@
             // 
             this.msgText.AutoEllipsis = true;
             this.msgText.AutoSize = true;
-            this.msgText.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.msgText.Location = new System.Drawing.Point(65, 0);
             this.msgText.MaximumSize = new System.Drawing.Size(420, 0);
             this.msgText.Name = "msgText";
@@ -129,7 +125,6 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.Location = new System.Drawing.Point(203, 9);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(90, 27);
