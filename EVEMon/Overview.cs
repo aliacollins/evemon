@@ -51,7 +51,8 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             UpdateContent();
         }
@@ -87,6 +88,7 @@ namespace EVEMon
                 {
                     characters.AddRange(EveClient.MonitoredCharacters);
                 }
+
                 foreach (var character in characters)
                 {
                     // Creates a control and adds it
@@ -111,21 +113,20 @@ namespace EVEMon
         /// </summary>
         internal void CleanUp()
         {
-            // Backup the controls list
-            Control[] oldControls = new Control[this.Controls.Count];
-            this.Controls.CopyTo(oldControls, 0);
+            // Dispose every one of the control to prevent timer's execution
+            foreach (Control item in this.Controls)
+            {
+                if (item == labelNoCharacters)
+                    continue;
+                
+                item.Click -= new EventHandler(item_Click);
+                item.Dispose();
+            }
 
             // Clear the controls list
             this.Controls.Clear();
             this.Controls.Add(labelNoCharacters);
 
-            // Dispose every one of the control to prevent timer's execution
-            foreach (Control item in oldControls)
-            {
-                if (item == labelNoCharacters) continue;
-                item.Click -= new EventHandler(item_Click);
-                item.Dispose();
-            }
         }
 
         /// <summary>
@@ -142,7 +143,11 @@ namespace EVEMon
             {
                 // Check there is at least one control
                 int numControls = this.Controls.Count - 1;
-                if (numControls <= 0) return;
+                if (numControls <= 0)
+                    return;
+
+                // Reset the scroll bar position
+                this.VerticalScroll.Value = 0;
 
                 // Retrieve the item width (should be the same for all controls) and compute the item and row width
                 var firstItem = (OverviewItem)this.Controls[1];
@@ -164,7 +169,8 @@ namespace EVEMon
                 foreach (Control ctl in this.Controls)
                 {
                     // Skip the "no characters" label
-                    if (ctl == labelNoCharacters) continue;
+                    if (ctl == labelNoCharacters)
+                        continue;
 
                     // Add the item to the row
                     rowHeight = Math.Max(rowHeight, ctl.PreferredSize.Height);
@@ -172,7 +178,9 @@ namespace EVEMon
                     index++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != this.Controls.Count) continue;
+                    if (rowIndex != numColumns && index != this.Controls.Count)
+                        continue;
+
                     height += rowHeight + padding;
                     rowHeight = 0;
                     rowIndex = 0;
@@ -190,7 +198,8 @@ namespace EVEMon
                 foreach (Control ctl in this.Controls)
                 {
                     // Skip the "no characters" label
-                    if (ctl == labelNoCharacters) continue;
+                    if (ctl == labelNoCharacters)
+                        continue;
 
                     // Set the control bound
                     ctl.SetBounds(marginH + rowIndex * (itemWidth + padding), height, ctl.PreferredSize.Width, ctl.PreferredSize.Height);
@@ -198,7 +207,9 @@ namespace EVEMon
                     rowIndex++;
 
                     // Skip if row not complete yet
-                    if (rowIndex != numColumns && index != this.Controls.Count) continue;
+                    if (rowIndex != numColumns && index != this.Controls.Count)
+                        continue;
+
                     height += rowHeight + padding;
                     rowHeight = 0;
                     rowIndex = 0;
@@ -252,9 +263,7 @@ namespace EVEMon
         {
             var item = sender as OverviewItem;
             if (this.CharacterClicked != null)
-            {
                 this.CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
-            }
         }
         #endregion
     }
