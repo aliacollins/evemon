@@ -58,7 +58,7 @@ namespace EVEMon.XmlGenerator
         private static Bag<CrtRelationships> s_crtRelationships;
 
 
-        #region Constructor
+        #region Initilization
 
         static void Main(string[] args)
         {
@@ -390,6 +390,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Items Datafile
 
@@ -894,6 +895,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Skills Datafile
 
         /// <summary>
@@ -1023,6 +1025,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Certificates Datafile
         
@@ -1195,6 +1198,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Blueprints Datafile
 
@@ -1658,6 +1662,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Geography Datafile
 
         /// <summary>
@@ -1760,6 +1765,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Reprocessing Datafile
 
         /// <summary>
@@ -1808,6 +1814,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region MD5Sums
 
         /// <summary>
@@ -1819,6 +1826,7 @@ namespace EVEMon.XmlGenerator
         }
         
         #endregion
+
 
         #region Helper Methods
 
@@ -1851,5 +1859,6 @@ namespace EVEMon.XmlGenerator
             Console.Write(m_text);
         }
         #endregion
+
     }
 }
