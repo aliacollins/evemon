@@ -197,9 +197,7 @@ namespace EVEMon.Common
                 }
 
                 if (outGroup.Skills.Count != 0)
-                {
                     serial.SkillGroups.Add(outGroup);
-                }
             }
 
             // Serializes to XML and apply a XSLT to generate the HTML doc.
@@ -222,9 +220,7 @@ namespace EVEMon.Common
             var serial = character.Export();
 
             if (plan != null)
-            {
-                serial.Skills = character.Skills.Where(x => x.IsKnown).Select(x => GetMergedSkill(plan, x)).Where(x => x.Level > 0).ToList();
-            }
+                serial.Skills = character.Skills.Where(x => x.IsKnown).Select(x => GetMergedSkill(plan, x)).ToList();
 
             var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
             return Util.GetXMLStringRepresentation(doc);
@@ -240,9 +236,7 @@ namespace EVEMon.Common
             // Try to use the last XML character sheet downloaded from CCP
             var doc = LocalXmlCache.GetCharacterXml(character.Name);
             if (doc != null)
-            {
                 return Util.GetXMLStringRepresentation(doc);
-            }
 
             // Displays an error
             return null;
@@ -285,9 +279,7 @@ namespace EVEMon.Common
                 }
 
                 if (skillGroupAppended)
-                {
                     result.AppendFormat(CultureConstants.DefaultCulture, "Total Skillpoints in Group: {0}{1}", skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
-                }
             }
 
             result.AppendLine();
