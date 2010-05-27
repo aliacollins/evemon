@@ -373,7 +373,7 @@ namespace EVEMon.Common
                     return false;
 
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                foreach (var skill in skillQueue)
+                foreach (var skill in skillQueue.Where(x=> x.Skill != null))
                 {
                     if (m_staticData.ID == skill.Skill.ID)
                         return true;

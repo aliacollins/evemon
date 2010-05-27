@@ -256,25 +256,26 @@ namespace EVEMon
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             float percentComplete = 0;
-            int skillPoints = skill.Skill.SkillPoints;
-            int skillPointsToNextLevel = skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
-            
-            if (skill.Level == skill.Skill.Level + 1)
+            int skillPoints = (skill.Skill == null ? 0 : skill.Skill.SkillPoints);
+            int skillPointsToNextLevel = (skill.Skill == null ? 0 :
+                skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5)));
+
+            if (skill.Skill != null && skill.Level == skill.Skill.Level + 1)
             {
                 percentComplete = skill.Skill.FractionCompleted;
             }
 
-            if (skill.Level > skill.Skill.Level + 1)
+            if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
             {
                 skillPoints = skill.CurrentSP;
             }
 
-            string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Skill.Rank);
+            string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", (skill.Skill == null ? 0 : skill.Skill.Rank));
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0:0}% Done", percentComplete * 100);
 
-            Size skillNameSize = TextRenderer.MeasureText(g, skill.Skill.Name, m_boldSkillsQueueFont, Size.Empty, format);
+            Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsQueueFont, Size.Empty, format);
             Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsQueueFont, Size.Empty, format);
             Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsQueueFont, Size.Empty, format);
@@ -284,7 +285,7 @@ namespace EVEMon
             // Draw texts
             Color highlightColor = Color.Black;
 
-            TextRenderer.DrawText(g, skill.Skill.Name, m_boldSkillsQueueFont,
+            TextRenderer.DrawText(g, skill.SkillName, m_boldSkillsQueueFont,
                 new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop, skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
             TextRenderer.DrawText(g, rankText, m_skillsQueueFont,
                 new Rectangle(e.Bounds.Left + PadLeft + skillNameSize.Width, e.Bounds.Top + PadTop, rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
@@ -301,7 +302,7 @@ namespace EVEMon
                 Rectangle brect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (levelBoxWidth * (level - 1)) + (level - 1),
                                   e.Bounds.Top + PadTop + 2, levelBoxWidth, BoxHeight - 3);
 
-                if (level <= skill.Skill.Level)
+                if (skill.Skill != null && level <= skill.Skill.Level)
                 {
                     g.FillRectangle(Brushes.Black, brect);
                 }
@@ -312,28 +313,31 @@ namespace EVEMon
 
                 // Color indicator for a queued level
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                foreach (var qskill in skillQueue)
+                if (skill.Skill != null)
                 {
-                    if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
-                       || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level && percentComplete == 0.0))
+                    foreach (var qskill in skillQueue)
                     {
-                        g.FillRectangle(Brushes.RoyalBlue, brect);
-                    }
-                    
-                    // Blinking indicator of skill level in training
-                    if (skill.Skill.IsTraining && skill == qskill && level == skill.Level && percentComplete > 0.0)
-                    {
-                        if (count == 0)
+                        if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
+                           || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level && percentComplete == 0.0))
                         {
-                            g.FillRectangle(Brushes.White, brect);
+                            g.FillRectangle(Brushes.RoyalBlue, brect);
                         }
 
-                        if (count == 1)
+                        // Blinking indicator of skill level in training
+                        if (skill.Skill.IsTraining && skill == qskill && level == skill.Level && percentComplete > 0.0)
                         {
-                            count = -1;
-                        }
+                            if (count == 0)
+                            {
+                                g.FillRectangle(Brushes.White, brect);
+                            }
 
-                        count++;
+                            if (count == 1)
+                            {
+                                count = -1;
+                            }
+
+                            count++;
+                        }
                     }
                 }
             }
@@ -563,6 +567,9 @@ namespace EVEMon
         /// <param name="s"></param>
         private string GetTooltip(QueuedSkill skill)
         {
+            if (skill.Skill == null)
+                return String.Empty;
+
             int sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
             float percentDone = 0;

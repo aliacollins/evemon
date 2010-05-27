@@ -59,7 +59,7 @@ namespace EVEMon
         public void Display(QueuedSkill skill, Point pt)
         {
             string format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
-            string skillName = skill.Skill.Name;
+            string skillName = skill.SkillName;
             string skillLevel = Skill.GetRomanForInt(skill.Level);
             string skillStart = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.StartTime.ToLocalTime()) : "Paused");
             string skillEnd = (skill.Owner.IsTraining ? TimeExtensions.ToAbsoluteDateTimeDescription(skill.EndTime.ToLocalTime()) : "Paused");

@@ -124,7 +124,7 @@ namespace EVEMon.Common
         {
             get 
             {
-                return m_skill.FractionCompleted;
+                return (m_skill == null ? 0 : m_skill.FractionCompleted);
             }
         }
 
@@ -191,7 +191,7 @@ namespace EVEMon.Common
         {
             var skill = new SerializableQueuedSkill
             {
-                ID = m_skill.ID,
+                ID = (m_skill == null ? 0 : m_skill.ID),
                 Level = m_level,
                 StartSP = m_startSP,
                 EndSP = m_endSP,

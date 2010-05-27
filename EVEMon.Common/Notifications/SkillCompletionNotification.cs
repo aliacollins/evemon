@@ -74,7 +74,7 @@ namespace EVEMon.Common.Notifications
         {
             if (m_skills.Count == 1)
             {
-                m_description = String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", m_skills[0].Skill.Name, Skill.GetRomanForInt(m_skills[0].Level));
+                m_description = String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", m_skills[0].SkillName, Skill.GetRomanForInt(m_skills[0].Level));
             }
             else
             {
