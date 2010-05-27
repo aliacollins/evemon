@@ -59,12 +59,12 @@ namespace EVEMon
 
             // Developers
             slDevelopers.Add("MrCue", "03");
-            slDevelopers.Add("DonQuiche", "03");
             slDevelopers.Add("Jimi", "03");
 
             // Developers (Retired)
             slDevelopers.Add("Collin Grady", "04");
             slDevelopers.Add("DCShadow", "04");
+            slDevelopers.Add("DonQuiche", "04");
             slDevelopers.Add("Grauw", "04");
             slDevelopers.Add("Jalon Mevek", "04");
             slDevelopers.Add("Labogh", "04");
@@ -77,6 +77,7 @@ namespace EVEMon
             slDevelopers.Add("Abomb", "05");
             slDevelopers.Add("Adam Butt", "05");
             slDevelopers.Add("Aevum Decessus", "05");
+            slDevelopers.Add("aliceturing", "05");
             slDevelopers.Add("aMUSiC", "05");
             slDevelopers.Add("Arengor", "05");
             slDevelopers.Add("ATGardner", "05");
@@ -85,7 +86,7 @@ namespace EVEMon
             slDevelopers.Add("Candle","05");
             slDevelopers.Add("coeus", "05");
             slDevelopers.Add("CrazyMahone", "05");
-            slDevelopers.Add("cybertech", "05");
+            slDevelopers.Add("CyberTech", "05");
             slDevelopers.Add("Dariana", "05");
             slDevelopers.Add("Eviro", "05");
             slDevelopers.Add("exi", "05");
@@ -100,23 +101,26 @@ namespace EVEMon
             slDevelopers.Add("jdread", "05");
             slDevelopers.Add("Jeff Zellner", "05");
             slDevelopers.Add("jthiesen", "05");            
-            slDevelopers.Add("justinian", "05");            
+            slDevelopers.Add("justinian", "05");
+            slDevelopers.Add("Kingdud", "05");
             slDevelopers.Add("Kw4h", "05");
             slDevelopers.Add("Lexiica", "05");
             slDevelopers.Add("Master of Dice", "05");
             slDevelopers.Add("Maximilian Kernbach", "05");
             slDevelopers.Add("MaZ", "05");
+            slDevelopers.Add("mexx24", "05");
             slDevelopers.Add("Michayel Lyon", "05");
             slDevelopers.Add("mintoko", "05");
             slDevelopers.Add("misterilla", "05");
-            slDevelopers.Add("Namistai", "05");
             slDevelopers.Add("Moq", "05");
             slDevelopers.Add("morgangreenacre", "05");
+            slDevelopers.Add("Namistai", "05");
             slDevelopers.Add("Nascent Nimbus", "05");
             slDevelopers.Add("NetMage", "05");
             slDevelopers.Add("Nagapito", "05");
             slDevelopers.Add("Nilyen", "05");
             slDevelopers.Add("Nimrel", "05");
+            slDevelopers.Add("Niom", "05");
             slDevelopers.Add("Pharazon", "05");
             slDevelopers.Add("Phoenix Flames", "05");
             slDevelopers.Add("phorge", "05");
