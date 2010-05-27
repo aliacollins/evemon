@@ -74,7 +74,7 @@ namespace EVEMon.SkillPlanner
                 // Metagroups combo
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
-                    this.ccbGroupFilter.SetItemChecked(i, (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.None);
+                    this.ccbGroupFilter.SetItemChecked(i, (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
                 }
 
                 // Slots combo
@@ -215,7 +215,7 @@ namespace EVEMon.SkillPlanner
             // Update the settings
             if (m_isLoaded)
             {
-                Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.AllTechLevel;
+                Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.Empty;
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
                     if (this.ccbGroupFilter.GetItemChecked(i))
@@ -225,7 +225,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the predicate
             var filter = Settings.UI.ItemBrowser.MetagroupFilter;
-            m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.None;
+            m_metaGroupPredicate = (x) => (x.MetaGroup & filter) != ItemMetaGroup.Empty;
 
             // Update the control's content
             UpdateContent();
