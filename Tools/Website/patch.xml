@@ -119,39 +119,53 @@ Bugfixes
  </newest>
  <datafiles>
   <datafile>
+    <name>eve-blueprints-en-US.xml.gz</name>
+    <date>17 May 2010</date>
+    <md5>ee8b35086ffddea5e3ef634b0bb84fc5</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
     <name>eve-certificates-en-US.xml.gz</name>
     <date>25 May 2010</date>
     <md5>9ced7a636195498d6df59a3e669e585a</md5>
-    <url>http://pic.ucoz.org/updates/Tyrannis/154366</url>
-    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team (Hosted by Jimi)]]></message>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-geography-en-US.xml.gz</name>
+    <date>25 May 2010</date>
+    <md5>87525056318f7956e2b52bbed1947abc</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-items-en-US.xml.gz</name>
     <date>25 May 2010</date>
     <md5>dbbc0618b68dc9e5f676bcb2ed280e42</md5>
-    <url>http://pic.ucoz.org/updates/Tyrannis/154366</url>
-    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team (Hosted by Jimi)]]></message>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-properties-en-US.xml.gz</name>
     <date>25 May 2010</date>
     <md5>cc82cee5cac701947ff0eae287e16335</md5>
-    <url>http://pic.ucoz.org/updates/Tyrannis/154366</url>
-    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team (Hosted by Jimi)]]></message>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-reprocessing-en-US.xml.gz</name>
     <date>25 May 2010</date>
     <md5>6deaa4ec2e461e1a616e72481931fe72</md5>
-    <url>http://pic.ucoz.org/updates/Tyrannis/154366</url>
-    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team (Hosted by Jimi)]]></message>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-skills-en-US.xml.gz</name>
     <date>25 May 2010</date>
     <md5>bafffb3f38b30fb862c84c9ccdc27336</md5>
-    <url>http://pic.ucoz.org/updates/Tyrannis/154366</url>
-    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team (Hosted by Jimi)]]></message>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
  </datafiles>
 </evemon>
