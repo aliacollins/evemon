@@ -119,46 +119,53 @@ Bugfixes
  </newest>
  <datafiles>
   <datafile>
+    <name>eve-blueprints-en-US.xml.gz</name>
+    <date>17 May 2010</date>
+    <md5>ee8b35086ffddea5e3ef634b0bb84fc5</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
     <name>eve-certificates-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>51a72a1e62a00c586945af32c1f519cc</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Dominion 1.1.1 (127381) certificates data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>9ced7a636195498d6df59a3e669e585a</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-geography-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>4d6c9fe0ca780b963297d20bda4d7c8a</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Updated Dominion 1.1.1 (127381) geography data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>87525056318f7956e2b52bbed1947abc</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-items-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>f75d82e4b95a33242c7e085316aea845</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Updated Dominion 1.1.1 (127381) items data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>dbbc0618b68dc9e5f676bcb2ed280e42</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-properties-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>663b89f01ea24823949b3858b9c23606</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Updated Dominion 1.1.1 (127381) properties data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>cc82cee5cac701947ff0eae287e16335</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
   <datafile>
     <name>eve-reprocessing-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>849194ce54105d8e5fb1d507a0171772</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Dominion 1.1.1 (127381) reprocessing data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>6deaa4ec2e461e1a616e72481931fe72</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
-	  <datafile>
+  <datafile>
     <name>eve-skills-en-US.xml.gz</name>
-    <date>09 March 2010</date>
-    <md5>c33e420b4ee379f0cf27e4b3421adda4</md5>
-    <url>http://evemon.battleclinic.com/updates/Dominion/127381-R2</url>
-    <message><![CDATA[Updated Dominion 1.1.1 (127381) skills data file by zofu]]></message>
+    <date>25 May 2010</date>
+    <md5>bafffb3f38b30fb862c84c9ccdc27336</md5>
+    <url>http://evemon.battleclinic.com/updates/Tyrannis/154366</url>
+    <message><![CDATA[Tyrannis 1.0 (154366) certificates data file by the EVEMon Development Team]]></message>
   </datafile>
  </datafiles>
 </evemon>
