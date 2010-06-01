@@ -119,13 +119,14 @@ namespace EVEMon.SkillPlanner
 
             // Treeview update
             tvSkillList.BeginUpdate();
+
+            var prerequisites = (Activity == BlueprintActivity.None ?
+                m_object.Prerequisites.Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity)) :
+                m_object.Prerequisites.Where(x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).OrderBy(x => x.Skill.Name));
+
             try
             {
                 tvSkillList.Nodes.Clear();
-
-                var prerequisites = (Activity == BlueprintActivity.None ?
-                    m_object.Prerequisites.Where(x => x.Level != 0 && x.Activity == Activity) :
-                    m_object.Prerequisites.Where(x => x.Level != 0 && x.Activity == Activity).OrderBy(x => x.Skill.Name));
 
                 // Recursively create nodes
                 foreach (StaticSkillLevel prereq in prerequisites)
@@ -145,7 +146,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                TimeSpan trainTime = m_plan.Character.GetTrainingTimeToMultipleSkills(m_object.Prerequisites);
+                TimeSpan trainTime = m_plan.Character.GetTrainingTimeToMultipleSkills(prerequisites);
                 lblTimeRequired.Text = trainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
             }
 
@@ -251,7 +252,7 @@ namespace EVEMon.SkillPlanner
         private void btnAddSkills_Click(object sender, EventArgs e)
         {
             // Add skills to plan
-            var operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x=> x.Activity == Activity), m_object.Name);
+            var operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x => x.Activity.Equals(Activity)), m_object.Name);
             PlanHelper.Perform(operation);
 
             // Refresh display to reflect plan changes
