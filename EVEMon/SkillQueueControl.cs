@@ -346,14 +346,13 @@ namespace EVEMon
                     g.FillPolygon(background, bottomTriangle);
 
                     // Border (point)
-                    g.DrawLine(pen, topTopLeft, topBottomRight);
-                    g.DrawLine(pen, bottomTopRight, bottomBottomLeft);
+                    g.DrawLine(pen, width - pointWidth, 0, width, halfHeight + 1);
+                    g.DrawLine(pen, width, halfHeight - 1, width - pointWidth, height);
 
                     // Border (top, left, bottom lines)
-                    bottomBottomLeft.Y -= 1;
-                    g.DrawLine(pen, new Point(0, 0), topTopLeft);
-                    g.DrawLine(pen, new Point(0, 0), new Point(0, height));
-                    g.DrawLine(pen, new Point(0, height - 1), bottomBottomLeft);
+                    g.DrawLine(pen, 0, 0, width - pointWidth, 0);
+                    g.DrawLine(pen, 0, 0, 0, height);
+                    g.DrawLine(pen, 0, height - 1, width - pointWidth, height - 1);
                 }
             }
         }
