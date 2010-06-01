@@ -111,16 +111,19 @@ namespace EVEMon.Common
                 // Name
                 builder.Append(boldStart);
 
-                if (settings.Markup == MarkupType.Html && !settings.ShoppingList)
+                if (settings.Markup.Equals(MarkupType.Html))
                 {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">", entry.Skill.ID);
+                    if (!settings.ShoppingList)
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">", entry.Skill.ID);
+                    }
+                    else
+                    {
+                        builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
+                    }
                 }
-                else
-                {
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "<a href=\"\" onclick=\"CCPEVE.showMarketDetails({0})\">", entry.Skill.ID);
-                }
-
                 builder.Append(entry.Skill.Name);
+
                 if (settings.Markup == MarkupType.Html)
                     builder.Append("</a>");
 
