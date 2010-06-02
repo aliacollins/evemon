@@ -63,25 +63,20 @@ namespace EVEMon.Common
             builder.AppendLine(Separator);
             foreach (var skillGroup in character.SkillGroups)
             {
-                int count = 0;
-                foreach (var skill in skillGroup)
-                {
-                    if (skill.IsKnown)
-                        count++;
-                }
+                int count = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(x => GetMergedSkill(plan, x)).Count();
+                int skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(x=> GetMergedSkill(plan, x)).Sum(x=> x.Skillpoints);
 
+                // Skill Group
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0}, {1} Skill{2}, {3} Points{4}",
                              skillGroup.Name, count, count > 1 ? "s" : String.Empty,
-                             skillGroup.TotalSP.ToString("#,##0"), Environment.NewLine);
+                             skillGroupTotalSP.ToString("#,##0"), Environment.NewLine);
 
                 // Skills
-                foreach (var skill in skillGroup.Where(x => x.IsKnown))
+                foreach (var skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
                 {
                     var mergedSkill = GetMergedSkill(plan, skill);
-                    if ((plan != null) && (mergedSkill.Level == 0))
-                        continue;
 
-                    string skillDesc = skill.ToString() + " (" + skill.Rank.ToString() + ")";
+                    string skillDesc = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", skill.ToString(), skill.Rank.ToString());
                     builder.AppendFormat(CultureConstants.DefaultCulture, ": {0} L{1} {2}/{3} Points{4}",
                         skillDesc.PadRight(45), mergedSkill.Level.ToString().PadRight(5), mergedSkill.Skillpoints.ToString("#,##0"),
                         skill.StaticData.GetPointsRequiredForLevel(5).ToString("#,##0"), Environment.NewLine);
@@ -110,10 +105,10 @@ namespace EVEMon.Common
         {
             StringBuilder builder = new StringBuilder();
 
-            foreach (var skill in character.Skills.Where(x => x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
+            foreach (var skill in character.Skills.Where(x => (x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
                                                                         && x.Group.ID != DBConstants.LearningSkillsGroupID
                                                                         && x.Group.ID != DBConstants.SocialSkillsGroupID
-                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID).Select(x => GetMergedSkill(plan, x)))
+                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID)).Select(x => GetMergedSkill(plan, x)))
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0}={1}{2}", skill.Name, skill.Level, Environment.NewLine);
             }
@@ -170,20 +165,14 @@ namespace EVEMon.Common
             // Skills (grouped by skill groups)
             foreach (var skillGroup in character.SkillGroups)
             {
-                int count = 0;
-                foreach (var skill in skillGroup)
-                {
-                    if (skill.IsKnown)
-                        count++;
-                }
+                int count = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(x => GetMergedSkill(plan, x)).Count();
+                int skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
 
-                var outGroup = new OutputSkillGroup { Name = skillGroup.Name, SkillsCount = count, TotalSP = skillGroup.TotalSP };
+                var outGroup = new OutputSkillGroup { Name = skillGroup.Name, SkillsCount = count, TotalSP = skillGroupTotalSP };
 
-                foreach (var skill in skillGroup.Where(x => x.IsKnown))
+                foreach (var skill in skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))))
                 {
                     var mergedSkill = GetMergedSkill(plan, skill);
-                    if ((plan != null) && (mergedSkill.Level == 0))
-                        continue;
 
                     outGroup.Skills.Add(new OutputSkill
                     {
@@ -200,13 +189,13 @@ namespace EVEMon.Common
                     serial.SkillGroups.Add(outGroup);
             }
 
-            // Serializes to XML and apply a XSLT to generate the HTML doc.
+            // Serializes to XML and apply a XSLT to generate the HTML doc
             var doc = Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
 
             var xslt = Util.LoadXSLT(Properties.Resources.XmlToHtmlXslt);
             var htmlDoc = Util.Transform(doc, xslt);
 
-            // Returns the string representation of the generated doc.
+            // Returns the string representation of the generated doc
             return Util.GetXMLStringRepresentation(htmlDoc);
         }
 
@@ -220,7 +209,7 @@ namespace EVEMon.Common
             var serial = character.Export();
 
             if (plan != null)
-                serial.Skills = character.Skills.Where(x => x.IsKnown).Select(x => GetMergedSkill(plan, x)).ToList();
+                serial.Skills = character.Skills.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(x => GetMergedSkill(plan, x)).ToList();
 
             var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
             return Util.GetXMLStringRepresentation(doc);

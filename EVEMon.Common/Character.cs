@@ -1,23 +1,24 @@
 using System;
+using System.IO;
+using System.Xml;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+using System.Threading;
+using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
+using System.IO.Compression;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
-using EVEMon.Common.Serialization;
+using EVEMon.Common.Data;
 using EVEMon.Common.Attributes;
-using System.Threading;
+using EVEMon.Common.Serialization;
+using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
@@ -462,20 +463,16 @@ namespace EVEMon.Common
 
             // Certificates
             serial.Certificates = new List<SerializableCharacterCertificate>();
-            foreach(var cert in this.Certificates)
+            foreach(var cert in this.Certificates.Where(x => x.IsGranted))
             {
-                if (cert.IsGranted) 
-                {
-                    serial.Certificates.Add(new SerializableCharacterCertificate{ CertificateID = cert.ID });
-                }
+                serial.Certificates.Add(new SerializableCharacterCertificate{ CertificateID = cert.ID });
             }
 
             // Skills
             serial.Skills = new List<SerializableCharacterSkill>();
-            foreach(var skill in this.Skills)
+            foreach(var skill in this.Skills.Where(x => x.IsKnown || x.IsOwned))
             {
-                if (skill.IsKnown || skill.IsOwned)
-                    serial.Skills.Add(skill.Export());
+                serial.Skills.Add(skill.Export());
             }
         }
 
@@ -548,12 +545,10 @@ namespace EVEMon.Common
                 skill.Reset(fromCCP);
             }
             
-            foreach (var serialSkill in serial.Skills)
+            foreach (var serialSkill in serial.Skills.Where(x => m_skills[x.ID] != null))
             {
                 // Take care of the new skills not in our datafiles yet. Update if it exists.
-                var foundSkill = m_skills[serialSkill.ID];
-                if (foundSkill != null)
-                    foundSkill.Import(serialSkill, fromCCP);
+                m_skills[serialSkill.ID].Import(serialSkill, fromCCP);
             }
 
             // Certificates : reset > mark the granted ones > update the other ones
@@ -562,12 +557,10 @@ namespace EVEMon.Common
                 cert.Reset();
             }
 
-            foreach (var serialCert in serial.Certificates)
+            foreach (var serialCert in serial.Certificates.Where(x => m_certificates[x.CertificateID] != null))
             {
                 // Take care of the new certs not in our datafiles yet. Mark as granted if it exists.
-                var foundCert = m_certificates[serialCert.CertificateID];
-                if (foundCert != null)
-                    foundCert.MarkAsGranted();
+                m_certificates[serialCert.CertificateID].MarkAsGranted();
             }
 
             while (true)
