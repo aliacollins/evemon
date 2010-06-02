@@ -19,13 +19,13 @@ namespace EVEMon.XmlGenerator
         
         private static int m_percentOld;
         private static int m_propGenTotal = 1442;
-        private static int m_itemGenTotal = 8547;
+        private static int m_itemGenTotal = 8556;
         private static int m_skillGenTotal = 468;
         private static int m_certGenTotal = 3828;
         private static int m_blueprintGenTotal = 3901;
         private static int m_geoGen = 5219;
         private static int m_geoGenTotal = 19501;
-        private static int m_reprocessGenTotal = 9843; 
+        private static int m_reprocessGenTotal = 9852; 
 
         private static DateTime m_startTime;
         private static DateTime m_endTime;
@@ -442,6 +442,15 @@ namespace EVEMon.XmlGenerator
                 });
 
             // Manually set some items attributes
+            s_types[11].Published = true;
+            s_types[12].Published = true;
+            s_types[13].Published = true;
+            s_types[2014].Published = true;
+            s_types[2015].Published = true;
+            s_types[2016].Published = true;
+            s_types[2017].Published = true;
+            s_types[2063].Published = true;
+            s_types[30889].Published = true;
             s_types[27029].Published = true;
             s_types[32077].Published = true;
 
@@ -456,7 +465,7 @@ namespace EVEMon.XmlGenerator
                     case 17924: // Succubus
                         srcItem.MarketGroupID = 72;
                         srcItem.RaceID = 32;
-                        break; 
+                        break;
                     case 17619: // Caldari Navy Hookbill
                         srcItem.MarketGroupID = 61;
                         srcItem.RaceID = 32;
@@ -541,7 +550,11 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // Set some items market group to support blueprints
-                if (srcItem.ID >28685 && srcItem.ID < 28694)
+                if (srcItem.ID > 28685 && srcItem.ID < 28694)
+                    srcItem.MarketGroupID = 10002;
+
+                // Adding planets to support attribute browsing for command centers
+                if (srcItem.GroupID == DBConstants.PlanetGroupID)
                     srcItem.MarketGroupID = 10002;
             }
 
