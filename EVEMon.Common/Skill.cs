@@ -551,7 +551,7 @@ namespace EVEMon.Common
                 case 5:
                     return "V";
                 default:
-                    return "(none)";
+                    return "(nulla)";
             }
         }
 
