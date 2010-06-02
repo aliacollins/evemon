@@ -18,14 +18,14 @@ namespace EVEMon.XmlGenerator
         private static double m_totalTablesCount = 23;
         
         private static int m_percentOld;
-        private static int m_propGenTotal = 1433;
-        private static int m_itemGenTotal = 8282;
-        private static int m_skillGenTotal = 464;
+        private static int m_propGenTotal = 1442;
+        private static int m_itemGenTotal = 8547;
+        private static int m_skillGenTotal = 468;
         private static int m_certGenTotal = 3828;
-        private static int m_blueprintGenTotal = 3814;
+        private static int m_blueprintGenTotal = 3901;
         private static int m_geoGen = 5219;
         private static int m_geoGenTotal = 19501;
-        private static int m_reprocessGenTotal = 9585; 
+        private static int m_reprocessGenTotal = 9843; 
 
         private static DateTime m_startTime;
         private static DateTime m_endTime;
@@ -142,6 +142,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Properties Datafile
 
@@ -1405,7 +1406,7 @@ namespace EVEMon.XmlGenerator
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (var item in s_types.Where(x => x.MarketGroupID == null && !x.Name.Contains("TEST")
-                && s_blueprintTypes.Any(y => y.ID == x.ID)
+                && s_blueprintTypes.Any(y => y.ID == x.ID) && s_types.Any(z => z.ID == s_blueprintTypes[x.ID].ProductTypeID)
                 && s_types[s_blueprintTypes[x.ID].ProductTypeID].Published))
             {
                 UpdatePercentDone(m_blueprintGenTotal);
