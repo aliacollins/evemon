@@ -24,6 +24,7 @@ namespace EVEMon
         private static readonly object s_lockObject = new object();
         private static bool s_firstCheck;
         private static bool s_enabled;
+        private static TimeSpan s_frequency = TimeSpan.FromMinutes(120);
 
         /// <summary>
         /// Delete the installation files on a previous autodupdate.
@@ -79,7 +80,7 @@ namespace EVEMon
             // When disabled, reschedule in ten minutes
             else if (!s_enabled)
             {
-                Dispatcher.Schedule(TimeSpan.FromMinutes(10), () => BeginCheck());
+                Dispatcher.Schedule(s_frequency, () => BeginCheck());
             }
             // Otherwise, query Batlleclinic.
             else
@@ -101,7 +102,7 @@ namespace EVEMon
             // If disabled, reschedule in ten minutes and quits
             if (!s_enabled)
             {
-                Dispatcher.Schedule(TimeSpan.FromMinutes(10), () => BeginCheck());
+                Dispatcher.Schedule(s_frequency, () => BeginCheck());
                 return;
             }
 
@@ -110,7 +111,7 @@ namespace EVEMon
             {
                 // Stores the error and reschedule in ten minutes
                 Trace.WriteLine("UpdateManager: " + e.Error.Message);
-                Dispatcher.Schedule(TimeSpan.FromMinutes(10), () => BeginCheck());
+                Dispatcher.Schedule(s_frequency, () => BeginCheck());
                 return;
             }
 
@@ -127,7 +128,7 @@ namespace EVEMon
             finally
             {
                 // Reschedule in one hour
-                Dispatcher.Schedule(TimeSpan.FromHours(1), () => BeginCheck());
+                Dispatcher.Schedule(s_frequency, () => BeginCheck());
             }
         }
 
