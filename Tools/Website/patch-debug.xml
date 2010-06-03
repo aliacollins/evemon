@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<evemon>
+ <newest>
+  <date>09 March 2010</date>
+  <version>1.3.1.2138</version>
+  <url>http://forum.battleclinic.com/index.php/topic,77296</url>
+  <autopatchurl>http://localhost:8080/installers\EVEMon-install-1.3.1.2138.exe</autopatchurl>
+  <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
+	<additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
+  <message><![CDATA[Breaking Changes
+ * If you use Proxy Authentication you will have to re-enter the port number. 
+
+Contributors
+ * aliceturing
+ * Arengor
+ * Jimi
+ * CyberTech
+ * Kingdud
+ * NetMage
+ * mexx24
+ * Richard Slater
+ * The_Assimilator 
+
+New Features 
+ * Searching in skills will now search the skill name and description.
+ * An optimization was made to release memory used by plan names.
+ * An optimization was made to reduce the amount of memory EVEMon holds after the popup window has closed.
+ * EVEMon will no longer display "D:\EVEMon\" in Crash Reports.
+ * EVEMon will no longer update the main window when it is not visible.
+ * Some refactoring of percentage calculations was done to support the DRY (Don't Repeat Yourself) principal.
+ * Multiple skill completions will now be merged together.
+ * EVEMon will now include information about the status of the skill queue when sending notifications by e-mail.
+ * New "EVE Like" icons have been added to menus and buttons.
+ * Added information about the skill queue to e-mail notifications.
+ * Updated Google DLLs to latest version (1.4.0.2).
+ * Improved support for "Large Fonts".
+ * All characters loaded into EVEMon can now access all other characters via the In Game Browser.
+ * Show Skill in Explorer menu item added to Main Window skill lists.
+ * New Automatic Window Relocation functionality added.
+ * Added option to return Planner status bar to pre 1.3.0 operation.
+ * "Create Sub-Plan..." is now named "Copy selected skills to new plan..." the phrase "Sub-Plan" was confusing.
+ * Relocator changes (Auto-relocate returns, Borders are now removed, relocate any EVE window that fits any screen.)
+ * The IGB Server now offers a "Mark skill as owned" link in the shopping list.
+ * EFT format has been added to the selection of export formats, the export as after plan has returned to EVEMon.
+ * The planner now has a colour key.
+ * Relocator menu added in tray icon's right click menu.
+ * The System Tray tooltip can now be disabled.
+ * Update is now more robust, MD5s are checked against patch.xml after download, EVEMon will retry three times.
+ * An implant set can now be selected from the Plan Editor it will be applied to that patch.
+ * Inactive market orders are hidden by default.
+ * Notes are now included in print outs.
+ * The Relocator now supports multiple screens of the same resolution.
+ * Reordering of the overview based upon currently training characters can be be disabled from the Settings.
+ * Title bar text will dynamically adapt based upon the quantity of text to display.
+ * The time till next update is now displayed in the update menu.
+ * Support for EVE Metrics Data has been included in the Mineral Browser.
+ * Ability to select priority when adding skills has been restored to EVEMon.
+ * Skill training logic has been improved.
+ * Adds EVETime and Wallet Balance to G15 Display.
+ * EVEMon now supports Outposts and Conquerable stations.
+ * Adds a Certificate Recommendation panel to the Ship Browser.
+ * A link to the EVEMon UserVoice forum has been added to the Help Menu. 
+
+Bugfixes
+ * EVEMon will now start faster, however characters may not update for a few seconds after the window displays.
+ * An issue where text is not displayed in the main window under Windows 2000 has been resolved.
+ * EVEMon will no longer crash when Edit or Delete are clicked in Account Management and no character is selected.
+ * EVEMon will no longer crash when a duplicate account is imported from 1.2.8.
+ * Large fonts are now better supported by the popup window.
+ * Accounts management window will flicker less when grouping and un-grouping characters.
+ * EVEMon will no longer crash if a limited API key is provided.
+ * When exporting skills in BB format, level 0 skills will no longer be included.
+ * The overview will now update at startup.
+ * Proxy Authentication settings are now saved correctly.
+ * EVEMon will no longer crash if there are invalid entries in a plan.
+ * EVEMon will now consider a low CPU Usage, PG Usage or Volume better than a higher value.
+ * EVEMon will fall back to trying to ping Google if it is unable to automatically detect the network status.
+ * An issue that would incorrectly indicate one attribute was better than another in the ship comparison screen has been resolved.
+ * EVEMon will no longer crash in the skill browser if you double click when nothing is selected.
+ * EVEMon will no longer crash if the user does not have access to update the registry when selecting "Load at startup".
+ * When a plan is deleted another plan will be automatically selected.
+ * Non-default damage types will no longer be hidden from the ship browser.
+ * Network detection will fall back to pinging Google if the .NET methods throw an exception.
+ * Updated API link in "Manage Accounts".
+ * Small updates to G15 to add basic support for the skill queue.
+ * EVEMon can now import plans from 1.2.8 and BattleClinic again.
+ * Errors will no longer be truncated in the API Error window.
+ * EVEMon better support Large Fonts in all windows.
+ * Messages will no longer overflow in the Account Management window.
+ * The the text in the planner window status bar will no longer vanish.
+ * Prerequisites will now be added to imported plans if they are not included in the file and required by the character.
+ * Switched Market orders item reference from item name to item ID.
+ * EVEMon now has less of a problem loading 1.2.8 era data files.
+ * The Remove option is no longer missing in some "Plan To" menus.
+ * Some list box glitches have been fixed.
+ * EVEMon will no longer run out of temporary files.
+ * The G15 will now update correctly when resuming from standby.
+ * Free room timer on the overview will update correctly.
+ * The plan window has been refactored to speed up refresh and load times.
+ * The popup menu have been given a noticeable speed boost.
+ * EVEMon will no longer crash when an item is double clicked but there is no plan window available.
+ * TreeNode selection when something is selected outside the browser has been improved.
+ * EVEMon will no longer crash when an expired account is displayed in the popup.
+ * A rounding error has been fixed in the module browser.
+ * Fixed bug in E-mail settings that would not use the updated details to send the test mail.
+ * EVENon will no longer crash when a character without a skill queue has planned items.
+ * IGB settings now displays the correct URL.
+ * EVEMon will no longer crash if the implant window or attribute optimizer is open when EVEMon is closed.
+ * Some Red/Green markings in comparison were the wrong way round, that has been changed.
+ * EVEMon will no longer display a REALLY big number in the throbber menu if you are using an limited API Key.
+ * Users can now update their character portraits from the EVE Cache again.
+ * HTML Tags will no longer be displayed in descriptions.
+ * EVEMon will no longer crash when right clicking the throbber when a character is not associated with an account.
+ * EVEMon will no longer crash if VC90 Debug CRTs are not installed.
+ * A bug where switching training between paused characters on the same account would be missed by EVEMon has been fixed.
+ * Datafile updates will no longer be offered multiple times.
+ * Corrected spelling and grammar errors in the Settings Window. Move the "About" menu item to the bottom of the "Help" menu.
+ * Improved the way the status bar in the skill planner is drawn.]]></message>
+ </newest>
+ <datafiles>
+  <datafile>
+    <name>eve-blueprints-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>ab9577626cbcf8537ddb75ba17493bb1</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) blueprints data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-certificates-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>9ced7a636195498d6df59a3e669e585a</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) certificates data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-geography-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>87525056318f7956e2b52bbed1947abc</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) geography data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-items-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>ec0f511e8ac48e8d7dd711b4c6cc3ba7</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) items data file by the EVEMon Development Team
+	
+* Some skills may crash Skill Explorer, update to latests snapshot version for fix while we prepare a new release.
+	
+	]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-properties-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>cc82cee5cac701947ff0eae287e16335</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) properties data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-reprocessing-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>403b063503e613e8c28ddff022034b23</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) reprocessing data file by the EVEMon Development Team]]></message>
+  </datafile>
+  <datafile>
+    <name>eve-skills-en-US.xml.gz</name>
+    <date>02 June 2010</date>
+    <md5>e1e4d177d8d2e116337c37ab988e4cd4</md5>
+    <url>http://localhost:8080/updates/Tyrannis/156690</url>
+    <message><![CDATA[Tyrannis 1.0.1 (156690) skills data file by the EVEMon Development Team]]></message>
+  </datafile>
+ </datafiles>
+</evemon>
