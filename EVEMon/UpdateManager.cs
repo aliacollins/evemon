@@ -21,10 +21,9 @@ namespace EVEMon
         public static event UpdateAvailableHandler UpdateAvailable;
         public static event DataUpdateAvailableHandler DataUpdateAvailable;
 
-        private static readonly object s_lockObject = new object();
-        private static bool s_firstCheck;
+        private static bool s_checkScheduled = false;
         private static bool s_enabled;
-        private static TimeSpan s_frequency = TimeSpan.FromMinutes(120);
+        private static TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.UpdateFrequency);
 
         /// <summary>
         /// Delete the installation files on a previous autodupdate.
@@ -53,16 +52,26 @@ namespace EVEMon
             set 
             {
                 s_enabled = value;
-                if (!s_enabled) return;
 
-                // If the first check has already been performed once, 
-                // there is an action already scheduled at any time.
-                if (!s_firstCheck)
-                {
-                    s_firstCheck = true;
-                    Dispatcher.Schedule(TimeSpan.FromSeconds(10), () => BeginCheck());
-                }
+                if (!s_enabled)
+                    return;
+
+                if (s_checkScheduled)
+                    return;
+
+                // schedule a check in 10 seconds
+                ScheduleCheck(TimeSpan.FromSeconds(10));
             }
+        }
+
+        /// <summary>
+        /// Schedules a check a specified time period in the future.
+        /// </summary>
+        /// <param name="time">Time period in the future to start check.</param>
+        private static void ScheduleCheck(TimeSpan time)
+        {
+            s_checkScheduled = true;
+            Dispatcher.Schedule(time, () => BeginCheck());
         }
 
         /// <summary>
@@ -75,20 +84,14 @@ namespace EVEMon
             // No connection ? Recheck in one minute.
             if (!NetworkMonitor.IsNetworkAvailable)
             {
-                Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => BeginCheck());
+                ScheduleCheck(TimeSpan.FromMinutes(1));
+                return;
             }
-            // When disabled, reschedule in ten minutes
-            else if (!s_enabled)
-            {
-                Dispatcher.Schedule(s_frequency, () => BeginCheck());
-            }
+
             // Otherwise, query Batlleclinic.
-            else
-            {
-                var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                var url = NetworkConstants.BattleclinicUpdates + "?ver=" + currentVersion;
-                EveClient.HttpWebService.DownloadXmlAsync(url, null, OnCheckCompleted, null);
-            }
+            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var url = String.Format("{0}?ver={1}", Settings.Updates.UpdatesUrl, currentVersion);
+            EveClient.HttpWebService.DownloadXmlAsync(url, null, OnCheckCompleted, null);
         }
 
         /// <summary>
@@ -99,19 +102,20 @@ namespace EVEMon
         /// <param name="userState"></param>
         private static void OnCheckCompleted(DownloadXmlAsyncResult e, object userState)
         {
-            // If disabled, reschedule in ten minutes and quits
+            // if update manager has been disabled since the last
+            // update was triggered quit out here.
             if (!s_enabled)
             {
-                Dispatcher.Schedule(s_frequency, () => BeginCheck());
+                s_checkScheduled = false;
                 return;
             }
 
             // Was there an HTTP error ??
             if (e.Error != null)
             {
-                // Stores the error and reschedule in ten minutes
+                // Logs the error and reschedule
                 Trace.WriteLine("UpdateManager: " + e.Error.Message);
-                Dispatcher.Schedule(s_frequency, () => BeginCheck());
+                ScheduleCheck(s_frequency);
                 return;
             }
 
@@ -127,12 +131,11 @@ namespace EVEMon
             }
             finally
             {
-                // Reschedule in one hour
-                Dispatcher.Schedule(s_frequency, () => BeginCheck());
+                // Reschedule
+                ScheduleCheck(s_frequency);
             }
         }
-
-
+        
         /// <summary>
         /// Scans the feed returned by BC.
         /// </summary>

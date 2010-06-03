@@ -27,6 +27,7 @@ using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowsApi;
+using System.Reflection;
 
 namespace EVEMon
 {
@@ -94,6 +95,7 @@ namespace EVEMon
         }
         
         #region Loading, closing, resizing, etc
+
         /// <summary>
         /// Once the window is loaded, we complete initialization.
         /// </summary>
@@ -962,6 +964,7 @@ namespace EVEMon
 
 
         #region Updates manager
+
         /// <summary>
         /// Occurs when a program update is available. Display the information form to the user.
         /// </summary>
@@ -1001,6 +1004,53 @@ namespace EVEMon
             m_isShowingUpdateWindow = false;
         }
 
+        /// <summary>
+        /// Triggers a restart of EVEMon.
+        /// </summary>
+        private void RestartApplication()
+        {
+            // save the settings to make sure we don't loose anything.
+            Settings.SaveImmediate();
+
+            // set the updating data flag so EVEMon exits cleanly.
+            m_isUpdatingData = true;
+
+            // find the expected path for EVEMon.Watchdog.exe.
+            Assembly assembly = Assembly.GetEntryAssembly();
+            string path = Path.GetDirectoryName(assembly.Location);
+            string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
+
+            // if the watchdog dosn't exist just quit.
+            if (!File.Exists(executable))
+                Application.Exit();
+
+            // start the watchdog process.
+            StartProcess(executable, Environment.GetCommandLineArgs());
+
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// Starts a process with arguments.
+        /// </summary>
+        /// <param name="executable">Executable to start (i.e. EVEMon.exe).</param>
+        /// <param name="arguments">Arguments to pass to the executable.</param>
+        private void StartProcess(string executable, string[] arguments)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo()
+            {
+                FileName = executable,
+                Arguments = String.Join(" ", arguments),
+                UseShellExecute = false
+            };
+
+            Process evemonProc = new Process()
+            {
+                StartInfo = startInfo
+            };
+
+            evemonProc.Start();
+        }
 
         /// <summary>
         /// Occurs when new datafiles versions are available. Display the information form to the user.
@@ -1022,12 +1072,9 @@ namespace EVEMon
             m_isShowingDataUpdateWindow = true;
             using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
             {
-                f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
+                if (f.ShowDialog() == DialogResult.OK)
                 {
-                    m_isUpdatingData = true;
-                    Settings.SaveImmediate();
-                    this.Close();
+                    RestartApplication();
                 }
             }
             m_isShowingDataUpdateWindow = false;
@@ -1036,6 +1083,7 @@ namespace EVEMon
 
 
         #region Menus and toolbar
+
         /// <summary>
         /// Tray icon's context menu > Close.
         /// Quit the application.

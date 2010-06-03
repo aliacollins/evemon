@@ -3,6 +3,7 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using System.Globalization;
@@ -55,55 +56,80 @@ namespace EVEMon
         /// <param name="e"></param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            foreach (DatafileVersion dfv in m_args.ChangedFiles)
+            DialogResult result = DialogResult.Yes;
+
+            while (m_args.ChangedFiles.Count != 0 && result == DialogResult.Yes)
             {
-                string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
-                string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
+                DownloadUpdates();
 
-                string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
-                bool checksumOK = false;
-                int attempt = 0;
-                do
-                {
-                    File.Delete(newFilename);
-                    using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
-                    {
-                        f.ShowDialog();
-                        if (f.DialogResult == DialogResult.OK)
-                        {
-                            string filename = Path.GetFileName(newFilename);
-                            Datafile datafile = new Datafile(filename);
+                if (m_args.ChangedFiles.Count == 0)
+                    break;
 
-                            if (datafile.MD5Sum != dfv.Md5)
-                            {
-                                attempt++;
-                                File.Delete(newFilename);
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    File.Delete(oldFilename + ".bak");
-                                    File.Copy(oldFilename, oldFilename + ".bak");
-                                    File.Delete(oldFilename);
-                                    File.Move(newFilename, oldFilename);
-                                }
-                                catch (IOException ex)
-                                {
-                                    ExceptionHandler.LogException(ex, true);
-                                }
+                // one or more files failed
+                string message = String.Format(
+                    CultureConstants.DefaultCulture, 
+                    "{0} file{1} failed to download, do you wish to try again?", 
+                    m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
 
-                                checksumOK = true;
-                            }
-                        }
-                    }
-                } while (!checksumOK && attempt < 3);
+                result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
             }
-            Settings.SaveImmediate();
 
-            MessageBox.Show("Your datafiles have been updated. Please restart EVEMon for them to take effect.", "Data Files Updated", MessageBoxButtons.OK);
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void DownloadUpdates()
+        {
+            List<DatafileVersion> datafiles = new List<DatafileVersion>();
+
+            // copy the list of datafiles
+            m_args.ChangedFiles.ForEach(x => datafiles.Add(x));
+
+            foreach (var dfv in datafiles)
+            {
+                // work out the new names of the files
+                string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
+                string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
+                string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
+
+                // if the file already exists delete it
+                if (File.Exists(newFilename))
+                    File.Delete(newFilename);
+
+                // show the download dialog, which will download the file
+                using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
+                {
+                    if (f.ShowDialog() == DialogResult.OK)
+                    {
+                        string filename = Path.GetFileName(newFilename);
+                        Datafile datafile = new Datafile(filename);
+
+                        if (datafile.MD5Sum != dfv.Md5)
+                        {
+                            File.Delete(newFilename);
+                            continue;
+                        }
+
+                        ReplaceDatafile(oldFilename, newFilename);
+                        m_args.ChangedFiles.Remove(dfv);
+                    }
+                }
+            }
+        }
+
+        private static void ReplaceDatafile(string oldFilename, string newFilename)
+        {
+            try
+            {
+                File.Delete(oldFilename + ".bak");
+                File.Copy(oldFilename, oldFilename + ".bak");
+                File.Delete(oldFilename);
+                File.Move(newFilename, oldFilename);
+            }
+            catch (IOException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
         }
 
         /// <summary>

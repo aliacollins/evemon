@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
 
@@ -19,6 +17,8 @@ namespace EVEMon.Common.SettingsObjects
             HttpTimeout = 10;
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
             IgnoreNetworkStatus = false;
+            UpdateFrequency = 120;
+            UpdatesUrl = NetworkConstants.BattleclinicUpdates;
         }
 
         /// <summary>
@@ -49,6 +49,81 @@ namespace EVEMon.Common.SettingsObjects
         {
             get;
             set;
+        }
+
+        private int m_updateFrequency;
+
+        /// <summary>
+        /// Gets or sets the length of time between updates in minutes.
+        /// </summary>
+        /// <remarks>
+        /// Hidden Setting. The value of this setting must be equal to or higher than 10 minutes, the default is 120 minutes (2 hours).
+        /// </remarks>
+        [XmlElement("updateFrequency")]
+        public int UpdateFrequency
+        {
+            get
+            {
+                if (m_updateFrequency < 10)
+                    return 120;
+
+                return m_updateFrequency;
+            }
+            set
+            {
+                m_updateFrequency = value;
+            }
+        }
+
+        private int m_dataFileRetryMaximum;
+
+        /// <summary>
+        /// Maximum number of tries to download a file.
+        /// </summary>
+        /// <remarks>
+        /// Hidden Setting. The value of this setting must be between 1 and 5, the default is 1.
+        /// </remarks>
+        [XmlElement("dataFileRetryMaximum")]
+        public int DataFileRetryMaximum
+        {
+            get
+            {
+                if (m_dataFileRetryMaximum < 1)
+                    return 1;
+
+                if (m_dataFileRetryMaximum > 5)
+                    return 1;
+
+                return m_dataFileRetryMaximum;
+            }
+            set
+            {
+                m_dataFileRetryMaximum = value;
+            }
+        }
+
+        private string m_updatesUrl;
+
+        /// <summary>
+        /// Url to patch.xml
+        /// </summary>
+        /// <remarks>
+        /// Hidden Setting.
+        /// </remarks>
+        [XmlElement("updatesUrl")]
+        public string UpdatesUrl
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(m_updatesUrl))
+                    return NetworkConstants.BattleclinicUpdates;
+                
+                return m_updatesUrl;
+            }
+            set
+            {
+                m_updatesUrl = value;
+            }
         }
 
         [XmlElement("periods")]
@@ -86,6 +161,9 @@ namespace EVEMon.Common.SettingsObjects
             clone.MostRecentDeniedUpgrade = this.MostRecentDeniedUpgrade;
             clone.HttpTimeout = this.HttpTimeout;
             clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
+            clone.DataFileRetryMaximum = this.DataFileRetryMaximum;
+            clone.UpdateFrequency = this.UpdateFrequency;
+            clone.UpdatesUrl = this.UpdatesUrl;
 
             foreach (var pair in this.Periods)
             {
