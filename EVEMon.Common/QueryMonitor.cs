@@ -103,8 +103,12 @@ namespace EVEMon.Common
             get
             {
                 // If there was an error on last try, we use the cached time
-                // (we exclude the corporation roles error for characters corporation issued orders)
-                if (m_lastResult != null && m_lastResult.HasError && m_lastResult.CCPError != null && !m_lastResult.CCPError.IsOrdersRelatedCorpRolesError)
+                // (we exclude the corporation roles error for characters corporation issued queries)
+                if (m_lastResult != null
+                    && m_lastResult.HasError
+                    && m_lastResult.CCPError != null
+                    && !m_lastResult.CCPError.IsOrdersRelatedCorpRolesError
+                    && !m_lastResult.CCPError.IsJobsRelatedCorpRolesError)
                     return m_lastResult.CachedUntil;
 
                 // No error ? Then we compute the next update according to the settings.

@@ -36,12 +36,12 @@ namespace EVEMon.Common.Notifications
         [Header("API problem")]
         QueryingError,
         /// <summary>
-        /// The status of Tranquility changed
+        /// The status of Tranquility changed.
         /// </summary>
         [Header("Tranquility status change")]
         ServerStatusChange,
         /// <summary>
-        /// The status of Tranquility changed
+        /// The IGB service has a problem.
         /// </summary>
         [Header("IGB service problem")]
         IgbServiceException,
@@ -50,6 +50,11 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         [Header("Market orders expired/fulfilled")]
         MarketOrdersEnding,
+        /// <summary>
+        /// An industry job has been completed.
+        /// </summary>
+        [Header("Industry jobs completion")]
+        IndustryJobsCompletion,
         /// <summary>
         /// Skill queue has room for more skills.
         /// </summary>

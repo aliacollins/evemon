@@ -142,18 +142,9 @@ namespace EVEMon.Common
                 {
                     var updateAttribute = method.GetAttribute<UpdateAttribute>();
                     if (updateAttribute != null)
-                    {
                         Settings.Updates.Periods.Add(method, updateAttribute.DefaultPeriod);
-                    }
                 }
             }
-
-            // Add missing market order columns
-            var columns = UI.MainWindow.MarketOrders.Columns.ToList();
-            columns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().
-                Where(x => x != MarketOrderColumn.None && columns.All(y => y.Column != x)).
-                Select(x => new MarketOrderColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
-            UI.MainWindow.MarketOrders.Columns = columns.ToArray();
 
             // Add missing plan order columns
             var planColumns = UI.PlanWindow.Columns.ToList();
@@ -161,6 +152,20 @@ namespace EVEMon.Common
                 Where(x => x != PlanColumn.None && planColumns.All(y => y.Column != x)).
                 Select(x => new PlanColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
             UI.PlanWindow.Columns = planColumns.ToArray();
+
+            // Add missing market order columns
+            var ordersColumns = UI.MainWindow.MarketOrders.Columns.ToList();
+            ordersColumns.AddRange(EnumExtensions.GetValues<MarketOrderColumn>().
+                Where(x => x != MarketOrderColumn.None && ordersColumns.All(y => y.Column != x)).
+                Select(x => new MarketOrderColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+            UI.MainWindow.MarketOrders.Columns = ordersColumns.ToArray();
+
+            // Add missing industry jobs columns
+            var jobsColumns = UI.MainWindow.IndustryJobs.Columns.ToList();
+            jobsColumns.AddRange(EnumExtensions.GetValues<IndustryJobColumn>().
+                Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
+                Select(x => new IndustryJobColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+            UI.MainWindow.IndustryJobs.Columns = jobsColumns.ToArray();
         }
 
         /// <summary>
@@ -221,8 +226,14 @@ namespace EVEMon.Common
             SerializableSettings settings = TryDeserializeSettings();
 
             // Loading from file failed, we create settings from scratch
-            if (settings == null) Reset();
-            else Import(settings, false);
+            if (settings == null)
+            {
+                Reset();
+            }
+            else
+            {
+                Import(settings, false);
+            }
         }
 
         /// <summary>
@@ -380,7 +391,8 @@ namespace EVEMon.Common
             {
                 // Look for the owner by his name
                 var owner = serial.Characters.SingleOrDefault(x => x.Name == oldPlan.Owner);
-                if (owner == null) continue;
+                if (owner == null)
+                    continue;
 
                 // Imports the plan
                 var plan = new SerializablePlan { Owner = owner.Guid, Name = oldPlan.Name };

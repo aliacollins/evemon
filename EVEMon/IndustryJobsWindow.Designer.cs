@@ -1,6 +1,6 @@
-﻿namespace EVEMon
+namespace EVEMon
 {
-    partial class MarketOrdersWindow
+    partial class IndustryJobsWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
             this.SuspendLayout();
             // 
-            // ordersList
+            // jobsList
             // 
-            this.ordersList.Character = null;
-            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
-            this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.ordersList.Size = new System.Drawing.Size(292, 266);
-            this.ordersList.TabIndex = 0;
-            this.ordersList.TextFilter = "";
+            this.jobsList.Character = null;
+            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
+            this.jobsList.Location = new System.Drawing.Point(0, 0);
+            this.jobsList.Name = "jobsList";
+            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.jobsList.Size = new System.Drawing.Size(292, 266);
+            this.jobsList.TabIndex = 0;
+            this.jobsList.TextFilter = "";
             // 
-            // MarketOrdersWindow
+            // IndustryJobsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 266);
-            this.Controls.Add(this.ordersList);
+            this.Controls.Add(this.jobsList);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MarketOrdersWindow";
+            this.Name = "IndustryJobsWindow";
             this.Text = "Notification Details";
             this.ResumeLayout(false);
 
@@ -59,6 +59,6 @@
 
         #endregion
 
-        private MainWindowMarketOrdersList ordersList;
+        private MainWindowIndustryJobsList jobsList;
     }
 }

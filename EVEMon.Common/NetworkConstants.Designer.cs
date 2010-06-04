@@ -124,11 +124,29 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /corp/IndustryJobs.xml.aspx.
+        /// </summary>
+        public static string APICorporationIndustryJobs {
+            get {
+                return ResourceManager.GetString("APICorporationIndustryJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /corp/MarketOrders.xml.aspx.
         /// </summary>
         public static string APICorporationMarketOrders {
             get {
                 return ResourceManager.GetString("APICorporationMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/IndustryJobs.xml.aspx.
+        /// </summary>
+        public static string APIIndustryJobs {
+            get {
+                return ResourceManager.GetString("APIIndustryJobs", resourceCulture);
             }
         }
         
@@ -259,7 +277,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://EVEMon.battleclinic.com/.
+        ///   Looks up a localized string similar to http://evemon.battleclinic.com/.
         /// </summary>
         public static string EVEMonMainPage {
             get {

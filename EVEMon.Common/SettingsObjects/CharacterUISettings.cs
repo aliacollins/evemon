@@ -38,6 +38,13 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("jobsGroupBy")]
+        public IndustryJobGrouping JobsGroupBy
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Clones this serialization object.
         /// </summary>
@@ -48,6 +55,7 @@ namespace EVEMon.Common.SettingsObjects
             clone.CollapsedGroups.AddRange(this.CollapsedGroups);
             clone.SelectedPage = this.SelectedPage;
             clone.OrdersGroupBy = this.OrdersGroupBy;
+            clone.JobsGroupBy = this.JobsGroupBy;
             return clone;
         }
     }

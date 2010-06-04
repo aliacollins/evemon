@@ -73,6 +73,14 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlArray("industryJobs")]
+        [XmlArrayItem("job")]
+        public List<SerializableJob> IndustryJobs
+        {
+            get;
+            set;
+        }
+
         [XmlArray("lastUpdates")]
         [XmlArrayItem("apiUpdate")]
         public List<SerializableAPIUpdate> LastUpdates

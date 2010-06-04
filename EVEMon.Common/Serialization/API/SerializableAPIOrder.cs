@@ -156,14 +156,14 @@ namespace EVEMon.Common.Serialization.API
         /// Which this order was issued for.
         /// </summary>
         [XmlIgnore]
-        public OrderIssuedFor IssuedFor
+        public IssuedFor IssuedFor
         {
             get;
             set;
         }
 
         [XmlAttribute("issued")]
-        public string _Issued
+        public string IssuedXml
         {
             get { return Issued.ToCCPTimeString(); }
             set

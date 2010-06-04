@@ -12,6 +12,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverview = true;
             ShowMenuBar = true;
             MarketOrders = new MarketOrderSettings();
+            IndustryJobs = new IndustryJobSettings();
             OverviewItemSize = PortraitSizes.x96;
             TitleFormat = MainWindowTitleFormat.NextCharToFinish;
             ShowOverviewSkillQueueFreeRoom = true;
@@ -186,6 +187,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("marketOrders")]
         public MarketOrderSettings MarketOrders
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("industryJobs")]
+        public IndustryJobSettings IndustryJobs
         {
             get;
             set;

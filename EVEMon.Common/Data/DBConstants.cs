@@ -25,7 +25,7 @@ namespace EVEMon.Common.Data
         public static readonly int[] CompressionBlueprintsGroupIDs = new int[] { 1042, 1043 };
         public static readonly int[] IndustryModifyingPropertyIDs = new int[] { 440, 451, 452, 453, 468 };
 
-        public static readonly int[] AdditionalRawMaterialsForShipsGroupIDs = new int[] { 20 ,65, 781 };
+        public static readonly int[] AdditionalRawMaterialsForShipsGroupIDs = new int[] { 20, 65, 781 };
         public static readonly int[] ProductionRawMaterialGroupIDs = new int[]
             { 18, 476, 499, 780, 942, 1096, 1098, 1144, 1147, 1332 };
 
@@ -111,6 +111,12 @@ namespace EVEMon.Common.Data
         public const int ExhumersGroupID = 875;
         public const int CapitalIndustrialsGroupID = 1048;
 
+        public const int ProjectileAmmunitionBlueprintsGroupID = 299;
+        public const int HybridAmmunitionBlueprintsGroupID = 300;
+        public const int MissilesAmmunitionBlueprintsGroupID = 314;
+        public const int BombsBlueprintsGroupID = 1016;
+        public const int BoostersChargesBlueprintsGroupID = 339;
+
         #endregion
 
 
@@ -153,6 +159,16 @@ namespace EVEMon.Common.Data
         public const int ResearchSkillID = 3403;
         public const int MetallurgySkillID = 3409;
         public const int ProductionEfficiencySkillID = 3388;
+
+        public const int MassProductionSkillID = 3387;
+        public const int AdvancedMassProductionSkillID = 24625;
+        public const int SupplyChainManagementSkillID = 24268;
+
+        public const int LaboratoryOperationSkillID = 3406;
+        public const int AdvancedLaboratoryOperationSkillID = 24624;
+        public const int ScientificNetworkingSkillID = 24270;
+
+        public const int WarpDisruptProbeBlueprintID = 22779;
 
         #endregion
 

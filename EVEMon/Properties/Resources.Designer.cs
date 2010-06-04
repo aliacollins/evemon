@@ -340,6 +340,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Industry {
+            get {
+                object obj = ResourceManager.GetObject("Industry", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Information16 {
             get {
                 object obj = ResourceManager.GetObject("Information16", resourceCulture);

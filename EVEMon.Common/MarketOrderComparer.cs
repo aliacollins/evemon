@@ -1,21 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
+    /// <summary>
+    /// Performs a comparison between two <see cref="MarketOrder" /> types.
+    /// </summary>
     public sealed class MarketOrderComparer : Comparer<MarketOrder>
     {
         private MarketOrderColumn m_column;
         private bool m_isAscending;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarketOrderComparer"/> class.
+        /// </summary>
+        /// <param name="column">The market order column.</param>
+        /// <param name="isAscending">Is ascending flag.</param>
         public MarketOrderComparer(MarketOrderColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;
         }
 
+        /// <summary>
+        /// Performs a comparison of two objects of the <see cref="MarketOrder" /> type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+        /// </summary>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
+        /// <returns>
+        /// Less than zero
+        /// <paramref name="x"/> is less than <paramref name="y"/>.
+        /// Zero
+        /// <paramref name="x"/> equals <paramref name="y"/>.
+        /// Greater than zero
+        /// <paramref name="x"/> is greater than <paramref name="y"/>.
+        /// </returns>
         public override int Compare(MarketOrder x, MarketOrder y)
         {
             if (m_isAscending)
@@ -24,7 +44,20 @@ namespace EVEMon.Common
             return -CompareCore(x, y);
         }
 
-        public int CompareCore(MarketOrder x, MarketOrder y)
+        /// <summary>
+        /// Performs a comparison of two objects of the <see cref="MarketOrder" /> type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+        /// </summary>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
+        /// <returns>
+        /// Less than zero
+        /// <paramref name="x"/> is less than <paramref name="y"/>.
+        /// Zero
+        /// <paramref name="x"/> equals <paramref name="y"/>.
+        /// Greater than zero
+        /// <paramref name="x"/> is greater than <paramref name="y"/>.
+        /// </returns>
+        private int CompareCore(MarketOrder x, MarketOrder y)
         {
             switch (m_column)
             {

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Drawing;
 using System.Threading;
 using System.Reflection;
-using EVEMon.SkillPlanner;
 using System.Windows.Forms;
 using System.Globalization;
 using System.ComponentModel;
@@ -19,6 +18,7 @@ using EVEMon.Common;
 using EVEMon.Controls;
 using EVEMon.Common.Net;
 using EVEMon.Accounting;
+using EVEMon.SkillPlanner;
 using EVEMon.ExternalCalendar;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Notifications;
@@ -59,7 +59,6 @@ namespace EVEMon
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="s">The EVEMon settings.</param>
         public CharacterMonitor(Character character)
             :this()
         {
@@ -67,6 +66,7 @@ namespace EVEMon
             this.skillsList.Character = character;
             this.skillQueueList.Character = character;
             this.ordersList.Character = character;
+            this.jobsList.Character = character;
             notificationList.Notifications = null;
 
             if (character is CCPCharacter)
@@ -81,6 +81,7 @@ namespace EVEMon
                 skillQueuePanel.Visible = false;
                 skillQueueIcon.Visible = false;
                 ordersIcon.Visible = false;
+                jobsIcon.Visible = false;
             }
 
             // Subscribe events
@@ -207,6 +208,11 @@ namespace EVEMon
             {
                 lblBalanceAmount.ForeColor = Color.Orange;
                 lblBalanceAmount.Font = new Font(Font, FontStyle.Bold);
+            }
+            else
+            {
+                lblBalanceAmount.ForeColor = SystemColors.ControlText;
+                lblBalanceAmount.Font = new Font(Font, FontStyle.Regular);
             }
 
             //Assigning new positions to labels as the designer fails to position them correctly
@@ -376,7 +382,7 @@ namespace EVEMon
             var nextMonitor = ccpCharacter.QueryMonitors.NextUpdate;
             if (nextMonitor != null)
             {
-                TimeSpan timeLeft = nextMonitor.NextUpdate - DateTime.UtcNow;
+                TimeSpan timeLeft = nextMonitor.NextUpdate.Subtract(DateTime.UtcNow);
                 if (timeLeft < TimeSpan.Zero)
                 {
                     lblUpdateTimer.Text = "Pending...";
@@ -410,7 +416,7 @@ namespace EVEMon
                 return;
             }
 
-            if (multiPanel.SelectedPage == ordersPage)
+            if (multiPanel.SelectedPage == ordersPage || multiPanel.SelectedPage == jobsPage)
             {
                 if (account == null)
                     return;
@@ -451,20 +457,31 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            // Enables/Disables the market orders page controls
-            ordersGroupMenu.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
-            searchTextBox.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
-            preferencesMenu.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
-
-            if (ccpCharacter.MarketOrders.IsEmpty())
-                return;
-
-            // Saves any changes we've made to the market columns
+            // Saves any changes we've made to the market orders page columns
             // (I've tried to find a better way to deal with this but failed)
-            if (multiPanel.SelectedPage == ordersPage)
+            if (multiPanel.SelectedPage == ordersPage && !ccpCharacter.MarketOrders.IsEmpty())
             {
-                Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
-                m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
+                // Enables/Disables the market orders page controls
+                groupMenu.Enabled = searchTextBox.Enabled = preferencesMenu.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
+
+                if (!ccpCharacter.MarketOrders.IsEmpty())
+                {
+                    Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
+                    m_character.UISettings.OrdersGroupBy = ordersList.Grouping;
+                }
+            }
+
+            // Saves any changes we've made to the industry jobs page columns
+            if (multiPanel.SelectedPage == jobsPage && !ccpCharacter.IndustryJobs.IsEmpty())
+            {
+                // Enables/Disables the industry jobs page controls
+                groupMenu.Enabled = searchTextBox.Enabled = preferencesMenu.Enabled = !ccpCharacter.IndustryJobs.IsEmpty();
+
+                if (!ccpCharacter.IndustryJobs.IsEmpty())
+                {
+                    Settings.UI.MainWindow.IndustryJobs.Columns = jobsList.Columns.Select(x => x.Clone()).ToArray();
+                    m_character.UISettings.JobsGroupBy = jobsList.Grouping;
+                }
             }
         }
 
@@ -500,7 +517,7 @@ namespace EVEMon
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                ordersGroupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 toggleSkillsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
@@ -510,7 +527,7 @@ namespace EVEMon
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
-                ordersGroupMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                groupMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 toggleSkillsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
             }
@@ -666,9 +683,9 @@ namespace EVEMon
             // Update the buttons visibility.
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
 
-            searchTextBox.Visible = (e.NewPage == ordersPage);
-            ordersGroupMenu.Visible = (e.NewPage == ordersPage);
-            preferencesMenu.Visible = (e.NewPage == ordersPage);
+            searchTextBox.Visible = (e.NewPage == ordersPage || e.NewPage == jobsPage);
+            groupMenu.Visible = (e.NewPage == ordersPage || e.NewPage == jobsPage);
+            preferencesMenu.Visible = (e.NewPage == ordersPage || e.NewPage == jobsPage);
         }
 
         /// <summary>
@@ -686,10 +703,11 @@ namespace EVEMon
             var sb = new StringBuilder();
             foreach (var autoUpdate in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
             {
-                // Skip character's corporation market orders monitor,
-                // there is no need to show it as it's bind
-                // with the characters personal market orders monitor
-                if (autoUpdate.Method == APIMethods.CorporationMarketOrders)
+                // Skip character's corporation market orders and industry jobs monitor,
+                // cause there is no need to show them as they are bind
+                // with the character's personal monitor
+                if (autoUpdate.Method == APIMethods.CorporationMarketOrders
+                    || autoUpdate.Method == APIMethods.CorporationIndustryJobs)
                     continue;
 
                 var description = autoUpdate.ToString();
@@ -701,7 +719,7 @@ namespace EVEMon
                 {
                     if (autoUpdate.NextUpdate.Year != 9999)
                     {
-                        var remainingTime = autoUpdate.NextUpdate - DateTime.UtcNow;
+                        var remainingTime = autoUpdate.NextUpdate.Subtract(DateTime.UtcNow);
 
                         if (remainingTime.Minutes > 0)
                         {
@@ -730,9 +748,7 @@ namespace EVEMon
 
             // Sets the tooltip
             if (sb.Length != 0)
-            {
                 ttToolTip.SetToolTip(lblUpdateTimer, sb.ToString());
-            }
         }
 
         /// <summary>
@@ -812,16 +828,21 @@ namespace EVEMon
                 if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
                     continue;
 
-                // Skip character's corporation market orders monitor,
-                // there is no need to show it as it's bind
-                // with the character's personal market orders monitor
-                if (monitor.Method == APIMethods.CorporationMarketOrders)
+                // Skip character's corporation market orders and industry jobs monitor,
+                // cause there is no need to show them as they are bind
+                // with the character's personal monitor
+                if (monitor.Method == APIMethods.CorporationMarketOrders
+                    || monitor.Method == APIMethods.CorporationIndustryJobs)
                     continue;
 
                 TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
                 string timeToNextUpdateText;
 
-                if (timeToNextUpdate.TotalMinutes >= 60)
+                if (monitor.NextUpdate.Year.Equals(9999))
+                {
+                    timeToNextUpdateText = "Never";
+                }
+                else if (timeToNextUpdate.TotalMinutes >= 60)
                 {
                     timeToNextUpdateText = String.Format(CultureConstants.DefaultCulture, "{0}h", Math.Floor(timeToNextUpdate.TotalHours));
                 }
@@ -856,8 +877,12 @@ namespace EVEMon
                 var method = (APIMethods)e.ClickedItem.Tag;
                 throbber.State = ThrobberState.Rotating;
                 ccpCharacter.QueryMonitors.Query(method);
+
                 if (method == APIMethods.MarketOrders)
                     ccpCharacter.QueryMonitors.Query(APIMethods.CorporationMarketOrders);
+
+                if (method == APIMethods.IndustryJobs)
+                    ccpCharacter.QueryMonitors.Query(APIMethods.CorporationIndustryJobs);
             }
 
         }
@@ -986,20 +1011,35 @@ namespace EVEMon
 
         # region Multi Panel Control/Component Event Handlers
         /// <summary>
-        /// On opening we create the menu items for "Group By..." in market orders panel.
+        /// On opening we create the menu items for "Group By..." in panel.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ordersGroupMenu_DropDownOpening(object sender, System.EventArgs e)
+        void groupMenu_DropDownOpening(object sender, EventArgs e)
         {
-            ordersGroupMenu.DropDownItems.Clear();
-            foreach (var grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
-            {
-                var menu = new ToolStripButton(grouping.GetHeader());
-                menu.Checked = (ordersList.Grouping == grouping);
-                menu.Tag = (object)grouping;
+            groupMenu.DropDownItems.Clear();
 
-                ordersGroupMenu.DropDownItems.Add(menu);
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                foreach (var grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
+                {
+                    var menu = new ToolStripButton(grouping.GetHeader());
+                    menu.Checked = (ordersList.Grouping == grouping);
+                    menu.Tag = (object)grouping;
+
+                    groupMenu.DropDownItems.Add(menu);
+                }
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                foreach (var grouping in EnumExtensions.GetValues<IndustryJobGrouping>())
+                {
+                    var menu = new ToolStripButton(grouping.GetHeader());
+                    menu.Checked = (jobsList.Grouping == grouping);
+                    menu.Tag = (object)grouping;
+
+                    groupMenu.DropDownItems.Add(menu);
+                }
             }
         }
 
@@ -1008,11 +1048,19 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ordersGroupMenu_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
+        void groupMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var item = e.ClickedItem;
-            var grouping = (MarketOrderGrouping)item.Tag;
-            ordersList.Grouping = grouping;
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                var grouping = (MarketOrderGrouping)item.Tag;
+                ordersList.Grouping = grouping;
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                var grouping = (IndustryJobGrouping)item.Tag;
+                jobsList.Grouping = grouping;
+            }
         }
 
         /// <summary>
@@ -1020,9 +1068,16 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void searchTextBox_TextChanged(object sender, System.EventArgs e)
+        void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            ordersList.TextFilter = searchTextBox.Text;
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                ordersList.TextFilter = searchTextBox.Text;
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                jobsList.TextFilter = searchTextBox.Text;
+            }
         }
 
         /// <summary>
@@ -1032,16 +1087,31 @@ namespace EVEMon
         /// <param name="e"></param>
         void columnSettingsMenuItem_Click(object sender, EventArgs e)
         {
-            using (var f = new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
+            if (multiPanel.SelectedPage == ordersPage)
             {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.OK)
+                using (var f = new MarketOrdersColumnsSelectWindow(ordersList.Columns.Select(x => x.Clone())))
                 {
-                    ordersList.Columns = f.Columns.Cast<MarketOrderColumnSettings>();
-                    ordersList.UpdateColumns();
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        ordersList.Columns = f.Columns.Cast<MarketOrderColumnSettings>();
+                        ordersList.UpdateColumns();
+                    }
+                }
+             }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                using (var f = new IndustryJobsColumnsSelectWindow(jobsList.Columns.Select(x => x.Clone())))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        jobsList.Columns = f.Columns.Cast<IndustryJobColumnSettings>();
+                        jobsList.UpdateColumns();
+                    }
                 }
             }
-        }
+       }
 
         /// <summary>
         /// On menu opening we update the menu items.
@@ -1050,23 +1120,50 @@ namespace EVEMon
         /// <param name="e"></param>
         void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
-            bool hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
-            bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
-            hideInactiveOrdersMenuItem.Text = (hideInactive ? "Unhide Inactive Orders" : "Hide Inactive Orders");
-            numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+            bool hideInactive = true;
+            bool numberFormat = false;
+
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
+                numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
+                preferencesMenu.DropDownItems.Insert(3, numberAbsFormatMenuItem);
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
+                showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
+                preferencesMenu.DropDownItems.Remove(numberAbsFormatMenuItem);
+                showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
+                showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+
+            hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
         }
 
         /// <summary>
-        /// Hide/Show the inactive orders.
+        /// Hide/Show the inactive entries.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void hideInactiveOrdersMenuItem_Click(object sender, EventArgs e)
+        void hideInactiveMenuItem_Click(object sender, EventArgs e)
         {
-            bool hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
-            hideInactiveOrdersMenuItem.Text = (!hideInactive ? "Unhide Inactive Orders" : "Hide Inactive Orders");
-            Settings.UI.MainWindow.MarketOrders.HideInactiveOrders = !hideInactive;
-            ordersList.UpdateColumns();
+            bool hideInactive = true;
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
+                Settings.UI.MainWindow.MarketOrders.HideInactiveOrders = !hideInactive;
+                ordersList.UpdateColumns();
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
+                Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs = !hideInactive;
+                jobsList.UpdateColumns();
+            }
+            hideInactiveMenuItem.Text = (!hideInactive ? "Unhide Inactive" : "Hide Inactive");
         }
 
         /// <summary>
@@ -1083,25 +1180,41 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Displays only the market orders issued for character.
+        /// Displays only the entries issued for character.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void showOnlyCharOrdersMenuItem_Click(object sender, EventArgs e)
+        void showOnlyCharMenuItem_Click(object sender, EventArgs e)
         {
-            ordersList.ShowIssuedFor = (showOnlyCharOrdersMenuItem.Checked == true ? OrderIssuedFor.Character : OrderIssuedFor.All);
-            showOnlyCorpOrdersMenuItem.Checked = false;
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
+                showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
+                showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
         }
 
         /// <summary>
-        /// Displays only the market orders issued for corporation.
+        /// Displays only the entries issued for corporation.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void showOnlyCorpOrdersMenuItem_Click(object sender, EventArgs e)
+        void showOnlyCorpMenuItem_Click(object sender, EventArgs e)
         {
-            ordersList.ShowIssuedFor = (showOnlyCorpOrdersMenuItem.Checked == true ? OrderIssuedFor.Corporation : OrderIssuedFor.All);
-            showOnlyCharOrdersMenuItem.Checked = false;
+            if (multiPanel.SelectedPage == ordersPage)
+            {
+                ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
+                showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
+            }
+            else if (multiPanel.SelectedPage == jobsPage)
+            {
+                jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
+                showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
+            }
         }
         # endregion
 

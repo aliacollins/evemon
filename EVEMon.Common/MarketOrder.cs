@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common
 {
@@ -33,7 +32,7 @@ namespace EVEMon.Common
         protected readonly int m_initialVolume;
         protected readonly int m_minVolume;
         protected readonly int m_duration;
-        protected readonly OrderIssuedFor m_issuedFor;
+        protected readonly IssuedFor m_issuedFor;
 
         protected int m_remainingVolume;
         protected decimal m_unitaryPrice;
@@ -79,7 +78,7 @@ namespace EVEMon.Common
             m_minVolume = src.MinVolume;
             m_duration = src.Duration;
             m_issued = src.Issued;
-            m_issuedFor = (src.IssuedFor == OrderIssuedFor.None ? OrderIssuedFor.Character : src.IssuedFor);
+            m_issuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
         }
 
         /// <summary>
@@ -141,7 +140,7 @@ namespace EVEMon.Common
                 m_state = (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Active);
             }
 
-            // Canceled orders are left as marked for deletion.
+            // Canceled orders are left as marked for deletion
             OrderState state = GetState(src);
             if (state == OrderState.Canceled || (state == OrderState.Expired && Expiration > DateTime.UtcNow))
             {
@@ -160,11 +159,8 @@ namespace EVEMon.Common
                 m_lastStateChange = DateTime.UtcNow;
 
                 // Should we notify it to the user ?
-                if (state == OrderState.Expired || state == OrderState.Fulfilled)
-                {
-                    if (!m_ignored)
-                        endedOrders.Add(this);
-                }
+                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !m_ignored)
+                    endedOrders.Add(this);
             }
 
             return true;
@@ -218,15 +214,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         private Station GetStationByID(int id)
         {
-            Station station = null;
-
             // Look for the station in datafile
-            station = StaticGeography.GetStation(id);
-            
+            Station station = StaticGeography.GetStation(id);
+
             // We failed ? Then it's a conquerable outpost station
             if (station == null)
                 station = ConquerableStation.GetStation(id);
-            
+
             // We failed again ? It's not in any data we can access
             // We set it to a fixed one and notify about it in the trace file
             if (station == null)
@@ -238,7 +232,7 @@ namespace EVEMon.Common
 
             return station;
         }
-        
+
         /// <summary>
         /// Gets the state of an order.
         /// </summary>
@@ -380,7 +374,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets for which the order was issued.
         /// </summary>
-        public OrderIssuedFor IssuedFor
+        public IssuedFor IssuedFor
         {
             get { return m_issuedFor; }
         }
@@ -496,42 +490,6 @@ namespace EVEMon.Common
     {
         AbbreviationWords,
         AbbreviationSymbols
-    }
-    #endregion
-
-
-    #region OrderState
-    /// <summary>
-    /// The status of a market order.
-    /// </summary>
-    /// <remarks>The integer value determines the sort order.</remarks>
-    public enum OrderState
-    {
-        [Header("Active orders")]
-        Active = 0,
-        [Header("Canceled orders")]
-        Canceled = 1,
-        [Header("Expired orders")]
-        Expired = 2,
-        [Header("Fulfilled orders")]
-        Fulfilled = 3,
-        [Header("Modified orders")]
-        Modified = 4
-    }
-    #endregion
-
-
-    #region OrderIssuedFor
-    /// <summary>
-    /// For which the order was issued.
-    /// </summary>
-    /// <remarks>No need for integer value as we don't use the "Key" enum anywhere in the code for this</remarks>
-    public enum OrderIssuedFor
-    {
-        None,
-        Character,
-        Corporation,
-        All
     }
     #endregion
 

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System;
 using System.Data;
-using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using System.Linq;
+using System.Drawing;
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -13,31 +13,31 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MarketOrdersWindow : EVEMonForm
+    public partial class IndustryJobsWindow : EVEMonForm
     {
         private bool m_init;
 
-        public MarketOrdersWindow()
+        public IndustryJobsWindow()
         {
             InitializeComponent();
-            this.RememberPositionKey = "MarketOrdersWindow";
+            this.RememberPositionKey = "IndustryJobsWindow";
             m_init = true;
         }
 
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public MarketOrderGrouping Grouping
+        public IndustryJobGrouping Grouping
         {
-            get { return ordersList.Grouping; }
-            set
+            get { return jobsList.Grouping; }
+            set 
             {
-                ordersList.Grouping = value;
+                jobsList.Grouping = value;
 
                 if (m_init)
                 {
-                    ordersList.UpdateColumns();
-                    ordersList.listView.Visible = !ordersList.Orders.IsEmpty();
+                    jobsList.UpdateColumns();
+                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
                 }
             }
         }
@@ -47,28 +47,28 @@ namespace EVEMon
         /// </summary>
         public IssuedFor ShowIssuedFor
         {
-            get { return ordersList.ShowIssuedFor; }
-            set
+            get { return jobsList.ShowIssuedFor; }
+            set 
             {
-                ordersList.ShowIssuedFor = value;
+                jobsList.ShowIssuedFor = value;
 
                 if (m_init)
                 {
-                    ordersList.UpdateColumns();
-                    ordersList.listView.Visible = !ordersList.Orders.IsEmpty();
+                    jobsList.UpdateColumns();
+                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the enumeration of orders to display.
+        /// Gets or sets the enumeration of jobs to display.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrder> Orders
+        public IEnumerable<IndustryJob> Jobs
         {
-            get { return ordersList.Orders; }
-            set { ordersList.Orders = value; }
+            get { return jobsList.Jobs; }
+            set { jobsList.Jobs = value; }
         }
 
         /// <summary>
@@ -76,17 +76,17 @@ namespace EVEMon
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrderColumnSettings> Columns
+        public IEnumerable<IndustryJobColumnSettings> Columns
         {
-            get { return ordersList.Columns; }
+            get { return jobsList.Columns; }
             set
             {
-                ordersList.Columns = value;
+                jobsList.Columns = value;
 
                 if (m_init)
                 {
-                    ordersList.UpdateColumns();
-                    ordersList.listView.Visible = !ordersList.Orders.IsEmpty();
+                    jobsList.UpdateColumns();
+                    jobsList.lvJobs.Visible = !jobsList.Jobs.IsEmpty();
                 }
             }
         }

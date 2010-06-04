@@ -155,6 +155,7 @@
     <Compile Include="Controls\ExpandablePanelControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ListViewHelper.cs" />
     <Compile Include="Controls\NativeMethods.cs" />
     <Compile Include="Controls\ColumnSelectWindow.cs">
       <SubType>Form</SubType>
@@ -164,6 +165,21 @@
     </Compile>
     <Compile Include="Controls\NoFlickerPanel.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IndustryJobsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IndustryJobsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IndustryJobsWindow.Designer.cs">
+      <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindowIndustryJobs.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindowIndustryJobs.Designer.cs">
+      <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
@@ -965,6 +981,7 @@
     <None Include="Resources\icons\HideCharacter.png" />
     <Content Include="Resources\icons\ImplantCalculator.png" />
     <Content Include="Resources\icons\ImportCharacter.png" />
+    <Content Include="Resources\icons\Industry.png" />
     <Content Include="Resources\icons\Information16.png" />
     <None Include="Resources\icons\JumpClone.png" />
     <Content Include="Resources\icons\LeadsTo.png" />
@@ -1036,6 +1053,13 @@
     <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IndustryJobsWindow.resx">
+      <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindowIndustryJobs.resx">
+      <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillCompletionWindow.resx">
       <DependentUpon>SkillCompletionWindow.cs</DependentUpon>

@@ -59,5 +59,14 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return (ErrorCode == 208); }
         }
+
+        /// <summary>
+        /// Gets true when character has no corporation roles for industry jobs.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsJobsRelatedCorpRolesError
+        {
+            get { return (ErrorCode == 213); }
+        }
     }
 }

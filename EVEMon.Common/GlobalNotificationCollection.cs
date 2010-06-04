@@ -254,6 +254,34 @@ namespace EVEMon.Common
             notification.Priority = NotificationPriority.Error;
             Notify(notification);
         }
+
+        /// <summary>
+        /// Notifies an industry jobs querying error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
+        {
+            var notification = new APIErrorNotification(character, result);
+            notification.Description = "An error occured while querying the personal industry jobs.";
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Priority = NotificationPriority.Error;
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies an industry jobs querying error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
+        {
+            var notification = new APIErrorNotification(character, result);
+            notification.Description = "An error occured while querying the corporation industry jobs.";
+            notification.Behaviour = NotificationBehaviour.Overwrite;
+            notification.Priority = NotificationPriority.Error;
+            Notify(notification);
+        }
         #endregion
 
 
@@ -331,14 +359,6 @@ namespace EVEMon.Common
 
         #region Skill completion
         /// <summary>
-        /// Invalidates the notification for a skill completion.
-        /// </summary>
-        internal void InvalidateSkillCompletion(CCPCharacter character)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillCompletion));
-        }
-
-        /// <summary>
         /// Notifies a character finished training a skill.
         /// </summary>
         /// <param name="character"></param>
@@ -412,7 +432,7 @@ namespace EVEMon.Common
             Notify(notification);
         }
         #endregion 
-   
+
     
         #region Market orders expiration
         /// <summary>
@@ -423,6 +443,22 @@ namespace EVEMon.Common
         internal void NotifyMarkerOrdersEnding(Character character, List<MarketOrder> expiredOrders)
         {
             var notification = new MarketOrdersNotification(character, expiredOrders);
+            notification.Behaviour = NotificationBehaviour.Merge;
+            notification.Priority = NotificationPriority.Information;
+            Notify(notification);
+        }
+        #endregion
+
+
+        #region Industry jobs completion
+        /// <summary>
+        /// Notify some industry jobs have ended.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="expiredOrders"></param>
+        internal void NotifyIndustryJobCompletion(Character character, List<IndustryJob> jobsCompleted)
+        {
+            var notification = new IndustryJobsNotification(character, jobsCompleted);
             notification.Behaviour = NotificationBehaviour.Merge;
             notification.Priority = NotificationPriority.Information;
             Notify(notification);

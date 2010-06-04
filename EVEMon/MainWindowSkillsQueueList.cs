@@ -35,7 +35,6 @@ namespace EVEMon
         private QueuedSkill item;
         private QueuedSkill[] m_skillQueue;
 
-        private bool m_requireRefresh;
         private int count = 0;
         
         /// <summary>
@@ -45,7 +44,6 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            noSkillsQueueLabel.Visible = true;
             lbSkillsQueue.Visible = false;
 
             m_skillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F);
@@ -58,6 +56,28 @@ namespace EVEMon
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             this.Disposed += new EventHandler(OnDisposed);
         }
+
+        /// <summary>
+        /// Gets the character associated with this monitor.
+        /// </summary>
+        public Character Character
+        {
+            get { return m_character; }
+            set { m_character = value; }
+        }
+
+        /// <summary>
+        /// Gets the item's height.
+        /// </summary>
+        private int GetItemHeight
+        {
+            get
+            {
+                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop + LineVPad + PadTop + LowerBoxHeight, MinimumHeight);
+            }
+        }
+        
+        #region Inherited events
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -74,49 +94,28 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the character associated with this monitor.
-        /// </summary>
-        public Character Character
-        {
-            get { return m_character; }
-            set
-            {
-                m_character = value;
-                UpdateContent();
-            }
-        }
-
-        /// <summary>
-        /// Gets the item's height.
-        /// </summary>
-        private int GetItemHeight
-        {
-            get
-            {
-                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop + LineVPad + PadTop + LowerBoxHeight, MinimumHeight);
-            }
-        }
-        
-        #region Inherited events
-        /// <summary>
-        /// On load, we update the content
+        /// On load, we hide the list.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            UpdateContent();
+
+            lbSkillsQueue.Visible = false;
         }
 
         /// <summary>
-        /// When the control becomes visible again, checks whether a refresh is required.
+        /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible && m_requireRefresh) UpdateContent();
             base.OnVisibleChanged(e);
+
+            if (this.Visible)
+                UpdateContent();
         }
+
         #endregion
         
         
@@ -128,15 +127,11 @@ namespace EVEMon
         {
             // Returns if not visible
             if (!this.Visible)
-            {
-                m_requireRefresh = true;
                 return;
-            }
 
             // When no character, we just clear the list
             if (m_character == null)
             {
-                m_requireRefresh = false;
                 noSkillsQueueLabel.Visible = true;
                 lbSkillsQueue.Visible = false;
                 lbSkillsQueue.Items.Clear();
@@ -151,9 +146,7 @@ namespace EVEMon
             
             // When the skill queue hasn't changed don't do anything
             if (!QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
-            {
                 return;
-            }
 
             m_skillQueue = ccpCharacter.SkillQueue.ToArray();
 
@@ -178,7 +171,6 @@ namespace EVEMon
             finally
             {
                 lbSkillsQueue.EndUpdate();
-                m_requireRefresh = false;
             }
         }
 
@@ -190,12 +182,12 @@ namespace EVEMon
             if (m_skillQueue == null)
                 return true;
             
-            if (queue.Length != m_skillQueue.Length)
+            if (!queue.Length.Equals(m_skillQueue.Length))
                 return true;
 
             for (var i = 0; i < queue.Length; i++)
             {
-                if (queue[i] != m_skillQueue[i])
+                if (!queue[i].Equals(m_skillQueue[i]))
                     return true;
             }
 
@@ -214,6 +206,7 @@ namespace EVEMon
         {
             if (e.Index < 0)
                 return;
+
             item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
             DrawItem(item, e);
         }
@@ -227,6 +220,7 @@ namespace EVEMon
         {
             if (e.Index < 0)
                 return;
+
             e.ItemHeight = GetItemHeight;
         }
 
@@ -240,7 +234,7 @@ namespace EVEMon
             Graphics g = e.Graphics;
 
             // Draw background
-            if ((e.Index % 2) == 0)
+            if ((e.Index % 2).Equals(0))
             {
                 // Not in training - odd
                 g.FillRectangle(Brushes.LightGray, e.Bounds);
@@ -260,15 +254,11 @@ namespace EVEMon
             int skillPointsToNextLevel = (skill.Skill == null ? 0 :
                 skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5)));
 
-            if (skill.Skill != null && skill.Level == skill.Skill.Level + 1)
-            {
+            if (skill.Skill != null && skill.Level.Equals(skill.Skill.Level + 1))
                 percentComplete = skill.Skill.FractionCompleted;
-            }
 
             if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
-            {
                 skillPoints = skill.CurrentSP;
-            }
 
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", (skill.Skill == null ? 0 : skill.Skill.Rank));
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:#,##0}/{1:#,##0}", skillPoints, skillPointsToNextLevel);
@@ -317,24 +307,18 @@ namespace EVEMon
                 {
                     foreach (var qskill in skillQueue)
                     {
-                        if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
-                           || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level && percentComplete == 0.0))
-                        {
+                        if ((!skill.Skill.IsTraining && skill.Equals(qskill) && level.Equals(qskill.Level))
+                           || (skill.Equals(qskill) && level <= qskill.Level && level > skill.Skill.Level && percentComplete.Equals(0)))
                             g.FillRectangle(Brushes.RoyalBlue, brect);
-                        }
 
                         // Blinking indicator of skill level in training
-                        if (skill.Skill.IsTraining && skill == qskill && level == skill.Level && percentComplete > 0.0)
+                        if (skill.Skill.IsTraining && skill.Equals(qskill) && level.Equals(skill.Level) && percentComplete > 0.0)
                         {
-                            if (count == 0)
-                            {
+                            if (count.Equals(0))
                                 g.FillRectangle(Brushes.White, brect);
-                            }
 
-                            if (count == 1)
-                            {
+                            if (count.Equals(1))
                                 count = -1;
-                            }
 
                             count++;
                         }
@@ -376,15 +360,6 @@ namespace EVEMon
                 new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
         }
 
-        /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
-        /// </summary>
-        /// <param name="proposedSize"></param>
-        /// <returns></returns>
-        public override Size GetPreferredSize(Size proposedSize)
-        {
-            return lbSkillsQueue.GetPreferredSize(proposedSize);
-        }
         #endregion
 
 
@@ -399,7 +374,7 @@ namespace EVEMon
             // Update the drawing based upon the mouse wheel scrolling.
             int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
             int lines = numberOfItemLinesToMove;
-            if (lines == 0)
+            if (lines.Equals(0))
                 return;
 
             // Compute the number of lines to move
@@ -410,13 +385,11 @@ namespace EVEMon
                 object item = null;
 
                 // Going up
-                if (direction == Math.Abs(direction))
+                if (direction.Equals(Math.Abs(direction)))
                 {
+                    // Retrieve the next top item
                     if (lbSkillsQueue.TopIndex - i >= 0)
-                    {
-                        // Retrieve the next top item
                         item = lbSkillsQueue.Items[lbSkillsQueue.TopIndex - i];
-                    }
                 }
                 // Going down
                 else
@@ -430,9 +403,7 @@ namespace EVEMon
 
                     // Retrieve the next bottom item
                     if (height > lbSkillsQueue.ClientSize.Height)
-                    {
                         item = lbSkillsQueue.Items[lbSkillsQueue.TopIndex + i - 1];
-                    }
                 }
 
                 // If found a new item as top or bottom
@@ -447,10 +418,8 @@ namespace EVEMon
             }
 
             // Scroll 
-            if (lines != 0)
-            {
+            if (!lines.Equals(0))
                 lbSkillsQueue.Invalidate();
-            }
         }
 
         /// <summary>
@@ -467,7 +436,7 @@ namespace EVEMon
 
             // Beware, this last index may actually means a click in the whitespace at the bottom
             // Let's deal with this special case
-            if (index == lbSkillsQueue.Items.Count - 1)
+            if (index.Equals(lbSkillsQueue.Items.Count - 1))
             {
                 Rectangle itemRect = lbSkillsQueue.GetItemRectangle(index);
                 if (!itemRect.Contains(e.Location))
@@ -477,7 +446,7 @@ namespace EVEMon
             // Right click for skills below lv5 : we display a context menu to plan higher levels.
             item = lbSkillsQueue.Items[index] as QueuedSkill;
             Skill skill = item.Skill;
-            if (e.Button == MouseButtons.Right)
+            if (e.Button.Equals(MouseButtons.Right))
             {
                 // "Show in Skill Explorer" menu item
                 ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", Properties.Resources.LeadsTo);
@@ -497,7 +466,8 @@ namespace EVEMon
                     int nextLevel = Math.Min(5, skill.Level + 1);
                     for (int level = nextLevel; level < 6; level++)
                     {
-                        ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanForInt(level)));
+                        ToolStripMenuItem menuLevel = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture,
+                            "Level {0} to", Skill.GetRomanForInt(level)));
                         tm.DropDownItems.Add(menuLevel);
 
                         m_character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
@@ -552,8 +522,9 @@ namespace EVEMon
         /// <param name="item"></param>
         private void DisplayTooltip(QueuedSkill item)
         {
-            if (ttToolTip.Active && m_lastTooltipItem == item)
+            if (ttToolTip.Active && m_lastTooltipItem != null && m_lastTooltipItem.Equals(item))
                 return;
+
             m_lastTooltipItem = item;
 
             ttToolTip.Active = false;
@@ -573,13 +544,14 @@ namespace EVEMon
             int sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
             float percentDone = 0;
-            if (skill.Level == skill.Skill.Level + 1)
+            if (skill.Level.Equals(skill.Skill.Level + 1))
                 percentDone = skill.FractionCompleted;
+
             if (skill.Level > skill.Skill.Level + 1)
                 sp = skill.CurrentSP;
+
             int nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             int pointsLeft = nextLevelSP - sp;
-
             var timeSpanFromPoints = skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
@@ -597,7 +569,7 @@ namespace EVEMon
 
             // So, it's a left click on a skill, we display the tool tip
             // Currently training skill?
-            if (skill.Skill.IsTraining && percentDone != 0)
+            if (skill.Skill.IsTraining && !percentDone.Equals(0))
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Partially Completed ({0}%)\n", skill.Skill.PercentCompleted);
@@ -608,7 +580,7 @@ namespace EVEMon
             }
 
             // Currently training skill but next queued level?
-            if (skill.Skill.IsTraining && percentDone == 0)
+            if (skill.Skill.IsTraining && percentDone.Equals(0))
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Previous level not yet completed\n");
@@ -630,19 +602,16 @@ namespace EVEMon
             }
 
             // We've completed all the skill points for the current level
-            if (!skill.Skill.IsPartiallyTrained)
+            if (!skill.Skill.IsPartiallyTrained && !skill.Level.Equals(5))
             {
-                if (skill.Level != 5)
-                {
-                    StringBuilder levelCompleteToolTip = new StringBuilder();
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Completed Level {0}: {1:#,##0}/{2:#,##0}\n",
-                                         Skill.GetRomanForInt(skill.Level - 1), sp, nextLevelSP);
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Queued level {0}: {1:#,##0} skill points required\n",
-                                         Skill.GetRomanForInt(nextLevel), pointsLeft);
-                    levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}", remainingTimeText);
-                    AddSkillBoilerPlate(levelCompleteToolTip, skill.Skill);
-                    return levelCompleteToolTip.ToString();
-                }
+                StringBuilder levelCompleteToolTip = new StringBuilder();
+                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Completed Level {0}: {1:#,##0}/{2:#,##0}\n",
+                                     Skill.GetRomanForInt(skill.Level - 1), sp, nextLevelSP);
+                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Queued level {0}: {1:#,##0} skill points required\n",
+                                     Skill.GetRomanForInt(nextLevel), pointsLeft);
+                levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}", remainingTimeText);
+                AddSkillBoilerPlate(levelCompleteToolTip, skill.Skill);
+                return levelCompleteToolTip.ToString();
             }
 
             // Error in calculating SkillPoints
@@ -712,9 +681,7 @@ namespace EVEMon
                 // Invalidate the skill row
                 int index = lbSkillsQueue.Items.IndexOf(training);
                 if (index >= 0)
-                {
                     lbSkillsQueue.Invalidate(lbSkillsQueue.GetItemRectangle(index));
-                }
 
                 UpdateContent();
             }
@@ -729,6 +696,7 @@ namespace EVEMon
         {
             if (e.Character != m_character)
                 return;
+
             UpdateContent();
         }
 

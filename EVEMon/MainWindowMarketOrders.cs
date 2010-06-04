@@ -26,7 +26,7 @@ namespace EVEMon
 
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
-        private OrderIssuedFor m_showIssuedFor;
+        private IssuedFor m_showIssuedFor;
         private Character m_character;
 
         private string m_textFilter = String.Empty;
@@ -34,8 +34,8 @@ namespace EVEMon
 
         private bool m_hideInactive;
         private bool m_numberFormat;
-        private bool m_updatePending;
         private bool m_isUpdatingColumns;
+        private bool m_init;
 
         // Panel info variables
         private int m_skillBasedOrders;
@@ -58,33 +58,27 @@ namespace EVEMon
         public MainWindowMarketOrdersList()
         {
             InitializeComponent();
+            InitializeExpandablePanelControls();
 
             listView.Visible = false;
             listView.ShowItemToolTips = true;
             listView.AllowColumnReorder = true;
             listView.Columns.Clear();
             noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            noOrdersLabel.Visible = true;
+
+            ListViewHelper.EnableDoubleBuffer(listView);
+            marketExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
+            marketExpPanelControl.Visible = false;
 
             listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
             listView.KeyDown += new KeyEventHandler(listView_KeyDown);
             listView.ColumnWidthChanged += new ColumnWidthChangedEventHandler(listView_ColumnWidthChanged);
 
+            this.Resize += new EventHandler(MainWindowMarketOrdersList_Resize);
+
             EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
             this.Disposed += new EventHandler(OnDisposed);
         }
-        
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
-        }
-        
 
         /// <summary>
         /// Gets the character associated with this monitor.
@@ -104,7 +98,8 @@ namespace EVEMon
             set
             {
                 m_textFilter = value;
-                UpdateColumns();
+                if (m_init)
+                    UpdateColumns();
             }
         }
 
@@ -117,20 +112,22 @@ namespace EVEMon
             set
             {
                 m_grouping = value;
-                UpdateColumns();
+                if (m_init)
+                    UpdateColumns();
             }
         }
 
         /// <summary>
         /// Gets or sets which "Issued for" orders to display.
         /// </summary>
-        public OrderIssuedFor ShowIssuedFor
+        public IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set
             {
                 m_showIssuedFor = value;
-                UpdateColumns();
+                if (m_init)
+                    UpdateColumns();
             }
         }
 
@@ -143,7 +140,7 @@ namespace EVEMon
             { 
                 return m_list.Any(x=>
                 (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x.IssuedFor == OrderIssuedFor.Corporation); 
+                && x.IssuedFor == IssuedFor.Corporation); 
             }
         }
 
@@ -203,7 +200,8 @@ namespace EVEMon
                 if (value != null)
                     m_columns.AddRange(value.Select(x => x.Clone()));
 
-                UpdateColumns();
+                if (m_init)
+                    UpdateColumns();
             }
         }
 
@@ -213,43 +211,52 @@ namespace EVEMon
         # region Inherited Events
 
         /// <summary>
-        /// On load, we update the content.
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
+            this.Disposed -= new EventHandler(OnDisposed);
+        }
+
+        /// <summary>
+        /// On load, we hide the list and the expandable panel.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            UpdateColumns();
-            InitilizeExpandablePanelControls();
+
+            listView.Visible = false;
+            marketExpPanelControl.Visible = false;
+            marketExpPanelControl.Header.Visible = false;
         }
 
         /// <summary>
-        /// When the control becomes visible again, check for pending updates.
+        /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (this.DesignMode || this.IsDesignModeHosted() || m_character == null)
                 return;
 
-            if (this.Visible)
-            {
-                var ccpCharacter = m_character as CCPCharacter;
-                this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
-                this.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-                this.Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
-
-                UpdateColumns();
-                UpdateExpPanelContent();
-            }
-
-            if (m_updatePending)
-            {
-                UpdateColumns();
-                UpdateExpPanelContent();
-            }
-
             base.OnVisibleChanged(e);
+
+            if (!this.Visible)
+                return;
+
+            m_init = false;
+            var ccpCharacter = m_character as CCPCharacter;
+            this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
+            this.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
+            this.Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
+
+            UpdateColumns();
+            UpdateExpPanelContent();
+            m_init = true;
         }
 
         # endregion
@@ -268,8 +275,6 @@ namespace EVEMon
 
             try
             {
-                listView.Items.Clear();
-                listView.Groups.Clear();
                 listView.Columns.Clear();
 
                 foreach (var column in m_columns.Where(x => x.Visible))
@@ -326,11 +331,7 @@ namespace EVEMon
         {
             // Returns if not visible
             if (!this.Visible)
-            {
-                m_updatePending = true;
                 return;
-            }
-            m_updatePending = false;
  
             m_hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             m_numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
@@ -345,19 +346,13 @@ namespace EVEMon
 
                 switch (m_showIssuedFor)
                 {
-                    case OrderIssuedFor.Character:
-                        orders = orders.Where(x => x.IssuedFor == OrderIssuedFor.Character);
+                    case IssuedFor.Character:
+                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Character);
                         break;
-                    case OrderIssuedFor.Corporation:
-                        orders = orders.Where(x => x.IssuedFor == OrderIssuedFor.Corporation);
+                    case IssuedFor.Corporation:
+                        orders = orders.Where(x => x.IssuedFor == IssuedFor.Corporation);
                         break;
                 }
-
-                noOrdersLabel.Visible = orders.IsEmpty();
-                listView.Visible = !orders.IsEmpty();
-                
-                listView.Items.Clear();
-                listView.Groups.Clear();
 
                 UpdateSort();
 
@@ -404,6 +399,13 @@ namespace EVEMon
                         UpdateContent(groups9);
                         break;
                 }
+
+                // Display or hide the "no orders" label.
+                if (m_init)
+                {
+                    noOrdersLabel.Visible = orders.IsEmpty();
+                    listView.Visible = !orders.IsEmpty();
+                }
             }
             finally
             {
@@ -418,20 +420,30 @@ namespace EVEMon
         /// <param name="groups"></param>
         private void UpdateContent<TKey>(IEnumerable<IGrouping<TKey, MarketOrder>> groups)
         {
-            // Add the groups.
+            listView.Items.Clear();
+            listView.Groups.Clear();
+
+            // Add the groups
             foreach (var group in groups)
             {
                 string groupText = String.Empty;
                 if (group.Key is OrderState)
+                {
                     groupText = ((OrderState)(Object)group.Key).GetHeader().ToString();
+                }
                 else if (group.Key is DateTime)
+                {
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
-                else groupText = group.Key.ToString();
+                }
+                else
+                {
+                    groupText = group.Key.ToString();
+                }
 
                 var listGroup = new ListViewGroup(groupText);
                 listView.Groups.Add(listGroup);
 
-                // Add the items in every group.
+                // Add the items in every group
                 foreach (var order in group)
                 {
                     if (order.Item == null)
@@ -441,11 +453,11 @@ namespace EVEMon
                     item.UseItemStyleForSubItems = false;
                     item.Tag = order;
 
-                    // Display text as dimmed if the order is no longer available.
+                    // Display text as dimmed if the order is no longer available
                     if (!order.IsAvailable)
                         item.ForeColor = SystemColors.GrayText;
 
-                    // Display text highlighted if the order is modified.
+                    // Display text highlighted if the order is modified
                     if (order.State == OrderState.Modified)
                         item.ForeColor = SystemColors.HotTrack;
 
@@ -524,7 +536,7 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Expiration:
-                    item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription(order.Expiration).ToUpper() : "Expired");
+                    item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription(order.Expiration).ToUpper() : OrderState.Expired.ToString());
                     item.ForeColor = (order.IsAvailable ? Color.Black : Color.Red);
                     if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
                         item.ForeColor = Color.DarkOrange; 
@@ -684,6 +696,21 @@ namespace EVEMon
         #region Event Handlers
 
         /// <summary>
+        /// On resize, updates the controls visibility.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MainWindowMarketOrdersList_Resize(object sender, EventArgs e)
+        {
+            if (!m_init)
+                return;
+
+            UpdateContent();
+            marketExpPanelControl.Visible = true;
+            marketExpPanelControl.Header.Visible = true;
+        }
+
+        /// <summary>
         /// When the user manually resizes a column, we make sure to update the column preferences.
         /// </summary>
         /// <param name="sender"></param>
@@ -726,6 +753,10 @@ namespace EVEMon
         {
             switch (e.KeyCode)
             {
+                case Keys.A:
+                    if (e.Control)
+                        listView.SelectAll();
+                    break;
                 case Keys.Delete:
                     if (listView.SelectedItems.Count == 0)
                         return;
@@ -799,7 +830,8 @@ namespace EVEMon
                 return;
             }
 
-            marketExpPanelControl.Visible = true;
+            if (m_init)
+                marketExpPanelControl.Visible = true;
 
             // Calculate the related info for the panel
             CalculatePanelInfo();
@@ -969,13 +1001,13 @@ namespace EVEMon
         private void CalculatePanelInfo()
         {
             var activeSellOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is SellOrder && x.IssuedFor == OrderIssuedFor.Character);
+                && x is SellOrder && x.IssuedFor == IssuedFor.Character);
             var activeSellOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is SellOrder && x.IssuedFor == OrderIssuedFor.Corporation);
+                && x is SellOrder && x.IssuedFor == IssuedFor.Corporation);
             var activeBuyOrdersIssuedForCharacter = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is BuyOrder && x.IssuedFor == OrderIssuedFor.Character);
+                && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
             var activeBuyOrdersIssuedForCorporation = m_list.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
-                && x is BuyOrder && x.IssuedFor == OrderIssuedFor.Corporation);
+                && x is BuyOrder && x.IssuedFor == IssuedFor.Corporation);
 
             // Calculate character's max orders
             m_skillBasedOrders = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.TradeSkillID).LastConfirmedLvl * 4
@@ -1029,7 +1061,7 @@ namespace EVEMon
         # endregion
 
 
-        #region Initilize Expandable Panel Controls
+        #region Initialize Expandable Panel Controls
 
         // Basic labels constructor
         private Label lblTotalEscrow = new Label();
@@ -1054,7 +1086,7 @@ namespace EVEMon
         private Label lblActiveCharBuyOrdersCount = new Label();
         private Label lblActiveCorpBuyOrdersCount = new Label();
 
-        private void InitilizeExpandablePanelControls()
+        private void InitializeExpandablePanelControls()
         {
             // Add basic labels to panel
             marketExpPanelControl.Controls.AddRange(new Label[]
@@ -1098,10 +1130,10 @@ namespace EVEMon
             lblBidRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblModificationRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblRemoteBidRange.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblAskRange.Location = new Point(370, 0);
-            lblBidRange.Location = new Point(370, 0);
-            lblModificationRange.Location = new Point(370, 0);
-            lblRemoteBidRange.Location = new Point(370, 0);
+            lblAskRange.Location = new Point(220, 0);
+            lblBidRange.Location = new Point(220, 0);
+            lblModificationRange.Location = new Point(220, 0);
+            lblRemoteBidRange.Location = new Point(220, 0);
 
             // Subscribe events
             marketExpPanelControl.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);

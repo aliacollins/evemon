@@ -122,7 +122,7 @@ namespace EVEMon.Common.Serialization.Settings
         /// Which this order was issued for.
         /// </summary>
         [XmlAttribute("issuedFor")]
-        public OrderIssuedFor IssuedFor
+        public IssuedFor IssuedFor
         {
             get;
             set;

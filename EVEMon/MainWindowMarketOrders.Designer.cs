@@ -136,7 +136,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView;
+        internal protected System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Label noOrdersLabel;
         private System.Windows.Forms.ColumnHeader itemColumn;
         private System.Windows.Forms.ColumnHeader volumeColumn;

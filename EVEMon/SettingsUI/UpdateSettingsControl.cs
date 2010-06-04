@@ -130,6 +130,9 @@ namespace EVEMon.SettingsUI
             if (method == APIMethods.MarketOrders)
                 m_settings.Periods[APIMethods.CorporationMarketOrders] = periods[combo.SelectedIndex];
 
+            if (method == APIMethods.IndustryJobs)
+                m_settings.Periods[APIMethods.CorporationIndustryJobs] = periods[combo.SelectedIndex];
+
             m_settings.Periods[method] = periods[combo.SelectedIndex];
         }
 

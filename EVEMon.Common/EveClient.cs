@@ -446,6 +446,16 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersChanged;
 
         /// <summary>
+        /// Occurs when the industry jobs of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterIndustryJobsChanged;
+
+        /// <summary>
+        /// Occurs when the industry jobs of a character have been completed.
+        /// </summary>
+        public static event EventHandler<IndustryJobsEventArgs> CharacterIndustryJobsCompleted;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -548,6 +558,30 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterMarketOrdersChanged != null)
                 CharacterMarketOrdersChanged(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterIndustryJobsChanged(Character character)
+        {
+            Trace("EveClient.OnCharacterIndustryJobsChanged - " + character.Name);
+            Settings.Save();
+            if (CharacterIndustryJobsChanged != null)
+                CharacterIndustryJobsChanged(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
+        {
+            Trace("EveClient.OnCharacterIndustryJobsCompleted - " + character.Name);
+            Settings.Save();
+            if (CharacterIndustryJobsCompleted != null)
+                CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
 
         /// <summary>

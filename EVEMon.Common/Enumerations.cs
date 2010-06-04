@@ -7,7 +7,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
-    # region Flag Enumerations
+    #region Flag Enumerations
 
     /// <summary>
     /// Flags for the races.
@@ -116,29 +116,10 @@ namespace EVEMon.Common
         UpgradeOnly = 8
     }
 
-    # endregion
+    #endregion
 
 
     #region Simple Enumerations
-
-    /// <summary>
-    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4, matching the attributes order on the ingame character sheets.
-    /// </summary>
-    public enum EveAttribute
-    {
-        [XmlEnum("perception")]
-        Perception = 1,
-        [XmlEnum("memory")]
-        Memory = 4,
-        [XmlEnum("willpower")]
-        Willpower = 3,
-        [XmlEnum("intelligence")]
-        Intelligence = 0,
-        [XmlEnum("charisma")]
-        Charisma = 2,
-        [XmlEnum("none")]
-        None = -1
-    }
 
     /// <summary>
     /// Enumerations of the implants slots. None is -1, other range from 0 to 4, matching the order of the implants ingame
@@ -215,7 +196,6 @@ namespace EVEMon.Common
         LowerTierAttribute,
         UpperTierAttribute
     }
-
 
     /// <summary>
     /// Represents how much current SP and levels are taken into account for a training time computation.
@@ -336,6 +316,27 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// For which the object was issued.
+    /// </summary>
+    public enum IssuedFor
+    {
+        None,
+        Character,
+        Corporation,
+        All
+    }
+
+    /// <summary>
+    /// A blueprint's type.
+    /// </summary>
+    /// <remarks>The integer value determines the value assigned in <see cref="IndustryJob(SerializableAPIJob src)"/>.</remarks>
+    public enum BlueprintType
+    {
+        Original = 0,
+        Copy = 1
+    }
+
+    /// <summary>
     /// Enumeration of skill browser filter.
     /// </summary>
     public enum SkillFilter
@@ -390,12 +391,32 @@ namespace EVEMon.Common
         Copying = 3,
         ResearchingMaterialProductivity = 4,
         ResearchingTimeProductivity = 5,
-        Invention = 6,
+        Invention = 6
     }
+
     #endregion
 
 
     #region Enumerations with attributes
+
+    /// <summary>
+    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4, matching the attributes order on the ingame character sheets.
+    /// </summary>
+    public enum EveAttribute
+    {
+        [XmlEnum("perception")]
+        Perception = 1,
+        [XmlEnum("memory")]
+        Memory = 4,
+        [XmlEnum("willpower")]
+        Willpower = 3,
+        [XmlEnum("intelligence")]
+        Intelligence = 0,
+        [XmlEnum("charisma")]
+        Charisma = 2,
+        [XmlEnum("none")]
+        None = -1
+    }
 
     /// <summary>
     /// Represents the activity of a blueprint.
@@ -419,7 +440,57 @@ namespace EVEMon.Common
         [Description("Reverse Engineering")]
         ReverseEngineering = 7,
         [Description("Invention")]
-        Invention = 8,
+        Invention = 8
+    }
+
+    /// <summary>
+    /// The status of a industry job.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order in "Group by...".</remarks>
+    public enum JobState
+    {
+        [Header("Active jobs")]
+        Active = 0,
+        [Header("Delivered jobs")]
+        Delivered = 1,
+        [Header("Canceled jobs")]
+        Canceled = 2,
+        [Header("Paused jobs")]
+        Paused = 3,
+        [Header("Failed jobs")]
+        Failed = 4
+    }
+
+    /// <summary>
+    /// The status of a market order.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum OrderState
+    {
+        [Header("Active orders")]
+        Active = 0,
+        [Header("Canceled orders")]
+        Canceled = 1,
+        [Header("Expired orders")]
+        Expired = 2,
+        [Header("Fulfilled orders")]
+        Fulfilled = 3,
+        [Header("Modified orders")]
+        Modified = 4
+    }
+
+    /// <summary>
+    /// The status of an active job.
+    /// </summary>
+    public enum ActiveJobState
+    {
+        None,
+        [Description("Pending")]
+        Pending,
+        [Description("In progress")]
+        InProgress,
+        [Description("Ready")]
+        Ready
     }
 
     /// <summary>
@@ -464,6 +535,31 @@ namespace EVEMon.Common
         SkillQueue,
 
         /// <summary>
+        /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Market Orders")]
+        [Description("The market orders of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        MarketOrders,
+
+        /// <summary>
+        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders,
+
+        /// <summary>
+        /// The personal issued industry jobs of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Industry Jobs")]
+        [Description("The industry jobs of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        IndustryJobs,
+        
+        /// <summary>
         /// /// Mail messages for a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
@@ -482,13 +578,11 @@ namespace EVEMon.Common
         Notifications,
 
         /// <summary>
-        /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
+        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        [Header("Market Orders")]
-        [Description("The market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        MarketOrders,
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationIndustryJobs,
 
         /// <summary>
         /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
@@ -497,20 +591,13 @@ namespace EVEMon.Common
         CharacterAccountBalance,
 
         /// <summary>
-        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        CorporationMarketOrders,
-
-        /// <summary>
         /// The conquerable station list. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         ConquerableStationList,
 
         /// <summary>
-        /// The skill in training of a character.
+        /// The skill in training of a character. Used to determine if an account has a character in training.
         /// </summary>
         CharacterSkillInTraining
     }

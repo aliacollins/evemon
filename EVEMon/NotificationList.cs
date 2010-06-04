@@ -366,7 +366,19 @@ namespace EVEMon
                 window.Orders = ordersNotification.Orders;
                 window.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
                 window.Grouping = MarketOrderGrouping.State;
-                window.ShowIssuedFor = OrderIssuedFor.All;
+                window.ShowIssuedFor = IssuedFor.All;
+                return;
+            }
+
+            // Industry jobs ?
+            if (notification is IndustryJobsNotification)
+            {
+                var jobsNotification = (IndustryJobsNotification)notification;
+                var window = WindowsFactory<IndustryJobsWindow>.ShowUnique();
+                window.Jobs = jobsNotification.Jobs;
+                window.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
+                window.Grouping = IndustryJobGrouping.State;
+                window.ShowIssuedFor = IssuedFor.All;
                 return;
             }
         }
@@ -399,7 +411,8 @@ namespace EVEMon
                 StringBuilder builder = new StringBuilder();
                 foreach (var skill in skillNotifications.Skills.Reverse())
                 {
-                    builder.AppendLine(String.Format(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName, Skill.GetRomanForInt(skill.Level)));
+                    builder.AppendFormat(CultureConstants.DefaultCulture,
+                        "{0} {1} completed.", skill.SkillName, Skill.GetRomanForInt(skill.Level)).AppendLine();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());    
                 toolTip.Active = true;
@@ -414,7 +427,8 @@ namespace EVEMon
                 StringBuilder builder = new StringBuilder();
                 foreach (var orderGroup in ordersNotification.Orders.GroupBy(x => x.State))
                 {
-                    if (builder.Length != 0) builder.AppendLine();
+                    if (builder.Length != 0)
+                        builder.AppendLine();
                     builder.AppendLine(orderGroup.Key.GetHeader());
 
                     foreach (var order in orderGroup)
@@ -435,7 +449,25 @@ namespace EVEMon
                         builder.AppendLine(order.Station.Name);
                     }
                 }
+                toolTip.SetToolTip(listBox, builder.ToString());
+                toolTip.Active = true;
+                return;
+            }
 
+            // Industry jobs ?
+            if (notification is IndustryJobsNotification)
+            {
+                var jobsNotification = (IndustryJobsNotification)notification;
+
+                StringBuilder builder = new StringBuilder();
+                foreach (var job in jobsNotification.Jobs)
+                {
+                    if (job.InstalledItem == null)
+                        continue;
+
+                    builder.Append(job.InstalledItem.Name).Append(" at ");
+                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}", job.SolarSystem.Name, job.Installation).AppendLine();
+                }
                 toolTip.SetToolTip(listBox, builder.ToString());
                 toolTip.Active = true;
                 return;

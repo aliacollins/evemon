@@ -276,6 +276,9 @@
     <Compile Include="IGBService\IgbTcpListener.cs" />
     <Compile Include="IgnoredCharacter.cs" />
     <Compile Include="Attributes\UpdateAttribute.cs" />
+    <Compile Include="IndustryJob.cs" />
+    <Compile Include="IndustryJobCollection.cs" />
+    <Compile Include="IndustryJobComparer.cs" />
     <Compile Include="InvalidPlanEntry.cs" />
     <Compile Include="IQueryMonitor.cs" />
     <Compile Include="MarketOrder.cs" />
@@ -289,6 +292,7 @@
     <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
     <Compile Include="IPlanOperation.cs" />
     <Compile Include="Notifications\APIErrorNotification.cs" />
+    <Compile Include="Notifications\IndustryJobsNotification.cs" />
     <Compile Include="Notifications\SkillCompletionNotification.cs" />
     <Compile Include="Notifications\MarketOrdersNotification.cs" />
     <Compile Include="Notifications\Notification.cs" />
@@ -329,6 +333,7 @@
     <Compile Include="QueryMonitorCollection.cs" />
     <Compile Include="Serialization\API\IAPIResult.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
+    <Compile Include="Serialization\API\SerializableAPIJob.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
     <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
     <Compile Include="Serialization\Datafiles\BlueprintsDatafile.cs" />
@@ -358,12 +363,16 @@
     <Compile Include="Serialization\Importation\OldSettings.cs" />
     <Compile Include="Serialization\Importation\OldExportedSkill.cs" />
     <Compile Include="Serialization\Importation\OldExportedSkillGroup.cs" />
+    <Compile Include="Serialization\Settings\SerializableJob.cs" />
     <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
     <Compile Include="SettingsObjects\BlueprintBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />
     <Compile Include="SettingsObjects\IGBSettings.cs" />
+    <Compile Include="SettingsObjects\IndustryJobColumn.cs" />
+    <Compile Include="SettingsObjects\IndustryJobColumnSettings.cs" />
+    <Compile Include="SettingsObjects\IndustryJobSettings.cs" />
     <Compile Include="SettingsObjects\MarketOrderColumn.cs" />
     <Compile Include="SettingsObjects\MarketOrderColumnSettings.cs" />
     <Compile Include="SettingsObjects\MarketOrderSettings.cs" />
