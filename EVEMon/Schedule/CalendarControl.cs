@@ -181,13 +181,9 @@ namespace EVEMon.Schedule
                         {
                             bool isValidDay = false;
                             int dayNum = 0;
-                            if (!daysRunning)
-                            {
-                                if (cDow == firstDayDow)
-                                {
-                                    daysRunning = true;
-                                }
-                            }
+                            if (!daysRunning && cDow == firstDayDow)
+                                daysRunning = true;
+
                             if (daysRunning)
                             {
                                 if (mdt.Month == m_date.Month)
@@ -284,13 +280,8 @@ namespace EVEMon.Schedule
                 this.Invalidate();   
 
                 // Only send out the events if we clicked on a day this month
-                if (newDate.Month == oldDate.Month)
-                {
-                    if (mouse.Clicks == 1)
-                    {
-                        DayClicked(m_date, mouse, p);
-                    }
-                }
+                if (newDate.Month == oldDate.Month && mouse.Clicks == 1)
+                    DayClicked(m_date, mouse, p);
             }
         }
 
@@ -303,13 +294,8 @@ namespace EVEMon.Schedule
             DateTime oldDate = m_date;
             if (newDate != new DateTime(0))
             {
-                if (newDate.Month == oldDate.Month)
-                {
-                    if (mouse.Clicks == 2)
-                    {
-                        DayDoubleClicked(m_date, mouse, p);
-                    }
-                }
+                if (newDate.Month == oldDate.Month && mouse.Clicks == 2)
+                    DayDoubleClicked(m_date, mouse, p);
             }
         }
 
@@ -321,26 +307,7 @@ namespace EVEMon.Schedule
         // return the date under a specific point (used for hover tips etc)
         public DateTime GetDateFromPoint(Point p)
         {
-            // initialise the return variable with something useful as a default value
-            int nStartDay;
-            int day, week;
-
-            // we need an int value for the first day of the month
-            DayOfWeek nFirstDayOfMonth = (new DateTime(m_date.Year, m_date.Month, 1)).DayOfWeek;
-            switch (nFirstDayOfMonth)
-            {
-                case DayOfWeek.Friday: nStartDay = 4; break;
-                case DayOfWeek.Monday: nStartDay = 0; break;
-                case DayOfWeek.Saturday: nStartDay = 5; break;
-                case DayOfWeek.Sunday: nStartDay = 6; break;
-                case DayOfWeek.Thursday: nStartDay = 3; break;
-                case DayOfWeek.Tuesday: nStartDay = 1; break;
-                case DayOfWeek.Wednesday: nStartDay = 2; break;
-                default: nStartDay = 0; break;//???
-            }
-            
-
-            // make sure the member values are set up
+            // Make sure the member values are set up
             CalculateCellMetrics();
 
             // Make sure we clicked on the scheduler
@@ -351,9 +318,16 @@ namespace EVEMon.Schedule
                 return new DateTime(0);
             }
 
-            // calculate the x/y position over the grid, and hence the day/week number the user is clicking on
-            day = (p.X -= m_calTopLeft.X) / m_cellSize.Width ;
-            week = (p.Y -= (m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) / m_cellSize.Height ;
+            // We need an int value for the first day of the month
+            DayOfWeek nFirstDayOfMonth = (new DateTime(m_date.Year, m_date.Month, 1)).DayOfWeek;
+            int nStartDay = nFirstDayOfMonth - m_firstDayOfWeek;
+
+            // Calculate the x/y position over the grid, and hence the day/week number the user is clicking on
+            int day = (p.X -= m_calTopLeft.X) / m_cellSize.Width;
+            int week = (p.Y -= (m_calTopLeft.Y + HEADER_HEIGHT + DAY_HEADER_HEIGHT)) / m_cellSize.Height;
+
+            if (nStartDay < 0)
+                week -= 1;
 
             day -= nStartDay;
 
