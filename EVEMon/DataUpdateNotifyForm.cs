@@ -1,12 +1,11 @@
 using System;
 using System.Text;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using System.Globalization;
 
 namespace EVEMon
 {
@@ -57,6 +56,7 @@ namespace EVEMon
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             DialogResult result = DialogResult.Yes;
+            int changedFilesCount = m_args.ChangedFiles.Count;
 
             while (m_args.ChangedFiles.Count != 0 && result == DialogResult.Yes)
             {
@@ -74,7 +74,16 @@ namespace EVEMon
                 result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
             }
 
-            this.DialogResult = DialogResult.OK;
+            // if no files were updated, abort the update process.
+            if (m_args.ChangedFiles.Count == changedFilesCount)
+            {
+                this.DialogResult = DialogResult.Abort;
+            }
+            else
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+
             this.Close();
         }
 
