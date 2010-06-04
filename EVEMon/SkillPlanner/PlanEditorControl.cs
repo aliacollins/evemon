@@ -812,7 +812,9 @@ namespace EVEMon.SkillPlanner
                 selectedTrainTime += entry.TrainingTime;
             }
 
-            selectedTimeWithLearning = this.Plan.TimeWithPrecedingLearning(SelectedEntries);
+            bool planHasLearningSkills = m_displayPlan.Any(x => x.Skill.LearningClass != LearningClass.None);
+            if (planHasLearningSkills)
+                selectedTimeWithLearning = this.Plan.TimeWithPrecedingLearning(SelectedEntries);
 
             // Appends the string to display in the status bar.
             StringBuilder sb = new StringBuilder();
@@ -823,7 +825,7 @@ namespace EVEMon.SkillPlanner
                     UniqueSkillsCount == 1 ? String.Empty : "s",
                     selectedTrainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
 
-            if (selectedTimeWithLearning != selectedTrainTime)
+            if (planHasLearningSkills && selectedTimeWithLearning != selectedTrainTime)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "({0} including preceding learning skills). ",
                     selectedTimeWithLearning.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));

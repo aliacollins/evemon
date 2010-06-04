@@ -239,28 +239,6 @@ namespace EVEMon.Common
             return scratchpad.TrainingTime;
         }
 
-        /// <summary>
-        /// Gets the time require to train the given skills and their prerequisites
-        /// </summary>
-        /// <param name="plan"></param>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        public TimeSpan GetTrainingTimeWithLearning(BasePlan plan, StaticSkill skill, int level)
-        {
-            Character character = plan.Character as Character;
-            if (character == null)
-                return TimeSpan.Zero;
-
-            Plan newPlan = new Plan(character);
-            List<PlanEntry> entry = new List<PlanEntry>();
-            entry.Add(new PlanEntry(newPlan, skill, level));
-            newPlan.RebuildPlanFrom(entry);
-            newPlan.ChosenImplantSet = plan.ChosenImplantSet;
-            
-            TimeSpan trainingTimeWithLearning = GetTrainingTime(skill, level) - new PlanSuggestions(newPlan).TimeBenefit;
-            return trainingTimeWithLearning;
-        }
         #endregion
 
 

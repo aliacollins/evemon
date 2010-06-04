@@ -487,9 +487,8 @@ namespace EVEMon.Common
                 FixPrerequisites();
 
             // Notify changes
-            if ((change & PlanChange.Notification) != PlanChange.None)
-                if (m_isConnected)
-                    EveClient.OnPlanChanged(this);
+            if ((change & PlanChange.Notification) != PlanChange.None && m_isConnected)
+                EveClient.OnPlanChanged(this);
 
         }
         #endregion
@@ -724,6 +723,7 @@ namespace EVEMon.Common
             return false;
         }
         #endregion
+
 
         /// <summary>
         /// Gets suggestions for this plan

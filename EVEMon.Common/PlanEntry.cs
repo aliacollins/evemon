@@ -77,7 +77,7 @@ namespace EVEMon.Common
             m_notes = serial.Notes;
             m_priority = serial.Priority;
 
-            foreach (var group in serial.PlanGroups) m_planGroups.Add(group);
+            serial.PlanGroups.ForEach(x => m_planGroups.Add(x));
 
             if (serial.Remapping != null)
                 m_remapping = new RemappingPoint(serial.Remapping);
