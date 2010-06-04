@@ -39,15 +39,15 @@ namespace EVEMon.Common.Net
             m_redirectsRemaining = m_webServiceState.MaxRedirects;
 
             // pull the timeout from the settings
-            TimeSpan TimeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
+            TimeSpan timeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
 
-            if (TimeoutSetting < TimeSpan.FromSeconds(1) || TimeoutSetting > TimeSpan.FromMinutes(5))
+            if (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5))
             {
                 Timeout = 10000;
             }
             else
             {
-                Timeout = (int)TimeoutSetting.TotalMilliseconds;
+                Timeout = (int)timeoutSetting.TotalMilliseconds;
             }
         }
 
@@ -137,9 +137,9 @@ namespace EVEMon.Common.Net
                     }
                 } while (bytesRead > 0 && !Cancelled);
             }
-            catch (HttpWebServiceException ex)
+            catch (HttpWebServiceException)
             {
-                throw ex;
+                throw;
             }
             catch (WebException ex)
             {
