@@ -75,33 +75,6 @@ namespace EVEMon.Common.SettingsObjects
             }
         }
 
-        private int m_dataFileRetryMaximum;
-
-        /// <summary>
-        /// Maximum number of tries to download a file.
-        /// </summary>
-        /// <remarks>
-        /// Hidden Setting. The value of this setting must be between 1 and 5, the default is 1.
-        /// </remarks>
-        [XmlElement("dataFileRetryMaximum")]
-        public int DataFileRetryMaximum
-        {
-            get
-            {
-                if (m_dataFileRetryMaximum < 1)
-                    return 1;
-
-                if (m_dataFileRetryMaximum > 5)
-                    return 1;
-
-                return m_dataFileRetryMaximum;
-            }
-            set
-            {
-                m_dataFileRetryMaximum = value;
-            }
-        }
-
         private string m_updatesUrl;
 
         /// <summary>
@@ -161,7 +134,6 @@ namespace EVEMon.Common.SettingsObjects
             clone.MostRecentDeniedUpgrade = this.MostRecentDeniedUpgrade;
             clone.HttpTimeout = this.HttpTimeout;
             clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
-            clone.DataFileRetryMaximum = this.DataFileRetryMaximum;
             clone.UpdateFrequency = this.UpdateFrequency;
             clone.UpdatesUrl = this.UpdatesUrl;
 

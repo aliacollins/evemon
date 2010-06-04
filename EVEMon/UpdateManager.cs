@@ -81,6 +81,14 @@ namespace EVEMon
         /// <returns></returns>
         private static void BeginCheck()
         {
+            // if update manager has been disabled since the last
+            // update was triggered quit out here.
+            if (!s_enabled)
+            {
+                s_checkScheduled = false;
+                return;
+            }
+
             // No connection ? Recheck in one minute.
             if (!NetworkMonitor.IsNetworkAvailable)
             {
