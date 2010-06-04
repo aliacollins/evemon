@@ -121,9 +121,7 @@ namespace EVEMon.Common.Scheduling
             foreach (ScheduleDateTimeRange sdtr in ranges)
             {
                 if (checkDateTime >= sdtr.From && checkDateTime < sdtr.To)
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -140,15 +138,14 @@ namespace EVEMon.Common.Scheduling
             DateTime endDt = toDt.Date + TimeSpan.FromDays(1);
 
             if (m_endSecond > SecondsPerDay)
-            {
                 startDt -= TimeSpan.FromDays(1);
-            }
 
             DateTime wrkDt = startDt;
             for (DateTime wrkDT = startDt; wrkDt < endDt; wrkDt += TimeSpan.FromDays(1))
             {
                 var range = GetRangeForDay(wrkDt);
-                if (range != null) yield return range;
+                if (range != null)
+                    yield return range;
             }
         }
 
@@ -166,16 +163,19 @@ namespace EVEMon.Common.Scheduling
                     break;
 
                 case RecurringFrequency.Weekdays:
-                    if (day.DayOfWeek < DayOfWeek.Monday || day.DayOfWeek > DayOfWeek.Friday) return null;
+                    if (day.DayOfWeek < DayOfWeek.Monday || day.DayOfWeek > DayOfWeek.Friday)
+                        return null;
                     break;
 
                 case RecurringFrequency.Weekends:
-                    if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday) return null;
+                    if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+                        return null;
                     break;
 
                 case RecurringFrequency.Weekly:
                     DateTime FirstInstance = m_startDate.AddDays((m_dayOfWeek - m_startDate.DayOfWeek + 7) % 7);
-                    if (day.DayOfWeek != m_dayOfWeek || (day.Subtract(FirstInstance).Days % (7 * m_weeksPeriod)) != 0) return null;
+                    if (day.DayOfWeek != m_dayOfWeek || (day.Subtract(FirstInstance).Days % (7 * m_weeksPeriod)) != 0)
+                        return null;
                     break;
 
                 case RecurringFrequency.Monthly:
@@ -183,11 +183,13 @@ namespace EVEMon.Common.Scheduling
                     {
                         if (day.Day <= 3 && m_dayOfMonth >= 29)
                         {
-                            if (!IsOverflowDate(day)) return null;
+                            if (!IsOverflowDate(day))
+                                return null;
                         }
                         else if (day.Day >= 28 && m_dayOfMonth >= 29)
                         {
-                            if (!IsOverflowDate(day)) return null;
+                            if (!IsOverflowDate(day))
+                                return null;
                         }
                         else
                         {
@@ -223,8 +225,10 @@ namespace EVEMon.Common.Scheduling
 
                 case MonthlyOverflowResolution.ClipBack:
                     DateTime searchForward = day + TimeSpan.FromDays(1);
-                    if (day.Month == searchForward.Month) return false;
-                    if (m_dayOfMonth > day.Day) return true;
+                    if (day.Month == searchForward.Month)
+                        return false;
+                    if (m_dayOfMonth > day.Day)
+                        return true;
                     return false;
             }
         }
@@ -237,11 +241,18 @@ namespace EVEMon.Common.Scheduling
         protected override bool Clash(DateTime timeToTest)
         {
             DateTime testtime;
-            if ((m_options & ScheduleEntryOptions.EVETime) != 0) testtime = timeToTest.ToUniversalTime();
-            else testtime = timeToTest;
+            if ((m_options & ScheduleEntryOptions.EVETime) != 0)
+            {
+                testtime = timeToTest.ToUniversalTime();
+            }
+            else
+            {
+                testtime = timeToTest;
+            }
 
             var range = GetRangeForDay(testtime.Date);
-            if (range == null) return false;
+            if (range == null)
+                return false;
 
             return range.From < timeToTest && range.To >= timeToTest;
         }
@@ -253,8 +264,13 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override bool IsToday(DateTime timeToTest)
         {
-            var range = this.GetRangeForDay(timeToTest.Date);
-            return range != null;
+            if (timeToTest >= m_startDate && timeToTest <= m_endDate)
+            {
+                var range = this.GetRangeForDay(timeToTest.Date);
+                return range != null;
+            }
+
+            return false;
         }
 
         /// <summary>
