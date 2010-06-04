@@ -30,6 +30,7 @@ namespace EVEMon.Common
                 m_items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
                 m_items.Add(new Datafile(DatafileConstants.GeographyDatafile));
                 m_items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));
+                m_items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
             }
             // Don't worry if we cant create MD5 maybe they have FIPS enforced.
             catch (Exception)
