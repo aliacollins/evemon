@@ -57,8 +57,7 @@ namespace EVEMon.Common.Scheduling
         {
             get
             {
-                var time = DateTime.UtcNow;
-                return m_schedule.Any(x => x.Silent(time));
+                return m_schedule.Any(x => x.Silent(DateTime.Now));
             }
         }
 
