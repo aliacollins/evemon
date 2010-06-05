@@ -560,7 +560,14 @@ namespace EVEMon.Common
         IndustryJobs,
         
         /// <summary>
-        /// /// Mail messages for a character. Only downloaded when a full API key is provided.
+        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationIndustryJobs,
+
+        /// <summary>
+        /// Mail messages for a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         [Header("Mail Messages")]
@@ -576,13 +583,6 @@ namespace EVEMon.Common
         [Description("Notifications messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         Notifications,
-
-        /// <summary>
-        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationIndustryJobs,
 
         /// <summary>
         /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
