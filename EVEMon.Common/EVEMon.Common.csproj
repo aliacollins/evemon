@@ -363,8 +363,10 @@
     <Compile Include="Serialization\Importation\OldSettings.cs" />
     <Compile Include="Serialization\Importation\OldExportedSkill.cs" />
     <Compile Include="Serialization\Importation\OldExportedSkillGroup.cs" />
+    <Compile Include="Serialization\Settings\SerializableBuyOrder.cs" />
     <Compile Include="Serialization\Settings\SerializableJob.cs" />
-    <Compile Include="Serialization\Settings\SerializationOrderBase.cs" />
+    <Compile Include="Serialization\Settings\SerializableOrderBase1.cs" />
+    <Compile Include="Serialization\Settings\SerializableSellOrder.cs" />
     <Compile Include="SettingsObjects\BlueprintBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />

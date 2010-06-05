@@ -7,6 +7,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
+
     #region Flag Enumerations
 
     /// <summary>
@@ -603,4 +604,5 @@ namespace EVEMon.Common
     }
 
     #endregion
+
 }

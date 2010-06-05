@@ -4,6 +4,7 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common
 {
