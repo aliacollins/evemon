@@ -1055,30 +1055,15 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void MoveToTopMenuItem_Click(object sender, EventArgs e)
         {
+            // extract the list and the selected item.
             var items = lvSkills.Items.Cast<ListViewItem>().ToList();
+            int index = items.First(x => x.Selected).Index;
+            var item = items[index];
 
-            // Skip the tail
-            int index = items.Count - 1;
-            while (index >= 0)
-            {
-                if (!items[index].Selected)
-                    break;
-                index--;
-            }
+            // remove the item from the list, and add it at the top.
+            items.RemoveAt(index);
+            items.Insert(0, item);
 
-            // Move up the following items
-            while (index >= 0)
-            {
-                var item = items[index];
-                if (item.Selected)
-                {
-                    items.RemoveAt(index);
-                    items.Insert(0, item);
-                }
-                index--;
-            }
-
-            // Rebuild the plan
             RebuildPlanFromListViewOrder(items);
         }
 
