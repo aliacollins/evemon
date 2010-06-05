@@ -53,15 +53,15 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("productionFaciltyIndex")]
-        public int ProductionFaciltyIndex
+        [XmlElement("productionFacilityIndex")]
+        public int ProductionFacilityIndex
         {
             get;
             set;
         }
 
-        [XmlElement("researchFaciltyIndex")]
-        public int ResearchFaciltyIndex
+        [XmlElement("researchFacilityIndex")]
+        public int ResearchFacilityIndex
         {
             get;
             set;

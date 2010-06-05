@@ -424,12 +424,12 @@ namespace EVEMon.SkillPlanner
             // Update the selected index
             if (Activity == BlueprintActivity.Manufacturing)
             {
-                cbFacility.SelectedIndex = (Settings.UI.BlueprintBrowser.ProductionFaciltyIndex < cbFacility.Items.Count ?
-                    Settings.UI.BlueprintBrowser.ProductionFaciltyIndex : 0);
+                cbFacility.SelectedIndex = (Settings.UI.BlueprintBrowser.ProductionFacilityIndex < cbFacility.Items.Count ?
+                    Settings.UI.BlueprintBrowser.ProductionFacilityIndex : 0);
             }
             else
             {
-                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ResearchFaciltyIndex;
+                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ResearchFacilityIndex;
             }
         }
 
@@ -719,11 +719,11 @@ namespace EVEMon.SkillPlanner
         {
             if (Activity == BlueprintActivity.Manufacturing)
             {
-                Settings.UI.BlueprintBrowser.ProductionFaciltyIndex = cbFacility.SelectedIndex;
+                Settings.UI.BlueprintBrowser.ProductionFacilityIndex = cbFacility.SelectedIndex;
             }
             else
             {
-                Settings.UI.BlueprintBrowser.ResearchFaciltyIndex = cbFacility.SelectedIndex;
+                Settings.UI.BlueprintBrowser.ResearchFacilityIndex = cbFacility.SelectedIndex;
             }
 
             UpdateAttributes();
