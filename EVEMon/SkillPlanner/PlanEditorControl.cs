@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Controls;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
@@ -84,6 +85,8 @@ namespace EVEMon.SkillPlanner
             m_nonImmedTrainablePlanEntryColor = SystemColors.GrayText;
             m_remappingForeColor = SystemColors.HotTrack;
             m_remappingBackColor = SystemColors.Info;
+
+            ListViewHelper.EnableDoubleBuffer(lvSkills);
 
             lvSkills.ColumnWidthChanged += new ColumnWidthChangedEventHandler(lvSkills_ColumnWidthChanged);
             lvSkills.ColumnClick += new ColumnClickEventHandler(lvSkills_ColumnClick);
