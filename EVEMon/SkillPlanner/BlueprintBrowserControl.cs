@@ -324,9 +324,8 @@ namespace EVEMon.SkillPlanner
                         // Has perfect values ?
                         hasPerfect |= (youQuantity != perfectQuantity);
 
-                        // Add the perfect quantity for every item (empty string if it's equal to youQuantity)
-                        string perfectQuantityText = (youQuantity != perfectQuantity ? perfectQuantity.ToString() : String.Empty);
-                        var subItemPerfect = new ListViewItem.ListViewSubItem(item, perfectQuantityText);
+                        // Add the perfect quantity for every item
+                        var subItemPerfect = new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString());
                         item.SubItems.Add(subItemPerfect);
 
                         // Has damage per run ?
