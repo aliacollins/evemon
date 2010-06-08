@@ -143,6 +143,7 @@ namespace EVEMon.SkillPlanner
             // verticalSplitContainer.Panel1
             // 
             this.verticalSplitContainer.Panel1.Controls.Add(this.skillSelectControl);
+            this.verticalSplitContainer.Panel1MinSize = 45;
             // 
             // verticalSplitContainer.Panel2
             // 

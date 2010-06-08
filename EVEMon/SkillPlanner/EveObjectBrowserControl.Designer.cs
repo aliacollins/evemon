@@ -58,6 +58,7 @@ namespace EVEMon.SkillPlanner
             this.scObjectBrowser.Location = new System.Drawing.Point(0, 0);
             this.scObjectBrowser.Margin = new System.Windows.Forms.Padding(2);
             this.scObjectBrowser.Name = "scObjectBrowser";
+            this.scObjectBrowser.Panel1MinSize = 45;
             // 
             // scObjectBrowser.Panel2
             // 

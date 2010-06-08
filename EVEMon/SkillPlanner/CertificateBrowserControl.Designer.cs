@@ -73,6 +73,7 @@ namespace EVEMon.SkillPlanner
             // leftSplitContainer.Panel1
             // 
             this.leftSplitContainer.Panel1.Controls.Add(this.certSelectCtl);
+            this.leftSplitContainer.Panel1MinSize = 45;
             // 
             // leftSplitContainer.Panel2
             // 
