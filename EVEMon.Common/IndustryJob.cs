@@ -157,13 +157,13 @@ namespace EVEMon.Common
                 m_endProductionTime = src.EndProductionTime;
                 m_pauseProductionTime = src.PauseProductionTime;
                 
-                m_state = (m_pauseProductionTime.Equals(DateTime.MinValue) ? JobState.Active : JobState.Paused);
+                m_state = (m_pauseProductionTime == DateTime.MinValue ? JobState.Active : JobState.Paused);
                 m_activeJobState = GetActiveJobState();
             }
 
             // Canceled jobs are left as marked for deletion
             JobState state = GetState(src);
-            if (state.Equals(JobState.Canceled))
+            if (state == JobState.Canceled)
             {
                 m_state = JobState.Canceled;
                 m_markedForDeletion = true;
@@ -172,6 +172,10 @@ namespace EVEMon.Common
 
             // Prevent deletion
             m_markedForDeletion = false;
+
+            // Update state
+            if (m_state != JobState.Paused && state != m_state)
+                m_state = state;
 
             return true;
         }
@@ -212,7 +216,7 @@ namespace EVEMon.Common
             // Still nothing ? Then it's a starbase structure
             // and will be assigned manually based on activity
             if (station == null)
-                return (m_activity.Equals(BlueprintActivity.Manufacturing) ? "POS - Assembly Array" : "POS - Laboratory");
+                return (m_activity == BlueprintActivity.Manufacturing ? "POS - Assembly Array" : "POS - Laboratory");
 
             return station.Name;
         }
@@ -224,7 +228,7 @@ namespace EVEMon.Common
         /// <returns>State of the seriallzable job.</returns>
         private JobState GetState(SerializableAPIJob src)
         {
-            if (src.Completed.Equals((int)JobState.Delivered))
+            if (src.Completed == (int)JobState.Delivered)
             {
                 switch ((CCPJobCompletedStatus)src.CompletedStatus)
                 {
@@ -257,7 +261,7 @@ namespace EVEMon.Common
         /// <returns>State of an active job.</returns>
         private ActiveJobState GetActiveJobState()
         {
-            if (m_state.Equals(JobState.Active))
+            if (m_state == JobState.Active)
             {
                 if (m_beginProductionTime > DateTime.UtcNow)
                     return ActiveJobState.Pending;
@@ -336,10 +340,10 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_state.Equals(JobState.Paused))
+                if (m_state == JobState.Paused)
                     return m_endProductionTime.Subtract(m_pauseProductionTime).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
 
-                if (m_state.Equals(JobState.Active) && m_endProductionTime > DateTime.UtcNow)
+                if (m_state == JobState.Active && m_endProductionTime > DateTime.UtcNow)
                     return m_endProductionTime.ToLocalTime().ToRemainingTimeShortDescription();
                 
                 return String.Empty;
@@ -479,7 +483,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsActive
         {
-            get { return m_state.Equals(JobState.Active); }
+            get { return m_state == JobState.Active; }
         }
 
         /// <summary>
@@ -489,7 +493,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool MatchesWith(SerializableAPIJob src)
         {
-            return src.JobID.Equals(m_jobID);
+            return src.JobID == m_jobID;
         }
 
         /// <summary>
@@ -499,8 +503,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool IsModified(SerializableAPIJob src)
         {
-            return !src.EndProductionTime.Equals(m_endProductionTime)
-                || !src.PauseProductionTime.Equals(m_pauseProductionTime);
+            return src.EndProductionTime != m_endProductionTime
+                || src.PauseProductionTime != m_pauseProductionTime;
         }
 
         #endregion

@@ -128,7 +128,7 @@ namespace EVEMon
             get
             {
                 return m_list.Any(x =>
-                    x.State.Equals(JobState.Active) && x.IssuedFor.Equals(IssuedFor.Corporation));
+                    x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation);
             }
         }
 
@@ -168,8 +168,8 @@ namespace EVEMon
                 var newColumns = new List<IndustryJobColumnSettings>();
                 foreach (var header in lvJobs.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    var columnSetting = m_columns.First(x => x.Column.Equals((IndustryJobColumn)header.Tag));
-                    if (!columnSetting.Width.Equals(-1))
+                    var columnSetting = m_columns.First(x => x.Column == (IndustryJobColumn)header.Tag);
+                    if (columnSetting.Width != -1)
                         columnSetting.Width = header.Width;
 
                     newColumns.Add(columnSetting);
@@ -247,9 +247,9 @@ namespace EVEMon
             m_init = false;
 
             var ccpCharacter = m_character as CCPCharacter;
-            this.Jobs = (ccpCharacter.Equals(null) ? null : ccpCharacter.IndustryJobs);
+            this.Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
             this.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            this.Grouping = (m_character.Equals(null) ? IndustryJobGrouping.State : m_character.UISettings.JobsGroupBy);
+            this.Grouping = (m_character == null ? IndustryJobGrouping.State : m_character.UISettings.JobsGroupBy);
 
             UpdateColumns();
             UpdateExpPanelContent();
@@ -284,14 +284,14 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (lvJobs.Items.Count.Equals(0) ?
+                var resizeStyle = (lvJobs.Items.Count == 0 ?
                     ColumnHeaderAutoResizeStyle.HeaderSize :
                     ColumnHeaderAutoResizeStyle.ColumnContent);
 
                 int index = 0;
                 foreach (var column in m_columns.Where(x => x.Visible))
                 {
-                    if (column.Width.Equals(-1))
+                    if (column.Width == -1)
                         lvJobs.AutoResizeColumn(index, resizeStyle);
 
                     index++;
@@ -327,10 +327,10 @@ namespace EVEMon
                 switch (m_showIssuedFor)
                 {
                     case IssuedFor.Character:
-                        jobs = jobs.Where(x => x.IssuedFor.Equals(IssuedFor.Character));
+                        jobs = jobs.Where(x => x.IssuedFor == IssuedFor.Character);
                         break;
                     case IssuedFor.Corporation:
-                        jobs = jobs.Where(x => x.IssuedFor.Equals(IssuedFor.Corporation));
+                        jobs = jobs.Where(x => x.IssuedFor == IssuedFor.Corporation);
                         break;
                 }
 
@@ -488,7 +488,7 @@ namespace EVEMon
             for (int i = 0; i < lvJobs.Columns.Count; i++)
             {
                 var column = (IndustryJobColumn)lvJobs.Columns[i].Tag;
-                if (m_sortCriteria.Equals(column))
+                if (m_sortCriteria == column)
                 {
                     lvJobs.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
                 }
@@ -510,14 +510,14 @@ namespace EVEMon
             switch (column)
             {
                 case IndustryJobColumn.State:
-                    item.Text = (job.State.Equals(JobState.Active) ?
+                    item.Text = (job.State == JobState.Active ?
                         job.ActiveJobState.GetDescription() : job.State.ToString());
                     item.ForeColor = GetStateColor(job);
                     break;
 
                 case IndustryJobColumn.TTC:
                     item.Text = job.TTC;
-                    if (job.State.Equals(JobState.Paused))
+                    if (job.State == JobState.Paused)
                         item.ForeColor = Color.Red;
                     break;
 
@@ -554,22 +554,22 @@ namespace EVEMon
                     break;
 
                 case IndustryJobColumn.InstalledME:
-                    item.Text = (job.Activity.Equals(BlueprintActivity.ResearchingMaterialProductivity) ?
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity ?
                         job.InstalledME.ToString() : String.Empty);
                     break;
 
                 case IndustryJobColumn.EndME:
-                    item.Text = (job.Activity.Equals(BlueprintActivity.ResearchingMaterialProductivity) ?
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity ?
                         (job.InstalledME + job.Runs).ToString() : String.Empty);
                     break;
 
                 case IndustryJobColumn.InstalledPE:
-                    item.Text = (job.Activity.Equals(BlueprintActivity.ResearchingTimeProductivity) ?
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity ?
                         job.InstalledPE.ToString() : String.Empty);
                     break;
 
                 case IndustryJobColumn.EndPE:
-                    item.Text = (job.Activity.Equals(BlueprintActivity.ResearchingTimeProductivity) ?
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity ?
                         (job.InstalledPE + job.Runs).ToString() : String.Empty);
                     break;
 
@@ -615,10 +615,10 @@ namespace EVEMon
         /// <returns></returns>
         private int GetUnitCount(IndustryJob job)
         {
-            if (!job.Activity.Equals(BlueprintActivity.Manufacturing))
+            if (job.Activity != BlueprintActivity.Manufacturing)
                 return 1;
 
-            if (job.InstalledItem.ID.Equals(DBConstants.WarpDisruptProbeBlueprintID))
+            if (job.InstalledItem.ID == DBConstants.WarpDisruptProbeBlueprintID)
                 return job.Runs * 2;
 
             switch (job.InstalledItem.MarketGroup.ParentGroup.ID)
@@ -769,7 +769,7 @@ namespace EVEMon
         private void lvJobs_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var column = (IndustryJobColumn)lvJobs.Columns[e.Column].Tag;
-            if (m_sortCriteria.Equals(column))
+            if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
             }
@@ -796,7 +796,7 @@ namespace EVEMon
                         lvJobs.SelectAll();
                     break;
                 case Keys.Delete:
-                    if (lvJobs.SelectedItems.Count.Equals(0))
+                    if (lvJobs.SelectedItems.Count == 0)
                         return;
 
                     // Mark as ignored
@@ -873,18 +873,18 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_TimerTick(object sender, EventArgs e)
         {
-            var colIndexTTC = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column.Equals(IndustryJobColumn.TTC)));
+            var colIndexTTC = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
 
             for (int i = 0; i < lvJobs.Items.Count; i++)
             {
                 IndustryJob job = ((IndustryJob)lvJobs.Items[i].Tag);
-                if (!job.IsActive || job.ActiveJobState.Equals(ActiveJobState.Ready))
+                if (!job.IsActive || job.ActiveJobState == ActiveJobState.Ready)
                     continue;
 
                 // Update the time to completion
                 if (colIndexTTC != -1 && m_columns[colIndexTTC].Visible)
                 {
-                    if (m_displayIndexTTC.Equals(-1))
+                    if (m_displayIndexTTC == -1)
                         m_displayIndexTTC = lvJobs.Columns[IndustryJobColumn.TTC.GetHeader()].DisplayIndex;
 
                     lvJobs.Items[i].SubItems[m_displayIndexTTC].Text = job.TTC;
@@ -892,14 +892,14 @@ namespace EVEMon
                 }
 
                 // Job was pending and its time to start
-                if (job.ActiveJobState.Equals(ActiveJobState.Pending) && job.BeginProductionTime < DateTime.UtcNow)
+                if (job.ActiveJobState == ActiveJobState.Pending && job.BeginProductionTime < DateTime.UtcNow)
                 {
                     job.ActiveJobState = ActiveJobState.InProgress;
                     UpdateContent();
                 }
 
                 // Job is ready
-                if (job.TTC.Equals(String.Empty))
+                if (job.TTC == String.Empty)
                     job.ActiveJobState = ActiveJobState.Ready;
             }
         }
@@ -991,7 +991,7 @@ namespace EVEMon
         private void UpdatePanelControlPosition()
         {
             var pad = 5;
-            var height = (industryExpPanelControl.ExpandDirection.Equals(Direction.Up) ? pad : industryExpPanelControl.HeaderHeight);
+            var height = (industryExpPanelControl.ExpandDirection == Direction.Up ? pad : industryExpPanelControl.HeaderHeight);
 
             lblActiveManufacturingJobs.Location = new Point(5, height);
             lblRemoteManufacturingRange.Location = new Point(lblRemoteManufacturingRange.Location.X, height);

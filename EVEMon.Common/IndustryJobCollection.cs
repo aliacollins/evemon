@@ -99,7 +99,7 @@ namespace EVEMon.Common
         {
             List<IndustryJob> jobsCompleted = new List<IndustryJob>();
 
-            foreach (var job in m_items.Where(x => x.ActiveJobState.Equals(ActiveJobState.Ready) && !x.NotificationSend))
+            foreach (var job in m_items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
             {
                 jobsCompleted.Add(job);
                 job.NotificationSend = true;
