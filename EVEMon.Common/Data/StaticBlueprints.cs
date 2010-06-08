@@ -11,16 +11,30 @@ namespace EVEMon.Common.Data
     {
         private static readonly Dictionary<int, Blueprint> s_blueprintsByID = new Dictionary<int, Blueprint>();
         private static readonly Dictionary<int, BlueprintActivity> s_activityByID = new Dictionary<int, BlueprintActivity>();
-        private static BlueprintMarketGroupCollection s_blueprintGroups;
+        private static BlueprintMarketGroupCollection s_blueprintMarketGroups;
         
         #region Public Properties
 
         /// <summary>
         /// Gets the root category, containing all the top level categories
         /// </summary>
-        public static BlueprintMarketGroupCollection Blueprints
+        public static BlueprintMarketGroupCollection BlueprintMarketGroups
         {
-            get { return s_blueprintGroups; }
+            get { return s_blueprintMarketGroups; }
+        }
+
+        /// <summary>
+        /// Gets the collection of all the blueprints in this category and its descendants.
+        /// </summary>
+        public static IEnumerable<Item> AllBlueprints
+        {
+            get
+            {
+                foreach (var blueprint in s_blueprintsByID.Values)
+                {
+                    yield return blueprint;
+                }
+            }
         }
 
         #endregion
@@ -67,14 +81,14 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (s_blueprintGroups != null)
+            if (s_blueprintMarketGroups != null)
                 return;
             
             BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
 
-            s_blueprintGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
+            s_blueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
 
-            foreach (var srcGroup in s_blueprintGroups)
+            foreach (var srcGroup in s_blueprintMarketGroups)
             {
                 InitializeDictionaries(srcGroup);
             }

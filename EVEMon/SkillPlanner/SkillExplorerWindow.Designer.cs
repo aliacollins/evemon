@@ -29,16 +29,16 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node0");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node0");
             this.grpPlanName = new System.Windows.Forms.GroupBox();
             this.lblSkill = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new EVEMon.Controls.PersistentSplitContainer();
@@ -57,7 +57,7 @@ namespace EVEMon.SkillPlanner
             this.tsAddL5 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSwitch = new System.Windows.Forms.ToolStripMenuItem();
             this.tsShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsShowPrereqs = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsShowSkillPrereqs = new System.Windows.Forms.ToolStripMenuItem();
             this.cmEntity = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsShowObjectInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddObjectToPlan = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,15 +130,6 @@ namespace EVEMon.SkillPlanner
             this.panel1.Size = new System.Drawing.Size(550, 40);
             this.panel1.TabIndex = 4;
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(26, 22);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(160, 13);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "= other untrained skills needed.";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -149,15 +140,6 @@ namespace EVEMon.SkillPlanner
             this.label8.TabIndex = 8;
             this.label8.Text = "red";
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(204, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(143, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "= unlocked by this skill level,";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -167,6 +149,24 @@ namespace EVEMon.SkillPlanner
             this.label6.Size = new System.Drawing.Size(43, 13);
             this.label6.TabIndex = 6;
             this.label6.Text = "dimmed";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(26, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(160, 13);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "= other untrained skills needed.";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(204, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(143, 13);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "= unlocked by this skill level,";
             // 
             // label5
             // 
@@ -192,6 +192,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -238,10 +239,10 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvSkills.Location = new System.Drawing.Point(-1, 17);
             this.tvSkills.Name = "tvSkills";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "Node0";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "Node0";
             this.tvSkills.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.tvSkills.ShowNodeToolTips = true;
             this.tvSkills.Size = new System.Drawing.Size(206, 283);
             this.tvSkills.TabIndex = 0;
@@ -275,10 +276,10 @@ namespace EVEMon.SkillPlanner
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvEntity.Location = new System.Drawing.Point(-1, 17);
             this.tvEntity.Name = "tvEntity";
-            treeNode4.Name = "Node0";
-            treeNode4.Text = "Node0";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "Node0";
             this.tvEntity.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode2});
             this.tvEntity.ShowNodeToolTips = true;
             this.tvEntity.Size = new System.Drawing.Size(342, 282);
             this.tvEntity.TabIndex = 0;
@@ -291,7 +292,7 @@ namespace EVEMon.SkillPlanner
             this.tsAddPlan,
             this.tsSwitch,
             this.tsShowInBrowser,
-            this.tsShowPrereqs});
+            this.tsShowSkillPrereqs});
             this.cmSkills.Name = "cmSkills";
             this.cmSkills.Size = new System.Drawing.Size(242, 92);
             // 
@@ -356,12 +357,12 @@ namespace EVEMon.SkillPlanner
             this.tsShowInBrowser.Text = "Show Skill In Browser";
             this.tsShowInBrowser.Click += new System.EventHandler(this.tsShowInBrowser_Click);
             // 
-            // tsShowPrereqs
+            // tsShowSkillPrereqs
             // 
-            this.tsShowPrereqs.Name = "tsShowPrereqs";
-            this.tsShowPrereqs.Size = new System.Drawing.Size(241, 22);
-            this.tsShowPrereqs.Text = "Show Untrained Preqresites";
-            this.tsShowPrereqs.Click += new System.EventHandler(this.tsShowPrereqs_Click);
+            this.tsShowSkillPrereqs.Name = "tsShowSkillPrereqs";
+            this.tsShowSkillPrereqs.Size = new System.Drawing.Size(241, 22);
+            this.tsShowSkillPrereqs.Text = "Show Untrained Preqresites";
+            this.tsShowSkillPrereqs.Click += new System.EventHandler(this.tsShowSkillPrereqs_Click);
             // 
             // cmEntity
             // 
@@ -391,7 +392,7 @@ namespace EVEMon.SkillPlanner
             this.tsShowObjectPrereqs.Name = "tsShowObjectPrereqs";
             this.tsShowObjectPrereqs.Size = new System.Drawing.Size(228, 22);
             this.tsShowObjectPrereqs.Text = "Show Untrained Prerequisites";
-            this.tsShowObjectPrereqs.Click += new System.EventHandler(this.tsShowShipPrereqs_Click);
+            this.tsShowObjectPrereqs.Click += new System.EventHandler(this.tsShowItemPrereqs_Click);
             // 
             // groupBox2
             // 
@@ -421,13 +422,11 @@ namespace EVEMon.SkillPlanner
             // cbShowBaseOnly
             // 
             this.cbShowBaseOnly.AutoSize = true;
-            this.cbShowBaseOnly.Checked = true;
-            this.cbShowBaseOnly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbShowBaseOnly.Location = new System.Drawing.Point(411, 21);
             this.cbShowBaseOnly.Name = "cbShowBaseOnly";
-            this.cbShowBaseOnly.Size = new System.Drawing.Size(137, 17);
+            this.cbShowBaseOnly.Size = new System.Drawing.Size(107, 17);
             this.cbShowBaseOnly.TabIndex = 2;
-            this.cbShowBaseOnly.Text = "Only show T1/T2 Items";
+            this.cbShowBaseOnly.Text = "Only show T1/T2";
             this.cbShowBaseOnly.UseVisualStyleBackColor = true;
             this.cbShowBaseOnly.CheckedChanged += new System.EventHandler(this.cbShowBaseOnly_CheckedChanged);
             // 
@@ -514,7 +513,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem tsAddPlan;
         private System.Windows.Forms.ToolStripMenuItem tsSwitch;
         private System.Windows.Forms.ToolStripMenuItem tsShowInBrowser;
-        private System.Windows.Forms.ToolStripMenuItem tsShowPrereqs;
+        private System.Windows.Forms.ToolStripMenuItem tsShowSkillPrereqs;
         private System.Windows.Forms.ToolStripMenuItem tsAddL1;
         private System.Windows.Forms.ToolStripMenuItem tsAddL2;
         private System.Windows.Forms.ToolStripMenuItem tsAddL3;

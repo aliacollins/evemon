@@ -236,6 +236,16 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Opens this blueprint in the blueprint browser and switches to this tab.
+        /// </summary>
+        /// <param name="gs"></param>
+        public void ShowBlueprintInBrowser(Item i)
+        {
+            tabControl.SelectedTab = tpBlueprintBrowser;
+            blueprintBrowser.SelectedObject = i;
+        }
+
+        /// <summary>
         /// Opens this item in the item browser and switches to this tab.
         /// </summary>
         /// <param name="gs"></param>

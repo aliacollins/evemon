@@ -213,7 +213,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 // Create the nodes
-                foreach (var group in StaticBlueprints.Blueprints)
+                foreach (var group in StaticBlueprints.BlueprintMarketGroups)
                 {
                     TreeNode node = new TreeNode();
                     node.Text = group.Name;
