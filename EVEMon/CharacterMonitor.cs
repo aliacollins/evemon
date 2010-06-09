@@ -517,6 +517,7 @@ namespace EVEMon
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                jobsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 toggleSkillsIcon.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
@@ -527,6 +528,7 @@ namespace EVEMon
                 skillsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 skillQueueIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 ordersIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                jobsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 toggleSkillsIcon.DisplayStyle = ToolStripItemDisplayStyle.Text;
