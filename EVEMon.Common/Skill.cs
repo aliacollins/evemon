@@ -77,9 +77,7 @@ namespace EVEMon.Common
 
             // Are we reloading the settings ?
             if (!importFromCCP)
-            {
                 m_owned = false;
-            }
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace EVEMon.Common
         {
             m_known = true;
             m_level++;
-            m_currentSkillPoints = m_staticData.GetPointsRequiredForLevel(m_level);
+            m_currentSkillPoints = m_staticData.GetPointsRequiredForLevel(Math.Min(m_level, 5));
         }
 
         /// <summary>
@@ -101,7 +99,7 @@ namespace EVEMon.Common
             var dest = new SerializableCharacterSkill();
             dest.ID = m_staticData.ID;
             dest.Name = m_staticData.Name;
-            dest.Level = m_level;
+            dest.Level = Math.Min(m_level, 5);
             dest.Skillpoints = m_currentSkillPoints;
             dest.OwnsBook = m_owned;
             dest.IsKnown = m_known;
@@ -327,10 +325,7 @@ namespace EVEMon.Common
         /// <remarks>Please note they may be redundancies.</remarks>
         public IEnumerable<SkillLevel> AllPrerequisites
         {
-            get 
-            {
-                return m_staticData.AllPrerequisites.ToCharacter(m_character);
-            }
+            get { return m_staticData.AllPrerequisites.ToCharacter(m_character); }
         }
 
         /// <summary>
@@ -455,7 +450,8 @@ namespace EVEMon.Common
             get
             {
                 // Lv 5 ? 
-                if (m_level == 5) return 1.0f;
+                if (m_level == 5)
+                    return 1.0f;
 
                 // Not partially trained ? Then it's 1.0
                 var levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
@@ -477,12 +473,12 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Gets the percentage completion (between 0.0 and 100.0)
+        /// </summary>
         public double PercentCompleted
         {
-            get
-            {
-                return Math.Round(FractionCompleted * 100);
-            }
+            get { return Math.Round(FractionCompleted * 100); }
         }
 
         /// <summary>
@@ -494,7 +490,8 @@ namespace EVEMon.Common
         {
             get
             {
-                if (Level == 5) return 100.0;
+                if (Level == 5)
+                    return 100.0;
 
                 int reqToThisLevel = GetLeftPointsRequiredToLevel(Level);
                 int pointsInThisLevel = SkillPoints - reqToThisLevel;
@@ -511,7 +508,8 @@ namespace EVEMon.Common
         {
             get
             {
-                if (Level == 5)return false;
+                if (Level == 5)
+                    return false;
 
                 bool partialLevel = SkillPoints > m_staticData.GetPointsRequiredForLevel(Level),
                     isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
@@ -525,10 +523,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool ArePrerequisitesMet
         {
-            get
-            {
-                return m_prereqs.AreTrained();
-            }
+            get { return m_prereqs.AreTrained(); }
         }
 
         /// <summary>
