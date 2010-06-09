@@ -621,20 +621,23 @@ namespace EVEMon
             if (job.InstalledItem.ID == DBConstants.WarpDisruptProbeBlueprintID)
                 return job.Runs * 2;
 
-            switch (job.InstalledItem.MarketGroup.ParentGroup.ID)
-            {
-                case DBConstants.ProjectileAmmunitionBlueprintsGroupID:
-                case DBConstants.HybridAmmunitionBlueprintsGroupID:
-                case DBConstants.MissilesAmmunitionBlueprintsGroupID:
-                    return job.Runs * 100;
-            }
-
             switch (job.InstalledItem.MarketGroup.ID)
             {
                 case DBConstants.BoostersChargesBlueprintsGroupID:
                     return job.Runs * 10;
                 case DBConstants.BombsBlueprintsGroupID:
                     return job.Runs * 20;
+            }
+
+            if (job.InstalledItem.MarketGroup.ParentGroup != null)
+            {
+                switch (job.InstalledItem.MarketGroup.ParentGroup.ID)
+                {
+                    case DBConstants.ProjectileAmmunitionBlueprintsGroupID:
+                    case DBConstants.HybridAmmunitionBlueprintsGroupID:
+                    case DBConstants.MissilesAmmunitionBlueprintsGroupID:
+                        return job.Runs * 100;
+                }
             }
 
             return job.Runs;
