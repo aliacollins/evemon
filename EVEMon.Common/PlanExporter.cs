@@ -280,7 +280,14 @@ namespace EVEMon.Common
                 if (filename.EndsWith(".emp"))
                 {
                     string tempFile = Util.UncompressToTempFile(filename);
-                    return ImportFromXML(tempFile);
+                    try
+                    {
+                        return ImportFromXML(tempFile);
+                    }
+                    finally
+                    {
+                        File.Delete(tempFile);
+                    }
                 }
 
                 // Reads the revision number from the file
