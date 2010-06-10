@@ -50,11 +50,8 @@ namespace EVEMon.SkillPlanner
             public bool AreOverlapping(int leftIndex, int rightIndex, out int space)
             {
                 space = 0;
-                if (leftIndex == rightIndex) return false;
-                if (rightIndex >= Count) return false;
-                if (leftIndex >= Count) return false;
-                if (rightIndex < -1) return false;
-                if (leftIndex < -1) return false;
+                if (leftIndex == rightIndex || rightIndex >= Count || leftIndex >= Count || rightIndex < -1 || leftIndex < -1)
+                    return false;
 
                 var left = this[Math.Min(leftIndex, rightIndex)];
                 var right = this[Math.Max(leftIndex, rightIndex)];
@@ -115,8 +112,14 @@ namespace EVEMon.SkillPlanner
                 RequiredLevel = prereq.Level;
 
                 // Put on the appropriate row
-                if (rows.Count == level) rows.Add(new Row(this));
-                else rows[level].Add(this);
+                if (rows.Count == level)
+                {
+                    rows.Add(new Row(this));
+                }
+                else
+                {
+                    rows[level].Add(this);
+                }
 
                 // Create the children
                 foreach (var childPrereq in prereq.Skill.Prerequisites)
@@ -160,14 +163,17 @@ namespace EVEMon.SkillPlanner
             private void SecondPassLayout(List<Row> rows, int level)
             {
                 // Gets the row for this level
-                if (level == rows.Count) return;
+                if (level == rows.Count)
+                    return;
+
                 var row = rows[level];
 
                 // Scan every cell and, when there is a conflict, shift all the other cells
                 for (int i = 0; i < Cells.Count - 1; i++)
                 {
                     int space;
-                    if (!row.AreOverlapping(i, i + 1, out space)) continue;
+                    if (!row.AreOverlapping(i, i + 1, out space))
+                        continue;
 
                     // Shift the two cells
                     int shift = (-space) >> 1;
@@ -177,13 +183,17 @@ namespace EVEMon.SkillPlanner
                     // Shift boxes on the left of "left"
                     for (int j = i - 1; j >= 0; j--)
                     {
-                        if (!row.AreOverlapping(j, j + 1, out space)) break;
+                        if (!row.AreOverlapping(j, j + 1, out space))
+                            break;
+
                         row[j].Offset(space, 0);
                     }
                     // Shift boxes on the right of "right"
                     for (int j = i + 2; j < row.Count; j++)
                     {
-                        if (!row.AreOverlapping(j, j - 1, out space)) break;
+                        if (!row.AreOverlapping(j, j - 1, out space))
+                            break;
+
                         row[j].Offset(-space, 0);
                     }
                 }
@@ -200,7 +210,10 @@ namespace EVEMon.SkillPlanner
             public void Offset(int x, int y)
             {
                 this.Rectangle.Offset(x, y);
-                foreach (var cell in Cells) cell.Offset(x, y);
+                foreach (var cell in Cells)
+                {
+                    cell.Offset(x, y);
+                }
             }
 
             /// <summary>
@@ -317,8 +330,12 @@ namespace EVEMon.SkillPlanner
                 Graphics g = Graphics.FromHwnd(this.Handle);
                 float dpi = g.DpiX;
 
-                if (dpi > 125) return 353;
-                if (dpi > 96) return 295;
+                if (dpi > 125)
+                    return 353;
+
+                if (dpi > 96)
+                    return 295;
+
                 return 235;
             }
         }
@@ -333,8 +350,12 @@ namespace EVEMon.SkillPlanner
                 Graphics g = Graphics.FromHwnd(this.Handle);
                 float dpi = g.DpiX;
 
-                if (dpi > 125) return 110;
-                if (dpi > 96) return 92;
+                if (dpi > 125)
+                    return 110;
+
+                if (dpi > 96)
+                    return 92;
+
                 return 73;
             }
         }
@@ -385,7 +406,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateLayout()
         {
-            if (m_rootSkill == null) return;
+            if (m_rootSkill == null)
+                return;
+
             m_rootCell = new Cell(m_rootSkill);
             ArrangeGraph();
         }
@@ -395,7 +418,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void ArrangeGraph()
         {
-            if (m_rootSkill == null) return;
+            if (m_rootSkill == null)
+                return;
+
             m_graphBounds = m_rootCell.Arrange(this.Size);
             this.AutoScrollMinSize = m_graphBounds.Size;
             this.Invalidate();
@@ -423,7 +448,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Returns when no root skill
-            if (m_rootSkill == null) return;
+            if (m_rootSkill == null)
+                return;
 
             // Compute offset caused by scrollers
             int ofsLeft = this.AutoScrollPosition.X;
@@ -601,7 +627,8 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (fillBrush != null) fillBrush.Dispose();
+                if (fillBrush != null)
+                    fillBrush.Dispose();
             }
         }
 
@@ -662,22 +689,20 @@ namespace EVEMon.SkillPlanner
 
             // Checks every cell
             Skill skill = null;
-            foreach (var cell in m_rootCell.AllCells)
+            var mouseLocation = e.Location;
+            mouseLocation.Offset(ofsLeft, ofsTop);
+            foreach (var cell in m_rootCell.AllCells.Where(x => x.Rectangle.Contains(mouseLocation)))
             {
-                var rect = cell.Rectangle;
-                rect.Offset(ofsLeft, ofsTop);
-                if (cell.Rectangle.Contains(e.Location))
-                {
-                    skill = cell.Skill;
-                    break;
-                }
+                skill = cell.Skill;
             }
 
             // Fires the event when skill not null
-            if (skill == null) return;
+            if (skill == null)
+                return;
+
             if (SkillClicked != null)
             {
-                SkillClickedEventArgs se = new SkillClickedEventArgs(skill, e.Button, e.Location);
+                SkillClickedEventArgs se = new SkillClickedEventArgs(skill, e.Button, mouseLocation);
                 SkillClicked(this, se);
             }
         }
