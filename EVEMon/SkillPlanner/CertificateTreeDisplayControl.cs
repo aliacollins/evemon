@@ -659,6 +659,10 @@ namespace EVEMon.SkillPlanner
             if (npw == null || npw.IsDisposed)
                 return;
 
+            // Return when nothing is selected
+            if (this.treeView.SelectedNode == null)
+                return;
+
             Certificate cert = this.treeView.SelectedNode.Tag as Certificate;
             // When a certificate is selected, we select its class in the left tree
             if (cert != null)
@@ -683,6 +687,10 @@ namespace EVEMon.SkillPlanner
             // Retrieve the owner window
             PlanWindow npw = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             if (npw == null || npw.IsDisposed)
+                return;
+
+            // Return when nothing is selected
+            if (this.treeView.SelectedNode == null)
                 return;
 
             // Open the skill explorer
