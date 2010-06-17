@@ -54,6 +54,7 @@ namespace EVEMon.Common.Serialization.Settings
             this.SkillQueue = new List<SerializableQueuedSkill>();
             this.LastUpdates = new List<SerializableAPIUpdate>();
             this.MarketOrders = new List<SerializableOrderBase>();
+            this.IndustryJobs = new List<SerializableJob>();
         }
 
         [XmlArray("queue")]
