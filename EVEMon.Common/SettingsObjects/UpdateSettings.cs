@@ -18,6 +18,7 @@ namespace EVEMon.Common.SettingsObjects
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
             IgnoreNetworkStatus = false;
             UpdateFrequency = 120;
+            UseCustomUpdatesUrl = false;
             UpdatesUrl = NetworkConstants.BattleclinicUpdates;
         }
 
@@ -77,6 +78,9 @@ namespace EVEMon.Common.SettingsObjects
 
         private string m_updatesUrl;
 
+        [XmlElement("useCustomUpdatesUrl")]
+        public bool UseCustomUpdatesUrl { get; set; }
+
         /// <summary>
         /// Url to patch.xml
         /// </summary>
@@ -88,7 +92,15 @@ namespace EVEMon.Common.SettingsObjects
         {
             get
             {
+                if (!UseCustomUpdatesUrl)
+                    return NetworkConstants.BattleclinicUpdates;
+
                 if (String.IsNullOrEmpty(m_updatesUrl))
+                    return NetworkConstants.BattleclinicUpdates;
+
+                // We don't want this to be abused, so we lock the custom update url to localhost.
+                // For convenience any localhost path can be used on any port. file:// does not work anyway.
+                if (!m_updatesUrl.StartsWith("http://localhost:"))
                     return NetworkConstants.BattleclinicUpdates;
                 
                 return m_updatesUrl;
@@ -135,6 +147,7 @@ namespace EVEMon.Common.SettingsObjects
             clone.HttpTimeout = this.HttpTimeout;
             clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
             clone.UpdateFrequency = this.UpdateFrequency;
+            clone.UseCustomUpdatesUrl = this.UseCustomUpdatesUrl;
             clone.UpdatesUrl = this.UpdatesUrl;
 
             foreach (var pair in this.Periods)
