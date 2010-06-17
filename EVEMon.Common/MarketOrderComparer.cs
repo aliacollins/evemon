@@ -115,11 +115,11 @@ namespace EVEMon.Common
 
                 case MarketOrderColumn.OrderRange:
                     // Compare applies only to BuyOrder 
-                    return (x is BuyOrder ? ((BuyOrder)x).Range.CompareTo(((BuyOrder)y).Range) : 0);
+                    return (x is BuyOrder && y is BuyOrder ? ((BuyOrder)x).Range.CompareTo(((BuyOrder)y).Range) : 0);
 
                 case MarketOrderColumn.Escrow:
                     // Compare applies only to BuyOrder 
-                    return (x is BuyOrder ? ((BuyOrder)x).Escrow.CompareTo(((BuyOrder)y).Escrow) : 0);
+                    return (x is BuyOrder && y is BuyOrder ? ((BuyOrder)x).Escrow.CompareTo(((BuyOrder)y).Escrow) : 0);
 
                 default:
                     return 0;
