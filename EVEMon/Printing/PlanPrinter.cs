@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// Prints a plan.
+    /// </summary>
     public class PlanPrinter
     {
         private readonly Plan m_plan;
@@ -18,12 +21,11 @@ namespace EVEMon.SkillPlanner
         private readonly Font m_boldFont;
         private readonly SolidBrush m_brush;
         private readonly PlanExportSettings m_settings;
-
-
+        
         private int m_entryToPrint;
         private Point m_point = new Point();
         private DateTime m_currentDate = DateTime.Now;
-        private DateTime printStartTime = DateTime.Now;
+        private DateTime m_printStartTime = DateTime.Now;
         private TimeSpan m_trainingTime = TimeSpan.Zero;
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
         private PlanPrinter(Plan plan)
         {
             m_plan = plan;
@@ -60,7 +62,7 @@ namespace EVEMon.SkillPlanner
         {
 
             PrintDocument doc = new PrintDocument();
-            doc.DocumentName = "Skill Plan for " + m_character.Name + " (" + m_plan.Name + ")";
+            doc.DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
             doc.PrintPage += new PrintPageEventHandler(doc_PrintPage);
 
             //Display the options
@@ -83,13 +85,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Occurs anytime the preview dialog needs to print a page
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Drawing.Printing.PrintPageEventArgs"/> instance containing the event data.</param>
         private void doc_PrintPage(object sender, PrintPageEventArgs e)
         {
             var g = e.Graphics;
             int cumulativeSkillTotal = m_character.SkillPoints;
-            string s = "Skill Plan for " + m_character.Name + " (" + m_plan.Name + ")";
+            string s = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
             int index = 0;
 
             m_point.X = 5;
@@ -107,7 +109,7 @@ namespace EVEMon.SkillPlanner
             }
 
             bool resetTotal = true;
-            if (m_entryToPrint == 0) m_currentDate = printStartTime;
+            if (m_entryToPrint == 0) m_currentDate = m_printStartTime;
 
             // Scroll through entries
             foreach (var pe in m_plan)
@@ -153,11 +155,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Prints a single entry
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="size"></param>
-        /// <param name="index"></param>
-        /// <param name="pe"></param>
-        /// <returns></returns>
+        /// <param name="g">The graphics canvas.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="pe">The plan entry.</param>
         private void PrintEntry(Graphics g, int index, PlanEntry pe)
         {
             SizeF size;
@@ -256,10 +256,8 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Prints the footer displaying the statistics for this page ONLY
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="size"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
+        /// <param name="g">The graphis canvas.</param>
+        /// <param name="index">The index.</param>
         private void PrintPageFooter(Graphics g, int index)
         {
             SizeF size = SizeF.Empty;
@@ -333,9 +331,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Measures and prints using the bold font.
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="s"></param>
-        /// <param name="p"></param>
+        /// <param name="g">The graphics canvas.</param>
+        /// <param name="s">The string to print.</param>
+        /// <param name="p">The position.</param>
         /// <returns></returns>
         private SizeF PrintBold(Graphics g, string s, Point p)
         {
@@ -343,12 +341,13 @@ namespace EVEMon.SkillPlanner
             g.DrawString(s, m_boldFont, m_brush, m_point);
             return f;
         }
+
         /// <summary>
         /// Measures and prints using the regular font.
         /// </summary>
-        /// <param name="g"></param>
-        /// <param name="s"></param>
-        /// <param name="p"></param>
+        /// <param name="g">The graphics canvas.</param>
+        /// <param name="s">The string to print.</param>
+        /// <param name="p">The position.</param>
         /// <returns></returns>
         private SizeF Print(Graphics g, string s, Point p)
         {
