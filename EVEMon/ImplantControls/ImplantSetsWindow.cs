@@ -239,25 +239,6 @@ namespace EVEMon.ImplantControls
         }
 
         /// <summary>
-        /// Sets the selected implant slot
-        /// </summary>
-        /// <param name="set"></param>
-        private void SetSelectedSet(SerializableSettingsImplantSet set)
-        {
-            setsGrid.ClearSelection();
-
-            // Get the string representation of the ImplantSlots enumeration
-            if (set == m_sets.API) setsGrid.Rows[0].Selected = true;
-            else if (set == m_sets.OldAPI) setsGrid.Rows[1].Selected = true;
-            else
-            {
-                int index = m_sets.CustomSets.IndexOf(set);
-                index = (index == -1 ? -1 : 2 + index);
-                setsGrid.Rows[index].Selected = true;
-            }
-        }
-
-        /// <summary>
         /// Gets the implant name for the given slot and the provided set.
         /// </summary>
         /// <param name="set"></param>
