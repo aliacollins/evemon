@@ -44,10 +44,13 @@
   <ItemGroup>
     <Compile Include="BattleclinicParser.cs" />
     <Compile Include="CXIParser.cs" />
+    <Compile Include="DefaultMineralParserAttribute.cs" />
     <Compile Include="EveCentralParser.cs" />
     <Compile Include="EveMetricsParser.cs" />
     <Compile Include="IMineralParser.cs" />
     <Compile Include="MatariParser.cs" />
+    <Compile Include="MineralDataRequest.cs" />
+    <Compile Include="MineralParserException.cs" />
     <Compile Include="MineralTile.cs">
       <SubType>UserControl</SubType>
     </Compile>
