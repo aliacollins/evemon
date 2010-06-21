@@ -322,9 +322,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Relocator.cs" />
-    <Compile Include="Resources\icons\Skill_Select\IconSettings.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Resources\icons\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
