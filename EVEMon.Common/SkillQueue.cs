@@ -115,7 +115,7 @@ namespace EVEMon.Common
                 m_items.RemoveAt(0);
 
                 // Sends an email alert
-                if (Settings.Notifications.SendMailAlert)
+                if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
                     Emailer.SendSkillCompletionMail(m_items, skill, m_character);
 
                 // Sends a notification
