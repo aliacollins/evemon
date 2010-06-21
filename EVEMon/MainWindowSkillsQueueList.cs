@@ -364,6 +364,7 @@ namespace EVEMon
 
 
         #region Local events
+
         /// <summary>
         /// Handles the MouseWheel event of the lbSkillsQueue control.
         /// </summary>

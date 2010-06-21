@@ -77,6 +77,7 @@
             this.lbSkillsQueue.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkillsQueue_MeasureItem);
             this.lbSkillsQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkillsQueue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
+            this.lbSkillsQueue.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkillsQueue_MouseWheel);
             // 
             // MainWindowSkillsQueueList
             // 
