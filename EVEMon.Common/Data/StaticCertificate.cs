@@ -15,23 +15,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificate
     {
-        #region PrereqCertificate
-        /// <summary>
-        /// Structure used during initialization before we can resolve names
-        /// </summary>
-        private struct TempPrereqCertificate
-        {
-            public readonly string Name;
-            public readonly CertificateGrade Grade;
-
-            public TempPrereqCertificate(string name, CertificateGrade grade)
-            {
-                this.Name = name;
-                this.Grade = grade;
-            }
-        }
-        #endregion
-
         private readonly StaticRecommendations<Item> m_recommendations = new StaticRecommendations<Item>();
         private readonly List<StaticCertificate> m_prerequisiteCertificates = new List<StaticCertificate>();
         private readonly List<StaticSkillLevel> m_prerequisiteSkills = new List<StaticSkillLevel>();
