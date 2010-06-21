@@ -127,21 +127,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Checks the given system is not one of the parents.
-        /// </summary>
-        /// <param name="neighbor"></param>
-        /// <returns></returns>
-        private bool IsParent(SolarSystem neighbor)
-        {
-            for (var parent = m_parent; parent != null; parent = parent.m_parent)
-            {
-                if (parent.m_system == neighbor) return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Gets the depth of this node.
         /// </summary>
         private int Depth
