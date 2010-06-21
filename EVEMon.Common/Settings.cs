@@ -68,7 +68,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            m_isRestoringSettings = true;
+            IsRestoringSettings = true;
             try
             {
                 EveClient.Trace("Settings.Import() - begin");
@@ -117,7 +117,7 @@ namespace EVEMon.Common
             }
             finally
             {
-                m_isRestoringSettings = false;
+                IsRestoringSettings = false;
             }
         }
 
@@ -439,10 +439,6 @@ namespace EVEMon.Common
 
 
         #region Save
-        /// <summary>
-        /// Boolean to prevent temporary Settings objects being saved.
-        /// </summary>
-        private static bool m_isRestoringSettings = false;
 
         /// <summary>
         /// Flag to indicate if a save is pending but not comitted
@@ -512,9 +508,10 @@ namespace EVEMon.Common
         /// </summary>
         public static bool IsRestoringSettings
         {
-            get { return m_isRestoringSettings; }
-            private set { m_isRestoringSettings = value; }
+            get;
+            private set;
         }
+        
         #endregion
 
 
