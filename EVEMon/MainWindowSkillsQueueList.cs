@@ -29,13 +29,13 @@ namespace EVEMon
         private readonly Font m_skillsQueueFont;
         private readonly Font m_boldSkillsQueueFont;
 
-        private CCPCharacter ccpCharacter;
+        private CCPCharacter m_ccpCharacter;
         private Object m_lastTooltipItem;
         private Character m_character;
-        private QueuedSkill item;
+        private QueuedSkill m_item;
         private QueuedSkill[] m_skillQueue;
 
-        private int count = 0;
+        private int m_count = 0;
         
         /// <summary>
         /// Constructor
@@ -138,17 +138,17 @@ namespace EVEMon
                 return;
             }
             
-            ccpCharacter = m_character as CCPCharacter;
+            m_ccpCharacter = m_character as CCPCharacter;
 
             // If the character is not a CCPCharacter it does not have a skill queue.
-            if (ccpCharacter == null)
+            if (m_ccpCharacter == null)
                 return;
             
             // When the skill queue hasn't changed don't do anything
-            if (!QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
+            if (!QueueHasChanged(m_ccpCharacter.SkillQueue.ToArray()))
                 return;
 
-            m_skillQueue = ccpCharacter.SkillQueue.ToArray();
+            m_skillQueue = m_ccpCharacter.SkillQueue.ToArray();
 
             // Update the skills queue list
             lbSkillsQueue.BeginUpdate();
@@ -156,14 +156,14 @@ namespace EVEMon
             {
                 // Add items in the list
                 lbSkillsQueue.Items.Clear();
-                foreach (var skill in ccpCharacter.SkillQueue)
+                foreach (var skill in m_ccpCharacter.SkillQueue)
                 {
                     lbSkillsQueue.Items.Add(skill);
                 }
 
                 // Display or hide the "no queue skills" label.
-                noSkillsQueueLabel.Visible = ccpCharacter.SkillQueue.IsEmpty();
-                lbSkillsQueue.Visible = !ccpCharacter.SkillQueue.IsEmpty();
+                noSkillsQueueLabel.Visible = m_ccpCharacter.SkillQueue.IsEmpty();
+                lbSkillsQueue.Visible = !m_ccpCharacter.SkillQueue.IsEmpty();
 
                 // Invalidate display
                 lbSkillsQueue.Invalidate();
@@ -207,8 +207,8 @@ namespace EVEMon
             if (e.Index < 0)
                 return;
 
-            item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
-            DrawItem(item, e);
+            m_item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
+            DrawItem(m_item, e);
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace EVEMon
                 }
 
                 // Color indicator for a queued level
-                SkillQueue skillQueue = ccpCharacter.SkillQueue;
+                SkillQueue skillQueue = m_ccpCharacter.SkillQueue;
                 if (skill.Skill != null)
                 {
                     foreach (var qskill in skillQueue)
@@ -314,13 +314,13 @@ namespace EVEMon
                         // Blinking indicator of skill level in training
                         if (skill.Skill.IsTraining && skill.Equals(qskill) && level.Equals(skill.Level) && percentComplete > 0.0)
                         {
-                            if (count.Equals(0))
+                            if (m_count.Equals(0))
                                 g.FillRectangle(Brushes.White, brect);
 
-                            if (count.Equals(1))
-                                count = -1;
+                            if (m_count.Equals(1))
+                                m_count = -1;
 
-                            count++;
+                            m_count++;
                         }
                     }
                 }
@@ -355,7 +355,7 @@ namespace EVEMon
             // Draw skill queue color bar
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
-            Rectangle skillRect = SkillQueueControl.GetSkillRect(item, qBarRect.Width, LowerBoxHeight - 1);
+            Rectangle skillRect = SkillQueueControl.GetSkillRect(m_item, qBarRect.Width, LowerBoxHeight - 1);
             g.FillRectangle(Brushes.CornflowerBlue,
                 new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
         }
@@ -445,8 +445,8 @@ namespace EVEMon
             }
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels.
-            item = lbSkillsQueue.Items[index] as QueuedSkill;
-            Skill skill = item.Skill;
+            m_item = lbSkillsQueue.Items[index] as QueuedSkill;
+            Skill skill = m_item.Skill;
             if (e.Button.Equals(MouseButtons.Right))
             {
                 // "Show in Skill Explorer" menu item
@@ -489,7 +489,7 @@ namespace EVEMon
             }
 
             // Non-right click or already lv5, display the tooltip
-            DisplayTooltip(item);
+            DisplayTooltip(m_item);
         }
 
         /// <summary>
@@ -507,8 +507,8 @@ namespace EVEMon
                     continue;
 
                 // Updates the tooltip
-                item = lbSkillsQueue.Items[i] as QueuedSkill;
-                DisplayTooltip(item);
+                m_item = lbSkillsQueue.Items[i] as QueuedSkill;
+                DisplayTooltip(m_item);
                 return;
             }
 
