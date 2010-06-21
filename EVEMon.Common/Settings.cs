@@ -507,14 +507,6 @@ namespace EVEMon.Common
             FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, copyFileName);
         }
 
-        /// <summary>
-        /// Gets true if we're currently restoring the settings
-        /// </summary>
-        public static bool IsRestoringSettings
-        {
-            get { return m_isRestoringSettings; }
-            private set { m_isRestoringSettings = value; }
-        }
         #endregion
 
 
