@@ -22,7 +22,7 @@ namespace EVEMon.ImplantControls
     {
         private const string PhantomSetName = "<New set>";
 
-        private int maxJumpClones;
+        private int m_maxJumpClones;
         private Character m_character;
         private SerializableImplantSetCollection m_sets = null;
 
@@ -50,7 +50,7 @@ namespace EVEMon.ImplantControls
         {
             m_character = character;
             m_sets = character.ImplantSets.Export();
-            maxJumpClones = character.Skills["Infomorph Psychology"].Level;
+            m_maxJumpClones = character.Skills["Infomorph Psychology"].Level;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace EVEMon.ImplantControls
         {
             // Header
             headerLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} has the skill for {1:D} Jump Clones\n(plus 1 for the implants in your active body)",
-                          m_character, maxJumpClones);
+                          m_character, m_maxJumpClones);
 
             // Populate implants combo boxes
             foreach (var control in this.Controls)
