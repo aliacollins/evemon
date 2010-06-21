@@ -439,6 +439,7 @@
     <Compile Include="Collections\ReadonlyCollection.cs" />
     <Compile Include="SkillLevel.cs" />
     <Compile Include="Threading\IActorTimer.cs" />
+    <Compile Include="Threading\Message.cs" />
     <Compile Include="Threading\UIActorTimer.cs" />
     <Compile Include="TimeExtensions.cs" />
     <Compile Include="UriCharacter.cs" />
