@@ -58,6 +58,7 @@ namespace EVEMon
         }
 
         #region Content creation and layout
+
         /// <summary>
         /// Updates the characters' list with the provided monitors
         /// </summary>
@@ -113,12 +114,20 @@ namespace EVEMon
         /// </summary>
         internal void CleanUp()
         {
-            // Dispose every one of the control to prevent timer's execution
+            List<Control> itemsToRemove = new List<Control>();
+            
+            // Compile a list of items to remove, if we remove them
+            // within the loop one object will be leaked every time
+            // we call this method
             foreach (Control item in this.Controls)
             {
-                if (item == labelNoCharacters)
-                    continue;
-                
+                if (item != labelNoCharacters)
+                    itemsToRemove.Add(item);
+            }
+
+            // Dispose every one of the control to prevent timer's execution
+            foreach (Control item in itemsToRemove)
+            {
                 item.Click -= new EventHandler(item_Click);
                 item.Dispose();
             }
@@ -126,7 +135,6 @@ namespace EVEMon
             // Clear the controls list
             this.Controls.Clear();
             this.Controls.Add(labelNoCharacters);
-
         }
 
         /// <summary>
@@ -220,10 +228,12 @@ namespace EVEMon
                 this.ResumeLayout(true);
             }
         }
+
         #endregion
 
 
         #region Globals and locals events
+
         /// <summary>
         /// When the settings changed, we need to rebuild the items.
         /// </summary>
@@ -265,6 +275,7 @@ namespace EVEMon
             if (this.CharacterClicked != null)
                 this.CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
         }
+
         #endregion
     }
 }

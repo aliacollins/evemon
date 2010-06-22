@@ -46,6 +46,7 @@ namespace EVEMon
         private bool m_tooltip = false;
 
         #region Initialization, destruction
+
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
@@ -60,7 +61,6 @@ namespace EVEMon
             this.lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
             this.lblCompletionTime.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
             this.lblSkillQueueFreeRoom.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
-            m_lightForeColor = lblCompletionTime.ForeColor;
 
             // Misc fields
             m_showPortrait = true;
@@ -71,6 +71,7 @@ namespace EVEMon
             m_showConflicts = true;
             m_showSkillQueueFreeRoom = true;
             m_portraitSize = 96;
+            m_lightForeColor = lblCompletionTime.ForeColor;
 
             // Initialize the skill queue free room label text
             lblSkillQueueFreeRoom.Text = String.Empty;
@@ -179,10 +180,12 @@ namespace EVEMon
 
             base.OnLoad(e);
         }
+
         #endregion
 
 
         #region Global events and content update
+
         /// <summary>
         /// Gets the character this control is bound to.
         /// </summary>
@@ -404,10 +407,12 @@ namespace EVEMon
             if (e.Character != m_character) return;
             UpdateContent();
         }
+
         #endregion
 
 
         #region Controls events
+
         /// <summary>
         /// Occurs when the visibility changed.
         /// </summary>
@@ -477,10 +482,12 @@ namespace EVEMon
             Invalidate();
             base.OnMouseUp(e);
         }
+
         #endregion
 
 
         #region Layout
+
         /// <summary>
         /// Gets or sets true whether a button should appear on hover.
         /// </summary>
@@ -724,6 +731,7 @@ namespace EVEMon
         {
             return new Size(m_preferredWidth, m_preferredHeight);
         }
+
         #endregion
     }
 }

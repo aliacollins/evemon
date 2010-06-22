@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
@@ -16,8 +12,7 @@ namespace EVEMon.Common.Controls
         private Character m_character;
         private bool m_updatingPortrait;
         private bool m_pendingUpdate;
-
-
+        
         /// <summary>
         /// Constructor
         /// </summary>
@@ -37,8 +32,8 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.Disposed -= new EventHandler(OnDisposed);
             EveClient.CharacterPortraitChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPortraitChanged);
+            this.Disposed -= new EventHandler(OnDisposed);
         }
 
         /// <summary>
@@ -186,13 +181,17 @@ namespace EVEMon.Common.Controls
                 // we need to load the data into a MemoryStream before
                 // returning the image or GDI+ will lock the file for 
                 // the lifetime of the image.
-                MemoryStream stream = new MemoryStream();
+                Image image;
 
                 byte[] imageBytes = File.ReadAllBytes(cacheFileName);
-                stream.Write(imageBytes, 0, imageBytes.Length);
-                stream.Position = 0;
+                
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    stream.Write(imageBytes, 0, imageBytes.Length);
+                    stream.Position = 0;
 
-                var image = Image.FromStream(stream);
+                    image = Image.FromStream(stream);
+                }
                 return image;
             }
             catch (Exception e)
