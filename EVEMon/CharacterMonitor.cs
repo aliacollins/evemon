@@ -1,28 +1,19 @@
 //#define DEBUG_SINGLETHREAD
 using System;
-using System.IO;
-using System.Web;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Threading;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Globalization;
 using System.ComponentModel;
-using System.Drawing.Imaging;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
-using EVEMon.Common;
-using EVEMon.Controls;
-using EVEMon.Common.Net;
 using EVEMon.Accounting;
-using EVEMon.SkillPlanner;
-using EVEMon.ExternalCalendar;
-using EVEMon.Common.Scheduling;
+using EVEMon.Common;
+using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
+using EVEMon.ExternalCalendar;
 
 namespace EVEMon
 {

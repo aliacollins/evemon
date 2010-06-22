@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -27,7 +27,6 @@ using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowsApi;
-using System.Reflection;
 
 namespace EVEMon
 {
@@ -435,7 +434,9 @@ namespace EVEMon
         void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlsOnTabSelectionChange();
-            overview.UpdateContent();
+            
+            if (tcCharacterTabs.SelectedTab == tpOverview)
+                overview.UpdateContent();
         }
 
         /// <summary>
