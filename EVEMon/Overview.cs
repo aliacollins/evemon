@@ -62,7 +62,6 @@ namespace EVEMon
         /// <summary>
         /// Updates the characters' list with the provided monitors
         /// </summary>
-        /// <param name="monitors"></param>
         public void UpdateContent()
         {
             this.SuspendLayout();
