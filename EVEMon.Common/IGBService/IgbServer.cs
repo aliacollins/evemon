@@ -184,7 +184,7 @@ namespace EVEMon.Common.IgbService
                 client.Write("HTTP/1.1 200 OK\n");
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
-                if (headers.ContainsKey("eve_trusted") && headers["eve_trusted"].ToLower() == "no")
+                if (headers.ContainsKey("eve_trusted") && headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
                 {
                     client.Write("eve.trustme: http://" + BuildHostAndPort(headers["host"]) + "/::EVEMon needs your pilot information.\n");
                 }
@@ -230,7 +230,7 @@ namespace EVEMon.Common.IgbService
                     Match m = Regex.Match(tline, "^(.*?): (.*)$");
                     if (m.Success)
                     {
-                        headers[m.Groups[1].Value.ToLower()] = m.Groups[2].Value;
+                        headers[m.Groups[1].Value.ToLower(CultureConstants.DefaultCulture)] = m.Groups[2].Value;
                     }
                 }
             }
@@ -308,7 +308,7 @@ namespace EVEMon.Common.IgbService
                 return;
             }
 
-            if (trusted.ToLower() != "yes")
+            if (trusted.ToLower(CultureConstants.DefaultCulture) != "yes")
             {
                 sw.WriteLine("The in-game browser do not trust EVEMon.<br/>");
                 sw.WriteLine("<a href=\"\" onclick=\"CCPEVE.requestTrust('http://{0}')\">Trust EVEMon</a>.", BuildHostAndPort(headers["host"]));

@@ -92,7 +92,7 @@ namespace EVEMon.Common
             {
                 string format = Util.GetXmlRootElement(uri.LocalPath);
 
-                switch (format.ToLower())
+                switch (format.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
                         var apiResult = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);

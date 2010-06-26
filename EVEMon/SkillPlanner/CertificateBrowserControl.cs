@@ -292,7 +292,7 @@ namespace EVEMon.SkillPlanner
                     }
                     else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                     {
-                        tslbEligible.Text += " (improved from \"" + highestClaimedCertificate.Grade.ToString().ToLower() + "\")";
+                        tslbEligible.Text += " (improved from \"" + highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture) + "\")";
                     }
                     else
                     {

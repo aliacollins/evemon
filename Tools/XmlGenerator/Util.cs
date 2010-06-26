@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.XmlGenerator.StaticData;
+using EVEMon.Common;
 
 namespace EVEMon.XmlGenerator
 {
@@ -185,7 +186,7 @@ namespace EVEMon.XmlGenerator
                 using (FileStream fs = File.Open(datafile.FullName, FileMode.Open))
                 {
                     foreach (byte b in md5.ComputeHash(fs))
-                        sb.Append(b.ToString("x2").ToLower());
+                        sb.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
                 }
 
                 // Constract the fileline

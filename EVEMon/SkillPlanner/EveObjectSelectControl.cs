@@ -102,7 +102,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void BuildListView()
         {
-            string searchText = tbSearchText.Text.Trim().ToLower();
+            string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
            
             if (String.IsNullOrEmpty(searchText))
             {
@@ -159,7 +159,7 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            if (itm.Name.ToLower().Contains(searchText) || itm.Description.ToLower().Contains(searchText))
+            if (itm.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText) || itm.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
             {
                 filteredItems.Add(itm);
             }

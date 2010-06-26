@@ -38,7 +38,7 @@ namespace EVEMon.Common
                     hash = md5.ComputeHash(bufferedStream);
                     foreach (byte b in hash)
                     {
-                        builder.Append(b.ToString("x2").ToLower());
+                        builder.Append(b.ToString("x2").ToLower(CultureConstants.DefaultCulture));
                     }
                 }
             }

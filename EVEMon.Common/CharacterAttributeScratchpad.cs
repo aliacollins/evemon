@@ -157,7 +157,7 @@ namespace EVEMon.Common
         /// <returns>The formatted string.</returns>
         public string ToString(string format)
         {
-            format = format.Replace("%n",   m_attrib.ToString().ToLower());
+            format = format.Replace("%n",   m_attrib.ToString().ToLower(CultureConstants.DefaultCulture));
             format = format.Replace("%N",   m_attrib.ToString());
             format = format.Replace("%b",   m_base.ToString());
             format = format.Replace("%i",   m_implantBonus.ToString());

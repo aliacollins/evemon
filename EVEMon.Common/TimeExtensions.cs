@@ -308,10 +308,10 @@ namespace EVEMon.Common
                 sb.Append(' ');
 
             if ((dto & DescriptiveTextOptions.FirstLetterUppercase) != 0)
-                dstr = char.ToUpper(dstr[0]) + dstr.Substring(1);
+                dstr = char.ToUpper(dstr[0], CultureConstants.DefaultCulture) + dstr.Substring(1);
 
             if ((dto & DescriptiveTextOptions.UppercaseText) != 0)
-                dstr = dstr.ToUpper();
+                dstr = dstr.ToUpper(CultureConstants.DefaultCulture);
 
             if ((dto & DescriptiveTextOptions.FullText) != 0)
             {

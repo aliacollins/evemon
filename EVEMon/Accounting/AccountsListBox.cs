@@ -133,7 +133,7 @@ namespace EVEMon.Accounting
                 string UserID = account.UserID.ToString();
                 Size UserIDTextSize = TextRenderer.MeasureText(g, UserID, boldFont);
                 g.DrawString(UserID, boldFont, fontBrush, new PointF(left, top));
-                g.DrawString(account.APIKey.ToLower(), this.Font, fontBrush, new PointF(left + UserIDTextSize.Width, top));
+                g.DrawString(account.APIKey.ToLower(CultureConstants.DefaultCulture), this.Font, fontBrush, new PointF(left + UserIDTextSize.Width, top));
 
                 // Draws the identities bounds to this account
                 top = e.Bounds.Top + height / 2 + 4;
