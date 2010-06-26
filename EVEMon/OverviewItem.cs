@@ -174,7 +174,6 @@ namespace EVEMon
             if (this.DesignMode || this.IsDesignModeHosted()) return;
 
             // Character Name
-            PerformCustomLayout(m_tooltip);
             UpdateContent();
             m_loading = true;
 

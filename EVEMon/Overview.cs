@@ -29,7 +29,6 @@ namespace EVEMon
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
             EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             this.Disposed += new EventHandler(Overview_Disposed);
-
         }
 
         /// <summary>
@@ -69,17 +68,17 @@ namespace EVEMon
             {
                 CleanUp();
 
-                if (EveClient.MonitoredCharacters.IsEmpty())
-                {
-                    // Updates the visibility of the label for when no characters are loaded
-                    labelNoCharacters.Visible = true;
+                // Updates the visibility of the label for when no characters are loaded
+                bool noCharacters = EveClient.MonitoredCharacters.IsEmpty();
+                
+                labelNoCharacters.Visible = noCharacters;
+                
+                if (noCharacters)
                     return;
-                }
 
                 // Creates the controls
-                labelNoCharacters.Visible = false;
                 var characters = new List<Character>();
-                if(Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
+                if (Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
                 {
                     characters.AddRange(EveClient.MonitoredCharacters.Where(x => x.IsTraining));
                     characters.AddRange(EveClient.MonitoredCharacters.Where(x => !x.IsTraining));
@@ -95,6 +94,12 @@ namespace EVEMon
                     var item = new OverviewItem(character, Settings.UI.MainWindow);
                     item.Click += new EventHandler(item_Click);
                     item.Clickable = true;
+
+                    // Ensure that the control gets created before we add it,
+                    // (when Overview is created and then we hide a character,
+                    // the control gets created after the custom layout has been performed,
+                    // causing the controls to get misplaced)
+                    item.CreateControl();
 
                     // Add it 
                     this.Controls.Add(item);

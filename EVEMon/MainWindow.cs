@@ -434,9 +434,6 @@ namespace EVEMon
         void tcCharacterTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlsOnTabSelectionChange();
-            
-            if (tcCharacterTabs.SelectedTab == tpOverview)
-                overview.UpdateContent();
         }
 
         /// <summary>
