@@ -555,9 +555,14 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void btPaste_Click(object sender, EventArgs e)
         {
-            if (m_activeTextBox != null)
-                m_activeTextBox.Text = Clipboard.GetText();
+            if (m_activeTextBox == null)
+                return;
 
+            m_activeTextBox.Text = Clipboard.GetText();
+
+            if (m_activeTextBox.Parent.Parent is DatafileControl)
+                EnsureHeaderMessage(m_activeTextBox);
+            
             m_activeTextBox = null;
         }
 
