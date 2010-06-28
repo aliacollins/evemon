@@ -195,7 +195,7 @@ namespace EVEMon
             // Balance
             lblBalanceAmount.Text = String.Format(CultureConstants.DefaultCulture, "{0:N}", m_character.Balance);
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter != null && ccpCharacter.HasInsufficientBalance)
+            if (ccpCharacter != null && !ccpCharacter.HasSufficientBalance)
             {
                 lblBalanceAmount.ForeColor = Color.Orange;
                 lblBalanceAmount.Font = new Font(Font, FontStyle.Bold);

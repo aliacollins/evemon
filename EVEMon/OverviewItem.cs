@@ -221,7 +221,7 @@ namespace EVEMon
 
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter != null)
-                lblBalance.ForeColor = (ccpCharacter.HasInsufficientBalance ? Color.Orange : lblBalance.ForeColor);
+                lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
             
             lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", m_character.Balance);
 

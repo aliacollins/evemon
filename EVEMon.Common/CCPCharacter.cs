@@ -166,7 +166,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true when character has insufficient balance to complete its buy orders.
         /// </summary>
-        public bool HasInsufficientBalance
+        public bool HasSufficientBalance
         {
             get
             {
@@ -174,7 +174,7 @@ namespace EVEMon.Common
                     && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
                 decimal additionalToCover = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice) - activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
                 
-                return m_balance < additionalToCover;
+                return m_balance >= additionalToCover;
             }
         }
 
@@ -498,7 +498,7 @@ namespace EVEMon.Common
 
             // Check the character has sufficient balance
             // for its buying orders or send a notification
-            if (HasInsufficientBalance)
+            if (!HasSufficientBalance)
             {
                 EveClient.Notifications.NotifyInsufficientBalance(this);
             }
