@@ -138,6 +138,12 @@
     <Compile Include="CharacterMonitor.Designer.cs">
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitorHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitorHeader.Designer.cs">
+      <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1046,6 +1052,9 @@
     <EmbeddedResource Include="APIErrorWindow.resx">
       <DependentUpon>APIErrorWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitorHeader.resx">
+      <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
