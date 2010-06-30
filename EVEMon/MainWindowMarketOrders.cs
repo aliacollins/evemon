@@ -536,7 +536,9 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Expiration:
-                    item.Text = (order.IsAvailable ? TimeExtensions.ToRemainingTimeShortDescription(order.Expiration).ToUpper(CultureConstants.DefaultCulture) : OrderState.Expired.ToString());
+                    item.Text = (order.IsAvailable ?
+                        order.Expiration.ToRemainingTimeShortDescription().ToUpper(CultureConstants.DefaultCulture) :
+                        OrderState.Expired.ToString());
                     item.ForeColor = (order.IsAvailable ? Color.Black : Color.Red);
                     if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
                         item.ForeColor = Color.DarkOrange; 

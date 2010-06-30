@@ -539,11 +539,13 @@ namespace EVEMon.LogitechG15
         {
             if (CurrentCharacter.IsTraining)
             {
-                string completionDateTime = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",(DateTime.Now + TimeToComplete).ToShortDateString(), TimeExtensions.ToShortTimeString((DateTime.Now + TimeToComplete)));
-                SizeF size = m_lcdCanvas.MeasureString(completionDateTime, m_defaultFont);
+                DateTime completionDateTime = DateTime.Now.Add(TimeToComplete);
+                string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
+                    completionDateTime.ToShortDateString(), completionDateTime.ToShortTimeString());
+                SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 22f);
-                m_lcdCanvas.DrawString(completionDateTime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
+                m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, new SolidBrush(Color.Black), timeLine);
             }
         }
 
@@ -563,7 +565,7 @@ namespace EVEMon.LogitechG15
         {
             if (m_showTime)
             {
-                string curTime = TimeExtensions.ToShortTimeString(DateTime.Now);
+                string curTime = DateTime.Now.ToShortTimeString();
                 SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
                 RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 32f);
