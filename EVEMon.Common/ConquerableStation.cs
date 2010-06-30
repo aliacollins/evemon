@@ -111,6 +111,11 @@ namespace EVEMon.Common
                 return;
 
             var file = LocalXmlCache.GetFile(m_filename).FullName;
+
+            // Abort if the file hasn't been obtained for any reason
+            if (!File.Exists(file))
+                return;
+
             var result = Util.DeserializeAPIResult<SerializableConquerableStationList>(file, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
