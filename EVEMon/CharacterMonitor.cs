@@ -44,11 +44,11 @@ namespace EVEMon
             : this()
         {
             m_character = character;
+            this.Header.Character = character;
             this.skillsList.Character = character;
             this.skillQueueList.Character = character;
             this.ordersList.Character = character;
             this.jobsList.Character = character;
-            this.Header.Character = character;
             notificationList.Notifications = null;
 
             var ccpCharacter = character as CCPCharacter;

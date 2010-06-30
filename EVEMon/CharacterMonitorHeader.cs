@@ -40,6 +40,7 @@ namespace EVEMon
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
             EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_MarketOrdersChanged);
             this.Disposed += new EventHandler(OnDisposed);
         }
 
@@ -160,7 +161,7 @@ namespace EVEMon
         {
             var ccpCharacter = m_character as CCPCharacter;
 
-            if (m_character == null)
+            if (ccpCharacter == null)
             {
                 HideThrobber();
                 return;
@@ -232,14 +233,13 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError))
+            if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError) || ccpCharacter.Identity.Account == null)
             {
                 ToolTip.SetToolTip(UpdateThrobber, String.Empty);
+                return;
             }
-            else
-            {
-                ToolTip.SetToolTip(UpdateThrobber, "Click to update now");
-            }
+
+            ToolTip.SetToolTip(UpdateThrobber, "Click to update now");
         }
 
         /// <summary>
@@ -508,6 +508,7 @@ namespace EVEMon
             EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
             EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
             EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_MarketOrdersChanged);
             this.Disposed -= new EventHandler(OnDisposed);
         }
 
@@ -554,6 +555,20 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Handles the MarketOrdersChanged event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_MarketOrdersChanged(object sender, CharacterChangedEventArgs e)
+        {
+            // no need to do this if control is not visible
+            if (!this.Visible)
+                return;
+
+            FormatBalance();
+        }
+
+        /// <summary>
         /// Occurs when the user click the throbber.
         /// Query the API for or a full update when possible, or show the throbber's context menu.
         /// </summary>
@@ -561,23 +576,20 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void UpdateThrobber_Click(object sender, EventArgs e)
         {
-            var ccpCharacter = (CCPCharacter)m_character;
+            var ccpCharacter = m_character as CCPCharacter;
 
             // this is not a CCP account, it can't be updated
             if (ccpCharacter == null)
-            {
-                ThrobberContextMenu.Show(MousePosition);
                 return;
-            }
-
-            // there has been an error in the past
+            
+            // there has been an error in the past (Authorization, Server Error, etc.)
             if (UpdateThrobber.State != ThrobberState.Strobing)
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
             }
 
-            // updating now will throw an error from the API
+            // updating now will return an API error because the cache has not expired.
             if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError))
             {
                 ThrobberContextMenu.Show(MousePosition);
@@ -609,14 +621,14 @@ namespace EVEMon
 
             RemoveMonitorMenuItems(contextMenu);
 
-            // Exit for non-CCP characters or no associated account
             var ccpCharacter = m_character as CCPCharacter;
 
-            // disable if this is not a CCP Character
-            ChangeInfoMenuItem.Enabled = ccpCharacter != null;
-
+            // Exit for non-CCP characters or no associated account
             if (ccpCharacter == null || ccpCharacter.Identity.Account == null)
+            {
+                QueryEverythingMenuItem.Enabled = false;
                 return;
+            }
 
             // Enables/disables the "query everything" menu item
             QueryEverythingMenuItem.Enabled = !ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError);
@@ -655,8 +667,8 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            if (!(e.ClickedItem.Tag is APIMethods))
-                return;
+            if (e.ClickedItem == QueryEverythingMenuItem)
+                ccpCharacter.QueryMonitors.QueryEverything();
 
             if (!(e.ClickedItem.Tag is APIMethods))
                 return;
