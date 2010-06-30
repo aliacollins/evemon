@@ -159,10 +159,10 @@ namespace EVEMon.Common.IgbService
 
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
-            string requestUrl = ExtractHeaders(buffer, headers);
+            string request = String.Empty;
+            string requestUrl = ExtractHeaders(buffer, headers, ref request);
 
-            SendOutputToClient(client, headers, requestUrl);
-
+            SendOutputToClient(client, headers, request, requestUrl);
             client.Close();
         }
 
@@ -171,17 +171,20 @@ namespace EVEMon.Common.IgbService
         /// </summary>
         /// <param name="client">client to send output to</param>
         /// <param name="headers">dictionary of headers</param>
+        /// <param name="request">the requested method</param>
         /// <param name="requestUrl">url to respond to</param>
-        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string requestUrl)
+        private void SendOutputToClient(IgbTcpClient client, Dictionary<string, string> headers, string request, string requestUrl)
         {
             using (MemoryStream ms = new MemoryStream())
             using (StreamWriter sw = new StreamWriter(ms))
             {
-                ProcessRequest(requestUrl, headers, sw);
+                ProcessRequest(request, requestUrl, headers, sw);
 
                 sw.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
-                client.Write("HTTP/1.1 200 OK\n");
+
+                // We should support only the "GET" method
+                client.Write(request.Equals("GET") ? "HTTP/1.1 200 OK\n" : "HTTP/1.1 501 Not Implemented\n");
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
                 if (headers.ContainsKey("eve_trusted") && headers["eve_trusted"].ToLower(CultureConstants.DefaultCulture) == "no")
@@ -202,8 +205,9 @@ namespace EVEMon.Common.IgbService
         /// </summary>
         /// <param name="buffer">the buffer to extract headers from</param>
         /// <param name="headers">dictionary to add headers to</param>
+        /// <param name="request">the requested method</param>
         /// <returns></returns>
-        private static string ExtractHeaders(byte[] buffer, Dictionary<string, string> headers)
+        private static string ExtractHeaders(byte[] buffer, Dictionary<string, string> headers, ref string request)
         {
             string headerStr = Encoding.UTF8.GetString(buffer);
 
@@ -218,7 +222,12 @@ namespace EVEMon.Common.IgbService
             {
                 if (first)
                 {
-                    Match m = Regex.Match(tline, @"^(GET|POST) (.+) HTTP/(.*)$");
+                    // We should support only the "GET" method
+                    Regex getMatcher = new Regex(@"^(GET) (.+) HTTP/(.*)$", RegexOptions.Compiled);
+                    Match m = getMatcher.Match(tline);
+
+                    request = m.Groups[1].Value;
+
                     if (m.Success)
                     {
                         requestUrl = m.Groups[2].Value;
@@ -227,7 +236,8 @@ namespace EVEMon.Common.IgbService
                 }
                 else
                 {
-                    Match m = Regex.Match(tline, "^(.*?): (.*)$");
+                    Regex headerMatcher = new Regex("^(.*?): (.*)$", RegexOptions.Compiled);
+                    Match m = headerMatcher.Match(tline);
                     if (m.Success)
                     {
                         headers[m.Groups[1].Value.ToLower(CultureConstants.DefaultCulture)] = m.Groups[2].Value;
@@ -296,11 +306,18 @@ namespace EVEMon.Common.IgbService
         /// <summary>
         /// Process the request
         /// </summary>
+        /// <param name="request">the requested method</param>
         /// <param name="requestUrl">URL of the request</param>
         /// <param name="headers">dictionary of headers</param>
         /// <param name="sw">stream writer to output to</param>
-        private void ProcessRequest(string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
+        private void ProcessRequest(string request, string requestUrl, Dictionary<string, string> headers, StreamWriter sw)
         {
+            if (!request.Equals("GET"))
+            {
+                sw.WriteLine(String.Format("<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>", request));
+                return;
+            }
+
             string trusted;
             if (!headers.TryGetValue("eve_trusted", out trusted))
             {
