@@ -90,8 +90,12 @@ namespace EVEMon.Common
         {
             get 
             {
+                if (EveClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider)
+                    return false;
+
                 var cachedTime = (m_lastResult == null ? NextUpdate : m_lastResult.CachedUntil);
-                return EveClient.APIProviders.CurrentProvider == APIProvider.DefaultProvider && DateTime.UtcNow < cachedTime; 
+
+                return DateTime.UtcNow < cachedTime; 
             }
         }
 

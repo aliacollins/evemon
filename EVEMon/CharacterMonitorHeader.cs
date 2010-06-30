@@ -583,7 +583,7 @@ namespace EVEMon
                 return;
             
             // there has been an error in the past (Authorization, Server Error, etc.)
-            if (UpdateThrobber.State != ThrobberState.Strobing)
+            if (UpdateThrobber.State == ThrobberState.Strobing)
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
