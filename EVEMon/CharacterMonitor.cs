@@ -412,12 +412,6 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            // Update character's balance info
-            if (ccpCharacter.MarketOrdersUpdated)
-            {
-                ccpCharacter.MarketOrdersUpdated = false;
-            }
-
             // Is the character in training ?
             if (ccpCharacter.IsTraining)
             {

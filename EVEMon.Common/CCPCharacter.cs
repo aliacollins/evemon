@@ -34,7 +34,6 @@ namespace EVEMon.Common
         private bool m_corpOrdersUpdated;
         private bool m_charOrdersAdded;
         private bool m_corpOrdersAdded;
-        private bool m_ordersUpdated;
 
         private bool m_charJobsUpdated;
         private bool m_corpJobsUpdated;
@@ -176,16 +175,6 @@ namespace EVEMon.Common
                 
                 return m_balance >= additionalToCover;
             }
-        }
-
-        /// <summary>
-        /// Gets or set whether the market orders have been updated.
-        /// </summary>
-        /// <remarks>This is used to update the character's low balance warning</remarks>
-        public bool MarketOrdersUpdated
-        {
-            get { return m_ordersUpdated; }
-            set { m_ordersUpdated = value; }
         }
 
         /// <summary>
@@ -473,12 +462,9 @@ namespace EVEMon.Common
                 m_orders.Clear();
 
             // Add orders in list
-            foreach (var order in result.Result.Orders)
-            {
-                order.IssuedFor = issuedFor;
-            }
-
+            result.Result.Orders.ForEach(x => x.IssuedFor = issuedFor);
             m_orders.AddRange(result.Result.Orders);
+
             return true;
         }
 
@@ -512,9 +498,6 @@ namespace EVEMon.Common
             m_corpOrdersUpdated = false;
             m_charOrdersAdded = false;
             m_corpOrdersAdded = false;
-
-            // Raise flag
-            m_ordersUpdated = true;
         }
 
         /// <summary>
@@ -550,12 +533,9 @@ namespace EVEMon.Common
                 m_jobs.Clear();
 
             // Add jobs in list
-            foreach (var job in result.Result.Jobs)
-            {
-                job.IssuedFor = issuedFor;
-            }
-
+            result.Result.Jobs.ForEach(x => x.IssuedFor = issuedFor);
             m_jobs.AddRange(result.Result.Jobs);
+
             return true;
         }
 
@@ -569,6 +549,9 @@ namespace EVEMon.Common
             var characterJobs = jobs.Where(x => x.InstallerID == m_characterID);
 
             m_industryJobs.Import(characterJobs);
+            
+            // Fires the event regarding industry jobs update.
+            EveClient.OnCharacterIndustryJobsChanged(this);
 
             // Reset flags
             m_charJobsUpdated = false;
