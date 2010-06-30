@@ -51,9 +51,10 @@ namespace EVEMon
             this.Header.Character = character;
             notificationList.Notifications = null;
 
-            if (character is CCPCharacter)
+            var ccpCharacter = character as CCPCharacter;
+
+            if (ccpCharacter != null)
             {
-                var ccpCharacter = (CCPCharacter)character;
                 skillQueueControl.SkillQueue = ccpCharacter.SkillQueue;
             }
             else
