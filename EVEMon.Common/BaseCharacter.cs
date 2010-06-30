@@ -7,6 +7,7 @@ namespace EVEMon.Common
 {
     public abstract class BaseCharacter
     {
+
         #region Abstract methods and properties
         protected abstract int GetTotalSkillPoints();
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
@@ -273,5 +274,6 @@ namespace EVEMon.Common
             get { return GetAttribute(EveAttribute.Memory); }
         }
         #endregion
+    
     }
 }

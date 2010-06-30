@@ -371,8 +371,7 @@ namespace EVEMon.Common
             }
         }
         #endregion
-
-
+        
 
         #region Cloning, reseting, temporary changes
         /// <summary>
@@ -496,5 +495,6 @@ namespace EVEMon.Common
             return new DisposableWithCallback(() => Reset(clone));
         }
         #endregion
+
     }
 }

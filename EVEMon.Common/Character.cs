@@ -67,6 +67,9 @@ namespace EVEMon.Common
         // Settings
         protected CharacterUISettings m_uiSettings;
 
+        // Skill Point Caching
+        protected DateTime m_skillPointTotalUpdated = DateTime.MinValue;
+        protected int m_lastSkillPointTotal;
 
         #region Initialization
         /// <summary>
@@ -305,11 +308,20 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override int GetTotalSkillPoints()
         {
+            // we only do the calculation once every second to avoid
+            // excessive CPU utilization.
+            if (m_skillPointTotalUpdated > DateTime.UtcNow.AddSeconds(-1))
+                return m_lastSkillPointTotal;
+            
             int sp = 0;
             foreach (var skill in m_skills)
             {
                 sp += skill.SkillPoints;
             }
+            
+            m_lastSkillPointTotal = sp;
+            m_skillPointTotalUpdated = DateTime.UtcNow;
+
             return sp; 
         }
 
