@@ -25,6 +25,54 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// EVE Agents
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE Agents</returns>
+        internal static Bag<AgtAgents> Agents()
+        {
+            IndexedList<AgtAgents> list = new IndexedList<AgtAgents>();
+
+            foreach (var agent in context.agtAgents)
+            {
+                AgtAgents item = new AgtAgents()
+                {
+                    ID = agent.agentID,
+                    LocationID = agent.locationID.Value,
+                    Level = agent.level.Value
+                };
+
+                if (agent.quality.HasValue)
+                    item.Quality = agent.quality.Value;
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<AgtAgents>(list);
+        }
+
+        /// <summary>
+        /// EVE Names
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE Names</returns>
+        internal static Bag<EveNames> Names()
+        {
+            IndexedList<EveNames> list = new IndexedList<EveNames>();
+
+            foreach (var name in context.eveNames)
+            {
+                EveNames item = new EveNames()
+                {
+                    ID = name.itemID,
+                    Name = name.itemName
+                };
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<EveNames>(list);
+        }
+
+        /// <summary>
         /// EVE Units
         /// </summary>
         /// <returns><c>Bag</c> of EVE Units</returns>
@@ -238,6 +286,9 @@ namespace EVEMon.XmlGenerator
 
                 if (station.solarSystemID.HasValue)
                     item.SolarSystemID = station.solarSystemID.Value;
+                
+                if (station.corporationID.HasValue)
+                    item.CorporationID = station.corporationID.Value;
 
                 list.Items.Add(item);
             }

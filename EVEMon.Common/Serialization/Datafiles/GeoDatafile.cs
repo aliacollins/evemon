@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents out certificates datafile
+    /// Represents out eve geography datafile.
     /// </summary>
     [XmlRoot("geographyDatafile")]
     public sealed class GeoDatafile
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     }
 
     /// <summary>
-    /// Represents a region of the universe.
+    /// Represents a region of the eve universe.
     /// </summary>
     public sealed class SerializableRegion
     {
@@ -56,7 +56,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     }
 
     /// <summary>
-    /// Represents a constellation.
+    /// Represents an eve constellation.
     /// </summary>
     public sealed class SerializableConstellation
     {
@@ -83,7 +83,7 @@ namespace EVEMon.Common.Serialization.Datafiles
 
 
     /// <summary>
-    /// Represents a solar system.
+    /// Represents an eve solar system.
     /// </summary>
     public sealed class SerializableSolarSystem
     {
@@ -136,7 +136,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     }
 
     /// <summary>
-    /// Represents a solar system.
+    /// Represents an eve station.
     /// </summary>
     public sealed class SerializableStation
     {
@@ -174,10 +174,53 @@ namespace EVEMon.Common.Serialization.Datafiles
             get;
             set;
         }
+
+        [XmlArray("agents")]
+        [XmlArrayItem("agent")]
+        public SerializableAgent[] Agents
+        {
+            get;
+            set;
+        }
+    }
+
+
+    /// <summary>
+    /// Represents an eve agent of a station.
+    /// </summary>
+    public sealed class SerializableAgent
+    {
+        [XmlAttribute("agentID")]
+        public int ID
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("agentName")]
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("level")]
+        public int Level
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("quality")]
+        public int Quality
+        {
+            get;
+            set;
+        }
     }
 
     /// <summary>
-    /// Represents a connection between two gates.
+    /// Represents a connection between two jump gates.
     /// </summary>
     public sealed class SerializableJump
     {

@@ -15,7 +15,7 @@ namespace EVEMon.XmlGenerator
         private static string m_text = String.Empty;
         private static double m_counter;
         private static double m_tablesCount = 0;
-        private static double m_totalTablesCount = 23;
+        private static double m_totalTablesCount = 25;
         
         private static int m_percentOld;
         private static int m_propGenTotal = 1442;
@@ -33,7 +33,9 @@ namespace EVEMon.XmlGenerator
         private static int s_propBasePriceID;
         private static List<InvMarketGroup> m_injectedMarketGroups;
 
+        private static Bag<AgtAgents> s_agents;
         private static Bag<EveUnit> s_units;
+        private static Bag<EveNames> s_names;
         private static Bag<EveGraphic> s_graphics;
         private static Bag<DgmAttributeTypes> s_attributeTypes;
         private static Bag<DgmAttributeCategory> s_attributeCategories;
@@ -71,7 +73,11 @@ namespace EVEMon.XmlGenerator
             #region Read Tables From Database
 
             // Read tables from database
+            s_agents = Database.Agents();
+            UpdateProgress();
             s_units = Database.Units();
+            UpdateProgress();
+            s_names = Database.Names();
             UpdateProgress();
             s_graphics = Database.Graphics();
             UpdateProgress();
@@ -222,6 +228,7 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[676].HigherIsBetter = false; // Unanchoring Delay
             s_attributeTypes[677].HigherIsBetter = false; // Onlining Delay
             s_attributeTypes[780].HigherIsBetter = false; // Cycle Time bonus
+            s_attributeTypes[669].HigherIsBetter = false; // Reactivation Delay
 
             // Export attribute categories
             var categories = new List<SerializablePropertyCategory>();
@@ -1247,7 +1254,8 @@ namespace EVEMon.XmlGenerator
                 
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
-                foreach (var item in s_types.Where(x => x.MarketGroupID == marketGroup.ID && s_groups[x.GroupID].CategoryID == 9 && s_groups[x.GroupID].Published))
+                foreach (var item in s_types
+                    .Where(x => x.MarketGroupID == marketGroup.ID && s_groups[x.GroupID].CategoryID == 9 && s_groups[x.GroupID].Published))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -1264,7 +1272,8 @@ namespace EVEMon.XmlGenerator
             }
 
             // Sort groups
-            var blueprintGroups = s_marketGroups.Concat(m_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsGroupID).Select(x => groups[x.ID]).OrderBy(x => x.Name);
+            var blueprintGroups = s_marketGroups.Concat(m_injectedMarketGroups)
+                .Where(x => x.ParentID == DBConstants.BlueprintsGroupID).Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
             m_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", m_endTime.Subtract(m_startTime)).TrimEnd('0'));
@@ -1738,16 +1747,30 @@ namespace EVEMon.XmlGenerator
                         {
                             UpdatePercentDone(m_geoGen);
 
+                            // Agents
+                            var stationAgents = new List<SerializableAgent>();
+                            foreach(var srcAgent in s_agents.Where(x => x.LocationID == srcStation.ID))
+                            {
+                                var agent = new SerializableAgent
+                                {
+                                    ID = srcAgent.ID,
+                                    Level = srcAgent.Level,
+                                    Quality = srcAgent.Quality,
+                                    Name = s_names.FirstOrDefault(x => x.ID == srcAgent.ID).Name
+                                };
+                                stationAgents.Add(agent);
+                            }
+                            
                             var station = new SerializableStation
                             {
                                 ID = srcStation.ID,
                                 Name = srcStation.Name,
                                 CorporationID = srcStation.CorporationID,
                                 ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
-                                ReprocessingStationsTake = srcStation.ReprocessingStationsTake
+                                ReprocessingStationsTake = srcStation.ReprocessingStationsTake,
+                                Agents = stationAgents.ToArray()
                             };
                             stations.Add(station);
-
                         }
                         system.Stations = stations.OrderBy(x => x.Name).ToArray();
                     }

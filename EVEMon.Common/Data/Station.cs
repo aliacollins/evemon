@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -18,6 +19,7 @@ namespace EVEMon.Common.Data
         private readonly SolarSystem m_owner;
         private readonly float m_reprocessingTake;
         private readonly float m_reprocessingEfficiency;
+        private readonly FastList<SerializableAgent> m_agents;
 
         /// <summary>
         /// Constructor.
@@ -43,6 +45,15 @@ namespace EVEMon.Common.Data
             m_owner = owner;
             m_reprocessingTake = src.ReprocessingStationsTake;
             m_reprocessingEfficiency = src.ReprocessingEfficiency;
+
+            m_agents = new FastList<SerializableAgent>(src.Agents != null ? src.Agents.Length : 0);
+            if (src.Agents == null)
+                return;
+
+            foreach (var agent in src.Agents)
+            {
+                m_agents.Add(agent);
+            }
         }
 
         /// <summary>
@@ -99,6 +110,14 @@ namespace EVEMon.Common.Data
         public float ReprocessingStationsTake
         {
             get { return m_reprocessingTake; }
+        }
+
+        /// <summary>
+        /// Gets the agents of the station.
+        /// </summary>
+        public IEnumerable<SerializableAgent> Agents
+        {
+            get { return m_agents; }
         }
 
         /// <summary>
