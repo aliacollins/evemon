@@ -35,6 +35,7 @@ namespace EVEMon
         private bool m_hideInactive;
         private bool m_numberFormat;
         private bool m_isUpdatingColumns;
+        private bool m_columnsChanged;
         private bool m_init;
 
         // Panel info variables
@@ -73,9 +74,11 @@ namespace EVEMon
             listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
             listView.KeyDown += new KeyEventHandler(listView_KeyDown);
             listView.ColumnWidthChanged += new ColumnWidthChangedEventHandler(listView_ColumnWidthChanged);
+            listView.ColumnReordered += new ColumnReorderedEventHandler(listView_ColumnReordered);
 
             this.Resize += new EventHandler(MainWindowMarketOrdersList_Resize);
 
+            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
             this.Disposed += new EventHandler(OnDisposed);
         }
@@ -217,6 +220,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
             EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
             this.Disposed -= new EventHandler(OnDisposed);
         }
@@ -713,6 +717,16 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// On column reorder we update the settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void listView_ColumnReordered(object sender, EventArgs e)
+        {
+            m_columnsChanged = true;
+        } 
+
+        /// <summary>
         /// When the user manually resizes a column, we make sure to update the column preferences.
         /// </summary>
         /// <param name="sender"></param>
@@ -723,6 +737,7 @@ namespace EVEMon
                 return;
 
             m_columns[e.ColumnIndex].Width = listView.Columns[e.ColumnIndex].Width;
+            m_columnsChanged = true;
         }
 
         /// <summary>
@@ -797,6 +812,20 @@ namespace EVEMon
 
             marketExpPanelControl.expandablePanelControl_MouseClick(sender, arg);
             noOrdersLabel.SendToBack();
+        }
+
+        /// <summary>
+        /// On timer tick, we update the column settings if any changes have been made to them.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EveClient_TimerTick(object sender, EventArgs e)
+        {
+            if (m_columnsChanged)
+            {
+                Settings.UI.MainWindow.MarketOrders.Columns = this.Columns.Select(x => x.Clone()).ToArray();
+                m_columnsChanged = false;
+            }
         }
 
         /// <summary>

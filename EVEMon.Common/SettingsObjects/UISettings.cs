@@ -37,6 +37,7 @@ namespace EVEMon.Common.SettingsObjects
             ConfirmedTips = new List<String>();
 
             UseStoredSearchFilters = true;
+            ShowTextInToolStrip = true;
         }
 
         #endregion
@@ -49,6 +50,13 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         [XmlElement("safeForWork")]
         public bool SafeForWork
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("showTextInToolStrip")]
+        public bool ShowTextInToolStrip
         {
             get;
             set;
@@ -183,6 +191,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             var clone = new UISettings();
             clone.UseStoredSearchFilters = this.UseStoredSearchFilters;
+            clone.ShowTextInToolStrip = this.ShowTextInToolStrip;
             clone.MainWindowCloseBehaviour = this.MainWindowCloseBehaviour;
             clone.SystemTrayIcon = this.SystemTrayIcon;
             clone.SafeForWork = this.SafeForWork;

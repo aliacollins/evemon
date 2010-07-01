@@ -14,6 +14,7 @@ namespace EVEMon.Common.SettingsObjects
         public CharacterUISettings()
         {
             CollapsedGroups = new List<String>();
+            FullAPIKeyEnabledPages = new List<String>();
             SelectedPage = String.Empty;
         }
 
@@ -26,6 +27,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("collapsedGroup")]
         public List<String> CollapsedGroups
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("fullAPIKeyEnabledPage")]
+        public List<String> FullAPIKeyEnabledPages
         {
             get;
             set;
@@ -53,6 +61,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             var clone = new CharacterUISettings();
             clone.CollapsedGroups.AddRange(this.CollapsedGroups);
+            clone.FullAPIKeyEnabledPages.AddRange(this.FullAPIKeyEnabledPages);
             clone.SelectedPage = this.SelectedPage;
             clone.OrdersGroupBy = this.OrdersGroupBy;
             clone.JobsGroupBy = this.JobsGroupBy;

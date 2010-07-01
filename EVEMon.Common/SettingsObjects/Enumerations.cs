@@ -148,4 +148,16 @@ namespace EVEMon.Common.SettingsObjects
     
     #endregion
 
+    #region Full API Key Features
+
+    public enum FullAPIKeyFeatures
+    {
+        [Header ("Market")]
+        MarketOrders,
+        [Header("Industry")]
+        IndustryJobs,
+    }
+
+    #endregion
+
 }

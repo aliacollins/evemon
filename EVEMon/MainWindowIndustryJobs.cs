@@ -29,6 +29,7 @@ namespace EVEMon
 
         private bool m_hideInactive;
         private bool m_isUpdatingColumns;
+        private bool m_columnsChanged;
         private bool m_init;
 
         private int m_displayIndexTTC;
@@ -60,6 +61,7 @@ namespace EVEMon
             lvJobs.ColumnClick += new ColumnClickEventHandler(lvJobs_ColumnClick);
             lvJobs.KeyDown += new KeyEventHandler(lvJobs_KeyDown);
             lvJobs.ColumnWidthChanged += new ColumnWidthChangedEventHandler(lvJobs_ColumnWidthChanged);
+            lvJobs.ColumnReordered += new ColumnReorderedEventHandler(lvJobs_ColumnReordered);
 
             this.Resize += new EventHandler(MainWindowIndustryJobsList_Resize);
 
@@ -91,7 +93,7 @@ namespace EVEMon
                     UpdateColumns();
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
@@ -752,6 +754,16 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// On column reorder we update the settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void lvJobs_ColumnReordered(object sender, EventArgs e)
+        {
+            m_columnsChanged = true;
+        }
+
+        /// <summary>
         /// When the user manually resizes a column, we make sure to update the column preferences.
         /// </summary>
         /// <param name="sender"></param>
@@ -762,6 +774,7 @@ namespace EVEMon
                 return;
 
             m_columns[e.ColumnIndex].Width = lvJobs.Columns[e.ColumnIndex].Width;
+            m_columnsChanged = true;
         }
 
         /// <summary>
@@ -870,7 +883,8 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On timer tick, we update the time to completion and active job state.
+        /// On timer tick, we update the time to completion, the active job state
+        /// and the columns settings if any changes have beem made to them.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -904,6 +918,12 @@ namespace EVEMon
                 // Job is ready
                 if (job.TTC == String.Empty)
                     job.ActiveJobState = ActiveJobState.Ready;
+            }
+
+            if (m_columnsChanged)
+            {
+                Settings.UI.MainWindow.IndustryJobs.Columns = this.Columns.Select(x => x.Clone()).ToArray();
+                m_columnsChanged = false;
             }
         }
 

@@ -169,10 +169,14 @@ namespace EVEMon.Common
         {
             get
             {
-                var activeBuyOrdersIssuedForCharacter = m_marketOrders.Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) 
+                var activeBuyOrdersIssuedForCharacter = m_marketOrders
+                    .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) 
                     && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
-                decimal additionalToCover = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice) - activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
-                
+
+                decimal activeTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
+                decimal activeEscrow = activeBuyOrdersIssuedForCharacter.Sum(x => ((BuyOrder)x).Escrow);
+                decimal additionalToCover = activeTotal - activeEscrow;
+
                 return m_balance >= additionalToCover;
             }
         }
