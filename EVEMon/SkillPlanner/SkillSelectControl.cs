@@ -447,6 +447,7 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
+                m_allExpanded = false;
             }
         }
 
