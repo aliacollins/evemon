@@ -249,7 +249,7 @@ namespace EVEMon.SkillPlanner
             if (!this.Visible)
                 return;
 
-            UpdateListViewItems();
+            UpdateSkillList(true);
         }
 
         /// <summary>
@@ -263,7 +263,8 @@ namespace EVEMon.SkillPlanner
             if (!this.Visible)
                 return;
 
-            UpdateListViewItems();
+            UpdateSkillList(true);
+            UpdateListColumns();
         }
 
         /// <summary>

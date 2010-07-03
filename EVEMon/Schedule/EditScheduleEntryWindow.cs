@@ -296,11 +296,15 @@ namespace EVEMon.Schedule
         private void rbOneTime_CheckedChanged(object sender, EventArgs e)
         {
             pnlOneTime.Enabled = rbOneTime.Checked;
+            
+            ValidateData();
         }
 
         private void rbRecurring_CheckedChanged(object sender, EventArgs e)
         {
             pnlRecurring.Enabled = rbRecurring.Checked;
+
+            ValidateData();
         }
 
         private void cbRecurringFrequency_SelectedIndexChanged(object sender, EventArgs e)
