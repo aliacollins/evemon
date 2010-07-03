@@ -158,6 +158,7 @@ namespace EVEMon.Schedule
             this.lbEntries.TabIndex = 1;
             this.lbEntries.SelectedIndexChanged += new System.EventHandler(this.lbEntries_SelectedIndexChanged);
             this.lbEntries.DoubleClick += new System.EventHandler(this.lbEntries_DoubleClick);
+            this.lbEntries.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbEntries_KeyDown);
             // 
             // label1
             // 
@@ -309,19 +310,20 @@ namespace EVEMon.Schedule
             this.newScheduleEntryToolStripMenuItem,
             this.toolStripMenuItem1});
             this.calContext.Name = "calContext";
-            this.calContext.Size = new System.Drawing.Size(189, 32);
+            this.calContext.Size = new System.Drawing.Size(196, 54);
             // 
             // newScheduleEntryToolStripMenuItem
             // 
+            this.newScheduleEntryToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.newScheduleEntryToolStripMenuItem.Name = "newScheduleEntryToolStripMenuItem";
-            this.newScheduleEntryToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.newScheduleEntryToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.newScheduleEntryToolStripMenuItem.Text = "New Schedule Entry...";
             this.newScheduleEntryToolStripMenuItem.Click += new System.EventHandler(this.newEntryMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(185, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(192, 6);
             // 
             // ScheduleEditorWindow
             // 

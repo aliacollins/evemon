@@ -44,8 +44,6 @@ namespace EVEMon.Schedule
             calControl.SingleColor = (Color)Settings.UI.Scheduler.SimpleEventGradientStart;
             calControl.SingleColor2 = (Color)Settings.UI.Scheduler.SimpleEventGradientEnd;
             calControl.TextColor = (Color)Settings.UI.Scheduler.TextColor;
-
-            UpdateEntries();
         }
 
         /// <summary>
@@ -55,6 +53,8 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void ScheduleEditorWindow_Load(object sender, EventArgs e)
         {
+            UpdateEntries();
+
             // Months names
             nudMonth.Items.Clear();
             string[] monthNames = CultureConstants.DefaultCulture.DateTimeFormat.MonthNames;
@@ -132,10 +132,107 @@ namespace EVEMon.Schedule
             lbEntriesData.Sort(new ScheduleEntryTitleComparer());
 
             lbEntries.Items.Clear();
-            foreach (ScheduleEntry temp in lbEntriesData)
+            lbEntriesData.ForEach(x => lbEntries.Items.Add(x));
+
+            lbEntries.SelectedIndex = (lbEntriesData.IsEmpty() ? -1 : 0);
+        }
+
+        /// <summary>
+        /// Update the entry's description
+        /// </summary>
+        private void UpdateEntryDescription()
+        {
+            ScheduleEntry temp = lbEntriesData[lbEntries.SelectedIndex];
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("Title: {0}", temp.Title).AppendLine();
+
+            // Simple entry ?
+            if (temp is SimpleScheduleEntry)
             {
-                lbEntries.Items.Add(temp);
+                SimpleScheduleEntry simpleEntry = (SimpleScheduleEntry)temp;
+
+                sb.AppendLine("One Off Entry");
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}", simpleEntry.StartDate).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}", simpleEntry.EndDate).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", simpleEntry.Expired).AppendLine();
+                sb.AppendLine();
+                sb.AppendLine("Options");
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
+                    (simpleEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
+                    (simpleEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
+                    (simpleEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
             }
+            // Or recurring entry ?
+            else
+            {
+                RecurringScheduleEntry recurringEntry = (RecurringScheduleEntry)temp;
+
+                sb.AppendLine("Recurring Entry");
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Start: {0}",
+                    recurringEntry.StartDate.ToShortDateString()).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " End: {0}",
+                    recurringEntry.EndDate.ToShortDateString()).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Frequency: {0}",
+                    recurringEntry.Frequency).AppendLine();
+
+                if (recurringEntry.Frequency == RecurringFrequency.Monthly)
+                {
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Month: {0}", recurringEntry.DayOfMonth).AppendLine();
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "  On Overflow: {0}", recurringEntry.OverflowResolution).AppendLine();
+                }
+                else if (recurringEntry.Frequency == RecurringFrequency.Weekly)
+                {
+                    DateTime nowish = DateTime.Now.Date;
+                    DateTime initial = recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek + 7) % 7);
+                    Double datediff = ((7 * recurringEntry.WeeksPeriod) - (nowish.Subtract(initial).Days % (7 * recurringEntry.WeeksPeriod))) % (7 * recurringEntry.WeeksPeriod);
+
+                    if (((nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))) < DateTime.Now)
+                        datediff = datediff + (7 * recurringEntry.WeeksPeriod);
+
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Week: {0}", recurringEntry.DayOfWeek).AppendLine();
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "  Every: {0} week{1}",
+                        recurringEntry.WeeksPeriod, (recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")).AppendLine();
+                    sb.AppendFormat(CultureConstants.DefaultCulture, "  Next: {0}",
+                        (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)).ToShortDateString()).AppendLine();
+                }
+
+                if (recurringEntry.EndTimeInSeconds > 86400)
+                    recurringEntry.EndTimeInSeconds -= 86400;
+
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Start Time: {0}",
+                    TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds).ToString()).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " End Time: {0}",
+                    TimeSpan.FromSeconds(recurringEntry.EndTimeInSeconds).ToString()).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Expired: {0}", recurringEntry.Expired).AppendLine();
+                sb.AppendLine();
+                sb.AppendLine("Options");
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Blocking: {0}",
+                    (recurringEntry.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Silent: {0}",
+                    (recurringEntry.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None).AppendLine();
+                sb.AppendFormat(CultureConstants.DefaultCulture, " Uses Eve Time: {0}",
+                    (recurringEntry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None).AppendLine();
+            }
+
+            // Update the description
+            lblEntryDescription.Text = sb.ToString();
+        }
+
+        /// <summary>
+        /// Removes the selected entry.
+        /// </summary>
+        private void RemoveSelectedEntry()
+        {
+            int entryIndex = lbEntries.SelectedIndex;
+            ScheduleEntry entry = lbEntriesData[entryIndex];
+            Scheduler.Remove(entry);
+
+            // When no entries left, clear the description label
+            if (lbEntriesData.IsEmpty())
+                lbEntries_SelectedIndexChanged(null, EventArgs.Empty);
         }
         #endregion
 
@@ -172,7 +269,8 @@ namespace EVEMon.Schedule
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
             {
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 Scheduler.Add(f.ScheduleEntry);
             }
@@ -213,17 +311,14 @@ namespace EVEMon.Schedule
             calContext.Items[0].Tag = datetime;
 
             // Add "Edit" menus for every schedule on this day
-            foreach (ScheduleEntry entry in Scheduler.Entries)
+            foreach (ScheduleEntry entry in Scheduler.Entries.Where(x => x.IsToday(datetime)))
             {
-                if (entry.IsToday(datetime))
-                {
-                    ToolStripItem item = new ToolStripMenuItem();
-                    item.Text = "Edit \"" + entry.Title + "\"...";
-                    item.Tag = entry;
-                    item.Click += new EventHandler(editMenuItem_Click);
+                ToolStripItem item = new ToolStripMenuItem();
+                item.Text = String.Format(CultureConstants.DefaultCulture, "Edit \"{0}\"...", entry.Title);
+                item.Tag = entry;
+                item.Click += new EventHandler(editMenuItem_Click);
 
-                    calContext.Items.Add(item);
-                }
+                calContext.Items.Add(item);
             }
 
             // Display the menu
@@ -237,10 +332,9 @@ namespace EVEMon.Schedule
         private void ShowCalendarTooltip(DateTime datetime)
         {
             // How can you only localize the date?
-            string title = "Entries for " + datetime.ToString("d");
             StringBuilder content = new StringBuilder();
 
-            foreach (ScheduleEntry entry in Scheduler.Entries.Where(x => x.IsToday(datetime)))
+            foreach (ScheduleEntry entry in Scheduler.Entries.Where(x => x.IsToday(datetime)).OrderBy(x => x.Title))
             {
                 DateTime from = datetime;
                 DateTime to = datetime;
@@ -285,25 +379,25 @@ namespace EVEMon.Schedule
 
                 // Append the tooltip content
                 content.Append(entry.Title);
+
                 if ((entry.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None)
                 {
-                    content.Append(" [ EVE Time: ");
-                    content.Append(from.ToString("HH:mm") + " - " + to.ToString("HH:mm"));
-                    content.Append(" ] ");
-                    content.Append(" [ Local Time: ");
-                    content.Append(from.ToLocalTime().ToString("HH:mm") + " - " + to.ToLocalTime().ToString("HH:mm"));
-                    content.Append(" ] ");
+                    // In case local time conversion extends beyond the entry date,
+                    // we display also the ending date
+                    var toLocalTime = (to.Day == to.ToLocalTime().Day ?
+                        to.ToLocalTime().ToString("HH:mm") : to.ToLocalTime().ToString());
+
+                    content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
+                    content.AppendFormat(" [ Local Time: {0} - {1} ] ", from.ToLocalTime().ToString("HH:mm"), toLocalTime);
                 }
                 else
                 {
-                    content.Append(" [ ");
-                    content.Append(from.ToString("HH:mm") + " - " + to.ToString("HH:mm"));
-                    content.Append(" ] ");
+                    content.AppendFormat(" [ {0} - {1} ] ", from.ToString("HH:mm"), to.ToString("HH:mm"));
                 }
                 content.AppendLine();
             }
 
-            m_tooltip.ToolTipTitle = title;
+            m_tooltip.ToolTipTitle = String.Format(CultureConstants.DefaultCulture, "Entries for {0}", datetime.ToString("d"));
             m_tooltip.SetToolTip(calControl, content.ToString());
             m_tooltip.Active = true;
         }
@@ -323,7 +417,8 @@ namespace EVEMon.Schedule
             {
                 f.ScheduleEntry = entry;
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 Scheduler.Remove(entry);
                 Scheduler.Add(f.ScheduleEntry);
@@ -345,7 +440,8 @@ namespace EVEMon.Schedule
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
             {
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 // Add an entry
                 Scheduler.Add(f.ScheduleEntry);
@@ -363,10 +459,7 @@ namespace EVEMon.Schedule
         private void tsbDeleteEntry_Click(object sender, EventArgs e)
         {
             if (lbEntries.SelectedIndex != -1)
-            {
-                var selectedEntry = (ScheduleEntry)lbEntries.SelectedItem;
-                Scheduler.Remove(selectedEntry);
-            }
+                RemoveSelectedEntry();
         }
 
         /// <summary>
@@ -377,6 +470,10 @@ namespace EVEMon.Schedule
         private void tsbClearExpired_Click(object sender, EventArgs e)
         {
             Scheduler.ClearExpired();
+
+            // When no entries left, clear the description label
+            if (lbEntriesData.IsEmpty())
+                lbEntries_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -392,46 +489,9 @@ namespace EVEMon.Schedule
                 return;
             }
 
-            ScheduleEntry temp = lbEntriesData[lbEntries.SelectedIndex];
-            string label_text = "Title: " + temp.Title;
-
-            // Simple entry ?
-            if (temp is SimpleScheduleEntry)
-            {
-                SimpleScheduleEntry x = (SimpleScheduleEntry)temp;
-                label_text += "\nOne Off Entry\n Start: " + x.StartDate + "\n End: " + x.EndDate + "\n Expired: " + x.Expired;
-                label_text += "\n\n Options\n  Blocking: " + ((x.Options & ScheduleEntryOptions.Blocking) != ScheduleEntryOptions.None);
-                label_text += "\n  Silent: " + ((x.Options & ScheduleEntryOptions.Quiet) != ScheduleEntryOptions.None);
-                label_text += "\n  Uses Eve Time: " + ((x.Options & ScheduleEntryOptions.EVETime) != ScheduleEntryOptions.None);
-            }
-            // Or recurring entry ?
-            else
-            {
-                RecurringScheduleEntry x = (RecurringScheduleEntry)temp;
-                label_text += "\nRecurring Entry:\n Start: " + x.StartDate + "\n End: " + x.EndDate + "\n Frequency: " + x.Frequency;
-                if (x.Frequency == RecurringFrequency.Monthly)
-                {
-                    label_text += "\n  Day of Month: " + x.DayOfMonth + "\n  On Overflow: " + x.OverflowResolution;
-                }
-                else if (x.Frequency == RecurringFrequency.Weekly)
-                {
-                    DateTime nowish = DateTime.Now.Date;
-                    DateTime Initial = x.StartDate.AddDays((x.DayOfWeek - x.StartDate.DayOfWeek + 7) % 7);
-                    Double datediff = ((7 * x.WeeksPeriod) - (nowish.Subtract(Initial).Days % (7 * x.WeeksPeriod))) % (7 * x.WeeksPeriod);
-                    if (((nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(x.StartTimeInSeconds))) < DateTime.Now)
-                        datediff = datediff + (7 * x.WeeksPeriod);
-                    label_text += "\n  Day of Week: " + x.DayOfWeek + "\n  Every: " + x.WeeksPeriod + " weeks\n  Next: " + (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(x.StartTimeInSeconds));
-                }
-                if (x.EndTimeInSeconds > 86400) x.EndTimeInSeconds -= 86400;
-                label_text +=  "\n Start Time: " + TimeSpan.FromSeconds(x.StartTimeInSeconds).ToString() + "\n End Time: " + TimeSpan.FromSeconds(x.EndTimeInSeconds).ToString() + "\n Expired: " + x.Expired;
-                label_text += "\n Options\n  Blocking: " + ((x.Options & ScheduleEntryOptions.Blocking) != 0);
-                label_text += "\n  Silent: " + ((x.Options & ScheduleEntryOptions.Quiet) != 0);
-                label_text += "\n  Uses Eve Time: " + ((x.Options & ScheduleEntryOptions.EVETime) != 0);
-            }
-
-            // Update the description
-            lblEntryDescription.Text = label_text;
+            UpdateEntryDescription();
         }
+
 
         /// <summary>
         /// When the user double-clicks an entry on the left list box, we open the edition box for this entry.
@@ -440,18 +500,23 @@ namespace EVEMon.Schedule
         /// <param name="e"></param>
         private void lbEntries_DoubleClick(object sender, EventArgs e)
         {
-            if (lbEntries.SelectedIndex == -1) return;
+            if (lbEntries.SelectedIndex == -1)
+                return;
 
-            ScheduleEntry entry = lbEntriesData[lbEntries.SelectedIndex];
+            int entryIndex = lbEntries.SelectedIndex;
+            ScheduleEntry entry = lbEntriesData[entryIndex];
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow())
             {
                 f.ScheduleEntry = entry;
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 Scheduler.Remove(entry);
                 Scheduler.Add(f.ScheduleEntry);
             }
+
+            lbEntries.SelectedIndex = entryIndex;
         }
 
         /// <summary>
@@ -464,7 +529,8 @@ namespace EVEMon.Schedule
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow())
             {
                 DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 Scheduler.Add(f.ScheduleEntry);
             }
@@ -485,10 +551,9 @@ namespace EVEMon.Schedule
             {
                 nudDay.Maximum =
                     CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+
                 if (CultureConstants.DefaultCulture.Calendar.IsLeapYear(oldyearnum) && nudDay.Value > nudDay.Maximum)
-                {
                     nudDay.Value = nudDay.Maximum;
-                }
             }
             calControl.Date = m_currentDate;
         }
@@ -505,17 +570,16 @@ namespace EVEMon.Schedule
             if (nudDay.Value == 0)
             {
                 if (nudMonth.SelectedIndex == (nudMonth.Items.Count - 2) && nudYear.Value == nudYear.Minimum)
-                {
                     nudDay.Value = 1;
-                }
+
                 m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
                 nudDay.Maximum =
                     CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
+
                 if (nudDay.Value == 0)
-                {
                     nudDay.Value =
                         CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
-                }
+
                 donex = true;
             }
             else if (!donex && nudDay.Value == nudDay.Maximum)
@@ -524,6 +588,7 @@ namespace EVEMon.Schedule
                 {
                     nudDay.Value =
                         CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
+
                     doney = true;
                 }
                 else if (!doney)
@@ -553,24 +618,34 @@ namespace EVEMon.Schedule
         private void changedMonth(object sender, EventArgs e)
         {
             if (nudMonth.SelectedIndex == nudMonth.Items.Count - 1 && nudYear.Value == nudYear.Minimum)
-            {
                 nudMonth.SelectedIndex = nudMonth.Items.Count - 2;
-            }
+
             if (nudMonth.SelectedIndex == 0 && nudYear.Value == nudYear.Maximum)
-            {
                 nudMonth.SelectedIndex = 1;
-            }
+
             m_currentDate =
                 m_currentDate.AddMonths((((nudMonth.Items.Count - 1) - nudMonth.SelectedIndex) - m_currentDate.Month));
-            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) +
-                                     1;
+
+            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) + 1;
+
             if (nudDay.Value > CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month))
-            {
                 nudDay.Value = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
-            }
+
             nudDay.Maximum = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
             calControl.Date = m_currentDate;
             nudYear.Value = m_currentDate.Year;
+        }
+
+        private void lbEntries_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Delete:
+                    RemoveSelectedEntry();
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
     }

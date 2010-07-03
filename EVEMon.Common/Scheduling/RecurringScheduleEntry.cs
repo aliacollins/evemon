@@ -254,7 +254,12 @@ namespace EVEMon.Common.Scheduling
             if (range == null)
                 return false;
 
-            return range.From < timeToTest && range.To >= timeToTest;
+            if (m_startDate.Add(range.From.TimeOfDay) < testtime && testtime < m_endDate.Add(range.To.TimeOfDay))
+            {
+                return range.From < testtime && testtime < range.To; 
+            }
+
+            return false;
         }
 
         /// <summary>

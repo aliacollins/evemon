@@ -98,6 +98,7 @@ namespace EVEMon.SkillPlanner
             EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
+            EveClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
             this.Disposed += new EventHandler(OnDisposed);
         }
 
@@ -112,6 +113,7 @@ namespace EVEMon.SkillPlanner
             EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
             EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
             EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
+            EveClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
             this.Disposed -= new EventHandler(OnDisposed);
         }
 
@@ -214,7 +216,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character)
+            if (!this.Visible || e.Character != m_character)
                 return;
 
             UpdateDisplayPlan();
@@ -228,6 +230,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
+            if (!this.Visible)
+                return;
+
             UpdateDisplayPlan();
             UpdateSkillList(true);
             UpdateListColumns();
@@ -241,7 +246,24 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            UpdateSkillList(true);
+            if (!this.Visible)
+                return;
+
+            UpdateListViewItems();
+        }
+
+        /// <summary>
+        /// When the scheduler changed, the blocking highlights may be different. 
+        /// Entries are still the same but we may need to update the blocking highlights.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveClient_SchedulerChanged(object sender, EventArgs e)
+        {
+            if (!this.Visible)
+                return;
+
+            UpdateListViewItems();
         }
 
         /// <summary>
@@ -252,6 +274,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
+            if (!this.Visible)
+                return;
+            
             if (m_columnsOrderChanged)
             {
                 Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
@@ -456,7 +481,7 @@ namespace EVEMon.SkillPlanner
                             lvi.ForeColor = Color.Black; 
                         }
 
-                        // Checks whether this entry will be blocked.
+                        // Checks whether this entry will be blocked
                         string blockingEntry = string.Empty;
                         if (Settings.UI.PlanWindow.HighlightConflicts)
                         {

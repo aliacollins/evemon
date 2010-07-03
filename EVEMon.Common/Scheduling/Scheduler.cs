@@ -22,6 +22,8 @@ namespace EVEMon.Common.Scheduling
         public static void Add(ScheduleEntry entry)
         {
             m_schedule.Add(entry);
+
+            // Notify to subscribers
             EveClient.OnSchedulerChanged();
         }
 
@@ -32,6 +34,8 @@ namespace EVEMon.Common.Scheduling
         public static void Remove(ScheduleEntry entry)
         {
             m_schedule.Remove(entry);
+
+            // Notify to subscribers
             EveClient.OnSchedulerChanged();
         }
 
@@ -44,7 +48,8 @@ namespace EVEMon.Common.Scheduling
             {
                 foreach (var entry in m_schedule)
                 {
-                    if (!entry.Expired) yield return entry;
+                    if (!entry.Expired)
+                        yield return entry;
                 }
             }
         }
@@ -111,6 +116,7 @@ namespace EVEMon.Common.Scheduling
                 }
             }
 
+            // Notify to subscribers
             EveClient.OnSchedulerChanged();
         }
 
@@ -123,7 +129,8 @@ namespace EVEMon.Common.Scheduling
             SerializableScheduler serial = new SerializableScheduler();
             foreach (var entry in m_schedule)
             {
-                if (!entry.Expired) serial.Entries.Add(entry.Export());
+                if (!entry.Expired)
+                    serial.Entries.Add(entry.Export());
             }
             return serial;
         }
@@ -138,13 +145,18 @@ namespace EVEMon.Common.Scheduling
             while (i < m_schedule.Count)
             {
                 var entry = m_schedule[i];
-                if (entry.Expired) m_schedule.RemoveAt(i);
-                else i++;
+                if (entry.Expired)
+                {
+                    m_schedule.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
             }
 
             // Notify to subscribers
             EveClient.OnSchedulerChanged();
-
         }
     }
 }

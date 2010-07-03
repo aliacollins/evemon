@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -325,7 +326,7 @@ namespace EVEMon.Common.Collections
         /// Gets a non-generic enumerator over this list
         /// </summary>
         /// <returns>The enumerator over this list</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             if (m_items == null || m_count == 0) return EmptyEnumerator<T>.Instance;
             return new Enumerator(m_items, m_count);
@@ -334,7 +335,7 @@ namespace EVEMon.Common.Collections
         /// <summary>
         /// Gets false, since the list is not readonly
         /// </summary>
-        bool System.Collections.Generic.ICollection<T>.IsReadOnly
+        bool ICollection<T>.IsReadOnly
         {
             get { return false; }
         }

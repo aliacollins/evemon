@@ -33,7 +33,7 @@ namespace EVEMon.Schedule
             this.pnlRecurWeekly = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.nUDweeklyfrequency = new System.Windows.Forms.NumericUpDown();
+            this.nudWeeklyFrequency = new System.Windows.Forms.NumericUpDown();
             this.btnRecurringNoStartDate = new System.Windows.Forms.Button();
             this.btnRecurringNoEndDate = new System.Windows.Forms.Button();
             this.tbRecurringTimeTo = new System.Windows.Forms.TextBox();
@@ -78,7 +78,7 @@ namespace EVEMon.Schedule
             this.groupBox1.SuspendLayout();
             this.pnlRecurring.SuspendLayout();
             this.pnlRecurWeekly.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nUDweeklyfrequency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWeeklyFrequency)).BeginInit();
             this.pnlRecurMonthly.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecurDayOfMonth)).BeginInit();
             this.pnlOneTime.SuspendLayout();
@@ -127,7 +127,7 @@ namespace EVEMon.Schedule
             // 
             this.pnlRecurWeekly.Controls.Add(this.label13);
             this.pnlRecurWeekly.Controls.Add(this.label14);
-            this.pnlRecurWeekly.Controls.Add(this.nUDweeklyfrequency);
+            this.pnlRecurWeekly.Controls.Add(this.nudWeeklyFrequency);
             this.pnlRecurWeekly.Location = new System.Drawing.Point(180, 51);
             this.pnlRecurWeekly.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRecurWeekly.Name = "pnlRecurWeekly";
@@ -154,21 +154,21 @@ namespace EVEMon.Schedule
             // 
             // nUDweeklyfrequency
             // 
-            this.nUDweeklyfrequency.Location = new System.Drawing.Point(48, 3);
-            this.nUDweeklyfrequency.Maximum = new decimal(new int[] {
+            this.nudWeeklyFrequency.Location = new System.Drawing.Point(48, 3);
+            this.nudWeeklyFrequency.Maximum = new decimal(new int[] {
             52,
             0,
             0,
             0});
-            this.nUDweeklyfrequency.Minimum = new decimal(new int[] {
+            this.nudWeeklyFrequency.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.nUDweeklyfrequency.Name = "nUDweeklyfrequency";
-            this.nUDweeklyfrequency.Size = new System.Drawing.Size(35, 21);
-            this.nUDweeklyfrequency.TabIndex = 19;
-            this.nUDweeklyfrequency.Value = new decimal(new int[] {
+            this.nudWeeklyFrequency.Name = "nUDweeklyfrequency";
+            this.nudWeeklyFrequency.Size = new System.Drawing.Size(35, 21);
+            this.nudWeeklyFrequency.TabIndex = 19;
+            this.nudWeeklyFrequency.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -650,7 +650,7 @@ namespace EVEMon.Schedule
             this.pnlRecurring.PerformLayout();
             this.pnlRecurWeekly.ResumeLayout(false);
             this.pnlRecurWeekly.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nUDweeklyfrequency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudWeeklyFrequency)).EndInit();
             this.pnlRecurMonthly.ResumeLayout(false);
             this.pnlRecurMonthly.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRecurDayOfMonth)).EndInit();
@@ -709,7 +709,7 @@ namespace EVEMon.Schedule
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox cbUseEVETime;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.NumericUpDown nUDweeklyfrequency;
+        private System.Windows.Forms.NumericUpDown nudWeeklyFrequency;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Panel pnlRecurWeekly;
     }
