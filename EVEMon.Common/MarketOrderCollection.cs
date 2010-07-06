@@ -50,18 +50,19 @@ namespace EVEMon.Common
         /// <returns>The list of expired orders.</returns>
         internal void Import(IEnumerable<SerializableAPIOrder> src, List<MarketOrder> endedOrders)
         {
-            // Mark the ignored orders for deletion 
-            // If they are found again on the API feed, they won't be deleted and left as ignored
+            // Mark all orders for deletion 
+            // If they are found again on the API feed, they won't be deleted
+            // and those set as ignored will be left as ignored
             foreach (var order in m_items)
             {
-                order.MarkedForDeletion = order.Ignored;
+                order.MarkedForDeletion = true;
             }
 
             // Import the orders from the API
             List<MarketOrder> newOrders = new List<MarketOrder>();
             foreach (var srcOrder in src)
             {
-                // Skip expired tests
+                // Skip long expired orders
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays);
                 if (limit < DateTime.UtcNow)
                     continue;

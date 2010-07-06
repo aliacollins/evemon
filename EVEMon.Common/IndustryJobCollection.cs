@@ -42,11 +42,12 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serilizable jobs from the API.</param>
         internal void Import(IEnumerable<SerializableAPIJob> src)
         {
-            // Mark the ignored jobs for deletion 
-            // If they are found again on the API feed, they won't be deleted and left as ignored
+            // Mark all jobs for deletion 
+            // If they are found again on the API feed, they won't be deleted
+            // and those set as ignored will be left as ignored
             foreach (var job in m_items)
             {
-                job.MarkedForDeletion = job.Ignored;
+                job.MarkedForDeletion = true;
             }
 
             // Import the jobs from the API

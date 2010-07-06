@@ -117,11 +117,14 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool TryImport(SerializableAPIOrder src, List<MarketOrder> endedOrders)
         {
-            // Note that, before a match is found, all ignored orders have been marked for deletion : m_markedForDeletion == true
+            // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
 
             // Checks whether ID is the same (IDs can be recycled ?)
             if (!this.MatchesWith(src))
                 return false;
+
+            // Prevent deletion
+            m_markedForDeletion = false;
 
             // Update infos (if ID is the same it may have been modified either by the market 
             // or by the user [modify order] so we update the orders info that are changeable)
@@ -141,19 +144,8 @@ namespace EVEMon.Common
                 m_state = (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Active);
             }
 
-            // Canceled orders are left as marked for deletion
-            OrderState state = GetState(src);
-            if (state == OrderState.Canceled || (state == OrderState.Expired && Expiration > DateTime.UtcNow))
-            {
-                m_state = OrderState.Canceled;
-                m_markedForDeletion = true;
-                return true;
-            }
-
-            // Prevent deletion
-            m_markedForDeletion = false;
-
             // Update state
+            OrderState state = GetState(src);
             if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
             {
                 m_state = state;

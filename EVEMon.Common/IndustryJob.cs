@@ -145,11 +145,14 @@ namespace EVEMon.Common
         /// <returns>True if import sucessful otherwise, false.</returns>
         internal bool TryImport(SerializableAPIJob src)
         {
-            // Note that, before a match is found, all ignored jobs have been marked for deletion : m_markedForDeletion == true
+            // Note that, before a match is found, all jobs have been marked for deletion : m_markedForDeletion == true
 
             // Checks whether ID is the same
             if (!this.MatchesWith(src))
                 return false;
+
+            // Prevent deletion
+            m_markedForDeletion = false;
 
             // Update infos (if ID is the same it may have been modified)
             if (this.IsModified(src))
@@ -161,19 +164,8 @@ namespace EVEMon.Common
                 m_activeJobState = GetActiveJobState();
             }
 
-            // Canceled jobs are left as marked for deletion
-            JobState state = GetState(src);
-            if (state == JobState.Canceled)
-            {
-                m_state = JobState.Canceled;
-                m_markedForDeletion = true;
-                return true;
-            }
-
-            // Prevent deletion
-            m_markedForDeletion = false;
-
             // Update state
+            JobState state = GetState(src);
             if (m_state != JobState.Paused && state != m_state)
                 m_state = state;
 
