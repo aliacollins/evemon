@@ -25,6 +25,7 @@ namespace EVEMon.Common.Data
             this.Quantity = src.Quantity;
             this.DamagePerJob = src.DamagePerJob;
             this.Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.Activity);
+            this.WasteAffected = Convert.ToBoolean(src.WasteAffected);
         }
 
         #endregion
@@ -66,6 +67,15 @@ namespace EVEMon.Common.Data
         /// Gets or sets the activity.
         /// </summary>
         public BlueprintActivity Activity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets if waste affected.
+        /// </summary>
+        public bool WasteAffected
         {
             get;
             set;

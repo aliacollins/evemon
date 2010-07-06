@@ -468,6 +468,9 @@ namespace EVEMon.XmlGenerator
                 if (requirement.damagePerJob.HasValue)
                     item.DamagePerJob = requirement.damagePerJob.Value;
 
+                if (requirement.recycle.HasValue)
+                    item.Recyclable = requirement.recycle.Value;
+
                 list.Add(item);
             }
 

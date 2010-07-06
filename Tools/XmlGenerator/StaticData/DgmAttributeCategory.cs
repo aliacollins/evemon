@@ -12,18 +12,10 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         [XmlElement("categoryName")]
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name;
 
         [XmlElement("categoryDescription")]
-        public string Description
-        {
-            get;
-            set;
-        }
+        public string Description;
 
     }
 }

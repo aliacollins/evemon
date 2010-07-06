@@ -149,6 +149,9 @@ namespace EVEMon.SkillPlanner
                 if (tabControl.SelectedIndex != 0)
                     tabControl.Hide();
 
+                // Store the selected tab index for later use
+                int storedTabIndex = tabControl.SelectedIndex;
+
                 tabControl.TabPages.Clear();
 
                 // Add the appropriate tabs
@@ -165,6 +168,11 @@ namespace EVEMon.SkillPlanner
 
                 if (m_hasInvention)
                     tabControl.TabPages.Add(tpInvention);
+
+                // Restore the index of the previous selected tab,
+                // if the index doesn't exist it smartly selects
+                // the first one by its own
+                tabControl.SelectedIndex = storedTabIndex;
             }
             finally
             {
@@ -295,10 +303,7 @@ namespace EVEMon.SkillPlanner
                         items.Add(item);
 
                         // Find if the item is a raw material
-                        var rawMaterialGroup = (m_blueprint.ProducesItem is Ship ?
-                            DBConstants.ProductionRawMaterialGroupIDs.Concat(DBConstants.AdditionalRawMaterialsForShipsGroupIDs) :
-                            DBConstants.ProductionRawMaterialGroupIDs);
-                        bool isRawMaterial = BelongsInMarketGroup(StaticItems.GetItemByID(material.ID).MarketGroup, rawMaterialGroup);
+                        bool isRawMaterial = material.WasteAffected;
 
                         int baseMaterialQuantity = (int)Math.Round(material.Quantity * m_materialMultiplier * GetImplantMultiplier("G"), 0, MidpointRounding.AwayFromZero);
                         

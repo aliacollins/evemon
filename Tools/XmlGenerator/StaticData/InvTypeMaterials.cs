@@ -5,24 +5,12 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class InvTypeMaterials
     {
         [XmlElement("typeID")]
-        public int TypeID
-        {
-            get;
-            set;
-        }
+        public int TypeID;
 
         [XmlElement("materialTypeID")]
-        public int MaterialTypeID
-        {
-            get;
-            set;
-        }
+        public int MaterialTypeID;
 
         [XmlElement("quantity")]
-        public int Quantity
-        {
-            get;
-            set;
-        }
+        public int Quantity;
     }
 }

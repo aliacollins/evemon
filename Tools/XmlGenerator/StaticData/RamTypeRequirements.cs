@@ -5,38 +5,21 @@ namespace EVEMon.XmlGenerator.StaticData
     public sealed class RamTypeRequirements
     {
         [XmlElement("typeID")]
-        public int TypeID
-        {
-            get;
-            set;
-        }
+        public int TypeID;
 
         [XmlElement("activityID")]
-        public int ActivityID
-        {
-            get;
-            set;
-        }
+        public int ActivityID;
 
         [XmlElement("requiredTypeID")]
-        public int RequiredTypeID
-        {
-            get;
-            set;
-        }
+        public int RequiredTypeID;
 
         [XmlElement("quantity")]
-        public int Quantity
-        {
-            get;
-            set;
-        }
+        public int Quantity;
 
         [XmlElement("damagePerJob")]
-        public double DamagePerJob
-        {
-            get;
-            set;
-        }
+        public double DamagePerJob;
+
+        [XmlElement("recycle")]
+        public bool Recyclable;
     }
 }

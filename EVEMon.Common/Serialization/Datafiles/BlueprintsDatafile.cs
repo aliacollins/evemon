@@ -229,8 +229,15 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
-        [XmlAttribute("activity")]
+        [XmlAttribute("activityId")]
         public int Activity
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("wasted")]
+        public int WasteAffected
         {
             get;
             set;

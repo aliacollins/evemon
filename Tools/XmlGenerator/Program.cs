@@ -1549,9 +1549,53 @@ namespace EVEMon.XmlGenerator
         {
             var prerequisiteSkills = new List<SerializablePrereqSkill>();
             var requiredMaterials = new List<SerializableRequiredMaterial>();
+
+            // Add the required raw materials
+            AddRequiredRawMaterials(item, requiredMaterials);
+
+            // Add the required extra materials
+            AddRequiredExtraMaterials(srcBlueprint, prerequisiteSkills, requiredMaterials);
+
+            // Add prerequisite skills to item
+            item.PrereqSkill = prerequisiteSkills.OrderBy(x => x.Activity).ToArray();
+
+            // Add required materials to item
+            item.ReqMaterial = requiredMaterials.OrderBy(x => x.Activity).ToArray();
+        }
+
+        /// <summary>
+        /// Adds the raw materials needed to produce an item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="requiredMaterials"></param>
+        private static void AddRequiredRawMaterials(SerializableBlueprint item, List<SerializableRequiredMaterial> requiredMaterials)
+        {
+            // Find the raw materials needed for the produced item and add them to the list
+            foreach (var reprocItem in s_typeMaterials.Where(x => x.TypeID == item.ProduceItemID))
+            {
+                requiredMaterials.Add(new SerializableRequiredMaterial
+                {
+                    ID = reprocItem.MaterialTypeID,
+                    Quantity = reprocItem.Quantity,
+                    DamagePerJob = 1,
+                    Activity = (int)BlueprintActivity.Manufacturing,
+                    WasteAffected = 1
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds the extra materials needed to produce an item.
+        /// </summary>
+        /// <param name="srcBlueprint"></param>
+        /// <param name="prerequisiteSkills"></param>
+        /// <param name="requiredMaterials"></param>
+        private static void AddRequiredExtraMaterials(InvType srcBlueprint, List<SerializablePrereqSkill> prerequisiteSkills, List<SerializableRequiredMaterial> requiredMaterials)
+        {
+            // Find the additional extra materials and add them to the list
             foreach (var requirement in s_typeRequirements.Where(x => x.TypeID == srcBlueprint.ID))
             {
-                // Is it a skill ?
+                // Is it a skill ? Add it to the prerequisities skills list
                 if (s_types.Any(x => x.ID == requirement.RequiredTypeID && s_groups.Any(y => y.ID == x.GroupID && y.CategoryID == 16)))
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
@@ -1561,15 +1605,33 @@ namespace EVEMon.XmlGenerator
                         Activity = requirement.ActivityID
                     });
                 }
-                else // It is an item
+                else // It is an item (extra material)
                 {
                     requiredMaterials.Add(new SerializableRequiredMaterial
                     {
                         ID = requirement.RequiredTypeID,
                         Quantity = requirement.Quantity,
                         DamagePerJob = requirement.DamagePerJob,
-                        Activity = requirement.ActivityID
+                        Activity = requirement.ActivityID,
+                        WasteAffected = 0
                     });
+
+                    // If the item is recyclable, we need to find the materials produced by reprocessing it
+                    // and substracted them from the related materials of the requiredMaterials list
+                    if (requirement.Recyclable)
+                    {
+                        foreach (var reprocItem in s_typeMaterials.Where(x => x.TypeID == requirement.RequiredTypeID))
+                        {
+                            if (requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
+                            {
+                                var material = requiredMaterials.First(x => x.ID == reprocItem.MaterialTypeID);
+                                material.Quantity -= requirement.Quantity * reprocItem.Quantity;
+
+                                if (material.Quantity < 1)
+                                    requiredMaterials.Remove(material);
+                            }
+                        }
+                    }
 
                     // If activity is invention, add the prerequisite skill
                     // of the required material as it's not included in this table
@@ -1580,15 +1642,6 @@ namespace EVEMon.XmlGenerator
                     }
                 }
             }
-
-            // Add additional materials that are in the typeMaterials table
-            AdditionalRequiredMaterials(srcBlueprint, item, requiredMaterials);
-
-            // Add prerequisite skills to item
-            item.PrereqSkill = prerequisiteSkills.OrderBy(x => x.Activity).ToArray();
-
-            // Add required materials to item
-            item.ReqMaterial = requiredMaterials.OrderBy(x => x.Activity).ToArray();
         }
 
         /// <summary>
@@ -1630,56 +1683,6 @@ namespace EVEMon.XmlGenerator
                         Level = prereqLevels[i],
                         Activity = requirement.ActivityID
                     });
-            }
-        }
-
-        /// <summary>
-        /// Add additional materials needed for manufacturing.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="requiredMaterials"></param>
-        private static void AdditionalRequiredMaterials(InvType src, SerializableBlueprint item, List<SerializableRequiredMaterial> requiredMaterials)
-        {
-            // Find the materials needed for the item and add them (exclude compression blueprints)
-            foreach (var reprocItem in s_typeMaterials.Where(x => x.TypeID == item.ProduceItemID
-                && (Array.IndexOf(DBConstants.CompressionBlueprintsGroupIDs, src.MarketGroupID) == -1)))
-            {
-                // List already contains this material ?
-                // Add the material quantity to the existing one
-                if (requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
-                {
-                    var material = requiredMaterials.First(x => x.ID == reprocItem.MaterialTypeID);
-                    material.Quantity += reprocItem.Quantity;
-                }
-                // Add it to the list
-                else
-                {
-                    requiredMaterials.Add(new SerializableRequiredMaterial
-                    {
-                        ID = reprocItem.MaterialTypeID,
-                        Quantity = reprocItem.Quantity,
-                        DamagePerJob = 1,
-                        Activity = (int)BlueprintActivity.Manufacturing
-                    });
-                }
-
-                // Look if the produced item has a lower tech item and it's a ship 
-                var techItem = s_metaTypes.FirstOrDefault(x => x.ItemID == item.ProduceItemID && x.MetaGroupID == 2 &&
-                    s_types.Any(y => y.ID == item.ProduceItemID && s_groups.Any(z => z.ID == y.GroupID && z.CategoryID == 6)));
-                
-                if (techItem == null)
-                    continue;
-
-                // Find this material quantity needed for the lower tech ship and substract it
-                foreach (var reprocLowerTechItem in s_typeMaterials.Where(x => x.TypeID == techItem.ParentItemID && x.MaterialTypeID == reprocItem.MaterialTypeID))
-                {
-                    // Substract the material quantity from the existing one
-                    var material = requiredMaterials.First(x => x.ID == reprocLowerTechItem.MaterialTypeID);
-                    material.Quantity -= reprocLowerTechItem.Quantity;
-
-                    if (material.Quantity <= 0)
-                        requiredMaterials.Remove(material);
-                }
             }
         }
 
