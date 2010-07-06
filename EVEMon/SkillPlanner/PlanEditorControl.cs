@@ -230,9 +230,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if (!this.Visible)
-                return;
-
             UpdateDisplayPlan();
             UpdateSkillList(true);
             UpdateListColumns();
@@ -246,9 +243,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (!this.Visible)
-                return;
-
             UpdateSkillList(true);
         }
 
@@ -260,9 +254,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_SchedulerChanged(object sender, EventArgs e)
         {
-            if (!this.Visible)
-                return;
-
             UpdateSkillList(true);
             UpdateListColumns();
         }
