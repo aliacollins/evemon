@@ -282,6 +282,7 @@ namespace EVEMon.SkillPlanner
                 m_propertiesList.Columns.Add("Damage Per Run");
 
                 int perfectME = 0;
+                int perfectMELevel = 0;
                 bool hasPerfect = false;
                 bool hasDamagePerRun = false;
                 var items = new List<ListViewItem>();
@@ -302,23 +303,26 @@ namespace EVEMon.SkillPlanner
                         // Add the item to the list
                         items.Add(item);
 
-                        // Find if the item is a raw material
+                        // Set if the item is a raw material and therefore waste affected
                         bool isRawMaterial = material.WasteAffected;
 
+                        // Calculate the base material quantity
                         int baseMaterialQuantity = (int)Math.Round(material.Quantity * m_materialMultiplier * GetImplantMultiplier("G"), 0, MidpointRounding.AwayFromZero);
                         
-                        // Calculate the perfect material efficiency level
-                        int perfectMELevel = (int)Math.Round((0.02 * m_blueprint.WasteFactor * baseMaterialQuantity), 0, MidpointRounding.AwayFromZero);
+                        // Calculate the perfect material efficiency level if it's a raw material
+                        if (isRawMaterial)
+                            perfectMELevel = (int)Math.Round((0.02 * m_blueprint.WasteFactor * baseMaterialQuantity), 0, MidpointRounding.AwayFromZero);
 
-                        // Find the highest perfect material efficiency level
+                        // Store the highest perfect material efficiency level
                         if (perfectMELevel > perfectME)
                             perfectME = perfectMELevel;
                         
-                        // Calculate the quantity
+                        // Calculate the needed quantity by the character skills
                         int youQuantity = (this.Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
                             (int)Math.Round(baseMaterialQuantity * (1.25 - (0.05 * productionEfficiencyLevel)) + (baseMaterialQuantity * m_waste), 0, MidpointRounding.AwayFromZero) :
                             baseMaterialQuantity);
 
+                        // Calculate the perfect quantity
                         int perfectQuantity = (this.Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
                             (int)Math.Round(baseMaterialQuantity * (1 + m_waste), 0, MidpointRounding.AwayFromZero) : baseMaterialQuantity);
 
@@ -359,7 +363,7 @@ namespace EVEMon.SkillPlanner
                 // Add the items
                 m_propertiesList.Items.AddRange(items.OrderBy(x => x.Text).ToArray());
 
-                // Calculate the Perfect ME and update
+                // Display the Perfect ME
                 if (tabControl.SelectedTab == tpManufacturing)
                     lblPerfectMEValue.Text = perfectME.ToString("#,##0");
 
