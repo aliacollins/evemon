@@ -96,6 +96,8 @@ namespace EVEMon
                 return;
             }
 
+            EveClient.Trace("UpdateManager.BeginCheck()");
+
             // Otherwise, query Batlleclinic.
             var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             var url = String.Format("{0}?ver={1}", Settings.Updates.UpdatesUrl, currentVersion);
@@ -142,6 +144,8 @@ namespace EVEMon
                 // Reschedule
                 ScheduleCheck(s_frequency);
             }
+
+            EveClient.Trace("UpdateManager.OnCheckCompleted()");
         }
         
         /// <summary>
@@ -220,6 +224,8 @@ namespace EVEMon
             if (UpdateAvailable == null)
                 return;
 
+            EveClient.Trace("UpdateManager.OnUpdateAvailable({0}, {1}, {2}, {3}, {4}, {5}, {6})", updateUrl, updateMessage, newestVersion, currentVersion, canAutoInstall, installArgs, installUrl);
+
             UpdateAvailableEventArgs e = new UpdateAvailableEventArgs();
             e.CurrentVersion = currentVersion;
             e.NewestVersion = newestVersion;
@@ -239,7 +245,9 @@ namespace EVEMon
         {
             if (DataUpdateAvailable == null)
                 return;
-            
+
+            EveClient.Trace("UpdateManager.OnDataUpdateAvailable({0}, changedFiles.Count = {1})", updateUrl, changedFiles.Count);
+
             DataUpdateAvailableEventArgs e = new DataUpdateAvailableEventArgs();
             e.UpdateUrl = updateUrl;
             e.ChangedFiles = changedFiles;
@@ -400,4 +408,5 @@ namespace EVEMon
 
     }
     #endregion
+
 }
