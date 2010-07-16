@@ -123,49 +123,49 @@ Bugfixes
       <date>11 July 2010</date>
       <md5>42a78099e063681c8fa484797e7f363d</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) blueprints data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>9ced7a636195498d6df59a3e669e585a</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) certificates data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>7e056b23b59ec95574de83b39373e333</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) geography data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>ec0f511e8ac48e8d7dd711b4c6cc3ba7</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) items data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>080d2af1030cbc8d98948e5b0032acca</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) properties data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>403b063503e613e8c28ddff022034b23</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) reprocessing data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
       <date>11 July 2010</date>
       <md5>e1e4d177d8d2e116337c37ab988e4cd4</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.3 (167296) skills data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Tyrannis 1.0.1 (167296) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
