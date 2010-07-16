@@ -118,6 +118,7 @@ namespace EVEMon
                 CharacterNameLabel.Text = m_character.AdornedName;
                 BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", m_character.CorporationName);
+                
                 FormatBalance();
 
                 FormatAttributes();
@@ -214,11 +215,14 @@ namespace EVEMon
         /// Gets the countdown format.
         /// </summary>
         /// <param name="timeLeft">The time left.</param>
-        /// <returns>String formatted as a Long Time based upon the users culture.</returns>
+        /// <returns>String formatted as a countdown timer.</returns>
+        /// <remarks>Hours are formatted accumulatively when "Week" is selected</remarks>
         private static string GetCountdownFormat(TimeSpan timeLeft)
         {
-            DateTime formattingDate = DateTime.MinValue.Add(timeLeft);
-            return formattingDate.ToLongTimeString();
+            var hours = Math.Floor(timeLeft.TotalHours);
+            var minutes = timeLeft.Minutes;
+            var seconds = timeLeft.Seconds;
+            return String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}", hours, minutes, seconds);
         }
 
         /// <summary>
@@ -400,9 +404,7 @@ namespace EVEMon
         private static string GetDetailedStatusForMonitor(IQueryMonitor monitor)
         {
             if (monitor.NextUpdate == DateTime.MaxValue)
-            {
                 return "Never";
-            }
 
             var remainingTime = monitor.NextUpdate.Subtract(DateTime.UtcNow);
             if (remainingTime.Minutes > 0)
@@ -497,6 +499,20 @@ namespace EVEMon
         
 
         #region Event Handlers
+
+        /// <summary>
+        /// Occurs when visiblility changes.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (!this.Visible)
+                return;
+
+            UpdateInfrequentControls();
+        }
 
         /// <summary>
         /// Called when the control is disposed.

@@ -43,6 +43,7 @@
             this.AttributeWillpowerLabel = new System.Windows.Forms.Label();
             this.AttributeMemoryLabel = new System.Windows.Forms.Label();
             this.SkillSummaryLabel = new System.Windows.Forms.Label();
+            this.CharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.ThrobberFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.ThrobberContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ChangeInfoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +51,6 @@
             this.ThrobberSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.CharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.UpdateThrobber = new EVEMon.Controls.Throbber();
             this.MainTableLayoutPanel.SuspendLayout();
             this.BioFlowLayoutPanel.SuspendLayout();
@@ -67,7 +67,7 @@
             this.MainTableLayoutPanel.ColumnCount = 3;
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 56F));
+            this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.MainTableLayoutPanel.Controls.Add(this.BioFlowLayoutPanel, 0, 0);
             this.MainTableLayoutPanel.Controls.Add(this.SkillSummaryPanel, 1, 1);
             this.MainTableLayoutPanel.Controls.Add(this.CharacterPortrait, 0, 0);
@@ -236,16 +236,29 @@
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
             // 
+            // CharacterPortrait
+            // 
+            this.CharacterPortrait.Character = null;
+            this.CharacterPortrait.CharacterID = ((long)(-1));
+            this.CharacterPortrait.Location = new System.Drawing.Point(0, 0);
+            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.CharacterPortrait.MinimumSize = new System.Drawing.Size(128, 128);
+            this.CharacterPortrait.Name = "CharacterPortrait";
+            this.MainTableLayoutPanel.SetRowSpan(this.CharacterPortrait, 2);
+            this.CharacterPortrait.Size = new System.Drawing.Size(128, 128);
+            this.CharacterPortrait.TabIndex = 2;
+            this.CharacterPortrait.TabStop = false;
+            // 
             // ThrobberFlowLayoutPanel
             // 
             this.ThrobberFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateThrobber);
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateLabel);
             this.ThrobberFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(373, 0);
+            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(369, 0);
             this.ThrobberFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ThrobberFlowLayoutPanel.Name = "ThrobberFlowLayoutPanel";
-            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(56, 52);
+            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(60, 52);
             this.ThrobberFlowLayoutPanel.TabIndex = 10;
             // 
             // ThrobberContextMenu
@@ -285,7 +298,7 @@
             this.UpdateLabel.Location = new System.Drawing.Point(0, 30);
             this.UpdateLabel.Margin = new System.Windows.Forms.Padding(0);
             this.UpdateLabel.Name = "UpdateLabel";
-            this.UpdateLabel.Size = new System.Drawing.Size(56, 22);
+            this.UpdateLabel.Size = new System.Drawing.Size(60, 13);
             this.UpdateLabel.TabIndex = 5;
             this.UpdateLabel.Text = "00:00:00";
             this.UpdateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -298,24 +311,11 @@
             this.ToolTip.IsBalloon = true;
             this.ToolTip.ReshowDelay = 100;
             // 
-            // CharacterPortrait
-            // 
-            this.CharacterPortrait.Character = null;
-            this.CharacterPortrait.CharacterID = ((long)(-1));
-            this.CharacterPortrait.Location = new System.Drawing.Point(0, 0);
-            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
-            this.CharacterPortrait.MinimumSize = new System.Drawing.Size(128, 128);
-            this.CharacterPortrait.Name = "CharacterPortrait";
-            this.MainTableLayoutPanel.SetRowSpan(this.CharacterPortrait, 2);
-            this.CharacterPortrait.Size = new System.Drawing.Size(128, 128);
-            this.CharacterPortrait.TabIndex = 2;
-            this.CharacterPortrait.TabStop = false;
-            // 
             // UpdateThrobber
             // 
             this.UpdateThrobber.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.UpdateThrobber.ContextMenuStrip = this.ThrobberContextMenu;
-            this.UpdateThrobber.Location = new System.Drawing.Point(29, 3);
+            this.UpdateThrobber.Location = new System.Drawing.Point(33, 3);
             this.UpdateThrobber.MaximumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
