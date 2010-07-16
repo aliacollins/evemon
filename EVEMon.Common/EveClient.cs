@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 using EVEMon.Common.Attributes;
@@ -705,6 +707,41 @@ namespace EVEMon.Common
         public static void Trace(string format, params object[] args)
         {
             Trace(String.Format(format, args));
+        }
+
+        /// <summary>
+        /// Sends a message to the trace with the calling method, time
+        /// and the types of any arguments passed to the method.
+        /// </summary>
+        public static void Trace()
+        {
+            var stackTrace = new StackTrace();
+            var frame = stackTrace.GetFrame(1);
+            var method = frame.GetMethod();
+            var parameters = FormatParameters(method.GetParameters());
+            var declaringType = method.DeclaringType.ToString().Replace("EVEMon.", String.Empty);
+
+            Trace("{0}.{1}({2})", declaringType, method.Name, parameters);
+        }
+
+        /// <summary>
+        /// Formats the parameters of a method into a string.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>A comma seperated string of paramater types and names.</returns>
+        private static string FormatParameters(ParameterInfo[] parameters)
+        {
+            var paramDetail = new StringBuilder();
+
+            foreach (var param in parameters)
+            {
+                if (paramDetail.Length != 0)
+                    paramDetail.Append(", ");
+
+                paramDetail.AppendFormat("{0} {1}", param.GetType().Name, param.Name);
+            }
+
+            return paramDetail.ToString();
         }
 
         /// <summary>
