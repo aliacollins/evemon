@@ -130,10 +130,10 @@ namespace EVEMon
                 return;
 
             // Grab the current window style
-            long oldStyle = NativeMethods.GetWindowLong(hWnd, NativeMethods.GWL_STYLE);
+            int oldStyle = NativeMethods.GetWindowLong(hWnd, NativeMethods.GWL_STYLE);
 
             // Turn off dialog frame and border
-            long newStyle = oldStyle & ~(NativeMethods.WS_DLGFRAME | NativeMethods.WS_BORDER);
+            int newStyle = oldStyle & ~(NativeMethods.WS_DLGFRAME | NativeMethods.WS_BORDER);
             NativeMethods.SetWindowLong(hWnd, NativeMethods.GWL_STYLE, newStyle);
 
             NativeMethods.MoveWindow(hWnd, sc.Bounds.X,
@@ -501,11 +501,11 @@ namespace EVEMon
         public static extern int GetClientRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32")]
-        public static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("user32")]
-        public static extern long SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
-
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        
         [DllImport("user32")]
         public static extern int ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
