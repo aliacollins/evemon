@@ -173,8 +173,8 @@ namespace EVEMon.Common.Scheduling
                     break;
 
                 case RecurringFrequency.Weekly:
-                    DateTime FirstInstance = m_startDate.AddDays((m_dayOfWeek - m_startDate.DayOfWeek + 7) % 7);
-                    if (day.DayOfWeek != m_dayOfWeek || (day.Subtract(FirstInstance).Days % (7 * m_weeksPeriod)) != 0)
+                    DateTime firstInstance = m_startDate.AddDays((m_dayOfWeek - m_startDate.DayOfWeek + 7) % 7);
+                    if (day.DayOfWeek != m_dayOfWeek || (day.Subtract(firstInstance).Days % (7 * m_weeksPeriod)) != 0)
                         return null;
                     break;
 
@@ -255,7 +255,9 @@ namespace EVEMon.Common.Scheduling
                 return false;
 
             var startDate = m_startDate.Add(range.From.TimeOfDay);
-            var endDate = m_endDate.Add(range.From.TimeOfDay);
+
+            // in the event m_endDate is set to Forever (DateTime.MaxValue) we can't add anything to it
+            var endDate = m_endDate == DateTime.MaxValue ? m_endDate : m_endDate.Add(range.From.TimeOfDay);
 
             if (startDate < testtime && testtime < endDate)
             {
