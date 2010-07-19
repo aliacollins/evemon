@@ -43,7 +43,7 @@ namespace EVEMon
         private Character m_character;
         private Object m_lastTooltipItem;
         private bool m_requireRefresh;
-        private int count = 0;
+        private int m_count = 0;
 
         /// <summary>
         /// Constructor
@@ -57,6 +57,8 @@ namespace EVEMon
             m_skillsFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_boldSkillsFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            m_requireRefresh = true;
 
             EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
@@ -89,17 +91,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On load, we hide the list.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            lbSkills.Visible = false;
-            m_requireRefresh = true;
-        }
-
         /// <summary>
         /// When the control becomes visible again, we update the content.
         /// </summary>
@@ -340,13 +331,13 @@ namespace EVEMon
                 // Blinking indicator of skill in training level
                 if (skill.IsTraining && level.Equals(skill.Level + 1))
                 {
-                    if (count == 0)
+                    if (m_count == 0)
                         g.FillRectangle(Brushes.White, brect);
 
-                    if (count == 1)
-                        count = -1;
+                    if (m_count == 1)
+                        m_count = -1;
 
-                    count ++;
+                    m_count ++;
                 }
            }
 
@@ -879,6 +870,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_TimerTick(object sender, EventArgs e)
         {
+            // We trigger a refresh of the list to eliminate a designer leftover (scrollbar)
             if (m_requireRefresh)
             {
                 lbSkills.Invalidate();

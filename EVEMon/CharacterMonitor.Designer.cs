@@ -66,16 +66,7 @@ namespace EVEMon
             this.jobsList = new EVEMon.MainWindowIndustryJobsList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.NotificationList();
-            this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
-            this.toolstripContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showTextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.skillsIcon = new System.Windows.Forms.ToolStripButton();
-            this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
-            this.ordersIcon = new System.Windows.Forms.ToolStripButton();
-            this.jobsIcon = new System.Windows.Forms.ToolStripButton();
-            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
-            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolstripPanel = new System.Windows.Forms.Panel();
             this.toolStripContextual = new System.Windows.Forms.ToolStrip();
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,6 +78,16 @@ namespace EVEMon
             this.showOnlyCorpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
+            this.toolstripContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showTextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.skillsIcon = new System.Windows.Forms.ToolStripButton();
+            this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
+            this.ordersIcon = new System.Windows.Forms.ToolStripButton();
+            this.jobsIcon = new System.Windows.Forms.ToolStripButton();
+            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
+            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
             tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -103,9 +104,10 @@ namespace EVEMon
             this.ordersPage.SuspendLayout();
             this.skillQueuePage.SuspendLayout();
             this.jobsPage.SuspendLayout();
+            this.toolstripPanel.SuspendLayout();
+            this.toolStripContextual.SuspendLayout();
             this.toolStripFeatures.SuspendLayout();
             this.toolstripContextMenu.SuspendLayout();
-            this.toolStripContextual.SuspendLayout();
             this.SuspendLayout();
             // 
             // tsPagesSeparator
@@ -120,7 +122,7 @@ namespace EVEMon
             this.pnlTraining.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlTraining.Controls.Add(this.tlpStatus);
             this.pnlTraining.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlTraining.Location = new System.Drawing.Point(0, 271);
+            this.pnlTraining.Location = new System.Drawing.Point(0, 321);
             this.pnlTraining.Name = "pnlTraining";
             this.pnlTraining.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.pnlTraining.Size = new System.Drawing.Size(574, 42);
@@ -290,7 +292,7 @@ namespace EVEMon
             this.skillQueuePanel.Controls.Add(this.skillQueueTimePanel);
             this.skillQueuePanel.Controls.Add(this.skillQueueControl);
             this.skillQueuePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueuePanel.Location = new System.Drawing.Point(0, 215);
+            this.skillQueuePanel.Location = new System.Drawing.Point(0, 265);
             this.skillQueuePanel.Name = "skillQueuePanel";
             this.skillQueuePanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
             this.skillQueuePanel.Size = new System.Drawing.Size(574, 56);
@@ -357,10 +359,11 @@ namespace EVEMon
             this.lowerPanel.Controls.Add(this.skillsPanel);
             this.lowerPanel.Controls.Add(this.skillQueuePanel);
             this.lowerPanel.Controls.Add(this.pnlTraining);
+            this.lowerPanel.Controls.Add(this.toolstripPanel);
             this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lowerPanel.Location = new System.Drawing.Point(0, 186);
+            this.lowerPanel.Location = new System.Drawing.Point(0, 136);
             this.lowerPanel.Name = "lowerPanel";
-            this.lowerPanel.Size = new System.Drawing.Size(574, 313);
+            this.lowerPanel.Size = new System.Drawing.Size(574, 363);
             this.lowerPanel.TabIndex = 3;
             // 
             // skillsPanel
@@ -370,7 +373,7 @@ namespace EVEMon
             this.skillsPanel.Controls.Add(this.notificationList);
             this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPanel.ForeColor = System.Drawing.Color.Gray;
-            this.skillsPanel.Location = new System.Drawing.Point(0, 0);
+            this.skillsPanel.Location = new System.Drawing.Point(0, 50);
             this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.skillsPanel.Name = "skillsPanel";
             this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
@@ -512,118 +515,16 @@ namespace EVEMon
             this.notificationList.TabIndex = 13;
             this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
             // 
-            // toolStripFeatures
+            // toolstripPanel
             // 
-            this.toolStripFeatures.ContextMenuStrip = this.toolstripContextMenu;
-            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skillsIcon,
-            this.skillQueueIcon,
-            this.ordersIcon,
-            this.jobsIcon,
-            tsPagesSeparator,
-            this.toggleSkillsIcon,
-            this.tsToggleSeparator,
-            this.featuresMenu});
-            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripFeatures.Location = new System.Drawing.Point(0, 136);
-            this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(574, 25);
-            this.toolStripFeatures.TabIndex = 13;
-            // 
-            // toolstripContextMenu
-            // 
-            this.toolstripContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showTextMenuItem});
-            this.toolstripContextMenu.Name = "toolstripContextMenu";
-            this.toolstripContextMenu.Size = new System.Drawing.Size(129, 26);
-            this.toolstripContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toolstripContextMenu_Opening);
-            // 
-            // showTextMenuItem
-            // 
-            this.showTextMenuItem.Name = "showTextMenuItem";
-            this.showTextMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.showTextMenuItem.Text = "Show Text";
-            this.showTextMenuItem.Click += new System.EventHandler(this.showTextMenuItem_Click);
-            // 
-            // skillsIcon
-            // 
-            this.skillsIcon.Checked = true;
-            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
-            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillsIcon.Name = "skillsIcon";
-            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
-            this.skillsIcon.Tag = "skillsPage";
-            this.skillsIcon.Text = "Skills";
-            this.skillsIcon.ToolTipText = "Display skills list";
-            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // skillQueueIcon
-            // 
-            this.skillQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
-            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillQueueIcon.Name = "skillQueueIcon";
-            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
-            this.skillQueueIcon.Tag = "skillQueuePage";
-            this.skillQueueIcon.Text = "Queue";
-            this.skillQueueIcon.ToolTipText = "Display skills in queue";
-            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // ordersIcon
-            // 
-            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
-            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ordersIcon.Name = "ordersIcon";
-            this.ordersIcon.Size = new System.Drawing.Size(64, 22);
-            this.ordersIcon.Tag = "ordersPage";
-            this.ordersIcon.Text = "Market";
-            this.ordersIcon.ToolTipText = "Display market orders";
-            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // jobsIcon
-            // 
-            this.jobsIcon.Image = global::EVEMon.Properties.Resources.Industry;
-            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.jobsIcon.Name = "jobsIcon";
-            this.jobsIcon.Size = new System.Drawing.Size(70, 22);
-            this.jobsIcon.Tag = "jobsPage";
-            this.jobsIcon.Text = "Industry";
-            this.jobsIcon.ToolTipText = "Display industry jobs";
-            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // toggleSkillsIcon
-            // 
-            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
-            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
-            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
-            this.toggleSkillsIcon.Text = "Toggle All Skills";
-            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
-            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
-            // 
-            // tsToggleSeparator
-            // 
-            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsToggleSeparator.Name = "tsToggleSeparator";
-            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // featuresMenu
-            // 
-            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.featuresMenu.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
-            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.featuresMenu.Name = "featuresMenu";
-            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.featuresMenu.Size = new System.Drawing.Size(29, 22);
-            this.featuresMenu.Text = "Features";
-            this.featuresMenu.ToolTipText = "Full API key features";
-            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
-            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
+            this.toolstripPanel.AutoSize = true;
+            this.toolstripPanel.Controls.Add(this.toolStripContextual);
+            this.toolstripPanel.Controls.Add(this.toolStripFeatures);
+            this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
+            this.toolstripPanel.Name = "toolstripPanel";
+            this.toolstripPanel.Size = new System.Drawing.Size(574, 50);
+            this.toolstripPanel.TabIndex = 16;
             // 
             // toolStripContextual
             // 
@@ -633,7 +534,7 @@ namespace EVEMon
             this.searchTextBox,
             this.groupMenu});
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripContextual.Location = new System.Drawing.Point(0, 161);
+            this.toolStripContextual.Location = new System.Drawing.Point(0, 25);
             this.toolStripContextual.Name = "toolStripContextual";
             this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
             this.toolStripContextual.TabIndex = 15;
@@ -732,14 +633,125 @@ namespace EVEMon
             this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
             this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
             // 
+            // toolStripFeatures
+            // 
+            this.toolStripFeatures.ContextMenuStrip = this.toolstripContextMenu;
+            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.skillsIcon,
+            this.skillQueueIcon,
+            this.ordersIcon,
+            this.jobsIcon,
+            tsPagesSeparator,
+            this.toggleSkillsIcon,
+            this.tsToggleSeparator,
+            this.featuresMenu});
+            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
+            this.toolStripFeatures.Name = "toolStripFeatures";
+            this.toolStripFeatures.Size = new System.Drawing.Size(574, 25);
+            this.toolStripFeatures.TabIndex = 13;
+            // 
+            // toolstripContextMenu
+            // 
+            this.toolstripContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTextMenuItem});
+            this.toolstripContextMenu.Name = "toolstripContextMenu";
+            this.toolstripContextMenu.Size = new System.Drawing.Size(129, 26);
+            this.toolstripContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toolstripContextMenu_Opening);
+            // 
+            // showTextMenuItem
+            // 
+            this.showTextMenuItem.Name = "showTextMenuItem";
+            this.showTextMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showTextMenuItem.Text = "Show Text";
+            this.showTextMenuItem.Click += new System.EventHandler(this.showTextMenuItem_Click);
+            // 
+            // skillsIcon
+            // 
+            this.skillsIcon.Checked = true;
+            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
+            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillsIcon.Name = "skillsIcon";
+            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
+            this.skillsIcon.Tag = "skillsPage";
+            this.skillsIcon.Text = "Skills";
+            this.skillsIcon.ToolTipText = "Display skills list";
+            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // skillQueueIcon
+            // 
+            this.skillQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
+            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillQueueIcon.Name = "skillQueueIcon";
+            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
+            this.skillQueueIcon.Tag = "skillQueuePage";
+            this.skillQueueIcon.Text = "Queue";
+            this.skillQueueIcon.ToolTipText = "Display skills in queue";
+            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // ordersIcon
+            // 
+            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
+            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ordersIcon.Name = "ordersIcon";
+            this.ordersIcon.Size = new System.Drawing.Size(64, 22);
+            this.ordersIcon.Tag = "ordersPage";
+            this.ordersIcon.Text = "Market";
+            this.ordersIcon.ToolTipText = "Display market orders";
+            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // jobsIcon
+            // 
+            this.jobsIcon.Image = global::EVEMon.Properties.Resources.Industry;
+            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.jobsIcon.Name = "jobsIcon";
+            this.jobsIcon.Size = new System.Drawing.Size(70, 22);
+            this.jobsIcon.Tag = "jobsPage";
+            this.jobsIcon.Text = "Industry";
+            this.jobsIcon.ToolTipText = "Display industry jobs";
+            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // toggleSkillsIcon
+            // 
+            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
+            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
+            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
+            this.toggleSkillsIcon.Text = "Toggle All Skills";
+            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
+            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
+            // 
+            // tsToggleSeparator
+            // 
+            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsToggleSeparator.Name = "tsToggleSeparator";
+            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // featuresMenu
+            // 
+            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.featuresMenu.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
+            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.featuresMenu.Name = "featuresMenu";
+            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.featuresMenu.Size = new System.Drawing.Size(29, 22);
+            this.featuresMenu.Text = "Features";
+            this.featuresMenu.ToolTipText = "Full API key features";
+            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
+            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
+            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.lowerPanel);
-            this.Controls.Add(this.toolStripContextual);
-            this.Controls.Add(this.toolStripFeatures);
             this.Controls.Add(this.upperPanel);
             this.Name = "CharacterMonitor";
             this.Size = new System.Drawing.Size(574, 499);
@@ -764,11 +776,13 @@ namespace EVEMon
             this.ordersPage.ResumeLayout(false);
             this.skillQueuePage.ResumeLayout(false);
             this.jobsPage.ResumeLayout(false);
+            this.toolstripPanel.ResumeLayout(false);
+            this.toolstripPanel.PerformLayout();
+            this.toolStripContextual.ResumeLayout(false);
+            this.toolStripContextual.PerformLayout();
             this.toolStripFeatures.ResumeLayout(false);
             this.toolStripFeatures.PerformLayout();
             this.toolstripContextMenu.ResumeLayout(false);
-            this.toolStripContextual.ResumeLayout(false);
-            this.toolStripContextual.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -831,5 +845,6 @@ namespace EVEMon
         private EVEMon.Controls.MultiPanelPage jobsPage;
         private MainWindowIndustryJobsList jobsList;
         private CharacterMonitorHeader Header;
+        private System.Windows.Forms.Panel toolstripPanel;
     }
 }

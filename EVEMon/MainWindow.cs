@@ -1651,8 +1651,8 @@ namespace EVEMon
 
             // Add one menu entry per eve client
             bool foundAny = false;
-            var m_eveWindows = Relocator.FindEveWindows();
-            foreach (IntPtr eveInstance in m_eveWindows)
+            var eveWindows = Relocator.FindEveWindows();
+            foreach (IntPtr eveInstance in eveWindows)
             {
                 // Skip if null ptr
                 if (eveInstance == IntPtr.Zero)

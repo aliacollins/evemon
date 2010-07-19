@@ -226,19 +226,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On load, we hide the list and the expandable panel.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            listView.Visible = false;
-            marketExpPanelControl.Visible = false;
-            marketExpPanelControl.Header.Visible = false;
-        }
-
-        /// <summary>
         /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>

@@ -94,17 +94,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On load, we hide the list.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            lbSkillsQueue.Visible = false;
-        }
-
-        /// <summary>
         /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>
