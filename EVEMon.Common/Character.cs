@@ -494,11 +494,11 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         internal void Import(APIResult<SerializableAPICharacter> serial)
         {
-            if (!serial.HasError)
-            {
-                Import(serial.Result);
-                EveClient.OnCharacterChanged(this);
-            }
+            if (serial.HasError)
+                return;
+
+            Import(serial.Result);
+            EveClient.OnCharacterChanged(this);
         }
 
         /// <summary>

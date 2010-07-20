@@ -274,8 +274,14 @@ namespace EVEMon.SettingsUI
             // External calendar
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            if (m_settings.Calendar.Provider == CalendarProvider.Outlook) rbMSOutlook.Checked = true;
-            else rbGoogle.Checked = true;
+            if (m_settings.Calendar.Provider == CalendarProvider.Outlook)
+            {
+                rbMSOutlook.Checked = true;
+            }
+            else
+            {
+                rbGoogle.Checked = true;
+            }
 
             OnMustEnableOrDisable(externalCalendarCheckbox, e);
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
@@ -311,7 +317,7 @@ namespace EVEMon.SettingsUI
             }
             else
             {
-                // Rn at startup ?
+                // Run at startup ?
                 runAtStartupComboBox.Checked = (rk.GetValue("EVEMon") != null);
             }
 

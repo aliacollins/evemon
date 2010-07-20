@@ -438,6 +438,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterChanged;
 
         /// <summary>
+        /// Occurs when a character skill queue changed.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterSkillQueueChanged;
+
+        /// <summary>
         /// Occurs when a character's potrait changed.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitChanged;
@@ -548,6 +553,18 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterChanged != null)
                 CharacterChanged(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterSkillQueueChanged(Character character)
+        {
+            Trace("EveClient.OnSkillQueueChanged - " + character.Name);
+            Settings.Save();
+            if (CharacterSkillQueueChanged != null)
+                CharacterSkillQueueChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

@@ -165,6 +165,9 @@ namespace EVEMon.Common
                 // Creates the skill queue
                 m_items.Add(new QueuedSkill(m_character, serialSkill, m_isPaused, ref startTimeWhenPaused));
             }
+
+            // Fires the event regarding the character skill queue update.
+            EveClient.OnCharacterSkillQueueChanged(m_character);
         }
     }
 }
