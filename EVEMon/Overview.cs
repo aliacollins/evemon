@@ -24,11 +24,10 @@ namespace EVEMon
         public Overview()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
             this.AutoScroll = true;
 
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.CharacterSkillQueueChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_SkillQueueChanged);
             EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             this.Disposed += new EventHandler(Overview_Disposed);
         }
@@ -41,8 +40,6 @@ namespace EVEMon
         void Overview_Disposed(object sender, EventArgs e)
         {
             EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.QueuedSkillsCompleted -= new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.CharacterSkillQueueChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_SkillQueueChanged);
             EveClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             this.Disposed -= new EventHandler(Overview_Disposed);
         }
@@ -248,26 +245,6 @@ namespace EVEMon
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void EveClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// Occur when a character finishes skill level training.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void EveClient_QueuedSkillsCompleted(object sender, EventArgs e)
-        {
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// Occur when a character skill queue changes.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void EveClient_SkillQueueChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

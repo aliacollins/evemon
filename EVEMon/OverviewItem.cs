@@ -26,7 +26,6 @@ namespace EVEMon
         private bool m_hovered;
         private bool m_pressed = false;
         private bool m_pendingUpdate;
-        private bool m_loading;
         private int m_preferredWidth = 1;
         private int m_preferredHeight = 1;
 
@@ -171,11 +170,11 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             // Returns in design mode or when no char
-            if (this.DesignMode || this.IsDesignModeHosted()) return;
+            if (this.DesignMode || this.IsDesignModeHosted())
+                return;
 
             // Character Name
             UpdateContent();
-            m_loading = true;
 
             base.OnLoad(e);
         }
@@ -305,35 +304,30 @@ namespace EVEMon
                 return;
 
             var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
+            m_hasSkillQueueFreeRoom = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
 
-			if (freeTime)
-			{
-                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
-				string timeLeftText;
+            if (!m_hasSkillQueueFreeRoom)
+                return;
 
-				// Prevents the "(none)" text from being displayed
-				if (timeLeft < TimeSpan.FromSeconds(1))
-					return;
+            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
+            string timeLeftText;
 
-				// Less than minute ? Display seconds
-				if (timeLeft < TimeSpan.FromMinutes(1))
-				{
-					timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-				}
-				// Display time without seconds
-				else
-				{
-                    timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-				}
+            // Prevents the "(none)" text from being displayed
+            if (timeLeft < TimeSpan.FromSeconds(1))
+                return;
 
-				lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
-				m_hasSkillQueueFreeRoom = true;
-			}
-			else
-			{
-				m_hasSkillQueueFreeRoom = false;
-			}
+            // Less than minute ? Display seconds
+            if (timeLeft < TimeSpan.FromMinutes(1))
+            {
+                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            }
+            // Display time without seconds
+            else
+            {
+                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+            }
+
+            lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
         }
 
         /// <summary>
@@ -353,19 +347,12 @@ namespace EVEMon
 
                 UpdateSkillQueueFreeRoom();
 
-                if (m_loading)
-                    UpdateContent();
-
-                m_loading = false;
-            }
-            else
-            {
-                UpdateContent();
+                UpdateVisibilities();
             }
         }
 
         /// <summary>
-        /// When the scheduler changed, we may have to change the color of the trained skill.
+        /// When the scheduler changed, we may have to display a warning (blocking entry).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -381,7 +368,8 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
-            if (m_character != e.Character) return;
+            if (e.Character != m_character)
+                return;
 
             // Character still training ? Jump to next skill
             if (m_character.IsTraining)
@@ -397,13 +385,15 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On character completion, update everything.
+        /// On character sheet changed, update everything.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (e.Character != m_character) return;
+            if (e.Character != m_character)
+                return;
+
             UpdateContent();
         }
 
