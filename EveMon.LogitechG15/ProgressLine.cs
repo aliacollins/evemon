@@ -44,7 +44,7 @@ namespace EVEMon.LogitechG15
 
             if (Settings.G15.ShowSystemTime)
             {
-                string SystemTime = DateTime.Now.ToShortTimeString();
+                string SystemTime = DateTime.Now.ToCustomShortTimeString();
                 SizeF SystemTimeSize = canvas.MeasureString(SystemTime, m_font);
                 
                 size = size - (int)SystemTimeSize.Width;

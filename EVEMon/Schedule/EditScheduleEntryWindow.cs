@@ -56,18 +56,18 @@ namespace EVEMon.Schedule
             rbOneTime.Checked = true;
             rbRecurring.Checked = false;
             SetOneTimeStartDate(DateTime.Today);
-            tbOneTimeStartTime.Text = DateTime.Today.ToShortTimeString();
+            tbOneTimeStartTime.Text = DateTime.Today.ToCustomShortTimeString();
             DateTime dtto = DateTime.Today + TimeSpan.FromDays(1) - TimeSpan.FromMinutes(1);
             SetOneTimeEndDate(dtto);
-            tbOneTimeEndTime.Text = dtto.ToShortTimeString();
+            tbOneTimeEndTime.Text = dtto.ToCustomShortTimeString();
             SetRecurringDateFrom(DateTime.MinValue);
             SetRecurringDateTo(DateTime.MaxValue);
             cbRecurringFrequency.SelectedIndex = 0;
             nudWeeklyFrequency.Value = 1;
             nudRecurDayOfMonth.Value = 1;
             cbRecurOnOverflow.SelectedIndex = 0;
-            tbRecurringTimeFrom.Text = DateTime.Today.ToShortTimeString();
-            tbRecurringTimeTo.Text = dtto.ToShortTimeString();
+            tbRecurringTimeFrom.Text = DateTime.Today.ToCustomShortTimeString();
+            tbRecurringTimeTo.Text = dtto.ToCustomShortTimeString();
         }
 
         private void UpdateFromEntry()
@@ -83,9 +83,9 @@ namespace EVEMon.Schedule
                 rbOneTime.Checked = true;
                 rbRecurring.Checked = false;
                 SetOneTimeStartDate(sse.StartDate);
-                tbOneTimeStartTime.Text = sse.StartDate.ToShortTimeString();
+                tbOneTimeStartTime.Text = sse.StartDate.ToCustomShortTimeString();
                 SetOneTimeEndDate(sse.EndDate);
-                tbOneTimeEndTime.Text = sse.EndDate.ToShortTimeString();
+                tbOneTimeEndTime.Text = sse.EndDate.ToCustomShortTimeString();
             }
             else if (m_scheduleEntry is RecurringScheduleEntry)
             {
@@ -99,8 +99,8 @@ namespace EVEMon.Schedule
                 SetRecurringOverflowDropdown(rse.OverflowResolution);
                 DateTime tstart = DateTime.Today + TimeSpan.FromSeconds(rse.StartTimeInSeconds);
                 DateTime tend = DateTime.Today + TimeSpan.FromSeconds(rse.EndTimeInSeconds);
-                tbRecurringTimeFrom.Text = tstart.ToShortTimeString();
-                tbRecurringTimeTo.Text = tend.ToShortTimeString();
+                tbRecurringTimeFrom.Text = tstart.ToCustomShortTimeString();
+                tbRecurringTimeTo.Text = tend.ToCustomShortTimeString();
             }
 
             ValidateData();

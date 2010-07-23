@@ -185,7 +185,7 @@ namespace EVEMon.Common
         /// <returns>String representation of the time and relative date</returns>
         public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime)
         {
-            string shortTime = ToShortTimeString(absoluteDateTime);
+            string shortTime = absoluteDateTime.ToCustomShortTimeString();
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == DateTime.Now.Date.AddDays(-1))
@@ -236,7 +236,7 @@ namespace EVEMon.Common
         /// </remarks>
         /// <param name="ShortTimeString">DateTime to be formatted</param>
         /// <returns>String containing formatted text</returns>
-        public static string ToShortTimeString(DateTime shortTimeString)
+        public static string ToCustomShortTimeString(this DateTime shortTimeString)
         {
             DateTimeFormatInfo dateTimeFormat = CultureConstants.DefaultCulture.DateTimeFormat;
             

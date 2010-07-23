@@ -322,7 +322,7 @@ namespace EVEMon.Common
                     if (recover)
                     {
                         // Prompts the user to use the backup
-                        String fileDate = backupInfo.LastWriteTime.ToLocalTime().ToShortDateString() + " at " + backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString();
+                        String fileDate = backupInfo.LastWriteTime.ToLocalTime().ToShortDateString() + " at " + backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString();
                         DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                         if (dr == DialogResult.No)
