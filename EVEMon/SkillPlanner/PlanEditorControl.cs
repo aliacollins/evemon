@@ -1595,6 +1595,7 @@ namespace EVEMon.SkillPlanner
                 {
                     bool showDialog = Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox;
 
+                    // User wishes the dialog to be displayed
                     if (showDialog)
                     {
                         string text = String.Concat("This would result in a priority conflict.",
@@ -1607,7 +1608,7 @@ namespace EVEMon.SkillPlanner
                         MessageBoxCustom MsgBoxCustom = new MessageBoxCustom();
                         DialogResult drb = MsgBoxCustom.Show(this, text, captionText, cbOptionText, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                         Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = MsgBoxCustom.cbUnchecked;
-                        
+
                         // When the checkbox is checked we store the dialog result
                         if (!MsgBoxCustom.cbUnchecked)
                             Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = drb;
@@ -1615,6 +1616,11 @@ namespace EVEMon.SkillPlanner
                         if (drb == DialogResult.Yes)
                             m_plan.SetPriority(m_displayPlan, entries, form.Priority);
 
+                    }
+                    // User wishes the dialog not to be displayed and has set the dialog result to "Yes"
+                    else if (Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult == DialogResult.Yes)
+                    {
+                        m_plan.SetPriority(m_displayPlan, entries, form.Priority);
                     }
                 }
             }
