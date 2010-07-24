@@ -168,7 +168,7 @@ namespace EVEMon.Common
         internal void NotifyCharacterListError(Account account, APIResult<SerializableCharacterList> result)
         {
             var notification = new APIErrorNotification(account, result);
-            notification.Description = "An error occured while querying the character list for account " + account.ToString() + ".";
+            notification.Description = String.Format("An error occured while querying the character list for account {0}.", account);
             notification.Behaviour = NotificationBehaviour.Overwrite;
             notification.Priority = NotificationPriority.Error;
             Notify(notification);
@@ -182,7 +182,7 @@ namespace EVEMon.Common
         internal void NotifyKeyLevelError(Account account, APIResult<SerializableAccountBalanceList> result)
         {
             var notification = new APIErrorNotification(account, result);
-            notification.Description = "An error occured while checking the API key level for account " + account.ToString() + ".";
+            notification.Description = String.Format("An error occured while checking the API key level for account {0}.", account);
             notification.Behaviour = NotificationBehaviour.Overwrite;
             notification.Priority = NotificationPriority.Error;
             Notify(notification);
@@ -301,7 +301,7 @@ namespace EVEMon.Common
         internal void NotifyAccountNotInTraining(Account account)
         {
             var notification = new Notification(NotificationCategory.AccountNotInTraining, account);
-            notification.Description = "This account has no characters in training: " + account.ToString() + ".";
+            notification.Description = String.Format("This account has no characters in training: {0}.", account);
             notification.Behaviour = NotificationBehaviour.Overwrite;
             notification.Priority = NotificationPriority.Warning;
             Notify(notification);
