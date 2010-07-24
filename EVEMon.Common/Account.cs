@@ -21,6 +21,7 @@ namespace EVEMon.Common
         private CredentialsLevel m_keyLevel;
 
         private bool m_hasCharacterInTraining;
+        private bool m_firstCheck = true;
         private int m_counter;
 
         private readonly AccountIgnoreList m_ignoreList;
@@ -162,7 +163,8 @@ namespace EVEMon.Common
         internal void CharacterInTraining()
         {
             m_counter = 0;
-            
+            m_hasCharacterInTraining = false;
+
             foreach (var id in CharacterIdentities)
             {
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
@@ -216,8 +218,12 @@ namespace EVEMon.Common
             EveClient.Notifications.InvalidateAccountError(this);
             this.Import(result);
 
-            // Has character in training ?
-            CharacterInTraining();
+            // On startup check for character in training on this account
+            if (m_firstCheck)
+            {
+                CharacterInTraining();
+                m_firstCheck = false;
+            }
         }
 
         /// <summary>
@@ -303,6 +309,9 @@ namespace EVEMon.Common
             {
                 ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
             }
+
+            // Fires the event regarding the account character list update.
+            EveClient.OnCharacterListChanged(this);
         }
 
         /// <summary>

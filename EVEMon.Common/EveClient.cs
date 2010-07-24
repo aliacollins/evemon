@@ -362,7 +362,8 @@ namespace EVEMon.Common
         /// </summary>
         internal static void UpdateOnOneSecondTick()
         {
-            if (!s_running) return;
+            if (!s_running)
+                return;
 
             // Updates tranquility status
             s_tranquilityServer.UpdateOnOneSecondTick();
@@ -377,11 +378,13 @@ namespace EVEMon.Common
             foreach(var character in s_characters)
             {
                 var ccpCharacter = character as CCPCharacter;
-                if (ccpCharacter != null) ccpCharacter.UpdateOnOneSecondTick();
+                if (ccpCharacter != null)
+                    ccpCharacter.UpdateOnOneSecondTick();
             }
 
             // Fires the event for subscribers
-            if (TimerTick != null) TimerTick(null, EventArgs.Empty);
+            if (TimerTick != null)
+                TimerTick(null, EventArgs.Empty);
 
             // Check for settings save
             Settings.UpdateOnOneSecondTick();
@@ -416,6 +419,11 @@ namespace EVEMon.Common
         /// Occurs when the collection of characters changed.
         /// </summary>
         public static event EventHandler CharacterCollectionChanged;
+
+        /// <summary>
+        /// Occurs when the list of characters in an account changed.
+        /// </summary>
+        public static event EventHandler CharacterListChanged;
 
         /// <summary>
         /// Occurs when the collection of monitored characters changed.
@@ -546,6 +554,18 @@ namespace EVEMon.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="account"></param>
+        internal static void OnCharacterListChanged(Account account)
+        {
+            Trace("EveClient.OnCharacterListChanged - " + account);
+            Settings.Save();
+            if (CharacterListChanged != null)
+                CharacterListChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="character"></param>
         internal static void OnCharacterChanged(Character character)
         {
@@ -567,6 +587,17 @@ namespace EVEMon.Common
                 CharacterSkillQueueChanged(null, new CharacterChangedEventArgs(character));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="skillsCompleted"></param>
+        internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
+        {
+            Trace("EveClient.OnCharacterQueuedSkillsCompleted - " + character.Name);
+            if (QueuedSkillsCompleted != null)
+                QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -595,10 +626,10 @@ namespace EVEMon.Common
         /// 
         /// </summary>
         /// <param name="character"></param>
+        /// <param name="jobsCompleted"></param>
         internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
             Trace("EveClient.OnCharacterIndustryJobsCompleted - " + character.Name);
-            Settings.Save();
             if (CharacterIndustryJobsCompleted != null)
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
@@ -627,17 +658,6 @@ namespace EVEMon.Common
                 CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="skillsCompleted"></param>
-        internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
-        {
-            Trace("EveClient.OnCharacterQueuedSkillsCompleted - " + character.Name);
-            if (QueuedSkillsCompleted != null)
-                QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
-        }
 
         /// <summary>
         /// 
