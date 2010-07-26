@@ -81,9 +81,7 @@ namespace EVEMon
         protected override void OnVisibleChanged(EventArgs e)
         {
             if (this.Visible && m_updatePending)
-            {
                 UpdateContent();
-            }
 
             base.OnVisibleChanged(e);
         }
@@ -129,7 +127,9 @@ namespace EVEMon
                 // Assemble tooltip base format with character informations
                 foreach (Character character in m_characters)
                 {
-                    if (sb.Length != 0) sb.Append("\n");
+                    if (sb.Length != 0)
+                        sb.Append("\n");
+
                     sb.Append(FormatTooltipText(Settings.UI.SystemTrayTooltip.Format, character));
                 }
             }
@@ -155,13 +155,24 @@ namespace EVEMon
             string tooltip = m_tooltipFormat;
             foreach (var character in m_characters)
             {
-                var trainingSkill = character.CurrentlyTrainingSkill;
-                TimeSpan remainingTime = trainingSkill.EndTime - DateTime.UtcNow;
+                if (character.IsTraining)
+                {
+                    var trainingSkill = character.CurrentlyTrainingSkill;
+                    TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
 
-                tooltip = Regex.Replace(tooltip, 
-                    '%' + character.CharacterID.ToString() + 'r',
-                    remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas), 
-                    RegexOptions.Compiled);
+                    tooltip = Regex.Replace(tooltip,
+                        '%' + character.CharacterID.ToString() + 'r',
+                        remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                        RegexOptions.Compiled);
+                }
+
+                var ccpCharacter = character as CCPCharacter;
+                if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
+                {                    
+                    tooltip = Regex.Replace(tooltip,
+                        '%' + character.CharacterID.ToString() + 'r', "(Paused)",
+                        RegexOptions.Compiled);
+                }
             }
 
             // Updates the tooltip and its location
@@ -184,39 +195,47 @@ namespace EVEMon
                 int level = -1;
 
                 // First group
-                switch(m.Groups[1].Value[0])
+                switch (m.Groups[1].Value[0])
                 {
-                    default:
-                        return String.Empty;
                     case 'n':
                         return character.Name;
                     case 'b':
-                        return character.Balance.ToString("#,##0.00");
-                    case 's':
-                        return character.CurrentlyTrainingSkill.SkillName;
-                    case 'd':
-                        return character.CurrentlyTrainingSkill.EndTime.ToString("g");
-                    case 'r':
-                        return '%' + character.CharacterID.ToString() + 'r';
-                    case 'c':
-                        level = character.CurrentlyTrainingSkill.Level - 1;
-                        break;
-                    case 't':
-                        level = character.CurrentlyTrainingSkill.Level;
-                        break;
+                        return character.Balance.ToString("N2");
                 }
 
-                // Second group
-                if (level >= 0 && m.Groups[1].Value.Length > 1)
+                var ccpCharacter = character as CCPCharacter;
+                if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
                 {
-                    switch (m.Groups[1].Value[1])
+                    switch (m.Groups[1].Value[0])
                     {
-                        case 'i':
-                            return level.ToString();
                         case 'r':
-                            return Skill.GetRomanForInt(level);
+                            return '%' + character.CharacterID.ToString() + 'r';
+                        case 's':
+                            return character.CurrentlyTrainingSkill.SkillName;
+                        case 'd':
+                            return character.CurrentlyTrainingSkill.EndTime.ToString("g");
+                        case 'c':
+                            level = character.CurrentlyTrainingSkill.Level - 1;
+                            break;
+                        case 't':
+                            level = character.CurrentlyTrainingSkill.Level;
+                            break;
                         default:
                             return String.Empty;
+                    }
+
+                    // Second group
+                    if (level >= 0 && m.Groups[1].Value.Length > 1)
+                    {
+                        switch (m.Groups[1].Value[1])
+                        {
+                            case 'i':
+                                return level.ToString();
+                            case 'r':
+                                return Skill.GetRomanForInt(level);
+                            default:
+                                return String.Empty;
+                        }
                     }
                 }
 

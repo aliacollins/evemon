@@ -23,7 +23,7 @@ namespace EVEMon.SettingsUI
         private string[] tooltipCodes = {
             "%n - %s %tr - %r",
             "%n - %s [%cr->%tr]: %r",
-            "%n : %s - %d : %b isk",
+            "%n : %s - %d : %b ISK",
             "%s %ci to %ti, %r left"
         };
 

@@ -407,10 +407,7 @@ namespace EVEMon
         private void UpdateEveTimeLabel()
         {
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
-            {
-                DateTime now = DateTime.Now.ToUniversalTime();
-                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
-            }
+                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", DateTime.UtcNow);
         }
 
         /// <summary>
@@ -420,15 +417,9 @@ namespace EVEMon
         {
             if (m_serverStatusLabel == null)
                 return;
-            
-            if (!Settings.UI.SystemTrayPopup.ShowTQStatus)
-            {
-                m_serverStatusLabel.Text = String.Empty;
-            }
-            else
-            {
+
+            if (Settings.UI.SystemTrayPopup.ShowTQStatus)
                 m_serverStatusLabel.Text = EveClient.TranquilityServer.StatusText;
-            }
         }
         #endregion
 
