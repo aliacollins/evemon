@@ -347,7 +347,8 @@ namespace EVEMon
 
                 UpdateSkillQueueFreeRoom();
 
-                UpdateVisibilities();
+                if (m_hasSkillQueueFreeRoom)
+                    PerformCustomLayout(m_tooltip);
             }
         }
 
@@ -410,7 +411,9 @@ namespace EVEMon
         {
             if (this.Visible)
             {
-                if (m_pendingUpdate) UpdateContent();
+                if (m_pendingUpdate)
+                    UpdateContent();
+
                 EveClient_TimerTick(null, null);
             }
             base.OnVisibleChanged(e);
@@ -437,7 +440,8 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (!this.Clickable) return;
+            if (!this.Clickable)
+                return;
 
             // Show back button
             m_hovered = true;
@@ -601,32 +605,56 @@ namespace EVEMon
 
             // Retrieve margin
             int margin = 10;
-            if (portraitSize <= 48) margin = 1;
-            else if (portraitSize <= 64) margin = 3;
-            else if (portraitSize <= 80) margin = 6;
+            if (portraitSize <= 48)
+            {
+                margin = 1;
+            }
+            else if (portraitSize <= 64)
+            {
+                margin = 3;
+            }
+            else if (portraitSize <= 80)
+            {
+                margin = 6;
+            }
 
             // Label height
             int labelHeight = 18;
             int smallLabelHeight = 13;
-            if (portraitSize <= 48) labelHeight = 13;
-            else if (portraitSize <= 64) labelHeight = 16;
+            if (portraitSize <= 48)
+            {
+                labelHeight = 13;
+            }
+            else if (portraitSize <= 64)
+            {
+                labelHeight = 16;
+            }
 
             // Label width
             int labelWidth = 0;
-            if (!tooltip) labelWidth = 215;
+            if (!tooltip)
+                labelWidth = 215;
             
             // Big font size
             var bigFontSize = 11.25f;
-            if (portraitSize <= 48) bigFontSize = 8.25f;
-            else if (portraitSize <= 64) bigFontSize = 9.75f;
+            if (portraitSize <= 48)
+            {
+                bigFontSize = 8.25f;
+            }
+            else if (portraitSize <= 64)
+            {
+                bigFontSize = 9.75f;
+            }
 
             // Medium font size
             var mediumFontSize = 9.75f;
-            if (portraitSize <= 64) mediumFontSize = 8.25f;
+            if (portraitSize <= 64)
+                mediumFontSize = 8.25f;
 
             // Margin between the two labels groups
             int verticalMargin = (m_showSkillQueueFreeRoom ? 4 : 16);
-            if (portraitSize <= 80) verticalMargin = 0;
+            if (portraitSize <= 80)
+                verticalMargin = 0;
 
             // Adjust portrait
             pbCharacterPortrait.Location = new Point(margin, margin);
@@ -640,7 +668,8 @@ namespace EVEMon
 
             lblCharName.Font = FontFactory.GetFont(lblCharName.Font.FontFamily, bigFontSize, lblCharName.Font.Style);
             lblCharName.Location = new Point(left, top);
-            if (lblCharName.PreferredWidth + right > labelWidth) labelWidth = lblCharName.PreferredWidth + right;
+            if (lblCharName.PreferredWidth + right > labelWidth)
+                labelWidth = lblCharName.PreferredWidth + right;
             labelHeight = Math.Max (labelHeight, lblCharName.Font.Height);
             lblCharName.Size = new Size(labelWidth, labelHeight);
             top += labelHeight;
@@ -649,7 +678,8 @@ namespace EVEMon
             {
                 lblBalance.Font = FontFactory.GetFont(lblBalance.Font.FontFamily, mediumFontSize, lblBalance.Font.Style);
                 lblBalance.Location = new Point(left, top);
-                if (lblBalance.PreferredWidth + right > labelWidth) labelWidth = lblBalance.PreferredWidth + right;
+                if (lblBalance.PreferredWidth + right > labelWidth)
+                    labelWidth = lblBalance.PreferredWidth + right;
                 labelHeight = Math.Max(labelHeight, lblBalance.Font.Height);
                 lblBalance.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -664,7 +694,8 @@ namespace EVEMon
             {
                 lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize, lblRemainingTime.Font.Style);
                 lblRemainingTime.Location = new Point(left, top);
-                if (lblRemainingTime.PreferredWidth + right > labelWidth) labelWidth = lblRemainingTime.PreferredWidth + right;
+                if (lblRemainingTime.PreferredWidth + right > labelWidth)
+                    labelWidth = lblRemainingTime.PreferredWidth + right;
                 labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
                 lblRemainingTime.Size = new Size(labelWidth, labelHeight);
                 top += labelHeight;
@@ -673,7 +704,8 @@ namespace EVEMon
             if (lblSkillInTraining.Visible)
             {
                 lblSkillInTraining.Location = new Point(left, top);
-                if (lblSkillInTraining.PreferredWidth + right > labelWidth) labelWidth = lblSkillInTraining.PreferredWidth + right;
+                if (lblSkillInTraining.PreferredWidth + right > labelWidth)
+                    labelWidth = lblSkillInTraining.PreferredWidth + right;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillInTraining.Font.Height);
                 lblSkillInTraining.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
@@ -682,7 +714,8 @@ namespace EVEMon
             if (lblCompletionTime.Visible)
             {
                 lblCompletionTime.Location = new Point(left, top);
-                if (lblCompletionTime.PreferredWidth + right > labelWidth) labelWidth = lblCompletionTime.PreferredWidth + right;
+                if (lblCompletionTime.PreferredWidth + right > labelWidth)
+                    labelWidth = lblCompletionTime.PreferredWidth + right;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblCompletionTime.Font.Height);
                 lblCompletionTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
@@ -691,20 +724,14 @@ namespace EVEMon
             if (lblSkillQueueFreeRoom.Visible)
             {
                 lblSkillQueueFreeRoom.Location = new Point(left, top);
-                if (lblSkillQueueFreeRoom.PreferredWidth + right > labelWidth) labelWidth = lblSkillQueueFreeRoom.PreferredWidth + right;
+                if (lblSkillQueueFreeRoom.PreferredWidth + right > labelWidth)
+                    labelWidth = lblSkillQueueFreeRoom.PreferredWidth + right;
                 smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueFreeRoom.Font.Height);
                 lblSkillQueueFreeRoom.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
 
-            if (pbCharacterPortrait.Visible)
-            {
-                this.Height = Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin);
-            }
-            else
-            {
-                this.Height = top + margin;
-            }
+            this.Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin);
 
             this.Width = left + labelWidth + margin;
             m_preferredHeight = this.Height;
