@@ -32,4 +32,4 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.3.1.$WCREV$")]
+[assembly: AssemblyVersion("1.3.2.$WCREV$")]
