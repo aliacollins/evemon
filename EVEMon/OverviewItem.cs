@@ -222,7 +222,7 @@ namespace EVEMon
             if (ccpCharacter != null)
                 lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
             
-            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N} ISK", m_character.Balance);
+            lblBalance.Text = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", m_character.Balance);
 
             // Character in training ? We have labels to fill
             if (m_character.IsTraining)
@@ -233,37 +233,28 @@ namespace EVEMon
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
                 // Update the completion time
-                if (m_portraitSize > 80)
-                {
-                    lblCompletionTime.Text = String.Concat(endTime.ToString("ddd ", CultureConstants.DefaultCulture),
-                                                           endTime.ToString(CultureConstants.DefaultCulture));
-                }
-                else
-                {
-                    lblCompletionTime.Text = endTime.ToString(CultureConstants.DefaultCulture);
-                }
+                lblCompletionTime.Text = (m_portraitSize > 80 ?
+                    String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime) :
+                    endTime.ToString(CultureConstants.DefaultCulture));
 
                 // Changes the completion time color on scheduling block.
                 string blockingEntry;
-                if (m_showConflicts && Scheduler.SkillIsBlockedAt(trainingSkill.EndTime, out blockingEntry))
-                {
-                    lblCompletionTime.ForeColor = Color.Red;
-                }
-                else
-                {
-                    lblCompletionTime.ForeColor = m_lightForeColor;
-                }
+                lblCompletionTime.ForeColor = (
+                    m_showConflicts && Scheduler.SkillIsBlockedAt(trainingSkill.EndTime, out blockingEntry) ?
+                    Color.Red :
+                    m_lightForeColor);
 
                 // Updates the time remaining label
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+
+                // Update the skill queue free room label
+                UpdateSkillQueueFreeRoom();
 
                 // Show the training labels
                 m_hasSkillInTraining = true;
                 m_hasCompletionTime = true;
                 m_hasRemainingTime = true;
-
-                // Updates the skill queue free room
-                UpdateSkillQueueFreeRoom();
+                m_hasSkillQueueFreeRoom = true; // Yes, it's a lie! It's done for initialization
             }
             else
             {
@@ -304,28 +295,27 @@ namespace EVEMon
                 return;
 
             var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            m_hasSkillQueueFreeRoom = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
-
-            if (!m_hasSkillQueueFreeRoom)
-                return;
-
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
             string timeLeftText;
 
-            // Prevents the "(none)" text from being displayed
-            if (timeLeft < TimeSpan.FromSeconds(1))
+            // Negative time ? We shouldn't displayed anything
+            if (timeLeft < TimeSpan.Zero)
+            {
+                lblSkillQueueFreeRoom.Text = String.Empty;
                 return;
+            }
 
-            // Less than minute ? Display seconds
-            if (timeLeft < TimeSpan.FromMinutes(1))
+            // Training completed ?
+            if (timeLeft == TimeSpan.Zero)
             {
-                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                lblSkillQueueFreeRoom.Text = "Completed";
+                return;
             }
-            // Display time without seconds
-            else
-            {
-                timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-            }
+
+            // Less than minute ? Display seconds else display time without seconds
+            timeLeftText = (timeLeft < TimeSpan.FromMinutes(1) ?
+                timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas) :
+                timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
             lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
         }
@@ -346,9 +336,6 @@ namespace EVEMon
                 lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
                 UpdateSkillQueueFreeRoom();
-
-                if (m_hasSkillQueueFreeRoom)
-                    PerformCustomLayout(m_tooltip);
             }
         }
 
@@ -427,9 +414,9 @@ namespace EVEMon
         {
             if (m_hovered)
             {
-                ButtonRenderer.DrawButton(e.Graphics, this.DisplayRectangle,
-                    m_pressed ? PushButtonState.Pressed
-                              : PushButtonState.Hot);
+                ButtonRenderer.DrawButton(e.Graphics, this.DisplayRectangle, m_pressed ?
+                    PushButtonState.Pressed :
+                    PushButtonState.Hot);
             }
             base.OnPaint(e);
         }
