@@ -107,7 +107,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="font"></param>
         /// <returns></returns>
-        private static int CalculateMaxTextLength(Font font)
+        private int CalculateMaxTextLength(Font font)
         {
             int maxTextLength = 0;
 
@@ -194,10 +194,10 @@ namespace EVEMon
         /// </summary>
         private void UpdateSize()
         {
-            this.Height = listBox.Items.Count * listBox.ItemHeight;
-            this.Width = listBox.Width;
+            Height = listBox.Items.Count * listBox.ItemHeight;
+            Width = listBox.Width;
             CalculateFontSize();
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -258,11 +258,11 @@ namespace EVEMon
             }
 
             // Text
-            using (var foreBrush = new SolidBrush(this.ForeColor))
+            using (var foreBrush = new SolidBrush(ForeColor))
             {
                 string text = notification.ToString();
-                var size = g.MeasureString(text, this.Font);
-                g.DrawString(text, this.Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
+                var size = g.MeasureString(text, Font);
+                g.DrawString(text, Font, foreBrush, new Point(e.Bounds.Left + TextLeft, e.Bounds.Top + (int)(listBox.ItemHeight - size.Height) / 2));
             }
 
             // Draw line on top
@@ -391,7 +391,7 @@ namespace EVEMon
         /// <summary>
         /// Displays the tooltip for the hovered item
         /// </summary>
-        private static void DisplayTooltip(Notification notification)
+        private void DisplayTooltip(Notification notification)
         {
             // No details ?
             if (!notification.HasDetails)
@@ -499,7 +499,7 @@ namespace EVEMon
         /// <returns></returns>
         private Rectangle GetMagnifierIconRect(int index)
         {
-            var rect = this.listBox.GetItemRectangle(index);
+            var rect = listBox.GetItemRectangle(index);
             var icon = Properties.Resources.Magnifier;
             var yOffset = (rect.Height - icon.Height) / 2;
             var magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
@@ -514,7 +514,7 @@ namespace EVEMon
         /// <returns></returns>
         private Rectangle GetDeleteIconRect(int index)
         {
-            var rect = this.listBox.GetItemRectangle(index);
+            var rect = listBox.GetItemRectangle(index);
             var icon = Properties.Resources.CrossBlack;
             var yOffset = (rect.Height - icon.Height) / 2;
             var deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
