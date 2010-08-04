@@ -1464,7 +1464,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.mainWindowPage;
+            this.multiPanel.SelectedPage = this.skillPlannerPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1590,9 +1590,9 @@ namespace EVEMon.SettingsUI
             this.cbAdvanceEntryAdd.AutoSize = true;
             this.cbAdvanceEntryAdd.Location = new System.Drawing.Point(14, 198);
             this.cbAdvanceEntryAdd.Name = "cbAdvanceEntryAdd";
-            this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(160, 17);
+            this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(209, 17);
             this.cbAdvanceEntryAdd.TabIndex = 21;
-            this.cbAdvanceEntryAdd.Text = "Use Advance Entry Addition";
+            this.cbAdvanceEntryAdd.Text = "Set Priority When Adding Skills To Plan";
             this.cbAdvanceEntryAdd.UseVisualStyleBackColor = true;
             // 
             // cbSummaryOnMultiSelectOnly
