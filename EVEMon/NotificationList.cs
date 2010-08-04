@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -37,10 +36,13 @@ namespace EVEMon
         public NotificationList()
         {
             InitializeComponent();
-            listBox.DrawItem += new DrawItemEventHandler(listBox_DrawItem);
-            listBox.MouseMove += new MouseEventHandler(listBox_MouseMove);
-            listBox.MouseDown += new MouseEventHandler(listBox_MouseDown);
-            listBox.MouseLeave += new EventHandler(listBox_MouseLeave);
+
+            listBox.DrawItem += listBox_DrawItem;
+            listBox.MouseMove += listBox_MouseMove;
+            listBox.MouseDown += listBox_MouseDown;
+            listBox.MouseLeave += listBox_MouseLeave;
+
+            listBox.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         /// <summary>
@@ -49,12 +51,15 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
             {
                 var list = new List<Notification>();
-                var notification = new Notification(NotificationCategory.AccountNotInTraining, null);
-                notification.Priority = NotificationPriority.Information;
-                notification.Description = "Some information";
+                var notification = new Notification(NotificationCategory.AccountNotInTraining, null)
+                {
+                    Priority = NotificationPriority.Information,
+                    Description = "Some information"
+                };
+                
                 list.Add(notification);
 
                 notification = new Notification(NotificationCategory.AccountNotInTraining, null);
@@ -67,7 +72,7 @@ namespace EVEMon
                 notification.Description = "Some error";
                 list.Add(notification);
 
-                this.Notifications = list;
+                Notifications = list;
             }
 
             base.OnLoad(e);
@@ -102,7 +107,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="font"></param>
         /// <returns></returns>
-        private int CalculateMaxTextLength(Font font)
+        private static int CalculateMaxTextLength(Font font)
         {
             int maxTextLength = 0;
 
@@ -122,10 +127,10 @@ namespace EVEMon
         /// </summary>
         private void CalculateFontSize()
         {
-            if (this.Width == 0)
+            if (Width == 0)
                 return;
 
-            Font font = this.Font;
+            Font font = Font;
             var fontSize = font.Size;
             int magnifierIconSize = 0;
 
@@ -135,7 +140,7 @@ namespace EVEMon
                 magnifierIconSize = IconMagnifierPositionFromRight;
 
             // Calculates the available text space
-            var availableTextSpace = this.Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
+            var availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
 
             // If any text lenght exceeds our bounds we decrease the font size
             while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
@@ -151,7 +156,7 @@ namespace EVEMon
                 font = FontFactory.GetFont("Tahoma", fontSize);
             }
 
-            this.Font = font;
+            Font = font;
         }
 
         /// <summary>
@@ -159,7 +164,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateContent()
         {
-            if (!this.Visible)
+            if (!Visible)
             {
                 m_pendingUpdate = true;
                 return;
@@ -340,7 +345,7 @@ namespace EVEMon
         /// Show the details for the given notification.
         /// </summary>
         /// <param name="notification"></param>
-        private void ShowDetails(Notification notification)
+        private static void ShowDetails(Notification notification)
         {
             // API error ?
             if (notification is APIErrorNotification)
@@ -386,7 +391,7 @@ namespace EVEMon
         /// <summary>
         /// Displays the tooltip for the hovered item
         /// </summary>
-        private void DisplayTooltip(Notification notification)
+        private static void DisplayTooltip(Notification notification)
         {
             // No details ?
             if (!notification.HasDetails)
@@ -436,7 +441,6 @@ namespace EVEMon
                         if (order.Item == null)
                             continue;
 
-                        int volume = order.InitialVolume;
                         var format = AbbreviationFormat.AbbreviationSymbols;
 
                         // Expired :    12k/15k invulnerability fields at Pator V - Tech School
@@ -524,8 +528,8 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible && m_pendingUpdate)
-                this.UpdateContent();
+            if (Visible && m_pendingUpdate)
+                UpdateContent();
 
             base.OnVisibleChanged(e);
         }
