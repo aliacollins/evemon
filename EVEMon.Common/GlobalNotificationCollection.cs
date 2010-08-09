@@ -15,9 +15,13 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor, used by <see cref="EveClient"/> only.
         /// </summary>
-        internal GlobalNotificationCollection()
-        {
-        }
+        internal GlobalNotificationCollection() { }
+
+        /// <summary>
+        /// Protected default constructor with an initial capacity.
+        /// </summary>
+        internal GlobalNotificationCollection(int capacity)
+            : base(capacity) { }
 
         /// <summary>
         /// Adds a notification to this collection.
@@ -116,10 +120,11 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyConquerableStationListError(APIResult<SerializableConquerableStationList> result)
         {
-            var notification = new APIErrorNotification(null, result);
-            notification.Description = "An error occured while querying the API server.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(null, result)
+            {
+                Description = "An error occured while querying the API server.", Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
         #endregion
@@ -141,10 +146,11 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyServerStatusError(APIResult<SerializableServerStatus> result)
         {
-            var notification = new APIErrorNotification(null, result);
-            notification.Description = "An error occured while querying the server status.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(null, result)
+            {
+                Description = "An error occured while querying the server status.",
+                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
         #endregion
@@ -167,10 +173,11 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCharacterListError(Account account, APIResult<SerializableCharacterList> result)
         {
-            var notification = new APIErrorNotification(account, result);
-            notification.Description = String.Format("An error occured while querying the character list for account {0}.", account);
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(account, result)
+            {
+                Description = String.Format("An error occured while querying the character list for account {0}.", account),
+                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -181,10 +188,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyKeyLevelError(Account account, APIResult<SerializableAccountBalanceList> result)
         {
-            var notification = new APIErrorNotification(account, result);
-            notification.Description = String.Format("An error occured while checking the API key level for account {0}.", account);
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(account, result)
+            {
+                Description = String.Format("An error occured while checking the API key level for account {0}.", account),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
         #endregion
@@ -206,10 +215,11 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacter> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the character sheet.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the character sheet.",
+                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -220,10 +230,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableSkillQueue> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the skill queue.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the skill queue.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -234,10 +246,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the personal market orders.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the personal market orders.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -248,10 +262,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the corporation market orders.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the corporation market orders.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -262,10 +278,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the personal industry jobs.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the personal industry jobs.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -276,10 +294,12 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the corporation industry jobs.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the corporation industry jobs.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
         #endregion
@@ -300,10 +320,12 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyAccountNotInTraining(Account account)
         {
-            var notification = new Notification(NotificationCategory.AccountNotInTraining, account);
-            notification.Description = String.Format("This account has no characters in training: {0}.", account);
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Warning;
+            var notification = new Notification(NotificationCategory.AccountNotInTraining, account)
+            {
+                Description = String.Format("This account has no characters in training: {0}.", account),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
         #endregion
@@ -324,10 +346,12 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyInsufficientBalance(CCPCharacter character)
         {
-            var notification = new Notification(NotificationCategory.InsufficientBalance, character);
-            notification.Description = "This character has insufficient balance to fulfill its buying orders.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Warning;
+            var notification = new Notification(NotificationCategory.InsufficientBalance, character)
+            {
+                Description = "This character has insufficient balance to fulfill its buying orders.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
         #endregion
@@ -348,10 +372,12 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyInsufficientClone(CCPCharacter character)
         {
-            var notification = new Notification(NotificationCategory.InsufficientClone, character);
-            notification.Description = "This character has an insufficient clone.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Warning;
+            var notification = new Notification(NotificationCategory.InsufficientClone, character)
+            {
+                Description = "This character has an insufficient clone.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
         #endregion
@@ -365,9 +391,11 @@ namespace EVEMon.Common
         /// <param name="skillsCompleted"></param>
         internal void NotifySkillCompletion(CCPCharacter character, List<QueuedSkill> skillsCompleted)
         {
-            var notification = new SkillCompletionNotification(character, skillsCompleted);
-            notification.Behaviour = NotificationBehaviour.Merge;
-            notification.Priority = NotificationPriority.Information;
+            var notification = new SkillCompletionNotification(character, skillsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
         #endregion
@@ -391,20 +419,24 @@ namespace EVEMon.Common
             string text = String.Empty;
             switch(status)
             {
-                default:
-                    return;
                 case ServerStatus.Offline:
                     text = "Tranquility is offline.";
                     break;
                 case ServerStatus.Online:
                     text = "Tranquility is online.";
                     break;
+                case ServerStatus.CheckDisabled:
+                case ServerStatus.Unknown:
+                default:
+                    return;
             }
 
-            var notification = new Notification(NotificationCategory.ServerStatusChange, null);
-            notification.Description = text;
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Information;
+            var notification = new Notification(NotificationCategory.ServerStatusChange, null)
+            {
+                Description = text,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
         #endregion
@@ -425,10 +457,12 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyIgbServiceException(int port)
         {
-            var notification = new Notification(NotificationCategory.IgbServiceException, null);
-            notification.Description = String.Format(CultureConstants.DefaultCulture, "Failed to start the IGB server on port {0}.", port);
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new Notification(NotificationCategory.IgbServiceException, null)
+            {
+                Description = String.Format(CultureConstants.DefaultCulture,"Failed to start the IGB server on port {0}.", port),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
         #endregion 
@@ -442,9 +476,11 @@ namespace EVEMon.Common
         /// <param name="expiredOrders"></param>
         internal void NotifyMarkerOrdersEnding(Character character, List<MarketOrder> expiredOrders)
         {
-            var notification = new MarketOrdersNotification(character, expiredOrders);
-            notification.Behaviour = NotificationBehaviour.Merge;
-            notification.Priority = NotificationPriority.Information;
+            var notification = new MarketOrdersNotification(character, expiredOrders)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
         #endregion
@@ -458,9 +494,11 @@ namespace EVEMon.Common
         /// <param name="expiredOrders"></param>
         internal void NotifyIndustryJobCompletion(Character character, List<IndustryJob> jobsCompleted)
         {
-            var notification = new IndustryJobsNotification(character, jobsCompleted);
-            notification.Behaviour = NotificationBehaviour.Merge;
-            notification.Priority = NotificationPriority.Information;
+            var notification = new IndustryJobsNotification(character, jobsCompleted)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
             Notify(notification);
         }
         #endregion
@@ -482,10 +520,11 @@ namespace EVEMon.Common
         /// <param name="expiredOrders"></param>
         internal void NotifySkillQueueRoomAvailable(Character character)
         {
-            var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character);
-            notification.Description = "This character has free room in the skill queue.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Warning;
+            var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character)
+            {
+                Description = "This character has free room in the skill queue.",
+                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Warning
+            };
             Notify(notification);
         }
         #endregion
