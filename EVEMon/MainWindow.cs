@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -54,11 +53,11 @@ namespace EVEMon
         {
             InitializeComponent();
             Program.MainWindow = this;
-            this.RememberPositionKey = "MainWindow";
+            RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
 
-            tcCharacterTabs.SelectedIndexChanged += new EventHandler(tcCharacterTabs_SelectedIndexChanged);
-            overview.CharacterClicked += new EventHandler<CharacterChangedEventArgs>(overview_CharacterClicked);
+            tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
+            overview.CharacterClicked += overview_CharacterClicked;
             tcCharacterTabs.TabPages.Remove(tpOverview);
 
             DisplayTestMenu();
@@ -76,10 +75,10 @@ namespace EVEMon
             // Start minimized ?
             if (m_startMinimized)
             {
-                this.WindowState = FormWindowState.Minimized;
-                this.ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
+                WindowState = FormWindowState.Minimized;
+                ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
                                     || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
-                this.Visible = this.ShowInTaskbar;
+                Visible = ShowInTaskbar;
             }
 
             TriggerAutoShrink();
@@ -88,7 +87,7 @@ namespace EVEMon
         /// <summary>
         /// Forces cleanup, we will jump from 50MB to less than 10MB.
         /// </summary>
-        private void TriggerAutoShrink()
+        private static void TriggerAutoShrink()
         {
             AutoShrink.Dirty(TimeSpan.FromSeconds(5));
         }
@@ -103,27 +102,27 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode)
+            if (DesignMode)
                 return;
 
-            this.Visible = false;
+            Visible = false;
             trayIcon.Text = Application.ProductName;
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
                             && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                            || this.WindowState == FormWindowState.Minimized);
+                            || WindowState == FormWindowState.Minimized);
 
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
             standardToolStripMenuItem.Checked = standardToolbar.Visible = Settings.UI.MainWindow.ShowToolBar;
 
             // Subscribe events
-            EveClient.NotificationSent += new EventHandler<Notification>(EveClient_NotificationSent);
-            EveClient.NotificationInvalidated += new EventHandler<NotificationInvalidationEventArgs>(EveClient_NotificationInvalidated);
-            EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
-            EveClient.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(EveClient_ServerStatusUpdated);
-            EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
+            EveClient.NotificationSent += EveClient_NotificationSent;
+            EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
+            EveClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
+            EveClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
+            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.TimerTick += EveClient_TimerTick;
 
             // Initialize all of our business objects
             EveClient.Run(this);
@@ -152,7 +151,7 @@ namespace EVEMon
         /// Check for time synchronization, or reschedule it for later if no connection is available.
         /// </summary>
         /// <param name="um"></param>
-        private void CheckTimeSynchronization()
+        private static void CheckTimeSynchronization()
         {
             // Do it now if network available.
             if (NetworkMonitor.IsNetworkAvailable)
@@ -192,11 +191,11 @@ namespace EVEMon
             UpdateNotifications();
             
             // Updates tray icon visibility
-            if (this.WindowState == FormWindowState.Minimized && Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
+            if (WindowState == FormWindowState.Minimized && Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
             {
                 trayIcon.Visible = Settings.UI.MainWindowCloseBehaviour != CloseBehaviour.MinimizeToTaskbar
                                 || Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled;
-                this.Visible = (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar);
+                Visible = (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar);
             }
         }
 
@@ -209,9 +208,9 @@ namespace EVEMon
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Is there a reason that we should really close the window
-            if (this.Visible &&                                                 // and main form is visible
-                !this.m_isUpdating &&                                           // and code auto-update not currently in process   
-                !this.m_isUpdatingData &&                                       // and data auto-update not currently in process
+            if (Visible &&                                                 // and main form is visible
+                !m_isUpdating &&                                           // and code auto-update not currently in process   
+                !m_isUpdatingData &&                                       // and data auto-update not currently in process
                 !(e.CloseReason == CloseReason.ApplicationExitCall) &&          // and Application.Exit() was not called
                 !(e.CloseReason == CloseReason.TaskManagerClosing) &&           // and the user isn't trying to shut the program down for some reason
                 !(e.CloseReason == CloseReason.WindowsShutDown))                // and Windows is not shutting down
@@ -222,13 +221,13 @@ namespace EVEMon
                     // If the user has right clicked the task bar item item while
                     // this window is minimized, and chosen close then then the
                     // following will evaluate to false and EVEMon will close.
-                    if (this.WindowState != FormWindowState.Minimized)
+                    if (WindowState != FormWindowState.Minimized)
                     {
                         // Cancel the close operation and minimize the window
                         // Display of the tray icon and window will be handled by 
                         // MainWindow_Resize
                         e.Cancel = true;
-                        this.WindowState = FormWindowState.Minimized;
+                        WindowState = FormWindowState.Minimized;
                     }
                 }
             }
@@ -257,7 +256,7 @@ namespace EVEMon
         private void MainWindow_Deactivate(object sender, EventArgs e)
         {
             // Only cleanup if we're deactivating to the minimized state (e.g. systray)
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
                 TriggerAutoShrink();
         }
 
@@ -395,12 +394,14 @@ namespace EVEMon
         /// Creates the tab for the given character.
         /// </summary>
         /// <param name="character">The character</param>
-        private TabPage CreateTab(Character character)
+        private static TabPage CreateTab(Character character)
         {
-            TabPage page = new TabPage(character.Name);
-            page.UseVisualStyleBackColor = true;
-            page.Padding = new Padding(5);
-            page.Tag = character;
+            TabPage page = new TabPage(character.Name)
+            {
+                UseVisualStyleBackColor = true,
+                Padding = new Padding(5),
+                Tag = character
+            };
 
             return page;
         }
@@ -450,7 +451,6 @@ namespace EVEMon
                 monitor.Parent = page;
                 monitor.Dock = DockStyle.Fill;
             }
-
 
             // Enabled or disables the menus
             bool hasCharacterSelected = (GetCurrentCharacter() != null);
@@ -750,7 +750,7 @@ namespace EVEMon
         /// Checks whether a sound must be played on skill training.
         /// </summary>
         /// <returns></returns>
-        private void TryPlaySkillCompletionSound()
+        private static void TryPlaySkillCompletionSound()
         {
             // Returns if the user disabled the option
             if (!Settings.Notifications.PlaySoundOnSkillCompletion)
@@ -793,7 +793,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateStatusLabel()
         {
-            if (this.WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
                 return;
 
             DateTime now = DateTime.Now.ToUniversalTime();
@@ -807,20 +807,20 @@ namespace EVEMon
         /// <param name="e"></param>
         private void UpdateWindowTitle()
         {
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             // If character's trainings must be displayed in title
             if (!Settings.UI.MainWindow.ShowCharacterInfoInTitleBar)
             {
-                this.Text = Application.ProductName;
+                Text = Application.ProductName;
                 return;
             }
 
             StringBuilder builder;
 
             // Retrieve the selected character
-            CCPCharacter selectedChar = this.GetCurrentCharacter() as CCPCharacter;
+            CCPCharacter selectedChar = GetCurrentCharacter() as CCPCharacter;
 
             int trimTimeSpanComponents = 0;
 
@@ -905,7 +905,7 @@ namespace EVEMon
                 builder.Append(appSuffix);
 
             // Set the window title
-            this.Text = builder.ToString();
+            Text = builder.ToString();
         }
 
         /// <summary>
@@ -946,7 +946,7 @@ namespace EVEMon
         /// <param name="builder"></param>
         /// <param name="character"></param>
         /// <param name="time"></param>
-        private string AppendCharacterTrainingTime(CCPCharacter character, TimeSpan time)
+        private static string AppendCharacterTrainingTime(CCPCharacter character, TimeSpan time)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -971,9 +971,9 @@ namespace EVEMon
         private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             // Ensure it is invoked on the proper thread.
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
+                Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
                 return;
             }
 
@@ -996,7 +996,7 @@ namespace EVEMon
                 {
                     m_isUpdating = true;
                     Settings.SaveImmediate();
-                    this.Close();
+                    Close();
                 }
             }
             m_isShowingUpdateWindow = false;
@@ -1033,7 +1033,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="executable">Executable to start (i.e. EVEMon.exe).</param>
         /// <param name="arguments">Arguments to pass to the executable.</param>
-        private void StartProcess(string executable, string[] arguments)
+        private static void StartProcess(string executable, string[] arguments)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
@@ -1042,12 +1042,10 @@ namespace EVEMon
                 UseShellExecute = false
             };
 
-            Process evemonProc = new Process()
+            using (Process evemonProc = new Process { StartInfo = startInfo })
             {
-                StartInfo = startInfo
-            };
-
-            evemonProc.Start();
+                evemonProc.Start();
+            }
         }
 
         /// <summary>
@@ -1058,9 +1056,9 @@ namespace EVEMon
         private void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
         {
             // Ensure it is invoked on the proper thread.
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
+                Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
                 return;
             }
 
@@ -1217,11 +1215,11 @@ namespace EVEMon
         /// <param name="e"></param>
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Visible = true;
-            this.WindowState = FormWindowState.Normal;
-            this.ShowInTaskbar = true;
-            this.Activate();
-            this.trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
+            Visible = true;
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            Activate();
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
         }
 
         /// <summary>
@@ -1467,8 +1465,7 @@ namespace EVEMon
             }
 
             // Create a new plan
-            Plan newPlan = new Plan(character);
-            newPlan.Name = planName;
+            Plan newPlan = new Plan(character) { Name = planName };
 
             // Add plan and save
             character.Plans.Add(newPlan);
@@ -1565,7 +1562,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void toolbarContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void toolbarContext_Opening(object sender, CancelEventArgs e)
         {
             menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
@@ -1662,9 +1659,10 @@ namespace EVEMon
                 Rectangle instanceDimensions = Relocator.GetWindowDimensions(eveInstance);
                 
                 // Relocator menu disabled when autorelocate is active or client is minimized
-                var instanceMenu = new ToolStripMenuItem(windowDescription);
-                instanceMenu.Enabled = !((instanceDimensions.Height == 0) && (instanceDimensions.Width == 0))
-                    && !Relocator.AutoRelocationEnabled;
+                var instanceMenu = new ToolStripMenuItem(windowDescription)
+                {
+                    Enabled = !((instanceDimensions.Height == 0) && (instanceDimensions.Width == 0)) && !Relocator.AutoRelocationEnabled
+                };
 
                 var instanceCopy = eveInstance;
 
@@ -1692,8 +1690,10 @@ namespace EVEMon
             // Displays a "no window" message when there were no windows opened
             if (!foundAny)
             {
-                var menu = new ToolStripMenuItem("No EVE clients are running.");
-                menu.Enabled = false;
+                var menu = new ToolStripMenuItem("No EVE clients are running.")
+                {
+                    Enabled = false
+                };
                 rootMenu.DropDownItems.Add(menu);
             }
         }
@@ -1726,14 +1726,14 @@ namespace EVEMon
                 return;
 
             // Update the tray icon's visibility
-            this.trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
             HidePopup();
 
             // Restore the main window
-            this.Visible = true;
-            this.WindowState = FormWindowState.Normal;
-            this.ShowInTaskbar = true;
-            this.Activate();
+            Visible = true;
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            Activate();
         }
 
         /// <summary>
@@ -1827,7 +1827,7 @@ namespace EVEMon
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
                             && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                            || this.WindowState == FormWindowState.Minimized);
+                            || WindowState == FormWindowState.Minimized);
 
             // Relocate window
             relocatorMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
@@ -1842,15 +1842,15 @@ namespace EVEMon
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
-                UpdateManager.UpdateAvailable += new UpdateAvailableHandler(OnUpdateAvailable);
-                UpdateManager.DataUpdateAvailable += new DataUpdateAvailableHandler(OnDataUpdateAvailable);
+                UpdateManager.UpdateAvailable += OnUpdateAvailable;
+                UpdateManager.DataUpdateAvailable += OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = true;
             }
 
             if (!Settings.Updates.CheckEVEMonVersion && m_isUpdateEventsSubscribed)
             {
-                UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(OnUpdateAvailable);
-                UpdateManager.DataUpdateAvailable -= new DataUpdateAvailableHandler(OnDataUpdateAvailable);
+                UpdateManager.UpdateAvailable -= OnUpdateAvailable;
+                UpdateManager.DataUpdateAvailable -= OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = false;
             }
 
@@ -1928,7 +1928,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Thrown an exception with an inner excetpion just to test the exception handler is working.
+        /// Thrown an exception with an inner exception just to test the exception handler is working.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1944,10 +1944,12 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var notification = new Notification(NotificationCategory.TestNofitication, null);
-            notification.Priority = NotificationPriority.Information;
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Description = "Test Notification";
+            var notification = new Notification(NotificationCategory.TestNofitication, null)
+            {
+                Priority = NotificationPriority.Information,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Description = "Test Notification"
+            };
             EveClient.Notifications.Notify(notification);
         }
 
@@ -1961,6 +1963,19 @@ namespace EVEMon
             var monitor = GetCurrentMonitor();
             monitor.TestCharacterNotification();
         }
+
+        /// <summary>
+        /// Handles the Click event of the testTimeoutOneSecToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void testTimeoutOneSecToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(String.Format("Timeout Was: {0}, now 1", Settings.Updates.HttpTimeout));
+            Settings.Updates.HttpTimeout = 1;
+        }
+
         #endregion
+
     }
 }

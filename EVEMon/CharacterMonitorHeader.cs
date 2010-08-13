@@ -30,18 +30,18 @@ namespace EVEMon
             InitializeComponent();
 
             // fonts
-            this.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             // layout
-            this.Height = MainTableLayoutPanel.Height;
+            Height = MainTableLayoutPanel.Height;
 
             // subscribe to events
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_MarketOrdersChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterMarketOrdersChanged += EveClient_MarketOrdersChanged;
+            Disposed += OnDisposed;
         }
 
         #endregion
@@ -83,7 +83,7 @@ namespace EVEMon
 
             try
             {
-                this.SuspendLayout();
+                SuspendLayout();
                 RefreshThrobber();
 
                 // only update the skill summary when the skill points change
@@ -94,7 +94,7 @@ namespace EVEMon
             }
             finally
             {
-                this.ResumeLayout();
+                ResumeLayout();
             }
         }
 
@@ -108,7 +108,7 @@ namespace EVEMon
 
             try
             {
-                this.SuspendLayout();
+                SuspendLayout();
 
                 // safe for work implementation
                 MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
@@ -125,7 +125,7 @@ namespace EVEMon
             }
             finally
             {
-                this.ResumeLayout();
+                ResumeLayout();
             }
         }
 
@@ -335,12 +335,12 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Removes the monitor menu items and seperator.
+        /// Removes the monitor menu items and separator.
         /// </summary>
         /// <param name="contextMenu">The context menu.</param>
         private void RemoveMonitorMenuItems(ContextMenuStrip contextMenu)
         {
-            // Remove all the items after the seperator including the separator
+            // Remove all the items after the separator including the separator
             int separatorIndex = contextMenu.Items.IndexOf(ThrobberSeparator);
             while (separatorIndex > -1 && separatorIndex < contextMenu.Items.Count)
             {
@@ -427,38 +427,19 @@ namespace EVEMon
         /// <returns>New menu item for a monitor.</returns>
         private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
-            TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
             string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} {1}", monitor.ToString(), GenerateTimeToNextUpdateText(monitor));
 
-            var menu = new ToolStripMenuItem(menuText);
-            menu.Tag = (object)monitor.Method;
-            menu.Enabled = !monitor.ForceUpdateWillCauseError;
+            var menu = new ToolStripMenuItem(menuText)
+            {
+                Tag = (object)monitor.Method,
+                Enabled = !monitor.ForceUpdateWillCauseError
+            };
 
             return menu;
         }
 
         /// <summary>
-        /// Should the balance alert be shown for the specified character.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <returns>
-        /// 	<c>true</c> if the balance alert should be displayed for the specified character; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsBalanceAlertShown(Character character)
-        {
-            // we implement this as a function rather than just by
-            // calling CCPCharacter.HasSufficentBalance so that we can
-            // insert balance alerts for other items in the future.
-            var ccpChararacter = character as CCPCharacter;
-
-            if (ccpChararacter == null)
-                return true;
-
-            return !ccpChararacter.HasSufficientBalance;
-        }
-
-        /// <summary>
-        /// Gets the attibute text for a character.
+        /// Gets the attribute text for a character.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="eveAttribute">The eve attribute.</param>
@@ -501,14 +482,14 @@ namespace EVEMon
         #region Event Handlers
 
         /// <summary>
-        /// Occurs when visiblility changes.
+        /// Occurs when visibility changes.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
             base.OnVisibleChanged(e);
 
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             UpdateInfrequentControls();
@@ -521,11 +502,11 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_MarketOrdersChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterMarketOrdersChanged -= EveClient_MarketOrdersChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -536,7 +517,7 @@ namespace EVEMon
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
             // no need to do this if control is not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             UpdateFrequentControls();
@@ -550,7 +531,7 @@ namespace EVEMon
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
             // no need to do this if control is not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             UpdateInfrequentControls();
@@ -564,7 +545,7 @@ namespace EVEMon
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
             // no need to do this if control is not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             UpdateInfrequentControls();
@@ -578,7 +559,7 @@ namespace EVEMon
         private void EveClient_MarketOrdersChanged(object sender, CharacterChangedEventArgs e)
         {
             // no need to do this if control is not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             FormatBalance();
@@ -749,8 +730,8 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void CharacterMonitorHeader_Resize(object sender, EventArgs e)
         {
-            this.Height = MainTableLayoutPanel.Height;
-            MainTableLayoutPanel.Width = this.Width;
+            Height = MainTableLayoutPanel.Height;
+            MainTableLayoutPanel.Width = Width;
         }
 
         /// <summary>

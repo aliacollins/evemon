@@ -331,6 +331,7 @@
     <Compile Include="Pricer.cs" />
     <Compile Include="QueryMonitor.cs" />
     <Compile Include="QueryMonitorCollection.cs" />
+    <Compile Include="Serialization\API\APIErrors.cs" />
     <Compile Include="Serialization\API\IAPIResult.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIJob.cs" />

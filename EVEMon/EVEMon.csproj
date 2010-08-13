@@ -126,11 +126,17 @@
     <Compile Include="Accounting\FeaturesWindow.Designer.cs">
       <DependentUpon>FeaturesWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="APIErrorWindow.cs">
+    <Compile Include="ApiErrorHandling\APIErrorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="APIErrorWindow.Designer.cs">
+    <Compile Include="ApiErrorHandling\APIErrorWindow.Designer.cs">
       <DependentUpon>APIErrorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApiErrorHandling\HttpTimeoutTroubleshooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ApiErrorHandling\HttpTimeoutTroubleshooter.Designer.cs">
+      <DependentUpon>HttpTimeoutTroubleshooter.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitor.cs">
       <SubType>UserControl</SubType>
@@ -1049,9 +1055,11 @@
       <DependentUpon>FeaturesWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="APIErrorWindow.resx">
+    <EmbeddedResource Include="ApiErrorHandling\APIErrorWindow.resx">
       <DependentUpon>APIErrorWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApiErrorHandling\HttpTimeoutTroubleshooter.resx">
+      <DependentUpon>HttpTimeoutTroubleshooter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitorHeader.resx">
       <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>

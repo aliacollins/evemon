@@ -1,4 +1,4 @@
-﻿namespace EVEMon
+﻿namespace EVEMon.ApiErrorHandling
 {
     partial class APIErrorWindow
     {
@@ -30,12 +30,13 @@
         {
             this.errorLabel = new System.Windows.Forms.Label();
             this.iconPictureBox = new System.Windows.Forms.PictureBox();
+            this.errorTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.detailsPanel = new EVEMon.Controls.BorderPanel();
             this.detailsTextBox = new System.Windows.Forms.TextBox();
-            this.errorTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.TroubleshooterPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
-            this.detailsPanel.SuspendLayout();
             this.errorTableLayoutPanel.SuspendLayout();
+            this.detailsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // errorLabel
@@ -59,6 +60,23 @@
             this.iconPictureBox.TabIndex = 0;
             this.iconPictureBox.TabStop = false;
             // 
+            // errorTableLayoutPanel
+            // 
+            this.errorTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.errorTableLayoutPanel.AutoSize = true;
+            this.errorTableLayoutPanel.ColumnCount = 2;
+            this.errorTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.414449F));
+            this.errorTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 92.58555F));
+            this.errorTableLayoutPanel.Controls.Add(this.errorLabel, 1, 0);
+            this.errorTableLayoutPanel.Controls.Add(this.iconPictureBox, 0, 0);
+            this.errorTableLayoutPanel.Location = new System.Drawing.Point(13, 12);
+            this.errorTableLayoutPanel.Name = "errorTableLayoutPanel";
+            this.errorTableLayoutPanel.RowCount = 1;
+            this.errorTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.errorTableLayoutPanel.Size = new System.Drawing.Size(526, 39);
+            this.errorTableLayoutPanel.TabIndex = 3;
+            // 
             // detailsPanel
             // 
             this.detailsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -66,6 +84,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.detailsPanel.BackColor = System.Drawing.SystemColors.Window;
             this.detailsPanel.Controls.Add(this.detailsTextBox);
+            this.detailsPanel.Controls.Add(this.TroubleshooterPanel);
             this.detailsPanel.ForeColor = System.Drawing.Color.Gray;
             this.detailsPanel.Location = new System.Drawing.Point(13, 66);
             this.detailsPanel.Margin = new System.Windows.Forms.Padding(0);
@@ -84,24 +103,19 @@
             this.detailsTextBox.Name = "detailsTextBox";
             this.detailsTextBox.ReadOnly = true;
             this.detailsTextBox.Size = new System.Drawing.Size(520, 360);
-            this.detailsTextBox.TabIndex = 1;
+            this.detailsTextBox.TabIndex = 3;
             // 
-            // errorTableLayoutPanel
+            // TroubleshooterPanel
             // 
-            this.errorTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorTableLayoutPanel.AutoSize = true;
-            this.errorTableLayoutPanel.ColumnCount = 2;
-            this.errorTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.414449F));
-            this.errorTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 92.58555F));
-            this.errorTableLayoutPanel.Controls.Add(this.errorLabel, 1, 0);
-            this.errorTableLayoutPanel.Controls.Add(this.iconPictureBox, 0, 0);
-            this.errorTableLayoutPanel.Location = new System.Drawing.Point(13, 12);
-            this.errorTableLayoutPanel.Name = "errorTableLayoutPanel";
-            this.errorTableLayoutPanel.RowCount = 1;
-            this.errorTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.errorTableLayoutPanel.Size = new System.Drawing.Size(526, 39);
-            this.errorTableLayoutPanel.TabIndex = 3;
+            this.TroubleshooterPanel.AutoSize = true;
+            this.TroubleshooterPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.TroubleshooterPanel.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.TroubleshooterPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.TroubleshooterPanel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TroubleshooterPanel.Location = new System.Drawing.Point(3, 3);
+            this.TroubleshooterPanel.Name = "TroubleshooterPanel";
+            this.TroubleshooterPanel.Size = new System.Drawing.Size(520, 0);
+            this.TroubleshooterPanel.TabIndex = 2;
             // 
             // APIErrorWindow
             // 
@@ -114,10 +128,10 @@
             this.Name = "APIErrorWindow";
             this.Text = "API Error Details";
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
-            this.detailsPanel.ResumeLayout(false);
-            this.detailsPanel.PerformLayout();
             this.errorTableLayoutPanel.ResumeLayout(false);
             this.errorTableLayoutPanel.PerformLayout();
+            this.detailsPanel.ResumeLayout(false);
+            this.detailsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,8 +141,9 @@
 
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.PictureBox iconPictureBox;
-        private System.Windows.Forms.TextBox detailsTextBox;
         private EVEMon.Controls.BorderPanel detailsPanel;
         private System.Windows.Forms.TableLayoutPanel errorTableLayoutPanel;
+        private System.Windows.Forms.TextBox detailsTextBox;
+        private System.Windows.Forms.Panel TroubleshooterPanel;
     }
 }

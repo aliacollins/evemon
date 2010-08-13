@@ -954,10 +954,12 @@ namespace EVEMon
         /// </summary>
         internal void TestCharacterNotification()
         {
-            var notification = new Notification(NotificationCategory.TestNofitication, m_character);
-            notification.Priority = NotificationPriority.Warning;
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Description = "Test Character Notification.";
+            var notification = new Notification(NotificationCategory.TestNofitication, m_character)
+            {
+                Priority = NotificationPriority.Warning, 
+                Behaviour = NotificationBehaviour.Overwrite,
+                Description = "Test Character Notification."
+            };
             EveClient.Notifications.Notify(notification);
         }
 

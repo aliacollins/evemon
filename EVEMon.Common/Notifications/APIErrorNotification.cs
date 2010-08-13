@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Notifications
@@ -35,6 +33,5 @@ namespace EVEMon.Common.Notifications
         {
             get { return true; }
         }
-
     }
 }

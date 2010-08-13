@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization;
+using System.Xml.Xsl;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -12,7 +10,8 @@ namespace EVEMon.Common.Serialization.API
     public sealed class APIResult<T> : IAPIResult
     {
         private APIErrors m_error = APIErrors.None;
-        private readonly string m_errorMessage = String.Empty;
+        private readonly string m_errorMessage;
+        private readonly Exception m_exception;
 
         #region Constructors
         /// <summary>
@@ -22,53 +21,70 @@ namespace EVEMon.Common.Serialization.API
         {
             m_error = APIErrors.None;
             m_errorMessage = String.Empty;
+            m_exception = null;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="APIResult&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="exc">The exception.</param>
+        private APIResult(Exception exc)
+        {
+            m_errorMessage = exc.Message;
+            m_exception = exc;
         }
 
         /// <summary>
         /// Constructor from an http exception
         /// </summary>
+        /// <param name="exc">The exception.</param>
         public APIResult(HttpWebServiceException exc)
+            : this(exc as Exception)
         {
             m_error = APIErrors.Http;
-            m_errorMessage = exc.Message;
         }
 
         /// <summary>
         /// Constructor from an XML exception
         /// </summary>
+        /// <param name="exc">The exception.</param>
         public APIResult(XmlException exc)
+            : this((Exception)exc)
         {
             m_error = APIErrors.Xml;
-            m_errorMessage = exc.Message;
         }
 
         /// <summary>
         /// Constructor from an XSLT exception
         /// </summary>
-        public APIResult(System.Xml.Xsl.XsltException exc)
+        /// <param name="exc">The exception.</param>
+        public APIResult(XsltException exc)
+            : this(exc as Exception)
         {
             m_error = APIErrors.Xslt;
-            m_errorMessage = exc.Message;
         }
 
         /// <summary>
         /// Constructor from an XML serialization exception wrapped into an InvalidOperationException
         /// </summary>
+        /// <param name="exc">The exception.</param>
         public APIResult(InvalidOperationException exc)
         {
             m_error = APIErrors.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
+            m_exception = exc;
         }
 
         /// <summary>
         /// Constructor from a custom exception.
         /// </summary>
-        /// <param name="error"></param>
-        /// <param name="message"></param>
+        /// <param name="error">The error.</param>
+        /// <param name="message">The message.</param>
         public APIResult(APIErrors error, string message)
         {
             m_error = error;
             m_errorMessage = message;
+            m_exception = null;
         }
         #endregion
 
@@ -92,7 +108,9 @@ namespace EVEMon.Common.Serialization.API
         {
             get 
             {
-                if (CCPError != null) return true;
+                if (CCPError != null)
+                    return true;
+
                 return m_error != APIErrors.None; 
             }
         }
@@ -104,9 +122,20 @@ namespace EVEMon.Common.Serialization.API
         {
             get 
             {
-                if (CCPError != null) return APIErrors.CCP;
+                if (CCPError != null)
+                    return APIErrors.CCP;
+
                 return m_error; 
             }
+        }
+
+        /// <summary>
+        /// Gets the exception.
+        /// </summary>
+        /// <value>The exception.</value>
+        public Exception Exception
+        {
+            get { return m_exception; }
         }
 
         /// <summary>
@@ -228,44 +257,15 @@ namespace EVEMon.Common.Serialization.API
             }
 
             // Now fix the server time to align with local time
-            this.CurrentTime -= drift;
-            this.CachedUntil -= drift;
+            CurrentTime -= drift;
+            CachedUntil -= drift;
 
             // Fix the TQ start/end times first
             ISynchronizableWithLocalClock synchronizable = ((Object)Result) as ISynchronizableWithLocalClock;
-            if (synchronizable != null) synchronizable.SynchronizeWithLocalClock(drift);
-
+            
+            if (synchronizable != null)
+                synchronizable.SynchronizeWithLocalClock(drift);
         }
         #endregion
     }
-
-
-
-    /// <summary>
-    /// Represents the category of error which can occur with the API.
-    /// </summary>
-    public enum APIErrors
-    {
-        /// <summary>
-        /// There was no error.
-        /// </summary>
-        None,
-        /// <summary>
-        /// The error was caused by the network.
-        /// </summary>
-        Http,
-        /// <summary>
-        /// The error occured during the XSL transformation.
-        /// </summary>
-        Xslt,
-        /// <summary>
-        /// The error occured during the XML deserialization.
-        /// </summary>
-        Xml,
-        /// <summary>
-        /// It was a managed CCP error.
-        /// </summary>
-        CCP
-    }
-
 }

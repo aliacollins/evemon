@@ -119,46 +119,46 @@ namespace EVEMon.Common.Net
                     {
                         case HttpStatusCode.ProxyAuthenticationRequired:
                             status = HttpWebServiceExceptionStatus.ProxyError;
-                            messageBuilder.AppendLine(
-                                String.Format(ExceptionMessages.ProxyAuthenticationFailure,
-                                              proxyHost, GetHostName(url)));
+                            messageBuilder.AppendFormat(
+                                ExceptionMessages.ProxyAuthenticationFailure,
+                                proxyHost, GetHostName(url));
                             break;
 
                         default:
                             status = HttpWebServiceExceptionStatus.ServerError;
-                            messageBuilder.AppendLine(
-                                String.Format(ExceptionMessages.ServerError, GetHostName(url)));
+                            messageBuilder.AppendFormat(ExceptionMessages.ServerError,
+                                GetHostName(url));
                             messageBuilder.AppendLine(response.StatusDescription);
                             break;
                     }
                     break;
                 case WebExceptionStatus.ProxyNameResolutionFailure:
                     status = HttpWebServiceExceptionStatus.ProxyError;
-                    messageBuilder.AppendLine(
-                        String.Format(ExceptionMessages.ProxyNameResolutionFailure, proxyHost));
+                    messageBuilder.AppendFormat(
+                        ExceptionMessages.ProxyNameResolutionFailure, proxyHost);
                     break;
                 case WebExceptionStatus.RequestProhibitedByProxy:
                     status = HttpWebServiceExceptionStatus.ProxyError;
-                    messageBuilder.AppendLine(
-                        String.Format(ExceptionMessages.RequestProhibitedByProxy, GetHostName(url), proxyHost));
+                    messageBuilder.AppendFormat(ExceptionMessages.RequestProhibitedByProxy,
+                        GetHostName(url), proxyHost);
                     break;
                 case WebExceptionStatus.NameResolutionFailure:
                     status = HttpWebServiceExceptionStatus.NameResolutionFailure;
-                    messageBuilder.AppendLine(
-                        String.Format(ExceptionMessages.NameResolutionFailure, proxyHost));
+                    messageBuilder.AppendFormat(ExceptionMessages.NameResolutionFailure,
+                        proxyHost);
                     break;
                 case WebExceptionStatus.ConnectFailure:
                     status = HttpWebServiceExceptionStatus.ConnectFailure;
-                    messageBuilder.AppendLine(String.Format(ExceptionMessages.ConnectFailure, GetHostName(url)));
+                    messageBuilder.AppendFormat(ExceptionMessages.ConnectFailure, GetHostName(url));
                     break;
                 case WebExceptionStatus.Timeout:
                     status = HttpWebServiceExceptionStatus.Timeout;
-                    messageBuilder.AppendLine(String.Format(ExceptionMessages.Timeout, GetHostName(url)));
+                    messageBuilder.AppendFormat(ExceptionMessages.Timeout, GetHostName(url));
                     break;
                 default:
                     status = HttpWebServiceExceptionStatus.WebException;
-                    messageBuilder.AppendLine(
-                        String.Format(ExceptionMessages.UnknownWebException, GetHostName(url), ex.Status));
+                    messageBuilder.AppendFormat(ExceptionMessages.UnknownWebException,
+                        GetHostName(url), ex.Status);
                     break;
             }
 

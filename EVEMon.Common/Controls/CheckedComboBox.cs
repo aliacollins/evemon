@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Diagnostics;
-using EVEMon.Common;
 using System.ComponentModel;
 using System.Drawing.Design;
 
@@ -26,10 +23,9 @@ namespace EVEMon.Common.Controls
             private int m_curSelIndex = -1;
 
             public CustomCheckedListBox()
-                : base()
             {
-                this.SelectionMode = SelectionMode.One;
-                this.HorizontalScrollbar = true;
+                SelectionMode = SelectionMode.One;
+                HorizontalScrollbar = true;
             }
 
             /// <summary>
@@ -82,70 +78,48 @@ namespace EVEMon.Common.Controls
         // The content of the popup
         private CustomCheckedListBox listBox;
 
-
-        private string valueSeparator;
-
         /// <summary>
         /// The valueSeparator character(s) between the ticked elements as they appear in the text portion of the CheckedComboBox.
         /// </summary> 
-        public string ValueSeparator
-        {
-            get { return valueSeparator; }
-            set { valueSeparator = value; }
-        }
+        public string ValueSeparator { get; set; }
 
         public bool CheckOnClick
         {
-            get { return this.listBox.CheckOnClick; }
-            set { this.listBox.CheckOnClick = value; }
+            get { return listBox.CheckOnClick; }
+            set { listBox.CheckOnClick = value; }
         }
 
         public new string DisplayMember
         {
-            get { return this.listBox.DisplayMember; }
-            set { this.listBox.DisplayMember = value; }
+            get { return listBox.DisplayMember; }
+            set { listBox.DisplayMember = value; }
         }
 
         public delegate string CheckedComboBoxTextBuilderDelegate(CheckedComboBox box);
-        private CheckedComboBoxTextBuilderDelegate customTextBuilder;
-        public CheckedComboBoxTextBuilderDelegate CustomTextBuilder
-        {
-            get { return customTextBuilder; }
-            set { customTextBuilder = value; }
-        }
+        public CheckedComboBoxTextBuilderDelegate CustomTextBuilder { get; set; }
 
-        private string textForAll;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public string TextForAll
-        {
-            get { return this.textForAll; }
-            set { this.textForAll = value; }
-        }
+        public string TextForAll { get; set; }
 
-        private string textForNone;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public string TextForNone
-        {
-            get { return this.textForNone; }
-            set { this.textForNone = value; }
-        }
+        public string TextForNone { get; set; }
 
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
         public new CheckedListBox.ObjectCollection Items
         {
-            get { return this.listBox.Items; }
+            get { return listBox.Items; }
         }
 
         public CheckedListBox.CheckedItemCollection CheckedItems
         {
-            get { return this.listBox.CheckedItems; }
+            get { return listBox.CheckedItems; }
         }
 
         public CheckedListBox.CheckedIndexCollection CheckedIndices
         {
-            get { return this.listBox.CheckedIndices; }
+            get { return listBox.CheckedIndices; }
         }
 
         // Array holding the checked states of the items. This will be used to reverse any changes if user cancels selection.
@@ -159,21 +133,20 @@ namespace EVEMon.Common.Controls
         /// Constructor
         /// </summary>
         public CheckedComboBox()
-            : base()
         {
             // Default value separator.
-            this.textForAll = "All";
-            this.textForNone = "None";
-            this.valueSeparator = ", ";
-            this.Cursor = Cursors.Default;
-            this.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.DrawItem += new DrawItemEventHandler(CheckedComboBox_DrawItem);
+            TextForAll = "All";
+            TextForNone = "None";
+            ValueSeparator = ", ";
+            Cursor = Cursors.Default;
+            DropDownStyle = ComboBoxStyle.DropDownList;
+            DrawMode = DrawMode.OwnerDrawFixed;
+            DrawItem += CheckedComboBox_DrawItem;
 
             // CheckOnClick style for the dropdown (NOTE: must be set after dropdown is created).
-            this.CheckOnClick = true;
-            this.listBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listBox_ItemCheck);
-            this.listBox.IntegralHeight = false;
+            CheckOnClick = true;
+            listBox.ItemCheck += listBox_ItemCheck;
+            listBox.IntegralHeight = false;
         }
 
         /// <summary>
@@ -182,33 +155,33 @@ namespace EVEMon.Common.Controls
         /// <returns>The control to add to the popup</returns>
         protected override Control CreateContent()
         {
-            this.listBox = new CustomCheckedListBox();
-            this.listBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox.FormattingEnabled = true;
-            this.listBox.Location = new System.Drawing.Point(0, 0);
-            this.listBox.Name = "listBox";
-            this.listBox.Size = new System.Drawing.Size(47, 15);
-            this.listBox.TabIndex = 0;
-            return this.listBox;
+            listBox = new CustomCheckedListBox();
+            listBox.BorderStyle = BorderStyle.None;
+            listBox.Dock = DockStyle.Fill;
+            listBox.FormattingEnabled = true;
+            listBox.Location = new Point(0, 0);
+            listBox.Name = "listBox";
+            listBox.Size = new Size(47, 15);
+            listBox.TabIndex = 0;
+            return listBox;
         }
 
         public override string GetTextValue()
         {
-            if (this.listBox.CheckedItems.Count == 0) return this.textForNone;
-            if (this.listBox.CheckedItems.Count == this.listBox.Items.Count) return this.textForAll;
+            if (listBox.CheckedItems.Count == 0) return TextForNone;
+            if (listBox.CheckedItems.Count == listBox.Items.Count) return TextForAll;
 
-            if (this.customTextBuilder != null)
+            if (CustomTextBuilder != null)
             {
-                return this.customTextBuilder(this);
+                return CustomTextBuilder(this);
             }
             else
             {
                 StringBuilder sb = new StringBuilder("");
-                for (int i = 0; i < this.listBox.CheckedItems.Count; i++)
+                for (int i = 0; i < listBox.CheckedItems.Count; i++)
                 {
-                    if (i != 0) sb.Append(this.valueSeparator);
-                    sb.Append(this.listBox.GetItemText(this.listBox.CheckedItems[i]));
+                    if (i != 0) sb.Append(ValueSeparator);
+                    sb.Append(listBox.GetItemText(listBox.CheckedItems[i]));
                 }
                 return sb.ToString();
             }
@@ -220,22 +193,22 @@ namespace EVEMon.Common.Controls
             if (!validate)
             {
                 // Caller cancelled selection - need to restore the checked items to their original state.
-                for (int i = 0; i < this.listBox.Items.Count; i++)
+                for (int i = 0; i < listBox.Items.Count; i++)
                 {
-                    this.SetItemChecked(i, oldStates[i]);
+                    SetItemChecked(i, oldStates[i]);
                 }
             }
             // Set the text portion equal to the string comprising all checked items (if any, otherwise empty!).
-            this.Text = GetTextValue();
+            Text = GetTextValue();
         }
 
         protected override void OnDropDownActivated()
         {
             // Make a copy of the checked state of each item, in cace caller cancels selection.
-            oldStates = new bool[this.Items.Count];
-            for (int i = 0; i < this.Items.Count; i++)
+            oldStates = new bool[Items.Count];
+            for (int i = 0; i < Items.Count; i++)
             {
-                oldStates[i] = this.GetItemChecked(i);
+                oldStates[i] = GetItemChecked(i);
             }
 
             FitDropDownToContent();
@@ -243,10 +216,10 @@ namespace EVEMon.Common.Controls
 
         private void FitDropDownToContent()
         {
-            Size preferedSize = listBox.GetPreferredSize(new Size(this.Width, 600));
-            int width = Math.Max(preferedSize.Width, this.Width);
+            Size preferedSize = listBox.GetPreferredSize(new Size(Width, 600));
+            int width = Math.Max(preferedSize.Width, Width);
             int height = Math.Max(96, preferedSize.Height);
-            dropdown.MaximumSize = new Size(this.Width, height + 20);
+            dropdown.MaximumSize = new Size(Width, height + 20);
             dropdown.ClientSize = new Size(width, height);
             listBox.Refresh();
         }
@@ -259,7 +232,7 @@ namespace EVEMon.Common.Controls
             }
             else
             {
-                return this.listBox.GetItemChecked(index);
+                return listBox.GetItemChecked(index);
             }
         }
 
@@ -271,9 +244,9 @@ namespace EVEMon.Common.Controls
             }
             else
             {
-                this.listBox.SetItemChecked(index, isChecked);
+                listBox.SetItemChecked(index, isChecked);
                 // Need to update the Text.
-                this.Text = this.GetTextValue();
+                Text = GetTextValue();
             }
         }
 
@@ -285,7 +258,7 @@ namespace EVEMon.Common.Controls
             }
             else
             {
-                return this.listBox.GetItemCheckState(index);
+                return listBox.GetItemCheckState(index);
             }
         }
 
@@ -297,9 +270,9 @@ namespace EVEMon.Common.Controls
             }
             else
             {
-                this.listBox.SetItemCheckState(index, state);
+                listBox.SetItemCheckState(index, state);
                 // Need to update the Text.
-                this.Text = this.GetTextValue();
+                Text = GetTextValue();
             }
         }
 
@@ -312,7 +285,7 @@ namespace EVEMon.Common.Controls
                 try
                 {
                     manuallyFired = true;
-                    this.SetItemCheckState(e.Index, e.NewValue);
+                    SetItemCheckState(e.Index, e.NewValue);
                 }
                 finally
                 {
@@ -320,12 +293,12 @@ namespace EVEMon.Common.Controls
                 }
 
                 // Update the combobox's text
-                this.displayText = GetTextValue();
-                this.Invalidate();
+                displayText = GetTextValue();
+                Invalidate();
 
-                if (this.ItemCheck != null)
+                if (ItemCheck != null)
                 {
-                    this.ItemCheck(sender, e);
+                    ItemCheck(sender, e);
                 }
             }
         }
@@ -337,19 +310,19 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         void CheckedComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            using (Brush backBrush = new SolidBrush(this.BackColor))
+            using (Brush backBrush = new SolidBrush(BackColor))
             {
                 e.Graphics.FillRectangle(backBrush, e.Bounds);
             }
 
-            if (this.displayText != null)
+            if (displayText != null)
             {
-                using (Brush foreBrush = new SolidBrush(this.ForeColor))
+                using (Brush foreBrush = new SolidBrush(ForeColor))
                 {
                     const float offset = 3.0f;
-                    var size = e.Graphics.MeasureString(this.displayText, this.Font);
+                    var size = e.Graphics.MeasureString(displayText, Font);
                     var rect = new RectangleF(offset, (Bounds.Height - size.Height) * 0.5f, e.Bounds.Width - offset, size.Height);
-                    e.Graphics.DrawString(this.displayText, this.Font, foreBrush, rect, StringFormat.GenericTypographic);
+                    e.Graphics.DrawString(displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }
 
