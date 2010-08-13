@@ -203,4 +203,8 @@
   <data name="APICorporationIndustryJobs" xml:space="preserve">
     <value>/corp/IndustryJobs.xml.aspx</value>
   </data>
+  <data name="StackExchangeEveOnlineURL" xml:space="preserve">
+    <value>http://area51.stackexchange.com/proposals/3371/eve-online?referrer=YrSyuyuqKBzSZ2Kzwn8oXQ2</value>
+    <comment>URL For EVE Online Stack Exchange Site</comment>
+  </data>
 </root>

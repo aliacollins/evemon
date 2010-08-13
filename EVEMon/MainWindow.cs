@@ -1636,6 +1636,16 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Help - EVE Online Q&A
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void stackExchangeMenu_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.StackExchangeEveOnlineURL);
+        }
+
+        /// <summary>
         /// Menu bar > Relocator.
         /// </summary>
         /// <param name="sender"></param>

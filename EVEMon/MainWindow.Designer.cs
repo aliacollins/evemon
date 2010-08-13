@@ -122,6 +122,7 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
+            this.stackExchangeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -562,6 +563,7 @@ namespace EVEMon
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.knownProblemsMenuItem,
             this.userVoiceMenuItem,
+            this.stackExchangeMenu,
             this.forumsMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
             this.aboutMenuItem});
@@ -581,7 +583,7 @@ namespace EVEMon
             // 
             this.userVoiceMenuItem.Name = "userVoiceMenuItem";
             this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.userVoiceMenuItem.Text = "Suggest a Feature (UserVoice)";
+            this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
             this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
             // 
             // forumsMenuItem
@@ -917,6 +919,13 @@ namespace EVEMon
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             // 
+            // stackExchangeMenu
+            // 
+            this.stackExchangeMenu.Name = "stackExchangeMenu";
+            this.stackExchangeMenu.Size = new System.Drawing.Size(238, 22);
+            this.stackExchangeMenu.Text = "EVE Online &Q&&A";
+            this.stackExchangeMenu.Click += new System.EventHandler(this.stackExchangeMenu_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1043,5 +1052,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testCharacterNotificationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stackExchangeMenu;
     }
 }
