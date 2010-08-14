@@ -1,19 +1,14 @@
 using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Drawing.Drawing2D;
 
 namespace EVEMon.Controls
 {
-
     /// <summary>
-    /// A tabcontrol which support drag'n dropping.
+    /// A tab control which support drag and dropping.
     /// </summary>
-    public class DraggableTabControl : System.Windows.Forms.TabControl
+    public class DraggableTabControl : TabControl
     {
         private int m_markerIndex;
         private bool m_markerOnLeft;
@@ -27,7 +22,7 @@ namespace EVEMon.Controls
         {
             m_markerIndex = -1;
             m_marker = new InsertionMarker(this);
-            this.AllowDrop = true;
+            AllowDrop = true;
         }
 
         /// <summary>
@@ -53,7 +48,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// On dragging, we updates the cursor and dipsplays an insertion marker.
+        /// On dragging, we updates the cursor and displays an insertion marker.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnDragOver(DragEventArgs e)
@@ -86,7 +81,6 @@ namespace EVEMon.Controls
             // Get the old and new marker indices
             bool onLeft;
             int newIndex = GetMarkerIndex(draggedTab, pt, out onLeft);
-            var oldOnLeft = m_markerOnLeft;
             var oldIndex = m_markerIndex;
             m_markerIndex = newIndex;
             m_markerOnLeft = onLeft;
@@ -101,7 +95,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// On drag'n drop, we updates the tab order.
+        /// On drag and drop, we updates the tab order.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnDragDrop(DragEventArgs e)
@@ -130,7 +124,7 @@ namespace EVEMon.Controls
             }
 
             // Retrieve the dragged page. If same as dragged page, return
-            int draggedIndex = this.TabPages.IndexOf(draggedTab);
+            int draggedIndex = TabPages.IndexOf(draggedTab);
             if (draggedIndex == index || (draggedIndex == index - 1 && onLeft))
             {
                 e.Effect = DragDropEffects.None;
@@ -140,23 +134,23 @@ namespace EVEMon.Controls
 
             // Move the tabs
             e.Effect = DragDropEffects.Move;
-            this.SuspendLayout();
+            SuspendLayout();
             try
             {
-                if (this.TabPages.IndexOf(draggedTab) < index) index--;
-                this.TabPages.Remove(draggedTab);
-                this.TabPages.Insert(index, draggedTab);
-                this.SelectedTab = draggedTab;
+                if (TabPages.IndexOf(draggedTab) < index) index--;
+                TabPages.Remove(draggedTab);
+                TabPages.Insert(index, draggedTab);
+                SelectedTab = draggedTab;
             }
             finally
             {
-                this.ResumeLayout();
+                ResumeLayout();
                 base.OnDragDrop(e);
             }
         }
 
         /// <summary>
-        /// On drag'n drop leave, removes the marker index.
+        /// On drag and drop leave, removes the marker index.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnDragLeave(EventArgs e)
@@ -168,10 +162,10 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Gthe dragged tab
+        /// Get the dragged tab
         /// </summary>
         /// <returns></returns>
-        private TabPage GetDraggedTab(DragEventArgs e)
+        private static TabPage GetDraggedTab(DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(typeof(TabPage))) return null;
             return (TabPage)e.Data.GetData(typeof(TabPage));
@@ -188,7 +182,7 @@ namespace EVEMon.Controls
             if (hoveredPage == null)
             {
                 // Is it on the left or the right side of this control ?
-                if (pt.X < this.Width / 2)
+                if (pt.X < Width / 2)
                 {
                     onLeft = true;
                     return 0;
@@ -196,12 +190,12 @@ namespace EVEMon.Controls
                 else
                 {
                     onLeft = false;
-                    return this.TabCount;
+                    return TabCount;
                 }
             }
 
             // So we're over a page, retrieves its index.
-            int newIndex = this.TabPages.IndexOf(hoveredPage);
+            int newIndex = TabPages.IndexOf(hoveredPage);
 
             // Is it on the left or the right side of the tab ?
             var rect = GetTabRect(newIndex);
@@ -209,7 +203,7 @@ namespace EVEMon.Controls
             if (onLeft) return newIndex;
 
             // If there is a tab on the right, we may put the burden on it
-            if (newIndex + 1 >= this.TabCount) return newIndex;
+            if (newIndex + 1 >= TabCount) return newIndex;
             var nextPage = GetTabPageAt(new Point(rect.Right + 1, pt.Y));
 
             if (nextPage != null && nextPage != draggedPage)
@@ -227,7 +221,7 @@ namespace EVEMon.Controls
         /// <param name="markerIndex"></param>
         /// <param name="onLeft"></param>
         /// <returns></returns>
-        private int GetInsertionIndex(int markerIndex, bool onLeft)
+        private static int GetInsertionIndex(int markerIndex, bool onLeft)
         {
             if (markerIndex == -1) return 0;
             if (onLeft) return markerIndex;
@@ -235,7 +229,7 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// When the user moves the mouse with the left button pressed, we do a drag'n drop operation.
+        /// When the user moves the mouse with the left button pressed, we do a drag and drop operation.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseMove(MouseEventArgs e)
@@ -244,8 +238,7 @@ namespace EVEMon.Controls
 
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
             {
-                Point pt = new Point(e.X, e.Y);
-                TabPage tp = this.SelectedTab;
+                TabPage tp = SelectedTab;
 
                 if (tp != null)
                 {
@@ -291,8 +284,8 @@ namespace EVEMon.Controls
             rect.X += 1;
             rect.Y += 1;
 
-            var topLeft = this.PointToScreen(new Point(rect.Left, rect.Top));
-            var topRight = this.PointToScreen(new Point(rect.Right, rect.Top));
+            var topLeft = PointToScreen(new Point(rect.Left, rect.Top));
+            var topRight = PointToScreen(new Point(rect.Right, rect.Top));
 
             m_marker.Reversed = !m_markerOnLeft;
             m_marker.ShowInactiveTopmost();
@@ -312,7 +305,7 @@ namespace EVEMon.Controls
         /// <summary>
         /// A window displaying the insertion marker.
         /// </summary>
-        public partial class InsertionMarker : Form
+        private class InsertionMarker : Form
         {
             private bool m_reversed;
             private DraggableTabControl m_owner;
@@ -324,16 +317,16 @@ namespace EVEMon.Controls
             {
                 m_owner = owner;
 
-                this.SetStyle(ControlStyles.UserPaint, true);
-                this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-                this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+                SetStyle(ControlStyles.UserPaint, true);
+                SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
-                this.Opacity = 0.5;
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.ShowInTaskbar = false;
-                this.AllowDrop = true;
-                this.Height = 16;
-                this.Width = 6;
+                Opacity = 0.5;
+                FormBorderStyle = FormBorderStyle.None;
+                ShowInTaskbar = false;
+                AllowDrop = true;
+                Height = 16;
+                Width = 6;
             }
 
             /// <summary>
@@ -346,7 +339,7 @@ namespace EVEMon.Controls
                 {
                     if (m_reversed == value) return;
                     m_reversed = value;
-                    this.Invalidate();
+                    Invalidate();
                 }
             }
 
@@ -356,11 +349,11 @@ namespace EVEMon.Controls
             /// <param name="e"></param>
             protected override void OnPaint(PaintEventArgs e)
             {
-                Rectangle rect = this.ClientRectangle;
+                Rectangle rect = ClientRectangle;
                 var startColor = Color.FromArgb(0, 148, 255);
                 var endColor = Color.FromArgb(0, 255, 255);
 
-                // Computes the marker rect and the gradient
+                // Computes the marker rectangle and the gradient
                 if (m_reversed)
                 {
                     var tempColor = startColor;
@@ -368,31 +361,47 @@ namespace EVEMon.Controls
                     endColor = tempColor;
                 }
 
-                // Draws the marker rect
-                using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(this.Width, 0), startColor, endColor))
+                // Draws the marker rectangle
+                using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(Width, 0), startColor, endColor))
                 {
                     e.Graphics.FillRectangle(brush, rect);
                 }
             }
 
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.DragEnter"/> event.
+            /// </summary>
+            /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragEnter(DragEventArgs e)
             {
                 m_owner.OnDragEnter(e);
                 base.OnDragEnter(e);
             }
 
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.DragDrop"/> event.
+            /// </summary>
+            /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragDrop(DragEventArgs e)
             {
                 m_owner.OnDragDrop(e);
                 base.OnDragDrop(e);
             }
 
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.DragOver"/> event.
+            /// </summary>
+            /// <param name="e">A <see cref="T:System.Windows.Forms.DragEventArgs"/> that contains the event data.</param>
             protected override void OnDragOver(DragEventArgs e)
             {
                 m_owner.OnDragOver(e);
                 base.OnDragOver(e);
             }
 
+            /// <summary>
+            /// Raises the <see cref="E:System.Windows.Forms.Control.DragLeave"/> event.
+            /// </summary>
+            /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
             protected override void OnDragLeave(EventArgs e)
             {
                 Point pt = m_owner.PointToClient(Cursor.Position);
@@ -403,5 +412,6 @@ namespace EVEMon.Controls
             }
         }
         #endregion
+
     }
 }
