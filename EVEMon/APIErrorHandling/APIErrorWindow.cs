@@ -57,13 +57,14 @@ namespace EVEMon.ApiErrorHandling
             TroubleshooterPanel.Visible = false;
 
             m_troubleshooter = GetTroubleshooter(exception);
-            m_troubleshooter.ErrorResolved += troubleshooter_ErrorResolved;
 
             if (m_troubleshooter == null)
                 return;
 
             TroubleshooterPanel.Visible = true;
             TroubleshooterPanel.Controls.Add(m_troubleshooter);
+
+            m_troubleshooter.ErrorResolved += troubleshooter_ErrorResolved;
             m_troubleshooter.Dock = DockStyle.Fill;
         }
 
