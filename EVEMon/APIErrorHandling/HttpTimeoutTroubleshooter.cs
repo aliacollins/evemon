@@ -43,7 +43,7 @@ namespace EVEMon.APIErrorHandling
         private void SetTimeoutButton_Click(object sender, EventArgs e)
         {
             Settings.Updates.HttpTimeout = (int)TimeoutDropDown.SelectedValue;
-            OnErrorResolved(ResolutionAction.HideTroubleshooter);
+            OnErrorResolved(ResolutionAction.Close);
         }
 
         /// <summary>
@@ -60,6 +60,11 @@ namespace EVEMon.APIErrorHandling
                 Seconds = seconds;
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TimeoutOption"/> class.
+            /// </summary>
+            /// <param name="seconds">The seconds.</param>
+            /// <param name="text">The text.</param>
             public TimeoutOption(int seconds, string text)
             {
                 Seconds = seconds;

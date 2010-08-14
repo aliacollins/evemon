@@ -133,24 +133,26 @@ namespace EVEMon
 
             Font font = Font;
             var fontSize = font.Size;
-            int magnifierIconSize = 0;
+            int magnifierIconSize;
 
             // Check for magnifier icon
             var itemWithDetails = listBox.Items.OfType<Notification>().FirstOrDefault(x => x.HasDetails);
             if (itemWithDetails != null)
                 magnifierIconSize = IconMagnifierPositionFromRight;
+            else
+                magnifierIconSize = 0;
 
             // Calculates the available text space
             var availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight - RightPadding;
 
-            // If any text lenght exceeds our bounds we decrease the font size
+            // If any text length exceeds our bounds we decrease the font size
             while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
             {
                 fontSize -= 0.05f;
                 font = FontFactory.GetFont("Tahoma", fontSize);
             }
 
-            // If any text lenght fits better in our bounds we increase the font size
+            // If any text length fits better in our bounds we increase the font size
             while ((CalculateMaxTextLength(font) < availableTextSpace) && (fontSize < 8.25f))
             {
                 fontSize += 0.05f;
@@ -310,7 +312,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void listBox_MouseDown(object sender, MouseEventArgs e)
         {
-            // First test whether the "delete" and "mangifier" icons have been clicked
+            // First test whether the "delete" and "magnifier" icons have been clicked
             for (int i = 0; i < listBox.Items.Count; i++)
             {
                 var rect = listBox.GetItemRectangle(i);                
