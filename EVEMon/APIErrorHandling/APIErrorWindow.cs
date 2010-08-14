@@ -9,6 +9,9 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Text;
+using System.Runtime.InteropServices;
 
 namespace EVEMon.ApiErrorHandling
 {
@@ -19,6 +22,7 @@ namespace EVEMon.ApiErrorHandling
     {
         private APIErrorNotification m_notification;
         private ApiErrorTroubleshooter m_troubleshooter;
+        private bool m_troubleshooterUsed;
 
         /// <summary>
         /// Constructor
@@ -38,8 +42,8 @@ namespace EVEMon.ApiErrorHandling
             set
             {
                 m_notification = value;
-                errorLabel.Text = GetErrorLabelText(value);
-                detailsTextBox.Text = GetXmlData(value.Result);
+                ErrorLabel.Text = GetErrorLabelText(value);
+                DetailsTextBox.Text = GetXmlData(value.Result);
                 DisplayTroubleshooter(value.Result.Exception);
             }
         }
@@ -94,6 +98,8 @@ namespace EVEMon.ApiErrorHandling
         /// <param name="e">The <see cref="EVEMon.Common.Controls.ApiErrorTroubleshooterEventArgs"/> instance containing the event data.</param>
         private void troubleshooter_ErrorResolved(object sender, ApiErrorTroubleshooterEventArgs e)
         {
+            m_troubleshooterUsed = true;
+
             if (e == null)
                 return;
 
@@ -204,6 +210,48 @@ namespace EVEMon.ApiErrorHandling
             }            
 
             base.OnFormClosed(e);
+        }
+
+        /// <summary>
+        /// Handles the LinkClicked event of the CopyToClipboardLinkLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        private void CopyToClipboardLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var builder = new StringBuilder();
+
+            builder.AppendFormat("EVEMon {0} API Error:{1}", version, Environment.NewLine);
+            builder.AppendLine();
+            builder.AppendLine(GetErrorLabelText(Notification));
+            builder.AppendLine();
+            builder.AppendLine(GetXmlData(Notification.Result));
+
+            if (m_troubleshooter != null)
+            {
+                builder.AppendLine();
+                if (m_troubleshooterUsed)
+                {
+                    builder.Append("A troubleshooter was displayed and used.");
+                }
+                else
+                {
+                    builder.Append("A troubleshooter was displayed but not used.");
+                }
+            }
+
+            try
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(builder.ToString(), TextDataFormat.Text);
+            }
+            catch (ExternalException ex)
+            {
+                // Occurs when another process is using the clipboard
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. Wait a few moments and try again.");
+            }
         }
     }
 }

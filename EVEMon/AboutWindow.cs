@@ -3,11 +3,9 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common;
-using System.Text;
 using System.Collections;
 using System.Drawing;
 using EVEMon.Common.Controls;
-using System.Globalization;
 
 namespace EVEMon
 {
@@ -29,12 +27,12 @@ namespace EVEMon
         public AboutWindow()
         {
             InitializeComponent();
-            devsList.SelectedIndexChanged += new EventHandler(devsList_SelectedIndexChanged);
+            devsList.SelectedIndexChanged += devsList_SelectedIndexChanged;
             myFont = FontFactory.GetDefaultFont(8.25f);
             myFontbold = FontFactory.GetDefaultFont(8.25f, FontStyle.Bold);
-            this.EVEMonLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
-            this.DevContribLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
-            this.CredentialsLabels.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
+            EVEMonLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
+            DevContribLabel.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
+            CredentialsLabels.Font = FontFactory.GetDefaultFont(8.25F, FontStyle.Bold);
 
             // list of headings
             slPriority = new SortedList();

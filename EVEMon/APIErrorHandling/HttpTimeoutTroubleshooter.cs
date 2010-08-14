@@ -43,7 +43,7 @@ namespace EVEMon.APIErrorHandling
         private void SetTimeoutButton_Click(object sender, EventArgs e)
         {
             Settings.Updates.HttpTimeout = (int)TimeoutDropDown.SelectedValue;
-            OnErrorResolved(ResolutionAction.Close);
+            OnErrorResolved(ResolutionAction.HideTroubleshooter);
         }
 
         /// <summary>
