@@ -118,7 +118,7 @@
     <Compile Include="Controls\BusyDialog.Designer.cs">
       <DependentUpon>BusyDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\API\APIError.cs" />
+    <Compile Include="Serialization\API\CCPError.cs" />
     <Compile Include="Controls\CopySaveOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>

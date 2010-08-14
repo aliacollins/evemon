@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
-    /// CCP Api error message handling - for application error messages within the xml.
+    /// CCP API error message handling - for application error messages within the xml.
     /// </summary>
     [XmlRoot("error")]
     public sealed class CCPError
