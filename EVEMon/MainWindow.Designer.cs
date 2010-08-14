@@ -85,6 +85,7 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stackExchangeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,7 +123,6 @@ namespace EVEMon
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
             this.trayIcon = new EVEMon.TrayIcon(this.components);
-            this.stackExchangeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -586,6 +586,13 @@ namespace EVEMon
             this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
             this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
             // 
+            // stackExchangeMenu
+            // 
+            this.stackExchangeMenu.Name = "stackExchangeMenu";
+            this.stackExchangeMenu.Size = new System.Drawing.Size(238, 22);
+            this.stackExchangeMenu.Text = "EVE Online &Q&&A";
+            this.stackExchangeMenu.Click += new System.EventHandler(this.stackExchangeMenu_Click);
+            // 
             // forumsMenuItem
             // 
             this.forumsMenuItem.Image = global::EVEMon.Properties.Resources.Forum;
@@ -867,7 +874,6 @@ namespace EVEMon
             this.tcCharacterTabs.Controls.Add(this.tpOverview);
             this.tcCharacterTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcCharacterTabs.Location = new System.Drawing.Point(0, 49);
-            this.tcCharacterTabs.Margin = new System.Windows.Forms.Padding(0);
             this.tcCharacterTabs.Multiline = true;
             this.tcCharacterTabs.Name = "tcCharacterTabs";
             this.tcCharacterTabs.Padding = new System.Drawing.Point(0, 0);
@@ -918,13 +924,6 @@ namespace EVEMon
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
-            // 
-            // stackExchangeMenu
-            // 
-            this.stackExchangeMenu.Name = "stackExchangeMenu";
-            this.stackExchangeMenu.Size = new System.Drawing.Size(238, 22);
-            this.stackExchangeMenu.Text = "EVE Online &Q&&A";
-            this.stackExchangeMenu.Click += new System.EventHandler(this.stackExchangeMenu_Click);
             // 
             // MainWindow
             // 
