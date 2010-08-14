@@ -1,19 +1,24 @@
-﻿using System;
-using System.ComponentModel;
-using EVEMon.Common.Controls;
-using EVEMon.Common.Serialization.API;
+﻿using EVEMon.APIErrorHandling;
 using EVEMon.Common;
-using EVEMon.Common.Notifications;
-using System.Windows.Forms;
+using EVEMon.Common.Controls;
 using EVEMon.Common.Net;
-using EVEMon.APIErrorHandling;
+using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.API;
+
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace EVEMon.ApiErrorHandling
 {
+    /// <summary>
+    /// Displays an error window if appropriate a troubleshooter is displayed to help the user resolve the issue.
+    /// </summary>
     public partial class APIErrorWindow : EVEMonForm
     {
         private APIErrorNotification m_notification;
-        private UserControl m_troubleshooter;
+        private ApiErrorTroubleshooter m_troubleshooter;
 
         /// <summary>
         /// Constructor
@@ -35,7 +40,6 @@ namespace EVEMon.ApiErrorHandling
                 m_notification = value;
                 errorLabel.Text = GetErrorLabelText(value);
                 detailsTextBox.Text = GetXmlData(value.Result);
-
                 DisplayTroubleshooter(value.Result.Exception);
             }
         }
@@ -49,6 +53,7 @@ namespace EVEMon.ApiErrorHandling
             TroubleshooterPanel.Visible = false;
 
             m_troubleshooter = GetTroubleshooter(exception);
+            m_troubleshooter.ErrorResolved += troubleshooter_ErrorResolved;
 
             if (m_troubleshooter == null)
                 return;
@@ -63,7 +68,7 @@ namespace EVEMon.ApiErrorHandling
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns>A troubleshooter for the error message.</returns>
-        private static UserControl GetTroubleshooter(Exception exception)
+        private static ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
         {
             if (exception == null)
                 return null;
@@ -74,9 +79,53 @@ namespace EVEMon.ApiErrorHandling
                 return null;
 
             if (httpException.Status == HttpWebServiceExceptionStatus.Timeout)
-                return new HttpTimeoutTroubleshooter();
+            {
+                var troubleshooter = new HttpTimeoutTroubleshooter();
+                return troubleshooter;
+            }
 
             return null;
+        }
+
+        /// <summary>
+        /// Handles the ErrorResolved event when a http timeout is displayed of the troubleshooter control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.Controls.ApiErrorTroubleshooterEventArgs"/> instance containing the event data.</param>
+        private void troubleshooter_ErrorResolved(object sender, ApiErrorTroubleshooterEventArgs e)
+        {
+            if (e == null)
+                return;
+
+            if (!e.Resolved)
+            {
+                TroubleshooterPanel.BackColor = Color.DarkSalmon;
+                return;
+            }
+
+            PerformAction(e.Action);
+        }
+
+        /// <summary>
+        /// Performs the action.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        private void PerformAction(ResolutionAction action)
+        {
+            switch (action)
+            {
+                case ResolutionAction.Close:
+                    Close();
+                    break;
+                case ResolutionAction.HideTroubleshooter:
+                    TroubleshooterPanel.Hide();
+                    break;
+                case ResolutionAction.None:
+                    TroubleshooterPanel.BackColor = Color.PaleGreen;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>

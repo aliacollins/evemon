@@ -1,7 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using EVEMon.Common;
+using EVEMon.Common.Controls;
+
+using System;
 using System.Collections.Generic;
-using EVEMon.Common;
 using System.Text;
 
 namespace EVEMon.APIErrorHandling
@@ -9,9 +10,8 @@ namespace EVEMon.APIErrorHandling
     /// <summary>
     /// Http Timeout Troubleshooter displays when a HTTP Timeout has occurred.
     /// </summary>
-    public partial class HttpTimeoutTroubleshooter : UserControl
+    public partial class HttpTimeoutTroubleshooter : ApiErrorTroubleshooter
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpTimeoutTroubleshooter"/> class.
         /// </summary>
@@ -22,9 +22,9 @@ namespace EVEMon.APIErrorHandling
             var Options = new List<TimeoutOption>();
 
             Options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
-            Options.Add(new TimeoutOption(10, "Default"));
 
             // lets add 10 - 60 to the list.
+            Options.Add(new TimeoutOption(10, "Default"));
             for (int i = 20; i <= 60; i += 10)
             {
                 Options.Add(new TimeoutOption(i));
@@ -43,7 +43,7 @@ namespace EVEMon.APIErrorHandling
         private void SetTimeoutButton_Click(object sender, EventArgs e)
         {
             Settings.Updates.HttpTimeout = (int)TimeoutDropDown.SelectedValue;
-            Parent.Visible = false;
+            OnErrorResolved(ResolutionAction.Close);
         }
 
         /// <summary>

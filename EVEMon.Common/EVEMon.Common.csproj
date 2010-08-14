@@ -221,12 +221,20 @@
     <Compile Include="CharacterExtensions.cs" />
     <Compile Include="CharacterQueryMonitor.cs" />
     <Compile Include="Collections\FastList.cs" />
+    <Compile Include="Controls\ApiErrorTroubleshooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ApiErrorTroubleshooter.Designer.cs">
+      <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ApiErrorTroubleshooterEventArgs.cs" />
     <Compile Include="Controls\MsgBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Controls\MsgBoxCustom.Designer.cs">
       <DependentUpon>MsgBoxCustom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ResolutionAction.cs" />
     <Compile Include="CultureConstants.cs" />
     <Compile Include="ConquerableStation.cs" />
     <Compile Include="Data\Blueprint.cs" />
@@ -524,6 +532,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\ApiErrorTroubleshooter.resx">
+      <DependentUpon>ApiErrorTroubleshooter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\CharacterPortrait.resx">
       <DependentUpon>CharacterPortrait.cs</DependentUpon>
       <SubType>Designer</SubType>

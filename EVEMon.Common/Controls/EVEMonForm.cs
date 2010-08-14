@@ -13,10 +13,9 @@ namespace EVEMon.Common.Controls
     {
         protected const int MaxTitleLength = 259;
 
-        delegate void OnLayoutCallback(LayoutEventArgs levent);
+        private delegate void OnLayoutCallback(LayoutEventArgs levent);
 
         private bool m_loaded;
-        private string m_rememberPositionKey = null;
 
         /// <summary>
         /// Constructor
@@ -24,7 +23,7 @@ namespace EVEMon.Common.Controls
         public EVEMonForm()
         {
             InitializeComponent();
-            this.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
         }
 
         /// <summary>
@@ -32,14 +31,10 @@ namespace EVEMon.Common.Controls
         /// </summary>
         [Category("Behavior")]
         [Description("A key used to store and restore the position and size of the window. When null or empty, the position won't be persisted.")]
-        public string RememberPositionKey
-        {
-            get { return m_rememberPositionKey; }
-            set { m_rememberPositionKey = value; }
-        }
+        public string RememberPositionKey { get; set; }
 
         /// <summary>
-        /// On load, restores the window rect from the settings.
+        /// On load, restores the window rectangle from the settings.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
@@ -56,17 +51,17 @@ namespace EVEMon.Common.Controls
         protected override void OnLayout(LayoutEventArgs levent)
         {
             // Ensure it is called on the correct thread
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke((OnLayoutCallback)OnLayout, levent);
+                Invoke((OnLayoutCallback)OnLayout, levent);
                 return;
             }
 
             // Center to screen when required
             base.OnLayout(levent);
-            if (this.AutoSize && this.StartPosition == FormStartPosition.CenterScreen)
+            if (AutoSize && StartPosition == FormStartPosition.CenterScreen)
             {
-                this.CenterToScreen();
+                CenterToScreen();
             }
         }
 
@@ -106,13 +101,13 @@ namespace EVEMon.Common.Controls
         private void SaveLocation()
         {
             if (!m_loaded) return;
-            if (String.IsNullOrEmpty(m_rememberPositionKey)) return;
+            if (String.IsNullOrEmpty(RememberPositionKey)) return;
 
-            Rectangle r = new Rectangle(this.Location, this.Size);
-            if (this.WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
+            Rectangle r = new Rectangle(Location, Size);
+            if (WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
             {
-                Settings.UI.WindowLocations[m_rememberPositionKey] = 
-                    (SerializableRectangle)new Rectangle(this.Location, this.Size);
+                Settings.UI.WindowLocations[RememberPositionKey] = 
+                    (SerializableRectangle)new Rectangle(Location, Size);
             }
         }
 
@@ -121,13 +116,13 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void RestoreLocation()
         {
-            if (String.IsNullOrEmpty(m_rememberPositionKey)) return;
+            if (String.IsNullOrEmpty(RememberPositionKey)) return;
 
-            if (Settings.UI.WindowLocations.ContainsKey(m_rememberPositionKey))
+            if (Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
             {
-                Rectangle r = (Rectangle)Settings.UI.WindowLocations[m_rememberPositionKey];
+                Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
                 r = VerifyValidWindowLocation(r);
-                this.SetBounds(r.Left, r.Top, r.Width, r.Height);
+                SetBounds(r.Left, r.Top, r.Width, r.Height);
             }
         }
 
@@ -140,8 +135,8 @@ namespace EVEMon.Common.Controls
         {
             Point p = inRect.Location;
             Size s = inRect.Size;
-            s.Width = Math.Max(s.Width, this.MinimumSize.Width);
-            s.Height = Math.Max(s.Height, this.MinimumSize.Height);
+            s.Width = Math.Max(s.Width, MinimumSize.Width);
+            s.Height = Math.Max(s.Height, MinimumSize.Height);
 
             foreach (Screen ts in Screen.AllScreens)
             {
