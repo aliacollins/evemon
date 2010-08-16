@@ -1,91 +1,23 @@
 <?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>02 August 2010</date>
-    <version>1.3.2.2391</version>
-    <url>http://forum.battleclinic.com/index.php/topic,105717</url>
-    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.3.2.2391.exe</autopatchurl>
+    <date>16 August 2010</date>
+    <version>1.3.3.2418</version>
+    <url>http://forum.battleclinic.com/index.php/topic,108969</url>
+    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.3.3.2418.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[Breaking Changes
- * If you have customized the Automatic Relocation frequency, you will need to re-enter the frequency.
- * If you have configured indentation of the popup, you will need to reconfigure this setting. 
-
-Contributors so far
- * Jimi
- * Johnbot
- * Niom
- * Richard Slater 
+    <message><![CDATA[Contributors for this version
+ * Richard Slater
+ * Tonto Auri 
 
 New Features
- * A default monitor can be selected using the Automatic Relocator.
- * Better support for mouse actions (double click and right click) in the Certificate Browser.
- * Enables the "Optimize learning skills order..." if a learning skill is in the plan.
- * Increased contrast mode for the system tray popup, configurable in the options.
- * Handling of Obsolete Plan Entries can now be configured.
- * A fitting attribute has been added to the Drone and Item browsers.
- * You can now move a skill to the top of the skill plan.
- * Corporation orders have been added to EVEMon.
- * Low wallet balance warning.
- * New market summary panel.
- * Blueprint Browser has been added.
- * Now using CCPEVE.showMarketDetails() JavaScript in shopping lists.
- * Using the Roman word Nulla rather than the word none when representing 0 as a Roman numeral.
- * EVEMon will now auto-restart after a data-update has been installed.
- * Industry job monitor has been added.
- * Individual Full API features can be disabled to conserve screen space and resources. 
+ * A troubleshooter will be displayed in the event that an API request times out.
+ * Added link to the EVE Online Stack Exchange Site (Help -> EVE Online Q&A).
+ * Increased default HTTP Timeout from 10 to 20 seconds. 
 
 Bugfixes
- * Fixes sorting in the market panel.
- * Fixes infinite loop for autorelocate feature when set to 60 sec.
- * The skills scroll bar will no longer get stuck on screen.
- * The date in the BattleClinic loadout browser is improved.
- * The close cross on notifications will no longer take a hike off the right hand side of the window.
- * Trainable icon added to the required skills control to bring the design in line with EVE icons.
- * API Methods that return errors if requests are made inside the cache time will no longer be checked during a forced update.
- * The remapping entries in the Skill Plan UI has been tidied up.
- * Minutes will be shown when training time is less than one hour; Seconds will be shown when training time is less than one minute.
- * An errant notification will no longer be shown when changing the IGB port.
- * EVEMon will no longer crash if you press F2 in the planner and no skill is selected.
- * Prerequesite marks are now reset even when selecting a remapping point.
- * A better calculation is made when skills are selected and have preceding learning skills.
- * EVEMon will no longer crash when dragging a skill by its icon.
- * Unnessecary messages when account not associated with character will no longer be shown.
- * G15 will no longer start if system is not detected as WindowsNT.
- * Rearranged Settings UI to better support Resetting CustomMsgBoxes.
- * EVEMon will no longer crash trying to load Segoe UI.
- * EVEMon will no longer crash when an unknown skill is in the Character Sheet.
- * Group filter in item browser will now filter out the selected items.
- * XML Export will now contain known but untrained (injected) skills.
- * Scroll bar in Overview will no longer paint incorrectly when the EVEMon is minimised and restored.
- * Mineral Worksheet will no longer relocate when prices are updated.
- * The skill queue will hopefully not paint over other windows (possibly).
- * Update manager will now check for updates every 2 hours.
- * EVEMon Auto-Update will no longer get into an infinite loop when the download fails.
- * The following date will no longer be selected when clicking a day in the scheduler.
- * Scheduled events will no longer exceed their bounds.
- * EVEMon will no longer wake Tonto Auri up at 2AM.
- * The plan editor list will not flicker as much.
- * The filter drop downs will no longer be hidden when resizing.
- * EVEMon will now delete the temp files it creates.
- * Prevent a skill from being stored as a Level 6.
- * Clicking on a skill cell in skill browser when scroll bar has been moved will point to the correct skill.
- * EVEMon will no longer crash when double-clicking in the certification browser.
- * EVEMon will no longer crash in market orders.
- * Fixed a memory leak caused by switching tabs.
- * Reduced EVEMon's processor utilization by re-factoring several parts of the main window UI.
- * The IGB will no longer respond to HTTP CONNECT and other unsupported requests.
- * EVEMon will no longer crash if it is unable to download the Conquerable Station XML.
- * Several bugs in the scheduler have had their end time set to a time in the past.
- * Collapse All will no longer be displayed erroneously after toggling the Owns Book button.
- * Old industry jobs will no longer get stuck.
- * Market browser expiry will now be shown in local time.
- * Fixed potential problem with window relocation.
- * Fixed an update bug in the overview.
- * Short times will follow the users preference.
- * EVEMon will no longer trigger a double no characters in training popup at startup.
- * Users preference will now be used when encountering a priorities conflict.
- * EVEMon will no longer crash when using tool tips and non API characters. ]]></message>
+ * The setting "Use Advanced Entry Addition" has been renamed to "Set priority when adding skills to plan." ]]></message>
   </newest>
   <datafiles>
     <datafile>
