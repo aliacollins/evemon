@@ -48,6 +48,7 @@ namespace PatchXmlCreator
             this.lblExpVersion = new System.Windows.Forms.Label();
             this.tbExpVersion = new System.Windows.Forms.TextBox();
             this.btnDatafilesClear = new System.Windows.Forms.Button();
+            this.datafileControl = new PatchXmlCreator.DatafileControl();
             this.btnLoadDatafileInfo = new System.Windows.Forms.Button();
             this.lblRevision = new System.Windows.Forms.Label();
             this.tbExpRevision = new System.Windows.Forms.TextBox();
@@ -57,7 +58,6 @@ namespace PatchXmlCreator
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.splitContainerMinFixed = new EVEMon.Common.Controls.SplitContainerMinFixed();
-            this.datafileControl = new PatchXmlCreator.DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();
@@ -158,7 +158,7 @@ namespace PatchXmlCreator
             this.gbRelease.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.gbRelease.Location = new System.Drawing.Point(10, 10);
             this.gbRelease.Name = "gbRelease";
-            this.gbRelease.Size = new System.Drawing.Size(396, 190);
+            this.gbRelease.Size = new System.Drawing.Size(396, 211);
             this.gbRelease.TabIndex = 6;
             this.gbRelease.TabStop = false;
             this.gbRelease.Text = "Release Info";
@@ -168,7 +168,7 @@ namespace PatchXmlCreator
             // 
             this.btnInstallerClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnInstallerClear.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnInstallerClear.Location = new System.Drawing.Point(7, 161);
+            this.btnInstallerClear.Location = new System.Drawing.Point(7, 182);
             this.btnInstallerClear.Name = "btnInstallerClear";
             this.btnInstallerClear.Size = new System.Drawing.Size(75, 23);
             this.btnInstallerClear.TabIndex = 2;
@@ -181,7 +181,7 @@ namespace PatchXmlCreator
             this.btnLoadReleaseInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoadReleaseInfo.AutoSize = true;
             this.btnLoadReleaseInfo.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnLoadReleaseInfo.Location = new System.Drawing.Point(232, 162);
+            this.btnLoadReleaseInfo.Location = new System.Drawing.Point(232, 183);
             this.btnLoadReleaseInfo.Name = "btnLoadReleaseInfo";
             this.btnLoadReleaseInfo.Size = new System.Drawing.Size(158, 23);
             this.btnLoadReleaseInfo.TabIndex = 3;
@@ -209,7 +209,7 @@ namespace PatchXmlCreator
             this.rtbReleaseMessage.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.rtbReleaseMessage.Location = new System.Drawing.Point(7, 105);
             this.rtbReleaseMessage.Name = "rtbReleaseMessage";
-            this.rtbReleaseMessage.Size = new System.Drawing.Size(382, 51);
+            this.rtbReleaseMessage.Size = new System.Drawing.Size(382, 72);
             this.rtbReleaseMessage.TabIndex = 11;
             this.rtbReleaseMessage.Text = "Type your message here.";
             this.rtbReleaseMessage.Enter += new System.EventHandler(this.Control_Enter);
@@ -299,7 +299,7 @@ namespace PatchXmlCreator
             this.gbDatafiles.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.gbDatafiles.Location = new System.Drawing.Point(5, 10);
             this.gbDatafiles.Name = "gbDatafiles";
-            this.gbDatafiles.Size = new System.Drawing.Size(440, 190);
+            this.gbDatafiles.Size = new System.Drawing.Size(440, 211);
             this.gbDatafiles.TabIndex = 7;
             this.gbDatafiles.TabStop = false;
             this.gbDatafiles.Text = "Data Files Info";
@@ -333,7 +333,7 @@ namespace PatchXmlCreator
             // 
             this.btnDatafilesClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDatafilesClear.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.btnDatafilesClear.Location = new System.Drawing.Point(9, 161);
+            this.btnDatafilesClear.Location = new System.Drawing.Point(9, 182);
             this.btnDatafilesClear.Name = "btnDatafilesClear";
             this.btnDatafilesClear.Size = new System.Drawing.Size(75, 23);
             this.btnDatafilesClear.TabIndex = 1;
@@ -341,12 +341,23 @@ namespace PatchXmlCreator
             this.btnDatafilesClear.UseVisualStyleBackColor = true;
             this.btnDatafilesClear.Click += new System.EventHandler(this.btnDatafilesClear_Click);
             // 
+            // datafileControl
+            // 
+            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.datafileControl.AutoSize = true;
+            this.datafileControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.datafileControl.Location = new System.Drawing.Point(9, 65);
+            this.datafileControl.Name = "datafileControl";
+            this.datafileControl.Size = new System.Drawing.Size(427, 91);
+            this.datafileControl.TabIndex = 21;
+            // 
             // btnLoadDatafileInfo
             // 
             this.btnLoadDatafileInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoadDatafileInfo.AutoSize = true;
             this.btnLoadDatafileInfo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.btnLoadDatafileInfo.Location = new System.Drawing.Point(278, 162);
+            this.btnLoadDatafileInfo.Location = new System.Drawing.Point(278, 183);
             this.btnLoadDatafileInfo.Name = "btnLoadDatafileInfo";
             this.btnLoadDatafileInfo.Size = new System.Drawing.Size(158, 23);
             this.btnLoadDatafileInfo.TabIndex = 2;
@@ -436,7 +447,7 @@ namespace PatchXmlCreator
             this.pnlButtons.Controls.Add(this.btnCancel);
             this.pnlButtons.Controls.Add(this.btnCreate);
             this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlButtons.Location = new System.Drawing.Point(0, 210);
+            this.pnlButtons.Location = new System.Drawing.Point(0, 231);
             this.pnlButtons.Name = "pnlButtons";
             this.pnlButtons.Size = new System.Drawing.Size(870, 59);
             this.pnlButtons.TabIndex = 9;
@@ -461,27 +472,16 @@ namespace PatchXmlCreator
             this.splitContainerMinFixed.Panel2.Padding = new System.Windows.Forms.Padding(5, 10, 10, 10);
             this.splitContainerMinFixed.Panel2.Click += new System.EventHandler(this.OnClick);
             this.splitContainerMinFixed.Panel2MinSize = 455;
-            this.splitContainerMinFixed.Size = new System.Drawing.Size(870, 210);
+            this.splitContainerMinFixed.Size = new System.Drawing.Size(870, 231);
             this.splitContainerMinFixed.SplitterDistance = 411;
             this.splitContainerMinFixed.TabIndex = 10;
             this.splitContainerMinFixed.Click += new System.EventHandler(this.OnClick);
-            // 
-            // datafileControl
-            // 
-            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.datafileControl.AutoSize = true;
-            this.datafileControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.datafileControl.Location = new System.Drawing.Point(9, 65);
-            this.datafileControl.Name = "datafileControl";
-            this.datafileControl.Size = new System.Drawing.Size(427, 91);
-            this.datafileControl.TabIndex = 21;
             // 
             // PatchXmlCreatorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(870, 269);
+            this.ClientSize = new System.Drawing.Size(870, 290);
             this.Controls.Add(this.splitContainerMinFixed);
             this.Controls.Add(this.pnlButtons);
             this.Name = "PatchXmlCreatorWindow";

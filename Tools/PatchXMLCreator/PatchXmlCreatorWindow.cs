@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Serialization.Datafiles;
 
 namespace PatchXmlCreator
 {
@@ -67,7 +66,7 @@ namespace PatchXmlCreator
         /// <summary>
         /// Get EVEMon's assembly version.
         /// </summary>
-        private string AssemblyVersion
+        private static string AssemblyVersion
         {
             get
             {
@@ -95,7 +94,7 @@ namespace PatchXmlCreator
             UpdateDatafilesControls();
             UpdateCreateButtonEnabled();
 
-            this.MinimumSize = new Size(this.Width, this.Height);
+            MinimumSize = new Size(Width, Height);
 
             m_init = true;
         }
@@ -153,7 +152,7 @@ namespace PatchXmlCreator
             int pad = 5;
 
             gbDatafiles.Controls.Remove(datafileControl);
-            this.Height -= datafileControl.Height;
+            Height -= datafileControl.Height;
 
             SuspendLayout();
             try
@@ -176,32 +175,32 @@ namespace PatchXmlCreator
                         newDatafileControl.gbDatafile.Text.Replace(datafileHeader, String.Empty).Replace(datafileTail, String.Empty));
 
                     // Calculate window height and next control point
-                    this.Height += datafileControl.Height + pad;
+                    Height += datafileControl.Height + pad;
                     startLocation += datafileControl.Height + pad;
 
                     // Subscribe Events
-                    newDatafileControl.rtbDatafileMessage.Enter += new EventHandler(Control_Enter);
-                    newDatafileControl.rtbDatafileMessage.Leave += new EventHandler(Control_Leave);
-                    newDatafileControl.rtbDatafileMessage.DoubleClick += new EventHandler(Control_DoubleClick);
+                    newDatafileControl.rtbDatafileMessage.Enter += Control_Enter;
+                    newDatafileControl.rtbDatafileMessage.Leave += Control_Leave;
+                    newDatafileControl.rtbDatafileMessage.DoubleClick += Control_DoubleClick;
                 }
             }
             finally
             {
-                // Update the mesage of each data file control
+                // Update the message of each data file control
                 UpdateDatafilesMessage();
 
                 ResumeLayout();
             }
 
-            this.CenterToScreen();
+            CenterToScreen();
         }
 
         /// <summary>
-        /// Updates the info in the datafiles section.
+        /// Updates the info in the data files section.
         /// </summary>
         /// <param name="control"></param>
         /// <param name="datafile"></param>
-        private void UpdateDatafileInfo(DatafileControl control, Datafile datafile)
+        private static void UpdateDatafileInfo(DatafileControl control, Datafile datafile)
         {
             // Data file info
             FileInfo fileInfo = new FileInfo(Path.Combine(datafileDir, datafile.Filename));
@@ -419,13 +418,15 @@ namespace PatchXmlCreator
         /// Deserializes the existing patch file.
         /// </summary>
         /// <returns></returns>
-        private SerializablePatch TryDeserializePatchXml()
+        private static SerializablePatch TryDeserializePatchXml()
         {
-            SerializablePatch xmlDoc = null;
+            SerializablePatch xmlDoc;
             String filePath = Path.Combine(patchDir, patchFilename);
 
             if (File.Exists(filePath))
                 xmlDoc = Util.DeserializeXML<SerializablePatch>(filePath);
+            else
+                xmlDoc = null;
 
             return xmlDoc;
         }
@@ -503,11 +504,6 @@ namespace PatchXmlCreator
 
             try
             {
-                // Make a backup of the existing file
-                if (File.Exists(backupFilenamePath))
-                    File.Delete(backupFilenamePath);
-                File.Move(filenamePath, backupFilenamePath);
-
                 // Create our file
                 using (FileStream fs = File.Open(filenamePath, FileMode.Create, FileAccess.Write))
                 {
@@ -518,7 +514,7 @@ namespace PatchXmlCreator
             }
             finally
             {
-                string text = "The file was created succesfully.\r\n\r\n A backup of the previous file has been made.";
+                string text = "The file was created successfully.";
                 MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -535,7 +531,7 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -690,10 +686,12 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void Control_DoubleClick(object sender, EventArgs e)
         {
-            Control control = null;
+            Control control;
 
             if (sender is DatafileControl)
                 control = ((DatafileControl)sender).rtbDatafileMessage;
+            else
+                control = null;
 
             if (sender is RichTextBox)
                 control = (RichTextBox)sender;
@@ -730,10 +728,12 @@ namespace PatchXmlCreator
         /// <param name="e"></param>
         private void Control_Leave(object sender, EventArgs e)
         {
-            Control control = null;
+            Control control;
 
             if (sender is RichTextBox)
                 control = (RichTextBox)sender;
+            else
+                control = null;
 
             if (sender is TextBox)
                 control = (TextBox)sender;

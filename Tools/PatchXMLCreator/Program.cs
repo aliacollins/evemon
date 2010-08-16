@@ -17,7 +17,7 @@ namespace PatchXmlCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Ensure that the aplications prerequisites are met
+            // Ensure that the applications prerequisites are met
             EnsurePrerequisites();
 
             // When prerequisites are not met we exit before Run()
