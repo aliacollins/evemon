@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             CheckTimeOnStartup = true;
             CheckEVEMonVersion = true;
-            HttpTimeout = 10;
+            HttpTimeout = 20;
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
             IgnoreNetworkStatus = false;
             UpdateFrequency = 120;

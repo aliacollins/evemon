@@ -1,9 +1,11 @@
 ﻿using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.SettingsObjects;
 
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace EVEMon.APIErrorHandling
 {
@@ -20,16 +22,34 @@ namespace EVEMon.APIErrorHandling
             InitializeComponent();
 
             var Options = new List<TimeoutOption>();
-
-            Options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
-
+            var updateSettings = new UpdateSettings();
+            
             // lets add 10 - 60 to the list.
-            Options.Add(new TimeoutOption(10, "Default"));
-            for (int i = 20; i <= 60; i += 10)
+            for (int i = 10; i <= 60; i += 10)
             {
-                Options.Add(new TimeoutOption(i));
+                string text = String.Empty;
+
+                if (i == updateSettings.HttpTimeout)
+                    text = "Default";
+
+                if (i == Settings.Updates.HttpTimeout)
+                    text = "Current";
+
+                Options.Add(new TimeoutOption(i, text));
             }
 
+            // if the current is set to something odd we add it and sort by Seconds
+            if (!Options.Any(x => x.Seconds == Settings.Updates.HttpTimeout))
+                Options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
+
+            // if the default is not in the list we add it
+            if (!Options.Any(x => x.Seconds == updateSettings.HttpTimeout))
+                Options.Add(new TimeoutOption(updateSettings.HttpTimeout, "Default"));
+
+            Options.Sort((a, b) => a.Seconds.CompareTo(b.Seconds));
+
+
+            // databind
             TimeoutDropDown.DataSource = Options;
             TimeoutDropDown.DisplayMember = "Label";
             TimeoutDropDown.ValueMember = "Seconds";
