@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Controls
 {
@@ -12,7 +13,7 @@ namespace EVEMon.Common.Controls
         private Character m_character;
         private bool m_updatingPortrait;
         private bool m_pendingUpdate;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -184,7 +185,7 @@ namespace EVEMon.Common.Controls
                 Image image;
 
                 byte[] imageBytes = File.ReadAllBytes(cacheFileName);
-                
+
                 using (MemoryStream stream = new MemoryStream())
                 {
                     stream.Write(imageBytes, 0, imageBytes.Length);
@@ -288,7 +289,7 @@ namespace EVEMon.Common.Controls
             try
             {
                 // If we don't have the game's portraits cache already, prompt the user
-                if (String.IsNullOrEmpty(EveClient.EvePortraitCacheFolder))
+                if (EveClient.EvePortraitCacheFolders == null || EveClient.EvePortraitCacheFolders.Length == 0)
                 {
                     // Return if the user canceled
                     if (!ChangeEVEPortraitCache())
@@ -300,11 +301,15 @@ namespace EVEMon.Common.Controls
                 try
                 {
                     // Retrieve all files in the EVE cache directory which matches "<characterId>*.png"
-                    DirectoryInfo di = new DirectoryInfo(EveClient.EvePortraitCacheFolder);
-                    FileInfo[] filesInEveCache = di.GetFiles(m_id.ToString() + "*.png");
+                    List<FileInfo> filesInEveCache = new List<FileInfo>();
+                    foreach (var evePortraitCacheFolder in EveClient.EvePortraitCacheFolders)
+                    {
+                        DirectoryInfo di = new DirectoryInfo(evePortraitCacheFolder);
+                        filesInEveCache.AddRange(di.GetFiles(m_id.ToString() + "*.png"));
+                    }
 
                     // Displays an error message if none found.
-                    if (filesInEveCache.Length == 0)
+                    if (filesInEveCache.Count == 0)
                     {
                         String message;
 
@@ -356,10 +361,10 @@ namespace EVEMon.Common.Controls
         {
             using (EVEFolderWindow f = new EVEFolderWindow())
             {
-                f.EVEFolder = EveClient.EvePortraitCacheFolder;
+                f.EVEFolder = string.Empty;
                 if (f.ShowDialog() == DialogResult.OK)
                 {
-                    EveClient.EvePortraitCacheFolder = f.EVEFolder;
+                    EveClient.SetEvePortraitCacheFolder(f.EVEFolder);
                     return true;
                 }
             }

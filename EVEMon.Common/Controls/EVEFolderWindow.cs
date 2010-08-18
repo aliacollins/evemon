@@ -18,7 +18,10 @@ namespace EVEMon.Common.Controls
         {
             InitializeComponent();
 
-            DefaultFolderLocation = EveClient.EvePortraitCacheFolder;
+            string[] cacheFolders = EveClient.EvePortraitCacheFolders;
+
+            if (cacheFolders != null && cacheFolders.Length > 0)
+                DefaultFolderLocation = cacheFolders[0];
 
             if (DefaultFolderLocation == null)
             {

@@ -28,19 +28,8 @@ namespace EVEMon.Common
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
         private static bool s_initialized;
-        private static bool s_closed;
         private static bool s_running;
-
-        private static HttpWebService s_httpWebService;
-        private static GlobalAccountCollection s_accounts;
-        private static GlobalNotificationCollection s_notifications;
-        private static GlobalCharacterIdentityCollection s_identities;
-        private static GlobalMonitoredCharacterCollection s_monitoredCharacters;
-        private static GlobalAPIProviderCollection s_apiProviders;
         private static GlobalDatafileCollection s_datafiles;
-        private static GlobalCharacterCollection s_characters;
-        private static EveServer s_tranquilityServer;
-
 
         #region Initialization and threading
 
@@ -64,15 +53,15 @@ namespace EVEMon.Common
                 LocalXmlCache.Initialize();
 
                 // Members instantiations
-                s_httpWebService = new HttpWebService();
-                s_apiProviders = new GlobalAPIProviderCollection();
-                s_monitoredCharacters = new GlobalMonitoredCharacterCollection();
-                s_identities = new GlobalCharacterIdentityCollection();
-                s_notifications = new GlobalNotificationCollection();
-                s_characters = new GlobalCharacterCollection();
+                HttpWebService = new HttpWebService();
+                APIProviders = new GlobalAPIProviderCollection();
+                MonitoredCharacters = new GlobalMonitoredCharacterCollection();
+                CharacterIdentities = new GlobalCharacterIdentityCollection();
+                Notifications = new GlobalNotificationCollection();
+                Characters = new GlobalCharacterCollection();
                 s_datafiles = new GlobalDatafileCollection();
-                s_accounts = new GlobalAccountCollection();
-                s_tranquilityServer = new EveServer();
+                Accounts = new GlobalAccountCollection();
+                TranquilityServer = new EveServer();
 
                 // Load static datas (min order to follow : skills before anything else, items before certs)
                 Trace("Load Datafiles - begin");
@@ -109,7 +98,7 @@ namespace EVEMon.Common
         /// </summary>
         public static void Shutdown()
         {
-            s_closed = true;
+            Closed = true;
             s_running = false;
             Dispatcher.Shutdown();
         }
@@ -117,19 +106,13 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true whether the client has been shut down.
         /// </summary>
-        public static bool Closed
-        {
-            get { return s_closed; }
-        }
+        public static bool Closed { get; private set; }
 
         #endregion
 
 
         #region File paths
-
-        private static string s_evePortraitCacheFolder;
         private static string s_settingsFile;
-        private static string s_dataDir;
         private static string s_traceFile;
 
         /// <summary>
@@ -184,75 +167,85 @@ namespace EVEMon.Common
         private static void InitializeEVEMonPaths()
         {
             // If settings.xml exists in the app's directory, we use this one
-            s_dataDir = Directory.GetCurrentDirectory();
-            var settingsFile = Path.Combine(s_dataDir, s_settingsFile);
+            EVEMonDataDir = Directory.GetCurrentDirectory();
+            var settingsFile = Path.Combine(EVEMonDataDir, s_settingsFile);
 
             // Else, we use %APPDATA%\EVEMon
             if (!File.Exists(settingsFile))
-                s_dataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
+                EVEMonDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
             
             // Create the directory if it does not exist already
-            if (!Directory.Exists(s_dataDir))
-                Directory.CreateDirectory(s_dataDir);
+            if (!Directory.Exists(EVEMonDataDir))
+                Directory.CreateDirectory(EVEMonDataDir);
             
             // Create the cache subfolder
-            if (!Directory.Exists(Path.Combine(s_dataDir, "cache")))
-                Directory.CreateDirectory(Path.Combine(s_dataDir, "cache"));
+            if (!Directory.Exists(Path.Combine(EVEMonDataDir, "cache")))
+                Directory.CreateDirectory(Path.Combine(EVEMonDataDir, "cache"));
         }
 
         /// <summary>
-        /// Retrieves the protrait cache folder, from the game installation.
+        /// Retrieves the portrait cache folder, from the game installation.
         /// </summary>
         private static void InitializeEvePortraitCachePath()
         {
-            s_evePortraitCacheFolder = String.Empty;
+            EvePortraitCacheFolders = new string[] { };
             string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string EVEApplicationData = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
-
-            // Create a pattern that matches anything "*_tranquility"
-            string filePattern = "*_tranquility";
 
             // Check folder exists
             if (!Directory.Exists(EVEApplicationData))
                 return;
 
+            // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationData);
-            DirectoryInfo[] filesInEveCache = di.GetDirectories(filePattern);
+            DirectoryInfo[] filesInEveCache = di.GetDirectories("*_tranquility");
 
             if (filesInEveCache.Length > 0)
             {
-                string PortraitCache = filesInEveCache[0].Name;
-                s_evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
-                    Path.DirectorySeparatorChar, PortraitCache, EVEApplicationData);
+                var evePortraitCacheFolders = new List<string>();
 
+                foreach (var eveDataPath in filesInEveCache)
+                {
+                    string PortraitCache = eveDataPath.Name;
+                    string evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, 
+                                                        "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
+                                                        Path.DirectorySeparatorChar, 
+                                                        PortraitCache, 
+                                                        EVEApplicationData);
+                    evePortraitCacheFolders.Add(evePortraitCacheFolder);
+                }
+
+                EvePortraitCacheFolders = evePortraitCacheFolders.ToArray();
                 return;
             }
         }
 
         /// <summary>
-        /// Gets the EVE Online installation's portait cache folder.
+        /// Gets the EVE Online installation's portrait cache folder.
         /// </summary>
-        public static string EvePortraitCacheFolder
-        {
-            get { return s_evePortraitCacheFolder; }
-            internal set { s_evePortraitCacheFolder = value; }
-        }
+        public static string[] EvePortraitCacheFolders { get; internal set; }
 
         /// <summary>
-        /// Returns the current data storage directory and initialises SettingsFile.
+        /// Set the EVE Online installation's portrait cache folder.
         /// </summary>
-        public static string EVEMonDataDir
+        /// <param name="path">location of the folder</param>
+        internal static void SetEvePortraitCacheFolder(string path)
         {
-            get { return s_dataDir; }
+            EvePortraitCacheFolders = new string[] { path };
         }
+        
+        /// <summary>
+        /// Returns the current data storage directory and initializes SettingsFile.
+        /// </summary>
+        public static string EVEMonDataDir { get; private set; }
 
         /// <summary>
         /// Gets the fully qualified path to the current settings file
         /// </summary>
         public static string SettingsFileName
         {
-            get { return Path.Combine(s_dataDir, s_settingsFile); }
+            get { return Path.Combine(EVEMonDataDir, s_settingsFile); }
         }
 
         /// <summary>
@@ -260,7 +253,7 @@ namespace EVEMon.Common
         /// </summary>
         public static string TraceFileName
         {
-            get { return Path.Combine(s_dataDir, s_traceFile); }
+            get { return Path.Combine(EVEMonDataDir, s_traceFile); }
         }
 
         #endregion
@@ -283,33 +276,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the http web service we use to query web services.
         /// </summary>
-        public static HttpWebService HttpWebService
-        {
-            get { return s_httpWebService; }
-        }
+        public static HttpWebService HttpWebService { get; private set; }
 
         /// <summary>
         /// Gets the API providers collection.
         /// </summary>
-        public static GlobalAPIProviderCollection APIProviders
-        {
-            get { return s_apiProviders; }
-        }
+        public static GlobalAPIProviderCollection APIProviders { get; private set; }
 
         /// <summary>
         /// Gets the tranquility server's informations
         /// </summary>
-        public static EveServer TranquilityServer
-        {
-            get { return s_tranquilityServer; }
-        }
+        public static EveServer TranquilityServer { get; private set; }
         
         /// <summary>
         /// Apply some settings changes
         /// </summary>
         private static void UpdateSettings()
         {
-            s_httpWebService.State.Proxy = Settings.Proxy;
+            HttpWebService.State.Proxy = Settings.Proxy;
         }
 
         #endregion
@@ -320,42 +304,27 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of all known accounts.
         /// </summary>
-        public static GlobalAccountCollection Accounts
-        {
-            get { return s_accounts; }
-        }
+        public static GlobalAccountCollection Accounts { get; private set; }
 
         /// <summary>
         /// Gets the collection of all characters
         /// </summary>
-        public static GlobalCharacterCollection Characters
-        {
-            get { return s_characters; }
-        }
+        public static GlobalCharacterCollection Characters { get; private set; }
 
         /// <summary>
         /// Gets the collection of all known character identities. For monitored character sources, see <see cref="MonitoredCharacterSources"/>
         /// </summary>
-        public static GlobalCharacterIdentityCollection CharacterIdentities
-        {
-            get { return s_identities; }
-        }
+        public static GlobalCharacterIdentityCollection CharacterIdentities { get; private set; }
 
         /// <summary>
         /// Gets the collection of all monitored characters
         /// </summary>
-        public static GlobalMonitoredCharacterCollection MonitoredCharacters
-        {
-            get { return s_monitoredCharacters; }
-        }
+        public static GlobalMonitoredCharacterCollection MonitoredCharacters { get; private set; }
 
         /// <summary>
         /// Gets the collection of notifications.
         /// </summary>
-        public static GlobalNotificationCollection Notifications
-        {
-            get { return s_notifications; }
-        }
+        public static GlobalNotificationCollection Notifications { get; private set; }
 
         /// <summary>
         /// Everytime the API timer is clicked, we fire this to check whether we need to update the queries
@@ -366,16 +335,16 @@ namespace EVEMon.Common
                 return;
 
             // Updates tranquility status
-            s_tranquilityServer.UpdateOnOneSecondTick();
+            TranquilityServer.UpdateOnOneSecondTick();
 
             // Updates the accounts
-            foreach(var account in s_accounts)
+            foreach(var account in Accounts)
             {
                 account.UpdateOnOneSecondTick();
             }
 
             // Updates the characters
-            foreach(var character in s_characters)
+            foreach(var character in Characters)
             {
                 var ccpCharacter = character as CCPCharacter;
                 if (ccpCharacter != null)
@@ -803,6 +772,5 @@ namespace EVEMon.Common
         }
 
         #endregion
-
     }
 }
