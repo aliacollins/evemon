@@ -324,7 +324,7 @@ namespace EVEMon
             this.battleclinicLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
             this.battleclinicLinkLabel.Size = new System.Drawing.Size(236, 19);
             this.battleclinicLinkLabel.TabIndex = 11;
-            this.battleclinicLinkLabel.Text = "Battleclinic, which hosts and supports EVEMon.";
+            this.battleclinicLinkLabel.Text = "BattleClinic, which hosts and supports EVEMon.";
             this.battleclinicLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // zofuLinkLabel

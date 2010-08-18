@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="uxMessageLabel1.Text" xml:space="preserve">
-    <value>EVEMon checked your system's time using Battleclinic.com and found that we do not agree on what the current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. 
+    <value>EVEMon checked your system's time using BattleClinic.com and found that we do not agree on what the current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. 
 </value>
   </data>
 </root>

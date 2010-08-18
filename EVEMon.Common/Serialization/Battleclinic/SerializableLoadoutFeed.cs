@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Web;
 
-namespace EVEMon.Common.Serialization.Battleclinic
+namespace EVEMon.Common.Serialization.BattleClinic
 {
     [XmlRoot("loadouts")]
     public class SerializableLoadoutFeed

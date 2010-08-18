@@ -110,7 +110,7 @@ namespace EVEMon.SkillPlanner
             this.lblBattleclinic.Size = new System.Drawing.Size(101, 13);
             this.lblBattleclinic.TabIndex = 11;
             this.lblBattleclinic.TabStop = true;
-            this.lblBattleclinic.Text = "Battleclinic loadouts";
+            this.lblBattleclinic.Text = "BattleClinic loadouts";
             this.lblBattleclinic.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblBattleclinic_LinkClicked);
             // 
             // gbAttributes

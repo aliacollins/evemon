@@ -359,7 +359,7 @@ namespace EVEMon.SkillPlanner
             this.MinimumSize = new System.Drawing.Size(480, 300);
             this.Name = "ShipLoadoutSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Battleclinic Loadout Selection";
+            this.Text = "BattleClinic Loadout Selection";
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.panel1.ResumeLayout(false);

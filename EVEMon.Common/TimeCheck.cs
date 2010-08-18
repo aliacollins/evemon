@@ -12,7 +12,7 @@ namespace EVEMon.Common
     public static class TimeCheck
     {
         /// <summary>
-        /// Asynchronous method to determine if the user's clock is syncrhonized to Battleclinic time
+        /// Asynchronous method to determine if the user's clock is syncrhonized to BattleClinic time
         /// </summary>
         /// <param name="callback"></param>
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
@@ -22,8 +22,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Callback method for synchronisation check. The user's clock is deemed to be in sync with Battleclinic time
-        /// if it is no more than 60 seconds different to Battleclinic time as local time
+        /// Callback method for synchronisation check. The user's clock is deemed to be in sync with BattleClinic time
+        /// if it is no more than 60 seconds different to BattleClinic time as local time
         /// </summary>
         /// <param name="e"></param>
         /// <param name="userState"></param>

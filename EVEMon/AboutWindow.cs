@@ -175,7 +175,7 @@ namespace EVEMon
             AddDebugTag();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
-            AddLinkToLabel(battleclinicLinkLabel, "Battleclinic", "http://www.battleclinic.com/");
+            AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
             AddLinkToLabel(zofuLinkLabel, "Zofu", "http://zofu.no-ip.de/");
             AddLinkToLabel(eveCentralLinkLabel, "Eve-central", "http://www.eve-central.com/");
             AddLinkToLabel(iconsLinkLabel, "Famfamfam.com", "http://famfamfam.com/");

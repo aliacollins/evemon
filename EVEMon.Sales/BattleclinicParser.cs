@@ -20,7 +20,7 @@ namespace EVEMon.Sales
         #region BattleclinicParser Members
         public string Title
         {
-            get { return "Battleclinic.com EVE Averages"; }
+            get { return "BattleClinic.com EVE Averages"; }
         }
 
         public string CourtesyUrl
@@ -30,7 +30,7 @@ namespace EVEMon.Sales
 
         public string CourtesyText
         {
-            get { return "Battleclinic.com"; }
+            get { return "BattleClinic.com"; }
         }
 
         public IEnumerable<Pair<string, decimal>> GetPrices()

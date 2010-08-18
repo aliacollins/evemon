@@ -139,7 +139,7 @@ namespace EVEMon
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();
 
-            // Check with Battleclinic the local clock is synchronized.
+            // Check with BattleClinic the local clock is synchronized.
             if (Settings.Updates.CheckTimeOnStartup)
                 CheckTimeSynchronization();
 
@@ -261,7 +261,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Callback for time synchronization with Battleclinic check.
+        /// Callback for time synchronization with BattleClinic check.
         /// </summary>
         /// <param name="isSynchronised"></param>
         /// <param name="serverTime"></param>

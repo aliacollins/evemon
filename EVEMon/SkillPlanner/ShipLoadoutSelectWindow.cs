@@ -9,7 +9,7 @@ using System.Web;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.Battleclinic;
+using EVEMon.Common.Serialization.BattleClinic;
 using System.Runtime.InteropServices;
 
 using SortOrder = System.Windows.Forms.SortOrder;
@@ -158,7 +158,7 @@ namespace EVEMon.SkillPlanner
 
         #region Downloads
         /// <summary>
-        /// Occurs when we downloaded a loadouts feed from Battleclinic
+        /// Occurs when we downloaded a loadouts feed from BattleClinic
         /// </summary>
         /// <param name="feed"></param>
         /// <param name="errorMessage"></param>
@@ -177,14 +177,14 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to Battleclinic, it may be down for maintainance.\r\n{0}", errorMessage);
+                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}", errorMessage);
                 return;
             }
 
             // Are there no feeds ?
             if (feed.Race == null || feed.Race.Loadouts.Length == 0)
             {
-                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to Battleclinic?", m_ship.Name);
+                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
                 return;
             }
 
@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Occurs when we downloaded a loadout from Battleclinic
+        /// Occurs when we downloaded a loadout from BattleClinic
         /// </summary>
         /// <param name="feed"></param>
         /// <param name="errorMessage"></param>

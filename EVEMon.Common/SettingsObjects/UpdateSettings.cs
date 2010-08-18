@@ -23,7 +23,7 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// When true, EVEMon will check its version from Battleclinic
+        /// When true, EVEMon will check its version from BattleClinic
         /// </summary>
         [XmlElement("checkEVEMonVersion")]
         public bool CheckEVEMonVersion
@@ -33,7 +33,7 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// When true, EVEMon will check its version from Battleclinic
+        /// When true, EVEMon will check its version from BattleClinic
         /// </summary>
         [XmlElement("checkTimeOnStartup")]
         public bool CheckTimeOnStartup
