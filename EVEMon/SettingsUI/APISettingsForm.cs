@@ -119,7 +119,7 @@ namespace EVEMon.SettingsUI
             string configName = txtConfigurationName.Text.Trim();
 
             // Checks it is not a empty name
-            if (configName == string.Empty)
+            if (configName == String.Empty)
             {
                 ShowValidationError(txtConfigurationName, "Configuration Name cannot be blank.");
                 e.Cancel = true;
@@ -159,7 +159,7 @@ namespace EVEMon.SettingsUI
         private void txtAPIHost_Validating(object sender, CancelEventArgs e)
         {
             string apiHost = txtAPIHost.Text.Trim();
-            if (apiHost == string.Empty)
+            if (apiHost == String.Empty)
             {
                 ShowValidationError(txtAPIHost, "API Host Name cannot be blank.");
                 e.Cancel = true;
@@ -183,7 +183,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void dgMethods_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if ((string)e.FormattedValue == string.Empty)
+            if ((string)e.FormattedValue == String.Empty)
             {
                 ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture, "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
                 e.Cancel = true;
@@ -216,7 +216,7 @@ namespace EVEMon.SettingsUI
         /// <param name="control"></param>
         private void ClearValidationError(Control control)
         {
-            errorProvider.SetError(control,string.Empty);
+            errorProvider.SetError(control,String.Empty);
         }
     }
 }

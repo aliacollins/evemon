@@ -361,7 +361,7 @@ namespace EVEMon.Common.Controls
         {
             using (EVEFolderWindow f = new EVEFolderWindow())
             {
-                f.EVEFolder = string.Empty;
+                f.EVEFolder = String.Empty;
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     EveClient.SetEvePortraitCacheFolder(f.EVEFolder);

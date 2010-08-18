@@ -474,7 +474,7 @@ namespace EVEMon.SkillPlanner
                         }
 
                         // Checks whether this entry will be blocked
-                        string blockingEntry = string.Empty;
+                        string blockingEntry = String.Empty;
                         if (Settings.UI.PlanWindow.HighlightConflicts)
                         {
                             bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry);

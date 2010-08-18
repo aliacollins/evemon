@@ -123,7 +123,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static T Implementation<T>(object obj) where T : class
         {
-            return Enforce.Implementation<T>(obj, string.Empty);
+            return Enforce.Implementation<T>(obj, String.Empty);
         }
 
         /// <summary>

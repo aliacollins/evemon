@@ -67,7 +67,7 @@ namespace EVEMon.Common.Net
         private void DownloadStringAsyncCompleted(WebRequestAsyncState state)
         {
             StringRequestAsyncState requestState = (StringRequestAsyncState)state;
-            string result = string.Empty;
+            string result = String.Empty;
             if (!requestState.Request.Cancelled && requestState.Error == null && requestState.Request.ResponseStream != null)
             {
                 requestState.Request.ResponseStream.Seek(0, SeekOrigin.Begin);

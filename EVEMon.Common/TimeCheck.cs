@@ -7,12 +7,12 @@ namespace EVEMon.Common
     public delegate void TimeSynchronisationCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime);
 
     /// <summary>
-    /// Ensures synchronisation of local time to a knonw time source
+    /// Ensures synchronization of local time to a know time source
     /// </summary>
     public static class TimeCheck
     {
         /// <summary>
-        /// Asynchronous method to determine if the user's clock is syncrhonised to Battleclinic time
+        /// Asynchronous method to determine if the user's clock is syncrhonized to Battleclinic time
         /// </summary>
         /// <param name="callback"></param>
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
@@ -36,7 +36,7 @@ namespace EVEMon.Common
             if (e.Error == null)
             {
                 string timeString = e.Result;
-                if (timeString != string.Empty)
+                if (timeString != String.Empty)
                 {
                     try
                     {
