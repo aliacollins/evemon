@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization;
@@ -35,7 +34,7 @@ namespace EVEMon.Common
         private Account()
         {
             m_charactersListMonitor = new AccountQueryMonitor<SerializableCharacterList>(this, APIMethods.CharacterList);
-            m_charactersListMonitor.Updated += new QueryCallback<SerializableCharacterList>(OnCharactersListUpdated);
+            m_charactersListMonitor.Updated += OnCharactersListUpdated;
 
             m_ignoreList = new AccountIgnoreList(this);
         }
@@ -103,7 +102,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool HasCharacterInTraining
         {
-            get{ return m_hasCharacterInTraining; }
+            get { return m_hasCharacterInTraining; }
         }
 
         /// <summary>
@@ -190,7 +189,7 @@ namespace EVEMon.Common
                     return;
 
                 // Use the first character ID
-                var characterID = this.CharacterIdentities.FirstOrDefault();
+                var characterID = CharacterIdentities.FirstOrDefault();
                 if (characterID == null)
                     return;
 
@@ -216,7 +215,7 @@ namespace EVEMon.Common
 
             // Invalidates the notification and update
             EveClient.Notifications.InvalidateAccountError(this);
-            this.Import(result);
+            Import(result);
 
             // On startup check for character in training on this account
             if (m_firstCheck)
@@ -243,7 +242,7 @@ namespace EVEMon.Common
             }
 
             // Notify characters changed
-            foreach (var id in this.CharacterIdentities)
+            foreach (var id in CharacterIdentities)
             {
                 var ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter != null)
@@ -415,12 +414,12 @@ namespace EVEMon.Common
         public override string ToString()
         {
             // If no characters on this account, return a "no characters" mention
-            if (this.CharacterIdentities.Count() == 0)
+            if (CharacterIdentities.Count() == 0)
                 return String.Format("{0} (no characters)", m_userId);
 
             // Otherwise, return the chars' names into parenthesis.
             string names = String.Empty;
-            foreach (var id in this.CharacterIdentities)
+            foreach (var id in CharacterIdentities)
             {
                 names += id.Name;
                 names += ", ";
