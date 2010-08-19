@@ -311,6 +311,7 @@ namespace EVEMon.Common
         /// </summary>
         internal void InvalidateAccountNotInTraining(Account account)
         {
+            EveClient.Trace("EveClient.Notification.InvalidateAccountNotInTraining({0})", account);
             Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountNotInTraining));
         }
 
@@ -320,6 +321,8 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyAccountNotInTraining(Account account)
         {
+            EveClient.Trace("EveClient.Notification.NotifyAccountNotInTraining({0})", account);
+
             var notification = new Notification(NotificationCategory.AccountNotInTraining, account)
             {
                 Description = String.Format("This account has no characters in training: {0}.", account),

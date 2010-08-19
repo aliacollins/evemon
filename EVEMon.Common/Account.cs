@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -19,7 +19,6 @@ namespace EVEMon.Common
         private string m_apiKey;
         private CredentialsLevel m_keyLevel;
 
-        private bool m_hasCharacterInTraining;
         private bool m_firstCheck = true;
         private int m_counter;
 
@@ -102,7 +101,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool HasCharacterInTraining
         {
-            get { return m_hasCharacterInTraining; }
+            get { return TrainingCharacter != null; }
         }
 
         /// <summary>
@@ -157,20 +156,27 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query each account character's skill in training.
+        /// Query skills in training for characters on this account.
         /// </summary>
         internal void CharacterInTraining()
         {
+            if (m_counter != 0)
+                EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1} - unexpected results may follow!", this, m_counter);
+
             m_counter = 0;
-            m_hasCharacterInTraining = false;
+            EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1}", this, m_counter);
 
             foreach (var id in CharacterIdentities)
             {
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
-                    APIMethods.CharacterSkillInTraining, m_userId, m_apiKey, id.CharacterID,
-                    OnSkillInTrainingUpdated);
+                    APIMethods.CharacterSkillInTraining, 
+                    m_userId, 
+                    m_apiKey, 
+                    id.CharacterID,
+                    (x) => OnSkillInTrainingUpdated(x, id));
 
                 m_counter++;
+                EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1}", this, m_counter);
             }
         }
 
@@ -250,30 +256,57 @@ namespace EVEMon.Common
             }
         }
 
+        private void OnAllCharactersSkillTrainingCompleted(APIResult<SerializableSkillInTraining> result, CharacterIdentity id)
+        {
+            // the result showed the last character to return was training
+            if (result.Result.SkillInTraining == 1)
+            {
+                EveClient.Notifications.InvalidateAccountNotInTraining(this);
+                return;
+            }
+
+            // loop through all other characters on the account.
+            foreach (var character in CharacterIdentities.Where(x => x != id))
+            {
+                var ccpCharacter = character.CCPCharacter;
+
+                if (ccpCharacter == null)
+                    continue;
+
+                // one of the remaining characters was training account is training.
+                if (ccpCharacter.IsTraining)
+                {
+                    EveClient.Notifications.InvalidateAccountNotInTraining(this);
+                    return;
+                }
+            }
+
+            // no training characters found up until
+            EveClient.Notifications.NotifyAccountNotInTraining(this);
+        }
+
         /// <summary>
         /// Updates the account is in training or send a notification.
         /// </summary>
         /// <param name="result"></param>
-        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result)
+        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result, CharacterIdentity id)
         {
+            m_counter--;
+
             // Return on error
             if (result.HasError)
                 return;
 
-            m_hasCharacterInTraining |= result.Result.SkillInTraining != 0;
-            m_counter--;
+            // Debugging
+            EveClient.Trace("Account[{0}].OnSkillInTrainingUpdated - Result.SkillInTraining = {1}, m_counter = {2}", this, result.Result.SkillInTraining, m_counter);
 
-            // Notify on account none character in training
-            if (!m_hasCharacterInTraining && m_counter == 0)
-            {
-                EveClient.Notifications.NotifyAccountNotInTraining(this);
-            }
-            else
-            {
-                EveClient.Notifications.InvalidateAccountNotInTraining(this);
-            }
+            // Still waiting for characters to return SkillInTraining 
+            if (m_counter > 0)
+                return;
+
+            OnAllCharactersSkillTrainingCompleted(result, id);
         }
-
+ 
         /// <summary>
         /// Gets the credential level from the given result.
         /// </summary>
@@ -290,7 +323,7 @@ namespace EVEMon.Common
             if (result.CCPError != null && result.CCPError.IsLimitedKeyError) 
                 return CredentialsLevel.Limited;
 
-            // Another error occured 
+            // Another error occurred 
             return CredentialsLevel.Unknown;
         }
 
