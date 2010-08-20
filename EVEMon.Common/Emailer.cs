@@ -155,7 +155,7 @@ namespace EVEMon.Common
             }
             if (e.Error != null)
             {
-                EveClient.Trace("Emailer.SendCompleted - An error occured");
+                EveClient.Trace("Emailer.SendCompleted - An error occurred");
                 ExceptionHandler.LogException(e.Error, false);
             }
             else

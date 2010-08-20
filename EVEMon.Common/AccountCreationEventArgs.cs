@@ -103,7 +103,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the result which occured when the characters list was queried.
+        /// Gets the result which occurred when the characters list was queried.
         /// </summary>
         public IAPIResult Result
         {

@@ -68,7 +68,7 @@
             labelErrorHeader.Name = "labelErrorHeader";
             labelErrorHeader.Size = new System.Drawing.Size(268, 13);
             labelErrorHeader.TabIndex = 8;
-            labelErrorHeader.Text = "An error occured while trying to import this character :";
+            labelErrorHeader.Text = "An error occurred while trying to import this character :";
             // 
             // urlRadio
             // 

@@ -267,7 +267,7 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacter> result)
         {
-            // Notify an error occured
+            // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.CharacterSheet))
                 EveClient.Notifications.NotifyCharacterSheetError(this, result);
 
@@ -295,7 +295,7 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         private void OnSkillQueueUpdated(APIResult<SerializableSkillQueue> result)
         {
-            // Notify an error occured
+            // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.SkillQueue))
                 EveClient.Notifications.NotifySkillQueueError(this, result);
 
@@ -330,7 +330,7 @@ namespace EVEMon.Common
         {
             m_charOrdersUpdated = true;
 
-            // Notify an error occured
+            // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.MarketOrders))
                 EveClient.Notifications.NotifyCharacterMarketOrdersError(this, result);
 
@@ -357,7 +357,7 @@ namespace EVEMon.Common
                 // We don't want to be notified about corp roles error
                 if (result.CCPError != null && !result.CCPError.IsOrdersRelatedCorpRolesError)
                 {
-                    // Notify an error occured
+                    // Notify an error occurred
                     if (ShouldNotifyError(result, APIMethods.CorporationMarketOrders))
                         EveClient.Notifications.NotifyCorporationMarketOrdersError(this, result);
                 }
@@ -380,7 +380,7 @@ namespace EVEMon.Common
         {
             m_charJobsUpdated = true;
 
-            // Notify an error occured
+            // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.IndustryJobs))
                 EveClient.Notifications.NotifyCharacterIndustryJobsError(this, result);
 
@@ -407,7 +407,7 @@ namespace EVEMon.Common
                 // We don't want to be notified about corp roles error
                 if (result.CCPError != null && !result.CCPError.IsJobsRelatedCorpRolesError)
                 {
-                    // Notify an error occured
+                    // Notify an error occurred
                     if (ShouldNotifyError(result, APIMethods.CorporationMarketOrders))
                         EveClient.Notifications.NotifyCorporationIndustryJobsError(this, result);
                 }
@@ -428,7 +428,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldNotifyError(IAPIResult result, APIMethods method)
         {
-            // Notify an error occured
+            // Notify an error occurred
             if (result.HasError)
             {
                 if (m_errorNotifiedMethod != APIMethods.None)

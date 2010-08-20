@@ -31,7 +31,7 @@ namespace EVEMon.Common.Notifications
         [Header("Insufficient clone")]
         InsufficientClone,
         /// <summary>
-        /// An error occured while the querying of the API.
+        /// An error occurred while the querying of the API.
         /// </summary>
         [Header("API problem")]
         QueryingError,

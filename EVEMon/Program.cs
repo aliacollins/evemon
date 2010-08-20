@@ -206,13 +206,13 @@ namespace EVEMon
                     catch
                     {
                         StringBuilder MessageBuilder = new StringBuilder();
-                        MessageBuilder.AppendLine("An error occured and EVEMon was unable to handle the error message gracefully");
+                        MessageBuilder.AppendLine("An error occurred and EVEMon was unable to handle the error message gracefully");
                         MessageBuilder.AppendLine();
                         MessageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.", ex.Message);
                         MessageBuilder.AppendLine();
                         MessageBuilder.AppendLine();
                         MessageBuilder.AppendLine("Please report this on the EVEMon forums.");
-                        MessageBox.Show(MessageBuilder.ToString(), "EVEMon Error Occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(MessageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     Environment.Exit(1);

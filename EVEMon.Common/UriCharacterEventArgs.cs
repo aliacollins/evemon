@@ -73,7 +73,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the error which occured
+        /// Gets the error which occurred
         /// </summary>
         public string Error
         {

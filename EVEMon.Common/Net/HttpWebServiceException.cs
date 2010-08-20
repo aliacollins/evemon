@@ -50,7 +50,7 @@ namespace EVEMon.Common.Net
         /// <returns></returns>
         public static HttpWebServiceException Exception(string url, Exception ex)
         {
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.Exception, ex, url, "An Exception occured.");
+            return new HttpWebServiceException(HttpWebServiceExceptionStatus.Exception, ex, url, "An Exception occurred.");
         }
 
         /// <summary>

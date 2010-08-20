@@ -164,7 +164,7 @@ namespace EVEMon
                 catch (IOException ex)
                 {
                     ExceptionHandler.LogException(ex, true);
-                    MessageBox.Show("A problem occured during exportation. The operation has not been completed.");
+                    MessageBox.Show("A problem occurred during exportation. The operation has not been completed.");
                 }
             }
         }
@@ -221,7 +221,7 @@ namespace EVEMon
                 catch (IOException exc)
                 {
                     ExceptionHandler.LogException(exc, true);
-                    MessageBox.Show("A problem occured during exportation. The operation has not been completed.");
+                    MessageBox.Show("A problem occurred during exportation. The operation has not been completed.");
                 }
             }
         }

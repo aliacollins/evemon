@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
@@ -15,7 +14,7 @@ namespace EVEMon.Common
     public abstract class BasePlan : ReadonlyCollection<PlanEntry>
     {
         /// <summary>
-        /// Describes the kind of changes which occured
+        /// Describes the kind of changes which occurred
         /// </summary>
         [Flags]
         internal enum PlanChange

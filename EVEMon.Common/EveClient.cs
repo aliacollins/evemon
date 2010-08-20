@@ -145,7 +145,7 @@ namespace EVEMon.Common
                     }
                     catch (UnauthorizedAccessException exc)
                     {
-                        string msg = "An error occured while EVEMon was looking for its data directory. You may have insufficient rights or a synchronization may be taking place.";
+                        string msg = "An error occurred while EVEMon was looking for its data directory. You may have insufficient rights or a synchronization may be taking place.";
                         msg += "\r\n\r\nThe message was :\r\n" + exc.Message;
 
                         var result = MessageBox.Show(msg, "Couldn't read the data directory", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);

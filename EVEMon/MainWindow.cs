@@ -1403,7 +1403,7 @@ namespace EVEMon
             if (dr == DialogResult.Cancel)
                 return;
 
-            // Load from file and returns if an error occured (user has already been warned)
+            // Load from file and returns if an error occurred (user has already been warned)
             var serial = PlanExporter.ImportFromXML(ofdOpenDialog.FileName);
             if (serial == null)
                 return;

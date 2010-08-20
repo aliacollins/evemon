@@ -124,7 +124,7 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(exc, true);
                 return null;
             }
-            // An error occured during the deserialization
+            // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
@@ -162,12 +162,12 @@ namespace EVEMon.Common
             }
             catch (InvalidOperationException ex)
             {
-                String message = String.Format(CultureConstants.DefaultCulture, "An error occured decompressing {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                String message = String.Format(CultureConstants.DefaultCulture, "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
             catch (XmlException ex)
             {
-                String message = String.Format(CultureConstants.DefaultCulture, "An error occured reading the XML from {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
+                String message = String.Format(CultureConstants.DefaultCulture, "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. Try deleting all of the xml.gz files in %APPDATA%\\EVEMon.", filename, ex.Message, ex.Source);
                 throw new ApplicationException(message, ex);
             }
         }
@@ -327,7 +327,7 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(exc, true);
                 result = new APIResult<T>(exc);
             }
-            // An error occured during the deserialization
+            // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
@@ -380,7 +380,7 @@ namespace EVEMon.Common
                             result = (T)xs.Deserialize(reader);
                         }
                     }
-                    // An error occured during the deserialization
+                    // An error occurred during the deserialization
                     catch (InvalidOperationException exc)
                     {
                         ExceptionHandler.LogException(exc, true);

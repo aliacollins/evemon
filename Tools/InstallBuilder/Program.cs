@@ -45,7 +45,7 @@ namespace InstallBuilder
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured: {0} in {1}", ex.Message, ex.Source);
+                Console.WriteLine("An error occurred: {0} in {1}", ex.Message, ex.Source);
                 Console.WriteLine();
                 Console.WriteLine(ex.StackTrace);
                 if (Debugger.IsAttached) Console.ReadLine();

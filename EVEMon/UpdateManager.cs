@@ -134,7 +134,7 @@ namespace EVEMon
             {
                 ScanUpdateFeed(e.Result);
             }
-            // An error occured during the deserialization
+            // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);

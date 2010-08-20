@@ -43,7 +43,7 @@ namespace EVEMon.Common
         private static readonly Timer m_dirtyTimer = new Timer(DirtyCallback);
 
         /// <summary>
-        /// Call this method after an operation has occured that might have increased the working set of the application
+        /// Call this method after an operation has occurred that might have increased the working set of the application
         /// temporarily (e.g. making or servicing a network call).  Calling this after an operation that allocates and holds
         /// onto memory (e.g. loading an ADO.NET Table from SQL) will not have much effect as that memory isn't available
         /// to be Collected/Released.
@@ -62,7 +62,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Call this method after an operation has occured that might have increased the working set of the application
+        /// Call this method after an operation has occurred that might have increased the working set of the application
         /// temporarily (e.g. making or servicing a network call).  Calling this after an operation that allocates and holds
         /// onto memory (e.g. loading an ADO.NET Table from SQL) will not have much effect as that memory isn't available
         /// to be Collected/Released.

@@ -122,7 +122,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(null, result)
             {
-                Description = "An error occured while querying the API server.", Behaviour = NotificationBehaviour.Overwrite,
+                Description = "An error occurred while querying the API server.", Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
             Notify(notification);
@@ -148,7 +148,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(null, result)
             {
-                Description = "An error occured while querying the server status.",
+                Description = "An error occurred while querying the server status.",
                 Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
             };
             Notify(notification);
@@ -175,7 +175,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(account, result)
             {
-                Description = String.Format("An error occured while querying the character list for account {0}.", account),
+                Description = String.Format("An error occurred while querying the character list for account {0}.", account),
                 Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
             };
             Notify(notification);
@@ -190,7 +190,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(account, result)
             {
-                Description = String.Format("An error occured while checking the API key level for account {0}.", account),
+                Description = String.Format("An error occurred while checking the API key level for account {0}.", account),
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -217,7 +217,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the character sheet.",
+                Description = "An error occurred while querying the character sheet.",
                 Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
             };
             Notify(notification);
@@ -232,7 +232,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the skill queue.",
+                Description = "An error occurred while querying the skill queue.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -248,7 +248,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the personal market orders.",
+                Description = "An error occurred while querying the personal market orders.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -264,7 +264,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the corporation market orders.",
+                Description = "An error occurred while querying the corporation market orders.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -280,7 +280,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the personal industry jobs.",
+                Description = "An error occurred while querying the personal industry jobs.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -296,7 +296,7 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(character, result)
             {
-                Description = "An error occured while querying the corporation industry jobs.",
+                Description = "An error occurred while querying the corporation industry jobs.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };

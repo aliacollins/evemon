@@ -18,12 +18,12 @@ namespace EVEMon.Common.Serialization.API
         Http,
 
         /// <summary>
-        /// The error occured during the XSL transformation.
+        /// The error occurred during the XSL transformation.
         /// </summary>
         Xslt,
 
         /// <summary>
-        /// The error occured during the XML deserialization.
+        /// The error occurred during the XML deserialization.
         /// </summary>
         Xml,
 
