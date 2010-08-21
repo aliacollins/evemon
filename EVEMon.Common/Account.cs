@@ -18,14 +18,14 @@ namespace EVEMon.Common
         private long m_userId;
         private string m_apiKey;
         private CredentialsLevel m_keyLevel;
-
         private bool m_firstCheck = true;
-        private int m_counter;
-
         private readonly AccountIgnoreList m_ignoreList;
         private readonly AccountQueryMonitor<SerializableCharacterList> m_charactersListMonitor;
-
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
+        private Dictionary<String, SkillQueueResponse> m_skillQueueCache = new Dictionary<String, SkillQueueResponse>();
+
+
+        #region Constructors
 
         /// <summary>
         /// Common constructor base.
@@ -63,6 +63,11 @@ namespace EVEMon.Common
             m_userId = userID;
             m_apiKey = String.Empty;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets true whether this key is a full key.
@@ -155,28 +160,33 @@ namespace EVEMon.Common
             }
         }
 
+        #endregion
+
+        
+        #region Internal Methods
+
         /// <summary>
         /// Query skills in training for characters on this account.
         /// </summary>
         internal void CharacterInTraining()
         {
-            if (m_counter != 0)
-                EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1} - unexpected results may follow!", this, m_counter);
-
-            m_counter = 0;
-            EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1}", this, m_counter);
+            EveClient.Trace("Account.CharacterInTraining - {0}", this);
 
             foreach (var id in CharacterIdentities)
             {
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
-                    APIMethods.CharacterSkillInTraining, 
-                    m_userId, 
-                    m_apiKey, 
-                    id.CharacterID,
-                    (x) => OnSkillInTrainingUpdated(x, id));
+                var identity = id.CCPCharacter.Name;
 
-                m_counter++;
-                EveClient.Trace("Account[{0}].CharacterInTraining - m_counter = {1}", this, m_counter);
+                if (!m_skillQueueCache.ContainsKey(id.CCPCharacter.Name))
+                    m_skillQueueCache.Add(id.CCPCharacter.Name, new SkillQueueResponse());
+
+                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
+                    APIMethods.CharacterSkillInTraining,
+                    m_userId,
+                    m_apiKey,
+                    id.CharacterID,
+                    (x) => OnSkillInTrainingUpdated(x, identity));
+
+                EveClient.Trace("Account.CharacterInTraining - Querying {0}", id.Name);
             }
         }
 
@@ -205,6 +215,109 @@ namespace EVEMon.Common
                     OnKeyLevelUpdated);
             }
         }
+
+        /// <summary>
+        /// Gets the credential level from the given result.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAccountBalanceList> result)
+        {
+            // No error ? Then it is a full key
+            if (!result.HasError)
+                return CredentialsLevel.Full;
+
+            // Error code 200 means it was a limited key
+            if (result.CCPError != null && result.CCPError.IsLimitedKeyError)
+                return CredentialsLevel.Limited;
+
+            // Another error occurred 
+            return CredentialsLevel.Unknown;
+        }
+
+        /// <summary>
+        /// Updates the characters list with the given CCP data
+        /// </summary>
+        /// <param name="result"></param>
+        internal void Import(APIResult<SerializableCharacterList> result)
+        {
+            if (result.HasError)
+            {
+                ImportIdentities(null);
+            }
+            else
+            {
+                ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
+            }
+
+            // Fires the event regarding the account character list update.
+            EveClient.OnCharacterListChanged(this);
+        }
+
+        /// <summary>
+        /// Exports the data to a serialization object
+        /// </summary>
+        /// <returns></returns>
+        internal SerializableAccount Export()
+        {
+            return new SerializableAccount
+            {
+                ID = m_userId,
+                Key = m_apiKey,
+                KeyLevel = m_keyLevel,
+                LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
+                IgnoreList = m_ignoreList.Export()
+            };
+        }
+
+        #endregion
+
+
+        #region Response To Events
+        
+        /// <summary>
+        /// Updates the account is in training or send a notification.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result, string character)
+        {
+            // Return on error
+            if (result.HasError)
+            {
+                EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : Error Response", this, character);
+                m_skillQueueCache[character].State = ResponseState.InError;
+                return;
+            }
+
+            m_skillQueueCache[character].State = result.Result.SkillInTraining == 1 ? ResponseState.Training : ResponseState.NotTraining;
+
+            EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : {2} ({3}\\{4})", 
+                this,
+                character,
+                m_skillQueueCache[character].State,
+                m_skillQueueCache.Count(x => x.Value.State != ResponseState.Unknown),
+                CharacterIdentities.Count());
+
+
+            // in the event this becomes a very long running process because of latency
+            // and characters have been removed from the account since they were queried
+            // remove those characters from the cache.
+            var toRemove = m_skillQueueCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
+
+            foreach (var charToRemove in toRemove)
+            {
+                m_skillQueueCache.Remove(charToRemove.Key);
+            }
+
+            // if we did not get response from any characters yet we are not sure
+            // so wait until next time.
+            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Unknown))
+                return;
+
+            OnAllCharactersSkillTrainingUpdated();
+        }
+
 
         /// <summary>
         /// Used when the character list has been queried.
@@ -256,95 +369,38 @@ namespace EVEMon.Common
             }
         }
 
-        private void OnAllCharactersSkillTrainingCompleted(APIResult<SerializableSkillInTraining> result, CharacterIdentity id)
+        private void OnAllCharactersSkillTrainingUpdated()
         {
-            // the result showed the last character to return was training
-            if (result.Result.SkillInTraining == 1)
+            foreach (var key in m_skillQueueCache.Keys)
+                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0}\\{1} = {2} ({3})",
+                        this,
+                        key,
+                        m_skillQueueCache[key].State,
+                        m_skillQueueCache[key].Timestamp);
+
+               
+            // one of the remaining characters was training account is training.
+            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Training))
             {
+                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.");
                 EveClient.Notifications.InvalidateAccountNotInTraining(this);
                 return;
             }
 
-            // loop through all other characters on the account.
-            foreach (var character in CharacterIdentities.Where(x => x != id))
+            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.InError))
             {
-                var ccpCharacter = character.CCPCharacter;
-
-                if (ccpCharacter == null)
-                    continue;
-
-                // one of the remaining characters was training account is training.
-                if (ccpCharacter.IsTraining)
-                {
-                    EveClient.Notifications.InvalidateAccountNotInTraining(this);
-                    return;
-                }
+                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.");
+                return;
             }
 
             // no training characters found up until
             EveClient.Notifications.NotifyAccountNotInTraining(this);
         }
 
-        /// <summary>
-        /// Updates the account is in training or send a notification.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result, CharacterIdentity id)
-        {
-            m_counter--;
+        #endregion
 
-            // Return on error
-            if (result.HasError)
-                return;
 
-            // Debugging
-            EveClient.Trace("Account[{0}].OnSkillInTrainingUpdated - Result.SkillInTraining = {1}, m_counter = {2}", this, result.Result.SkillInTraining, m_counter);
-
-            // Still waiting for characters to return SkillInTraining 
-            if (m_counter > 0)
-                return;
-
-            OnAllCharactersSkillTrainingCompleted(result, id);
-        }
- 
-        /// <summary>
-        /// Gets the credential level from the given result.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="?"></param>
-        /// <returns></returns>
-        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAccountBalanceList> result)
-        {
-            // No error ? Then it is a full key
-            if (!result.HasError)
-                return CredentialsLevel.Full;
-
-            // Error code 200 means it was a limited key
-            if (result.CCPError != null && result.CCPError.IsLimitedKeyError) 
-                return CredentialsLevel.Limited;
-
-            // Another error occurred 
-            return CredentialsLevel.Unknown;
-        }
-
-        /// <summary>
-        /// Updates the characters list with the given CCP data
-        /// </summary>
-        /// <param name="result"></param>
-        internal void Import(APIResult<SerializableCharacterList> result)
-        {
-            if (result.HasError)
-            {
-                ImportIdentities(null);
-            }
-            else
-            {
-                ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
-            }
-
-            // Fires the event regarding the account character list update.
-            EveClient.OnCharacterListChanged(this);
-        }
+        #region Helper Methods
 
         /// <summary>
         /// Updates the characters list with the given CCP data
@@ -373,6 +429,11 @@ namespace EVEMon.Common
                 id.Account = this;
             }
         }
+
+        #endregion
+
+
+        #region Public Methods
 
         /// <summary>
         /// Asynchronously updates this account through a <see cref="AccountCreationEventArgs"/>.
@@ -424,21 +485,10 @@ namespace EVEMon.Common
             }
         }
 
-        /// <summary>
-        /// Exports the data to a serialization object
-        /// </summary>
-        /// <returns></returns>
-        internal SerializableAccount Export()
-        {
-            return new SerializableAccount 
-            { 
-                ID = m_userId, 
-                Key = m_apiKey, 
-                KeyLevel = m_keyLevel, 
-                LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
-                IgnoreList = m_ignoreList.Export() 
-            };
-        }
+        #endregion
+
+
+        #region Overridden Methods
 
         /// <summary>
         /// Gets a string representation of this account, under the given format : 123456 (John Doe, Joe Dohn).
@@ -459,5 +509,45 @@ namespace EVEMon.Common
             }
             return String.Format("{0} ({1})", m_userId, names.TrimEnd(", ".ToCharArray()));
         }
+
+        #endregion
+
+
+        #region Helper Class
+
+        private class SkillQueueResponse
+        {
+
+            public SkillQueueResponse()
+            {
+                State = ResponseState.Unknown;
+                Timestamp = DateTime.MinValue;
+            }
+
+            private ResponseState m_state;
+            
+            public ResponseState State
+            {
+                get { return m_state; }
+                set
+                {
+                    Timestamp = DateTime.Now;
+                    m_state = value;
+                }
+            }
+
+            public DateTime Timestamp { get; set; }
+        }
+
+        private enum ResponseState
+        {
+            Unknown,
+            InError,
+            Training,
+            NotTraining
+        }
+        
+        #endregion
+
     }
 }
