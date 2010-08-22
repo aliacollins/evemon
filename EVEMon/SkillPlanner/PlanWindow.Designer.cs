@@ -31,9 +31,11 @@ namespace EVEMon.SkillPlanner
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlanWindow));
             this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.tslSuggestion = new System.Windows.Forms.ToolStripStatusLabel();
-            this.obsoleteEntriesToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.slblStatusText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SuggestionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ObsoleteEntriesStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SkillsStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.TimeStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.CostStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.upperToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsddbPlans = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsddbSave = new System.Windows.Forms.ToolStripDropDownButton();
@@ -77,46 +79,67 @@ namespace EVEMon.SkillPlanner
             // MainStatusStrip
             // 
             this.MainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslSuggestion,
-            this.obsoleteEntriesToolStripStatusLabel,
-            this.slblStatusText});
+            this.SuggestionStatusLabel,
+            this.ObsoleteEntriesStatusLabel,
+            this.SkillsStatusLabel,
+            this.TimeStatusLabel,
+            this.CostStatusLabel});
             this.MainStatusStrip.Location = new System.Drawing.Point(0, 596);
             this.MainStatusStrip.Name = "MainStatusStrip";
             this.MainStatusStrip.ShowItemToolTips = true;
             this.MainStatusStrip.Size = new System.Drawing.Size(944, 22);
             this.MainStatusStrip.TabIndex = 1;
             // 
-            // tslSuggestion
+            // SuggestionStatusLabel
             // 
-            this.tslSuggestion.Image = ((System.Drawing.Image)(resources.GetObject("tslSuggestion.Image")));
-            this.tslSuggestion.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tslSuggestion.IsLink = true;
-            this.tslSuggestion.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
-            this.tslSuggestion.Name = "tslSuggestion";
-            this.tslSuggestion.Size = new System.Drawing.Size(91, 17);
-            this.tslSuggestion.Text = "Suggestion...";
-            this.tslSuggestion.Visible = false;
-            this.tslSuggestion.Click += new System.EventHandler(this.tslSuggestion_Click);
+            this.SuggestionStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("SuggestionStatusLabel.Image")));
+            this.SuggestionStatusLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.SuggestionStatusLabel.IsLink = true;
+            this.SuggestionStatusLabel.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+            this.SuggestionStatusLabel.Name = "SuggestionStatusLabel";
+            this.SuggestionStatusLabel.Size = new System.Drawing.Size(91, 17);
+            this.SuggestionStatusLabel.Text = "Suggestion...";
+            this.SuggestionStatusLabel.Visible = false;
+            this.SuggestionStatusLabel.Click += new System.EventHandler(this.tslSuggestion_Click);
             // 
-            // obsoleteEntriesToolStripStatusLabel
+            // ObsoleteEntriesStatusLabel
             // 
-            this.obsoleteEntriesToolStripStatusLabel.Image = global::EVEMon.Properties.Resources.Warning16;
-            this.obsoleteEntriesToolStripStatusLabel.IsLink = true;
-            this.obsoleteEntriesToolStripStatusLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.obsoleteEntriesToolStripStatusLabel.Name = "obsoleteEntriesToolStripStatusLabel";
-            this.obsoleteEntriesToolStripStatusLabel.Size = new System.Drawing.Size(117, 17);
-            this.obsoleteEntriesToolStripStatusLabel.Text = "Obsolete Entries...";
-            this.obsoleteEntriesToolStripStatusLabel.Visible = false;
-            this.obsoleteEntriesToolStripStatusLabel.Click += new System.EventHandler(this.obsoleteEntriesToolStripStatusLabel_Click);
+            this.ObsoleteEntriesStatusLabel.Image = global::EVEMon.Properties.Resources.Warning16;
+            this.ObsoleteEntriesStatusLabel.IsLink = true;
+            this.ObsoleteEntriesStatusLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.ObsoleteEntriesStatusLabel.Name = "ObsoleteEntriesStatusLabel";
+            this.ObsoleteEntriesStatusLabel.Size = new System.Drawing.Size(117, 17);
+            this.ObsoleteEntriesStatusLabel.Text = "Obsolete Entries...";
+            this.ObsoleteEntriesStatusLabel.Visible = false;
+            this.ObsoleteEntriesStatusLabel.Click += new System.EventHandler(this.obsoleteEntriesToolStripStatusLabel_Click);
             // 
-            // slblStatusText
+            // SkillsStatusLabel
             // 
-            this.slblStatusText.AutoToolTip = true;
-            this.slblStatusText.Name = "slblStatusText";
-            this.slblStatusText.Size = new System.Drawing.Size(929, 17);
-            this.slblStatusText.Spring = true;
-            this.slblStatusText.Text = "0 Skills Planned";
-            this.slblStatusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SkillsStatusLabel.AutoToolTip = true;
+            this.SkillsStatusLabel.Image = global::EVEMon.Properties.Resources.Skill16;
+            this.SkillsStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SkillsStatusLabel.Name = "SkillsStatusLabel";
+            this.SkillsStatusLabel.Size = new System.Drawing.Size(104, 17);
+            this.SkillsStatusLabel.Text = "0 Skills Planned";
+            this.SkillsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // TimeStatusLabel
+            // 
+            this.TimeStatusLabel.Image = global::EVEMon.Properties.Resources.Clock;
+            this.TimeStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TimeStatusLabel.Name = "TimeStatusLabel";
+            this.TimeStatusLabel.Size = new System.Drawing.Size(116, 17);
+            this.TimeStatusLabel.Text = "356d 23h 25m 10s";
+            this.TimeStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CostStatusLabel
+            // 
+            this.CostStatusLabel.Image = global::EVEMon.Properties.Resources.Money;
+            this.CostStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CostStatusLabel.Name = "CostStatusLabel";
+            this.CostStatusLabel.Size = new System.Drawing.Size(98, 17);
+            this.CostStatusLabel.Text = "0 ISK Required";
+            this.CostStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // upperToolStrip
             // 
@@ -441,10 +464,10 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private System.Windows.Forms.StatusStrip MainStatusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel slblStatusText;
+        private System.Windows.Forms.ToolStripStatusLabel SkillsStatusLabel;
         private System.Windows.Forms.ToolStrip upperToolStrip;
         private System.Windows.Forms.ToolStripButton tsbDeletePlan;
-        private System.Windows.Forms.ToolStripStatusLabel tslSuggestion;
+        private System.Windows.Forms.ToolStripStatusLabel SuggestionStatusLabel;
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.ToolStripButton tsbCopyForum;
         private System.Windows.Forms.SaveFileDialog sfdSave;
@@ -470,8 +493,10 @@ namespace EVEMon.SkillPlanner
         private CertificateBrowserControl certBrowser;
         private System.Windows.Forms.ImageList ilTabIcons;
         private System.Windows.Forms.ToolStripButton tsbEFTImport;
-        private System.Windows.Forms.ToolStripStatusLabel obsoleteEntriesToolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel ObsoleteEntriesStatusLabel;
         private System.Windows.Forms.TabPage tpBlueprintBrowser;
         private BlueprintBrowserControl blueprintBrowser;
+        private System.Windows.Forms.ToolStripStatusLabel CostStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel TimeStatusLabel;
     }
 }

@@ -939,6 +939,7 @@
     <Content Include="Microsoft.VC90.CRT\msvcr90.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\clock_16.png" />
     <Content Include="Resources\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

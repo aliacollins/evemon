@@ -832,38 +832,16 @@ namespace EVEMon.SkillPlanner
                 selectedTrainTime += entry.TrainingTime;
             }
 
+            selectedTimeWithLearning = selectedTrainTime;
+
             bool planHasLearningSkills = m_displayPlan.Any(x => x.Skill.LearningClass != LearningClass.None);
+
             if (planHasLearningSkills)
-                selectedTimeWithLearning = this.Plan.TimeWithPrecedingLearning(SelectedEntries);
+                selectedTimeWithLearning = Plan.TimeWithPrecedingLearning(SelectedEntries);
 
-            // Appends the string to display in the status bar.
-            StringBuilder sb = new StringBuilder();
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} Skill{1} selected ({2} Unique Skill{3}). Training time: {4}. ", 
-                    entriesCount,
-                    entriesCount == 1 ? String.Empty : "s",
-                    UniqueSkillsCount,
-                    UniqueSkillsCount == 1 ? String.Empty : "s",
-                    selectedTrainTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
-
-            if (planHasLearningSkills && selectedTimeWithLearning != selectedTrainTime)
-            {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "({0} including preceding learning skills). ",
-                    selectedTimeWithLearning.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
-            }
-            
-            if (sbcost > 0)
-            {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Skill book{0} cost: {1:0,0,0} ISK. ",
-                    UniqueSkillsCount == 1 ? String.Empty : "s", sbcost);
-            }
-
-            if (entriesCount > 1 && nksbcost > 0)
-            {
-                sb.AppendFormat(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ",
-                    NotKnownSkillsCount == 1 ? String.Empty : "s", nksbcost);
-            }
-            
-            window.UpdateStatusBarSelected(sb.ToString());
+            window.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
+            window.UpdateTimeStatusLabel(true, selectedTrainTime, selectedTimeWithLearning);
+            window.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
         }
         #endregion
 

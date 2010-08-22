@@ -276,14 +276,14 @@ namespace EVEMon.SkillPlanner
             switch (Settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour)
             {
                 case ObsoleteEntryRemovalBehaviour.AlwaysAsk:
-                    obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
+                    ObsoleteEntriesStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
                     break;
                 case ObsoleteEntryRemovalBehaviour.RemoveAll:
                     m_plan.CleanObsoleteEntries(ObsoleteRemovalPolicy.RemoveAll);
                     break;
                 case ObsoleteEntryRemovalBehaviour.RemoveConfirmed:
                     m_plan.CleanObsoleteEntries(ObsoleteRemovalPolicy.ConfirmedOnly);
-                    obsoleteEntriesToolStripStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
+                    ObsoleteEntriesStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
                     break;
                 default:
                     break;
@@ -365,19 +365,86 @@ namespace EVEMon.SkillPlanner
             tsmiPlan.Enabled = m_plan.Count > 0;
         }
 
-        /// <summary>
-        /// Update the status bar with the given text (used by the <see cref="PlanEditor"/> control when skills are selected).
-        /// </summary>
-        /// <param name="txt"></param>
-        public void UpdateStatusBarSelected(String txt)
+        internal void UpdateSkillStatusLabel(bool selected, int skillCount, int uniqueCount)
         {
-            slblStatusText.Text = txt;
+            SkillsStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} skill{1} {2} ({3} unique)",
+                skillCount,
+                skillCount == 1 ? String.Empty : "s",
+                selected ? "selected" : "planned",
+                uniqueCount);
+        }
+
+        private void UpdateTimeStatusLabel(TimeSpan totalTime)
+        {
+            UpdateTimeStatusLabel(false, totalTime, totalTime);
+        }
+
+        internal void UpdateTimeStatusLabel(bool selected, TimeSpan totalTime, TimeSpan timeWithLearning)
+        {
+            TimeStatusLabel.AutoToolTip = false;
+            TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
+                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                selected ? "selected skills" : "whole plan");
+
+            if (totalTime == timeWithLearning)
+            {
+                TimeStatusLabel.AutoToolTip = true;
+                return;
+            }
+
+            TimeStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture, "Training time of selected skills alone: {0}{2}Training time in the context of the plan: {1}",
+                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                timeWithLearning.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                Environment.NewLine);
+        }
+
+        internal void UpdateCostStatusLabel(bool selected, long totalcost, long cost)
+        {
+            CostStatusLabel.AutoToolTip = totalcost <= 0;
+
+            if (totalcost > 0)
+            {
+                CostStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required to purchase {1} skill{2} anew",
+                    totalcost,
+                    selected ? "selected" : "all",
+                    m_plan.UniqueSkillsCount == 1 ? String.Empty : "s");
+            }
+
+            if (cost > 0)
+            {
+                CostStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} ISK required",
+                     cost);
+            }
+            else
+            {
+                CostStatusLabel.Text = "0 ISK required";
+            }
+        }
+
+        internal void UpdateSuggestions()
+        {
+            SuggestionStatusLabel.Visible = false;
+
+            // Suggestions
+            if (m_plan.GetSuggestions().Count == 0)
+                return;
+
+            if (Visible && !SuggestionStatusLabel.Visible)
+            {
+                SuggestionStatusLabel.Visible = true;
+                TipWindow.ShowTip(this, "suggestion",
+                                  "Plan Suggestion",
+                                  "EVEMon found learning skills that would lower " +
+                                  "the overall training time of the plan. To view those " +
+                                  "suggestions and the resulting change in plan time, click the " +
+                                  "\"Suggestion\" link in the planner status bar.");
+            }
         }
 
         /// <summary>
         /// Autonomously updates the status bar with the plan's training time.
         /// </summary>
-        public void UpdateStatusBar()
+        internal void UpdateStatusBar()
         {
             // Training time
             CharacterScratchpad scratchpad;
@@ -391,44 +458,11 @@ namespace EVEMon.SkillPlanner
             }
 
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
-            slblStatusText.Text = String.Format(CultureConstants.DefaultCulture, "{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}. ",
-                                                m_plan.Count,
-                                                m_plan.Count == 1 ? String.Empty : "s",
-                                                m_plan.UniqueSkillsCount,
-                                                m_plan.UniqueSkillsCount == 1 ? String.Empty : "s",
-                                                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
 
-            // Books cost
-            long totalcost = m_plan.TotalBooksCost;
-            long cost = m_plan.NotKnownSkillBooksCost;
-            if (totalcost > 0)
-            {
-                slblStatusText.Text += String.Format(CultureConstants.DefaultCulture, "Total skill book{0} cost: {1:0,0,0} ISK. ",
-                    m_plan.UniqueSkillsCount == 1 ? String.Empty : "s", totalcost);
-            }
-
-            if (cost > 0)
-            {
-                slblStatusText.Text += String.Format(CultureConstants.DefaultCulture, "Not known skill book{0} cost: {1:0,0,0} ISK. ",
-                    m_plan.NotKnownSkillsCount == 1 ? String.Empty : "s", cost);
-            }
-
-            // Suggestions
-            var suggestions = m_plan.GetSuggestions();
-            if (suggestions.Count != 0)
-            {
-                if (Visible && !tslSuggestion.Visible)
-                {
-                    tslSuggestion.Visible = true;
-                    TipWindow.ShowTip(this, "suggestion",
-                                      "Plan Suggestion",
-                                      "EVEMon found learning skills that would lower " +
-                                      "the overall training time of the plan. To view those " +
-                                      "suggestions and the resulting change in plan time, click the " +
-                                      "\"Suggestion\" link in the planner status bar.");
-                }
-            }
-            else tslSuggestion.Visible = false;
+            UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
+            UpdateTimeStatusLabel(totalTime);
+            UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
+            UpdateSuggestions();
         }
 
         #endregion
@@ -521,11 +555,11 @@ namespace EVEMon.SkillPlanner
             {
                 case ObsoleteEntriesAction.RemoveAll:
                     planEditor.ClearObsoleteEntries(ObsoleteRemovalPolicy.RemoveAll);
-                    obsoleteEntriesToolStripStatusLabel.Visible = false;
+                    ObsoleteEntriesStatusLabel.Visible = false;
                     break;
                 case ObsoleteEntriesAction.RemoveConfirmed:
                     planEditor.ClearObsoleteEntries(ObsoleteRemovalPolicy.ConfirmedOnly);
-                    obsoleteEntriesToolStripStatusLabel.Visible = false;
+                    ObsoleteEntriesStatusLabel.Visible = false;
                     break;
                 case ObsoleteEntriesAction.KeepAll:
                 case ObsoleteEntriesAction.None:
