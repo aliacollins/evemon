@@ -23,7 +23,6 @@ namespace EVEMon.SkillPlanner
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
 
-
         #region Initialization and Lifecycle
 
         /// <summary>
@@ -32,13 +31,13 @@ namespace EVEMon.SkillPlanner
         public PlanWindow()
         {
             InitializeComponent();
-            this.RememberPositionKey = "PlanWindow";
+            RememberPositionKey = "PlanWindow";
 
-            this.ResizeEnd += new EventHandler(PlanWindow_ResizeEnd);
+            ResizeEnd += PlanWindow_ResizeEnd;
 
             // ToolStripLabels don't support AutoEllipsis so we user a custom renderer
             // via: http://discuss.joelonsoftware.com/default.asp?dotnet.12.597246.5
-            this.MainStatusStrip.Renderer = new AutoEllipsisToolStripRenderer();
+            MainStatusStrip.Renderer = new AutoEllipsisToolStripRenderer();
         }
 
         /// <summary>
@@ -48,10 +47,10 @@ namespace EVEMon.SkillPlanner
         public PlanWindow(Plan plan)
             : this()
         {
-            this.Plan = plan;
+            Plan = plan;
 
             // Global events (unsubscribed on window closing)
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.PlanChanged += EveClient_PlanChanged;
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode) return;
+            if (DesignMode) return;
 
             // Force an update
             tsddbPlans.DropDownItems.Add("<New Plan>");
@@ -69,11 +68,11 @@ namespace EVEMon.SkillPlanner
             // Compatibility mode : Mac OS
             if (Settings.Compatibility == CompatibilityMode.Wine)
             {
-                // Under Wine, the upper toolbar is not displayed
+                // Under Wine, the upper tool bar is not displayed
                 // We move it at the top of the first tab
-                this.Controls.Remove(this.upperToolStrip);
-                this.tabControl.TabPages[0].Controls.Add(this.upperToolStrip);
-                this.tabControl.TabPages[0].Controls.SetChildIndex(this.upperToolStrip, 0);
+                Controls.Remove(upperToolStrip);
+                tabControl.TabPages[0].Controls.Add(upperToolStrip);
+                tabControl.TabPages[0].Controls.SetChildIndex(upperToolStrip, 0);
             }
 
             // Show the hint tip
@@ -81,7 +80,7 @@ namespace EVEMon.SkillPlanner
                               "Welcome to the Skill Planner",
                               "Select skills to add to your plan using the list on the left. To " +
                               "view the list of skills you've added to your plan, choose " +
-                              "\"View Plan\" from the dropdown in the upper left.");
+                              "\"View Plan\" from the drop down in the upper left.");
 
             UpdateStatusBar();
         }
@@ -114,7 +113,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Unsubscribe global events
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.PlanChanged -= EveClient_PlanChanged;
             Settings.Save();
 
             // We're closing down
@@ -162,7 +161,7 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
 
                 // The tag is used by WindowsFactory.ShowByTag
-                this.Tag = value;
+                Tag = value;
 
                 // Check to see if one or more obsolete entries were found
                 CheckObsoleteEntries();
@@ -174,7 +173,9 @@ namespace EVEMon.SkillPlanner
                 certBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
+
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
+
                 if (loadoutSelect != null)
                 {
                     loadoutSelect.Plan = m_plan;
@@ -192,7 +193,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Update controls
-                this.Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", this.Character.Name, m_plan.Name);
+                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name, m_plan.Name);
 
                 // Check to see if one or more invalid entries were 
                 // found, we do this last so as not to cause problems
@@ -379,9 +380,16 @@ namespace EVEMon.SkillPlanner
         public void UpdateStatusBar()
         {
             // Training time
-            var scratchpad = new CharacterScratchpad(Character);
+            CharacterScratchpad scratchpad;
             if (m_plan.ChosenImplantSet != null)
+            {
                 scratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
+            }
+            else
+            {
+                scratchpad = new CharacterScratchpad(Character);
+            }
+
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
             slblStatusText.Text = String.Format(CultureConstants.DefaultCulture, "{0} Skill{1} Planned ({2} Unique Skill{3}). Total training time: {4}. ",
                                                 m_plan.Count,
@@ -409,7 +417,7 @@ namespace EVEMon.SkillPlanner
             var suggestions = m_plan.GetSuggestions();
             if (suggestions.Count != 0)
             {
-                if (this.Visible && !tslSuggestion.Visible)
+                if (Visible && !tslSuggestion.Visible)
                 {
                     tslSuggestion.Visible = true;
                     TipWindow.ShowTip(this, "suggestion",
@@ -458,13 +466,13 @@ namespace EVEMon.SkillPlanner
             // When no plans exists after deletion we close the window
             if (i < 0)
             {
-                this.Close();
+                Close();
                 return;
             }
 
             // New plan to show
             var newplan = Character.Plans[i];
-            this.Plan = newplan;
+            Plan = newplan;
         }
 
         /// <summary>
@@ -474,7 +482,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.DesignMode)
+            if (DesignMode)
                 return;
 
             // Force update of column widths in case we've just created a new plan from within the planner window.
@@ -519,6 +527,8 @@ namespace EVEMon.SkillPlanner
                     planEditor.ClearObsoleteEntries(ObsoleteRemovalPolicy.ConfirmedOnly);
                     obsoleteEntriesToolStripStatusLabel.Visible = false;
                     break;
+                case ObsoleteEntriesAction.KeepAll:
+                case ObsoleteEntriesAction.None:
                 default:
                     break;
             }
@@ -574,7 +584,7 @@ namespace EVEMon.SkillPlanner
                 }
                 else
                 {
-                    this.Plan = plan;
+                    Plan = plan;
                 }
 
                 return;
@@ -587,10 +597,12 @@ namespace EVEMon.SkillPlanner
                 if (dr == DialogResult.Cancel)
                     return;
 
-                var plan = new Plan(Character);
-                plan.Name = npw.Result;
+                var plan = new Plan(Character)
+                {
+                    Name = npw.Result
+                };
                 Character.Plans.Add(plan);
-                this.Plan = plan;
+                Plan = plan;
             }
         }
 
@@ -692,16 +704,18 @@ namespace EVEMon.SkillPlanner
             if (m_attributesOptimizerWindow == null)
             {
                 // Display the settings window
-                var settingsForm = new AttributesOptimizationSettingsForm(m_plan);
-                settingsForm.ShowDialog(this);
-
-                if (settingsForm.DialogResult == DialogResult.OK)
+                using (var settingsForm = new AttributesOptimizationSettingsForm(m_plan))
                 {
-                    // Now displays the computation window
-                    m_attributesOptimizerWindow = settingsForm.OptimizationForm;
-                    m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
-                    m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
-                    m_attributesOptimizerWindow.Show(this);
+                    settingsForm.ShowDialog(this);
+
+                    if (settingsForm.DialogResult == DialogResult.OK)
+                    {
+                        // Now displays the computation window
+                        m_attributesOptimizerWindow = settingsForm.OptimizationForm;
+                        m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+                        m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
+                        m_attributesOptimizerWindow.Show(this);
+                    }
                 }
             }
             else

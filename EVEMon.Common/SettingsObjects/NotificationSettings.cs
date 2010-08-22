@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 using EVEMon.Common.Notifications;
 
@@ -104,71 +102,14 @@ namespace EVEMon.Common.SettingsObjects
         {
             var clone = (NotificationSettings)MemberwiseClone();
 
-            // Add copy of behaviours
+            // Add copy of behaviors
             clone.Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
-            foreach (var pair in this.Categories) 
+            foreach (var pair in Categories) 
             {
                 clone.Categories[pair.Key] = pair.Value.Clone();
             }
+
             return clone;
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public sealed class NotificationCategorySettings
-    {
-        public NotificationCategorySettings()
-        {
-            ToolTipBehaviour = ToolTipNotificationBehaviour.Once;
-            ShowOnMainWindow = true;
-        }
-
-        public NotificationCategorySettings(ToolTipNotificationBehaviour toolTipBehaviour)
-        {
-            ToolTipBehaviour = toolTipBehaviour;
-            ShowOnMainWindow = true;
-        }
-
-        [XmlAttribute("toolTipBehaviour")]
-        public ToolTipNotificationBehaviour ToolTipBehaviour
-        {
-            get;
-            set;
-        }
-
-        [XmlAttribute("showOnMainWindow")]
-        public bool ShowOnMainWindow
-        {
-            get;
-            set;
-        }
-
-        public NotificationCategorySettings Clone()
-        {
-            return (NotificationCategorySettings)MemberwiseClone();
-        }
-    }
-
-    /// <summary>
-    /// Represents the behaviour of the tooltip notifications (alerts for skills completion, etc)
-    /// </summary>
-    public enum ToolTipNotificationBehaviour
-    {
-        /// <summary>
-        /// Never notify
-        /// </summary>
-        Never = 0,
-        /// <summary>
-        /// Notify once only 
-        /// </summary>
-        Once = 1,
-        /// <summary>
-        /// Every minutes, the warning is repeated until the user clicks the tooltip
-        /// </summary>
-        RepeatUntiClicked = 2
-    }
-
-
 }

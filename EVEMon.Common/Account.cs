@@ -318,7 +318,6 @@ namespace EVEMon.Common
             OnAllCharactersSkillTrainingUpdated();
         }
 
-
         /// <summary>
         /// Used when the character list has been queried.
         /// </summary>
@@ -382,14 +381,14 @@ namespace EVEMon.Common
             // one of the remaining characters was training account is training.
             if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Training))
             {
-                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.");
+                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.", this);
                 EveClient.Notifications.InvalidateAccountNotInTraining(this);
                 return;
             }
 
             if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.InError))
             {
-                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.");
+                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.", this);
                 return;
             }
 

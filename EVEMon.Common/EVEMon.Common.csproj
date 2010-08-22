@@ -387,6 +387,7 @@
     <Compile Include="SettingsObjects\MarketOrderColumn.cs" />
     <Compile Include="SettingsObjects\MarketOrderColumnSettings.cs" />
     <Compile Include="SettingsObjects\MarketOrderSettings.cs" />
+    <Compile Include="SettingsObjects\NotificationCategorySettings.cs" />
     <Compile Include="SettingsObjects\PlanColumn.cs" />
     <Compile Include="PlanEntry.cs" />
     <Compile Include="PlanExporter.cs" />
@@ -433,6 +434,7 @@
     <Compile Include="SettingsObjects\ShipBrowserSettings.cs" />
     <Compile Include="SettingsObjects\SkillBrowserSettings.cs" />
     <Compile Include="SettingsObjects\SkillPieChartSettings.cs" />
+    <Compile Include="SettingsObjects\ToolTipNotificationBehaviour.cs" />
     <Compile Include="SettingsObjects\TrayPopupSettings.cs" />
     <Compile Include="SettingsObjects\TrayTooltipSettings.cs" />
     <Compile Include="SettingsObjects\UISettings.cs" />
