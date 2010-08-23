@@ -174,10 +174,10 @@ namespace EVEMon.Common
 
             foreach (var id in CharacterIdentities)
             {
-                var identity = id.CCPCharacter.Name;
+                var identity = id.Name;
 
-                if (!m_skillQueueCache.ContainsKey(id.CCPCharacter.Name))
-                    m_skillQueueCache.Add(id.CCPCharacter.Name, new SkillQueueResponse());
+                if (!m_skillQueueCache.ContainsKey(identity))
+                    m_skillQueueCache.Add(identity, new SkillQueueResponse());
 
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
                     APIMethods.CharacterSkillInTraining,
@@ -186,7 +186,7 @@ namespace EVEMon.Common
                     id.CharacterID,
                     (x) => OnSkillInTrainingUpdated(x, identity));
 
-                EveClient.Trace("Account.CharacterInTraining - Querying {0}", id.Name);
+                EveClient.Trace("Account.CharacterInTraining - Querying {0}", identity);
             }
         }
 
