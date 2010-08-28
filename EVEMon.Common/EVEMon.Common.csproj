@@ -557,12 +557,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LinqBridge\LinqBridge.csproj">
-      <Project>{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}</Project>
-      <Name>LinqBridge</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\eve-blueprints-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -587,6 +581,12 @@
     <None Include="Resources\MD5Sums.txt" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LinqBridge\LinqBridge.csproj">
+      <Project>{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}</Project>
+      <Name>LinqBridge</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
