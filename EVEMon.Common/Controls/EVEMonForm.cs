@@ -45,27 +45,6 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// On layout, center to screen when requested.
-        /// </summary>
-        /// <param name="levent"></param>
-        protected override void OnLayout(LayoutEventArgs levent)
-        {
-            // Ensure it is called on the correct thread
-            if (InvokeRequired)
-            {
-                Invoke((OnLayoutCallback)OnLayout, levent);
-                return;
-            }
-
-            // Center to screen when required
-            base.OnLayout(levent);
-            if (AutoSize && StartPosition == FormStartPosition.CenterScreen)
-            {
-                CenterToScreen();
-            }
-        }
-
-        /// <summary>
         /// On closing, stores the window rect.
         /// </summary>
         /// <param name="e"></param>
