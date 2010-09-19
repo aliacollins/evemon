@@ -29,7 +29,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -932,23 +933,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Microsoft.VC90.CRT\msvcm90.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Microsoft.VC90.CRT\msvcp90.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Microsoft.VC90.CRT\msvcr90.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\clock_16.png" />
     <Content Include="Resources\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
-    <None Include="Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
@@ -1179,10 +1168,6 @@
     <ProjectReference Include="..\EVEMon.Sales\EVEMon.Sales.csproj">
       <Project>{097C8821-39BB-446D-87E1-5D24E9115CFB}</Project>
       <Name>EVEMon.Sales</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LinqBridge\LinqBridge.csproj">
-      <Project>{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}</Project>
-      <Name>LinqBridge</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.PieChart", "EVEMon.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.EVEMon", "Tests.EVEMon\Tests.EVEMon.csproj", "{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqBridge", "LinqBridge\LinqBridge.csproj", "{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallBuilder", "Tools\InstallBuilder\InstallBuilder.csproj", "{5CE8E302-3577-41BC-A35F-C88AC625F7A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlGenerator", "Tools\XmlGenerator\XmlGenerator.csproj", "{9366D54A-B516-4A1D-987B-B1BCE31D2A72}"
@@ -123,18 +121,6 @@ Global
 		{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}.Release|Win32.ActiveCfg = Release|Any CPU
 		{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}.Release|x86.ActiveCfg = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|Win32.ActiveCfg = Release|Any CPU
-		{28CEC46A-688F-4B1B-A202-B2D22B3CEE00}.Release|x86.ActiveCfg = Release|Any CPU
 		{5CE8E302-3577-41BC-A35F-C88AC625F7A7}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{5CE8E302-3577-41BC-A35F-C88AC625F7A7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{5CE8E302-3577-41BC-A35F-C88AC625F7A7}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -200,7 +186,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_Active = 0
 		CodeStyleEnforcer_RulesLocation = 
+		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
 EndGlobal
