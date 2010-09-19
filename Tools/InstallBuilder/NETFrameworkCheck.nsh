@@ -1,13 +1,6 @@
 Function GetDotNETVersion
-  Push $0
-  Push $1
- 
-  System::Call "mscoree::GetCORVersion(w .r0, i ${NSIS_MAX_STRLEN}, *i) i .r1"
-  StrCmp $1 0 +2
-    StrCpy $0 "not found"
- 
-  Pop $1
-  Exch $0
+  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Version"
+  push $0
 FunctionEnd
 
 Function VersionCompare
@@ -111,7 +104,7 @@ Section "Microsoft .NET Framework v4.0"
   lbl_notSkipped:
   Call GetDotNETVersion
   Pop $0
-  ${If} $0 == "not found"
+  ${If} $0 == ""
      goto lbl_StartInstallNotFound
   ${EndIf}
   StrCpy $0 $0 "" 1

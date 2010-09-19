@@ -73,14 +73,14 @@ Function .onInit
 	# elevation was aborted, we still run as normal
 	UAC_Success:
 
-	# fix it so it only computes the space needed for EVEMon itself if >net is not installed
+	# fix it so it only computes the space needed for EVEMon itself if .net is not installed
 	SectionSetSize 0 0
 	Call GetDotNETVersion
 	Pop $0
-	StrCmp $0 "not found" 0 isInstalled
-		SectionSetSize 0 153600
+	StrCmp $0 "" 0 isInstalled
+		SectionSetSize 0 43000000
 
-	isInstalled:		 
+	isInstalled:
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
 	Goto noCheckForExeInDir
