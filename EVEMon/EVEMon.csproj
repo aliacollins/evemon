@@ -937,7 +937,9 @@
     <Content Include="Resources\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\icons\Skill_Select\IconSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
