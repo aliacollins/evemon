@@ -78,7 +78,7 @@ Function .onInit
 	Call GetDotNETVersion
 	Pop $0
 	StrCmp $0 "" 0 isInstalled
-		SectionSetSize 0 43000000
+		SectionSetSize 0 49267
 
 	isInstalled:
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
