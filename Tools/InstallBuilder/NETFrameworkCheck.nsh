@@ -40,7 +40,7 @@ Section "Microsoft .NET Framework v4.0"
 
   lbl_Confirmed:
   nsisdl::download \
-         /TIMEOUT=30000 "http://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe" "$PLUGINSDIR\dotnetfx.exe"
+         /TIMEOUT=120000 "http://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe" "$PLUGINSDIR\dotnetfx.exe"
   Pop $0
   StrCmp "$0" "success" lbl_continue
   Abort ".NET Framework v4.0 download failed: $0"
