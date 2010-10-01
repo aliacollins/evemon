@@ -786,7 +786,7 @@ namespace EVEMon.SkillPlanner
         {
             var node = tvItems.SelectedNode;
             var certClass = SelectedCertificateClass;
-            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass[CertificateGrade.Elite]))
+            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.HighestGradeCertificate))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = "Plan to...";
