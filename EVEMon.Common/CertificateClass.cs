@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -40,7 +39,7 @@ namespace EVEMon.Common
         /// Core implementation of the <see cref="ReadonlyVirtualCollection{T}"/> collection.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<Certificate>  Enumerate()
+        protected override IEnumerable<Certificate> Enumerate()
         {
  	        foreach(var cert in m_items)
             {
