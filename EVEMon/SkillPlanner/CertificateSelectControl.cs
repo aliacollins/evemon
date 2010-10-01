@@ -34,14 +34,14 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
 
-            this.tbSearchText.KeyPress += new KeyPressEventHandler(tbSearchText_KeyPress);
-            this.tbSearchText.Enter += new EventHandler(tbSearchText_Enter);
-            this.tbSearchText.Leave += new EventHandler(tbSearchText_Leave);
-            this.lvSortedList.SelectedIndexChanged += new EventHandler(lvSortedList_SelectedIndexChanged);
-            this.tvItems.NodeMouseClick += new TreeNodeMouseClickEventHandler(tvItems_NodeMouseClick);
-            this.tvItems.AfterSelect += new TreeViewEventHandler(tvItems_AfterSelect);
-            this.cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
-            this.Disposed += new EventHandler(OnDisposed);
+            tbSearchText.KeyPress += tbSearchText_KeyPress;
+            tbSearchText.Enter += tbSearchText_Enter;
+            tbSearchText.Leave += tbSearchText_Leave;
+            lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
+            tvItems.NodeMouseClick += tvItems_NodeMouseClick;
+            tvItems.AfterSelect += tvItems_AfterSelect;
+            cmListSkills.Opening += cmListSkills_Opening;
+            Disposed += OnDisposed;
         }
 
         #endregion
@@ -56,14 +56,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.tbSearchText.KeyPress -= new KeyPressEventHandler(tbSearchText_KeyPress);
-            this.tbSearchText.Enter -= new EventHandler(tbSearchText_Enter);
-            this.tbSearchText.Leave -= new EventHandler(tbSearchText_Leave);
-            this.lvSortedList.SelectedIndexChanged -= new EventHandler(lvSortedList_SelectedIndexChanged);
-            this.tvItems.NodeMouseClick -= new TreeNodeMouseClickEventHandler(tvItems_NodeMouseClick);
-            this.tvItems.AfterSelect -= new TreeViewEventHandler(tvItems_AfterSelect);
-            this.cmListSkills.Opening -= new CancelEventHandler(cmListSkills_Opening);
-            this.Disposed -= new EventHandler(OnDisposed);
+            tbSearchText.KeyPress -= tbSearchText_KeyPress;
+            tbSearchText.Enter -= tbSearchText_Enter;
+            tbSearchText.Leave -= tbSearchText_Leave;
+            lvSortedList.SelectedIndexChanged -= lvSortedList_SelectedIndexChanged;
+            tvItems.NodeMouseClick -= tvItems_NodeMouseClick;
+            tvItems.AfterSelect -= tvItems_AfterSelect;
+            cmListSkills.Opening -= cmListSkills_Opening;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             m_iconsFont = FontFactory.GetFont("Tahoma", 8.0f, FontStyle.Bold, GraphicsUnit.Pixel);
@@ -305,8 +305,10 @@ namespace EVEMon.SkillPlanner
                 // Creates the nodes representing the categories.
                 foreach (var category in m_character.CertificateCategories)
                 {
-                    TreeNode node = new TreeNode(category.Name, -1, -1);
-                    node.Tag = category;
+                    var node = new TreeNode(category.Name, -1, -1)
+                    {
+                        Tag = category
+                    };
 
                     tvItems.Nodes.Add(node);
                 }
@@ -521,6 +523,7 @@ namespace EVEMon.SkillPlanner
             switch ((CertificateFilter)cbFilter.SelectedIndex)
             {
                 default:
+                case CertificateFilter.All:
                     return (x) => true;
 
                 case CertificateFilter.HideElite:
@@ -549,6 +552,7 @@ namespace EVEMon.SkillPlanner
             {
                 // Sort by name, default, occurs on initialization
                 default:
+                case CertificateSort.Name:
                     return String.Empty;
 
                 // Sort by time to next grade
@@ -739,14 +743,14 @@ namespace EVEMon.SkillPlanner
         private void UpdateSelection(object selection)
         {
             if (!m_blockSelectionReentrancy)
-                this.SelectedCertificateClass = selection as CertificateClass;
+                SelectedCertificateClass = selection as CertificateClass;
         }
 
         /// <summary>
         /// Updates the settings for the search text.
         /// </summary>
         /// <param name="textSearch"></param>
-        private void UpdateSettingsForTextSearch(string textSearch)
+        private static void UpdateSettingsForTextSearch(string textSearch)
         {
             Settings.UI.CertificateBrowser.TextSearch = textSearch;
         }
@@ -755,7 +759,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the settings for the filter.
         /// </summary>
         /// <param name="filterIndex"></param>
-        private void UpdateSettingsForFilter(int filterIndex)
+        private static void UpdateSettingsForFilter(int filterIndex)
         {
             Settings.UI.CertificateBrowser.Filter = (CertificateFilter)filterIndex;
         }
@@ -764,7 +768,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the settings for the sort.
         /// </summary>
         /// <param name="sortIndex"></param>
-        private void UpdateSettingsForSort(int sortIndex)
+        private static void UpdateSettingsForSort(int sortIndex)
         {
             Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;
         }
@@ -781,7 +785,7 @@ namespace EVEMon.SkillPlanner
         void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
             var node = tvItems.SelectedNode;
-            var certClass = this.SelectedCertificateClass;
+            var certClass = SelectedCertificateClass;
             if (certClass == null || m_plan.WillGrantEligibilityFor(certClass[CertificateGrade.Elite]))
             {
                 cmiLvPlanTo.Enabled = false;
@@ -790,27 +794,27 @@ namespace EVEMon.SkillPlanner
             else
             {
                 cmiLvPlanTo.Enabled = true;
-                cmiLvPlanTo.Text = "Plan \"" + certClass.Name + "\" to...";
+                cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
                 SetAdditionMenuStatus(tsmLevel1, certClass[CertificateGrade.Basic]);
                 SetAdditionMenuStatus(tsmLevel2, certClass[CertificateGrade.Standard]);
                 SetAdditionMenuStatus(tsmLevel3, certClass[CertificateGrade.Improved]);
                 SetAdditionMenuStatus(tsmLevel4, certClass[CertificateGrade.Elite]);
             }
 
-            this.tsSeparatorPlanTo.Visible = (certClass == null && node != null);
+            tsSeparatorPlanTo.Visible = (certClass == null && node != null);
 
             // "Expand" and "Collapse" selected menu
-            this.tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
-            this.tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
+            tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
+            tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
 
-            this.tsmExpandSelected.Text = (certClass == null && node != null && !node.IsExpanded ?
+            tsmExpandSelected.Text = (certClass == null && node != null && !node.IsExpanded ?
                 String.Format("Expand {0}", node.Text) : String.Empty);
-            this.tsmCollapseSelected.Text = (certClass == null && node != null && node.IsExpanded ?
+            tsmCollapseSelected.Text = (certClass == null && node != null && node.IsExpanded ?
                 String.Format("Collapse {0}", node.Text) : String.Empty);
 
             // "Expand All" and "Collapse All" menu
-            this.tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
-            this.tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
+            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
+            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
         }
 
         /// <summary>
@@ -829,7 +833,6 @@ namespace EVEMon.SkillPlanner
 
             menu.Visible = true;
             menu.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-
         }
 
         /// <summary>
@@ -839,7 +842,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel1_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Basic]);
+            var operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Basic]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -850,7 +853,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel2_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Standard]);
+            var operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Standard]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -861,7 +864,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel3_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Improved]);
+            var operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Improved]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -872,7 +875,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel4_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.SelectedCertificateClass[CertificateGrade.Elite]);
+            var operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Elite]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -903,7 +906,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
-            this.tvItems.ExpandAll();
+            tvItems.ExpandAll();
             m_allExpanded = true;
         }
 
@@ -914,7 +917,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
-            this.tvItems.CollapseAll();
+            tvItems.CollapseAll();
             m_allExpanded = false;
         }
         #endregion
