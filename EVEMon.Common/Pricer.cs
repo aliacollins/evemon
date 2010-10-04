@@ -24,7 +24,12 @@ namespace EVEMon.Common
                 {
                     yield return new SellOrder(new SerializableAPIOrder 
                     { 
-                        Range = 0, MinVolume = 1, ItemID = 35, StationID = station.ID, RemainingVolume = 5000, UnitaryPrice = 10.0M
+                        Range = 0, 
+                        MinVolume = 1, 
+                        ItemID = 35, 
+                        StationID = station.ID, 
+                        RemainingVolume = 5000, 
+                        UnitaryPrice = 10.0M
                     });
                 }
             }

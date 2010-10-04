@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         // Do not set this as readonly !
         private FastList<SolarSystem> m_jumps;
 
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_name;
         private readonly float m_securityLevel;
         private readonly Constellation m_owner;
@@ -49,7 +49,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }
@@ -167,7 +167,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return m_id;
+            return (int)m_id;
         }
 
         /// <summary>

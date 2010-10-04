@@ -43,7 +43,7 @@ namespace EVEMon.Common
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal CharacterIdentity Add(Int64 id, string name)
+        internal CharacterIdentity Add(int id, string name)
         {
             if (m_items.ContainsKey(id))
             {

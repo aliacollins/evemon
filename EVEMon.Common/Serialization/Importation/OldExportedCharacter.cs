@@ -25,7 +25,7 @@ namespace EVEMon.Common.Serialization.Importation
         }
 
         [XmlAttribute("characterID")]
-        public long CharacterId
+        public int CharacterId
         {
             get;
             set;

@@ -48,7 +48,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         internal static List<SolarSystemRange> GetSystemRangesFrom(SolarSystem system, int maxInclusiveNumberOfJumps)
         {
-            var collectedSystems = new Dictionary<int, SolarSystem>();
+            var collectedSystems = new Dictionary<long, SolarSystem>();
             var ranges = new List<SolarSystemRange>();
             var lastRange = new SolarSystemRange(system, 0);
 
@@ -68,7 +68,7 @@ namespace EVEMon.Common.Data
         /// gets the next 
         /// </summary>
         /// <returns></returns>
-        private SolarSystemRange GetNextRange(Dictionary<int, SolarSystem> collectedSystems)
+        private SolarSystemRange GetNextRange(Dictionary<long, SolarSystem> collectedSystems)
         {
             SolarSystemRange nextRange = new SolarSystemRange(m_source, m_range + 1);
 

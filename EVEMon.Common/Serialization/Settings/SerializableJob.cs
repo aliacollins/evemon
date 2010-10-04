@@ -108,7 +108,7 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("installedSolarSystemID")]
-        public int SolarSystemID
+        public long SolarSystemID
         {
             get;
             set;

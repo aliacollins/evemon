@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.Importation
     public sealed class OldSettingsCharacter
     {
         [XmlAttribute("id")]
-        public long ID
+        public int ID
         {
             get;
             set;

@@ -7,7 +7,7 @@ namespace EVEMon.Common.Serialization
     /// </summary>
     public interface ISerializableCharacterIdentity
     {
-        long ID { get; }
+        int ID { get; }
         string Name { get; }
     }
 }

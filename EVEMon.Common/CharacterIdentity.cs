@@ -14,7 +14,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CharacterIdentity
     {
-        private readonly long m_id;
+        private readonly int m_id;
         private Account m_account;
         private string m_name;
 
@@ -22,7 +22,7 @@ namespace EVEMon.Common
         /// Constructor from an id and a name.
         /// </summary>
         /// <param name="id">The id for this identity</param>
-        internal CharacterIdentity(long id, string name)
+        internal CharacterIdentity(int id, string name)
         {
             m_id = id;
             m_name = name;
@@ -31,7 +31,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the character ID.
         /// </summary>
-        public long CharacterID
+        public int CharacterID
         {
             get { return m_id; }
         }

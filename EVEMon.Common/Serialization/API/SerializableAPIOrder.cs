@@ -37,7 +37,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("stationID")]
-        public int StationID
+        public long StationID
         {
             get;
             set;

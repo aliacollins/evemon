@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// Represents a character idenitity in our settings file
+    /// Represents a character identity in our settings file
     /// </summary>
     public sealed class SerializableCharacterIdentity
     {
         [XmlElement("id")]
-        public long ID
+        public int ID
         {
             get;
             set;

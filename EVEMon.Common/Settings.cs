@@ -381,7 +381,11 @@ namespace EVEMon.Common
             foreach (var oldCharacter in oldSerial.Characters)
             {
                 // Adds the char both to the characters list and the monitored characters list.
-                var character = new SerializableCCPCharacter { ID = oldCharacter.ID, Name = oldCharacter.Name, Guid = Guid.NewGuid() };
+                var character = new SerializableCCPCharacter {
+                    ID = oldCharacter.ID, 
+                    Name = oldCharacter.Name, 
+                    Guid = Guid.NewGuid()
+                };
                 serial.MonitoredCharacters.Add(new MonitoredCharacterSettings { CharacterGuid = character.Guid });
                 serial.Characters.Add(character);
             }

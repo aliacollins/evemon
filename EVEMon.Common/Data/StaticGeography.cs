@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static SolarSystem GetSystem(int id)
+        public static SolarSystem GetSystem(long id)
         {
             EnsureInitialized();
             SolarSystem result = null;

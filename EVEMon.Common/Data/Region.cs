@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class Region : ReadonlyCollection<Constellation>, IComparable<Region>
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_name;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

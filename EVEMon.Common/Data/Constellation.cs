@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class Constellation : ReadonlyCollection<SolarSystem>, IComparable<Constellation>
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_name;
         private readonly Region m_owner;
 
@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

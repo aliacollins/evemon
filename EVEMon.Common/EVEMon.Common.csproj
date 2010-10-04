@@ -83,6 +83,7 @@
     <Compile Include="Serialization\API\SerializableAPIImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIJobList.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrderList.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterListItem.cs" />
     <Compile Include="Serialization\API\SerializableOutpost.cs" />
     <Compile Include="Serialization\ISerializableCharacterIdentity.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
