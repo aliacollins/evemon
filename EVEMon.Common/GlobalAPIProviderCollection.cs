@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -30,9 +28,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the default provider
         /// </summary>
-        public APIProvider DefaultProvider
+        public static APIProvider DefaultProvider
         {
             get { return APIProvider.DefaultProvider; }
+        }
+
+        /// <summary>
+        /// Gets the default provider
+        /// </summary>
+        public static APIProvider TestProvider
+        {
+            get { return APIProvider.TestProvider; }
         }
 
         /// <summary>
@@ -53,10 +59,16 @@ namespace EVEMon.Common
             set
             {
                 // Is it a custom provider stored in this collection ?
-                if (m_customProviders.Contains(value)) m_currentProvider = value;
+                if (m_customProviders.Contains(value))
+                    m_currentProvider = value;
 
                 // Is it the default provider ?
-                else if (APIProvider.DefaultProvider == value) m_currentProvider = value;
+                else if (APIProvider.DefaultProvider == value)
+                    m_currentProvider = value;
+
+                // is it the test provider
+                else if (APIProvider.TestProvider == value)
+                    m_currentProvider = value;
 
                 // Then it's a non-register provider, we messed up since it should be in this global collection
                 else throw new InvalidOperationException("The given provider is not in the list");
@@ -118,7 +130,12 @@ namespace EVEMon.Common
 
             // Current provider
             var newCurrentProvider = this[serial.CurrentProviderName];
-            if (newCurrentProvider != null) m_currentProvider = newCurrentProvider;
+            
+            if (newCurrentProvider != null)
+                m_currentProvider = newCurrentProvider;
+
+            if (serial.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
+                m_currentProvider = GlobalAPIProviderCollection.TestProvider;
         }
 
         /// <summary>

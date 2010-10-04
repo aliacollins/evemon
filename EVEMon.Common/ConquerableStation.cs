@@ -73,7 +73,7 @@ namespace EVEMon.Common
             {
                 // Update the file
                 EveClient.Trace("ConquerableStationList.Update - begin");
-                var result = EveClient.APIProviders.DefaultProvider.QueryConquerableStationList();
+                var result = GlobalAPIProviderCollection.DefaultProvider.QueryConquerableStationList();
                 OnUpdated(result);
             }
         }

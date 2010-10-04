@@ -1,25 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.Xml.Xsl;
-using System.Xml.Serialization;
-using System.IO;
 
-using EVEMon.Common.Net;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Attributes;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
-using System.Threading;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// A delegate for query callbacks.
-    /// </summary>
-    /// <param name="document"></param>
-    public delegate void QueryCallback<T>(APIResult<T> result);
-
-
     /// <summary>
     /// Serializable class abstracting an API queries provider and its configuration.
     /// </summary>
@@ -27,6 +15,7 @@ namespace EVEMon.Common
     public sealed class APIProvider
     {
         private static APIProvider s_ccpProvider;
+        private static APIProvider s_ccpTestProvider;
         private static XslCompiledTransform s_rowsetsTransform;
 
         private List<APIMethod> m_methods;
@@ -129,14 +118,32 @@ namespace EVEMon.Common
         {
             get
             {
-                if (s_ccpProvider == null)
-                {
-                    s_ccpProvider = new APIProvider();
-                    s_ccpProvider.Url = NetworkConstants.APIBase;
-                    s_ccpProvider.Name = "CCP";
-                }
+                if (s_ccpProvider != null)
+                    return s_ccpProvider;
+
+                s_ccpProvider = new APIProvider();
+                s_ccpProvider.Url = NetworkConstants.APIBase;
+                s_ccpProvider.Name = "CCP";
 
                 return s_ccpProvider;
+            }
+        }
+
+        /// <summary>
+        /// Gets the test API provider
+        /// </summary>
+        public static APIProvider TestProvider
+        {
+            get
+            {
+                if (s_ccpTestProvider != null)
+                    return s_ccpTestProvider;
+
+                s_ccpTestProvider = new APIProvider();
+                s_ccpTestProvider.Url = NetworkConstants.APITestBase;
+                s_ccpTestProvider.Name = "CCP Test API";
+
+                return s_ccpTestProvider;
             }
         }
         #endregion

@@ -178,6 +178,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://apitest.eve-online.com.
+        /// </summary>
+        public static string APITestBase {
+            get {
+                return ResourceManager.GetString("APITestBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://www.battleclinic.com/time.php.
         /// </summary>
         public static string BatlleclinicTimeSynch {

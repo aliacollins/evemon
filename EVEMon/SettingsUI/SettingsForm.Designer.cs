@@ -145,7 +145,7 @@ namespace EVEMon.SettingsUI
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.chName = new System.Windows.Forms.ColumnHeader();
+            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.cbUseIncreasedContrastOnOverview = new System.Windows.Forms.CheckBox();
             this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
@@ -463,7 +463,7 @@ namespace EVEMon.SettingsUI
             this.cbColorQueuedSkills.AutoSize = true;
             this.cbColorQueuedSkills.Location = new System.Drawing.Point(188, 38);
             this.cbColorQueuedSkills.Name = "cbColorQueuedSkills";
-            this.cbColorQueuedSkills.Size = new System.Drawing.Size(133, 17);
+            this.cbColorQueuedSkills.Size = new System.Drawing.Size(135, 17);
             this.cbColorQueuedSkills.TabIndex = 13;
             this.cbColorQueuedSkills.Text = "Highlight Queued Skills";
             this.ttToolTipCodes.SetToolTip(this.cbColorQueuedSkills, "When enabled, highlights all\r\nqueued skills in character\'s skill list");
@@ -474,7 +474,7 @@ namespace EVEMon.SettingsUI
             this.cbShowPrereqMetSkills.AutoSize = true;
             this.cbShowPrereqMetSkills.Location = new System.Drawing.Point(15, 57);
             this.cbShowPrereqMetSkills.Name = "cbShowPrereqMetSkills";
-            this.cbShowPrereqMetSkills.Size = new System.Drawing.Size(157, 17);
+            this.cbShowPrereqMetSkills.Size = new System.Drawing.Size(158, 17);
             this.cbShowPrereqMetSkills.TabIndex = 12;
             this.cbShowPrereqMetSkills.Text = "Show Also Prereq-Met Skills";
             this.ttToolTipCodes.SetToolTip(this.cbShowPrereqMetSkills, "When enabled, shows all prerequisites\r\nmet skills in character\'s skill list");
@@ -496,7 +496,7 @@ namespace EVEMon.SettingsUI
             this.cbAlwaysShowSkillQueueTime.AutoSize = true;
             this.cbAlwaysShowSkillQueueTime.Location = new System.Drawing.Point(188, 57);
             this.cbAlwaysShowSkillQueueTime.Name = "cbAlwaysShowSkillQueueTime";
-            this.cbAlwaysShowSkillQueueTime.Size = new System.Drawing.Size(215, 17);
+            this.cbAlwaysShowSkillQueueTime.Size = new System.Drawing.Size(213, 17);
             this.cbAlwaysShowSkillQueueTime.TabIndex = 2;
             this.cbAlwaysShowSkillQueueTime.Text = "Always show time above the skill queue";
             this.ttToolTipCodes.SetToolTip(this.cbAlwaysShowSkillQueueTime, "When enabled, always displays the total\r\nqueue time above the skill queue bar");
@@ -508,7 +508,7 @@ namespace EVEMon.SettingsUI
             this.cbShowNonPublicSkills.Enabled = false;
             this.cbShowNonPublicSkills.Location = new System.Drawing.Point(15, 38);
             this.cbShowNonPublicSkills.Name = "cbShowNonPublicSkills";
-            this.cbShowNonPublicSkills.Size = new System.Drawing.Size(153, 17);
+            this.cbShowNonPublicSkills.Size = new System.Drawing.Size(158, 17);
             this.cbShowNonPublicSkills.TabIndex = 1;
             this.cbShowNonPublicSkills.Text = "Show Also Non-Public Skills";
             this.ttToolTipCodes.SetToolTip(this.cbShowNonPublicSkills, "When enabled, shows all non-public skills in character\'s skill list");
@@ -519,7 +519,7 @@ namespace EVEMon.SettingsUI
             this.cbShowAllPublicSkills.AutoSize = true;
             this.cbShowAllPublicSkills.Location = new System.Drawing.Point(15, 20);
             this.cbShowAllPublicSkills.Name = "cbShowAllPublicSkills";
-            this.cbShowAllPublicSkills.Size = new System.Drawing.Size(144, 17);
+            this.cbShowAllPublicSkills.Size = new System.Drawing.Size(149, 17);
             this.cbShowAllPublicSkills.TabIndex = 0;
             this.cbShowAllPublicSkills.Text = "Show Also All Public Skills";
             this.ttToolTipCodes.SetToolTip(this.cbShowAllPublicSkills, "When enabled, shows all public skills in character\'s skill list");
@@ -815,7 +815,7 @@ namespace EVEMon.SettingsUI
             this.rbSystemTrayOptionsAlways.Location = new System.Drawing.Point(6, 66);
             this.rbSystemTrayOptionsAlways.Name = "rbSystemTrayOptionsAlways";
             this.rbSystemTrayOptionsAlways.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(62, 17);
+            this.rbSystemTrayOptionsAlways.Size = new System.Drawing.Size(61, 17);
             this.rbSystemTrayOptionsAlways.TabIndex = 3;
             this.rbSystemTrayOptionsAlways.TabStop = true;
             this.rbSystemTrayOptionsAlways.Tag = "";
@@ -828,7 +828,7 @@ namespace EVEMon.SettingsUI
             this.rbSystemTrayOptionsMinimized.Location = new System.Drawing.Point(6, 43);
             this.rbSystemTrayOptionsMinimized.Name = "rbSystemTrayOptionsMinimized";
             this.rbSystemTrayOptionsMinimized.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(104, 17);
+            this.rbSystemTrayOptionsMinimized.Size = new System.Drawing.Size(106, 17);
             this.rbSystemTrayOptionsMinimized.TabIndex = 2;
             this.rbSystemTrayOptionsMinimized.TabStop = true;
             this.rbSystemTrayOptionsMinimized.Tag = "";
@@ -998,7 +998,7 @@ namespace EVEMon.SettingsUI
             lblIGBPort.Dock = System.Windows.Forms.DockStyle.Left;
             lblIGBPort.Location = new System.Drawing.Point(3, 0);
             lblIGBPort.Name = "lblIGBPort";
-            lblIGBPort.Size = new System.Drawing.Size(51, 27);
+            lblIGBPort.Size = new System.Drawing.Size(50, 26);
             lblIGBPort.TabIndex = 6;
             lblIGBPort.Text = "IGB Port:";
             lblIGBPort.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1018,14 +1018,14 @@ namespace EVEMon.SettingsUI
             igbHelpLabel.Location = new System.Drawing.Point(3, 3);
             igbHelpLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             igbHelpLabel.Name = "igbHelpLabel";
-            igbHelpLabel.Size = new System.Drawing.Size(188, 13);
+            igbHelpLabel.Size = new System.Drawing.Size(181, 13);
             igbHelpLabel.TabIndex = 8;
             igbHelpLabel.Text = "Open the in-game browser and type :";
             // 
             // igbUrlTextBox
             // 
             this.igbUrlTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.igbUrlTextBox.Location = new System.Drawing.Point(197, 3);
+            this.igbUrlTextBox.Location = new System.Drawing.Point(190, 3);
             this.igbUrlTextBox.Name = "igbUrlTextBox";
             this.igbUrlTextBox.ReadOnly = true;
             this.igbUrlTextBox.Size = new System.Drawing.Size(120, 14);
@@ -1245,7 +1245,7 @@ namespace EVEMon.SettingsUI
             this.cbUseIncreasedContrastOnOverview.AutoSize = true;
             this.cbUseIncreasedContrastOnOverview.Location = new System.Drawing.Point(190, 20);
             this.cbUseIncreasedContrastOnOverview.Name = "cbUseIncreasedContrastOnOverview";
-            this.cbUseIncreasedContrastOnOverview.Size = new System.Drawing.Size(140, 17);
+            this.cbUseIncreasedContrastOnOverview.Size = new System.Drawing.Size(137, 17);
             this.cbUseIncreasedContrastOnOverview.TabIndex = 34;
             this.cbUseIncreasedContrastOnOverview.Text = "Use Increased Contrast";
             this.ttToolTipCodes.SetToolTip(this.cbUseIncreasedContrastOnOverview, "When enabled, increases the contrast of the shown info");
@@ -1301,7 +1301,7 @@ namespace EVEMon.SettingsUI
             this.cbShowOverViewTab.AutoSize = true;
             this.cbShowOverViewTab.Location = new System.Drawing.Point(14, 20);
             this.cbShowOverViewTab.Name = "cbShowOverViewTab";
-            this.cbShowOverViewTab.Size = new System.Drawing.Size(128, 17);
+            this.cbShowOverViewTab.Size = new System.Drawing.Size(129, 17);
             this.cbShowOverViewTab.TabIndex = 0;
             this.cbShowOverViewTab.Text = "Show \"Overview\" tab";
             this.ttToolTipCodes.SetToolTip(this.cbShowOverViewTab, "When enabled, shows the Overview tab");
@@ -1464,7 +1464,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.skillPlannerPage;
+            this.multiPanel.SelectedPage = this.networkPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1590,7 +1590,7 @@ namespace EVEMon.SettingsUI
             this.cbAdvanceEntryAdd.AutoSize = true;
             this.cbAdvanceEntryAdd.Location = new System.Drawing.Point(14, 198);
             this.cbAdvanceEntryAdd.Name = "cbAdvanceEntryAdd";
-            this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(209, 17);
+            this.cbAdvanceEntryAdd.Size = new System.Drawing.Size(211, 17);
             this.cbAdvanceEntryAdd.TabIndex = 21;
             this.cbAdvanceEntryAdd.Text = "Set Priority When Adding Skills To Plan";
             this.cbAdvanceEntryAdd.UseVisualStyleBackColor = true;
@@ -1600,7 +1600,7 @@ namespace EVEMon.SettingsUI
             this.cbSummaryOnMultiSelectOnly.AutoSize = true;
             this.cbSummaryOnMultiSelectOnly.Location = new System.Drawing.Point(14, 175);
             this.cbSummaryOnMultiSelectOnly.Name = "cbSummaryOnMultiSelectOnly";
-            this.cbSummaryOnMultiSelectOnly.Size = new System.Drawing.Size(230, 17);
+            this.cbSummaryOnMultiSelectOnly.Size = new System.Drawing.Size(232, 17);
             this.cbSummaryOnMultiSelectOnly.TabIndex = 20;
             this.cbSummaryOnMultiSelectOnly.Text = "Show Plan Summary Only On \"Multi-Select\"";
             this.cbSummaryOnMultiSelectOnly.UseVisualStyleBackColor = true;
@@ -1610,7 +1610,7 @@ namespace EVEMon.SettingsUI
             this.cbHighlightQueuedSiklls.AutoSize = true;
             this.cbHighlightQueuedSiklls.Location = new System.Drawing.Point(14, 152);
             this.cbHighlightQueuedSiklls.Name = "cbHighlightQueuedSiklls";
-            this.cbHighlightQueuedSiklls.Size = new System.Drawing.Size(133, 17);
+            this.cbHighlightQueuedSiklls.Size = new System.Drawing.Size(135, 17);
             this.cbHighlightQueuedSiklls.TabIndex = 14;
             this.cbHighlightQueuedSiklls.Text = "Highlight Queued Skills";
             this.cbHighlightQueuedSiklls.UseVisualStyleBackColor = true;
@@ -1630,7 +1630,7 @@ namespace EVEMon.SettingsUI
             this.cbHighlightConflicts.AutoSize = true;
             this.cbHighlightConflicts.Location = new System.Drawing.Point(14, 83);
             this.cbHighlightConflicts.Name = "cbHighlightConflicts";
-            this.cbHighlightConflicts.Size = new System.Drawing.Size(157, 17);
+            this.cbHighlightConflicts.Size = new System.Drawing.Size(158, 17);
             this.cbHighlightConflicts.TabIndex = 9;
             this.cbHighlightConflicts.Text = "Highlight Schedule Conflicts";
             this.cbHighlightConflicts.UseVisualStyleBackColor = true;
@@ -1640,7 +1640,7 @@ namespace EVEMon.SettingsUI
             this.cbHighlightPrerequisites.AutoSize = true;
             this.cbHighlightPrerequisites.Location = new System.Drawing.Point(14, 106);
             this.cbHighlightPrerequisites.Name = "cbHighlightPrerequisites";
-            this.cbHighlightPrerequisites.Size = new System.Drawing.Size(132, 17);
+            this.cbHighlightPrerequisites.Size = new System.Drawing.Size(130, 17);
             this.cbHighlightPrerequisites.TabIndex = 8;
             this.cbHighlightPrerequisites.Text = "Highlight Prerequisites";
             this.cbHighlightPrerequisites.UseVisualStyleBackColor = true;
@@ -1650,7 +1650,7 @@ namespace EVEMon.SettingsUI
             this.cbHighlightPlannedSkills.AutoSize = true;
             this.cbHighlightPlannedSkills.Location = new System.Drawing.Point(14, 60);
             this.cbHighlightPlannedSkills.Name = "cbHighlightPlannedSkills";
-            this.cbHighlightPlannedSkills.Size = new System.Drawing.Size(133, 17);
+            this.cbHighlightPlannedSkills.Size = new System.Drawing.Size(136, 17);
             this.cbHighlightPlannedSkills.TabIndex = 0;
             this.cbHighlightPlannedSkills.Text = "Highlight Planned Skills";
             this.cbHighlightPlannedSkills.UseVisualStyleBackColor = true;
@@ -1738,7 +1738,7 @@ namespace EVEMon.SettingsUI
             this.customProxyCheckBox.AutoSize = true;
             this.customProxyCheckBox.Location = new System.Drawing.Point(9, 74);
             this.customProxyCheckBox.Name = "customProxyCheckBox";
-            this.customProxyCheckBox.Size = new System.Drawing.Size(121, 17);
+            this.customProxyCheckBox.Size = new System.Drawing.Size(119, 17);
             this.customProxyCheckBox.TabIndex = 9;
             this.customProxyCheckBox.Text = "Use a custom proxy";
             this.customProxyCheckBox.UseVisualStyleBackColor = true;
@@ -1823,7 +1823,7 @@ namespace EVEMon.SettingsUI
             this.cbEmailUseShortFormat.AutoSize = true;
             this.cbEmailUseShortFormat.Location = new System.Drawing.Point(12, 3);
             this.cbEmailUseShortFormat.Name = "cbEmailUseShortFormat";
-            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(183, 17);
+            this.cbEmailUseShortFormat.Size = new System.Drawing.Size(179, 17);
             this.cbEmailUseShortFormat.TabIndex = 2;
             this.cbEmailUseShortFormat.Text = "Use Short Format (SMS-Friendly)";
             this.cbEmailUseShortFormat.UseVisualStyleBackColor = true;
@@ -2012,7 +2012,7 @@ namespace EVEMon.SettingsUI
             this.cbPlaySoundOnSkillComplete.AutoSize = true;
             this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(3, 380);
             this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
-            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(216, 17);
+            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(215, 17);
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
@@ -2048,7 +2048,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTaskBar.AutoSize = true;
             this.rbMinToTaskBar.Location = new System.Drawing.Point(12, 66);
             this.rbMinToTaskBar.Name = "rbMinToTaskBar";
-            this.rbMinToTaskBar.Size = new System.Drawing.Size(288, 17);
+            this.rbMinToTaskBar.Size = new System.Drawing.Size(285, 17);
             this.rbMinToTaskBar.TabIndex = 2;
             this.rbMinToTaskBar.TabStop = true;
             this.rbMinToTaskBar.Text = "Minimize to the taskbar (Recommended for Windows 7)";
@@ -2059,7 +2059,7 @@ namespace EVEMon.SettingsUI
             this.rbMinToTray.AutoSize = true;
             this.rbMinToTray.Location = new System.Drawing.Point(12, 43);
             this.rbMinToTray.Name = "rbMinToTray";
-            this.rbMinToTray.Size = new System.Drawing.Size(296, 17);
+            this.rbMinToTray.Size = new System.Drawing.Size(291, 17);
             this.rbMinToTray.TabIndex = 1;
             this.rbMinToTray.TabStop = true;
             this.rbMinToTray.Text = "Minimize to the system tray (Recommended for XP/Vista)";
@@ -2070,7 +2070,7 @@ namespace EVEMon.SettingsUI
             this.rbExitEVEMon.AutoSize = true;
             this.rbExitEVEMon.Location = new System.Drawing.Point(12, 20);
             this.rbExitEVEMon.Name = "rbExitEVEMon";
-            this.rbExitEVEMon.Size = new System.Drawing.Size(84, 17);
+            this.rbExitEVEMon.Size = new System.Drawing.Size(87, 17);
             this.rbExitEVEMon.TabIndex = 0;
             this.rbExitEVEMon.TabStop = true;
             this.rbExitEVEMon.Text = "Exit EVEMon";
@@ -2097,7 +2097,7 @@ namespace EVEMon.SettingsUI
             this.trayPopupDisabledRadio.AutoSize = true;
             this.trayPopupDisabledRadio.Location = new System.Drawing.Point(6, 78);
             this.trayPopupDisabledRadio.Name = "trayPopupDisabledRadio";
-            this.trayPopupDisabledRadio.Size = new System.Drawing.Size(65, 17);
+            this.trayPopupDisabledRadio.Size = new System.Drawing.Size(66, 17);
             this.trayPopupDisabledRadio.TabIndex = 5;
             this.trayPopupDisabledRadio.TabStop = true;
             this.trayPopupDisabledRadio.Text = "Disabled";
@@ -2118,7 +2118,7 @@ namespace EVEMon.SettingsUI
             this.trayPopupRadio.AutoSize = true;
             this.trayPopupRadio.Location = new System.Drawing.Point(6, 49);
             this.trayPopupRadio.Name = "trayPopupRadio";
-            this.trayPopupRadio.Size = new System.Drawing.Size(55, 17);
+            this.trayPopupRadio.Size = new System.Drawing.Size(56, 17);
             this.trayPopupRadio.TabIndex = 3;
             this.trayPopupRadio.TabStop = true;
             this.trayPopupRadio.Text = "Popup";
@@ -2197,7 +2197,7 @@ namespace EVEMon.SettingsUI
             this.cbAutomaticallySearchForNewVersions.AutoSize = true;
             this.cbAutomaticallySearchForNewVersions.Location = new System.Drawing.Point(15, 100);
             this.cbAutomaticallySearchForNewVersions.Name = "cbAutomaticallySearchForNewVersions";
-            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(249, 17);
+            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(248, 17);
             this.cbAutomaticallySearchForNewVersions.TabIndex = 0;
             this.cbAutomaticallySearchForNewVersions.Text = "Automatically search for new EVEMon versions";
             this.cbAutomaticallySearchForNewVersions.UseVisualStyleBackColor = true;
@@ -2468,7 +2468,7 @@ namespace EVEMon.SettingsUI
             this.externalCalendarCheckbox.AutoSize = true;
             this.externalCalendarCheckbox.Location = new System.Drawing.Point(6, 98);
             this.externalCalendarCheckbox.Name = "externalCalendarCheckbox";
-            this.externalCalendarCheckbox.Size = new System.Drawing.Size(176, 17);
+            this.externalCalendarCheckbox.Size = new System.Drawing.Size(169, 17);
             this.externalCalendarCheckbox.TabIndex = 0;
             this.externalCalendarCheckbox.Text = "Use External Calendar (Import)";
             this.externalCalendarCheckbox.UseVisualStyleBackColor = true;
@@ -2492,7 +2492,7 @@ namespace EVEMon.SettingsUI
             this.g15CheckBox.AutoSize = true;
             this.g15CheckBox.Location = new System.Drawing.Point(6, 102);
             this.g15CheckBox.Name = "g15CheckBox";
-            this.g15CheckBox.Size = new System.Drawing.Size(126, 17);
+            this.g15CheckBox.Size = new System.Drawing.Size(130, 17);
             this.g15CheckBox.TabIndex = 0;
             this.g15CheckBox.Text = "Use G15/G19 Display";
             this.g15CheckBox.UseVisualStyleBackColor = true;
@@ -2516,7 +2516,7 @@ namespace EVEMon.SettingsUI
             this.cbG15ShowEVETime.AutoSize = true;
             this.cbG15ShowEVETime.Location = new System.Drawing.Point(10, 59);
             this.cbG15ShowEVETime.Name = "cbG15ShowEVETime";
-            this.cbG15ShowEVETime.Size = new System.Drawing.Size(98, 17);
+            this.cbG15ShowEVETime.Size = new System.Drawing.Size(103, 17);
             this.cbG15ShowEVETime.TabIndex = 9;
             this.cbG15ShowEVETime.Text = "Show EVE Time";
             this.cbG15ShowEVETime.UseVisualStyleBackColor = true;
@@ -2526,7 +2526,7 @@ namespace EVEMon.SettingsUI
             this.cbG15ShowTime.AutoSize = true;
             this.cbG15ShowTime.Location = new System.Drawing.Point(114, 59);
             this.cbG15ShowTime.Name = "cbG15ShowTime";
-            this.cbG15ShowTime.Size = new System.Drawing.Size(115, 17);
+            this.cbG15ShowTime.Size = new System.Drawing.Size(116, 17);
             this.cbG15ShowTime.TabIndex = 8;
             this.cbG15ShowTime.Text = "Show System Time";
             this.cbG15ShowTime.UseVisualStyleBackColor = true;
@@ -2548,7 +2548,7 @@ namespace EVEMon.SettingsUI
             this.cbG15CycleTimes.Location = new System.Drawing.Point(3, 5);
             this.cbG15CycleTimes.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
             this.cbG15CycleTimes.Name = "cbG15CycleTimes";
-            this.cbG15CycleTimes.Size = new System.Drawing.Size(215, 17);
+            this.cbG15CycleTimes.Size = new System.Drawing.Size(212, 17);
             this.cbG15CycleTimes.TabIndex = 7;
             this.cbG15CycleTimes.Text = "Cycle Characters Skill Queue info every";
             this.cbG15CycleTimes.UseVisualStyleBackColor = true;
@@ -2595,7 +2595,7 @@ namespace EVEMon.SettingsUI
             this.cbG15ACycle.Location = new System.Drawing.Point(3, 5);
             this.cbG15ACycle.Margin = new System.Windows.Forms.Padding(3, 5, 0, 3);
             this.cbG15ACycle.Name = "cbG15ACycle";
-            this.cbG15ACycle.Size = new System.Drawing.Size(139, 17);
+            this.cbG15ACycle.Size = new System.Drawing.Size(135, 17);
             this.cbG15ACycle.TabIndex = 4;
             this.cbG15ACycle.Text = "Cycle Characters every";
             this.cbG15ACycle.UseVisualStyleBackColor = true;
@@ -2676,7 +2676,7 @@ namespace EVEMon.SettingsUI
             // 
             // igbPortTextBox
             // 
-            this.igbPortTextBox.Location = new System.Drawing.Point(60, 3);
+            this.igbPortTextBox.Location = new System.Drawing.Point(59, 3);
             this.igbPortTextBox.Name = "igbPortTextBox";
             this.igbPortTextBox.Size = new System.Drawing.Size(35, 21);
             this.igbPortTextBox.TabIndex = 8;
@@ -2688,7 +2688,7 @@ namespace EVEMon.SettingsUI
             this.cbIGBPublic.AutoSize = true;
             this.cbIGBPublic.Location = new System.Drawing.Point(12, 65);
             this.cbIGBPublic.Name = "cbIGBPublic";
-            this.cbIGBPublic.Size = new System.Drawing.Size(162, 17);
+            this.cbIGBPublic.Size = new System.Drawing.Size(165, 17);
             this.cbIGBPublic.TabIndex = 4;
             this.cbIGBPublic.Text = "Make IGB Mini-server public?";
             this.cbIGBPublic.UseVisualStyleBackColor = true;
@@ -2753,7 +2753,7 @@ namespace EVEMon.SettingsUI
             this.enableAutomaticRelocationCheckBox.AutoSize = true;
             this.enableAutomaticRelocationCheckBox.Location = new System.Drawing.Point(22, 152);
             this.enableAutomaticRelocationCheckBox.Name = "enableAutomaticRelocationCheckBox";
-            this.enableAutomaticRelocationCheckBox.Size = new System.Drawing.Size(162, 17);
+            this.enableAutomaticRelocationCheckBox.Size = new System.Drawing.Size(163, 17);
             this.enableAutomaticRelocationCheckBox.TabIndex = 2;
             this.enableAutomaticRelocationCheckBox.Text = "Enable Automatic Relocation";
             this.enableAutomaticRelocationCheckBox.UseVisualStyleBackColor = true;
@@ -2764,7 +2764,7 @@ namespace EVEMon.SettingsUI
             this.showRelocationMenuCheckbox.AutoSize = true;
             this.showRelocationMenuCheckbox.Location = new System.Drawing.Point(22, 119);
             this.showRelocationMenuCheckbox.Name = "showRelocationMenuCheckbox";
-            this.showRelocationMenuCheckbox.Size = new System.Drawing.Size(130, 17);
+            this.showRelocationMenuCheckbox.Size = new System.Drawing.Size(132, 17);
             this.showRelocationMenuCheckbox.TabIndex = 1;
             this.showRelocationMenuCheckbox.Text = "Show Relocator Menu";
             this.showRelocationMenuCheckbox.UseVisualStyleBackColor = true;

@@ -64,14 +64,4 @@ namespace EVEMon.Common.SettingsObjects
             return (ProxySettings)this.MemberwiseClone();
         }
     }
-
-    /// <summary>
-    /// Enum for the type of proxy in use
-    /// </summary>
-    public enum ProxyAuthentication
-    {
-        None,
-        SystemDefault,
-        Specified
-    }
 }

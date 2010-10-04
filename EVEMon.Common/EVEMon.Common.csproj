@@ -79,6 +79,7 @@
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanSorter.cs" />
+    <Compile Include="QueryCallback.cs" />
     <Compile Include="Serialization\API\CCPOrderState.cs" />
     <Compile Include="Serialization\API\SerializableAPIImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIJobList.cs" />
@@ -86,12 +87,15 @@
     <Compile Include="Serialization\API\SerializableCharacterListItem.cs" />
     <Compile Include="Serialization\API\SerializableOutpost.cs" />
     <Compile Include="Serialization\ISerializableCharacterIdentity.cs" />
+    <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
+    <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializablePlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableRemappingPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableSettings.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsObjects\Enumerations.cs" />
+    <Compile Include="SettingsObjects\ProxyAuthentication.cs" />
     <Compile Include="Threading\Dispatcher.cs" />
     <Compile Include="Threading\ActorTimer.cs" />
     <Compile Include="Threading\IActor.cs" />

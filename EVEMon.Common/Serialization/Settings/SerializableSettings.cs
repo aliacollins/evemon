@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
-using System.IO;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Serialization.Settings

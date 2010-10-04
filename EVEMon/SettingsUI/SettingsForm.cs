@@ -1,21 +1,17 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using System.Security;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
-using EVEMon.Common.Controls;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Resources.icons.Skill_Select;
-using EVEMon.Common.Serialization;
-using EVEMon.Controls;
 using EVEMon.Common;
-using EVEMon.Common.Net;
+using EVEMon.Common.Controls;
+using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
+using EVEMon.Resources.icons.Skill_Select;
+using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI
 {
@@ -56,7 +52,7 @@ namespace EVEMon.SettingsUI
                 {
                     // Transforms x64 to 64 by 64
                     var size = x.ToString().Substring(1);
-                    return size + " by " + size;
+                    return String.Format("{0} by {0}", size);
                 }).ToArray());
 
             // Expands the left panel and selects the first page and node.
@@ -79,8 +75,8 @@ namespace EVEMon.SettingsUI
             Settings.SaveImmediate();
 
             // Close
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -97,8 +93,8 @@ namespace EVEMon.SettingsUI
             Settings.SaveImmediate();
 
             // Close
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -549,7 +545,8 @@ namespace EVEMon.SettingsUI
         private void InitialiseAPIProvidersDropDown()
         {
             cbAPIServer.Items.Clear();
-            cbAPIServer.Items.Add(EveClient.APIProviders.DefaultProvider.Name);
+            cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
+            cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
             foreach (var provider in m_settings.APIProviders.CustomProviders)
             {
                 cbAPIServer.Items.Add(provider.Name);
@@ -559,11 +556,14 @@ namespace EVEMon.SettingsUI
                 }
             }
 
+            if (m_settings.APIProviders.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
+                cbAPIServer.SelectedIndex = 1;
+
             // Selects the default API server if none selected
             if (cbAPIServer.SelectedIndex == -1)
                 cbAPIServer.SelectedIndex = 0;
 
-            // Disable the drop down box if ony one available
+            // Disable the drop down box if only one available
             cbAPIServer.Enabled = cbAPIServer.Items.Count > 1;
         }
         #endregion
@@ -612,7 +612,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         void igbPortTextBox_TextChanged(object sender, EventArgs e)
         {
-            igbUrlTextBox.Text = "http://localhost:" + igbPortTextBox.Text + "/";
+            igbUrlTextBox.Text = String.Format("http://localhost:{0}/", igbPortTextBox.Text);
         }
 
         /// <summary>
@@ -641,7 +641,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="caption"></param>
         /// <param name="message"></param>
-        private void ShowErrorMessage(string caption, string message)
+        private static void ShowErrorMessage(string caption, string message)
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

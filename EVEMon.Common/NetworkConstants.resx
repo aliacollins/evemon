@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="APICharacterList" xml:space="preserve">
     <value>/account/Characters.xml.aspx</value>
@@ -206,5 +206,9 @@
   <data name="StackExchangeEveOnlineURL" xml:space="preserve">
     <value>http://area51.stackexchange.com/proposals/3371/eve-online?referrer=YrSyuyuqKBzSZ2Kzwn8oXQ2</value>
     <comment>URL For EVE Online Stack Exchange Site</comment>
+  </data>
+  <data name="APITestBase" xml:space="preserve">
+    <value>http://apitest.eve-online.com</value>
+    <comment>Test API Service announced as part of Tyrannis 1.2</comment>
   </data>
 </root>
