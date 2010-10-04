@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Station : IComparable<Station>
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_name;
         private readonly int m_corporationID;
         private readonly SolarSystem m_owner;
@@ -59,7 +59,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

@@ -12,7 +12,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Item
     {
-        protected readonly int m_id;
+        protected readonly long m_id;
         protected readonly int m_metaLevel;
 
         protected readonly string m_name;
@@ -125,7 +125,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's ID
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

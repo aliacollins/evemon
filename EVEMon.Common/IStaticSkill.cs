@@ -19,7 +19,7 @@ namespace EVEMon.Common
     #region IStaticSkill
     public interface IStaticSkill
     {
-        int ID { get; }
+        long ID { get; }
         int ArrayIndex { get; }
         string Name { get; }
 
@@ -79,7 +79,7 @@ namespace EVEMon.Common
         /// <returns><code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.</returns>
         private static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill, ref int neededLevel, bool recurse)
         {
-            int thisID = thisSkill.ID;
+            var thisID = thisSkill.ID;
 
             foreach (var prereq in thisSkill.Prerequisites)
             {

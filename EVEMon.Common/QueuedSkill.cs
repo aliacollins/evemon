@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    #region SerializableAPIOrder
     /// <summary>
     /// Represents a market order
     /// </summary>
@@ -174,34 +171,5 @@ namespace EVEMon.Common.Serialization.API
                 Issued = value.CCPTimeStringToDateTime();
             }
         }
-    }
-    #endregion
-
-
-    #region SerializableAPIOrderList
-    public sealed class SerializableAPIOrderList
-    {
-        [XmlArray("orders")]
-        [XmlArrayItem("order")]
-        public List<SerializableAPIOrder> Orders
-        {
-            get;
-            set;
-        }
-    }
-    #endregion
-
-
-    /// <summary>
-    /// The status of a market order.
-    /// </summary>
-    public enum CCPOrderState
-    {
-        Opened = 0,
-        Closed = 1,
-        ExpiredOrFulfilled = 2,
-        Canceled = 3,
-        Pending = 4,
-        CharacterDeleted = 5
     }
 }

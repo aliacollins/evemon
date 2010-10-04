@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -11,7 +9,7 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableCharacterCertificate
     {
         [XmlAttribute("certificateID")]
-        public int CertificateID
+        public long CertificateID
         {
             get;
             set;

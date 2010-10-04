@@ -44,7 +44,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Completes the prerequisites once all the character's certificates have been initialized
         /// </summary>
-        internal void CompleteInitialization(Dictionary<int, Certificate> dictionary)
+        internal void CompleteInitialization(Dictionary<long, Certificate> dictionary)
         {
             m_prereqCertificates.AddRange(m_staticData.PrerequisiteCertificates.Select(x => dictionary[x.ID]));
         }
@@ -127,7 +127,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets this certificate's id
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_staticData.ID; }
         }

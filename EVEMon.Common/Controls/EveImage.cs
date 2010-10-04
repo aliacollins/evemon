@@ -342,7 +342,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="id">EveObject id for retrieved image</param>
         /// <param name="i">Image object retrieved</param>
-        private void GotImage(int id, Image i)
+        private void GotImage(long id, Image i)
         {
             // Only display the image if the id matches the current EveObject
             if (i != null && m_item.ID == id)

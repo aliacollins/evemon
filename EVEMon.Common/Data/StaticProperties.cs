@@ -7,7 +7,7 @@ namespace EVEMon.Common.Data
 {
     public static class StaticProperties
     {
-        private static readonly Dictionary<int, EveProperty> m_propertiesByID = new Dictionary<int, EveProperty>();
+        private static readonly Dictionary<long, EveProperty> m_propertiesByID = new Dictionary<long, EveProperty>();
         private static readonly Dictionary<string, EveProperty> m_propertiesByName = new Dictionary<string, EveProperty>();
         private static readonly Dictionary<string, EvePropertyCategory> m_categoriesByName = new Dictionary<string, EvePropertyCategory>();
 

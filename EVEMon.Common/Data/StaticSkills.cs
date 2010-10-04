@@ -11,9 +11,9 @@ namespace EVEMon.Common.Data
     {
         private static int m_arrayIndicesCount;
         private static StaticSkill[] m_skills;
-        private static readonly Dictionary<int, StaticSkill> m_skillsById = new Dictionary<int, StaticSkill>();
+        private static readonly Dictionary<long, StaticSkill> m_skillsById = new Dictionary<long, StaticSkill>();
         private static readonly Dictionary<string, StaticSkill> m_skillsByName = new Dictionary<string, StaticSkill>();
-        private static readonly Dictionary<int, StaticSkillGroup> m_allGroupsById = new Dictionary<int, StaticSkillGroup>();
+        private static readonly Dictionary<long, StaticSkillGroup> m_allGroupsById = new Dictionary<long, StaticSkillGroup>();
 
         #region Public Properties
 
@@ -109,7 +109,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticSkill GetSkillById(int id)
+        public static StaticSkill GetSkillById(long id)
         {
             StaticSkill skill = null;
             m_skillsById.TryGetValue(id, out skill);

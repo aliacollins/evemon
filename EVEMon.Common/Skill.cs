@@ -144,7 +144,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets this skill's id
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_staticData.ID; }
         }

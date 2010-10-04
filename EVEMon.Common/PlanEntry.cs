@@ -360,7 +360,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return m_skill.ID << 3 | m_level;
+            // after the switch to 64-bit integers this line was throwing a
+            // warning. GetHashCode can't possibly be unique for every object
+            // there is, additionally GetHashCode() should not be used for
+            // equality only grouping; or at least Google says so...
+            return (int)m_skill.ID << 3 | m_level;
         }
 
         /// <summary>

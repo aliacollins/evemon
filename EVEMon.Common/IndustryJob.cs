@@ -27,9 +27,9 @@ namespace EVEMon.Common
         private DateTime m_endProductionTime;
         private DateTime m_pauseProductionTime;
 
-        private readonly int m_jobID;
-        private readonly int m_installedItemID;
-        private readonly int m_outputItemID;
+        private readonly long m_jobID;
+        private readonly long m_installedItemID;
+        private readonly long m_outputItemID;
         private readonly int m_installedItemME;
         private readonly int m_installedItemPE;
         private readonly int m_runs;
@@ -177,7 +177,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="itemID">The itemID of the blueprint.</param>
         /// <returns>The output item from the bluperint.</returns>
-        private static Item GetOutputItem(int id)
+        private static Item GetOutputItem(long id)
         {
             Item item = null;
 
@@ -345,7 +345,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the job ID.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_jobID; }
         }

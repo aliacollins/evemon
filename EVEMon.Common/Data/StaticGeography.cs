@@ -10,10 +10,10 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticGeography
     {
-        private static readonly Dictionary<int, Region> s_regionsByID = new Dictionary<int, Region>();
-        private static readonly Dictionary<int, Constellation> s_constellationsByID = new Dictionary<int, Constellation>();
-        private static readonly Dictionary<int, SolarSystem> s_solarSystemsByID = new Dictionary<int, SolarSystem>();
-        private static readonly Dictionary<int, Station> s_stationsByID = new Dictionary<int, Station>();
+        private static readonly Dictionary<long, Region> s_regionsByID = new Dictionary<long, Region>();
+        private static readonly Dictionary<long, Constellation> s_constellationsByID = new Dictionary<long, Constellation>();
+        private static readonly Dictionary<long, SolarSystem> s_solarSystemsByID = new Dictionary<long, SolarSystem>();
+        private static readonly Dictionary<long, Station> s_stationsByID = new Dictionary<long, Station>();
         private static bool m_initialized = false;
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Station GetStation(int id)
+        public static Station GetStation(long id)
         {
             EnsureInitialized();
             Station result = null;

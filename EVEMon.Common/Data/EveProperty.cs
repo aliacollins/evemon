@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
 
         private readonly EvePropertyCategory m_owner;
 
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_icon;
         private readonly string m_unit;
         private readonly int m_unitID;
@@ -58,7 +58,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property's ID.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

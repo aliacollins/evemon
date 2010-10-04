@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificateCategory : ReadonlyCollection<StaticCertificateClass>
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly string m_name;
         private readonly string m_description;
 
@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this category's id
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

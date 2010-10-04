@@ -15,7 +15,7 @@ namespace EVEMon.Common.Data
     public static class StaticCertificates
     {
         private static readonly Dictionary<string, StaticCertificateClass> m_classesByName = new Dictionary<string, StaticCertificateClass>();
-        private static readonly Dictionary<int, StaticCertificate> m_certificatesByID = new Dictionary<int, StaticCertificate>();
+        private static readonly Dictionary<long, StaticCertificate> m_certificatesByID = new Dictionary<long, StaticCertificate>();
         private static readonly List<StaticCertificateCategory> m_categories = new List<StaticCertificateCategory>();
 
         /// <summary>

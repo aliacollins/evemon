@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         private readonly ItemCollection m_items;
         private readonly MarketGroup m_parent;
         private readonly string m_name;
-        private readonly int m_id;
+        private readonly long m_id;
 
 
         #region Constructors
@@ -71,7 +71,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group ID.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

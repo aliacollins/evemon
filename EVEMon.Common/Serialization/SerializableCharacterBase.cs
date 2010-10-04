@@ -1,8 +1,5 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using EVEMon.Common.Serialization.API;
 
@@ -11,13 +8,13 @@ namespace EVEMon.Common.Serialization
     /// <summary>
     /// Represents a serializable version of a character sheet. Used for settings.xml serialization and CCP querying
     /// </summary>
-    public partial class SerializableCharacterBase : ISerializableCharacterIdentity
+    public class SerializableCharacterBase : ISerializableCharacterIdentity
     {
         public SerializableCharacterBase()
         {
-            this.Attributes = new SerializableAttributes();
-            this.Skills = new List<SerializableCharacterSkill>();
-            this.Certificates = new List<SerializableCharacterCertificate>();
+            Attributes = new SerializableAttributes();
+            Skills = new List<SerializableCharacterSkill>();
+            Certificates = new List<SerializableCharacterCertificate>();
         }
 
         [XmlElement("characterID")]
@@ -113,15 +110,4 @@ namespace EVEMon.Common.Serialization
             set;
         }
     }
-
-
-    /// <summary>
-    /// Represents a set of informations required to create an identity
-    /// </summary>
-    public interface ISerializableCharacterIdentity
-    {
-        long ID { get; }
-        string Name { get; }
-    }
-
 }

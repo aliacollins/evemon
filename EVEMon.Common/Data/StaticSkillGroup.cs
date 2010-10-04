@@ -10,7 +10,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkillGroup : ReadonlyKeyedCollection<int, StaticSkill>
     {
-        private readonly int m_ID;
+        private readonly long m_ID;
         private readonly string m_name;
 
         #region Constructors
@@ -39,7 +39,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group's identifier.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_ID; }
         }

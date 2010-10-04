@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -40,26 +38,6 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlElement("charismaBonus")]
         public SerializableAPIImplant Charisma
-        {
-            get;
-            set;
-        }
-    }
-
-    /// <summary>
-    /// Represents an attribute enhan
-    /// </summary>
-    public sealed class SerializableAPIImplant
-    {
-        [XmlElement("augmentatorName")]
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("augmentatorValue")]
-        public int Amount
         {
             get;
             set;

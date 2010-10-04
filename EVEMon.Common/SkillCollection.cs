@@ -15,7 +15,7 @@ namespace EVEMon.Common
     {
         private readonly Character m_character;
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
-        private readonly Dictionary<int, Skill> m_itemsByID = new Dictionary<int, Skill>();
+        private readonly Dictionary<long, Skill> m_itemsByID = new Dictionary<long, Skill>();
 
         /// <summary>
         /// Constructor
@@ -56,7 +56,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Skill this[int id]
+        public Skill this[long id]
         {
             get 
             {

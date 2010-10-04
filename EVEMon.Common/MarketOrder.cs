@@ -27,7 +27,7 @@ namespace EVEMon.Common
         protected DateTime m_issued;
 
         protected readonly int m_orderID;
-        protected readonly int m_itemID;
+        protected readonly long m_itemID;
         protected readonly Item m_item;
         protected readonly Station m_station;
         protected readonly int m_initialVolume;
@@ -164,12 +164,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private static int GetItemID(SerializableOrderBase src)
+        private static long GetItemID(SerializableOrderBase src)
         {
-            int itemID;
-
             // Try get item ID by source
-            itemID = src.ItemID;
+            var itemID = src.ItemID;
 
             // We failed? Try get item ID by name
             if (itemID == 0)
@@ -205,7 +203,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private Station GetStationByID(int id)
+        private Station GetStationByID(long id)
         {
             // Look for the station in datafile
             Station station = StaticGeography.GetStation(id);

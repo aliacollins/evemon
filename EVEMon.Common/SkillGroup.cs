@@ -48,7 +48,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the group's ID
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_group.ID; }
         }

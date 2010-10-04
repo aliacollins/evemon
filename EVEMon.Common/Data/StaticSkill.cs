@@ -11,7 +11,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkill : IStaticSkill
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private readonly int m_rank;
         private readonly long m_cost;
         private readonly bool m_public;
@@ -155,7 +155,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ID of this skill
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_id; }
         }

@@ -30,7 +30,7 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("itemID")]
-        public int ItemID
+        public long ItemID
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("stationID")]
-        public int StationID
+        public long StationID
         {
             get;
             set;

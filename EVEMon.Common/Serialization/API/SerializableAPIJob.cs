@@ -1,28 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
-
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableAPIJobList
-    {
-        public SerializableAPIJobList()
-        {
-            this.Jobs = new List<SerializableAPIJob>();
-        }
-
-        [XmlArray("jobs")]
-        [XmlArrayItem("job")]
-        public List<SerializableAPIJob> Jobs
-        {
-            get;
-            set;
-        }
-    }
-
     public sealed class SerializableAPIJob
     {
         [XmlAttribute("jobID")]

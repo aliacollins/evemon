@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -9,7 +7,7 @@ namespace EVEMon.Common.Serialization.API
     {
         public SerializableAPICharacter()
         {
-            this.Implants = new SerializableAPIImplantSet();
+            Implants = new SerializableAPIImplantSet();
         }
 
         [XmlElement("attributeEnhancers")]
@@ -18,6 +16,5 @@ namespace EVEMon.Common.Serialization.API
             get;
             set;
         }
-
     }
 }

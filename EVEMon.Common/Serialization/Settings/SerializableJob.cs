@@ -23,14 +23,14 @@ namespace EVEMon.Common.Serialization.Settings
         /// But they are unique for the purpose of one data pull. 
         /// </summary>
         [XmlAttribute("jobID")]
-        public int JobID
+        public long JobID
         {
             get;
             set;
         }
 
         [XmlAttribute("installedItemID")]
-        public int InstalledItemID
+        public long InstalledItemID
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("outputItemID")]
-        public int OutputItemID
+        public long OutputItemID
         {
             get;
             set;
