@@ -196,6 +196,7 @@
     <Compile Include="MainWindowIndustryJobs.Designer.cs">
       <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
     </Compile>
+    <Compile Include="NativeRelocatorMethods.cs" />
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
