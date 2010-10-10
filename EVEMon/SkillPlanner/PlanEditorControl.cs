@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
         // Sort key are identified 
         private PlanEntrySort m_columnWithSortFeedback = PlanEntrySort.None;
 
-        // Drag'n drop
+        // Drag and drop
         private MouseButtons m_dragButton = MouseButtons.None;
 
         // Columns
@@ -359,11 +359,9 @@ namespace EVEMon.SkillPlanner
                         tmrAutoRefresh.Enabled = true;
                 }
 
-                // We avoid clear + AddRange because it causes the sliders's position to reset
+                // We avoid clear + AddRange because it causes the sliders position to reset
                 while (lvSkills.Items.Count > 1)
-                {
                     lvSkills.Items.RemoveAt(lvSkills.Items.Count - 1);
-                }
 
                 bool isEmpty = (lvSkills.Items.Count == 0);
                 lvSkills.Items.AddRange(items.ToArray());
