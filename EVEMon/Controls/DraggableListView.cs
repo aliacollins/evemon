@@ -121,8 +121,16 @@ namespace EVEMon.Controls
             {
                 ListViewItemsDragged(this, new EventArgs());
             }
-            base.EnsureVisible(dropIndex);
-            
+
+            // if the item was dragged to the end of the plan.
+            if (dropIndex >= Items.Count)
+            {
+                base.EnsureVisible(Items.Count - 1);
+            }
+            else
+            {
+                base.EnsureVisible(dropIndex);
+            }
         }
 
         protected override void OnDragOver(DragEventArgs e)
