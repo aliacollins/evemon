@@ -17,15 +17,6 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
-    /// <summary>
-    /// Provides a way for implant calculator and attributes optimization form to add a column showing the training time difference.
-    /// </summary>
-    public interface IPlanOrderPluggable
-    {
-        event EventHandler Disposed;
-        void UpdateStatistics(BasePlan plan, out bool areRemappingPointsActive);
-        void UpdateOnImplantSetChange();
-    }
 
     /// <summary>
     /// The main control of the plan editor window, the list of plan entries.
@@ -45,8 +36,8 @@ namespace EVEMon.SkillPlanner
         private Color m_remappingForeColor;
 
         private Character m_character;
-        private RemappingPoint formTag = null;
-        private AttributesOptimizationForm oldForm = null;
+        private RemappingPoint formTag;
+        private AttributesOptimizationForm oldForm;
 
         /// <summary>
         /// To enable the three-state columns, we need to persist the base plan,
@@ -56,7 +47,7 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
 
         // The ImplantsControl or the AttributesOptimizationForm
-        private IPlanOrderPluggable m_pluggable = null;
+        private IPlanOrderPluggable m_pluggable;
 
         // Sort key are identified 
         private PlanEntrySort m_columnWithSortFeedback = PlanEntrySort.None;
@@ -76,7 +67,7 @@ namespace EVEMon.SkillPlanner
         public PlanEditorControl()
         {
             InitializeComponent();
-            this.pscPlan.RememberDistanceKey = "PlanEditor";
+            pscPlan.RememberDistanceKey = "PlanEditor";
 
             m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
 
@@ -88,18 +79,18 @@ namespace EVEMon.SkillPlanner
 
             ListViewHelper.EnableDoubleBuffer(lvSkills);
 
-            lvSkills.ColumnWidthChanged += new ColumnWidthChangedEventHandler(lvSkills_ColumnWidthChanged);
-            lvSkills.ColumnClick += new ColumnClickEventHandler(lvSkills_ColumnClick);
-            tsSortLearning.Click += new EventHandler(tsSortLearning_Clicked);
-            tsSortPriorities.Click += new EventHandler(tsSortPriorities_Clicked);
-            cbChooseImplantSet.DropDown += new EventHandler(cbChooseImplantSet_DropDown);
+            lvSkills.ColumnWidthChanged += lvSkills_ColumnWidthChanged;
+            lvSkills.ColumnClick += lvSkills_ColumnClick;
+            tsSortLearning.Click += tsSortLearning_Clicked;
+            tsSortPriorities.Click += tsSortPriorities_Clicked;
+            cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.PlanChanged += EveClient_PlanChanged;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -109,12 +100,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.PlanChanged -= EveClient_PlanChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -123,7 +114,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             base.OnLoad(e);
@@ -146,7 +137,7 @@ namespace EVEMon.SkillPlanner
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
-                this.skillSelectControl.Plan = m_plan;
+                skillSelectControl.Plan = m_plan;
 
                 // Build the plan
                 UpdateDisplayPlan();
@@ -216,7 +207,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            if (!this.Visible || e.Character != m_character)
+            if (!Visible || e.Character != m_character)
                 return;
 
             UpdateDisplayPlan();
@@ -266,7 +257,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
-            if (!this.Visible)
+            if (!Visible)
                 return;
             
             if (m_columnsOrderChanged)
@@ -589,7 +580,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="blockingEntry"></param>
         /// <param name="format"></param>
         /// <returns></returns>
-        private string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry, NumberFormatInfo format)
+        private static string GetColumnTextForItem(PlanEntry entry, PlanColumn column, string blockingEntry, NumberFormatInfo format)
         {
             const int MaxNotesLength = 60;
 
@@ -754,7 +745,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="c"></param>
         private void RestoreSelection(Dictionary<int, bool> c)
         {
-            for (int i = this.lvSkills.Items.Count - 1; i >= 0; i--)
+            for (int i = lvSkills.Items.Count - 1; i >= 0; i--)
             {
                 // Retrieve this item's tag hash code
                 ListViewItem lvi = lvSkills.Items[i];
@@ -823,8 +814,6 @@ namespace EVEMon.SkillPlanner
             TimeSpan selectedTrainTime = TimeSpan.Zero;
             TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
             int entriesCount = SelectedEntries.Count();
-            long sbcost = SkillBooksCost;
-            long nksbcost = NotKnownSkillBooksCost;
 
             // We compute the training time
             foreach (var entry in SelectedEntries)
@@ -860,7 +849,7 @@ namespace EVEMon.SkillPlanner
                 if (m_pluggable == null)
                 {
                     m_pluggable = pluggable;
-                    pluggable.Disposed += new EventHandler(pluggable_Disposed);
+                    pluggable.Disposed += pluggable_Disposed;
                     UpdateListColumns();
                 }
 
@@ -880,7 +869,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void pluggable_Disposed(object o, EventArgs e)
         {
-            m_pluggable.Disposed -= new EventHandler(pluggable_Disposed);
+            m_pluggable.Disposed -= pluggable_Disposed;
             m_pluggable = null;
             UpdateListColumns();
         }
@@ -903,7 +892,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="lvi"></param>
         /// <returns></returns>
-        private PlanEntry GetPlanEntry(ListViewItem lvi)
+        private static PlanEntry GetPlanEntry(ListViewItem lvi)
         {
             if (lvi == null)
                 return null;
@@ -917,30 +906,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private PlanEntry GetFirstSelectedEntry()
         {
-            PlanEntry pe = null;
-            foreach (ListViewItem item in lvSkills.SelectedItems)
-            {
-                pe = lvSkills.SelectedItems[0].Tag as PlanEntry;
-                if (pe != null)
-                    return pe;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets an item from its tag's hash code.
-        /// </summary>
-        /// <param name="hashCode"></param>
-        /// <returns></returns>
-        private ListViewItem GetItemByHashCode(int hashCode)
-        {
-            foreach (ListViewItem lvi in lvSkills.Items)
-            {
-                if (lvi.Tag.GetHashCode() == hashCode) return lvi;
-            }
-
-            return null;
+            return lvSkills.SelectedItems[0].Tag as PlanEntry;
         }
 
         /// <summary>
@@ -979,7 +945,7 @@ namespace EVEMon.SkillPlanner
         // TODO: Refactor Move Up, Move Down and Move To Top into a single method.
 
         /// <summary>
-        /// When the user click moves up, we move the list view items and rebuild the plan from this.
+        /// When the user click moves up, we move the list view items and rebuild the plan from 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1013,7 +979,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the user click moves down, we move the list view items and rebuild the plan from this.
+        /// When the user click moves down, we move the list view items and rebuild the plan from 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1259,7 +1225,7 @@ namespace EVEMon.SkillPlanner
             if (criteria == PlanEntrySort.None)
                 return null;
 
-            foreach (ColumnHeader header in this.lvSkills.Columns)
+            foreach (ColumnHeader header in lvSkills.Columns)
             {
                 if (GetPlanSort(header) == criteria)
                     return header;
@@ -1272,7 +1238,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        private PlanEntrySort GetPlanSort(ColumnHeader header)
+        private static PlanEntrySort GetPlanSort(ColumnHeader header)
         {
             if (header.Tag == null)
                 return PlanEntrySort.TimeDifference;
@@ -1327,8 +1293,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateSortVisualFeedback()
         {
             // Updates the menu icons on the left toolbar
-            this.tsSortLearning.Checked = m_plan.SortingPreferences.OptimizeLearning;
-            this.tsSortPriorities.Checked = m_plan.SortingPreferences.GroupByPriority;
+            tsSortLearning.Checked = m_plan.SortingPreferences.OptimizeLearning;
+            tsSortPriorities.Checked = m_plan.SortingPreferences.GroupByPriority;
 
 
             // Removes the icon from the old column
@@ -1342,12 +1308,9 @@ namespace EVEMon.SkillPlanner
             if (m_plan.SortingPreferences.Criteria != PlanEntrySort.None && m_plan.SortingPreferences.Order != ThreeStateSortOrder.None)
             {
                 var column = GetColumn(m_plan.SortingPreferences.Criteria);
-                var order = m_plan.SortingPreferences.Order;
 
                 if (column != null)
-                {
                     column.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending ? ArrowUpIndex : ArrowDownIndex);
-                }
             }
         }
         #endregion
@@ -1417,7 +1380,7 @@ namespace EVEMon.SkillPlanner
                     foreach (string pg in planGroups)
                     {
                         ToolStripButton tsb = new ToolStripButton(pg);
-                        tsb.Click += new EventHandler(planGroupMenu_Click);
+                        tsb.Click += planGroupMenu_Click;
                         tsb.Width = TextRenderer.MeasureText(pg, tsb.Font).Width;
                         miPlanGroups.DropDownItems.Add(tsb);
                     }
@@ -2129,22 +2092,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbToggleRemapping_Click(object sender, EventArgs e)
         {
-            if (this.lvSkills.SelectedIndices.Count == 0)
+            if (lvSkills.SelectedIndices.Count == 0)
                 return;
 
-            var item = this.lvSkills.SelectedItems[0];
+            var item = lvSkills.SelectedItems[0];
             var tag = item.Tag;
 
             // Remove an existing point
             if (tag is RemappingPoint)
             {
                 // Selects the next item and focuses it.
-                var entryIndex = this.lvSkills.SelectedItems[0].Index + 1;
-                this.lvSkills.Items[entryIndex].Selected = true;
-                this.lvSkills.Items[entryIndex].Focused = true;
+                var entryIndex = lvSkills.SelectedItems[0].Index + 1;
+                lvSkills.Items[entryIndex].Selected = true;
+                lvSkills.Items[entryIndex].Focused = true;
 
                 // Retrieve the original entry after this item and remove its remapping point.
-                var entry = this.lvSkills.Items[entryIndex].Tag as PlanEntry;
+                var entry = lvSkills.Items[entryIndex].Tag as PlanEntry;
                 var originalEntry = GetOriginalEntry(entry);
                 originalEntry.Remapping = null;
             }
@@ -2154,8 +2117,6 @@ namespace EVEMon.SkillPlanner
                 // Retrieves the focused item's hash code.
                 item.Focused = true;
 
-                // Retrieves the original entry
-                var entryIndex = this.lvSkills.SelectedIndices[0];
                 var entry = tag as PlanEntry;
                 var originalEntry = GetOriginalEntry(entry);
 
@@ -2174,8 +2135,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbColorKey_Click(object sender, EventArgs e)
         {
-            this.pFooter.Visible = !this.pFooter.Visible;
-            tsbColorKey.Checked = this.pFooter.Visible;
+            pFooter.Visible = !pFooter.Visible;
+            tsbColorKey.Checked = pFooter.Visible;
         }
 
         /// <summary>

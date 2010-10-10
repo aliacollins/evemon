@@ -468,6 +468,7 @@
       <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Printing\PlanPrinter.cs" />
+    <Compile Include="SkillPlanner\IPlanOrderPluggable.cs" />
     <Compile Include="SkillPlanner\ObsoleteEntriesForm.cs">
       <SubType>Form</SubType>
     </Compile>
