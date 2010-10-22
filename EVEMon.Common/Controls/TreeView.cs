@@ -627,7 +627,7 @@ namespace EVEMon.Common.Controls
 			// Select each node in range
 			SelectNode(firstNode, true, tva);
 			TreeNode tnTemp = firstNode;
-			while (tnTemp != lastNode)
+			while (tnTemp != lastNode && tnTemp != null)
 			{
 				tnTemp = tnTemp.NextVisibleNode;
 				if (tnTemp != null)
