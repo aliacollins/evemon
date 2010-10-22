@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Data;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
     public sealed partial class ShipSelectControl : EveObjectSelectControl
     {
-        private Func<Item, Boolean> m_racePredicate = (x) => true;
+        private Func<Item, Boolean> m_racePredicate = x => true;
         private bool m_isLoaded;
 
         #region Initialisation
@@ -31,7 +29,7 @@ namespace EVEMon.SkillPlanner
         protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             // Call the base method
@@ -41,9 +39,9 @@ namespace EVEMon.SkillPlanner
             BuildTreeView();
 
             // Initialize the "skills" combo box
-            this.cbUsabilityFilter.Items[0] = "All Ships";
-            this.cbUsabilityFilter.Items[1] = "Ships I can fly";
-            this.cbUsabilityFilter.Items[2] = "Ships I cannot fly";
+            cbUsabilityFilter.Items[0] = "All Ships";
+            cbUsabilityFilter.Items[1] = "Ships I can fly";
+            cbUsabilityFilter.Items[2] = "Ships I cannot fly";
 
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
@@ -52,12 +50,12 @@ namespace EVEMon.SkillPlanner
                 tbSearchText.Text = Settings.UI.ShipBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
-                this.cbAmarr.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Amarr) != Race.None;
-                this.cbCaldari.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Caldari) != Race.None;
-                this.cbGallente.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Gallente) != Race.None;
-                this.cbMinmatar.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Minmatar) != Race.None;
-                this.cbFaction.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Faction) != Race.None;
-                this.cbORE.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Ore) != Race.None;
+                cbAmarr.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Amarr) != Race.None;
+                cbCaldari.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Caldari) != Race.None;
+                cbGallente.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Gallente) != Race.None;
+                cbMinmatar.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Minmatar) != Race.None;
+                cbFaction.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Faction) != Race.None;
+                cbORE.Checked = (Settings.UI.ShipBrowser.RacesFilter & Race.Ore) != Race.None;
             }
             else
             {
@@ -129,7 +127,7 @@ namespace EVEMon.SkillPlanner
             Settings.UI.ShipBrowser.RacesFilter |= race;
 
             // Update the predicate
-            m_racePredicate = (x) => (x.Race & race) != Race.None;
+            m_racePredicate = x => (x.Race & race) != Race.None;
 
             // Update content
             m_isLoaded = true;
@@ -218,7 +216,10 @@ namespace EVEMon.SkillPlanner
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
                 if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                {
                     tvItems.ExpandAll();
+                    m_allExpanded = true;
+                }
             }
         }
 

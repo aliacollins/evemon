@@ -20,7 +20,7 @@ namespace EVEMon.SkillPlanner
         protected BlueprintActivity m_activity;
         protected Plan m_plan;
 
-        private bool m_allExpanded;
+        protected bool m_allExpanded;
 
         /// <summary>
         /// Constructor.
@@ -48,7 +48,7 @@ namespace EVEMon.SkillPlanner
         {
             m_usabilityPredicate = SelectAll;
 
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
         }
 
