@@ -527,12 +527,9 @@ namespace EVEMon
                     break;
 
                 case MarketOrderColumn.Expiration:
-                    item.Text = (order.IsAvailable ?
-                        order.Expiration.ToLocalTime().ToRemainingTimeShortDescription().ToUpper(CultureConstants.DefaultCulture) :
-                        OrderState.Expired.ToString());
-                    item.ForeColor = (order.IsAvailable ? Color.Black : Color.Red);
-                    if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
-                        item.ForeColor = Color.DarkOrange; 
+                    var format = FormatExpiration(order);
+                    item.Text = format.Text;
+                    item.ForeColor = format.TextColor;
                     break;
 
                 case MarketOrderColumn.InitialVolume:
@@ -681,6 +678,40 @@ namespace EVEMon
                 return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the text and formatting for the expration cell
+        /// </summary>
+        /// <param name="order">Order to generate a format for</param>
+        /// <returns>CellFormat object describing the format of the cell</returns>
+        private static CellFormat FormatExpiration(MarketOrder order)
+        {
+            // initialize to sensible defaults
+            var format = new CellFormat()
+            {
+                TextColor = Color.Black,
+                Text = order.Expiration.ToLocalTime().ToRemainingTimeShortDescription().ToUpper(CultureConstants.DefaultCulture)
+            };
+
+            // order is expiring soon
+            if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
+                format.TextColor = Color.DarkOrange;
+
+            // we have all the information for formatting an available order
+            if (order.IsAvailable)
+                return format;
+
+            // order isn't available so lets format it as such
+            format.Text = order.State.ToString();
+
+            if (order.State == OrderState.Expired)
+                format.TextColor = Color.Red;
+
+            if (order.State == OrderState.Fulfilled)
+                format.TextColor = Color.DarkGreen;
+
+            return format;
         }
 
         #endregion
@@ -1175,6 +1206,17 @@ namespace EVEMon
             lblActiveCorpSellOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
             lblActiveCharBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
             lblActiveCorpBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+        }
+
+        #endregion
+
+
+        #region Helper Classes
+
+        private class CellFormat
+        {
+            public Color TextColor { get; set; }
+            public string Text { get; set; }
         }
 
         #endregion
