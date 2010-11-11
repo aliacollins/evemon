@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -19,8 +17,6 @@ namespace EVEMon.Common
         /// The maximum number of days after expiration. Beyond this limit, we do not import orders anymore.
         /// </summary>
         public const int MaxExpirationDays = 7;
-
-        protected bool m_ignored;
         protected bool m_markedForDeletion;
         protected DateTime m_lastStateChange;
         protected OrderState m_state;
@@ -66,7 +62,7 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         protected MarketOrder(SerializableOrderBase src)
         {
-            m_ignored = src.Ignored;
+            Ignored = src.Ignored;
             m_orderID = src.OrderID;
             m_state = src.State;
             m_itemID = GetItemID(src);
@@ -94,7 +90,7 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         protected void Export(SerializableOrderBase src)
         {
-            src.Ignored = m_ignored;
+            src.Ignored = Ignored;
             src.OrderID = m_orderID;
             src.State = m_state;
             src.ItemID = m_itemID;
@@ -120,7 +116,7 @@ namespace EVEMon.Common
             // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
 
             // Checks whether ID is the same (IDs can be recycled ?)
-            if (!this.MatchesWith(src))
+            if (!MatchesWith(src))
                 return false;
 
             // Prevent deletion
@@ -128,7 +124,7 @@ namespace EVEMon.Common
 
             // Update infos (if ID is the same it may have been modified either by the market 
             // or by the user [modify order] so we update the orders info that are changeable)
-            if (this.IsModified(src))
+            if (IsModified(src))
             {
                 // If its a buying order, escrow may have changed
                 if (src.IsBuyOrder != 0)
@@ -152,7 +148,7 @@ namespace EVEMon.Common
                 m_lastStateChange = DateTime.UtcNow;
 
                 // Should we notify it to the user ?
-                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !m_ignored)
+                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !Ignored)
                     endedOrders.Add(this);
             }
 
@@ -186,10 +182,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static Item GetItem(SerializableOrderBase src)
         {
-            Item item = null;
+            Item item = StaticItems.GetItemByID(src.ItemID);
 
             // Try get item by its ID
-            item = StaticItems.GetItemByID(src.ItemID);
 
             // We failed? Try get item by its name
             if (item == null)
@@ -203,7 +198,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private Station GetStationByID(long id)
+        private static Station GetStationByID(long id)
         {
             // Look for the station in datafile
             Station station = StaticGeography.GetStation(id);
@@ -229,7 +224,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private OrderState GetState(SerializableAPIOrder src)
+        private static OrderState GetState(SerializableAPIOrder src)
         {
             switch ((CCPOrderState)src.State)
             {
@@ -262,11 +257,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets whether an expired order has been deleted by the user.
         /// </summary>
-        public bool Ignored
-        {
-            get { return m_ignored; }
-            set { m_ignored = value; }
-        }
+        public bool Ignored { get; set; }
 
         /// <summary>
         /// Gets the order state.
@@ -431,7 +422,6 @@ namespace EVEMon.Common
         public static string Format(decimal value, AbbreviationFormat format)
         {
             decimal abs = Math.Abs(value);
-            var culture = CultureInfo.InvariantCulture;
             if (format == AbbreviationFormat.AbbreviationWords)
             {
                 if (abs >= 1E9M) return Format("Billions", value / 1E9M);
@@ -468,143 +458,6 @@ namespace EVEMon.Common
                 return (((int)value * 1000)/1000.0M).ToString("##.#") + suffix;
 
             return (((int)value * 1000) / 1000.0M).ToString("###") + suffix;
-        }
-    }
-    #endregion
-
-
-    #region AbbreviationFormat
-    /// <summary>
-    /// The abbreviation format status of a market orders value.
-    /// </summary>
-    public enum AbbreviationFormat
-    {
-        AbbreviationWords,
-        AbbreviationSymbols
-    }
-    #endregion
-
-
-    #region BuyOrder
-    /// <summary>
-    /// This class represents a buy order.
-    /// </summary>
-    public sealed class BuyOrder : MarketOrder
-    {
-        private decimal m_escrow;
-        private readonly int m_range;
-
-        /// <summary>
-        /// Constructor from the API.
-        /// </summary>
-        /// <param name="src"></param>
-        internal BuyOrder(SerializableAPIOrder src)
-            : base(src)
-        {
-            m_escrow = src.Escrow;
-            m_range = src.Range;
-        }
-
-        /// <summary>
-        /// Constructor from an object deserialized from the settings file.
-        /// </summary>
-        /// <param name="src"></param>
-        internal BuyOrder(SerializableBuyOrder src)
-            : base(src)
-        {
-            m_escrow = src.Escrow;
-            m_range = src.Range;
-        }
-
-        /// <summary>
-        /// Gets the amount currently invested in escrow.
-        /// </summary>
-        public decimal Escrow
-        {
-            get { return m_escrow; }
-            internal set { m_escrow = value; }
-        }
-
-        /// <summary>
-        /// Gets the range of this order.
-        /// </summary>
-        public int Range
-        {
-            get { return m_range; }
-        }
-
-        /// <summary>
-        /// Gets the description of the range.
-        /// </summary>
-        public string RangeDescription
-        {
-            get
-            {
-                switch (m_range)
-                { 
-                    case -1:
-                        return "Station";
-                    case 0:
-                        return "Solar System";
-                    case 1:
-                        return String.Format("{0} jump", m_range.ToString()); 
-                    case EveConstants.RegionRange:
-                        return "Region";
-                    default:
-                        return  String.Format("{0} jumps", m_range.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        /// <returns></returns>
-        public override SerializableOrderBase Export()
-        {
-            var serial = new SerializableBuyOrder();
-            serial.Escrow = m_escrow;
-            serial.Range = m_range;
-            this.Export(serial);
-            return serial;
-        }
-    }
-    #endregion
-
-
-    #region SellOrder
-    /// <summary>
-    /// This class represents a sell order.
-    /// </summary>
-    public sealed class SellOrder : MarketOrder
-    {
-        /// <summary>
-        /// Constructor from the API.
-        /// </summary>
-        /// <param name="src"></param>
-        internal SellOrder(SerializableAPIOrder src)
-            : base(src)
-        {
-        }
-
-        /// <summary>
-        /// Constructor from an object deserialized from the settings file.
-        /// </summary>
-        /// <param name="src"></param>
-        internal SellOrder(SerializableSellOrder src)
-            : base(src)
-        {
-        }
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        /// <returns></returns>
-        public override SerializableOrderBase Export()
-        {
-            var serial = new SerializableSellOrder();
-            this.Export(serial);
-            return serial;
         }
     }
     #endregion

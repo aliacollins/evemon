@@ -59,7 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="AbbreviationFormat.cs" />
     <Compile Include="Account.cs" />
+    <Compile Include="BuyOrder.cs" />
     <Compile Include="Datafile.cs" />
     <Compile Include="APIProvider.cs" />
     <Compile Include="AttributesOptimizer.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanSorter.cs" />
     <Compile Include="QueryCallback.cs" />
+    <Compile Include="SellOrder.cs" />
     <Compile Include="Serialization\API\CCPOrderState.cs" />
     <Compile Include="Serialization\API\SerializableAPIImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIJobList.cs" />
