@@ -34,6 +34,8 @@ namespace EVEMon
         private Form m_trayPopup;
         private IgbServer m_igbServer;
 
+        private int m_relocatedMonitor = -1;
+
         private bool m_startMinimized;
 
         private bool m_isUpdating;
@@ -1665,13 +1667,10 @@ namespace EVEMon
                 if (eveInstance == IntPtr.Zero)
                     continue;
 
-                string windowDescription = Relocator.GetWindowDescription(eveInstance);
-                Rectangle instanceDimensions = Relocator.GetWindowDimensions(eveInstance);
-                
                 // Relocator menu disabled when autorelocate is active or client is minimized
-                var instanceMenu = new ToolStripMenuItem(windowDescription)
+                var instanceMenu = new ToolStripMenuItem(eveInstance.GetWindowDescription())
                 {
-                    Enabled = !((instanceDimensions.Height == 0) && (instanceDimensions.Width == 0)) && !Relocator.AutoRelocationEnabled
+                    Enabled = !eveInstance.IsMinimized() && !Relocator.AutoRelocationEnabled
                 };
 
                 var instanceCopy = eveInstance;
@@ -1682,13 +1681,23 @@ namespace EVEMon
                     var screenCopy = i;
                     
                     // Skip if client doesn't fit in screen
-                    if (instanceDimensions.Width > Screen.AllScreens[screenCopy].Bounds.Width)
+                    if (eveInstance.GetClientRectInScreenCoords().Width > Screen.AllScreens[screenCopy].Bounds.Width)
                         continue;
 
-                    string screenDescription = Relocator.GetScreenDescription(i);
+                    var screenMenu = new ToolStripMenuItem(screenCopy.GetScreenDescription())
+                    {
+                        // When a client is relocated to a monitor we disable its selection option
+                        Enabled = !(eveInstance.IsRelocated() && m_relocatedMonitor == screenCopy)
+                    };
 
-                    var screenMenu = new ToolStripMenuItem(screenDescription);
-                    screenMenu.Click += (senders, args) => Relocator.Relocate(instanceCopy, screenCopy);
+                    // Handles the selection press
+                    screenMenu.Click += (senders, args) =>
+                    {
+                        Relocator.Relocate(instanceCopy, screenCopy);
+                        m_relocatedMonitor = screenCopy;
+                    };
+
+                    // Adds the submenu
                     instanceMenu.DropDownItems.Add(screenMenu);
                 }
 

@@ -15,24 +15,24 @@ namespace EVEMon
     {
         public delegate bool WindowFoundHandler(int hwnd, int lParam);
 
-        private static bool m_initilized;
-        private static readonly int m_pid = Application.ProductName.GetHashCode();
-        private static readonly List<IntPtr> m_foundWindows = new List<IntPtr>();
-        private static int m_autoRelocateDefaultMonitor;
-        private static int counter;
-        private static bool m_autoRelocation;
-        private static bool dialogActive;
+        private static bool s_initilized;
+        private static readonly int s_pid = Application.ProductName.GetHashCode();
+        private static readonly List<IntPtr> s_foundWindows = new List<IntPtr>();
+        private static int s_autoRelocateDefaultMonitor;
+        private static int s_counter;
+        private static bool s_autoRelocation;
+        private static bool s_dialogActive;
 
         public static void Initialize()
         {
-            if (m_initilized)
+            if (s_initilized)
                 return;
 
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient_SettingsChanged(null, EventArgs.Empty);
 
-            m_initilized = true;
+            s_initilized = true;
         }
 
         #region Dimensions
@@ -41,7 +41,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="hWnd">A valid window</param>
         /// <returns>new Rectangle(Left, Top, Width, Height)</returns>
-        private static Rectangle GetWindowRect(IntPtr hWnd)
+        private static Rectangle GetWindowRect(this IntPtr hWnd)
         {
             NativeRelocatorMethods.RECT r;
             NativeRelocatorMethods.GetWindowRect(hWnd, out r);
@@ -53,13 +53,15 @@ namespace EVEMon
         /// </summary>
         /// <param name="hWnd">A valid window</param>
         /// <returns>new Rectangle(Left, Top, Right, Bottom) relative to the screen</returns>
-        private static Rectangle GetClientRectInScreenCoords(IntPtr hWnd)
+        internal static Rectangle GetClientRectInScreenCoords(this IntPtr hWnd)
         {
             NativeRelocatorMethods.RECT cr;
             NativeRelocatorMethods.GetClientRect(hWnd, out cr);
-            NativeRelocatorMethods.POINT pt = new NativeRelocatorMethods.POINT();
-            pt.X = 0;
-            pt.Y = 0;
+            var pt = new NativeRelocatorMethods.POINT
+            {
+                X = 0,
+                Y = 0
+            };
             NativeRelocatorMethods.ClientToScreen(hWnd, ref pt);
             return new Rectangle(pt.X, pt.Y, cr.Right - cr.Left, cr.Bottom - cr.Top);
         }
@@ -67,26 +69,28 @@ namespace EVEMon
         #endregion
 
         #region Private functions
+
         /// <summary>
         /// Callback function for finding all open EVE instance windows.
         /// </summary>
         /// <param name="hwnd">the window information to be tested - automatically passed by EnumWindows</param>
+        /// <param name="lParam"></param>
         private static bool EnumWindowCallBack(int hwnd, int lParam)
         {
-            IntPtr windowHandle = (IntPtr)hwnd;
-            StringBuilder sbText = new StringBuilder(512);
-            StringBuilder sbClass = new StringBuilder(512);
+            var windowHandle = (IntPtr)hwnd;
+            var sbText = new StringBuilder(512);
+            var sbClass = new StringBuilder(512);
             NativeRelocatorMethods.GetWindowText(windowHandle, sbText, 512);
             NativeRelocatorMethods.GetClassName(windowHandle, sbClass, 512);
 
             if (sbText.ToString().StartsWith("EVE", StringComparison.CurrentCultureIgnoreCase) && sbClass.ToString() == "triuiScreen")
             {
-                int pid = 0;
+                int pid;
                 NativeRelocatorMethods.GetWindowThreadProcessId(windowHandle, out pid);
                 System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(pid);
                 if (p.ProcessName == "ExeFile")
                 {
-                    m_foundWindows.Add(windowHandle);
+                    s_foundWindows.Add(windowHandle);
                 }
             }
             
@@ -101,11 +105,11 @@ namespace EVEMon
         /// <returns>IntPtr array of EVE instances</returns>
         public static IEnumerable<IntPtr> FindEveWindows()
         {
-            lock (m_foundWindows)
+            lock (s_foundWindows)
             {
-                m_foundWindows.Clear();
-                NativeRelocatorMethods.EnumWindows(EnumWindowCallBack, m_pid);
-                return m_foundWindows;
+                s_foundWindows.Clear();
+                NativeRelocatorMethods.EnumWindows(EnumWindowCallBack, s_pid);
+                return s_foundWindows;
             }
         }
 
@@ -117,7 +121,6 @@ namespace EVEMon
         public static void Relocate(IntPtr hWnd, int targetScreen)
         {
             Rectangle cr = GetClientRectInScreenCoords(hWnd);
-
             Screen sc = Screen.AllScreens[targetScreen];
 
             // Null guard? Could in any case sc be null?
@@ -127,14 +130,12 @@ namespace EVEMon
             // Grab the current window style
             int oldStyle = NativeRelocatorMethods.GetWindowLong(hWnd, NativeRelocatorMethods.GWL_STYLE);
 
-            // Turn off dialog frame and border
-            int newStyle = oldStyle & ~(NativeRelocatorMethods.WS_DLGFRAME | NativeRelocatorMethods.WS_BORDER);
+            // Turn off dialog frame, border and sizebox atttribute
+            int newStyle = oldStyle & ~(NativeRelocatorMethods.WS_DLGFRAME | NativeRelocatorMethods.WS_BORDER | NativeRelocatorMethods.WS_SIZEBOX);
+
             NativeRelocatorMethods.SetWindowLong(hWnd, NativeRelocatorMethods.GWL_STYLE, newStyle);
 
-            NativeRelocatorMethods.MoveWindow(hWnd, sc.Bounds.X,
-                       sc.Bounds.Y,
-                       cr.Width,
-                       cr.Height, true);
+            NativeRelocatorMethods.MoveWindow(hWnd, sc.Bounds.X, sc.Bounds.Y, cr.Width, cr.Height, true);
         }
 
         /// <summary>
@@ -142,9 +143,9 @@ namespace EVEMon
         /// </summary>
         /// <param name="hWnd">Passed EVE client instance</param>
         /// <returns>String containing the title bar text and resolution</returns>
-        public static string GetWindowDescription(IntPtr hWnd)
+        public static string GetWindowDescription(this IntPtr hWnd)
         {
-            StringBuilder sb = new StringBuilder(512);
+            var sb = new StringBuilder(512);
 
             NativeRelocatorMethods.GetWindowText(hWnd, sb, 512);
             sb.Append(" - ");
@@ -164,24 +165,44 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Returns the resolution of the specified window.
-        /// </summary>
-        /// <param name="hWnd">EVE client instance</param>
-        /// <returns>Rectangle containing the resolution of the window</returns>
-        public static Rectangle GetWindowDimensions(IntPtr hWnd)
-        {
-            return GetClientRectInScreenCoords(hWnd);
-        }
-
-        /// <summary>
         /// Returns the number and resolution of the passed screen number.
         /// </summary>
         /// <param name="screen">Integer of the screen to be identified</param>
         /// <returns>Screen z - WidthxHeight</returns>
-        public static string GetScreenDescription(int screen)
+        public static string GetScreenDescription(this int screen)
         {
             Screen sc = Screen.AllScreens[screen];
             return String.Format(CultureConstants.DefaultCulture, "Screen {0} - {1}x{2}", screen + 1, sc.Bounds.Width, sc.Bounds.Height);
+        }
+
+        /// <summary>
+        /// Determines whether the specified EVE client instance is relocated.
+        /// </summary>
+        /// <param name="hWnd">The EVE client instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified EVE client instance is relocated; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsRelocated(this IntPtr hWnd)
+        {
+            Rectangle ncr = hWnd.GetWindowRect();
+            Rectangle cr = hWnd.GetClientRectInScreenCoords();
+            int wDiff = ncr.Width - cr.Width;
+            int hDiff = ncr.Height - cr.Height;
+
+            return (wDiff == 0 && hDiff == 0);
+        }
+
+        /// <summary>
+        /// Determines whether the specified EVE client instance is minimized.
+        /// </summary>
+        /// <param name="hWnd">The EVE client instance.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified EVE client instance is minimized; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsMinimized(this IntPtr hWnd)
+        {
+            Rectangle cr = hWnd.GetClientRectInScreenCoords();
+            return (cr.Height == 0 && cr.Width == 0);
         }
 
         #endregion
@@ -194,7 +215,7 @@ namespace EVEMon
         {
             get
             {
-                return m_autoRelocation = Settings.UI.MainWindow.EnableAutomaticRelocation;
+                return s_autoRelocation = Settings.UI.MainWindow.EnableAutomaticRelocation;
             }
         }
 
@@ -205,7 +226,7 @@ namespace EVEMon
         {
             get
             {
-                return m_autoRelocateDefaultMonitor = Settings.UI.MainWindow.AutoRelocateDefaultMonitor;
+                return s_autoRelocateDefaultMonitor = Settings.UI.MainWindow.AutoRelocateDefaultMonitor;
             }
         }
 
@@ -214,12 +235,7 @@ namespace EVEMon
         /// </summary>
         private static void AutoRelocate()
         {
-            // TODO: Refactor this method into smaller more managable chunks
-            // Breaks []wiki:CodingGuidlines]]:
-            //  - Small methods (no more than 15 lines) is the ideal.
-
             int screenCount = Screen.AllScreens.Length;
-            int sameResScr = 0;
 
             foreach (IntPtr eveInstance in FindEveWindows())
             {
@@ -227,71 +243,108 @@ namespace EVEMon
                 if (eveInstance == IntPtr.Zero)
                     continue;
 
-                Rectangle ncr = GetWindowRect(eveInstance);
-                Rectangle cr = GetClientRectInScreenCoords(eveInstance);
-                int wDiff = ncr.Width - cr.Width;
-                int hDiff = ncr.Height - cr.Height;
-
-                // We skip if the client is minimized
-                if ((cr.Height == 0) && (cr.Width == 0))
+                // We skip if the client is minimized or already relocated
+                if (eveInstance.IsMinimized() || eveInstance.IsRelocated())
                     continue;
 
-                // We skip if the client is already relocated
-                if (wDiff == 0 && hDiff == 0)
-                    continue;
-
-                // Check if monitors with same resolution are present
-                for (int screen = 0; screen < screenCount; screen++)
-                {
-                    var nextScreen = Math.Min(screen + 1, screenCount - 1);
-                    if (Screen.AllScreens[screen].Bounds.Size == Screen.AllScreens[nextScreen].Bounds.Size)
-                    {
-                        sameResScr += 1;
-                    }
-                }
+                int sameResScr = screenCount.GetSameResScreens();
 
                 // More than one monitor with same resolution ?
                 if (sameResScr > 1)
                 {
-                    // Ensure that the client is the same size as the monitor's resolution
-                    for (int screen = 0; screen < screenCount; screen++)
-                    {
-                        if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
-                            return;
-                    }
+                    RelocateOnSameResScreens(eveInstance, screenCount, sameResScr);
 
-                    // Has the user set a default monitor to relocate ?
-                    if (AutoRelocateDefaultMonitor != 0 && AutoRelocateDefaultMonitor <= screenCount)
-                    {
-                        Relocate(eveInstance, m_autoRelocateDefaultMonitor - 1);
-                        return;
-                    }
-
-                    // Show the dialog window
-                    if (!dialogActive)
-                    {
-                        dialogActive = true;
-                        ShowDialog(eveInstance, sameResScr);
-                        dialogActive = false;
-
-                        // We have changed the enumeration
-                        // so we need to exit
-                        return;
-                    }
+                    // We have changed the enumeration
+                    // so we need to exit
+                    return;
                 }
                 // Different monitor resolutions ?
                 // Relocate to the monitor that fits the client
                 else
                 {
-                    for (int screen = 0; screen < screenCount; screen++)
-                    {
-                        if (cr.Width != Screen.AllScreens[screen].Bounds.Width)
-                            continue;
-
-                        Relocate(eveInstance, screen);
-                    }
+                    RelocateOnDiffResScreens(eveInstance, screenCount);
                 }
             }
+        }
+
+        /// <summary>
+        /// Relocates the client on same resolution screens.
+        /// </summary>
+        /// <param name="screenCount">The screen count.</param>
+        /// <param name="eveInstance">The eve instance.</param>
+        /// <param name="sameResScr">The same res SCR.</param>
+        private static void RelocateOnSameResScreens(IntPtr eveInstance, int screenCount, int sameResScr)
+        {
+            if (!ClientFitsToScreen(eveInstance, screenCount))
+                return;
+
+            // Has the user set a default monitor to relocate ?
+            if (AutoRelocateDefaultMonitor != 0 && AutoRelocateDefaultMonitor <= screenCount)
+            {
+                Relocate(eveInstance, s_autoRelocateDefaultMonitor - 1);
+                return;
+            }
+
+            // Show the dialog window
+            if (!s_dialogActive)
+            {
+                s_dialogActive = true;
+                ShowDialog(eveInstance, sameResScr);
+                s_dialogActive = false;
+            }
+        }
+
+        /// <summary>
+        /// Relocates the client on different resolution screens.
+        /// </summary>
+        /// <param name="screenCount">The screen count.</param>
+        /// <param name="eveInstance">The eve instance.</param>
+        private static void RelocateOnDiffResScreens(IntPtr eveInstance, int screenCount)
+        {
+            for (int screen = 0; screen < screenCount; screen++)
+            {
+                // We skip if the client width doesn't match the screen width
+                if (eveInstance.GetClientRectInScreenCoords().Width != Screen.AllScreens[screen].Bounds.Width)
+                    continue;
+
+                Relocate(eveInstance, screen);
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of same resolution screens.
+        /// </summary>
+        /// <param name="screenCount">The screen count.</param>
+        /// <returns></returns>
+        private static int GetSameResScreens(this int screenCount)
+        {
+            int sameResScr = 0;
+
+            // Check if monitors with same resolution are present
+            for (int screen = 0; screen < screenCount; screen++)
+            {
+                var nextScreen = Math.Min(screen + 1, screenCount - 1);
+                if (Screen.AllScreens[screen].Bounds.Size == Screen.AllScreens[nextScreen].Bounds.Size)
+                    sameResScr += 1;
+            }
+            return sameResScr;
+        }
+
+        /// <summary>
+        /// Checks if the client fits to the screen.
+        /// </summary>
+        /// <param name="screenCount">The screen count.</param>
+        /// <param name="eveInstance">The eve instance.</param>
+        /// <returns></returns>
+        private static bool ClientFitsToScreen(IntPtr eveInstance, int screenCount)
+        {
+            // Ensure that the client is the same size as the monitor's resolution
+            for (int screen = 0; screen < screenCount; screen++)
+            {
+                if (eveInstance.GetClientRectInScreenCoords().Width != Screen.AllScreens[screen].Bounds.Width)
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -300,7 +353,8 @@ namespace EVEMon
         /// </summary>
         private static void ShowDialog(IntPtr eveInstance, int sameResScr)
         {
-            float dpi = 0;
+            float dpi;
+            
             // We create a dialog for the user
             using (var dialog = new EVEMonForm())
             {
@@ -341,9 +395,9 @@ namespace EVEMon
                     var sectionWidth = (width / sameResScr);
                     var startPoint = sectionWidth * scr;
 
-                    Button button = new Button();
+                    var button = new Button();
                     button.AutoSize = true;
-                    button.Text = "Monitor " + (scr + 1);
+                    button.Text = @"Monitor " + (scr + 1);
                     button.Location = new Point(startPoint + ((sectionWidth - button.Width) / 2), height);
                     buttonHeight = button.Height;
                     buttons.Add(button);
@@ -360,10 +414,10 @@ namespace EVEMon
                 height += (buttonHeight + (vpad / 2));
 
                 // Add checkbox
-                CheckBox checkbox = new CheckBox();
+                var checkbox = new CheckBox();
                 checkbox.AutoSize = true;
                 checkbox.TextAlign = ContentAlignment.MiddleLeft;
-                checkbox.Text = "Set my choice as the default monitor.";
+                checkbox.Text = @"Set my choice as the default monitor.";
                 checkbox.Location = new Point(10, height);
                 panel.Controls.Add(checkbox);
                 height += checkbox.Height + (vpad / 2);
@@ -409,20 +463,19 @@ namespace EVEMon
         /// <summary>
         /// Checks whether an AutoRelocation should occur.
         /// </summary>
-        /// <param name="interval">The length of time to wait between checks.</param>
         private static void EveClient_TimerTick(object sender, EventArgs e)
         {
             var interval = TimeSpan.FromSeconds(Settings.UI.MainWindow.AutomaticRelocationInterval);
-            int m_checkInterval = (int)interval.TotalSeconds;
+            var checkInterval = (int)interval.TotalSeconds;
 
             if (AutoRelocationEnabled)
             {
-                while (counter == m_checkInterval)
+                while (s_counter == checkInterval)
                 {
-                    counter = 0;
+                    s_counter = 0;
                     AutoRelocate();
                 }
-                counter++;
+                s_counter++;
             }
         }
 
@@ -435,14 +488,9 @@ namespace EVEMon
         /// </summary>
         private static void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            if (AutoRelocationEnabled)
-            {
-                EveClient.Trace("AutoRelocation.Enabled");
-            }
-            else
-            {
-                EveClient.Trace("AutoRelocation.Disabled");
-            }
+            string text = String.Format("AutoRelocation.{0}abled", AutoRelocationEnabled ? "En" : "Dis");
+
+            EveClient.Trace(text);
         }
 
         #endregion

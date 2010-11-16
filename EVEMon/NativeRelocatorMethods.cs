@@ -29,6 +29,7 @@ namespace EVEMon
         public const int GWL_STYLE = -16;
         public const int WS_DLGFRAME = 0x00400000;
         public const int WS_BORDER = 0x00800000;
+        public const int WS_SIZEBOX = 0x00040000;
 
         [DllImport("user32.Dll")]
         public static extern IntPtr EnumWindows(Relocator.WindowFoundHandler x, int y);
