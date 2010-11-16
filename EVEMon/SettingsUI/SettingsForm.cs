@@ -678,7 +678,7 @@ namespace EVEMon.SettingsUI
 
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
-            btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedIndex != 0;
+            btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedIndex > 1;
 
             // Relocator
             relocationSecondsNumericUpDown.Enabled = enableAutomaticRelocationCheckBox.Checked;

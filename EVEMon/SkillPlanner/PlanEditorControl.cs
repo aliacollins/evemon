@@ -27,7 +27,7 @@ namespace EVEMon.SkillPlanner
         private const int ArrowDownIndex = 5;
 
         private int m_lastImplantSetIndex;
-        private bool areRemappingPointsActive;
+        private bool m_areRemappingPointsActive;
 
         private Font m_plannedSkillFont;
         private Font m_prerequisiteSkillFont;
@@ -116,6 +116,8 @@ namespace EVEMon.SkillPlanner
         {
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
 
             base.OnLoad(e);
         }
@@ -398,10 +400,10 @@ namespace EVEMon.SkillPlanner
         {
             // When there is a pluggable (implants calculator or attributes optimizer)
             // This one provides us the scratchpad to update training times.
-            areRemappingPointsActive = true;
+            m_areRemappingPointsActive = true;
             if (m_pluggable != null)
             {
-                m_pluggable.UpdateStatistics(m_displayPlan, out areRemappingPointsActive);
+                m_pluggable.UpdateStatistics(m_displayPlan, out m_areRemappingPointsActive);
             }
             else
             {
@@ -532,7 +534,7 @@ namespace EVEMon.SkillPlanner
 
                             // We display the text in the SkillName column for better visibility
                             if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
-                                lvi.SubItems[columnIndex].Text = (areRemappingPointsActive ? point.ToString() : "Remapping (ignored)");
+                                lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive ? point.ToString() : "Remapping (ignored)");
                         }
                     }
                 }
@@ -2052,7 +2054,7 @@ namespace EVEMon.SkillPlanner
             else if (lvi.Tag is RemappingPoint)
             {
                 var point = lvi.Tag as RemappingPoint;
-                lvi.ToolTipText = (areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
+                lvi.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
             }
         }
 

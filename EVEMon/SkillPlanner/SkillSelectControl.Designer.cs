@@ -68,8 +68,8 @@ namespace EVEMon.SkillPlanner
             this.cbSorting = new System.Windows.Forms.ComboBox();
             this.lblSort = new System.Windows.Forms.Label();
             this.lvSortedSkillList = new System.Windows.Forms.ListView();
-            this.chName = new System.Windows.Forms.ColumnHeader();
-            this.chSortKey = new System.Windows.Forms.ColumnHeader();
+            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSortKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilSkillIcons = new System.Windows.Forms.ImageList(this.components);
             this.pnlFilter = new System.Windows.Forms.Panel();
             this.pnlResults = new System.Windows.Forms.Panel();
@@ -122,9 +122,9 @@ namespace EVEMon.SkillPlanner
             this.tbSearchText.Size = new System.Drawing.Size(182, 20);
             this.tbSearchText.TabIndex = 36;
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
-            this.tbSearchText.Leave += new System.EventHandler(this.tbSearch_Leave);
-            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearch_Enter);
+            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearch_KeyPress);
+            this.tbSearchText.Leave += new System.EventHandler(this.tbSearch_Leave);
             // 
             // pbSearchImage
             // 
@@ -210,9 +210,9 @@ namespace EVEMon.SkillPlanner
             this.level5ToolStripMenuItem.Text = "Level &5";
             this.level5ToolStripMenuItem.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
-            // toolStripSeparator1
+            // tsSeparatorBrowser
             // 
-            this.tsSeparatorBrowser.Name = "toolStripSeparator1";
+            this.tsSeparatorBrowser.Name = "tsSeparatorBrowser";
             this.tsSeparatorBrowser.Size = new System.Drawing.Size(182, 6);
             // 
             // showInSkillBrowserMenu
@@ -457,6 +457,7 @@ namespace EVEMon.SkillPlanner
             this.lvSortedSkillList.FullRowSelect = true;
             this.lvSortedSkillList.Location = new System.Drawing.Point(0, 0);
             this.lvSortedSkillList.Margin = new System.Windows.Forms.Padding(2);
+            this.lvSortedSkillList.MultiSelect = false;
             this.lvSortedSkillList.Name = "lvSortedSkillList";
             this.lvSortedSkillList.Size = new System.Drawing.Size(227, 321);
             this.lvSortedSkillList.TabIndex = 28;
@@ -531,9 +532,9 @@ namespace EVEMon.SkillPlanner
             this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
             this.tvItems.Size = new System.Drawing.Size(227, 321);
             this.tvItems.TabIndex = 20;
+            this.tvItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvItems_ItemDrag);
             this.tvItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSkillList_AfterSelect);
             this.tvItems.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvItems_NodeMouseClick);
-            this.tvItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvItems_ItemDrag);
             // 
             // SkillSelectControl
             // 
