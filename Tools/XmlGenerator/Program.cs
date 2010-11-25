@@ -672,128 +672,125 @@ namespace EVEMon.XmlGenerator
             var prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
             foreach (DgmTypeAttribute srcProp in s_typeAttributes.Where(x => x.ItemID == srcItem.ID))
             {
-                if (srcProp.ValueFloat != null)
+                var propIntValue = (srcProp.ValueInt.HasValue ? srcProp.ValueInt.Value : (int) srcProp.ValueFloat.Value);
+
+                // Is it a prereq skill ?
+                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, srcProp.AttributeID);
+                if (prereqIndex >= 0)
                 {
-                    var propIntValue = (srcProp.ValueInt.HasValue ? srcProp.ValueInt.Value : (int) srcProp.ValueFloat.Value);
-
-                    // Is it a prereq skill ?
-                    int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, srcProp.AttributeID);
-                    if (prereqIndex >= 0)
-                    {
-                        prereqSkills[prereqIndex] = propIntValue;
-                        continue;
-                    }
-
-                    // Is it a prereq level ?
-                    prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, srcProp.AttributeID);
-                    if (prereqIndex >= 0)
-                    {
-                        prereqLevels[prereqIndex] = propIntValue;
-                        continue;
-                    }
-
-                    // Launcher group ?
-                    int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupIDs, srcProp.AttributeID);
-                    if (launcherIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // Charge group ?
-                    int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupIDs, srcProp.AttributeID);
-                    if (chargeIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // CanFitShip group ?
-                    int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupIDs, srcProp.AttributeID);
-                    if (canFitShipIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // ModuleShip group ?
-                    int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupIDs, srcProp.AttributeID);
-                    if (moduleShipIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // SpecialisationAsteroid group ?
-                    int specialisationAsteroidIndex = Array.IndexOf(DBConstants.SpecialisationAsteroidGroupIDs,
-                                                                    srcProp.AttributeID);
-                    if (specialisationAsteroidIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // Reaction group ?
-                    int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupIDs, srcProp.AttributeID);
-                    if (reactionIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // PosCargobayAccept group ?
-                    int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupIDs, srcProp.AttributeID);
-                    if (posCargobayAcceptIndex >= 0)
-                    {
-                        props.Add(new SerializablePropertyValue
-                                      {
-                                          ID = srcProp.AttributeID,
-                                          Value = s_groups[propIntValue].Name
-                                      });
-                        continue;
-                    }
-
-                    // Get the warp speed multiplier
-                    if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID)
-                        warpSpeedMultiplier = srcProp.ValueFloat.Value;
-
-                    // We calculate the Ships Warp Speed
-                    if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
-                        props.Add(new SerializablePropertyValue
-                                      {ID = srcProp.AttributeID, Value = (baseWarpSpeed*warpSpeedMultiplier).ToString()});
-
-                    // Other props
-                    props.Add(new SerializablePropertyValue
-                                  {ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue()});
-
-                    // Is metalevel property ?
-                    if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
-                        item.MetaLevel = propIntValue;
+                    prereqSkills[prereqIndex] = propIntValue;
+                    continue;
                 }
+
+                // Is it a prereq level ?
+                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, srcProp.AttributeID);
+                if (prereqIndex >= 0)
+                {
+                    prereqLevels[prereqIndex] = propIntValue;
+                    continue;
+                }
+
+                // Launcher group ?
+                int launcherIndex = Array.IndexOf(DBConstants.LauncherGroupIDs, srcProp.AttributeID);
+                if (launcherIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // Charge group ?
+                int chargeIndex = Array.IndexOf(DBConstants.ChargeGroupIDs, srcProp.AttributeID);
+                if (chargeIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // CanFitShip group ?
+                int canFitShipIndex = Array.IndexOf(DBConstants.CanFitShipGroupIDs, srcProp.AttributeID);
+                if (canFitShipIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // ModuleShip group ?
+                int moduleShipIndex = Array.IndexOf(DBConstants.ModuleShipGroupIDs, srcProp.AttributeID);
+                if (moduleShipIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // SpecialisationAsteroid group ?
+                int specialisationAsteroidIndex = Array.IndexOf(DBConstants.SpecialisationAsteroidGroupIDs,
+                                                                srcProp.AttributeID);
+                if (specialisationAsteroidIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // Reaction group ?
+                int reactionIndex = Array.IndexOf(DBConstants.ReactionGroupIDs, srcProp.AttributeID);
+                if (reactionIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // PosCargobayAccept group ?
+                int posCargobayAcceptIndex = Array.IndexOf(DBConstants.PosCargobayAcceptGroupIDs, srcProp.AttributeID);
+                if (posCargobayAcceptIndex >= 0)
+                {
+                    props.Add(new SerializablePropertyValue
+                                    {
+                                        ID = srcProp.AttributeID,
+                                        Value = s_groups[propIntValue].Name
+                                    });
+                    continue;
+                }
+
+                // Get the warp speed multiplier
+                if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID)
+                    warpSpeedMultiplier = srcProp.ValueFloat.Value;
+
+                // We calculate the Ships Warp Speed
+                if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
+                    props.Add(new SerializablePropertyValue
+                                    {ID = srcProp.AttributeID, Value = (baseWarpSpeed*warpSpeedMultiplier).ToString()});
+
+                // Other props
+                props.Add(new SerializablePropertyValue
+                                {ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue()});
+
+                // Is metalevel property ?
+                if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
+                    item.MetaLevel = propIntValue;
             }
 
             // Ensures there is a mass and add it to prop
