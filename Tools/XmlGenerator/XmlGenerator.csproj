@@ -82,7 +82,7 @@
     <Compile Include="StaticData\DgmAttributeCategory.cs" />
     <Compile Include="StaticData\DgmTypeAttribute.cs" />
     <Compile Include="StaticData\DgmTypeEffect.cs" />
-    <Compile Include="StaticData\EveGraphic.cs" />
+    <Compile Include="StaticData\EveIcons.cs" />
     <Compile Include="StaticData\EveUnit.cs" />
     <Compile Include="StaticData\InvGroup.cs" />
     <Compile Include="StaticData\InvMarketGroup.cs" />
@@ -109,6 +109,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

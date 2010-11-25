@@ -4,77 +4,81 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="EveStaticDataModelStoreContainer">
-          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="chrRaces" EntityType="EveStaticDataModel.Store.chrRaces" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="eveNames" EntityType="EveStaticDataModel.Store.eveNames" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.Store.eveUnits" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invControlTowerResourcePurposes" EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invFlags" EntityType="EveStaticDataModel.Store.invFlags" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invGroups" EntityType="EveStaticDataModel.Store.invGroups" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="invTypes" EntityType="EveStaticDataModel.Store.invTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapJumps" EntityType="EveStaticDataModel.Store.mapJumps" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrAttributes" EntityType="EveStaticDataModel.Store.chrAttributes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrBloodlines" EntityType="EveStaticDataModel.Store.chrBloodlines" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrFactions" EntityType="EveStaticDataModel.Store.chrFactions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="chrRaces" EntityType="EveStaticDataModel.Store.chrRaces" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtClasses" EntityType="EveStaticDataModel.Store.crtClasses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtRecommendations" EntityType="EveStaticDataModel.Store.crtRecommendations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crtRelationships" EntityType="EveStaticDataModel.Store.crtRelationships" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmAttributeCategories" EntityType="EveStaticDataModel.Store.dgmAttributeCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmAttributeTypes" EntityType="EveStaticDataModel.Store.dgmAttributeTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.Store.dgmEffects" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.Store.dgmTypeAttributes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.Store.eveIcons" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveNames" EntityType="EveStaticDataModel.Store.eveNames" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.Store.eveUnits" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invContrabandTypes" EntityType="EveStaticDataModel.Store.invContrabandTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResourcePurposes" EntityType="EveStaticDataModel.Store.invControlTowerResourcePurposes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invFlags" EntityType="EveStaticDataModel.Store.invFlags" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invGroups" EntityType="EveStaticDataModel.Store.invGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invTypeMaterials" EntityType="EveStaticDataModel.Store.invTypeMaterials" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invTypeReactions" EntityType="EveStaticDataModel.Store.invTypeReactions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invTypes" EntityType="EveStaticDataModel.Store.invTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapCelestialStatistics" EntityType="EveStaticDataModel.Store.mapCelestialStatistics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellationJumps" EntityType="EveStaticDataModel.Store.mapConstellationJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapConstellations" EntityType="EveStaticDataModel.Store.mapConstellations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapDenormalize" EntityType="EveStaticDataModel.Store.mapDenormalize" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapJumps" EntityType="EveStaticDataModel.Store.mapJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLandmarks" EntityType="EveStaticDataModel.Store.mapLandmarks" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLocationScenes" EntityType="EveStaticDataModel.Store.mapLocationScenes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapLocationWormholeClasses" EntityType="EveStaticDataModel.Store.mapLocationWormholeClasses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapRegionJumps" EntityType="EveStaticDataModel.Store.mapRegionJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapRegions" EntityType="EveStaticDataModel.Store.mapRegions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapSolarSystemJumps" EntityType="EveStaticDataModel.Store.mapSolarSystemJumps" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapSolarSystems" EntityType="EveStaticDataModel.Store.mapSolarSystems" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="mapUniverse" EntityType="EveStaticDataModel.Store.mapUniverse" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.Store.planetSchematics" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -125,7 +129,7 @@
           <Property Name="charisma" Type="tinyint" />
           <Property Name="memory" Type="tinyint" />
           <Property Name="intelligence" Type="tinyint" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="shortDescription" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="chrAttributes">
@@ -135,7 +139,7 @@
           <Property Name="attributeID" Type="tinyint" Nullable="false" />
           <Property Name="attributeName" Type="varchar" MaxLength="100" />
           <Property Name="description" Type="varchar" MaxLength="1000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="shortDescription" Type="nvarchar" MaxLength="500" />
           <Property Name="notes" Type="nvarchar" MaxLength="500" />
         </EntityType>
@@ -156,7 +160,7 @@
           <Property Name="charisma" Type="tinyint" />
           <Property Name="memory" Type="tinyint" />
           <Property Name="intelligence" Type="tinyint" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="shortDescription" Type="nvarchar" MaxLength="500" />
           <Property Name="shortMaleDescription" Type="nvarchar" MaxLength="500" />
           <Property Name="shortFemaleDescription" Type="nvarchar" MaxLength="500" />
@@ -175,6 +179,7 @@
           <Property Name="stationCount" Type="smallint" />
           <Property Name="stationSystemCount" Type="smallint" />
           <Property Name="militiaCorporationID" Type="int" />
+          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="chrRaces">
           <Key>
@@ -183,7 +188,7 @@
           <Property Name="raceID" Type="tinyint" Nullable="false" />
           <Property Name="raceName" Type="varchar" MaxLength="100" />
           <Property Name="description" Type="varchar" MaxLength="1000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="shortDescription" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="crpActivities">
@@ -250,6 +255,7 @@
           <Property Name="stationCount" Type="smallint" />
           <Property Name="stationSystemCount" Type="smallint" />
           <Property Name="description" Type="nvarchar" />
+          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="crpNPCDivisions">
           <Key>
@@ -322,7 +328,7 @@
           <Property Name="attributeID" Type="smallint" Nullable="false" />
           <Property Name="attributeName" Type="varchar" MaxLength="100" />
           <Property Name="description" Type="varchar" MaxLength="1000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="defaultValue" Type="float" />
           <Property Name="published" Type="bit" />
           <Property Name="displayName" Type="varchar" MaxLength="100" />
@@ -342,7 +348,7 @@
           <Property Name="postExpression" Type="int" />
           <Property Name="description" Type="varchar" MaxLength="1000" />
           <Property Name="guid" Type="varchar" MaxLength="60" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="isOffensive" Type="bit" />
           <Property Name="isAssistance" Type="bit" />
           <Property Name="durationAttributeID" Type="smallint" />
@@ -386,15 +392,23 @@
           <Key>
             <PropertyRef Name="graphicID" />
           </Key>
-          <Property Name="graphicID" Type="smallint" Nullable="false" />
-          <Property Name="url3D" Type="varchar" MaxLength="100" />
-          <Property Name="urlWeb" Type="varchar" MaxLength="100" />
-          <Property Name="description" Type="varchar" MaxLength="1000" />
-          <Property Name="published" Type="bit" />
-          <Property Name="obsolete" Type="bit" />
-          <Property Name="icon" Type="varchar" MaxLength="100" />
-          <Property Name="urlSound" Type="varchar" MaxLength="100" />
-          <Property Name="explosionID" Type="smallint" />
+          <Property Name="graphicID" Type="int" Nullable="false" />
+          <Property Name="graphicFile" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="obsolete" Type="bit" Nullable="false" />
+          <Property Name="graphicType" Type="varchar" MaxLength="100" />
+          <Property Name="collidable" Type="bit" />
+          <Property Name="explosionID" Type="int" />
+          <Property Name="directoryID" Type="int" />
+          <Property Name="graphicName" Type="nvarchar" Nullable="false" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="eveIcons">
+          <Key>
+            <PropertyRef Name="iconID" />
+          </Key>
+          <Property Name="iconID" Type="int" Nullable="false" />
+          <Property Name="iconFile" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="eveNames">
           <Key>
@@ -440,7 +454,7 @@
           <Property Name="categoryID" Type="tinyint" Nullable="false" />
           <Property Name="categoryName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="published" Type="bit" />
         </EntityType>
         <EntityType Name="invContrabandTypes">
@@ -492,7 +506,7 @@
           <Property Name="categoryID" Type="tinyint" />
           <Property Name="groupName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="useBasePrice" Type="bit" />
           <Property Name="allowManufacture" Type="bit" />
           <Property Name="allowRecycler" Type="bit" />
@@ -509,7 +523,7 @@
           <Property Name="parentGroupID" Type="smallint" />
           <Property Name="marketGroupName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="hasTypes" Type="bit" />
         </EntityType>
         <EntityType Name="invMetaGroups">
@@ -519,7 +533,7 @@
           <Property Name="metaGroupID" Type="smallint" Nullable="false" />
           <Property Name="metaGroupName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="invMetaTypes">
           <Key>
@@ -557,7 +571,7 @@
           <Property Name="groupID" Type="smallint" />
           <Property Name="typeName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="graphicID" Type="int" />
           <Property Name="radius" Type="float" />
           <Property Name="mass" Type="float" />
           <Property Name="volume" Type="float" />
@@ -568,6 +582,7 @@
           <Property Name="published" Type="bit" />
           <Property Name="marketGroupID" Type="smallint" />
           <Property Name="chanceOfDuplicating" Type="float" />
+          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="mapCelestialStatistics">
           <Key>
@@ -662,9 +677,8 @@
           <Property Name="y" Type="float" />
           <Property Name="z" Type="float" />
           <Property Name="radius" Type="float" />
-          <Property Name="graphicID" Type="smallint" />
+          <Property Name="iconID" Type="int" />
           <Property Name="importance" Type="tinyint" />
-          <Property Name="url2d" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="mapLocationScenes">
           <Key>
@@ -765,6 +779,32 @@
           <Property Name="zMin" Type="float" />
           <Property Name="zMax" Type="float" />
           <Property Name="radius" Type="float" />
+        </EntityType>
+        <EntityType Name="planetSchematics">
+          <Key>
+            <PropertyRef Name="schematicID" />
+          </Key>
+          <Property Name="schematicID" Type="smallint" Nullable="false" />
+          <Property Name="schematicName" Type="nvarchar" MaxLength="255" />
+          <Property Name="cycleTime" Type="int" />
+        </EntityType>
+        <EntityType Name="planetSchematicsPinMap">
+          <Key>
+            <PropertyRef Name="schematicID" />
+            <PropertyRef Name="pinTypeID" />
+          </Key>
+          <Property Name="schematicID" Type="smallint" Nullable="false" />
+          <Property Name="pinTypeID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="planetSchematicsTypeMap">
+          <Key>
+            <PropertyRef Name="schematicID" />
+            <PropertyRef Name="typeID" />
+          </Key>
+          <Property Name="schematicID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="quantity" Type="smallint" />
+          <Property Name="isInput" Type="bit" />
         </EntityType>
         <EntityType Name="ramActivities">
           <Key>
@@ -906,8 +946,6 @@
             <PropertyRef Name="stationTypeID" />
           </Key>
           <Property Name="stationTypeID" Type="smallint" Nullable="false" />
-          <Property Name="dockingBayGraphicID" Type="smallint" />
-          <Property Name="hangarGraphicID" Type="smallint" />
           <Property Name="dockEntryX" Type="float" />
           <Property Name="dockEntryY" Type="float" />
           <Property Name="dockEntryZ" Type="float" />
@@ -963,8 +1001,7 @@
           <Property Name="languageID" Type="char" Nullable="false" MaxLength="2" />
           <Property Name="text" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EveStaticDataModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -994,7 +1031,6 @@
           <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.dgmEffects" />
           <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.dgmTypeAttributes" />
           <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.dgmTypeEffects" />
-          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
           <EntitySet Name="eveNames" EntityType="EveStaticDataModel.eveNames" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.eveUnits" />
           <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.invBlueprintTypes" />
@@ -1038,6 +1074,11 @@
           <EntitySet Name="staStations" EntityType="EveStaticDataModel.staStations" />
           <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.trnTranslationColumns" />
           <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.trnTranslations" />
+          <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.eveIcons" />
+          <EntitySet Name="planetSchematics" EntityType="EveStaticDataModel.planetSchematics" />
+          <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.planetSchematicsPinMap" />
+          <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.planetSchematicsTypeMap" />
+          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
         </EntityContainer>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -1088,8 +1129,8 @@
           <Property Name="charisma" Type="Byte" />
           <Property Name="memory" Type="Byte" />
           <Property Name="intelligence" Type="Byte" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="shortDescription" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="chrAttributes">
           <Key>
@@ -1098,9 +1139,9 @@
           <Property Name="attributeID" Type="Byte" Nullable="false" />
           <Property Name="attributeName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="shortDescription" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
           <Property Name="notes" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="chrBloodlines">
           <Key>
@@ -1119,10 +1160,10 @@
           <Property Name="charisma" Type="Byte" />
           <Property Name="memory" Type="Byte" />
           <Property Name="intelligence" Type="Byte" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="shortDescription" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
           <Property Name="shortMaleDescription" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
           <Property Name="shortFemaleDescription" Type="String" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="chrFactions">
           <Key>
@@ -1138,6 +1179,7 @@
           <Property Name="stationCount" Type="Int16" />
           <Property Name="stationSystemCount" Type="Int16" />
           <Property Name="militiaCorporationID" Type="Int32" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="chrRaces">
           <Key>
@@ -1146,8 +1188,8 @@
           <Property Name="raceID" Type="Byte" Nullable="false" />
           <Property Name="raceName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="shortDescription" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="crpActivities">
           <Key>
@@ -1213,6 +1255,7 @@
           <Property Name="stationCount" Type="Int16" />
           <Property Name="stationSystemCount" Type="Int16" />
           <Property Name="description" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="crpNPCDivisions">
           <Key>
@@ -1285,7 +1328,6 @@
           <Property Name="attributeID" Type="Int16" Nullable="false" />
           <Property Name="attributeName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="defaultValue" Type="Double" />
           <Property Name="published" Type="Boolean" />
           <Property Name="displayName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
@@ -1293,6 +1335,7 @@
           <Property Name="stackable" Type="Boolean" />
           <Property Name="highIsGood" Type="Boolean" />
           <Property Name="categoryID" Type="Byte" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="dgmEffects">
           <Key>
@@ -1305,7 +1348,6 @@
           <Property Name="postExpression" Type="Int32" />
           <Property Name="description" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
           <Property Name="guid" Type="String" MaxLength="60" Unicode="false" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="isOffensive" Type="Boolean" />
           <Property Name="isAssistance" Type="Boolean" />
           <Property Name="durationAttributeID" Type="Int16" />
@@ -1325,6 +1367,7 @@
           <Property Name="npcUsageChanceAttributeID" Type="Int16" />
           <Property Name="npcActivationChanceAttributeID" Type="Int16" />
           <Property Name="fittingUsageChanceAttributeID" Type="Int16" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="dgmTypeAttributes">
           <Key>
@@ -1344,20 +1387,6 @@
           <Property Name="typeID" Type="Int16" Nullable="false" />
           <Property Name="effectID" Type="Int16" Nullable="false" />
           <Property Name="isDefault" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="eveGraphics">
-          <Key>
-            <PropertyRef Name="graphicID" />
-          </Key>
-          <Property Name="graphicID" Type="Int16" Nullable="false" />
-          <Property Name="url3D" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="urlWeb" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="description" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="published" Type="Boolean" />
-          <Property Name="obsolete" Type="Boolean" />
-          <Property Name="icon" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="urlSound" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="explosionID" Type="Int16" />
         </EntityType>
         <EntityType Name="eveNames">
           <Key>
@@ -1403,8 +1432,8 @@
           <Property Name="categoryID" Type="Byte" Nullable="false" />
           <Property Name="categoryName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="published" Type="Boolean" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="invContrabandTypes">
           <Key>
@@ -1455,7 +1484,6 @@
           <Property Name="categoryID" Type="Byte" />
           <Property Name="groupName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="useBasePrice" Type="Boolean" />
           <Property Name="allowManufacture" Type="Boolean" />
           <Property Name="allowRecycler" Type="Boolean" />
@@ -1463,6 +1491,7 @@
           <Property Name="anchorable" Type="Boolean" />
           <Property Name="fittableNonSingleton" Type="Boolean" />
           <Property Name="published" Type="Boolean" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="invMarketGroups">
           <Key>
@@ -1472,8 +1501,8 @@
           <Property Name="parentGroupID" Type="Int16" />
           <Property Name="marketGroupName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="hasTypes" Type="Boolean" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="invMetaGroups">
           <Key>
@@ -1482,7 +1511,7 @@
           <Property Name="metaGroupID" Type="Int16" Nullable="false" />
           <Property Name="metaGroupName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="invMetaTypes">
           <Key>
@@ -1531,6 +1560,7 @@
           <Property Name="published" Type="Boolean" />
           <Property Name="marketGroupID" Type="Int16" />
           <Property Name="chanceOfDuplicating" Type="Double" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="mapCelestialStatistics">
           <Key>
@@ -1625,9 +1655,8 @@
           <Property Name="y" Type="Double" />
           <Property Name="z" Type="Double" />
           <Property Name="radius" Type="Double" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="importance" Type="Byte" />
-          <Property Name="url2d" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="mapLocationScenes">
           <Key>
@@ -1869,8 +1898,6 @@
             <PropertyRef Name="stationTypeID" />
           </Key>
           <Property Name="stationTypeID" Type="Int16" Nullable="false" />
-          <Property Name="dockingBayGraphicID" Type="Int16" />
-          <Property Name="hangarGraphicID" Type="Int16" />
           <Property Name="dockEntryX" Type="Double" />
           <Property Name="dockEntryY" Type="Double" />
           <Property Name="dockEntryZ" Type="Double" />
@@ -1926,6 +1953,54 @@
           <Property Name="languageID" Type="String" Nullable="false" MaxLength="2" Unicode="false" FixedLength="true" />
           <Property Name="text" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
+        <EntityType Name="eveIcons">
+          <Key>
+            <PropertyRef Name="iconID" />
+          </Key>
+          <Property Type="Int32" Name="iconID" Nullable="false" />
+          <Property Type="String" Name="iconFile" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="planetSchematics">
+          <Key>
+            <PropertyRef Name="schematicID" />
+          </Key>
+          <Property Type="Int16" Name="schematicID" Nullable="false" />
+          <Property Type="String" Name="schematicName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="cycleTime" />
+        </EntityType>
+        <EntityType Name="planetSchematicsPinMap">
+          <Key>
+            <PropertyRef Name="schematicID" />
+            <PropertyRef Name="pinTypeID" />
+          </Key>
+          <Property Type="Int16" Name="schematicID" Nullable="false" />
+          <Property Type="Int16" Name="pinTypeID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="planetSchematicsTypeMap">
+          <Key>
+            <PropertyRef Name="schematicID" />
+            <PropertyRef Name="typeID" />
+          </Key>
+          <Property Type="Int16" Name="schematicID" Nullable="false" />
+          <Property Type="Int16" Name="typeID" Nullable="false" />
+          <Property Type="Int16" Name="quantity" />
+          <Property Type="Boolean" Name="isInput" />
+        </EntityType>
+        <EntityType Name="eveGraphics">
+          <Key>
+            <PropertyRef Name="graphicID" />
+          </Key>
+          <Property Type="Int32" Name="graphicID" Nullable="false" />
+          <Property Type="String" Name="graphicFile" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="obsolete" Nullable="false" />
+          <Property Type="String" Name="graphicType" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="collidable" />
+          <Property Type="Int32" Name="explosionID" />
+          <Property Type="Int32" Name="directoryID" />
+          <Property Type="String" Name="graphicName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1973,6 +2048,7 @@
           <EntitySetMapping Name="chrAncestries">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.chrAncestries)">
               <MappingFragment StoreEntitySet="chrAncestries">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="ancestryID" ColumnName="ancestryID" />
                 <ScalarProperty Name="ancestryName" ColumnName="ancestryName" />
                 <ScalarProperty Name="bloodlineID" ColumnName="bloodlineID" />
@@ -1982,7 +2058,6 @@
                 <ScalarProperty Name="charisma" ColumnName="charisma" />
                 <ScalarProperty Name="memory" ColumnName="memory" />
                 <ScalarProperty Name="intelligence" ColumnName="intelligence" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="shortDescription" ColumnName="shortDescription" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1990,10 +2065,10 @@
           <EntitySetMapping Name="chrAttributes">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.chrAttributes)">
               <MappingFragment StoreEntitySet="chrAttributes">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="attributeID" ColumnName="attributeID" />
                 <ScalarProperty Name="attributeName" ColumnName="attributeName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="shortDescription" ColumnName="shortDescription" />
                 <ScalarProperty Name="notes" ColumnName="notes" />
               </MappingFragment>
@@ -2002,6 +2077,7 @@
           <EntitySetMapping Name="chrBloodlines">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.chrBloodlines)">
               <MappingFragment StoreEntitySet="chrBloodlines">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="bloodlineID" ColumnName="bloodlineID" />
                 <ScalarProperty Name="bloodlineName" ColumnName="bloodlineName" />
                 <ScalarProperty Name="raceID" ColumnName="raceID" />
@@ -2015,7 +2091,6 @@
                 <ScalarProperty Name="charisma" ColumnName="charisma" />
                 <ScalarProperty Name="memory" ColumnName="memory" />
                 <ScalarProperty Name="intelligence" ColumnName="intelligence" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="shortDescription" ColumnName="shortDescription" />
                 <ScalarProperty Name="shortMaleDescription" ColumnName="shortMaleDescription" />
                 <ScalarProperty Name="shortFemaleDescription" ColumnName="shortFemaleDescription" />
@@ -2025,6 +2100,7 @@
           <EntitySetMapping Name="chrFactions">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.chrFactions)">
               <MappingFragment StoreEntitySet="chrFactions">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="factionID" ColumnName="factionID" />
                 <ScalarProperty Name="factionName" ColumnName="factionName" />
                 <ScalarProperty Name="description" ColumnName="description" />
@@ -2041,10 +2117,10 @@
           <EntitySetMapping Name="chrRaces">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.chrRaces)">
               <MappingFragment StoreEntitySet="chrRaces">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="raceID" ColumnName="raceID" />
                 <ScalarProperty Name="raceName" ColumnName="raceName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="shortDescription" ColumnName="shortDescription" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2086,6 +2162,7 @@
           <EntitySetMapping Name="crpNPCCorporations">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.crpNPCCorporations)">
               <MappingFragment StoreEntitySet="crpNPCCorporations">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="corporationID" ColumnName="corporationID" />
                 <ScalarProperty Name="size" ColumnName="size" />
                 <ScalarProperty Name="extent" ColumnName="extent" />
@@ -2190,10 +2267,10 @@
           <EntitySetMapping Name="dgmAttributeTypes">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.dgmAttributeTypes)">
               <MappingFragment StoreEntitySet="dgmAttributeTypes">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="attributeID" ColumnName="attributeID" />
                 <ScalarProperty Name="attributeName" ColumnName="attributeName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="defaultValue" ColumnName="defaultValue" />
                 <ScalarProperty Name="published" ColumnName="published" />
                 <ScalarProperty Name="displayName" ColumnName="displayName" />
@@ -2207,6 +2284,7 @@
           <EntitySetMapping Name="dgmEffects">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.dgmEffects)">
               <MappingFragment StoreEntitySet="dgmEffects">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="effectID" ColumnName="effectID" />
                 <ScalarProperty Name="effectName" ColumnName="effectName" />
                 <ScalarProperty Name="effectCategory" ColumnName="effectCategory" />
@@ -2214,7 +2292,6 @@
                 <ScalarProperty Name="postExpression" ColumnName="postExpression" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="guid" ColumnName="guid" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="isOffensive" ColumnName="isOffensive" />
                 <ScalarProperty Name="isAssistance" ColumnName="isAssistance" />
                 <ScalarProperty Name="durationAttributeID" ColumnName="durationAttributeID" />
@@ -2253,21 +2330,6 @@
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="effectID" ColumnName="effectID" />
                 <ScalarProperty Name="isDefault" ColumnName="isDefault" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="eveGraphics">
-            <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.eveGraphics)">
-              <MappingFragment StoreEntitySet="eveGraphics">
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
-                <ScalarProperty Name="url3D" ColumnName="url3D" />
-                <ScalarProperty Name="urlWeb" ColumnName="urlWeb" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="published" ColumnName="published" />
-                <ScalarProperty Name="obsolete" ColumnName="obsolete" />
-                <ScalarProperty Name="icon" ColumnName="icon" />
-                <ScalarProperty Name="urlSound" ColumnName="urlSound" />
-                <ScalarProperty Name="explosionID" ColumnName="explosionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2314,10 +2376,10 @@
           <EntitySetMapping Name="invCategories">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.invCategories)">
               <MappingFragment StoreEntitySet="invCategories">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="categoryID" ColumnName="categoryID" />
                 <ScalarProperty Name="categoryName" ColumnName="categoryName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="published" ColumnName="published" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2368,11 +2430,11 @@
           <EntitySetMapping Name="invGroups">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.invGroups)">
               <MappingFragment StoreEntitySet="invGroups">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="categoryID" ColumnName="categoryID" />
                 <ScalarProperty Name="groupName" ColumnName="groupName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="useBasePrice" ColumnName="useBasePrice" />
                 <ScalarProperty Name="allowManufacture" ColumnName="allowManufacture" />
                 <ScalarProperty Name="allowRecycler" ColumnName="allowRecycler" />
@@ -2386,11 +2448,11 @@
           <EntitySetMapping Name="invMarketGroups">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.invMarketGroups)">
               <MappingFragment StoreEntitySet="invMarketGroups">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="marketGroupID" ColumnName="marketGroupID" />
                 <ScalarProperty Name="parentGroupID" ColumnName="parentGroupID" />
                 <ScalarProperty Name="marketGroupName" ColumnName="marketGroupName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="hasTypes" ColumnName="hasTypes" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2398,10 +2460,10 @@
           <EntitySetMapping Name="invMetaGroups">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.invMetaGroups)">
               <MappingFragment StoreEntitySet="invMetaGroups">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="metaGroupID" ColumnName="metaGroupID" />
                 <ScalarProperty Name="metaGroupName" ColumnName="metaGroupName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2436,6 +2498,7 @@
           <EntitySetMapping Name="invTypes">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.invTypes)">
               <MappingFragment StoreEntitySet="invTypes">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="typeName" ColumnName="typeName" />
@@ -2542,6 +2605,7 @@
           <EntitySetMapping Name="mapLandmarks">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.mapLandmarks)">
               <MappingFragment StoreEntitySet="mapLandmarks">
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
                 <ScalarProperty Name="landmarkID" ColumnName="landmarkID" />
                 <ScalarProperty Name="landmarkName" ColumnName="landmarkName" />
                 <ScalarProperty Name="description" ColumnName="description" />
@@ -2550,9 +2614,7 @@
                 <ScalarProperty Name="y" ColumnName="y" />
                 <ScalarProperty Name="z" ColumnName="z" />
                 <ScalarProperty Name="radius" ColumnName="radius" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="importance" ColumnName="importance" />
-                <ScalarProperty Name="url2d" ColumnName="url2d" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2804,8 +2866,6 @@
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.staStationTypes)">
               <MappingFragment StoreEntitySet="staStationTypes">
                 <ScalarProperty Name="stationTypeID" ColumnName="stationTypeID" />
-                <ScalarProperty Name="dockingBayGraphicID" ColumnName="dockingBayGraphicID" />
-                <ScalarProperty Name="hangarGraphicID" ColumnName="hangarGraphicID" />
                 <ScalarProperty Name="dockEntryX" ColumnName="dockEntryX" />
                 <ScalarProperty Name="dockEntryY" ColumnName="dockEntryY" />
                 <ScalarProperty Name="dockEntryZ" ColumnName="dockEntryZ" />
@@ -2864,6 +2924,57 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="eveIcons">
+            <EntityTypeMapping TypeName="EveStaticDataModel.eveIcons">
+              <MappingFragment StoreEntitySet="eveIcons">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="iconFile" ColumnName="iconFile" />
+                <ScalarProperty Name="iconID" ColumnName="iconID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="planetSchematics">
+            <EntityTypeMapping TypeName="EveStaticDataModel.planetSchematics">
+              <MappingFragment StoreEntitySet="planetSchematics">
+                <ScalarProperty Name="cycleTime" ColumnName="cycleTime" />
+                <ScalarProperty Name="schematicName" ColumnName="schematicName" />
+                <ScalarProperty Name="schematicID" ColumnName="schematicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="planetSchematicsPinMap">
+            <EntityTypeMapping TypeName="EveStaticDataModel.planetSchematicsPinMap">
+              <MappingFragment StoreEntitySet="planetSchematicsPinMap">
+                <ScalarProperty Name="pinTypeID" ColumnName="pinTypeID" />
+                <ScalarProperty Name="schematicID" ColumnName="schematicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="planetSchematicsTypeMap">
+            <EntityTypeMapping TypeName="EveStaticDataModel.planetSchematicsTypeMap">
+              <MappingFragment StoreEntitySet="planetSchematicsTypeMap">
+                <ScalarProperty Name="isInput" ColumnName="isInput" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
+                <ScalarProperty Name="schematicID" ColumnName="schematicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="eveGraphics">
+            <EntityTypeMapping TypeName="EveStaticDataModel.eveGraphics">
+              <MappingFragment StoreEntitySet="eveGraphics">
+                <ScalarProperty Name="graphicName" ColumnName="graphicName" />
+                <ScalarProperty Name="directoryID" ColumnName="directoryID" />
+                <ScalarProperty Name="explosionID" ColumnName="explosionID" />
+                <ScalarProperty Name="collidable" ColumnName="collidable" />
+                <ScalarProperty Name="graphicType" ColumnName="graphicType" />
+                <ScalarProperty Name="obsolete" ColumnName="obsolete" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="graphicFile" ColumnName="graphicFile" />
+                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2878,16 +2989,18 @@
     <edmx:Options>
       <DesignerInfoPropertySet xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram Name="EveStaticData" ZoomLevel="100" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+      <Diagram Name="EveStaticData" ZoomLevel="101" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgentTypes" Width="1.5" PointX="0.75" PointY="0.75" Height="1.4033821614583331" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75" Height="2.3648893229166665" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtConfig" Width="1.5" PointX="4.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtResearchAgents" Width="1.5" PointX="0.75" PointY="4.75" Height="1.4033821614583335" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.chrAncestries" Width="1.5" PointX="2.75" PointY="4.75" Height="3.1340950520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.chrAncestries" Width="1.5" PointX="2.75" PointY="4.75" Height="3.1340950520833326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.chrAttributes" Width="1.5" PointX="4.75" PointY="3.75" Height="2.1725878906249996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.chrBloodlines" Width="1.5" PointX="6.75" PointY="0.75" Height="4.2879036458333326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.chrFactions" Width="1.5" PointX="4.75" PointY="6.75" Height="2.9417936197916674" IsExpanded="true" />
@@ -2904,15 +3017,14 @@
         <EntityTypeShape EntityType="EveStaticDataModel.crtRecommendations" Width="1.5" PointX="10.75" PointY="6.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crtRelationships" Width="1.5" PointX="10.75" PointY="9.75" Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeCategories" Width="1.5" PointX="12.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeTypes" Width="1.5" PointX="12.75" PointY="3.75" Height="3.1340950520833335" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmAttributeTypes" Width="1.5" PointX="12.75" PointY="3.75" Height="3.1340950520833326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmEffects" Width="1.5" PointX="12.75" PointY="7.75" Height="6.21091796875" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeAttributes" Width="1.5" PointX="8.75" PointY="12.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeEffects" Width="1.5" PointX="14.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.75" PointY="14.75" Height="2.7494921875000014" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveNames" Width="1.5" PointX="2.75" PointY="14.75" Height="1.9802864583333317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveUnits" Width="1.5" PointX="14.75" PointY="3.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invBlueprintTypes" Width="1.5" PointX="14.75" PointY="6.75" Height="3.5186979166666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invCategories" Width="1.5" PointX="10.75" PointY="14.75" Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invCategories" Width="1.5" PointX="10.75" PointY="12.5" Height="1.9802864583333335" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invContrabandTypes" Width="1.5" PointX="14.75" PointY="11.75" Height="2.1725878906249996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResourcePurposes" Width="1.5" PointX="12.75" PointY="14.75" Height="1.4033821614583317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResources" Width="1.5" PointX="14.75" PointY="14.75" Height="2.1725878906249996" IsExpanded="true" />
@@ -2923,13 +3035,13 @@
         <EntityTypeShape EntityType="EveStaticDataModel.invMetaTypes" Width="1.5" PointX="16.75" PointY="8.75" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invTypeMaterials" Width="1.5" PointX="16.75" PointY="11.75" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invTypeReactions" Width="1.5" PointX="16.75" PointY="14.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="8.75" PointY="17.75" Height="3.903300781249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="10.75" PointY="17.75" Height="4.8648079427083317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="8.875" PointY="14.875" Height="4.0956022135416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="10.875" PointY="14.875" Height="4.8648079427083317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapConstellationJumps" Width="1.5" PointX="12.75" PointY="17.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapConstellations" Width="1.5" PointX="14.75" PointY="17.75" Height="3.7109993489583317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapDenormalize" Width="1.5" PointX="16.75" PointY="17.75" Height="3.903300781249996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapJumps" Width="1.5" PointX="18.75" PointY="0.75" Height="1.4033821614583333" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.mapLandmarks" Width="1.5" PointX="0.75" PointY="18.75" Height="3.1340950520833317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.mapLandmarks" Width="1.5" PointX="0.75" PointY="18.75" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapLocationScenes" Width="1.5" PointX="18.75" PointY="3.75" Height="1.4033821614583335" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapLocationWormholeClasses" Width="1.5" PointX="18.75" PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapRegionJumps" Width="1.5" PointX="18.75" PointY="9.75" Height="1.4033821614583317" IsExpanded="true" />
@@ -2946,11 +3058,16 @@
         <EntityTypeShape EntityType="EveStaticDataModel.ramInstallationTypeContents" Width="1.5" PointX="22.75" PointY="0.75" Height="1.5956835937499998" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.ramTypeRequirements" Width="1.5" PointX="22.75" PointY="3.75" Height="2.1725878906249996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.staOperationServices" Width="1.5" PointX="22.75" PointY="6.75" Height="1.4033821614583326" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staOperations" Width="1.5" PointX="6.75" PointY="22.75" Height="3.7109993489583317" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staOperations" Width="1.5" PointX="10.875" PointY="22.75" Height="3.7109993489583317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.staServices" Width="1.5" PointX="22.75" PointY="9.75" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.staStationTypes" Width="1.5" PointX="22.75" PointY="12.75" Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.staStationTypes" Width="1.5" PointX="22.75" PointY="12.75" Height="3.1340950520833335" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.staStations" Width="1.5" PointX="12.75" PointY="22.75" Height="4.480205078124996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.trnTranslationColumns" Width="1.5" PointX="14.75" PointY="22.75" Height="1.9802864583333317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="16.75" PointY="22.75" Height="1.7879850260416674" IsExpanded="true" /></Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="16.75" PointY="22.75" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="2.75" PointY="17.25" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="8.625" PointY="20" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="8.625" PointY="21.875" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.625" PointY="20" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125" Height="2.7494921874999818" /></Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

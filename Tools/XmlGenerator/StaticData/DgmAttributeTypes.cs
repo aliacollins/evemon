@@ -24,8 +24,8 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("defaultValue")]
         public string DefaultValue;
 
-        [XmlElement("graphicID")]
-        public Nullable<int> GraphicID;
+        [XmlElement("iconID")]
+        public Nullable<int> IconID;
 
         [XmlElement("unitID")]
         public Nullable<int> UnitID;

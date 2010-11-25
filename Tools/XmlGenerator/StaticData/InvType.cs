@@ -15,8 +15,8 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("groupID")]
         public int GroupID;
 
-        [XmlElement("graphicID")]
-        public Nullable<int> GraphicID;
+        [XmlElement("iconID")]
+        public Nullable<int> IconID;
 
         [XmlElement("typeName")]
         public string Name;

@@ -18,8 +18,8 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("parentGroupID")]
         public Nullable<int> ParentID;
 
-        [XmlElement("graphicID")]
-        public Nullable<int> GraphicID;
+        [XmlElement("iconID")]
+        public Nullable<int> IconID;
 
         [XmlElement("description")]
         public string Description;

@@ -465,22 +465,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<eveGraphics> eveGraphics
-        {
-            get
-            {
-                if ((_eveGraphics == null))
-                {
-                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
-                }
-                return _eveGraphics;
-            }
-        }
-        private ObjectSet<eveGraphics> _eveGraphics;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<eveNames> eveNames
         {
             get
@@ -1165,6 +1149,86 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<trnTranslations> _trnTranslations;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<eveIcons> eveIcons
+        {
+            get
+            {
+                if ((_eveIcons == null))
+                {
+                    _eveIcons = base.CreateObjectSet<eveIcons>("eveIcons");
+                }
+                return _eveIcons;
+            }
+        }
+        private ObjectSet<eveIcons> _eveIcons;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<planetSchematics> planetSchematics
+        {
+            get
+            {
+                if ((_planetSchematics == null))
+                {
+                    _planetSchematics = base.CreateObjectSet<planetSchematics>("planetSchematics");
+                }
+                return _planetSchematics;
+            }
+        }
+        private ObjectSet<planetSchematics> _planetSchematics;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<planetSchematicsPinMap> planetSchematicsPinMap
+        {
+            get
+            {
+                if ((_planetSchematicsPinMap == null))
+                {
+                    _planetSchematicsPinMap = base.CreateObjectSet<planetSchematicsPinMap>("planetSchematicsPinMap");
+                }
+                return _planetSchematicsPinMap;
+            }
+        }
+        private ObjectSet<planetSchematicsPinMap> _planetSchematicsPinMap;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<planetSchematicsTypeMap> planetSchematicsTypeMap
+        {
+            get
+            {
+                if ((_planetSchematicsTypeMap == null))
+                {
+                    _planetSchematicsTypeMap = base.CreateObjectSet<planetSchematicsTypeMap>("planetSchematicsTypeMap");
+                }
+                return _planetSchematicsTypeMap;
+            }
+        }
+        private ObjectSet<planetSchematicsTypeMap> _planetSchematicsTypeMap;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<eveGraphics> eveGraphics
+        {
+            get
+            {
+                if ((_eveGraphics == null))
+                {
+                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
+                }
+                return _eveGraphics;
+            }
+        }
+        private ObjectSet<eveGraphics> _eveGraphics;
 
         #endregion
         #region AddTo Methods
@@ -1367,14 +1431,6 @@ namespace EVEMon.XmlGenerator
         public void AddTodgmTypeEffects(dgmTypeEffects dgmTypeEffects)
         {
             base.AddObject("dgmTypeEffects", dgmTypeEffects);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveGraphics(eveGraphics eveGraphics)
-        {
-            base.AddObject("eveGraphics", eveGraphics);
         }
     
         /// <summary>
@@ -1719,6 +1775,46 @@ namespace EVEMon.XmlGenerator
         public void AddTotrnTranslations(trnTranslations trnTranslations)
         {
             base.AddObject("trnTranslations", trnTranslations);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the eveIcons EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToeveIcons(eveIcons eveIcons)
+        {
+            base.AddObject("eveIcons", eveIcons);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematics(planetSchematics planetSchematics)
+        {
+            base.AddObject("planetSchematics", planetSchematics);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematicsPinMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematicsPinMap(planetSchematicsPinMap planetSchematicsPinMap)
+        {
+            base.AddObject("planetSchematicsPinMap", planetSchematicsPinMap);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematicsTypeMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematicsTypeMap(planetSchematicsTypeMap planetSchematicsTypeMap)
+        {
+            base.AddObject("planetSchematicsTypeMap", planetSchematicsTypeMap);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToeveGraphics(eveGraphics eveGraphics)
+        {
+            base.AddObject("eveGraphics", eveGraphics);
         }
 
         #endregion
@@ -2447,30 +2543,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -2489,6 +2561,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _shortDescription;
         partial void OnshortDescriptionChanging(global::System.String value);
         partial void OnshortDescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -2598,30 +2694,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -2664,6 +2736,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _notes;
         partial void OnnotesChanging(global::System.String value);
         partial void OnnotesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -3013,30 +3109,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -3103,6 +3175,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _shortFemaleDescription;
         partial void OnshortFemaleDescriptionChanging(global::System.String value);
         partial void OnshortFemaleDescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -3374,6 +3470,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _militiaCorporationID;
         partial void OnmilitiaCorporationIDChanging(Nullable<global::System.Int32> value);
         partial void OnmilitiaCorporationIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -3483,30 +3603,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -3525,6 +3621,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _shortDescription;
         partial void OnshortDescriptionChanging(global::System.String value);
         partial void OnshortDescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -4499,6 +4619,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _description;
         partial void OndescriptionChanging(global::System.String value);
         partial void OndescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -5607,30 +5751,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Double> defaultValue
         {
             get
@@ -5793,6 +5913,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Byte> _categoryID;
         partial void OncategoryIDChanging(Nullable<global::System.Byte> value);
         partial void OncategoryIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -5992,30 +6136,6 @@ namespace EVEMon.XmlGenerator
         private global::System.String _guid;
         partial void OnguidChanging(global::System.String value);
         partial void OnguidChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6472,6 +6592,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int16> _fittingUsageChanceAttributeID;
         partial void OnfittingUsageChanceAttributeIDChanging(Nullable<global::System.Int16> value);
         partial void OnfittingUsageChanceAttributeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -6731,10 +6875,18 @@ namespace EVEMon.XmlGenerator
         /// Create a new eveGraphics object.
         /// </summary>
         /// <param name="graphicID">Initial value of the graphicID property.</param>
-        public static eveGraphics CreateeveGraphics(global::System.Int16 graphicID)
+        /// <param name="graphicFile">Initial value of the graphicFile property.</param>
+        /// <param name="description">Initial value of the description property.</param>
+        /// <param name="obsolete">Initial value of the obsolete property.</param>
+        /// <param name="graphicName">Initial value of the graphicName property.</param>
+        public static eveGraphics CreateeveGraphics(global::System.Int32 graphicID, global::System.String graphicFile, global::System.String description, global::System.Boolean obsolete, global::System.String graphicName)
         {
             eveGraphics eveGraphics = new eveGraphics();
             eveGraphics.graphicID = graphicID;
+            eveGraphics.graphicFile = graphicFile;
+            eveGraphics.description = description;
+            eveGraphics.obsolete = obsolete;
+            eveGraphics.graphicName = graphicName;
             return eveGraphics;
         }
 
@@ -6746,7 +6898,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 graphicID
+        public global::System.Int32 graphicID
         {
             get
             {
@@ -6764,62 +6916,38 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _graphicID;
-        partial void OngraphicIDChanging(global::System.Int16 value);
+        private global::System.Int32 _graphicID;
+        partial void OngraphicIDChanging(global::System.Int32 value);
         partial void OngraphicIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String url3D
+        public global::System.String graphicFile
         {
             get
             {
-                return _url3D;
+                return _graphicFile;
             }
             set
             {
-                Onurl3DChanging(value);
-                ReportPropertyChanging("url3D");
-                _url3D = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("url3D");
-                Onurl3DChanged();
+                OngraphicFileChanging(value);
+                ReportPropertyChanging("graphicFile");
+                _graphicFile = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("graphicFile");
+                OngraphicFileChanged();
             }
         }
-        private global::System.String _url3D;
-        partial void Onurl3DChanging(global::System.String value);
-        partial void Onurl3DChanged();
+        private global::System.String _graphicFile;
+        partial void OngraphicFileChanging(global::System.String value);
+        partial void OngraphicFileChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String urlWeb
-        {
-            get
-            {
-                return _urlWeb;
-            }
-            set
-            {
-                OnurlWebChanging(value);
-                ReportPropertyChanging("urlWeb");
-                _urlWeb = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("urlWeb");
-                OnurlWebChanged();
-            }
-        }
-        private global::System.String _urlWeb;
-        partial void OnurlWebChanging(global::System.String value);
-        partial void OnurlWebChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.String description
         {
@@ -6831,7 +6959,7 @@ namespace EVEMon.XmlGenerator
             {
                 OndescriptionChanging(value);
                 ReportPropertyChanging("description");
-                _description = StructuralObject.SetValidValue(value, true);
+                _description = StructuralObject.SetValidValue(value, false);
                 ReportPropertyChanged("description");
                 OndescriptionChanged();
             }
@@ -6843,33 +6971,9 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> published
-        {
-            get
-            {
-                return _published;
-            }
-            set
-            {
-                OnpublishedChanging(value);
-                ReportPropertyChanging("published");
-                _published = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("published");
-                OnpublishedChanged();
-            }
-        }
-        private Nullable<global::System.Boolean> _published;
-        partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
-        partial void OnpublishedChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> obsolete
+        public global::System.Boolean obsolete
         {
             get
             {
@@ -6884,8 +6988,8 @@ namespace EVEMon.XmlGenerator
                 OnobsoleteChanged();
             }
         }
-        private Nullable<global::System.Boolean> _obsolete;
-        partial void OnobsoleteChanging(Nullable<global::System.Boolean> value);
+        private global::System.Boolean _obsolete;
+        partial void OnobsoleteChanging(global::System.Boolean value);
         partial void OnobsoleteChanged();
     
         /// <summary>
@@ -6893,55 +6997,55 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String icon
+        public global::System.String graphicType
         {
             get
             {
-                return _icon;
+                return _graphicType;
             }
             set
             {
-                OniconChanging(value);
-                ReportPropertyChanging("icon");
-                _icon = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("icon");
-                OniconChanged();
+                OngraphicTypeChanging(value);
+                ReportPropertyChanging("graphicType");
+                _graphicType = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("graphicType");
+                OngraphicTypeChanged();
             }
         }
-        private global::System.String _icon;
-        partial void OniconChanging(global::System.String value);
-        partial void OniconChanged();
+        private global::System.String _graphicType;
+        partial void OngraphicTypeChanging(global::System.String value);
+        partial void OngraphicTypeChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String urlSound
+        public Nullable<global::System.Boolean> collidable
         {
             get
             {
-                return _urlSound;
+                return _collidable;
             }
             set
             {
-                OnurlSoundChanging(value);
-                ReportPropertyChanging("urlSound");
-                _urlSound = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("urlSound");
-                OnurlSoundChanged();
+                OncollidableChanging(value);
+                ReportPropertyChanging("collidable");
+                _collidable = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("collidable");
+                OncollidableChanged();
             }
         }
-        private global::System.String _urlSound;
-        partial void OnurlSoundChanging(global::System.String value);
-        partial void OnurlSoundChanged();
+        private Nullable<global::System.Boolean> _collidable;
+        partial void OncollidableChanging(Nullable<global::System.Boolean> value);
+        partial void OncollidableChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> explosionID
+        public Nullable<global::System.Int32> explosionID
         {
             get
             {
@@ -6956,9 +7060,164 @@ namespace EVEMon.XmlGenerator
                 OnexplosionIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _explosionID;
-        partial void OnexplosionIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _explosionID;
+        partial void OnexplosionIDChanging(Nullable<global::System.Int32> value);
         partial void OnexplosionIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> directoryID
+        {
+            get
+            {
+                return _directoryID;
+            }
+            set
+            {
+                OndirectoryIDChanging(value);
+                ReportPropertyChanging("directoryID");
+                _directoryID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("directoryID");
+                OndirectoryIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _directoryID;
+        partial void OndirectoryIDChanging(Nullable<global::System.Int32> value);
+        partial void OndirectoryIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String graphicName
+        {
+            get
+            {
+                return _graphicName;
+            }
+            set
+            {
+                OngraphicNameChanging(value);
+                ReportPropertyChanging("graphicName");
+                _graphicName = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("graphicName");
+                OngraphicNameChanged();
+            }
+        }
+        private global::System.String _graphicName;
+        partial void OngraphicNameChanging(global::System.String value);
+        partial void OngraphicNameChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="eveIcons")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class eveIcons : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new eveIcons object.
+        /// </summary>
+        /// <param name="iconID">Initial value of the iconID property.</param>
+        /// <param name="iconFile">Initial value of the iconFile property.</param>
+        /// <param name="description">Initial value of the description property.</param>
+        public static eveIcons CreateeveIcons(global::System.Int32 iconID, global::System.String iconFile, global::System.String description)
+        {
+            eveIcons eveIcons = new eveIcons();
+            eveIcons.iconID = iconID;
+            eveIcons.iconFile = iconFile;
+            eveIcons.description = description;
+            return eveIcons;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                if (_iconID != value)
+                {
+                    OniconIDChanging(value);
+                    ReportPropertyChanging("iconID");
+                    _iconID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("iconID");
+                    OniconIDChanged();
+                }
+            }
+        }
+        private global::System.Int32 _iconID;
+        partial void OniconIDChanging(global::System.Int32 value);
+        partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String iconFile
+        {
+            get
+            {
+                return _iconFile;
+            }
+            set
+            {
+                OniconFileChanging(value);
+                ReportPropertyChanging("iconFile");
+                _iconFile = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("iconFile");
+                OniconFileChanged();
+            }
+        }
+        private global::System.String _iconFile;
+        partial void OniconFileChanging(global::System.String value);
+        partial void OniconFileChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                OndescriptionChanging(value);
+                ReportPropertyChanging("description");
+                _description = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("description");
+                OndescriptionChanged();
+            }
+        }
+        private global::System.String _description;
+        partial void OndescriptionChanging(global::System.String value);
+        partial void OndescriptionChanged();
 
         #endregion
     
@@ -7689,30 +7948,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Boolean> published
         {
             get
@@ -7731,6 +7966,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Boolean> _published;
         partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
         partial void OnpublishedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -8454,30 +8713,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Boolean> useBasePrice
         {
             get
@@ -8640,6 +8875,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Boolean> _published;
         partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
         partial void OnpublishedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -8773,30 +9032,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Boolean> hasTypes
         {
             get
@@ -8815,6 +9050,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Boolean> _hasTypes;
         partial void OnhasTypesChanging(Nullable<global::System.Boolean> value);
         partial void OnhasTypesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -8924,24 +9183,24 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
+        public Nullable<global::System.Int32> iconID
         {
             get
             {
-                return _graphicID;
+                return _iconID;
             }
             set
             {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -9683,6 +9942,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Double> _chanceOfDuplicating;
         partial void OnchanceOfDuplicatingChanging(Nullable<global::System.Double> value);
         partial void OnchanceOfDuplicatingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -11392,30 +11675,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Byte> importance
         {
             get
@@ -11440,24 +11699,24 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String url2d
+        public Nullable<global::System.Int32> iconID
         {
             get
             {
-                return _url2d;
+                return _iconID;
             }
             set
             {
-                Onurl2dChanging(value);
-                ReportPropertyChanging("url2d");
-                _url2d = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("url2d");
-                Onurl2dChanged();
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
             }
         }
-        private global::System.String _url2d;
-        partial void Onurl2dChanging(global::System.String value);
-        partial void Onurl2dChanged();
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
     
@@ -13197,6 +13456,325 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Double> _radius;
         partial void OnradiusChanging(Nullable<global::System.Double> value);
         partial void OnradiusChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="planetSchematics")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class planetSchematics : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new planetSchematics object.
+        /// </summary>
+        /// <param name="schematicID">Initial value of the schematicID property.</param>
+        public static planetSchematics CreateplanetSchematics(global::System.Int16 schematicID)
+        {
+            planetSchematics planetSchematics = new planetSchematics();
+            planetSchematics.schematicID = schematicID;
+            return planetSchematics;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 schematicID
+        {
+            get
+            {
+                return _schematicID;
+            }
+            set
+            {
+                if (_schematicID != value)
+                {
+                    OnschematicIDChanging(value);
+                    ReportPropertyChanging("schematicID");
+                    _schematicID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("schematicID");
+                    OnschematicIDChanged();
+                }
+            }
+        }
+        private global::System.Int16 _schematicID;
+        partial void OnschematicIDChanging(global::System.Int16 value);
+        partial void OnschematicIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String schematicName
+        {
+            get
+            {
+                return _schematicName;
+            }
+            set
+            {
+                OnschematicNameChanging(value);
+                ReportPropertyChanging("schematicName");
+                _schematicName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("schematicName");
+                OnschematicNameChanged();
+            }
+        }
+        private global::System.String _schematicName;
+        partial void OnschematicNameChanging(global::System.String value);
+        partial void OnschematicNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> cycleTime
+        {
+            get
+            {
+                return _cycleTime;
+            }
+            set
+            {
+                OncycleTimeChanging(value);
+                ReportPropertyChanging("cycleTime");
+                _cycleTime = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("cycleTime");
+                OncycleTimeChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _cycleTime;
+        partial void OncycleTimeChanging(Nullable<global::System.Int32> value);
+        partial void OncycleTimeChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="planetSchematicsPinMap")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class planetSchematicsPinMap : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new planetSchematicsPinMap object.
+        /// </summary>
+        /// <param name="schematicID">Initial value of the schematicID property.</param>
+        /// <param name="pinTypeID">Initial value of the pinTypeID property.</param>
+        public static planetSchematicsPinMap CreateplanetSchematicsPinMap(global::System.Int16 schematicID, global::System.Int16 pinTypeID)
+        {
+            planetSchematicsPinMap planetSchematicsPinMap = new planetSchematicsPinMap();
+            planetSchematicsPinMap.schematicID = schematicID;
+            planetSchematicsPinMap.pinTypeID = pinTypeID;
+            return planetSchematicsPinMap;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 schematicID
+        {
+            get
+            {
+                return _schematicID;
+            }
+            set
+            {
+                if (_schematicID != value)
+                {
+                    OnschematicIDChanging(value);
+                    ReportPropertyChanging("schematicID");
+                    _schematicID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("schematicID");
+                    OnschematicIDChanged();
+                }
+            }
+        }
+        private global::System.Int16 _schematicID;
+        partial void OnschematicIDChanging(global::System.Int16 value);
+        partial void OnschematicIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 pinTypeID
+        {
+            get
+            {
+                return _pinTypeID;
+            }
+            set
+            {
+                if (_pinTypeID != value)
+                {
+                    OnpinTypeIDChanging(value);
+                    ReportPropertyChanging("pinTypeID");
+                    _pinTypeID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("pinTypeID");
+                    OnpinTypeIDChanged();
+                }
+            }
+        }
+        private global::System.Int16 _pinTypeID;
+        partial void OnpinTypeIDChanging(global::System.Int16 value);
+        partial void OnpinTypeIDChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EveStaticDataModel", Name="planetSchematicsTypeMap")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class planetSchematicsTypeMap : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new planetSchematicsTypeMap object.
+        /// </summary>
+        /// <param name="schematicID">Initial value of the schematicID property.</param>
+        /// <param name="typeID">Initial value of the typeID property.</param>
+        public static planetSchematicsTypeMap CreateplanetSchematicsTypeMap(global::System.Int16 schematicID, global::System.Int16 typeID)
+        {
+            planetSchematicsTypeMap planetSchematicsTypeMap = new planetSchematicsTypeMap();
+            planetSchematicsTypeMap.schematicID = schematicID;
+            planetSchematicsTypeMap.typeID = typeID;
+            return planetSchematicsTypeMap;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 schematicID
+        {
+            get
+            {
+                return _schematicID;
+            }
+            set
+            {
+                if (_schematicID != value)
+                {
+                    OnschematicIDChanging(value);
+                    ReportPropertyChanging("schematicID");
+                    _schematicID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("schematicID");
+                    OnschematicIDChanged();
+                }
+            }
+        }
+        private global::System.Int16 _schematicID;
+        partial void OnschematicIDChanging(global::System.Int16 value);
+        partial void OnschematicIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int16 typeID
+        {
+            get
+            {
+                return _typeID;
+            }
+            set
+            {
+                if (_typeID != value)
+                {
+                    OntypeIDChanging(value);
+                    ReportPropertyChanging("typeID");
+                    _typeID = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("typeID");
+                    OntypeIDChanged();
+                }
+            }
+        }
+        private global::System.Int16 _typeID;
+        partial void OntypeIDChanging(global::System.Int16 value);
+        partial void OntypeIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int16> quantity
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                OnquantityChanging(value);
+                ReportPropertyChanging("quantity");
+                _quantity = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("quantity");
+                OnquantityChanged();
+            }
+        }
+        private Nullable<global::System.Int16> _quantity;
+        partial void OnquantityChanging(Nullable<global::System.Int16> value);
+        partial void OnquantityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> isInput
+        {
+            get
+            {
+                return _isInput;
+            }
+            set
+            {
+                OnisInputChanging(value);
+                ReportPropertyChanging("isInput");
+                _isInput = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("isInput");
+                OnisInputChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _isInput;
+        partial void OnisInputChanging(Nullable<global::System.Boolean> value);
+        partial void OnisInputChanged();
 
         #endregion
     
@@ -15843,54 +16421,6 @@ namespace EVEMon.XmlGenerator
         private global::System.Int16 _stationTypeID;
         partial void OnstationTypeIDChanging(global::System.Int16 value);
         partial void OnstationTypeIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> dockingBayGraphicID
-        {
-            get
-            {
-                return _dockingBayGraphicID;
-            }
-            set
-            {
-                OndockingBayGraphicIDChanging(value);
-                ReportPropertyChanging("dockingBayGraphicID");
-                _dockingBayGraphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("dockingBayGraphicID");
-                OndockingBayGraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _dockingBayGraphicID;
-        partial void OndockingBayGraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OndockingBayGraphicIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> hangarGraphicID
-        {
-            get
-            {
-                return _hangarGraphicID;
-            }
-            set
-            {
-                OnhangarGraphicIDChanging(value);
-                ReportPropertyChanging("hangarGraphicID");
-                _hangarGraphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("hangarGraphicID");
-                OnhangarGraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _hangarGraphicID;
-        partial void OnhangarGraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OnhangarGraphicIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
