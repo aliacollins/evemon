@@ -65,9 +65,9 @@
             this.label2.ForeColor = System.Drawing.Color.DarkRed;
             this.label2.Location = new System.Drawing.Point(51, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 13);
+            this.label2.Size = new System.Drawing.Size(173, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "All your datas and plans will be lost!";
+            this.label2.Text = "All your data and plans will be lost!";
             // 
             // cancelButton
             // 
@@ -125,6 +125,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CharacterDeletionWindow";

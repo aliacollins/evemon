@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.Label label1;
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("John Doe");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Mary Jane");
-            System.Windows.Forms.Label label1;
             this.cancelButton = new System.Windows.Forms.Button();
             this.validationButton = new System.Windows.Forms.Button();
             this.charactersListView = new System.Windows.Forms.ListView();
@@ -42,6 +42,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // label1
+            // 
+            label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label1.Location = new System.Drawing.Point(51, 13);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(376, 32);
+            label1.TabIndex = 4;
+            label1.Text = "You are about to delete an account.";
+            label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cancelButton
             // 
@@ -91,16 +101,6 @@
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // label1
-            // 
-            label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label1.Location = new System.Drawing.Point(51, 13);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(376, 32);
-            label1.TabIndex = 4;
-            label1.Text = "You are about to delete an account.";
-            label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(6, 28);
@@ -145,6 +145,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.validationButton);
             this.Controls.Add(this.cancelButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "AccountDeletionWindow";
             this.Text = "Delete an account";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

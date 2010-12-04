@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
 
@@ -13,31 +12,7 @@ namespace EVEMon.Common.Scheduling
     [EnforceUIThreadAffinity]
     public static class Scheduler
     {
-        private static readonly List<ScheduleEntry> m_schedule = new List<ScheduleEntry>();
-
-        /// <summary>
-        /// Add the given entry
-        /// </summary>
-        /// <param name="entry"></param>
-        public static void Add(ScheduleEntry entry)
-        {
-            m_schedule.Add(entry);
-
-            // Notify to subscribers
-            EveClient.OnSchedulerChanged();
-        }
-
-        /// <summary>
-        /// Add the given entry
-        /// </summary>
-        /// <param name="entry"></param>
-        public static void Remove(ScheduleEntry entry)
-        {
-            m_schedule.Remove(entry);
-
-            // Notify to subscribers
-            EveClient.OnSchedulerChanged();
-        }
+        private static readonly List<ScheduleEntry> s_schedule = new List<ScheduleEntry>();
 
         /// <summary>
         /// Gets the scheduled entries
@@ -46,7 +21,7 @@ namespace EVEMon.Common.Scheduling
         {
             get
             {
-                foreach (var entry in m_schedule)
+                foreach (ScheduleEntry entry in s_schedule)
                 {
                     if (!entry.Expired)
                         yield return entry;
@@ -60,10 +35,31 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public static bool SilentMode
         {
-            get
-            {
-                return m_schedule.Any(x => x.Silent(DateTime.Now));
-            }
+            get { return s_schedule.Any(x => x.Silent(DateTime.Now)); }
+        }
+
+        /// <summary>
+        /// Add the given entry
+        /// </summary>
+        /// <param name="entry"></param>
+        public static void Add(ScheduleEntry entry)
+        {
+            s_schedule.Add(entry);
+
+            // Notify to subscribers
+            EveClient.OnSchedulerChanged();
+        }
+
+        /// <summary>
+        /// Add the given entry
+        /// </summary>
+        /// <param name="entry"></param>
+        public static void Remove(ScheduleEntry entry)
+        {
+            s_schedule.Remove(entry);
+
+            // Notify to subscribers
+            EveClient.OnSchedulerChanged();
         }
 
         /// <summary>
@@ -78,14 +74,15 @@ namespace EVEMon.Common.Scheduling
             blockingEntry = String.Empty;
 
             // Checks whether it will be on downtime
-            if (time.ToUniversalTime().Hour == EveConstants.DowntimeHour)
+            if (time.ToUniversalTime().Hour == EveConstants.DowntimeHour &&
+                time.ToUniversalTime().Minute < EveConstants.DowntimeDuration)
             {
                 blockingEntry = "DOWNTIME";
                 return true;
             }
 
             // Checks schedule entries to see if they overlap the imput time
-            foreach(var entry in m_schedule)
+            foreach (ScheduleEntry entry in s_schedule)
             {
                 if (entry.Blocking(time))
                 {
@@ -103,16 +100,16 @@ namespace EVEMon.Common.Scheduling
         /// <param name="serial"></param>
         internal static void Import(SerializableScheduler serial)
         {
-            m_schedule.Clear();
-            foreach (var serialEntry in serial.Entries)
+            s_schedule.Clear();
+            foreach (SerializableScheduleEntry serialEntry in serial.Entries)
             {
                 if (serialEntry is SerializableSimpleScheduleEntry)
                 {
-                    m_schedule.Add(new SimpleScheduleEntry(serialEntry as SerializableSimpleScheduleEntry));
+                    s_schedule.Add(new SimpleScheduleEntry(serialEntry as SerializableSimpleScheduleEntry));
                 }
                 else
                 {
-                    m_schedule.Add(new RecurringScheduleEntry(serialEntry as SerializableRecurringScheduleEntry));
+                    s_schedule.Add(new RecurringScheduleEntry(serialEntry as SerializableRecurringScheduleEntry));
                 }
             }
 
@@ -126,8 +123,8 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         internal static SerializableScheduler Export()
         {
-            SerializableScheduler serial = new SerializableScheduler();
-            foreach (var entry in m_schedule)
+            var serial = new SerializableScheduler();
+            foreach (ScheduleEntry entry in s_schedule)
             {
                 if (!entry.Expired)
                     serial.Entries.Add(entry.Export());
@@ -142,12 +139,12 @@ namespace EVEMon.Common.Scheduling
         {
             // Removed the expired entries
             int i = 0;
-            while (i < m_schedule.Count)
+            while (i < s_schedule.Count)
             {
-                var entry = m_schedule[i];
+                ScheduleEntry entry = s_schedule[i];
                 if (entry.Expired)
                 {
-                    m_schedule.RemoveAt(i);
+                    s_schedule.RemoveAt(i);
                 }
                 else
                 {

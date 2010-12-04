@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.Common.Controls;
 using EVEMon.Common;
+using EVEMon.Common.Controls;
 
 namespace EVEMon.Accounting
 {
@@ -25,6 +19,10 @@ namespace EVEMon.Accounting
             InitializeComponent();
             m_character = character;
             m_account = character.Identity.Account;
+
+            // Replaces end of text with character's name
+            string newText = label1.Text.Replace("a character", m_character.Name);
+            label1.Text = newText;
 
             // Checks whether there will be no characters left after this deletion and hide/display the relevant labels.
             int charactersLeft = EveClient.Characters.Count(x => x.Identity.Account == m_account);
@@ -51,7 +49,7 @@ namespace EVEMon.Accounting
                 EveClient.Characters.Remove(m_character);
             }
 
-            this.Close();
+            Close();
         }
     }
 }

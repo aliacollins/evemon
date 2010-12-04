@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EVEMon.Common
+﻿namespace EVEMon.Common
 {
     public static class EveConstants
     {
@@ -11,6 +7,7 @@ namespace EVEMon.Common
         public const int SpareAttributePointsOnRemap = 14;
         public const int MinAttributeValueOnRemap = 5;
         public const int DowntimeHour = 11;
+        public const int DowntimeDuration = 30;
 
         /// <summary>
         /// Represents a "region" range.

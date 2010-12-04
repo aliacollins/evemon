@@ -15,15 +15,17 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class Account
     {
-        private long m_userId;
-        private string m_apiKey;
-        private CredentialsLevel m_keyLevel;
-        private bool m_firstCheck = true;
-        private readonly AccountIgnoreList m_ignoreList;
         private readonly AccountQueryMonitor<SerializableCharacterList> m_charactersListMonitor;
-        private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
-        private Dictionary<String, SkillQueueResponse> m_skillQueueCache = new Dictionary<String, SkillQueueResponse>();
+        private readonly AccountIgnoreList m_ignoreList;
 
+        private readonly Dictionary<String, SkillQueueResponse> m_skillQueueCache =
+            new Dictionary<String, SkillQueueResponse>();
+
+        private readonly long m_userId;
+        private string m_apiKey;
+        private bool m_firstCheck = true;
+        private CredentialsLevel m_keyLevel;
+        private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
 
         #region Constructors
 
@@ -55,8 +57,6 @@ namespace EVEMon.Common
         /// Constructor from the provided informations
         /// </summary>
         /// <param name="userID"></param>
-        /// <param name="apiKey"></param>
-        /// <param name="isFullKey"></param>
         internal Account(long userID)
             : this()
         {
@@ -65,7 +65,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
 
         #region Public Properties
 
@@ -114,9 +113,9 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
         {
-            get 
+            get
             {
-                foreach (var characterID in EveClient.CharacterIdentities)
+                foreach (CharacterIdentity characterID in EveClient.CharacterIdentities)
                 {
                     if (characterID.Account == this)
                         yield return characterID;
@@ -131,10 +130,10 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var id in CharacterIdentities)
+                foreach (CharacterIdentity id in CharacterIdentities)
                 {
-                    var ccpCharacter = id.CCPCharacter;
-                    if (ccpCharacter != null && ccpCharacter.Monitored) 
+                    CCPCharacter ccpCharacter = id.CCPCharacter;
+                    if (ccpCharacter != null && ccpCharacter.Monitored)
                         return true;
                 }
                 return false;
@@ -150,9 +149,9 @@ namespace EVEMon.Common
             get
             {
                 // Scroll through owned identities
-                foreach (var id in CharacterIdentities)
+                foreach (CharacterIdentity id in CharacterIdentities)
                 {
-                    var ccpCharacter = id.CCPCharacter;
+                    CCPCharacter ccpCharacter = id.CCPCharacter;
                     if (ccpCharacter != null && ccpCharacter.IsTraining)
                         return ccpCharacter;
                 }
@@ -162,7 +161,6 @@ namespace EVEMon.Common
 
         #endregion
 
-        
         #region Internal Methods
 
         /// <summary>
@@ -170,11 +168,13 @@ namespace EVEMon.Common
         /// </summary>
         internal void CharacterInTraining()
         {
+            m_skillQueueCache.Clear();
+
             EveClient.Trace("Account.CharacterInTraining - {0}", this);
 
-            foreach (var id in CharacterIdentities)
+            foreach (CharacterIdentity id in CharacterIdentities)
             {
-                var identity = id.Name;
+                string identity = id.Name;
 
                 if (!m_skillQueueCache.ContainsKey(identity))
                     m_skillQueueCache.Add(identity, new SkillQueueResponse());
@@ -184,7 +184,7 @@ namespace EVEMon.Common
                     m_userId,
                     m_apiKey,
                     id.CharacterID,
-                    (x) => OnSkillInTrainingUpdated(x, identity));
+                    x => OnSkillInTrainingUpdated(x, identity));
 
                 EveClient.Trace("Account.CharacterInTraining - Querying {0}", identity);
             }
@@ -205,7 +205,7 @@ namespace EVEMon.Common
                     return;
 
                 // Use the first character ID
-                var characterID = CharacterIdentities.FirstOrDefault();
+                CharacterIdentity characterID = CharacterIdentities.FirstOrDefault();
                 if (characterID == null)
                     return;
 
@@ -248,7 +248,7 @@ namespace EVEMon.Common
             }
             else
             {
-                ImportIdentities(result.Result.Characters.Cast<ISerializableCharacterIdentity>());
+                ImportIdentities(result.Result.Characters);
             }
 
             // Fires the event regarding the account character list update.
@@ -262,24 +262,24 @@ namespace EVEMon.Common
         internal SerializableAccount Export()
         {
             return new SerializableAccount
-            {
-                ID = m_userId,
-                Key = m_apiKey,
-                KeyLevel = m_keyLevel,
-                LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
-                IgnoreList = m_ignoreList.Export()
-            };
+                       {
+                           ID = m_userId,
+                           Key = m_apiKey,
+                           KeyLevel = m_keyLevel,
+                           LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
+                           IgnoreList = m_ignoreList.Export()
+                       };
         }
 
         #endregion
 
-
         #region Response To Events
-        
+
         /// <summary>
-        /// Updates the account is in training or send a notification.
+        /// Called when character's skill in training gets updated.
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="result">The result.</param>
+        /// <param name="character">The character.</param>
         private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result, string character)
         {
             // Return on error
@@ -290,20 +290,23 @@ namespace EVEMon.Common
                 return;
             }
 
-            m_skillQueueCache[character].State = result.Result.SkillInTraining == 1 ? ResponseState.Training : ResponseState.NotTraining;
+            m_skillQueueCache[character].State = result.Result.SkillInTraining == 1
+                                                     ? ResponseState.Training
+                                                     : ResponseState.NotTraining;
 
-            EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : {2} ({3}\\{4})", 
-                this,
-                character,
-                m_skillQueueCache[character].State,
-                m_skillQueueCache.Count(x => x.Value.State != ResponseState.Unknown),
-                CharacterIdentities.Count());
+            EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : {2} ({3}\\{4})",
+                            this,
+                            character,
+                            m_skillQueueCache[character].State,
+                            m_skillQueueCache.Count(x => x.Value.State != ResponseState.Unknown),
+                            CharacterIdentities.Count());
 
 
             // in the event this becomes a very long running process because of latency
             // and characters have been removed from the account since they were queried
             // remove those characters from the cache.
-            var toRemove = m_skillQueueCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
+            IEnumerable<KeyValuePair<string, SkillQueueResponse>> toRemove =
+                m_skillQueueCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
 
             foreach (var charToRemove in toRemove)
             {
@@ -360,25 +363,28 @@ namespace EVEMon.Common
             }
 
             // Notify characters changed
-            foreach (var id in CharacterIdentities)
+            foreach (CharacterIdentity id in CharacterIdentities)
             {
-                var ccpCharacter = id.CCPCharacter;
+                CCPCharacter ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter != null)
                     EveClient.OnCharacterChanged(ccpCharacter);
             }
         }
 
+        /// <summary>
+        /// Called when all characters skill training has been updated.
+        /// </summary>
         private void OnAllCharactersSkillTrainingUpdated()
         {
-            foreach (var key in m_skillQueueCache.Keys)
+            foreach (string key in m_skillQueueCache.Keys)
                 EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0}\\{1} = {2} ({3})",
-                        this,
-                        key,
-                        m_skillQueueCache[key].State,
-                        m_skillQueueCache[key].Timestamp);
+                                this,
+                                key,
+                                m_skillQueueCache[key].State,
+                                m_skillQueueCache[key].Timestamp);
 
-               
-            // one of the remaining characters was training account is training.
+
+            // one of the remaining characters was training; account is training.
             if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Training))
             {
                 EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.", this);
@@ -388,7 +394,9 @@ namespace EVEMon.Common
 
             if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.InError))
             {
-                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.", this);
+                EveClient.Trace(
+                    "Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.",
+                    this);
                 return;
             }
 
@@ -398,17 +406,16 @@ namespace EVEMon.Common
 
         #endregion
 
-
         #region Helper Methods
 
         /// <summary>
         /// Updates the characters list with the given CCP data
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="identities"></param>
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
         {
             // Clear the accounts on this character
-            foreach (var id in EveClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveClient.CharacterIdentities)
             {
                 if (id.Account == this)
                     id.Account = null;
@@ -419,9 +426,9 @@ namespace EVEMon.Common
                 return;
 
             // Assign owned identities to this account
-            foreach (var serialID in identities)
+            foreach (ISerializableCharacterIdentity serialID in identities)
             {
-                var id = EveClient.CharacterIdentities[serialID.ID];
+                CharacterIdentity id = EveClient.CharacterIdentities[serialID.ID];
                 if (id == null)
                     id = EveClient.CharacterIdentities.Add(serialID.ID, serialID.Name);
 
@@ -430,7 +437,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
 
         #region Public Methods
 
@@ -452,21 +458,22 @@ namespace EVEMon.Common
         /// <param name="keyLevel"></param>
         /// <param name="identities"></param>
         /// <param name="queryResult"></param>
-        internal void UpdateAPIKey(string apiKey, CredentialsLevel keyLevel, IEnumerable<CharacterIdentity> identities, APIResult<SerializableCharacterList> queryResult)
+        internal void UpdateAPIKey(string apiKey, CredentialsLevel keyLevel, IEnumerable<CharacterIdentity> identities,
+                                   APIResult<SerializableCharacterList> queryResult)
         {
             m_apiKey = apiKey;
             m_keyLevel = keyLevel;
             m_charactersListMonitor.UpdateWith(queryResult);
 
             // Clear the account for the currently associated identities
-            foreach (var id in EveClient.CharacterIdentities)
+            foreach (CharacterIdentity id in EveClient.CharacterIdentities)
             {
                 if (id.Account == this)
                     id.Account = null;
             }
 
             // Assign this account to the new identities and create CCP characters
-            foreach (var id in identities)
+            foreach (CharacterIdentity id in identities)
             {
                 // Skip if in the ignore list
                 id.Account = this;
@@ -474,7 +481,7 @@ namespace EVEMon.Common
                     continue;
 
                 // Retrieves the ccp character and create one if none.
-                var ccpCharacter = id.CCPCharacter;
+                CCPCharacter ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter == null)
                 {
                     ccpCharacter = new CCPCharacter(id);
@@ -485,7 +492,6 @@ namespace EVEMon.Common
         }
 
         #endregion
-
 
         #region Overridden Methods
 
@@ -501,7 +507,7 @@ namespace EVEMon.Common
 
             // Otherwise, return the chars' names into parenthesis.
             string names = String.Empty;
-            foreach (var id in CharacterIdentities)
+            foreach (CharacterIdentity id in CharacterIdentities)
             {
                 names += id.Name;
                 names += ", ";
@@ -511,11 +517,25 @@ namespace EVEMon.Common
 
         #endregion
 
-
         #region Helper Class
+
+        #region Nested type: ResponseState
+
+        private enum ResponseState
+        {
+            Unknown,
+            InError,
+            Training,
+            NotTraining
+        }
+
+        #endregion
+
+        #region Nested type: SkillQueueResponse
 
         private class SkillQueueResponse
         {
+            private ResponseState m_state;
 
             public SkillQueueResponse()
             {
@@ -523,8 +543,6 @@ namespace EVEMon.Common
                 Timestamp = DateTime.MinValue;
             }
 
-            private ResponseState m_state;
-            
             public ResponseState State
             {
                 get { return m_state; }
@@ -538,15 +556,8 @@ namespace EVEMon.Common
             public DateTime Timestamp { get; set; }
         }
 
-        private enum ResponseState
-        {
-            Unknown,
-            InError,
-            Training,
-            NotTraining
-        }
-        
         #endregion
 
+        #endregion
     }
 }

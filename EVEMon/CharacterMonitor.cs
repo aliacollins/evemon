@@ -1,11 +1,11 @@
 //#define DEBUG_SINGLETHREAD
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
@@ -21,10 +21,9 @@ namespace EVEMon
     public partial class CharacterMonitor : UserControl
     {
         private readonly Character m_character;
+        private readonly List<ToolStripButton> m_fullAPIKeyFeautures = new List<ToolStripButton>();
         private CredentialsLevel m_keyLevel;
         private bool m_pendingUpdate;
-
-        private List<ToolStripButton> m_fullAPIKeyFeautures = new List<ToolStripButton>();
 
         #region Constructor
 
@@ -36,10 +35,10 @@ namespace EVEMon
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
-            this.lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
-            this.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
+            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
 
-            multiPanel.SelectionChange += new MultiPanelSelectionChangeHandler(multiPanel_SelectionChange);
+            multiPanel.SelectionChange += multiPanel_SelectionChange;
         }
 
         /// <summary>
@@ -50,11 +49,11 @@ namespace EVEMon
             : this()
         {
             m_character = character;
-            this.Header.Character = character;
-            this.skillsList.Character = character;
-            this.skillQueueList.Character = character;
-            this.ordersList.Character = character;
-            this.jobsList.Character = character;
+            Header.Character = character;
+            skillsList.Character = character;
+            skillQueueList.Character = character;
+            ordersList.Character = character;
+            jobsList.Character = character;
             notificationList.Notifications = null;
 
             // Create a list of the full API Key features
@@ -85,31 +84,15 @@ namespace EVEMon
             }
 
             // Subscribe events
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
-            EveClient.CharacterIndustryJobsChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterIndustryJobsChanged);
-            EveClient.NotificationSent += new EventHandler<Notification>(EveClient_NotificationSent);
-            EveClient.NotificationInvalidated += new EventHandler<NotificationInvalidationEventArgs>(EveClient_NotificationInvalidated);
-            this.Disposed += new EventHandler(OnDisposed);
-        }
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void OnDisposed(object sender, EventArgs e)
-        {
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.NotificationSent -= new EventHandler<Notification>(EveClient_NotificationSent);
-            EveClient.NotificationInvalidated -= new EventHandler<NotificationInvalidationEventArgs>(EveClient_NotificationInvalidated);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
+            EveClient.NotificationSent += EveClient_NotificationSent;
+            EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -121,8 +104,25 @@ namespace EVEMon
             get { return m_character; }
         }
 
-        #endregion
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.NotificationSent -= EveClient_NotificationSent;
+            EveClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
+            Disposed -= OnDisposed;
+        }
 
+        #endregion
 
         #region Inherited events
 
@@ -136,8 +136,9 @@ namespace EVEMon
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
-            var tag = m_character.UISettings.SelectedPage;
-            var item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
+            string tag = m_character.UISettings.SelectedPage;
+            ToolStripItem item =
+                toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
 
             if (item != null)
                 item.Visible = true;
@@ -165,7 +166,6 @@ namespace EVEMon
 
         #endregion
 
-
         #region Display update on character change
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateContent()
         {
-            if (!this.Visible)
+            if (!Visible)
             {
                 m_pendingUpdate = true;
                 return;
@@ -182,7 +182,7 @@ namespace EVEMon
             m_pendingUpdate = false;
 
             // Display the "no skills" label if there's no skills
-            this.SuspendLayout();
+            SuspendLayout();
             try
             {
                 // Update the other controls
@@ -193,7 +193,7 @@ namespace EVEMon
             }
             finally
             {
-                this.ResumeLayout();
+                ResumeLayout();
             }
         }
 
@@ -207,12 +207,16 @@ namespace EVEMon
             // Is the character in training ?
             if (m_character.IsTraining)
             {
-                var training = m_character.CurrentlyTrainingSkill;
-                var completionTime = training.EndTime.ToLocalTime();
+                QueuedSkill training = m_character.CurrentlyTrainingSkill;
+                DateTime completionTime = training.EndTime.ToLocalTime();
 
                 lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
-                lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", completionTime.ToString("ddd"), completionTime.ToString("G"));
+                lblSPPerHour.Text = (training.Skill == null
+                                         ? "???"
+                                         : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                                                         training.Skill.SkillPointsPerHour));
+                lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                                                    completionTime.ToString("ddd"), completionTime.ToString("G"));
 
                 string conflictMessage;
                 if (Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage))
@@ -227,12 +231,15 @@ namespace EVEMon
 
                 if (ccpCharacter != null)
                 {
-                    var queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", queueCompletionTime.ToString("ddd"), queueCompletionTime.ToString("G"));
+                    DateTime queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
+                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                                                                queueCompletionTime.ToString("ddd"),
+                                                                queueCompletionTime.ToString("G"));
                     if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
                         skillQueueControl.Invalidate();
                     skillQueuePanel.Visible = true;
-                    skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 || Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
+                    skillQueueTimePanel.Visible = ccpCharacter.SkillQueue.Count > 1 ||
+                                                  Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
                 }
 
                 pnlTraining.Visible = true;
@@ -243,9 +250,12 @@ namespace EVEMon
             // Not in training, check for paused skill queue
             if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
             {
-                var training = ccpCharacter.SkillQueue.CurrentlyTraining;
+                QueuedSkill training = ccpCharacter.SkillQueue.CurrentlyTraining;
                 lblTrainingSkill.Text = training.ToString();
-                lblSPPerHour.Text = (training.Skill == null ? "???" : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour", training.Skill.SkillPointsPerHour));
+                lblSPPerHour.Text = (training.Skill == null
+                                         ? "???"
+                                         : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                                                         training.Skill.SkillPointsPerHour));
 
                 lblTrainingRemain.Text = "Paused";
                 lblTrainingEst.Text = String.Empty;
@@ -296,7 +306,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateFeaturesMenu()
         {
-            var account = m_character.Identity.Account;
+            Account account = m_character.Identity.Account;
             if (account == null || m_keyLevel == account.KeyLevel)
                 return;
 
@@ -380,8 +390,9 @@ namespace EVEMon
                 foreach (ToolStripItem item in toolStripFeatures.Items)
                 {
                     if (item is ToolStripButton)
-                        item.DisplayStyle = (Settings.UI.ShowTextInToolStrip ?
-                            ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Image);
+                        item.DisplayStyle = (Settings.UI.ShowTextInToolStrip
+                                                 ? ToolStripItemDisplayStyle.ImageAndText
+                                                 : ToolStripItemDisplayStyle.Image);
                 }
 
                 featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -389,7 +400,6 @@ namespace EVEMon
         }
 
         #endregion
-
 
         #region Updates on global events
 
@@ -438,7 +448,6 @@ namespace EVEMon
             // Read the settings
             if (!Settings.UI.SafeForWork)
             {
-
                 UpdateFeaturesTextVisibility();
 
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
@@ -448,7 +457,6 @@ namespace EVEMon
             }
             else
             {
-
                 foreach (ToolStripItem item in toolStripFeatures.Items)
                 {
                     if (item is ToolStripButton || item is ToolStripDropDownButton)
@@ -480,7 +488,7 @@ namespace EVEMon
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
             // No need to do anything when the control is not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             // Update the training info
@@ -491,7 +499,7 @@ namespace EVEMon
 
             // Update the full api key enabled pages
             UpdateFeaturesMenu();
-            
+
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
@@ -500,11 +508,11 @@ namespace EVEMon
             if (ccpCharacter.IsTraining)
             {
                 // Remaining training time label
-                var training = m_character.CurrentlyTrainingSkill;
+                QueuedSkill training = m_character.CurrentlyTrainingSkill;
                 lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription();
 
                 // Remaining queue time label
-                var queueEndTime = ccpCharacter.SkillQueue.EndTime;
+                DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
                 lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription();
             }
         }
@@ -549,7 +557,6 @@ namespace EVEMon
 
         #endregion
 
-
         #region Control/Component Event Handlers
 
         /// <summary>
@@ -570,12 +577,14 @@ namespace EVEMon
                 if (item == sender)
                 {
                     // Selects the proper page
-                    multiPanel.SelectedPage = multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)item.Tag);
+                    ToolStripItem item1 = item;
+                    multiPanel.SelectedPage =
+                        multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string) item1.Tag);
 
                     // Checks it.
                     button.Checked = true;
                 }
-                // Or another one representing another page ?
+                    // Or another one representing another page ?
                 else if (button != null)
                 {
                     // Unchecks it
@@ -648,7 +657,6 @@ namespace EVEMon
 
         #endregion
 
-
         # region Screenshot Method
 
         /// <summary>
@@ -660,23 +668,22 @@ namespace EVEMon
             int cachedHeight = skillsList.Height;
             int preferredHeight = skillsList.PreferredSize.Height;
 
-            skillsList.Dock = System.Windows.Forms.DockStyle.None;
+            skillsList.Dock = DockStyle.None;
             skillsList.Height = preferredHeight;
             skillsList.Update();
 
-            Bitmap bitmap = new Bitmap(skillsList.Width, preferredHeight);
+            var bitmap = new Bitmap(skillsList.Width, preferredHeight);
             skillsList.DrawToBitmap(bitmap, new Rectangle(0, 0, skillsList.Width, preferredHeight));
 
-            skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            skillsList.Dock = DockStyle.Fill;
             skillsList.Height = cachedHeight;
             skillsList.Update();
 
-            this.Invalidate();
+            Invalidate();
             return bitmap;
         }
 
         # endregion
-
 
         # region Multi Panel Control/Component Event Handlers
 
@@ -690,7 +697,7 @@ namespace EVEMon
             featuresMenu.DropDownItems.Clear();
 
             // Create the menu items
-            foreach (var feature in EnumExtensions.GetValues<FullAPIKeyFeatures>())
+            foreach (FullAPIKeyFeatures feature in EnumExtensions.GetValues<FullAPIKeyFeatures>())
             {
                 var item = new ToolStripMenuItem(feature.GetHeader());
                 item.Checked = CheckEnabledFeatures(feature.GetHeader());
@@ -706,7 +713,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void featuresMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            ToolStripMenuItem item = e.ClickedItem as ToolStripMenuItem;
+            var item = e.ClickedItem as ToolStripMenuItem;
             item.Checked = !item.Checked;
 
             ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
@@ -726,22 +733,22 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == ordersPage)
             {
-                foreach (var grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
+                foreach (MarketOrderGrouping grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
                 {
                     var menu = new ToolStripButton(grouping.GetHeader());
                     menu.Checked = (ordersList.Grouping == grouping);
-                    menu.Tag = (object)grouping;
+                    menu.Tag = grouping;
 
                     groupMenu.DropDownItems.Add(menu);
                 }
             }
             else if (multiPanel.SelectedPage == jobsPage)
             {
-                foreach (var grouping in EnumExtensions.GetValues<IndustryJobGrouping>())
+                foreach (IndustryJobGrouping grouping in EnumExtensions.GetValues<IndustryJobGrouping>())
                 {
                     var menu = new ToolStripButton(grouping.GetHeader());
                     menu.Checked = (jobsList.Grouping == grouping);
-                    menu.Tag = (object)grouping;
+                    menu.Tag = grouping;
 
                     groupMenu.DropDownItems.Add(menu);
                 }
@@ -755,16 +762,15 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
         private void groupMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            var item = e.ClickedItem;
+            ToolStripItem item = e.ClickedItem;
             if (multiPanel.SelectedPage == ordersPage)
             {
-                var grouping = (MarketOrderGrouping)item.Tag;
+                var grouping = (MarketOrderGrouping) item.Tag;
                 m_character.UISettings.OrdersGroupBy = ordersList.Grouping = grouping;
-
             }
             else if (multiPanel.SelectedPage == jobsPage)
             {
-                var grouping = (IndustryJobGrouping)item.Tag;
+                var grouping = (IndustryJobGrouping) item.Tag;
                 m_character.UISettings.JobsGroupBy = jobsList.Grouping = grouping;
             }
         }
@@ -801,7 +807,8 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         ordersList.Columns = f.Columns.Cast<MarketOrderColumnSettings>();
-                        Settings.UI.MainWindow.MarketOrders.Columns = ordersList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.MarketOrders.Columns =
+                            ordersList.Columns.Select(x => x.Clone()).ToArray();
                     }
                 }
             }
@@ -940,12 +947,11 @@ namespace EVEMon
         /// <param name="e"></param>
         private void showTextMenuItem_Click(object sender, EventArgs e)
         {
-           Settings.UI.ShowTextInToolStrip = showTextMenuItem.Checked = !showTextMenuItem.Checked;
-           EveClient_SettingsChanged(null, EventArgs.Empty);
+            Settings.UI.ShowTextInToolStrip = showTextMenuItem.Checked = !showTextMenuItem.Checked;
+            EveClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         # endregion
-
 
         #region Testing Function
 
@@ -955,11 +961,11 @@ namespace EVEMon
         internal void TestCharacterNotification()
         {
             var notification = new Notification(NotificationCategory.TestNofitication, m_character)
-            {
-                Priority = NotificationPriority.Warning, 
-                Behaviour = NotificationBehaviour.Overwrite,
-                Description = "Test Character Notification."
-            };
+                                   {
+                                       Priority = NotificationPriority.Warning,
+                                       Behaviour = NotificationBehaviour.Overwrite,
+                                       Description = "Test Character Notification."
+                                   };
             EveClient.Notifications.Notify(notification);
         }
 
