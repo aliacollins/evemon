@@ -9,7 +9,7 @@ namespace EVEMon.Common.Serialization.Settings
     public sealed class SerializableCharacterIdentity
     {
         [XmlElement("id")]
-        public int ID
+        public long ID
         {
             get;
             set;

@@ -7,28 +7,28 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPIJob
     {
         [XmlAttribute("jobID")]
-        public int JobID
+        public long JobID
         {
             get;
             set;
         }
 
         [XmlAttribute("installedItemLocationID")]
-        public int InstalledItemLocationID
+        public long InstalledItemLocationID
         {
             get;
             set;
         }
 
         [XmlAttribute("outputLocationID")]
-        public int OutputLocationID
+        public long OutputLocationID
         {
             get;
             set;
         }
 
         [XmlAttribute("installedInSolarSystemID")]
-        public int SolarSystemID
+        public long SolarSystemID
         {
             get;
             set;
@@ -63,14 +63,14 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("installedItemTypeID")]
-        public int InstalledItemTypeID
+        public long InstalledItemTypeID
         {
             get;
             set;
         }
 
         [XmlAttribute("outputTypeID")]
-        public int OutputTypeID
+        public long OutputTypeID
         {
             get;
             set;
