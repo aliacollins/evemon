@@ -1,5 +1,3 @@
-using System;
-
 namespace EVEMon.Common.Serialization
 {
     /// <summary>
@@ -7,7 +5,7 @@ namespace EVEMon.Common.Serialization
     /// </summary>
     public interface ISerializableCharacterIdentity
     {
-        int ID { get; }
+        long ID { get; }
         string Name { get; }
     }
 }

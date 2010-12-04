@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization
         }
 
         [XmlElement("characterID")]
-        public int ID
+        public long ID
         {
             get;
             set;

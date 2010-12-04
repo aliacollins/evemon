@@ -45,7 +45,8 @@ namespace EVEMon.Common
                 // StartTime and EndTime were empty on the serialization object if the skill was paused.
                 // So we compute a "what if we start now" scenario
                 m_startTime = startTimeWhenPaused;
-                startTimeWhenPaused += m_skill.GetLeftTrainingTimeForLevelOnly(m_level);
+                if (m_skill != null)
+                    startTimeWhenPaused += m_skill.GetLeftTrainingTimeForLevelOnly(m_level);
                 m_endTime = startTimeWhenPaused;
             }
         }

@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Threading;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Net;
-using System.Xml.Serialization;
-using System.Xml;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.API;
-
 
 namespace EVEMon.Common
 {
@@ -43,7 +33,7 @@ namespace EVEMon.Common
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal CharacterIdentity Add(int id, string name)
+        internal CharacterIdentity Add(long id, string name)
         {
             if (m_items.ContainsKey(id))
             {
@@ -54,6 +44,5 @@ namespace EVEMon.Common
             m_items[id] = identity;
             return identity;
         }
-
     }
 }

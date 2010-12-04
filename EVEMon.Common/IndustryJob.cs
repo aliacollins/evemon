@@ -1,11 +1,8 @@
 using System;
-using System.Text;
-using System.Globalization;
 using System.Collections.Generic;
-
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -15,33 +12,31 @@ namespace EVEMon.Common
         /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
         /// </summary>
         public const int MaxEndedDays = 7;
-        private List<IndustryJob> m_jobsCompleted = new List<IndustryJob>();
 
-        private bool m_ignored;
-        private bool m_markedForDeletion;
-        private bool m_notificationSend;
+        private readonly BlueprintActivity m_activity;
+        private readonly DateTime m_beginProductionTime;
+        private readonly BlueprintType m_blueprintType;
+        private readonly string m_installation;
+        private readonly Blueprint m_installedItem;
 
-        private JobState m_state;
-        private ActiveJobState m_activeJobState;
-        private DateTime m_lastStateChange;
-        private DateTime m_endProductionTime;
-        private DateTime m_pauseProductionTime;
-
-        private readonly long m_jobID;
         private readonly long m_installedItemID;
-        private readonly long m_outputItemID;
         private readonly int m_installedItemME;
         private readonly int m_installedItemPE;
-        private readonly int m_runs;
-        private readonly string m_installation;
-        private readonly BlueprintType m_blueprintType;
-        private readonly BlueprintActivity m_activity;
-        private readonly Blueprint m_installedItem;
-        private readonly Item m_outputItem;
-        private readonly SolarSystem m_solarSystem;
-        private readonly IssuedFor m_issuedFor;
         private readonly DateTime m_installedTime;
-        private readonly DateTime m_beginProductionTime;
+        private readonly IssuedFor m_issuedFor;
+        private readonly long m_jobID;
+        private readonly DateTime m_lastStateChange;
+        private readonly Item m_outputItem;
+        private readonly long m_outputItemID;
+        private readonly int m_runs;
+        private readonly SolarSystem m_solarSystem;
+        private ActiveJobState m_activeJobState;
+        private DateTime m_endProductionTime;
+        private bool m_ignored;
+        private List<IndustryJob> m_jobsCompleted = new List<IndustryJob>();
+        private bool m_markedForDeletion;
+        private DateTime m_pauseProductionTime;
+        private JobState m_state;
 
         #region Constructor
 
@@ -58,8 +53,8 @@ namespace EVEMon.Common
             m_outputItemID = src.OutputTypeID;
             m_outputItem = GetOutputItem(src.OutputTypeID);
             m_runs = src.Runs;
-            m_activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
-            m_blueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
+            m_activity = (BlueprintActivity) Enum.ToObject(typeof (BlueprintActivity), src.ActivityID);
+            m_blueprintType = (BlueprintType) Enum.ToObject(typeof (BlueprintType), src.InstalledItemCopy);
             m_installation = GetInstallation(src.OutputLocationID);
             m_solarSystem = StaticGeography.GetSystem(src.SolarSystemID);
             m_installedTime = src.InstallTime;
@@ -107,34 +102,34 @@ namespace EVEMon.Common
         /// </summary>
         internal SerializableJob Export()
         {
-            var serial = new SerializableJob();
-
-            serial.Ignored = m_ignored;
-            serial.JobID = m_jobID;
-            serial.State = m_state;
-            serial.InstalledItemID = m_installedItemID;
-            serial.InstalledItem = m_installedItem.Name;
-            serial.OutputItemID = m_outputItemID;
-            serial.OutputItem = m_outputItem.Name;
-            serial.Runs = m_runs;
-            serial.Activity = m_activity;
-            serial.BlueprintType = m_blueprintType;
-            serial.ItemLocation = m_installation;
-            serial.SolarSystemID = m_solarSystem.ID;
-            serial.InstalledTime = m_installedTime;
-            serial.InstalledItemME = m_installedItemME;
-            serial.InstalledItemPE = m_installedItemPE;
-            serial.BeginProductionTime = m_beginProductionTime;
-            serial.EndProductionTime = m_endProductionTime;
-            serial.PauseProductionTime = m_pauseProductionTime;
-            serial.LastStateChange = m_lastStateChange;
-            serial.IssuedFor = m_issuedFor;
+            var serial = new SerializableJob
+                             {
+                                 Ignored = m_ignored,
+                                 JobID = m_jobID,
+                                 State = m_state,
+                                 InstalledItemID = m_installedItemID,
+                                 InstalledItem = m_installedItem.Name,
+                                 OutputItemID = m_outputItemID,
+                                 OutputItem = m_outputItem.Name,
+                                 Runs = m_runs,
+                                 Activity = m_activity,
+                                 BlueprintType = m_blueprintType,
+                                 ItemLocation = m_installation,
+                                 SolarSystemID = m_solarSystem.ID,
+                                 InstalledTime = m_installedTime,
+                                 InstalledItemME = m_installedItemME,
+                                 InstalledItemPE = m_installedItemPE,
+                                 BeginProductionTime = m_beginProductionTime,
+                                 EndProductionTime = m_endProductionTime,
+                                 PauseProductionTime = m_pauseProductionTime,
+                                 LastStateChange = m_lastStateChange,
+                                 IssuedFor = m_issuedFor
+                             };
 
             return serial;
         }
 
         #endregion
-
 
         #region Helper Methods
 
@@ -148,18 +143,18 @@ namespace EVEMon.Common
             // Note that, before a match is found, all jobs have been marked for deletion : m_markedForDeletion == true
 
             // Checks whether ID is the same
-            if (!this.MatchesWith(src))
+            if (!MatchesWith(src))
                 return false;
 
             // Prevent deletion
             m_markedForDeletion = false;
 
             // Update infos (if ID is the same it may have been modified)
-            if (this.IsModified(src))
+            if (IsModified(src))
             {
                 m_endProductionTime = src.EndProductionTime;
                 m_pauseProductionTime = src.PauseProductionTime;
-                
+
                 m_state = (m_pauseProductionTime == DateTime.MinValue ? JobState.Active : JobState.Paused);
                 m_activeJobState = GetActiveJobState();
             }
@@ -175,14 +170,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the output item by its ID (can be a blueprint or an item).
         /// </summary>
-        /// <param name="itemID">The itemID of the blueprint.</param>
+        /// <param name="id">The itemID of the blueprint.</param>
         /// <returns>The output item from the bluperint.</returns>
         private static Item GetOutputItem(long id)
         {
-            Item item = null;
-
             // Is it a blueprint ?
-            item = StaticBlueprints.GetBlueprintByID(id) as Blueprint;
+            Item item = StaticBlueprints.GetBlueprintByID(id);
 
             // Then it's an item
             if (item == null)
@@ -196,7 +189,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The ID of the installation.</param>
         /// <returns>Name of the installation.</returns>
-        internal string GetInstallation(int id)
+        internal string GetInstallation(long id)
         {
             // Look for the station in datafile
             Station station = StaticGeography.GetStation(id);
@@ -220,22 +213,22 @@ namespace EVEMon.Common
         /// <returns>State of the seriallzable job.</returns>
         private JobState GetState(SerializableAPIJob src)
         {
-            if (src.Completed == (int)JobState.Delivered)
+            if (src.Completed == (int) JobState.Delivered)
             {
-                switch ((CCPJobCompletedStatus)src.CompletedStatus)
+                switch ((CCPJobCompletedStatus) src.CompletedStatus)
                 {
-                    // Canceled States
+                        // Canceled States
                     case CCPJobCompletedStatus.Aborted:
                     case CCPJobCompletedStatus.GM_Aborted:
                         return JobState.Canceled;
-                    
-                    // Failed States
+
+                        // Failed States
                     case CCPJobCompletedStatus.Inflight_Unanchored:
                     case CCPJobCompletedStatus.Destroyed:
                     case CCPJobCompletedStatus.Failed:
                         return JobState.Failed;
 
-                    // Delivered States
+                        // Delivered States
                     case CCPJobCompletedStatus.Delivered:
                         return JobState.Delivered;
 
@@ -269,17 +262,12 @@ namespace EVEMon.Common
 
         #endregion
 
-
         #region Properties
 
         /// <summary>
         /// Gets true if we have notified the user.
         /// </summary>
-        public bool NotificationSend
-        {
-            get { return m_notificationSend; }
-            set { m_notificationSend = value; }
-        }
+        public bool NotificationSend { get; set; }
 
         /// <summary>
         /// When true, the job will be deleted unless it was found on the API feed.
@@ -333,11 +321,13 @@ namespace EVEMon.Common
             get
             {
                 if (m_state == JobState.Paused)
-                    return m_endProductionTime.Subtract(m_pauseProductionTime).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
+                    return
+                        m_endProductionTime.Subtract(m_pauseProductionTime).ToDescriptiveText(
+                            DescriptiveTextOptions.SpaceBetween);
 
                 if (m_state == JobState.Active && m_endProductionTime > DateTime.UtcNow)
                     return m_endProductionTime.ToLocalTime().ToRemainingTimeShortDescription();
-                
+
                 return String.Empty;
             }
         }
@@ -496,10 +486,9 @@ namespace EVEMon.Common
         internal bool IsModified(SerializableAPIJob src)
         {
             return src.EndProductionTime != m_endProductionTime
-                || src.PauseProductionTime != m_pauseProductionTime;
+                   || src.PauseProductionTime != m_pauseProductionTime;
         }
 
         #endregion
-
     }
 }

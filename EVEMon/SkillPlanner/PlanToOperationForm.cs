@@ -113,7 +113,7 @@ namespace EVEMon.SkillPlanner
                 if (m_operation.Type == PlanOperations.Addition)
                 { 
                     // Skip if the entry is already in the plan
-                    if (m_operation.Plan.IsPlanned(entry.Skill))
+                    if (m_operation.Plan.IsPlanned(entry.Skill, entry.Level))
                         continue;
                 }
                 else

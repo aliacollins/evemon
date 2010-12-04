@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Serialization.API;
+﻿using System.Collections.Generic;
 
 namespace EVEMon.Common
 {
@@ -14,24 +8,24 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CharacterIdentity
     {
-        private readonly int m_id;
+        private readonly long m_id;
         private Account m_account;
-        private string m_name;
 
         /// <summary>
         /// Constructor from an id and a name.
         /// </summary>
         /// <param name="id">The id for this identity</param>
-        internal CharacterIdentity(int id, string name)
+        /// <param name="name"></param>
+        internal CharacterIdentity(long id, string name)
         {
             m_id = id;
-            m_name = name;
+            Name = name;
         }
 
         /// <summary>
         /// Gets the character ID.
         /// </summary>
-        public int CharacterID
+        public long CharacterID
         {
             get { return m_id; }
         }
@@ -39,11 +33,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the character's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-            internal set { m_name = value; }
-        }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets the account this identity is associated with.
@@ -51,13 +41,13 @@ namespace EVEMon.Common
         public Account Account
         {
             get { return m_account; }
-            internal set 
+            internal set
             {
                 if (m_account == value) return;
                 m_account = value;
 
                 // Notify subscribers
-                var ccpCharacter = CCPCharacter;
+                CCPCharacter ccpCharacter = CCPCharacter;
                 if (ccpCharacter != null)
                 {
                     EveClient.OnCharacterChanged(ccpCharacter);
@@ -72,11 +62,11 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var character in EveClient.Characters)
+                foreach (Character character in EveClient.Characters)
                 {
                     if (character is CCPCharacter && character.CharacterID == m_id)
                     {
-                        return (CCPCharacter)character;
+                        return (CCPCharacter) character;
                     }
                 }
                 return null;
@@ -90,7 +80,7 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var character in EveClient.Characters)
+                foreach (Character character in EveClient.Characters)
                 {
                     var uriCharacter = character as UriCharacter;
                     if (uriCharacter != null) yield return uriCharacter;

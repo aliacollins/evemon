@@ -36,8 +36,8 @@ namespace EVEMon.SkillPlanner
         private Color m_remappingForeColor;
 
         private Character m_character;
-        private RemappingPoint formTag;
-        private AttributesOptimizationForm oldForm;
+        private RemappingPoint m_formTag;
+        private AttributesOptimizationForm m_oldForm;
 
         /// <summary>
         /// To enable the three-state columns, we need to persist the base plan,
@@ -68,14 +68,6 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             pscPlan.RememberDistanceKey = "PlanEditor";
-
-            m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
-
-            m_plannedSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Bold);
-            m_prerequisiteSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Regular);
-            m_nonImmedTrainablePlanEntryColor = SystemColors.GrayText;
-            m_remappingForeColor = SystemColors.HotTrack;
-            m_remappingBackColor = SystemColors.Info;
 
             ListViewHelper.EnableDoubleBuffer(lvSkills);
 
@@ -118,6 +110,14 @@ namespace EVEMon.SkillPlanner
                 return;
 
             Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+
+            m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
+
+            m_plannedSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Bold);
+            m_prerequisiteSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Regular);
+            m_nonImmedTrainablePlanEntryColor = SystemColors.GrayText;
+            m_remappingForeColor = SystemColors.HotTrack;
+            m_remappingBackColor = SystemColors.Info;
 
             base.OnLoad(e);
         }
@@ -327,23 +327,24 @@ namespace EVEMon.SkillPlanner
             try
             {
                 // Scroll through entries and their remapping points
-                List<ListViewItem> items = new List<ListViewItem>();
+                var items = new List<ListViewItem>();
                 foreach (var entry in m_displayPlan)
                 {
                     // In any case, we must insert a new item for this plan's entry at the current index
                     // Do we need to insert a remapping point ?
                     if (entry.Remapping != null)
                     {
-                        ListViewItem rlv = new ListViewItem();
-                        rlv.UseItemStyleForSubItems = true;
-                        rlv.Tag = entry.Remapping;
-                        rlv.ImageIndex = 3;
+                        var rlv = new ListViewItem
+                                      {
+                                          UseItemStyleForSubItems = true,
+                                          Tag = entry.Remapping,
+                                          ImageIndex = 3
+                                      };
                         items.Add(rlv);
                     }
 
                     // Insert the entry
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Tag = entry;
+                    var lvi = new ListViewItem {Tag = entry};
                     items.Add(lvi);
 
                     // Is it a prerequisite or a top level entry ?
@@ -424,7 +425,7 @@ namespace EVEMon.SkillPlanner
                 for (int i = 0; i < lvSkills.Items.Count; i++)
                 {
                     ListViewItem lvi = lvSkills.Items[i];
-                    PlanEntry entry = lvi.Tag as PlanEntry;
+                    var entry = lvi.Tag as PlanEntry;
 
                     // Add enough subitems to match the number of columns
                     while (lvi.SubItems.Count < lvSkills.Columns.Count)
@@ -447,18 +448,18 @@ namespace EVEMon.SkillPlanner
                             lvi.ForeColor = Color.LightSlateGray;
                         
                         // Checks if this entry is partially trained
-                        bool s_level = (entry.Level == entry.CharacterSkill.Level + 1);
+                        bool level = (entry.Level == entry.CharacterSkill.Level + 1);
                         if (Settings.UI.PlanWindow.HighlightPartialSkills)
                         {
                             bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 && entry.CharacterSkill.FractionCompleted < 1);
-                            if (s_level && partiallyTrained)
+                            if (level && partiallyTrained)
                                 lvi.ForeColor = Color.Green;
                         }
 
                         HighlightQueuedSkills(lvi, entry);
 
                         // Checks if this entry is currently training (even if it's paused)
-                        if (entry.CharacterSkill.IsTraining && s_level) 
+                        if (entry.CharacterSkill.IsTraining && level) 
                         { 
                             lvi.BackColor = Color.LightSteelBlue;
                             lvi.ForeColor = Color.Black; 
@@ -1865,21 +1866,21 @@ namespace EVEMon.SkillPlanner
 
                     // Display the attributes optimization form
                     // if it's not already shown
-                    if (point != formTag)
+                    if (point != m_formTag)
                     {
                         // When we click on another point the previous form closes
-                        if (oldForm != null)
-                            oldForm.Close();
+                        if (m_oldForm != null)
+                            m_oldForm.Close();
 
                         // Creates the form and displays it
                         var form = new AttributesOptimizationForm(m_character, m_plan, point);
-                        form.FormClosed += (AttributesOptimizationForm, args) => formTag = null;
+                        form.FormClosed += (AttributesOptimizationForm, args) => m_formTag = null;
                         form.PlanEditor = this;
                         form.Show(this);
                         
                         // Update variables for forms display control
-                        formTag = point;
-                        oldForm = form;
+                        m_formTag = point;
+                        m_oldForm = form;
                     }
                 }
             }
