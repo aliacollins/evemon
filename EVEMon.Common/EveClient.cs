@@ -440,6 +440,11 @@ namespace EVEMon.Common
         public static event EventHandler<IndustryJobsEventArgs> CharacterIndustryJobsCompleted;
 
         /// <summary>
+        /// Occurs when the research points of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterResearchPointsChanged;
+        
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -603,6 +608,18 @@ namespace EVEMon.Common
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterResearchPointsChanged(Character character)
+        {
+            Trace("EveClient.OnCharacterResearchPointsChanged - " + character.Name);
+            Settings.Save();
+            if (CharacterResearchPointsChanged != null)
+                CharacterResearchPointsChanged(null, new CharacterChangedEventArgs(character));
+        }
+        
         /// <summary>
         /// 
         /// </summary>

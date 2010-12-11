@@ -211,4 +211,7 @@
     <value>http://apitest.eve-online.com</value>
     <comment>Test API Service announced as part of Tyrannis 1.2</comment>
   </data>
+  <data name="APIResearchPoints" xml:space="preserve">
+    <value>/char/Research.xml.aspx</value>
+  </data>
 </root>

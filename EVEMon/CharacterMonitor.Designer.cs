@@ -43,7 +43,6 @@ namespace EVEMon
             this.lblTrainingEst = new System.Windows.Forms.Label();
             this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.upperPanel = new System.Windows.Forms.Panel();
-            this.Header = new EVEMon.CharacterMonitorHeader();
             this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.skillQueuePanel = new System.Windows.Forms.Panel();
@@ -51,21 +50,7 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
-            this.skillQueueControl = new EVEMon.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.skillsPanel = new EVEMon.Controls.BorderPanel();
-            this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new EVEMon.Controls.MultiPanel();
-            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
-            this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
-            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.jobsPage = new EVEMon.Controls.MultiPanelPage();
-            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
-            this.warningLabel = new System.Windows.Forms.Label();
-            this.notificationList = new EVEMon.NotificationList();
             this.toolstripPanel = new System.Windows.Forms.Panel();
             this.toolStripContextual = new System.Windows.Forms.ToolStrip();
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
@@ -88,6 +73,24 @@ namespace EVEMon
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.researchIcon = new System.Windows.Forms.ToolStripButton();
+            this.skillsPanel = new EVEMon.Controls.BorderPanel();
+            this.corePanel = new System.Windows.Forms.Panel();
+            this.multiPanel = new EVEMon.Controls.MultiPanel();
+            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
+            this.skillsList = new EVEMon.MainWindowSkillsList();
+            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
+            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
+            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
+            this.jobsPage = new EVEMon.Controls.MultiPanelPage();
+            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
+            this.researchPage = new EVEMon.Controls.MultiPanelPage();
+            this.researchList = new EVEMon.MainWindowResearchPointsList();
+            this.warningLabel = new System.Windows.Forms.Label();
+            this.notificationList = new EVEMon.NotificationList();
+            this.skillQueueControl = new EVEMon.SkillQueueControl();
+            this.Header = new EVEMon.CharacterMonitorHeader();
             tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -97,6 +100,10 @@ namespace EVEMon
             this.skillQueuePanel.SuspendLayout();
             this.skillQueueTimePanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
+            this.toolstripPanel.SuspendLayout();
+            this.toolStripContextual.SuspendLayout();
+            this.toolStripFeatures.SuspendLayout();
+            this.toolstripContextMenu.SuspendLayout();
             this.skillsPanel.SuspendLayout();
             this.corePanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
@@ -104,10 +111,7 @@ namespace EVEMon
             this.ordersPage.SuspendLayout();
             this.skillQueuePage.SuspendLayout();
             this.jobsPage.SuspendLayout();
-            this.toolstripPanel.SuspendLayout();
-            this.toolStripContextual.SuspendLayout();
-            this.toolStripFeatures.SuspendLayout();
-            this.toolstripContextMenu.SuspendLayout();
+            this.researchPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // tsPagesSeparator
@@ -267,16 +271,6 @@ namespace EVEMon
             this.upperPanel.Size = new System.Drawing.Size(574, 136);
             this.upperPanel.TabIndex = 14;
             // 
-            // Header
-            // 
-            this.Header.Character = null;
-            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.Header.Location = new System.Drawing.Point(0, 0);
-            this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 136);
-            this.Header.TabIndex = 15;
-            // 
             // ttToolTip
             // 
             this.ttToolTip.AutoPopDelay = 5000000;
@@ -340,20 +334,6 @@ namespace EVEMon
             this.lblQueueRemaining.TabIndex = 16;
             this.lblQueueRemaining.Text = "Nothing";
             // 
-            // skillQueueControl
-            // 
-            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
-            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
-            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
-            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
-            this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
-            this.skillQueueControl.SkillQueue = null;
-            this.skillQueueControl.TabIndex = 13;
-            // 
             // lowerPanel
             // 
             this.lowerPanel.Controls.Add(this.skillsPanel);
@@ -365,155 +345,6 @@ namespace EVEMon
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(574, 363);
             this.lowerPanel.TabIndex = 3;
-            // 
-            // skillsPanel
-            // 
-            this.skillsPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.skillsPanel.Controls.Add(this.corePanel);
-            this.skillsPanel.Controls.Add(this.notificationList);
-            this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsPanel.ForeColor = System.Drawing.Color.Gray;
-            this.skillsPanel.Location = new System.Drawing.Point(0, 50);
-            this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsPanel.Name = "skillsPanel";
-            this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.skillsPanel.Size = new System.Drawing.Size(574, 215);
-            this.skillsPanel.TabIndex = 3;
-            // 
-            // corePanel
-            // 
-            this.corePanel.Controls.Add(this.multiPanel);
-            this.corePanel.Controls.Add(this.warningLabel);
-            this.corePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.corePanel.Location = new System.Drawing.Point(2, 74);
-            this.corePanel.Margin = new System.Windows.Forms.Padding(0);
-            this.corePanel.Name = "corePanel";
-            this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(571, 139);
-            this.corePanel.TabIndex = 14;
-            // 
-            // multiPanel
-            // 
-            this.multiPanel.Controls.Add(this.skillsPage);
-            this.multiPanel.Controls.Add(this.ordersPage);
-            this.multiPanel.Controls.Add(this.skillQueuePage);
-            this.multiPanel.Controls.Add(this.jobsPage);
-            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.multiPanel.Location = new System.Drawing.Point(1, 18);
-            this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(568, 121);
-            this.multiPanel.TabIndex = 14;
-            // 
-            // skillsPage
-            // 
-            this.skillsPage.Controls.Add(this.skillsList);
-            this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsPage.Location = new System.Drawing.Point(0, 0);
-            this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 121);
-            this.skillsPage.TabIndex = 0;
-            this.skillsPage.Text = "skillsPage";
-            // 
-            // skillsList
-            // 
-            this.skillsList.Character = null;
-            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsList.Location = new System.Drawing.Point(0, 0);
-            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 121);
-            this.skillsList.TabIndex = 12;
-            // 
-            // ordersPage
-            // 
-            this.ordersPage.Controls.Add(this.ordersList);
-            this.ordersPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersPage.Location = new System.Drawing.Point(0, 0);
-            this.ordersPage.Name = "ordersPage";
-            this.ordersPage.Size = new System.Drawing.Size(568, 141);
-            this.ordersPage.TabIndex = 2;
-            this.ordersPage.Text = "ordersPage";
-            // 
-            // ordersList
-            // 
-            this.ordersList.Character = null;
-            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
-            this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.ordersList.Size = new System.Drawing.Size(568, 141);
-            this.ordersList.TabIndex = 13;
-            this.ordersList.TextFilter = "";
-            // 
-            // skillQueuePage
-            // 
-            this.skillQueuePage.Controls.Add(this.skillQueueList);
-            this.skillQueuePage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueuePage.Location = new System.Drawing.Point(0, 0);
-            this.skillQueuePage.Name = "skillQueuePage";
-            this.skillQueuePage.Size = new System.Drawing.Size(568, 141);
-            this.skillQueuePage.TabIndex = 1;
-            this.skillQueuePage.Text = "skillQueuePage";
-            // 
-            // skillQueueList
-            // 
-            this.skillQueueList.Character = null;
-            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
-            this.skillQueueList.Name = "skillQueueList";
-            this.skillQueueList.Size = new System.Drawing.Size(568, 141);
-            this.skillQueueList.TabIndex = 0;
-            // 
-            // jobsPage
-            // 
-            this.jobsPage.Controls.Add(this.jobsList);
-            this.jobsPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsPage.Location = new System.Drawing.Point(0, 0);
-            this.jobsPage.Name = "jobsPage";
-            this.jobsPage.Size = new System.Drawing.Size(568, 141);
-            this.jobsPage.TabIndex = 3;
-            this.jobsPage.Text = "industryJobsPage";
-            // 
-            // jobsList
-            // 
-            this.jobsList.Character = null;
-            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
-            this.jobsList.Location = new System.Drawing.Point(0, 0);
-            this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.jobsList.Size = new System.Drawing.Size(568, 141);
-            this.jobsList.TabIndex = 0;
-            this.jobsList.TextFilter = "";
-            // 
-            // warningLabel
-            // 
-            this.warningLabel.AutoEllipsis = true;
-            this.warningLabel.BackColor = System.Drawing.Color.Black;
-            this.warningLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.warningLabel.ForeColor = System.Drawing.Color.White;
-            this.warningLabel.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
-            this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.warningLabel.Location = new System.Drawing.Point(1, 1);
-            this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(568, 17);
-            this.warningLabel.TabIndex = 1;
-            this.warningLabel.Text = "Key level warning.";
-            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // notificationList
-            // 
-            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.notificationList.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.notificationList.Location = new System.Drawing.Point(2, 2);
-            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
-            this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(571, 72);
-            this.notificationList.TabIndex = 13;
-            this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
             // 
             // toolstripPanel
             // 
@@ -630,8 +461,8 @@ namespace EVEMon
             this.groupMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.groupMenu.Size = new System.Drawing.Size(94, 22);
             this.groupMenu.Text = "Group By...";
-            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
             this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
+            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
             // 
             // toolStripFeatures
             // 
@@ -642,6 +473,7 @@ namespace EVEMon
             this.skillQueueIcon,
             this.ordersIcon,
             this.jobsIcon,
+            this.researchIcon,
             tsPagesSeparator,
             this.toggleSkillsIcon,
             this.tsToggleSeparator,
@@ -743,8 +575,213 @@ namespace EVEMon
             this.featuresMenu.Size = new System.Drawing.Size(29, 22);
             this.featuresMenu.Text = "Features";
             this.featuresMenu.ToolTipText = "Full API key features";
-            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
             this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
+            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
+            // 
+            // researchIcon
+            // 
+            this.researchIcon.Image = global::EVEMon.Properties.Resources.Research;
+            this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.researchIcon.Name = "researchIcon";
+            this.researchIcon.Size = new System.Drawing.Size(74, 22);
+            this.researchIcon.Tag = "researchPage";
+            this.researchIcon.Text = "Research";
+            this.researchIcon.ToolTipText = "Display Research Points";
+            this.researchIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // skillsPanel
+            // 
+            this.skillsPanel.BackColor = System.Drawing.SystemColors.Window;
+            this.skillsPanel.Controls.Add(this.corePanel);
+            this.skillsPanel.Controls.Add(this.notificationList);
+            this.skillsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsPanel.ForeColor = System.Drawing.Color.Gray;
+            this.skillsPanel.Location = new System.Drawing.Point(0, 50);
+            this.skillsPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsPanel.Name = "skillsPanel";
+            this.skillsPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
+            this.skillsPanel.Size = new System.Drawing.Size(574, 215);
+            this.skillsPanel.TabIndex = 3;
+            // 
+            // corePanel
+            // 
+            this.corePanel.Controls.Add(this.multiPanel);
+            this.corePanel.Controls.Add(this.warningLabel);
+            this.corePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.corePanel.Location = new System.Drawing.Point(2, 74);
+            this.corePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.corePanel.Name = "corePanel";
+            this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
+            this.corePanel.Size = new System.Drawing.Size(571, 139);
+            this.corePanel.TabIndex = 14;
+            // 
+            // multiPanel
+            // 
+            this.multiPanel.Controls.Add(this.skillsPage);
+            this.multiPanel.Controls.Add(this.ordersPage);
+            this.multiPanel.Controls.Add(this.skillQueuePage);
+            this.multiPanel.Controls.Add(this.jobsPage);
+            this.multiPanel.Controls.Add(this.researchPage);
+            this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.multiPanel.Location = new System.Drawing.Point(1, 18);
+            this.multiPanel.Name = "multiPanel";
+            this.multiPanel.SelectedPage = this.researchPage;
+            this.multiPanel.Size = new System.Drawing.Size(568, 121);
+            this.multiPanel.TabIndex = 14;
+            // 
+            // skillsPage
+            // 
+            this.skillsPage.Controls.Add(this.skillsList);
+            this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsPage.Location = new System.Drawing.Point(0, 0);
+            this.skillsPage.Name = "skillsPage";
+            this.skillsPage.Size = new System.Drawing.Size(568, 121);
+            this.skillsPage.TabIndex = 0;
+            this.skillsPage.Text = "skillsPage";
+            // 
+            // skillsList
+            // 
+            this.skillsList.Character = null;
+            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsList.Location = new System.Drawing.Point(0, 0);
+            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsList.Name = "skillsList";
+            this.skillsList.Size = new System.Drawing.Size(568, 121);
+            this.skillsList.TabIndex = 12;
+            // 
+            // ordersPage
+            // 
+            this.ordersPage.Controls.Add(this.ordersList);
+            this.ordersPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersPage.Location = new System.Drawing.Point(0, 0);
+            this.ordersPage.Name = "ordersPage";
+            this.ordersPage.Size = new System.Drawing.Size(568, 121);
+            this.ordersPage.TabIndex = 2;
+            this.ordersPage.Text = "ordersPage";
+            // 
+            // ordersList
+            // 
+            this.ordersList.Character = null;
+            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.OrderTypeDesc;
+            this.ordersList.Location = new System.Drawing.Point(0, 0);
+            this.ordersList.Name = "ordersList";
+            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.ordersList.Size = new System.Drawing.Size(568, 121);
+            this.ordersList.TabIndex = 13;
+            this.ordersList.TextFilter = "";
+            // 
+            // skillQueuePage
+            // 
+            this.skillQueuePage.Controls.Add(this.skillQueueList);
+            this.skillQueuePage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueuePage.Location = new System.Drawing.Point(0, 0);
+            this.skillQueuePage.Name = "skillQueuePage";
+            this.skillQueuePage.Size = new System.Drawing.Size(568, 121);
+            this.skillQueuePage.TabIndex = 1;
+            this.skillQueuePage.Text = "skillQueuePage";
+            // 
+            // skillQueueList
+            // 
+            this.skillQueueList.Character = null;
+            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
+            this.skillQueueList.Name = "skillQueueList";
+            this.skillQueueList.Size = new System.Drawing.Size(568, 121);
+            this.skillQueueList.TabIndex = 0;
+            // 
+            // jobsPage
+            // 
+            this.jobsPage.Controls.Add(this.jobsList);
+            this.jobsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jobsPage.Location = new System.Drawing.Point(0, 0);
+            this.jobsPage.Name = "jobsPage";
+            this.jobsPage.Size = new System.Drawing.Size(568, 121);
+            this.jobsPage.TabIndex = 3;
+            this.jobsPage.Text = "industryJobsPage";
+            // 
+            // jobsList
+            // 
+            this.jobsList.Character = null;
+            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
+            this.jobsList.Location = new System.Drawing.Point(0, 0);
+            this.jobsList.Name = "jobsList";
+            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.jobsList.Size = new System.Drawing.Size(568, 121);
+            this.jobsList.TabIndex = 0;
+            this.jobsList.TextFilter = "";
+            // 
+            // researchPage
+            // 
+            this.researchPage.Controls.Add(this.researchList);
+            this.researchPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.researchPage.Location = new System.Drawing.Point(0, 0);
+            this.researchPage.Name = "researchPage";
+            this.researchPage.Size = new System.Drawing.Size(568, 121);
+            this.researchPage.TabIndex = 4;
+            this.researchPage.Text = "researchPage";
+            // 
+            // researchList
+            // 
+            this.researchList.Character = null;
+            this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.researchList.Location = new System.Drawing.Point(0, 0);
+            this.researchList.Name = "researchList";
+            this.researchList.Size = new System.Drawing.Size(568, 121);
+            this.researchList.TabIndex = 0;
+            this.researchList.TextFilter = "";
+            // 
+            // warningLabel
+            // 
+            this.warningLabel.AutoEllipsis = true;
+            this.warningLabel.BackColor = System.Drawing.Color.Black;
+            this.warningLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.warningLabel.ForeColor = System.Drawing.Color.White;
+            this.warningLabel.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
+            this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.warningLabel.Location = new System.Drawing.Point(1, 1);
+            this.warningLabel.Name = "warningLabel";
+            this.warningLabel.Size = new System.Drawing.Size(568, 17);
+            this.warningLabel.TabIndex = 1;
+            this.warningLabel.Text = "Key level warning.";
+            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // notificationList
+            // 
+            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notificationList.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.notificationList.Location = new System.Drawing.Point(2, 2);
+            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
+            this.notificationList.Name = "notificationList";
+            this.notificationList.Size = new System.Drawing.Size(571, 72);
+            this.notificationList.TabIndex = 13;
+            this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
+            // 
+            // skillQueueControl
+            // 
+            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
+            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
+            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
+            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.Name = "skillQueueControl";
+            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
+            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.SkillQueue = null;
+            this.skillQueueControl.TabIndex = 13;
+            // 
+            // Header
+            // 
+            this.Header.Character = null;
+            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Header.Location = new System.Drawing.Point(0, 0);
+            this.Header.Name = "Header";
+            this.Header.Size = new System.Drawing.Size(574, 136);
+            this.Header.TabIndex = 15;
             // 
             // CharacterMonitor
             // 
@@ -769,13 +806,6 @@ namespace EVEMon
             this.skillQueueTimePanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             this.lowerPanel.PerformLayout();
-            this.skillsPanel.ResumeLayout(false);
-            this.corePanel.ResumeLayout(false);
-            this.multiPanel.ResumeLayout(false);
-            this.skillsPage.ResumeLayout(false);
-            this.ordersPage.ResumeLayout(false);
-            this.skillQueuePage.ResumeLayout(false);
-            this.jobsPage.ResumeLayout(false);
             this.toolstripPanel.ResumeLayout(false);
             this.toolstripPanel.PerformLayout();
             this.toolStripContextual.ResumeLayout(false);
@@ -783,6 +813,14 @@ namespace EVEMon
             this.toolStripFeatures.ResumeLayout(false);
             this.toolStripFeatures.PerformLayout();
             this.toolstripContextMenu.ResumeLayout(false);
+            this.skillsPanel.ResumeLayout(false);
+            this.corePanel.ResumeLayout(false);
+            this.multiPanel.ResumeLayout(false);
+            this.skillsPage.ResumeLayout(false);
+            this.ordersPage.ResumeLayout(false);
+            this.skillQueuePage.ResumeLayout(false);
+            this.jobsPage.ResumeLayout(false);
+            this.researchPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -846,5 +884,8 @@ namespace EVEMon
         private MainWindowIndustryJobsList jobsList;
         private CharacterMonitorHeader Header;
         private System.Windows.Forms.Panel toolstripPanel;
+        private System.Windows.Forms.ToolStripButton researchIcon;
+        private Controls.MultiPanelPage researchPage;
+        private MainWindowResearchPointsList researchList;
     }
 }

@@ -196,7 +196,16 @@
     <Compile Include="MainWindowIndustryJobs.Designer.cs">
       <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainWindowResearchPoints.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindowResearchPoints.Designer.cs">
+      <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
+    </Compile>
     <Compile Include="NativeRelocatorMethods.cs" />
+    <Compile Include="ResearchColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -321,6 +330,9 @@
     <EmbeddedResource Include="MainWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindowResearchPoints.resx">
+      <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -999,6 +1011,7 @@
     <None Include="Resources\icons\Reset.png" />
     <None Include="Resources\icons\Relocation.png" />
     <Content Include="Resources\icons\messagebox.png" />
+    <None Include="Resources\icons\Research.png" />
     <Content Include="Resources\icons\Window.png" />
     <None Include="Resources\icons\Mineral.png" />
     <Content Include="Resources\icons\Money.png" />

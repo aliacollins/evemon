@@ -51,10 +51,11 @@ namespace EVEMon.Common.Serialization.Settings
     {
         public SerializableCCPCharacter()
         {
-            this.SkillQueue = new List<SerializableQueuedSkill>();
-            this.LastUpdates = new List<SerializableAPIUpdate>();
-            this.MarketOrders = new List<SerializableOrderBase>();
-            this.IndustryJobs = new List<SerializableJob>();
+            SkillQueue = new List<SerializableQueuedSkill>();
+            LastUpdates = new List<SerializableAPIUpdate>();
+            MarketOrders = new List<SerializableOrderBase>();
+            IndustryJobs = new List<SerializableJob>();
+            ResearchPoints = new List<SerializableResearchPoint>();
         }
 
         [XmlArray("queue")]
@@ -77,6 +78,14 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlArray("industryJobs")]
         [XmlArrayItem("job")]
         public List<SerializableJob> IndustryJobs
+        {
+            get;
+            set;
+        }
+
+        [XmlArray("researchPoints")]
+        [XmlArrayItem("researchPoint")]
+        public List<SerializableResearchPoint> ResearchPoints
         {
             get;
             set;

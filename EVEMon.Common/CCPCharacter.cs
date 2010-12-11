@@ -18,12 +18,14 @@ namespace EVEMon.Common
         private readonly SkillQueue m_queue;
         private readonly CharacterQueryMonitor<SerializableSkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacter> m_charSheetMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIResearchList> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIOrderList> m_charMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIOrderList> m_corpMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIJobList> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIJobList> m_corpIndustryJobsMonitor;
         private readonly MarketOrderCollection m_marketOrders;
         private readonly IndustryJobCollection m_industryJobs;
+        private readonly ResearchPointCollection m_researchPoints;
         private readonly QueryMonitorCollection m_monitors;
 
         private List<SerializableAPIOrder> m_orders = new List<SerializableAPIOrder>();
@@ -51,6 +53,7 @@ namespace EVEMon.Common
             m_queue = new SkillQueue(this);
             m_marketOrders = new MarketOrderCollection(this);
             m_industryJobs = new IndustryJobCollection(this);
+            m_researchPoints = new ResearchPointCollection(this);
             m_monitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
@@ -77,6 +80,10 @@ namespace EVEMon.Common
             m_corpIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIJobList>(this, APIMethods.CorporationIndustryJobs);
             m_corpIndustryJobsMonitor.Updated += new QueryCallback<SerializableAPIJobList>(OnCorporationJobsUpdated);
             m_monitors.Add(m_corpIndustryJobsMonitor);
+
+            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearchList>(this, APIMethods.ResearchPoints);
+            m_charResearchPointsMonitor.Updated += new QueryCallback<SerializableAPIResearchList>(OnCharacterResearchPointsUpdated);
+            m_monitors.Add(m_charResearchPointsMonitor);
         }
 
         /// <summary>
@@ -139,6 +146,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the collection of research points.
+        /// </summary>
+        public ResearchPointCollection ResearchPoints
+        {
+            get { return m_researchPoints; }
+        }
+
+        /// <summary>
         /// Gets true when the character is currently actively training, false otherwise
         /// </summary>
         public override bool IsTraining
@@ -198,7 +213,10 @@ namespace EVEMon.Common
 
             // Industry jobs
             serial.IndustryJobs = m_industryJobs.Export();
-
+            
+            // Research points
+            serial.ResearchPoints = m_researchPoints.Export();
+             
             // Last API updates
             foreach (var monitor in m_monitors)
             {
@@ -226,6 +244,9 @@ namespace EVEMon.Common
             
             // Industry jobs
             m_industryJobs.Import(serial.IndustryJobs);
+
+            // Research points
+            m_researchPoints.Import(serial.ResearchPoints);
 
             // Last API updates
             foreach(var lastUpdate in serial.LastUpdates)
@@ -419,6 +440,27 @@ namespace EVEMon.Common
             // Import the data if all queried and there are jobs to import
             if (m_charJobsUpdated && m_jobs.Count != 0)
                 Import(m_jobs);
+        }
+
+        /// <summary>
+        /// Processes the queried character's research points.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearchList> result)
+        {
+            // Notify an error occured
+            if (ShouldNotifyError(result, APIMethods.ResearchPoints))
+                EveClient.Notifications.NotifyResearchPointsError(this, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_researchPoints.Import(result.Result.ResearchPoints);
+
+            // Fires the event regarding research points update.
+            EveClient.OnCharacterResearchPointsChanged(this);
         }
 
         /// <summary>

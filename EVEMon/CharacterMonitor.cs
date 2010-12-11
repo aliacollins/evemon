@@ -1,11 +1,11 @@
 //#define DEBUG_SINGLETHREAD
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
@@ -54,11 +54,13 @@ namespace EVEMon
             skillQueueList.Character = character;
             ordersList.Character = character;
             jobsList.Character = character;
+            researchList.Character = character;
             notificationList.Notifications = null;
 
             // Create a list of the full API Key features
             m_fullAPIKeyFeautures.Add(ordersIcon);
             m_fullAPIKeyFeautures.Add(jobsIcon);
+            m_fullAPIKeyFeautures.Add(researchIcon);
 
             // Hide all full api key related controls
             m_fullAPIKeyFeautures.ForEach(x => x.Visible = false);
@@ -90,18 +92,10 @@ namespace EVEMon
             EveClient.CharacterChanged += EveClient_CharacterChanged;
             EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
             EveClient.NotificationSent += EveClient_NotificationSent;
             EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
             Disposed += OnDisposed;
-        }
-
-        /// <summary>
-        /// Gets the character associated with this monitor.
-        /// </summary>
-        /// <value>The character.</value>
-        public Character Character
-        {
-            get { return m_character; }
         }
 
         /// <summary>
@@ -117,12 +111,23 @@ namespace EVEMon
             EveClient.CharacterChanged -= EveClient_CharacterChanged;
             EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterResearchPointsChanged -= EveClient_CharacterResearchPointsChanged;
             EveClient.NotificationSent -= EveClient_NotificationSent;
             EveClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
             Disposed -= OnDisposed;
         }
 
+        /// <summary>
+        /// Gets the character associated with this monitor.
+        /// </summary>
+        /// <value>The character.</value>
+        public Character Character
+        {
+            get { return m_character; }
+        }
+
         #endregion
+
 
         #region Inherited events
 
@@ -140,10 +145,14 @@ namespace EVEMon
             ToolStripItem item =
                 toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
 
-            if (item != null)
+            // If it's not a full key feature page make it visible
+            if (item != null && !m_fullAPIKeyFeautures.Contains(item))
                 item.Visible = true;
 
-            featuresMenu.Visible = m_fullAPIKeyFeautures.Any(x => x.Visible);
+            // If it's a full key feature page reset to skills page
+            if (item != null && m_fullAPIKeyFeautures.Contains(item))
+                item = skillsIcon;
+
             toolbarIcon_Click((item ?? skillsIcon), EventArgs.Empty);
 
             // Updates the rest of the control
@@ -165,6 +174,7 @@ namespace EVEMon
         }
 
         #endregion
+
 
         #region Display update on character change
 
@@ -341,6 +351,12 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
+            // Ensures the visibility of the toolstrip items
+            foreach (ToolStripItem item in toolStripContextual.Items)
+            {
+                item.Visible = true;
+            }
+            
             // Enables/Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
                 toolStripContextual.Enabled = !ccpCharacter.MarketOrders.IsEmpty();
@@ -348,6 +364,13 @@ namespace EVEMon
             // Enables/Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
                 toolStripContextual.Enabled = !ccpCharacter.IndustryJobs.IsEmpty();
+
+            // Enables/Disables the research points page related controls
+            if (multiPanel.SelectedPage == researchPage)
+            {
+                toolStripContextual.Enabled = !ccpCharacter.ResearchPoints.IsEmpty();
+                groupMenu.Visible = false;
+            }
         }
 
         /// <summary>
@@ -356,7 +379,8 @@ namespace EVEMon
         private void UpdateFullAPIKeyPagesSettings()
         {
             if ((multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
-                || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible))
+                || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible)
+                || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible))
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
 
             var enabledFullAPIKeyPages = new List<string>();
@@ -401,11 +425,14 @@ namespace EVEMon
 
         #endregion
 
+
         #region Updates on global events
 
         /// <summary>
         /// Updates the page controls on market orders change.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_CharacterMarketOrdersChanged(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -415,9 +442,25 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Updates the page controls on industry jobs change.
+        /// Handles the CharacterIndustryJobsChanged event of the EveClient control.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_CharacterIndustryJobsChanged(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+
+        /// <summary>
+        /// Handles the CharacterResearchPointsChanged event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterResearchPointsChanged(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -448,6 +491,7 @@ namespace EVEMon
             // Read the settings
             if (!Settings.UI.SafeForWork)
             {
+
                 UpdateFeaturesTextVisibility();
 
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
@@ -457,6 +501,7 @@ namespace EVEMon
             }
             else
             {
+
                 foreach (ToolStripItem item in toolStripFeatures.Items)
                 {
                     if (item is ToolStripButton || item is ToolStripDropDownButton)
@@ -499,7 +544,7 @@ namespace EVEMon
 
             // Update the full api key enabled pages
             UpdateFeaturesMenu();
-
+            
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
@@ -557,6 +602,7 @@ namespace EVEMon
 
         #endregion
 
+
         #region Control/Component Event Handlers
 
         /// <summary>
@@ -577,14 +623,13 @@ namespace EVEMon
                 if (item == sender)
                 {
                     // Selects the proper page
-                    ToolStripItem item1 = item;
                     multiPanel.SelectedPage =
-                        multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string) item1.Tag);
+                        multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string) item.Tag);
 
                     // Checks it.
                     button.Checked = true;
                 }
-                    // Or another one representing another page ?
+                // Or another one representing another page ?
                 else if (button != null)
                 {
                     // Unchecks it
@@ -657,6 +702,7 @@ namespace EVEMon
 
         #endregion
 
+
         # region Screenshot Method
 
         /// <summary>
@@ -684,6 +730,7 @@ namespace EVEMon
         }
 
         # endregion
+
 
         # region Multi Panel Control/Component Event Handlers
 
@@ -718,6 +765,7 @@ namespace EVEMon
 
             ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
             jobsIcon.Visible = (item.Text == jobsIcon.Text ? item.Checked : jobsIcon.Visible);
+            researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
 
             UpdateFullAPIKeyPagesSettings();
         }
@@ -742,7 +790,8 @@ namespace EVEMon
                     groupMenu.DropDownItems.Add(menu);
                 }
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 foreach (IndustryJobGrouping grouping in EnumExtensions.GetValues<IndustryJobGrouping>())
                 {
@@ -768,7 +817,8 @@ namespace EVEMon
                 var grouping = (MarketOrderGrouping) item.Tag;
                 m_character.UISettings.OrdersGroupBy = ordersList.Grouping = grouping;
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 var grouping = (IndustryJobGrouping) item.Tag;
                 m_character.UISettings.JobsGroupBy = jobsList.Grouping = grouping;
@@ -786,9 +836,15 @@ namespace EVEMon
             {
                 ordersList.TextFilter = searchTextBox.Text;
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.TextFilter = searchTextBox.Text;
+            }
+
+            if (multiPanel.SelectedPage == researchPage)
+            {
+                researchList.TextFilter = searchTextBox.Text;
             }
         }
 
@@ -812,7 +868,8 @@ namespace EVEMon
                     }
                 }
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 using (var f = new IndustryJobsColumnsSelectWindow(jobsList.Columns.Select(x => x.Clone())))
                 {
@@ -820,7 +877,22 @@ namespace EVEMon
                     if (dr == DialogResult.OK)
                     {
                         jobsList.Columns = f.Columns.Cast<IndustryJobColumnSettings>();
-                        Settings.UI.MainWindow.IndustryJobs.Columns = jobsList.Columns.Select(x => x.Clone()).ToArray();
+                        Settings.UI.MainWindow.IndustryJobs.Columns =
+                            jobsList.Columns.Select(x => x.Clone()).ToArray();
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == researchPage)
+            {
+                using (var f = new ResearchColumnsSelectWindow(researchList.Columns.Select(x => x.Clone())))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        researchList.Columns = f.Columns.Cast<ResearchColumnSettings>();
+                        Settings.UI.MainWindow.Research.Columns =
+                            researchList.Columns.Select(x => x.Clone()).ToArray();
                     }
                 }
             }
@@ -845,12 +917,19 @@ namespace EVEMon
                 showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
                 preferencesMenu.DropDownItems.Remove(numberAbsFormatMenuItem);
                 showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+
+            if (multiPanel.SelectedPage == researchPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
             }
 
             hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
@@ -952,6 +1031,7 @@ namespace EVEMon
         }
 
         # endregion
+
 
         #region Testing Function
 

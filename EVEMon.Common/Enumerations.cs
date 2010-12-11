@@ -559,7 +559,16 @@ namespace EVEMon.Common
         [Description("The industry jobs of a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
         IndustryJobs,
-        
+
+        /// <summary>
+        /// The research points of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Research")]
+        [Description("Research Points for a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        ResearchPoints,
+
         /// <summary>
         /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
         /// </summary>

@@ -160,6 +160,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/Research.xml.aspx.
+        /// </summary>
+        public static string APIResearchPoints {
+            get {
+                return ResourceManager.GetString("APIResearchPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /server/ServerStatus.xml.aspx.
         /// </summary>
         public static string APIServerStatus {

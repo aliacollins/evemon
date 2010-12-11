@@ -156,6 +156,8 @@ namespace EVEMon.Common.SettingsObjects
         MarketOrders,
         [Header("Industry")]
         IndustryJobs,
+        [Header("Research")]
+        ResearchPoints,   
     }
 
     #endregion

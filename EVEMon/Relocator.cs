@@ -258,12 +258,10 @@ namespace EVEMon
                     // so we need to exit
                     return;
                 }
+
                 // Different monitor resolutions ?
                 // Relocate to the monitor that fits the client
-                else
-                {
-                    RelocateOnDiffResScreens(eveInstance, screenCount);
-                }
+                RelocateOnDiffResScreens(eveInstance, screenCount);
             }
         }
 
