@@ -111,6 +111,7 @@ namespace EVEMon.SkillPlanner
 
             Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
 
+            m_columns.Clear();
             m_columns.AddRange(Settings.UI.PlanWindow.Columns.Select(x => x.Clone()));
 
             m_plannedSkillFont = FontFactory.GetFont(lvSkills.Font, FontStyle.Bold);
@@ -118,6 +119,9 @@ namespace EVEMon.SkillPlanner
             m_nonImmedTrainablePlanEntryColor = SystemColors.GrayText;
             m_remappingForeColor = SystemColors.HotTrack;
             m_remappingBackColor = SystemColors.Info;
+
+            // Update the skill list
+            UpdateSkillList(true);
 
             base.OnLoad(e);
         }
