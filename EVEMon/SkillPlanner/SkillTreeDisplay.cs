@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             public Row(Cell cell)
             {
-                this.Add(cell);
+                Add(cell);
             }
 
             /// <summary>
@@ -37,7 +37,7 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             public int Width
             {
-                get { return this.Count * m_std.CellWidth + (this.Count - 1) * SKILLBOX_MARGIN_LR; }
+                get { return Count * m_std.CellWidth + (Count - 1) * SKILLBOX_MARGIN_LR; }
             }
 
             /// <summary>
@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
 
                 // Layout the children
                 int childrenTop = top + m_std.CellHeight + SKILLBOX_MARGIN_UD;
-                int childrenWidth = this.Cells.Count * m_std.CellWidth +(this.Cells.Count - 1) * SKILLBOX_MARGIN_LR;
+                int childrenWidth = Cells.Count * m_std.CellWidth +(Cells.Count - 1) * SKILLBOX_MARGIN_LR;
 
                 left += (m_std.CellWidth - childrenWidth) / 2;
                 foreach (var cell in Cells)
@@ -209,7 +209,7 @@ namespace EVEMon.SkillPlanner
             /// <param name="y"></param>
             public void Offset(int x, int y)
             {
-                this.Rectangle.Offset(x, y);
+                Rectangle.Offset(x, y);
                 foreach (var cell in Cells)
                 {
                     cell.Offset(x, y);
@@ -287,24 +287,24 @@ namespace EVEMon.SkillPlanner
         public SkillTreeDisplay()
         {
             InitializeComponent();
-            OnLoad(null, null);
         }
 
         /// <summary>
         /// Subscribe events on load.
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnLoad(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.Opaque, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
 
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.PlanChanged += EveClient_PlanChanged;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -314,10 +314,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.PlanChanged -= EveClient_PlanChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                Graphics g = Graphics.FromHwnd(this.Handle);
+                Graphics g = Graphics.FromHwnd(Handle);
                 float dpi = g.DpiX;
 
                 if (dpi > 125)
@@ -347,7 +347,7 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                Graphics g = Graphics.FromHwnd(this.Handle);
+                Graphics g = Graphics.FromHwnd(Handle);
                 float dpi = g.DpiX;
 
                 if (dpi > 125)
@@ -369,7 +369,7 @@ namespace EVEMon.SkillPlanner
             set 
             { 
                 m_plan = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -421,9 +421,9 @@ namespace EVEMon.SkillPlanner
             if (m_rootSkill == null)
                 return;
 
-            m_graphBounds = m_rootCell.Arrange(this.Size);
-            this.AutoScrollMinSize = m_graphBounds.Size;
-            this.Invalidate();
+            m_graphBounds = m_rootCell.Arrange(Size);
+            AutoScrollMinSize = m_graphBounds.Size;
+            Invalidate();
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace EVEMon.SkillPlanner
             // Draws the background (solid or gradient, depending on safe mode or not)
             if (!Settings.UI.SafeForWork)
             {
-                using (Brush b = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
+                using (Brush b = new LinearGradientBrush(ClientRectangle, Color.LightBlue, Color.DarkBlue, 90.0F))
                 {
                     g.FillRectangle(b, e.ClipRectangle);
                 }
@@ -452,8 +452,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Compute offset caused by scrollers
-            int ofsLeft = this.AutoScrollPosition.X;
-            int ofsTop = this.AutoScrollPosition.Y;
+            int ofsLeft = AutoScrollPosition.X;
+            int ofsTop = AutoScrollPosition.Y;
 
             // Draw the lines
             using(var linePen = new Pen((Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White), 5.0F))
@@ -463,8 +463,9 @@ namespace EVEMon.SkillPlanner
                     DrawLines(g, m_rootCell, cell, linePen, ofsLeft, ofsTop);
                 }
             }
+
             // Draw the cells
-            using (Font boldFont = FontFactory.GetFont(this.Font, FontStyle.Bold))
+            using (Font boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
             {
                 foreach (var cell in m_rootCell.AllCells)
                 {
@@ -603,22 +604,22 @@ namespace EVEMon.SkillPlanner
                 Size sz = MeasureAndDrawText(g, cell.Skill.Name, boldFont, drawPoint, stdTextColor);
                 drawPoint.Y += sz.Height;
 
-                sz = MeasureAndDrawText(g, currentLevelText.ToString(), this.Font, drawPoint, stdTextColor);
+                sz = MeasureAndDrawText(g, currentLevelText.ToString(), Font, drawPoint, stdTextColor);
                 drawPoint.Y += sz.Height;
 
                 if (!String.IsNullOrEmpty(requiredLevel))
                 {
-                    sz = MeasureAndDrawText(g, requiredLevel, this.Font, drawPoint, reqTextColor);
+                    sz = MeasureAndDrawText(g, requiredLevel, Font, drawPoint, reqTextColor);
                     drawPoint.Y += sz.Height;
                 }
                 if (!String.IsNullOrEmpty(thisRequiredTime))
                 {
-                    sz = MeasureAndDrawText(g, thisRequiredTime, this.Font, drawPoint, reqTextColor);
+                    sz = MeasureAndDrawText(g, thisRequiredTime, Font, drawPoint, reqTextColor);
                     drawPoint.Y += sz.Height;
                 }
                 if (!String.IsNullOrEmpty(prereqTime))
                 {
-                    sz = MeasureAndDrawText(g, prereqTime, this.Font, drawPoint, prTextColor);
+                    sz = MeasureAndDrawText(g, prereqTime, Font, drawPoint, prTextColor);
                     drawPoint.Y += sz.Height;
                 }
 
@@ -671,7 +672,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrSkillTick_Tick(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
             CheckTraining();
         }
 
@@ -684,8 +685,8 @@ namespace EVEMon.SkillPlanner
             base.OnMouseClick(e);
 
             // Computes the offsets caused by scrollers
-            int ofsLeft = -this.AutoScrollPosition.X;
-            int ofsTop = -this.AutoScrollPosition.Y;
+            int ofsLeft = -AutoScrollPosition.X;
+            int ofsTop = -AutoScrollPosition.Y;
 
             // Checks every cell
             Skill skill = null;
@@ -714,7 +715,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnScroll(ScrollEventArgs se)
         {
             base.OnScroll(se);
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -724,7 +725,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -734,7 +735,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -750,7 +751,7 @@ namespace EVEMon.SkillPlanner
             if (e.Character != m_plan.Character) 
                 return;
 
-            this.Invalidate();
+            Invalidate();
         }
 
         /// <summary>
@@ -760,7 +761,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
         }
         #endregion
     }

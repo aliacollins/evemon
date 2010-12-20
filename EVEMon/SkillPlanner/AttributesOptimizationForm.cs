@@ -1,13 +1,10 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using System.Drawing.Imaging;
 using System.Threading;
+using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Controls;
@@ -86,7 +83,7 @@ namespace EVEMon.SkillPlanner
             m_strategy = strategy;
             m_plan = plan;
             m_description = description;
-            this.Text = name;
+            Text = name;
         }
 
         /// <summary>
@@ -106,7 +103,7 @@ namespace EVEMon.SkillPlanner
             m_manuallyEditedRemappingPoint = point;
             m_strategy = Strategy.ManualRemappingPointEdition;
             m_description = "Manual editing of a remapping point";
-            this.Text = "Remapping point manual editing (" + plan.Name + ")";
+            Text = "Remapping point manual editing (" + plan.Name + ")";
         }
 
         /// <summary>

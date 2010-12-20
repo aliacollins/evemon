@@ -9,15 +9,18 @@ namespace EVEMon.Common
     {
 
         #region Abstract methods and properties
+
         protected abstract int GetTotalSkillPoints();
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
 
         public abstract int GetSkillLevel(StaticSkill skill);
         public abstract int GetSkillPoints(StaticSkill skill);
+
         #endregion
 
 
         #region Computation methods
+
         /// <summary>
         /// Gets the total skill points for this character
         /// </summary>
@@ -81,36 +84,11 @@ namespace EVEMon.Common
             return GetTrainingTime(points, GetBaseSPPerHour(skill));
         }
 
-        /// <summary>
-        /// Returns the skill training bonus based upon the total number of  skill points and  the number of  points to train the skill.
-        /// </summary>
-        /// <param name="skillPoints">The total  number of  points to  train this  skill from the current level to the next.</param>
-        /// <returns>Double between 1.0 (no  bonus  applied) to 2.0 (bonus applied), in  the event that 1.6m SP is  passed  during training of the current skill a number between 1.0 and 2.0 will be returned.</returns>
-        public int GetNewCharacterSkillTrainingBonus(int pointsToTrain)
-        {
-            return GetNewCharacterSkillTrainingBonus(SkillPoints, pointsToTrain);
-        }
-
-        /// <summary>
-        /// Returns the skill training bonus based upon the total number of  skill points and  the number of  points to train the skill.
-        /// </summary>
-        /// <param name="skillPointTotal">The total number of skill points.</param>
-        /// <param name="skillPoints">The total  number of  points to  train this  skill from the current level to the next.</param>
-        /// <returns>Double between 1.0 (no  bonus  applied) to 2.0 (bonus applied), in  the event that 1.6m SP is  passed  during training of the current skill a number between 1.0 and 2.0 will be returned.</returns>
-        public static int GetNewCharacterSkillTrainingBonus(int skillPointTotal, int pointsToTrain)
-        {
-            int points = skillPointTotal + pointsToTrain;
-
-            if ((points > 0) && (points < EveConstants.NewCharacterTrainingThreshold))
-            {
-                return EveConstants.NewCharacterTrainingFactor;
-            }
-            return 1;
-        }
         #endregion
 
 
         #region GetSPToTrain
+
         /// <summary>
         /// Computes the number of SP to train
         /// </summary>
@@ -175,10 +153,12 @@ namespace EVEMon.Common
 
             return result;
         }
+
         #endregion
 
 
         #region GetTrainingTime & GetTrainingTimeToMultipleSkills
+
         /// <summary>
         /// Computes the training time for the given skill
         /// </summary>
@@ -224,7 +204,6 @@ namespace EVEMon.Common
         {
             if (spPerHour == 0.0f)
                 return TimeSpan.FromDays(999.0);
-            spPerHour *= GetNewCharacterSkillTrainingBonus(sp);
             return TimeSpan.FromHours(sp / spPerHour);
         }
 
@@ -244,6 +223,7 @@ namespace EVEMon.Common
 
 
         #region ICharacter non-abstract explicit members
+
         public ICharacterAttribute this[EveAttribute attribute]
         {
             get { return GetAttribute(attribute); }
@@ -273,6 +253,7 @@ namespace EVEMon.Common
         {
             get { return GetAttribute(EveAttribute.Memory); }
         }
+
         #endregion
     
     }

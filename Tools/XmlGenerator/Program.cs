@@ -18,14 +18,14 @@ namespace EVEMon.XmlGenerator
         private static double s_totalTablesCount = 25;
 
         private static int s_percentOld;
-        private static int s_propGenTotal = 1442;
-        private static int s_itemGenTotal = 8556;
-        private static int s_skillGenTotal = 468;
+        private static int s_propGenTotal = 1445;
+        private static int s_itemGenTotal = 8555;
+        private static int s_skillGenTotal = 458;
         private static int s_certGenTotal = 4272;
-        private static int s_blueprintGenTotal = 3901;
+        private static int s_blueprintGenTotal = 3915;
         private static int s_geoGen = 5219;
         private static int s_geoGenTotal = 19501;
-        private static int s_reprocessGenTotal = 9852;
+        private static int s_reprocessGenTotal = 9859;
 
         private static DateTime s_startTime;
         private static DateTime s_endTime;
@@ -253,8 +253,7 @@ namespace EVEMon.XmlGenerator
                 // Export attributes
                 var properties = new List<SerializableProperty>();
 
-                var sourceCategory = srcCategory;
-                foreach (var srcProp in s_attributeTypes.Where(x => x.CategoryID == sourceCategory.ID))
+                foreach (var srcProp in s_attributeTypes.Where(x => x.CategoryID == srcCategory.ID))
                 {
                     UpdatePercentDone(s_propGenTotal);
 
@@ -427,23 +426,39 @@ namespace EVEMon.XmlGenerator
                                                  {
                                                      Name = "Unique Designs",
                                                      Description = "Ships of a unique design",
-                                                     ID = 10000,
-                                                     ParentID = 4,
+                                                     ID = DBConstants.RootUniqueDesignsGroupID,
+                                                     ParentID = DBConstants.ShipsGroupID,
                                                      IconID = 1443
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Unique Shuttles",
                                                      Description = "Fast ships of a unique design",
-                                                     ID = 10001,
-                                                     ParentID = 10000,
+                                                     ID = DBConstants.UniqueDesignShuttlesGroupID,
+                                                     ParentID = DBConstants.RootUniqueDesignsGroupID,
+                                                     IconID = null
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Unique Industrials",
+                                                     Description = "Industrial ships of a unique design",
+                                                     ID = DBConstants.UniqueDesignIndustrialsGroupID,
+                                                     ParentID = DBConstants.RootUniqueDesignsGroupID,
+                                                     IconID = null
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Unique Frigates",
+                                                     Description = "Frigate ships of a unique design",
+                                                     ID = DBConstants.UniqueDesignFrigatesGroupID,
+                                                     ParentID = DBConstants.RootUniqueDesignsGroupID,
                                                      IconID = null
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Various Non-Market",
                                                      Description = "Non-Market Items",
-                                                     ID = 10002,
+                                                     ID = DBConstants.RootNonMarketGroupID,
                                                      ParentID = null,
                                                      IconID = null
                                                  }
@@ -470,56 +485,27 @@ namespace EVEMon.XmlGenerator
                 // Set some ships market group and race
                 switch (srcItem.ID)
                 {
-                    case 17703: // Imperial Navy Slicer
-                    case 17926: // Cruor
-                    case 17924: // Succubus
-                        srcItem.MarketGroupID = 72;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17619: // Caldari Navy Hookbill
-                        srcItem.MarketGroupID = 61;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17841: // Federation Navy Comet
-                        srcItem.MarketGroupID = 77;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17812: // Republic Fleet Firetail
-                    case 17932: // Dramiel
-                    case 17928: // Daredevil
-                        srcItem.MarketGroupID = 64;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17736: // Nightmare
-                        srcItem.MarketGroupID = 79;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17738: // Machariel
-                        srcItem.MarketGroupID = 78;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17720: // Cynabal
-                        srcItem.MarketGroupID = 73;
-                        srcItem.RaceID = 32;
-                        break;
-                    case 17922: // Ashimmu
-                    case 17718: // Phantasm
-                        srcItem.MarketGroupID = 74;
-                        srcItem.RaceID = 32;
-                        break;
                     case 21097: // Goru's Shuttle
                     case 21628: // Guristas Shuttle
-                        srcItem.MarketGroupID = 396;
-                        srcItem.RaceID = 32;
+                        srcItem.MarketGroupID = DBConstants.CaldariDesignShuttlesGroupID;
+                        srcItem.RaceID = (int)Race.Faction;
                         break;
                     case 30842: // Interbus Shuttle
-                        srcItem.MarketGroupID = 395;
-                        srcItem.RaceID = 32;
+                        srcItem.MarketGroupID = DBConstants.GallenteDesignShuttlesGroupID;
+                        srcItem.RaceID = (int)Race.Faction;
                         break;
                     case 29266: // Apotheosis
                     case 2078: // Zephyr
-                        srcItem.MarketGroupID = 10001;
-                        srcItem.RaceID = 32;
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesGroupID;
+                        srcItem.RaceID = (int)Race.Faction;
+                        break;
+                    case 2863: // Primae
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignIndustrialsGroupID;
+                        srcItem.RaceID = (int)Race.Faction;
+                        break;
+                    case 3532: // Echelon
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignFrigatesGroupID;
+                        srcItem.RaceID = (int)Race.Faction;
                         break;
 
                         // Set some items market group to support blueprints
@@ -555,17 +541,17 @@ namespace EVEMon.XmlGenerator
                     case 22327:
                     case 22325:
                     case 22331:
-                        srcItem.MarketGroupID = 10002;
+                        srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
                         break;
                 }
 
                 // Set some items market group to support blueprints
                 if (srcItem.ID > 28685 && srcItem.ID < 28694)
-                    srcItem.MarketGroupID = 10002;
+                    srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
 
                 // Adding planets to support attribute browsing for command centers
                 if (srcItem.GroupID == DBConstants.PlanetGroupID)
-                    srcItem.MarketGroupID = 10002;
+                    srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
             }
 
             var groups = new Dictionary<int, SerializableMarketGroup>();
@@ -578,25 +564,23 @@ namespace EVEMon.XmlGenerator
 
                 // Add the items in this group
                 var items = new List<SerializableItem>();
-                var sourceGroup = srcGroup;
-                foreach (
-                    InvType srcItem in
-                        s_types.Where(x => x.Published && (x.MarketGroupID.GetValueOrDefault() == sourceGroup.ID)))
+                foreach (InvType srcItem in s_types
+                    .Where(x => x.Published && (x.MarketGroupID.GetValueOrDefault() == srcGroup.ID)))
                 {
                     CreateItem(srcItem, items);
                 }
 
                 // If this is an implant group, we add the implants with no market groups in this one.
-                if (srcGroup.ParentID == 531 || srcGroup.ParentID == 532)
+                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantGroupID || srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsGroupID)
                 {
                     string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
                     int slot = Int32.Parse(slotString);
 
                     // Enumerate all implants without market groups
-                    foreach (
-                        InvType srcItem in
-                            s_types.Where(
-                                x => x.MarketGroupID == null && s_groups[x.GroupID].CategoryID == 20 && x.GroupID != 745)
+                    foreach (InvType srcItem in s_types
+                        .Where(x => x.MarketGroupID == null 
+                        && s_groups[x.GroupID].CategoryID == DBConstants.ImplantCategoryID 
+                        && x.GroupID != DBConstants.CyberLearningImplantsGroupID)
                         )
                     {
                         // Check the slot matches
@@ -621,11 +605,11 @@ namespace EVEMon.XmlGenerator
             }
 
             // Pick the family
-            SetItemFamilyByMarketGroup(groups[2], ItemFamily.Bpo);
-            SetItemFamilyByMarketGroup(groups[4], ItemFamily.Ship);
-            SetItemFamilyByMarketGroup(groups[27], ItemFamily.Implant);
-            SetItemFamilyByMarketGroup(groups[157], ItemFamily.Drone);
-            SetItemFamilyByMarketGroup(groups[477], ItemFamily.StarbaseStructure);
+            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsGroupID], ItemFamily.Bpo);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ShipsGroupID], ItemFamily.Ship);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsGroupID], ItemFamily.Implant);
+            SetItemFamilyByMarketGroup(groups[DBConstants.DronesGroupID], ItemFamily.Drone);
+            SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresGroupID], ItemFamily.StarbaseStructure);
 
             // Sort groups
             IOrderedEnumerable<SerializableMarketGroup> rootGroups =
@@ -867,9 +851,10 @@ namespace EVEMon.XmlGenerator
                 item.Race = Race.Faction;
 
             // Set race to ORE if it is in the ORE market groups
-            // within mining barges, exhumers or capital industrial ships
+            // within mining barges, exhumers, industrial or capital industrial ships
             if (srcItem.MarketGroupID == DBConstants.MiningBargesGroupID
                 || srcItem.MarketGroupID == DBConstants.ExhumersGroupID
+                || srcItem.MarketGroupID == DBConstants.IndustrialsGroupID
                 || srcItem.MarketGroupID == DBConstants.CapitalIndustrialsGroupID)
                 item.Race = Race.Ore;
 
@@ -911,7 +896,7 @@ namespace EVEMon.XmlGenerator
                 InvType srcVariationItem = s_types[variation.ItemID];
                 if (srcVariationItem.Published && srcVariationItem.MarketGroupID == null)
                 {
-                    srcVariationItem.RaceID = 32;
+                    srcVariationItem.RaceID = (int)Race.Faction;
                     CreateItem(srcVariationItem, groupItems);
                 }
             }
@@ -966,8 +951,7 @@ namespace EVEMon.XmlGenerator
                 // Export skills
                 var listOfSkillsInGroup = new List<SerializableSkill>();
 
-                var theGroup = group;
-                foreach (InvType skill in s_types.Where(x => x.GroupID == theGroup.ID))
+                foreach (InvType skill in s_types.Where(x => x.GroupID == group.ID))
                 {
                     UpdatePercentDone(s_skillGenTotal);
 
@@ -983,8 +967,7 @@ namespace EVEMon.XmlGenerator
                     // Export skill atributes
                     var skillAttributes = new Dictionary<int, int>();
 
-                    var theSkill = skill;
-                    foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(x => x.ItemID == theSkill.ID))
+                    foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(x => x.ItemID == skill.ID))
                     {
                         skillAttributes.Add(attribute.AttributeID, attribute.GetIntValue());
                     }
@@ -1126,8 +1109,7 @@ namespace EVEMon.XmlGenerator
                     // Export certificates
                     var listOfCertificates = new List<SerializableCertificate>();
 
-                    var theCertClass = certClass;
-                    foreach (var certificate in s_certificates.Where(x => x.ClassID == theCertClass.ID))
+                    foreach (var certificate in s_certificates.Where(x => x.ClassID == certClass.ID))
                     {
                         UpdatePercentDone(s_certGenTotal);
 
@@ -1141,9 +1123,8 @@ namespace EVEMon.XmlGenerator
                         // Export prerequesities
                         var listOfPrereq = new List<SerializableCertificatePrerequisite>();
 
-                        var theCertificate = certificate;
-                        foreach (
-                            CrtRelationships relationship in s_crtRelationships.Where(x => x.ChildID == theCertificate.ID))
+                        foreach (CrtRelationships relationship in s_crtRelationships
+                            .Where(x => x.ChildID == certificate.ID))
                         {
                             var crtPrerequisites = new SerializableCertificatePrerequisite
                                                        {
@@ -1153,16 +1134,14 @@ namespace EVEMon.XmlGenerator
 
                             if (relationship.ParentTypeID != null) // prereq is a skill
                             {
-                                var theRelationship = relationship;
-                                var skill = s_types.First(x => x.ID == theRelationship.ParentTypeID);
+                                var skill = s_types.First(x => x.ID == relationship.ParentTypeID);
                                 crtPrerequisites.Kind = SerializableCertificatePrerequisiteKind.Skill;
                                 crtPrerequisites.Name = skill.Name;
                                 crtPrerequisites.Level = relationship.ParentLevel.ToString();
                             }
                             else // prereq is a certificate
                             {
-                                var theRelationship = relationship;
-                                CrtCertificates cert = s_certificates.First(x => x.ID == theRelationship.ParentID);
+                                CrtCertificates cert = s_certificates.First(x => x.ID == relationship.ParentID);
                                 CrtClasses crtClass = s_crtClasses.First(x => x.ID == cert.ClassID);
                                 crtPrerequisites.Kind = SerializableCertificatePrerequisiteKind.Certificate;
                                 crtPrerequisites.Name = crtClass.ClassName;
@@ -1176,13 +1155,11 @@ namespace EVEMon.XmlGenerator
                         // Export recommendations
                         var listOfRecom = new List<SerializableCertificateRecommendation>();
 
-                        foreach (
-                            CrtRecommendations recommendation in
-                                s_crtRecommendations.Where(x => x.CertificateID == theCertificate.ID))
+                        foreach (CrtRecommendations recommendation in s_crtRecommendations
+                            .Where(x => x.CertificateID == certificate.ID))
                         {
                             // Finds the ships name
-                            var theRecommendation = recommendation;
-                            InvType shipName = s_types.First(x => x.ID == theRecommendation.ShipTypeID);
+                            InvType shipName = s_types.First(x => x.ID == recommendation.ShipTypeID);
 
                             var crtRecommendations = new SerializableCertificateRecommendation
                                                          {
@@ -1291,12 +1268,9 @@ namespace EVEMon.XmlGenerator
 
                 // Add the items in this group
                 var blueprints = new List<SerializableBlueprint>();
-                var theMarketGroup = marketGroup;
-                foreach (InvType item in s_types
-                    .Where(
-                        x =>
-                        x.MarketGroupID == theMarketGroup.ID && s_groups[x.GroupID].CategoryID == 9 &&
-                        s_groups[x.GroupID].Published))
+                foreach (InvType item in s_types.Where(x => x.MarketGroupID == marketGroup.ID
+                                       && s_groups[x.GroupID].CategoryID == DBConstants.BlueprintCategoryID
+                                       && s_groups[x.GroupID].Published))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -1308,17 +1282,16 @@ namespace EVEMon.XmlGenerator
             // Create the parent-children groups relations
             foreach (SerializableBlueprintGroup group in groups.Values)
             {
-                var theGroup = group;
-                IEnumerable<SerializableBlueprintGroup> children =
-                    s_marketGroups.Concat(s_injectedMarketGroups).Where(x => x.ParentID == theGroup.ID).Select(
-                        x => groups[x.ID]);
+                IEnumerable<SerializableBlueprintGroup> children = s_marketGroups.Concat(
+                    s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(x => groups[x.ID]);
+
                 group.SubGroups = children.OrderBy(x => x.Name).ToArray();
             }
 
             // Sort groups
             IOrderedEnumerable<SerializableBlueprintGroup> blueprintGroups = s_marketGroups.Concat(
-                s_injectedMarketGroups)
-                .Where(x => x.ParentID == DBConstants.BlueprintsGroupID).Select(x => groups[x.ID]).OrderBy(x => x.Name);
+                s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsGroupID)
+                .Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
             Console.WriteLine(String.Format(" in {0}", s_endTime.Subtract(s_startTime)).TrimEnd('0'));
@@ -1339,28 +1312,10 @@ namespace EVEMon.XmlGenerator
             // Create custom market groups that don't exist in EVE
             s_injectedMarketGroups.Add(new InvMarketGroup
                                            {
-                                               Name = "Unique Designs",
-                                               Description = "Blueprints of unique design ships",
-                                               ID = 20000,
-                                               ParentID = 204,
-                                               IconID = 2703
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Unique Shuttles",
-                                               Description = "Blueprints of unique shuttles",
-                                               ID = 20001,
-                                               ParentID = 20000,
-                                               IconID = 2703
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
                                                Name = "Various Non-Market",
                                                Description = "Various blueprints not in EVE market",
                                                ID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               ParentID = 2,
+                                               ParentID = DBConstants.BlueprintsGroupID,
                                                IconID = 2703
                                            });
 
@@ -1368,8 +1323,8 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Storyline",
                                                Description = "Storyline blueprints not in EVE market",
-                                               ID = 20003,
-                                               ParentID = 20002,
+                                               ID = DBConstants.BlueprintNonMarketStorylineGroupID,
+                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = 2703
                                            });
 
@@ -1377,26 +1332,8 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Faction",
                                                Description = "Faction blueprints not in EVE market",
-                                               ID = 20004,
-                                               ParentID = 20002,
-                                               IconID = 2703
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Tech III",
-                                               Description = "Tech III blueprints not in EVE market",
-                                               ID = 20005,
-                                               ParentID = 20002,
-                                               IconID = 2703
-                                           });
-
-            s_injectedMarketGroups.Add(new InvMarketGroup
-                                           {
-                                               Name = "Tech II",
-                                               Description = "Tech II blueprints not in EVE market",
-                                               ID = 20006,
-                                               ParentID = 20002,
+                                               ID = DBConstants.BlueprintNonMarketFactionGroupID,
+                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = 2703
                                            });
 
@@ -1404,8 +1341,26 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Tech I",
                                                Description = "Tech I blueprints not in EVE market",
-                                               ID = 20007,
-                                               ParentID = 20002,
+                                               ID = DBConstants.BlueprintNonMarketTechIGroupID,
+                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                               IconID = 2703
+                                           });
+
+            s_injectedMarketGroups.Add(new InvMarketGroup
+                                           {
+                                               Name = "Tech II",
+                                               Description = "Tech II blueprints not in EVE market",
+                                               ID = DBConstants.BlueprintNonMarketTechIIGroupID,
+                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                                               IconID = 2703
+                                           });
+
+            s_injectedMarketGroups.Add(new InvMarketGroup
+                                           {
+                                               Name = "Tech III",
+                                               Description = "Tech III blueprints not in EVE market",
+                                               ID = DBConstants.BlueprintNonMarketTechIIIGroupID,
+                                               ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = 2703
                                            });
 
@@ -1414,12 +1369,11 @@ namespace EVEMon.XmlGenerator
             {
                 switch (item.ID)
                 {
-                    case 29267: // Apotheosis Blueprint
-                        item.MarketGroupID = 20001;
-                        break;
                     case 22924: // 'Wild' Miner I Blueprint
-                        item.MarketGroupID = 20003;
+                        item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
                         break;
+                    case 2837: // Adrestia Blueprint
+                    case 3533: // Echelon Blueprint
                     case 17704: // Imperial Navy Slicer Blueprint
                     case 17620: // Caldari Navy Hookbill Blueprint
                     case 17842: // Federation Navy Comet Blueprint
@@ -1437,7 +1391,9 @@ namespace EVEMon.XmlGenerator
                     case 21629: // Guristas Shuttle Blueprint
                     case 21842: // Gallente Mining Laser Blueprint
                     case 30843: // Interbus Shuttle Blueprint
-                        item.MarketGroupID = 20004;
+                    case 32208: // Freki Blueprint
+                    case 32210: // Mimir Blueprint
+                        item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
                         break;
                     case 29987: // Legion Blueprint
                     case 30227: // Legion Defensive - Adaptive Augmenter Blueprint
@@ -1463,10 +1419,10 @@ namespace EVEMon.XmlGenerator
                     case 30140: // Tengu Engineering - Power Core Multiplier Blueprint
                     case 30397: // Tengu Offensive - Accelerated Ejection Bay Blueprint
                     case 30087: // Tengu Propulsion - Intercalated Nanofibers Blueprint
-                        item.MarketGroupID = 20005;
+                        item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
                         break;
                     case 32078: // Small EW Drone Range Augmentor II Blueprint
-                        item.MarketGroupID = 20006;
+                        item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
                         break;
                 }
             }
@@ -1479,29 +1435,28 @@ namespace EVEMon.XmlGenerator
             {
                 UpdatePercentDone(s_blueprintGenTotal);
 
-                var theItem = item;
-                foreach (
-                    InvMetaType relation in s_metaTypes.Where(x => x.ItemID == s_blueprintTypes[theItem.ID].ProductTypeID))
+                foreach (InvMetaType relation in s_metaTypes
+                    .Where(x => x.ItemID == s_blueprintTypes[item.ID].ProductTypeID))
                 {
                     switch (relation.MetaGroupID)
                     {
                         case 2:
-                            item.MarketGroupID = 20006;
+                            item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
                             break;
                         case 3:
-                            item.MarketGroupID = 20003;
+                            item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
                             break;
                         case 4:
-                            item.MarketGroupID = 20004;
+                            item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
                             break;
                         case 14:
-                            item.MarketGroupID = 20005;
+                            item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
                             break;
                     }
                 }
 
                 if (item.MarketGroupID == null)
-                    item.MarketGroupID = 20007;
+                    item.MarketGroupID = DBConstants.BlueprintNonMarketTechIGroupID;
             }
         }
 
@@ -1544,10 +1499,8 @@ namespace EVEMon.XmlGenerator
 
             // Metagroup
             item.MetaGroup = ItemMetaGroup.T1;
-            foreach (
-                InvMetaType relation in
-                    s_metaTypes.Where(
-                        x => x.ItemID == s_blueprintTypes[srcBlueprint.ID].ProductTypeID && x.MetaGroupID == 2))
+            foreach (InvMetaType relation in s_metaTypes
+                .Where(x => x.ItemID == s_blueprintTypes[srcBlueprint.ID].ProductTypeID && x.MetaGroupID == 2))
             {
                 item.MetaGroup = ItemMetaGroup.T2;
             }
@@ -1574,15 +1527,13 @@ namespace EVEMon.XmlGenerator
 
             // Look for the tech 2 variations that this blueprint invents
             var inventionBlueprint = new List<int>();
-            foreach (
-                int relationItemID in
-                    s_metaTypes.Where(x => x.ParentItemID == item.ProduceItemID && x.MetaGroupID == 2).Select(
-                        x => x.ItemID))
+            foreach (int relationItemID in s_metaTypes
+                .Where(x => x.ParentItemID == item.ProduceItemID && x.MetaGroupID == 2)
+                .Select(x => x.ItemID))
             {
                 // Look for a blueprint that produces the related item
-                foreach (
-                    int variationItemID in
-                        s_blueprintTypes.Where(x => x.ProductTypeID == relationItemID).Select(x => x.ID))
+                foreach (int variationItemID in s_blueprintTypes
+                    .Where(x => x.ProductTypeID == relationItemID).Select(x => x.ID))
                 {
                     // Add the variation blueprint
                     inventionBlueprint.Add(s_types[variationItemID].ID);
@@ -1655,11 +1606,9 @@ namespace EVEMon.XmlGenerator
             foreach (RamTypeRequirements requirement in s_typeRequirements.Where(x => x.TypeID == srcBlueprint.ID))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
-                var theRequirement = requirement;
-                if (
-                    s_types.Any(
-                        x =>
-                        x.ID == theRequirement.RequiredTypeID && s_groups.Any(y => y.ID == x.GroupID && y.CategoryID == 16)))
+                if (s_types.Any(x => x.ID == requirement.RequiredTypeID
+                                    && s_groups.Any(y => y.ID == x.GroupID
+                                    && y.CategoryID == DBConstants.SkillCategoryID)))
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
                                                {
@@ -1683,15 +1632,14 @@ namespace EVEMon.XmlGenerator
                     // and substracted them from the related materials of the requiredMaterials list
                     if (requirement.Recyclable)
                     {
-                        foreach (
-                            InvTypeMaterials reprocItem in
-                                s_typeMaterials.Where(x => x.TypeID == theRequirement.RequiredTypeID))
+                        foreach (InvTypeMaterials reprocItem in s_typeMaterials
+                                .Where(x => x.TypeID == requirement.RequiredTypeID))
                         {
-                            var theReprocItem = reprocItem;
-                            if (requiredMaterials.Any(x => x.ID == theReprocItem.MaterialTypeID))
+                            if (requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
                             {
-                                SerializableRequiredMaterial material =
-                                    requiredMaterials.First(x => x.ID == theReprocItem.MaterialTypeID);
+                                SerializableRequiredMaterial material = requiredMaterials
+                                    .First(x => x.ID == reprocItem.MaterialTypeID);
+
                                 material.Quantity -= requirement.Quantity*reprocItem.Quantity;
 
                                 if (material.Quantity < 1)
@@ -1702,7 +1650,7 @@ namespace EVEMon.XmlGenerator
 
                     // If activity is invention, add the prerequisite skill
                     // of the required material as it's not included in this table
-                    if (requirement.ActivityID == (int) BlueprintActivity.Invention)
+                    if (requirement.ActivityID == (int)BlueprintActivity.Invention)
                     {
                         // Add the prerequisite skills for a material used in invention activity.
                         MaterialPrereqSkill(requirement, prerequisiteSkills);
@@ -1720,7 +1668,8 @@ namespace EVEMon.XmlGenerator
             var prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Length];
             var prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Length];
 
-            foreach (DgmTypeAttribute attribute in s_typeAttributes.Where(x => x.ItemID == requirement.RequiredTypeID))
+            foreach (DgmTypeAttribute attribute in s_typeAttributes
+                    .Where(x => x.ItemID == requirement.RequiredTypeID))
             {
                 if (attribute.ValueFloat != null)
                 {
@@ -1791,8 +1740,7 @@ namespace EVEMon.XmlGenerator
 
                 // Constellations
                 var constellations = new List<SerializableConstellation>();
-                var theSrcRegion = srcRegion;
-                foreach (MapConstellation srcConstellation in s_constellations.Where(x => x.RegionID == theSrcRegion.ID))
+                foreach (MapConstellation srcConstellation in s_constellations.Where(x => x.RegionID == srcRegion.ID))
                 {
                     var constellation = new SerializableConstellation
                                             {
@@ -1804,9 +1752,8 @@ namespace EVEMon.XmlGenerator
                     // Systems
                     const double baseDistance = 1.0E14;
                     var systems = new List<SerializableSolarSystem>();
-                    var theSrcConstellation = srcConstellation;
                     foreach (
-                        MapSolarSystem srcSystem in s_solarSystems.Where(x => x.ConstellationID == theSrcConstellation.ID))
+                        MapSolarSystem srcSystem in s_solarSystems.Where(x => x.ConstellationID == srcConstellation.ID))
                     {
                         var system = new SerializableSolarSystem
                                          {
@@ -1821,23 +1768,20 @@ namespace EVEMon.XmlGenerator
 
                         // Stations
                         var stations = new List<SerializableStation>();
-                        var theSrcSystem = srcSystem;
-                        foreach (StaStation srcStation in s_stations.Where(x => x.SolarSystemID == theSrcSystem.ID))
+                        foreach (StaStation srcStation in s_stations.Where(x => x.SolarSystemID == srcSystem.ID))
                         {
                             UpdatePercentDone(s_geoGen);
 
                             // Agents
                             var stationAgents = new List<SerializableAgent>();
-                            var theSrcStation = srcStation;
-                            foreach (AgtAgents srcAgent in s_agents.Where(x => x.LocationID == theSrcStation.ID))
+                            foreach (AgtAgents srcAgent in s_agents.Where(x => x.LocationID == srcStation.ID))
                             {
-                                var theSrcAgent = srcAgent;
                                 var agent = new SerializableAgent
                                                 {
                                                     ID = srcAgent.ID,
                                                     Level = srcAgent.Level,
                                                     Quality = srcAgent.Quality,
-                                                    Name = s_names.FirstOrDefault(x => x.ID == theSrcAgent.ID).Name
+                                                    Name = s_names.FirstOrDefault(x => x.ID == srcAgent.ID).Name
                                                 };
                                 stationAgents.Add(agent);
                             }
@@ -1905,8 +1849,7 @@ namespace EVEMon.XmlGenerator
                 UpdatePercentDone(s_reprocessGenTotal);
 
                 var materials = new List<SerializableMaterialQuantity>();
-                var theTypeId = typeID;
-                foreach (InvTypeMaterials srcMaterial in s_typeMaterials.Where(x => x.TypeID == theTypeId))
+                foreach (InvTypeMaterials srcMaterial in s_typeMaterials.Where(x => x.TypeID == typeID))
                 {
                     materials.Add(new SerializableMaterialQuantity
                                       {ID = srcMaterial.MaterialTypeID, Quantity = srcMaterial.Quantity});

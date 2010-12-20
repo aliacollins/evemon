@@ -29,7 +29,6 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.buttonWholePlan = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.buttonRemappingPoints = new System.Windows.Forms.Button();
             this.buttonCharacter = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -45,19 +44,10 @@ namespace EVEMon.SkillPlanner
             this.buttonWholePlan.Name = "buttonWholePlan";
             this.buttonWholePlan.Size = new System.Drawing.Size(472, 48);
             this.buttonWholePlan.TabIndex = 1;
-            this.buttonWholePlan.Text = "Attributes that would be best for the first year of this plan";
+            this.buttonWholePlan.Text = "Attributes that would be best for the first year of this plan.";
             this.buttonWholePlan.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.buttonWholePlan.UseVisualStyleBackColor = true;
             this.buttonWholePlan.Click += new System.EventHandler(this.buttonWholePlan_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 172);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(289, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "* Assuming the learning skills would have been trained first";
             // 
             // buttonRemappingPoints
             // 
@@ -70,7 +60,7 @@ namespace EVEMon.SkillPlanner
             this.buttonRemappingPoints.Name = "buttonRemappingPoints";
             this.buttonRemappingPoints.Size = new System.Drawing.Size(472, 48);
             this.buttonRemappingPoints.TabIndex = 0;
-            this.buttonRemappingPoints.Text = "Use the remapping points I set up";
+            this.buttonRemappingPoints.Text = "Use the remapping points I set up.";
             this.buttonRemappingPoints.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.buttonRemappingPoints.UseVisualStyleBackColor = true;
             this.buttonRemappingPoints.Click += new System.EventHandler(this.buttonRemappingPoints_Click);
@@ -86,7 +76,7 @@ namespace EVEMon.SkillPlanner
             this.buttonCharacter.Name = "buttonCharacter";
             this.buttonCharacter.Size = new System.Drawing.Size(472, 48);
             this.buttonCharacter.TabIndex = 2;
-            this.buttonCharacter.Text = "Attributes that would have been best for what I have trained so far*";
+            this.buttonCharacter.Text = "Attributes that would have been best for what I have trained so far.";
             this.buttonCharacter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.buttonCharacter.UseVisualStyleBackColor = true;
             this.buttonCharacter.Click += new System.EventHandler(this.buttonCharacter_Click);
@@ -95,9 +85,8 @@ namespace EVEMon.SkillPlanner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 200);
+            this.ClientSize = new System.Drawing.Size(497, 182);
             this.Controls.Add(this.buttonRemappingPoints);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonWholePlan);
             this.Controls.Add(this.buttonCharacter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -108,7 +97,6 @@ namespace EVEMon.SkillPlanner
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Attributes optimization settings";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -116,7 +104,6 @@ namespace EVEMon.SkillPlanner
 
         private System.Windows.Forms.Button buttonCharacter;
         private System.Windows.Forms.Button buttonWholePlan;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonRemappingPoints;
 
     }

@@ -24,9 +24,6 @@ namespace EVEMon.Common.Data
         private readonly EveAttribute m_secondaryAttribute;
         private readonly List<StaticSkillLevel> m_prereqs = new List<StaticSkillLevel>();
 
-        private readonly EveAttribute m_bonusAttribute;
-        private readonly LearningClass m_learningClass;
-
         private bool m_trainableOnTrialAccount;
         private string m_descriptionNL;
 
@@ -52,69 +49,6 @@ namespace EVEMon.Common.Data
             m_trainableOnTrialAccount = src.CanTrainOnTrial;
             m_arrayIndex = arrayIndex;
             m_group = group;
-
-            switch (m_id)
-            {
-                case DBConstants.AnalyticalMindSkillID:
-                    m_bonusAttribute = EveAttribute.Intelligence;
-                    m_learningClass = LearningClass.LowerTierAttribute;
-                    break;
-
-                case DBConstants.LogicSkillID:
-                    m_bonusAttribute = EveAttribute.Intelligence;
-                    m_learningClass = LearningClass.UpperTierAttribute;
-                    break;
-
-                case DBConstants.EmpathySkillID:
-                    m_bonusAttribute = EveAttribute.Charisma;
-                    m_learningClass = LearningClass.LowerTierAttribute;
-                    break;
-
-                case DBConstants.PresenceSkillID:
-                    m_bonusAttribute = EveAttribute.Charisma;
-                    m_learningClass = LearningClass.UpperTierAttribute;
-                    break;
-
-                case DBConstants.InstantRecallSkillID:
-                    m_bonusAttribute = EveAttribute.Memory;
-                    m_learningClass = LearningClass.LowerTierAttribute;
-                    break;
-
-                case DBConstants.EideticMemorySkillID:
-                    m_bonusAttribute = EveAttribute.Memory;
-                    m_learningClass = LearningClass.UpperTierAttribute;
-                    break;
-
-                case DBConstants.IronWillSkillID:
-                    m_bonusAttribute = EveAttribute.Willpower;
-                    m_learningClass = LearningClass.LowerTierAttribute;
-                    break;
-
-                case DBConstants.FocusSkillID:
-                    m_bonusAttribute = EveAttribute.Willpower;
-                    m_learningClass = LearningClass.UpperTierAttribute;
-                    break;
-
-                case DBConstants.SpatialAwarenessSkillID:
-                    m_bonusAttribute = EveAttribute.Perception;
-                    m_learningClass = LearningClass.LowerTierAttribute;
-                    break;
-
-                case DBConstants.ClaritySkillID:
-                    m_bonusAttribute = EveAttribute.Perception;
-                    m_learningClass = LearningClass.UpperTierAttribute;
-                    break;
-
-                case DBConstants.LearningSkillID:
-                    m_bonusAttribute = EveAttribute.None;
-                    m_learningClass = LearningClass.Learning;
-                    break;
-
-                default:
-                    m_bonusAttribute = EveAttribute.None;
-                    m_learningClass = LearningClass.None;
-                    break;
-            }
         }
 
         #endregion
@@ -166,14 +100,6 @@ namespace EVEMon.Common.Data
         public int ArrayIndex
         {
             get { return m_arrayIndex; }
-        }
-
-        /// <summary>
-        /// Gets the learning class of this skill
-        /// </summary>
-        public LearningClass LearningClass
-        {
-            get { return m_learningClass; }
         }
 
         /// <summary>
@@ -263,14 +189,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets true if this skill is an attribute learning skill (i.e. not "learning" !)
-        /// </summary>
-        public bool HasAttributeBonus
-        {
-            get { return m_bonusAttribute != EveAttribute.None; }
-        }
-
-        /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
         /// The order matches the hirerarchy but skills are not duplicated and are systematically trained to the highest required level.
         /// For example, if some skill is required to lv3 and, later, to lv4, this first time it is encountered, lv4 is returned.
@@ -321,14 +239,6 @@ namespace EVEMon.Common.Data
 
                 return String.Format(CultureConstants.DefaultCulture, "{0:0,0,0}", m_cost);
             }
-        }
-
-        /// <summary>
-        /// Gets the attribute this skill grants a bonus to. Returns <c>EveAttribute.None</c> when irrelevant.
-        /// </summary>
-        public EveAttribute AttributeModified
-        {
-            get { return m_bonusAttribute; }
         }
 
         #endregion

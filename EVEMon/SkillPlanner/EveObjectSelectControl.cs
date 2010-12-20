@@ -50,6 +50,34 @@ namespace EVEMon.SkillPlanner
 
             if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            // Subscribe the events
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            Disposed += OnDisposed;
+
+            // Update the controls
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Handles the SettingsChanged event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+        }
+
+        /// <summary>
+        /// Called when [disposed].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            Disposed -= OnDisposed;
         }
 
         #region Search
@@ -102,6 +130,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void BuildListView()
         {
+            //Reset selected object and 'all expanded' flag
+            SelectedObject = null;
+            m_allExpanded = false;
+            
             string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
            
             if (String.IsNullOrEmpty(searchText))
@@ -396,7 +428,7 @@ namespace EVEMon.SkillPlanner
                        || ((Blueprint)eo).MaterialRequirements.Any(x => x.Activity.Equals(m_activity));
 
                 // Can not be used when item doesn't support the selected activity
-                if (!m_activityFilter.Equals(ObjectActivityFilter.All) && !m_activityFilter.Equals(ObjectActivityFilter.Any)
+                if ((m_activityFilter.Equals(ObjectActivityFilter.Manufacturing) || m_activityFilter.Equals(ObjectActivityFilter.Invention))
                     && !hasSelectedActivity)
                     return false;
 

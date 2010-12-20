@@ -188,14 +188,74 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Represents the class of a learning skill
+    /// Represents a plan entry sort.
     /// </summary>
-    public enum LearningClass
+    public enum PlanEntrySort
     {
+        /// <summary>
+        /// 
+        /// </summary>
         None,
-        Learning,
-        LowerTierAttribute,
-        UpperTierAttribute
+        /// <summary>
+        /// 
+        /// </summary>
+        Cost,
+        /// <summary>
+        /// 
+        /// </summary>
+        Rank,
+        /// <summary>
+        /// 
+        /// </summary>
+        Name,
+        /// <summary>
+        /// 
+        /// </summary>
+        Priority,
+        /// <summary>
+        /// 
+        /// </summary>
+        PlanGroup,
+        /// <summary>
+        /// 
+        /// </summary>
+        SPPerHour,
+        /// <summary>
+        /// 
+        /// </summary>
+        TrainingTime,
+        /// <summary>
+        /// 
+        /// </summary>
+        TrainingTimeNatural,
+        /// <summary>
+        /// 
+        /// </summary>
+        PrimaryAttribute,
+        /// <summary>
+        /// 
+        /// </summary>
+        SecondaryAttribute,
+        /// <summary>
+        /// 
+        /// </summary>
+        SkillGroupDuration,
+        /// <summary>
+        /// 
+        /// </summary>
+        PercentCompleted,
+        /// <summary>
+        /// 
+        /// </summary>
+        TimeDifference,
+        /// <summary>
+        /// 
+        /// </summary>
+        PlanType,
+        /// <summary>
+        /// 
+        /// </summary>
+        Notes
     }
 
     /// <summary>

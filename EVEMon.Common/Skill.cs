@@ -190,35 +190,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the learning class of this skill
-        /// </summary>
-        public LearningClass LearningClass
-        {
-            get { return m_staticData.LearningClass; }
-        }
-
-        /// <summary>
-        /// Gets true if this skill is an attribute learning skill (i.e. not "learning" !)
-        /// </summary>
-        public bool HasAttributeBonus
-        {
-            get { return m_staticData.AttributeModified != EveAttribute.None; }
-        }
-
-        /// <summary>
         /// Gets whether this skill and all its prereqs are trainable on a trial account.
         /// </summary>
         public bool IsTrainableOnTrialAccount
         {
             get { return m_staticData.IsTrainableOnTrialAccount; }
-        }
-
-        /// <summary>
-        /// Gets which attribute this skill modifies.
-        /// </summary>
-        public EveAttribute AttributeModified
-        {
-            get { return m_staticData.AttributeModified; }
         }
 
         /// <summary>
@@ -329,7 +305,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the training speed, taking into account the noobs bonus (we assumes the skill would be trained right now).
+        /// Gets the training speed.
         /// </summary>
         public int SkillPointsPerHour
         {
@@ -337,7 +313,7 @@ namespace EVEMon.Common
             {
                 int level = Math.Min(m_level + 1, 5);
                 var spPerHour = m_character.GetBaseSPPerHour(this);
-                return (int) Math.Round(spPerHour) * m_character.GetNewCharacterSkillTrainingBonus(this.GetLeftPointsRequiredToLevel(level));
+                return (int)Math.Round(spPerHour);
             }
         }
 

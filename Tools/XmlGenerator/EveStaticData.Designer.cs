@@ -8538,30 +8538,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String flagType
-        {
-            get
-            {
-                return _flagType;
-            }
-            set
-            {
-                OnflagTypeChanging(value);
-                ReportPropertyChanging("flagType");
-                _flagType = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("flagType");
-                OnflagTypeChanged();
-            }
-        }
-        private global::System.String _flagType;
-        partial void OnflagTypeChanging(global::System.String value);
-        partial void OnflagTypeChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int16> orderID
         {
             get

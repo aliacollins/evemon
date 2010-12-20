@@ -33,10 +33,7 @@ namespace EVEMon.SkillPlanner
         public SkillSelectControl()
         {
             InitializeComponent();
-
-            this.Disposed += new EventHandler(OnDisposed);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-        }
+       }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -45,8 +42,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.Disposed -= new EventHandler(OnDisposed);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
+            Disposed -= OnDisposed;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
         }
 
         /// <summary>
@@ -56,8 +53,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void SkillSelectControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
+
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            Disposed += OnDisposed;
 
             cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
             cbSorting.SelectedIndex = (int)Settings.UI.SkillBrowser.Sort;
@@ -69,7 +69,8 @@ namespace EVEMon.SkillPlanner
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
             }
 
-            UpdateContent();
+            // Updates the controls
+            EveClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -77,8 +78,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
+            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+            
             UpdateContent();
         }
 
@@ -150,7 +153,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         public ImageList GetIconSet(int index)
         {
-            return GetIconSet(index, this.ilSkillIcons);
+            return GetIconSet(index, ilSkillIcons);
         }
 
         /// <summary>
@@ -677,12 +680,12 @@ namespace EVEMon.SkillPlanner
         {
             if (lvSortedSkillList.SelectedItems.Count == 0)
             {
-                this.SelectedSkill = null;
+                SelectedSkill = null;
             }
             else
             {
                 ListViewItem lvi = lvSortedSkillList.SelectedItems[0];
-                this.SelectedSkill = lvi.Tag as Skill;
+                SelectedSkill = lvi.Tag as Skill;
             }
         }
 
@@ -826,7 +829,7 @@ namespace EVEMon.SkillPlanner
             {
                 for (int i = 0; i <= 5; i++)
                 {
-                    PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, this.SelectedSkill, i);
+                    PlanHelper.UpdatesRegularPlanToMenu(cmiPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
                 }
             }
         }
@@ -838,7 +841,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
-            if (this.SelectedSkill == null)
+            if (SelectedSkill == null)
             {
                 e.Cancel = true;
                 return;
@@ -847,7 +850,7 @@ namespace EVEMon.SkillPlanner
             // "Plan to N" menus
             for (int i = 0; i <= 5; i++)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, this.SelectedSkill, i);
+                PlanHelper.UpdatesRegularPlanToMenu(cmiLvPlanTo.DropDownItems[i], m_plan, SelectedSkill, i);
             }
 
             // "Show in skill browser"
@@ -921,7 +924,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Open the skill explorer
-            npw.ShowSkillInBrowser(this.SelectedSkill);
+            npw.ShowSkillInBrowser(SelectedSkill);
         }
 
         /// <summary>
@@ -937,7 +940,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Open the skill explorer
-            npw.ShowSkillInExplorer(this.SelectedSkill);
+            npw.ShowSkillInExplorer(SelectedSkill);
         }
         #endregion
 

@@ -13,8 +13,8 @@ namespace EVEMon.SkillPlanner
         public ShipBrowserControl()
         {
             InitializeComponent();
-            this.scObjectBrowser.RememberDistanceKey = "ShipsBrowser_Left";
-            this.Initialize(lvShipProperties, shipSelectControl, true);
+            scObjectBrowser.RememberDistanceKey = "ShipsBrowser_Left";
+            Initialize(lvShipProperties, shipSelectControl, true);
         }
 
         #region Event Handlers
@@ -51,10 +51,10 @@ namespace EVEMon.SkillPlanner
             tbDescription.Text = SelectedObject.Description;
 
             // Recommended Certificates
-            this.recommendedCertificatesControl.Object = SelectedObject;
+            recommendedCertificatesControl.Object = SelectedObject;
             
             // Required Skills
-            this.requiredSkillsControl.Object = SelectedObject;
+            requiredSkillsControl.Object = SelectedObject;
 
             var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
             if (loadoutSelect != null)
@@ -67,8 +67,8 @@ namespace EVEMon.SkillPlanner
         protected override void OnPlanChanged()
         {
             base.OnPlanChanged();
-            this.recommendedCertificatesControl.Plan = this.Plan;
-            this.requiredSkillsControl.Plan = this.Plan;
+            recommendedCertificatesControl.Plan = Plan;
+            requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;

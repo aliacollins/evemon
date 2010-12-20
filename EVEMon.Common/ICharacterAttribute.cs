@@ -6,10 +6,7 @@ namespace EVEMon.Common
     {
         int Base { get; }
         int ImplantBonus { get; }
-        int LowerSkillBonus { get; }
-        int UpperSkillBonus { get; }
-        int PreLearningEffectiveAttribute { get; }
-        float EffectiveValue { get; }
+        int EffectiveValue { get; }
 
 
         /// <summary>
@@ -17,12 +14,10 @@ namespace EVEMon.Common
         /// <list type="bullet">
         /// <item>%n for name (lower case)</item>
         /// <item>%N for name (CamelCase)</item>
-        /// <item>%b for base value</item>
+        /// <item>%B for attribute base value</item>
+        /// <item>%b for base bonus</item>
         /// <item>%i for implant bonus</item>
-        /// <item>%s for skills bonus</item>
-        /// <item>%s1 for lower skill bonus</item>
-        /// <item>%s2 for upper skill bonus</item>
-        /// <item>%f for learning factor</item>
+        /// <item>%r for remapping points</item>
         /// <item>%e for effective value</item>
         /// </list>
         /// </summary>

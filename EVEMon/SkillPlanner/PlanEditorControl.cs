@@ -73,7 +73,6 @@ namespace EVEMon.SkillPlanner
 
             lvSkills.ColumnWidthChanged += lvSkills_ColumnWidthChanged;
             lvSkills.ColumnClick += lvSkills_ColumnClick;
-            tsSortLearning.Click += tsSortLearning_Clicked;
             tsSortPriorities.Click += tsSortPriorities_Clicked;
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
@@ -233,13 +232,17 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the settings changed, the highlights and such may be different. 
-        /// Entries are still the same but we may need to update highlights and others.
+        /// When the settings changed, implant sets, the highlights and such may be different. 
+        /// Entries are still the same but we may need to update implant sets, highlights and others.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
+            UpdateImplantSetList();
+            cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
+            UpdateImplantSet();
+
             UpdateSkillList(true);
         }
 
@@ -388,9 +391,6 @@ namespace EVEMon.SkillPlanner
                     
                     lvSkills.Select();
                 }
-
-                // Enable the "Optimize learning skills order..." if a learning skill is in the plan
-                tsSortLearning.Enabled = m_displayPlan.Any(x => x.Skill.LearningClass != LearningClass.None);
             }
             finally
             {
@@ -817,7 +817,6 @@ namespace EVEMon.SkillPlanner
 
             // Multi-selection
             TimeSpan selectedTrainTime = TimeSpan.Zero;
-            TimeSpan selectedTimeWithLearning = TimeSpan.Zero;
             int entriesCount = SelectedEntries.Count();
 
             // We compute the training time
@@ -826,17 +825,24 @@ namespace EVEMon.SkillPlanner
                 selectedTrainTime += entry.TrainingTime;
             }
 
-            selectedTimeWithLearning = selectedTrainTime;
-
-            bool planHasLearningSkills = m_displayPlan.Any(x => x.Skill.LearningClass != LearningClass.None);
-
-            if (planHasLearningSkills)
-                selectedTimeWithLearning = Plan.TimeWithPrecedingLearning(SelectedEntries);
-
             window.UpdateSkillStatusLabel(true, entriesCount, UniqueSkillsCount);
-            window.UpdateTimeStatusLabel(true, selectedTrainTime, selectedTimeWithLearning);
+            window.UpdateTimeStatusLabel(true, entriesCount, selectedTrainTime);
             window.UpdateCostStatusLabel(true, SkillBooksCost, NotKnownSkillBooksCost);
         }
+
+        /// <summary>
+        /// Updates the implant set.
+        /// </summary>
+        private void UpdateImplantSet()
+        {
+            m_plan.ChosenImplantSet = cbChooseImplantSet.SelectedItem as ImplantSet;
+            m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
+            m_displayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
+
+            if (m_pluggable != null)
+                m_pluggable.UpdateOnImplantSetChange();
+        }
+
         #endregion
 
 
@@ -876,6 +882,7 @@ namespace EVEMon.SkillPlanner
         {
             m_pluggable.Disposed -= pluggable_Disposed;
             m_pluggable = null;
+            UpdateSkillList(true);
             UpdateListColumns();
         }
         #endregion
@@ -1073,7 +1080,6 @@ namespace EVEMon.SkillPlanner
 
             // Since the list is not sorted anymore, we disable/hide the sort buttons and feedback.
             m_plan.SortingPreferences.Order = ThreeStateSortOrder.None;
-            m_plan.SortingPreferences.OptimizeLearning = false;
             m_plan.SortingPreferences.GroupByPriority = false;
             UpdateSortVisualFeedback();
 
@@ -1159,18 +1165,6 @@ namespace EVEMon.SkillPlanner
         private void tsSortPriorities_Clicked(object sender, EventArgs e)
         {
             m_plan.SortingPreferences.GroupByPriority = tsSortPriorities.Checked;
-            UpdateDisplayPlan();
-            UpdateSkillList(true);
-        }
-
-        /// <summary>
-        /// The user toggled the "sort learning" button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsSortLearning_Clicked(object sender, EventArgs e)
-        {
-            m_plan.SortingPreferences.OptimizeLearning = tsSortLearning.Checked;
             UpdateDisplayPlan();
             UpdateSkillList(true);
         }
@@ -1298,7 +1292,6 @@ namespace EVEMon.SkillPlanner
         private void UpdateSortVisualFeedback()
         {
             // Updates the menu icons on the left toolbar
-            tsSortLearning.Checked = m_plan.SortingPreferences.OptimizeLearning;
             tsSortPriorities.Checked = m_plan.SortingPreferences.GroupByPriority;
 
 
@@ -2145,12 +2138,12 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the user clicks the "select columns" link,
+        /// When the user clicks the "select columns" button,
         /// we display the suggestions window and save the changes.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void columnsLink_Click(object sender, LinkLabelLinkClickedEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tsbSelectColumns_Click(object sender, EventArgs e)
         {
             // Update the settings from the current columns
             var columns = ExportColumnSettings();
@@ -2174,13 +2167,8 @@ namespace EVEMon.SkillPlanner
             if (cbChooseImplantSet.SelectedIndex == m_lastImplantSetIndex)
                 return;
 
-            m_plan.ChosenImplantSet = cbChooseImplantSet.SelectedItem as ImplantSet;
-            m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
-            m_displayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
+            UpdateImplantSet();
             UpdateSkillList(true);
-
-            if (m_pluggable != null)
-                m_pluggable.UpdateOnImplantSetChange();
         }
 
         /// <summary>

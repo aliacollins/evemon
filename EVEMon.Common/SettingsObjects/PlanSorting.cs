@@ -27,13 +27,6 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlAttribute("optimizeLearning")]
-        public bool OptimizeLearning
-        {
-            get;
-            set;
-        }
-
         [XmlAttribute("groupByPriority")]
         public bool GroupByPriority
         {

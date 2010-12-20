@@ -55,22 +55,6 @@ namespace EVEMon.Common.Data
                 }
             }
         }
-        
-        /// <summary>
-        /// Gets the "learning" skill
-        /// </summary>
-        public static StaticSkill LearningSkill
-        {
-            get { return m_skillsById[DBConstants.LearningSkillID]; }
-        }
-
-        /// <summary>
-        /// Gets the "learning" skill group
-        /// </summary>
-        public static StaticSkillGroup LearningSkillGroup
-        {
-            get { return m_allGroupsById[DBConstants.LearningSkillsGroupID]; }
-        }
 
         #endregion
 
@@ -124,54 +108,6 @@ namespace EVEMon.Common.Data
         public static StaticSkill GetSkillByArrayIndex(int index)
         {
             return m_skills[index];
-        }
-
-        /// <summary>
-        /// Gets the low-tier learning skill for the given attribute.
-        /// </summary>
-        /// <param name="attrib"></param>
-        /// <returns></returns>
-        public static StaticSkill GetLowerAttributeLearningSkill(EveAttribute attrib)
-        {
-            switch (attrib)
-            {
-                case EveAttribute.Charisma:
-                    return m_skillsById[DBConstants.EmpathySkillID];
-                case EveAttribute.Intelligence:
-                    return m_skillsById[DBConstants.AnalyticalMindSkillID];
-                case EveAttribute.Memory:
-                    return m_skillsById[DBConstants.InstantRecallSkillID];
-                case EveAttribute.Perception:
-                    return m_skillsById[DBConstants.SpatialAwarenessSkillID];
-                case EveAttribute.Willpower:
-                    return m_skillsById[DBConstants.IronWillSkillID];
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the low-tier learning skill for the given attribute.
-        /// </summary>
-        /// <param name="attrib"></param>
-        /// <returns></returns>
-        public static StaticSkill GetUpperAttributeLearningSkill(EveAttribute attrib)
-        {
-            switch (attrib)
-            {
-                case EveAttribute.Charisma:
-                    return m_skillsById[DBConstants.PresenceSkillID];
-                case EveAttribute.Intelligence:
-                    return m_skillsById[DBConstants.LogicSkillID];
-                case EveAttribute.Memory:
-                    return m_skillsById[DBConstants.EideticMemorySkillID];
-                case EveAttribute.Perception:
-                    return m_skillsById[DBConstants.ClaritySkillID];
-                case EveAttribute.Willpower:
-                    return m_skillsById[DBConstants.FocusSkillID];
-                default:
-                    return null;
-            }
         }
 
         /// <summary>

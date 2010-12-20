@@ -357,13 +357,14 @@ namespace EVEMon.SkillPlanner
         private void UpdateNode(TreeNode node)
         {
             Certificate cert = node.Tag as Certificate;
+            ImageList noImageList = new ImageList() { ImageSize = new Size(24, 24) };
 
             // The node represents a certificate
             if (cert != null)
             {
                 switch (cert.Status)
-	            {
-		            case CertificateStatus.Granted:
+                {
+                    case CertificateStatus.Granted:
                         node.ImageIndex = GrantedIcon;
                         break;
                     case CertificateStatus.Claimable:
@@ -377,7 +378,7 @@ namespace EVEMon.SkillPlanner
                         break;
                     default:
                         throw new NotImplementedException();
-	            }
+                }
             }
             // The node represents a skill prerequisite
             else
@@ -432,7 +433,8 @@ namespace EVEMon.SkillPlanner
             if (cert != null)
             {
                 line1 = cert.ToString();
-                supIcon = CertificateIcon;
+                if (!Settings.UI.SafeForWork)
+                    supIcon = CertificateIcon;
                 var status = cert.Status;
 
                 // When not granted or claimable, let's display the training time
@@ -445,7 +447,8 @@ namespace EVEMon.SkillPlanner
             // Or a skill prerequsiite ?
             else
             {
-                supIcon = SkillIcon;
+                if (!Settings.UI.SafeForWork)
+                    supIcon = SkillIcon;
 
                 var skillPrereq = (SkillLevel)e.Node.Tag;
                 line1 = skillPrereq.ToString();

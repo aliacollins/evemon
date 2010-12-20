@@ -27,8 +27,8 @@ namespace EVEMon.SkillPlanner
         public BlueprintBrowserControl()
         {
             InitializeComponent();
-            this.scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
-            this.Initialize(lvManufacturing, blueprintSelectControl, false);
+            scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
+            Initialize(lvManufacturing, blueprintSelectControl, false);
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             lblHelp.Text = "Use the tree on the left to select a blueprint to view.";
@@ -87,8 +87,8 @@ namespace EVEMon.SkillPlanner
 
             // Update Required Skills
             m_activity = GetActivity();
-            this.requiredSkillsControl.Object = SelectedObject;
-            this.requiredSkillsControl.Activity = m_activity;
+            requiredSkillsControl.Object = SelectedObject;
+            requiredSkillsControl.Activity = m_activity;
 
             // Update Facility Modifier
             UpdateFacilityModifier();
@@ -179,7 +179,7 @@ namespace EVEMon.SkillPlanner
                 tabControl.Show();
 
                 // Return focus to selector
-                this.blueprintSelectControl.tvItems.Focus();
+                blueprintSelectControl.tvItems.Focus();
             }
         }
 
@@ -318,12 +318,12 @@ namespace EVEMon.SkillPlanner
                             perfectME = perfectMELevel;
                         
                         // Calculate the needed quantity by the character skills
-                        int youQuantity = (this.Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
+                        int youQuantity = (Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
                             (int)Math.Round(baseMaterialQuantity * (1.25 - (0.05 * productionEfficiencyLevel)) + (baseMaterialQuantity * m_waste), 0, MidpointRounding.AwayFromZero) :
                             baseMaterialQuantity);
 
                         // Calculate the perfect quantity
-                        int perfectQuantity = (this.Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
+                        int perfectQuantity = (Activity == BlueprintActivity.Manufacturing && isRawMaterial ?
                             (int)Math.Round(baseMaterialQuantity * (1 + m_waste), 0, MidpointRounding.AwayFromZero) : baseMaterialQuantity);
 
                         // Add the quantity for every item
@@ -692,7 +692,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             m_activity = GetActivity();
-            this.requiredSkillsControl.Activity = m_activity;
+            requiredSkillsControl.Activity = m_activity;
             UpdateFacilityModifier();
         }
 
@@ -784,7 +784,7 @@ namespace EVEMon.SkillPlanner
             if (blueprint == null)
                 return;
 
-            this.SelectedObject = blueprint;
+            SelectedObject = blueprint;
             InventBlueprintListBox.ClearSelected();
         }
 

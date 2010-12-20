@@ -645,12 +645,6 @@
     <Compile Include="SkillPlanner\SkillTreeDisplay.Designer.cs">
       <DependentUpon>SkillTreeDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\SuggestionWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\SuggestionWindow.Designer.cs">
-      <DependentUpon>SuggestionWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillQueueControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -908,10 +902,6 @@
     <EmbeddedResource Include="SkillPlanner\SkillTreeDisplay.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SkillTreeDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\SuggestionWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SuggestionWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillsPieChart.resx">
       <SubType>Designer</SubType>

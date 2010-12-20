@@ -490,64 +490,6 @@ namespace EVEMon.Common
 
 
         #region Insertion and removal
-        /// <summary>
-        /// Inserts the given learning skill at the best possible position
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
-        public void InsertAtBestPosition(StaticSkill skill, int level)
-        {
-            using (SuspendingEvents())
-            {
-                var entry = new PlanEntry(this, skill, level);
-
-                // Look at prerequisites to search min and max insertion positions
-                int minPosition = 0, maxPosition = m_items.Count;
-                for (int i = 0; i < m_items.Count; i++)
-                {
-                    var pEntry = m_items[i];
-                    if (entry.IsDependentOf(pEntry))
-                    {
-                        minPosition = Math.Max(minPosition, i + 1);
-                    }
-                    if (pEntry.IsDependentOf(entry))
-                    {
-                        maxPosition = Math.Min(maxPosition, i);
-                    }
-                }
-
-                var bestTime = TimeSpan.MaxValue;
-                var bestCandidatePosition = maxPosition;
-                var scratchpad = new CharacterScratchpad(m_character);
-
-                // We now search for the best insertion position
-                for (int index = maxPosition; index >= minPosition; index--)
-                {
-                    using (scratchpad.BeginTemporaryChanges())
-                    {
-                        // Compute list's training time if the next item was inserted at index
-                        for (int i = 0; i <= m_items.Count; i++)
-                        {
-                            if (i < index)
-                                scratchpad.Train(m_items[i]);
-                            else if (i > index)
-                                scratchpad.Train(m_items[i - 1]);
-                            else scratchpad.Train(entry);
-                        }
-
-                        // Is it better with this index ? Then, we retain this as the best candidate
-                        if (bestTime > scratchpad.TrainingTime)
-                        {
-                            bestTime = scratchpad.TrainingTime;
-                            bestCandidatePosition = index;
-                        }
-                    }
-                }
-
-                // Insert at the best candidate position
-                InsertCore(bestCandidatePosition, entry);
-            }
-        }
 
         /// <summary>
         /// Gets true whether a skill set is already planned
@@ -850,14 +792,6 @@ namespace EVEMon.Common
 
 
         #region Sort
-        /// <summary>
-        /// Put the learning skills on top and optimize their orders
-        /// </summary>
-        /// <param name="groupByPriority"></param>
-        public void SortLearningSkills(bool groupByPriority)
-        {
-            Sort(PlanEntrySort.None, false, groupByPriority, true);
-        }
 
         /// <summary>
         /// Sort this plan
@@ -865,10 +799,9 @@ namespace EVEMon.Common
         /// <param name="sort"></param>
         /// <param name="reverseOrder"></param>
         /// <param name="groupByPriority"></param>
-        /// <param name="learningSkillsFirst"></param>
-        public void Sort(PlanEntrySort sort, bool reverseOrder, bool groupByPriority, bool learningSkillsFirst)
+        public void Sort(PlanEntrySort sort, bool reverseOrder, bool groupByPriority)
         {
-            var sorter = new PlanSorter(m_character, m_items, sort, reverseOrder, groupByPriority, learningSkillsFirst);
+            var sorter = new PlanSorter(m_character, m_items, sort, reverseOrder, groupByPriority);
 
             // Perform the sort
             var entries = sorter.Sort(m_character.SkillPoints);
@@ -884,7 +817,7 @@ namespace EVEMon.Common
         public void Sort(PlanSorting settings)
         {
             var criteria = (settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria);
-            this.Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority, settings.OptimizeLearning);
+            this.Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
         }
         #endregion
 
@@ -903,7 +836,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="scratchpad"></param>
         /// <param name="applyRemappingPoints"></param>
-        /// <param name="trainSkills">When true, the character will train every skill, applying learning bonuses, increasing SP, etc.</param>
+        /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateStatistics(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
             var scratchpadWithoutImplants = scratchpad.Clone();
@@ -945,7 +878,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="scratchpad"></param>
         /// <param name="applyRemappingPoints"></param>
-        /// <param name="trainSkills">When true, the character will train every skill, applying learning bonuses, increasing SP, etc.</param>
+        /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateOldTrainingTimes(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
             DateTime time = DateTime.Now;

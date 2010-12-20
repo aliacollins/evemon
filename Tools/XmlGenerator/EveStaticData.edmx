@@ -84,7 +84,7 @@
           <Key>
             <PropertyRef Name="agentTypeID" />
           </Key>
-          <Property Name="agentTypeID" Type="tinyint" Nullable="false" />
+          <Property Name="agentTypeID" Type="int" Nullable="false" />
           <Property Name="agentType" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="agtAgents">
@@ -97,7 +97,7 @@
           <Property Name="locationID" Type="int" />
           <Property Name="level" Type="tinyint" />
           <Property Name="quality" Type="smallint" />
-          <Property Name="agentTypeID" Type="tinyint" />
+          <Property Name="agentTypeID" Type="int" />
         </EntityType>
         <EntityType Name="agtConfig">
           <Key>
@@ -114,7 +114,7 @@
             <PropertyRef Name="typeID" />
           </Key>
           <Property Name="agentID" Type="int" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="chrAncestries">
           <Key>
@@ -153,7 +153,7 @@
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
           <Property Name="maleDescription" Type="nvarchar" MaxLength="1000" />
           <Property Name="femaleDescription" Type="nvarchar" MaxLength="1000" />
-          <Property Name="shipTypeID" Type="smallint" />
+          <Property Name="shipTypeID" Type="int" />
           <Property Name="corporationID" Type="int" />
           <Property Name="perception" Type="tinyint" />
           <Property Name="willpower" Type="tinyint" />
@@ -213,7 +213,7 @@
             <PropertyRef Name="skillID" />
             <PropertyRef Name="corporationID" />
           </Key>
-          <Property Name="skillID" Type="smallint" Nullable="false" />
+          <Property Name="skillID" Type="int" Nullable="false" />
           <Property Name="corporationID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="crpNPCCorporationTrades">
@@ -222,7 +222,7 @@
             <PropertyRef Name="typeID" />
           </Key>
           <Property Name="corporationID" Type="int" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="crpNPCCorporations">
           <Key>
@@ -299,7 +299,7 @@
             <PropertyRef Name="recommendationID" />
           </Key>
           <Property Name="recommendationID" Type="int" Nullable="false" />
-          <Property Name="shipTypeID" Type="smallint" />
+          <Property Name="shipTypeID" Type="int" />
           <Property Name="certificateID" Type="int" />
           <Property Name="recommendationLevel" Type="tinyint" Nullable="false" />
         </EntityType>
@@ -309,7 +309,7 @@
           </Key>
           <Property Name="relationshipID" Type="int" Nullable="false" />
           <Property Name="parentID" Type="int" />
-          <Property Name="parentTypeID" Type="smallint" />
+          <Property Name="parentTypeID" Type="int" />
           <Property Name="parentLevel" Type="tinyint" />
           <Property Name="childID" Type="int" />
         </EntityType>
@@ -374,7 +374,7 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="attributeID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="attributeID" Type="smallint" Nullable="false" />
           <Property Name="valueInt" Type="int" />
           <Property Name="valueFloat" Type="float" />
@@ -384,7 +384,7 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="effectID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="effectID" Type="smallint" Nullable="false" />
           <Property Name="isDefault" Type="bit" />
         </EntityType>
@@ -418,7 +418,7 @@
           <Property Name="itemName" Type="nvarchar" MaxLength="100" />
           <Property Name="categoryID" Type="tinyint" />
           <Property Name="groupID" Type="smallint" />
-          <Property Name="typeID" Type="smallint" />
+          <Property Name="typeID" Type="int" />
         </EntityType>
         <EntityType Name="eveUnits">
           <Key>
@@ -433,9 +433,9 @@
           <Key>
             <PropertyRef Name="blueprintTypeID" />
           </Key>
-          <Property Name="blueprintTypeID" Type="smallint" Nullable="false" />
-          <Property Name="parentBlueprintTypeID" Type="smallint" />
-          <Property Name="productTypeID" Type="smallint" />
+          <Property Name="blueprintTypeID" Type="int" Nullable="false" />
+          <Property Name="parentBlueprintTypeID" Type="int" />
+          <Property Name="productTypeID" Type="int" />
           <Property Name="productionTime" Type="int" />
           <Property Name="techLevel" Type="smallint" />
           <Property Name="researchProductivityTime" Type="int" />
@@ -463,7 +463,7 @@
             <PropertyRef Name="typeID" />
           </Key>
           <Property Name="factionID" Type="int" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="standingLoss" Type="float" />
           <Property Name="confiscateMinSec" Type="float" />
           <Property Name="fineByValue" Type="float" />
@@ -481,8 +481,8 @@
             <PropertyRef Name="controlTowerTypeID" />
             <PropertyRef Name="resourceTypeID" />
           </Key>
-          <Property Name="controlTowerTypeID" Type="smallint" Nullable="false" />
-          <Property Name="resourceTypeID" Type="smallint" Nullable="false" />
+          <Property Name="controlTowerTypeID" Type="int" Nullable="false" />
+          <Property Name="resourceTypeID" Type="int" Nullable="false" />
           <Property Name="purpose" Type="tinyint" />
           <Property Name="quantity" Type="int" />
           <Property Name="minSecurityLevel" Type="float" />
@@ -492,11 +492,10 @@
           <Key>
             <PropertyRef Name="flagID" />
           </Key>
-          <Property Name="flagID" Type="tinyint" Nullable="false" />
-          <Property Name="flagName" Type="varchar" MaxLength="100" />
+          <Property Name="flagID" Type="smallint" Nullable="false" />
+          <Property Name="flagName" Type="varchar" MaxLength="200" />
           <Property Name="flagText" Type="varchar" MaxLength="100" />
-          <Property Name="flagType" Type="varchar" MaxLength="20" />
-          <Property Name="orderID" Type="smallint" />
+          <Property Name="orderID" Type="int" />
         </EntityType>
         <EntityType Name="invGroups">
           <Key>
@@ -539,8 +538,8 @@
           <Key>
             <PropertyRef Name="typeID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
-          <Property Name="parentTypeID" Type="smallint" />
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="parentTypeID" Type="int" />
           <Property Name="metaGroupID" Type="smallint" />
         </EntityType>
         <EntityType Name="invTypeMaterials">
@@ -548,8 +547,8 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="materialTypeID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
-          <Property Name="materialTypeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="materialTypeID" Type="int" Nullable="false" />
           <Property Name="quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="invTypeReactions">
@@ -558,16 +557,16 @@
             <PropertyRef Name="input" />
             <PropertyRef Name="typeID" />
           </Key>
-          <Property Name="reactionTypeID" Type="smallint" Nullable="false" />
+          <Property Name="reactionTypeID" Type="int" Nullable="false" />
           <Property Name="input" Type="bit" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="quantity" Type="smallint" />
         </EntityType>
         <EntityType Name="invTypes">
           <Key>
             <PropertyRef Name="typeID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="groupID" Type="smallint" />
           <Property Name="typeName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
@@ -643,7 +642,7 @@
             <PropertyRef Name="itemID" />
           </Key>
           <Property Name="itemID" Type="int" Nullable="false" />
-          <Property Name="typeID" Type="smallint" />
+          <Property Name="typeID" Type="int" />
           <Property Name="groupID" Type="smallint" />
           <Property Name="solarSystemID" Type="int" />
           <Property Name="constellationID" Type="int" />
@@ -760,7 +759,7 @@
           <Property Name="security" Type="float" />
           <Property Name="factionID" Type="int" />
           <Property Name="radius" Type="float" />
-          <Property Name="sunTypeID" Type="smallint" />
+          <Property Name="sunTypeID" Type="int" />
           <Property Name="securityClass" Type="varchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="mapUniverse">
@@ -794,7 +793,7 @@
             <PropertyRef Name="pinTypeID" />
           </Key>
           <Property Name="schematicID" Type="smallint" Nullable="false" />
-          <Property Name="pinTypeID" Type="smallint" Nullable="false" />
+          <Property Name="pinTypeID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="planetSchematicsTypeMap">
           <Key>
@@ -802,7 +801,7 @@
             <PropertyRef Name="typeID" />
           </Key>
           <Property Name="schematicID" Type="smallint" Nullable="false" />
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="quantity" Type="smallint" />
           <Property Name="isInput" Type="bit" />
         </EntityType>
@@ -824,7 +823,7 @@
           <Property Name="stationID" Type="int" Nullable="false" />
           <Property Name="assemblyLineTypeID" Type="tinyint" Nullable="false" />
           <Property Name="quantity" Type="tinyint" />
-          <Property Name="stationTypeID" Type="smallint" />
+          <Property Name="stationTypeID" Type="int" />
           <Property Name="ownerID" Type="int" />
           <Property Name="solarSystemID" Type="int" />
           <Property Name="regionID" Type="int" />
@@ -889,7 +888,7 @@
             <PropertyRef Name="installationTypeID" />
             <PropertyRef Name="assemblyLineTypeID" />
           </Key>
-          <Property Name="installationTypeID" Type="smallint" Nullable="false" />
+          <Property Name="installationTypeID" Type="int" Nullable="false" />
           <Property Name="assemblyLineTypeID" Type="tinyint" Nullable="false" />
           <Property Name="quantity" Type="tinyint" />
         </EntityType>
@@ -899,9 +898,9 @@
             <PropertyRef Name="activityID" />
             <PropertyRef Name="requiredTypeID" />
           </Key>
-          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="activityID" Type="tinyint" Nullable="false" />
-          <Property Name="requiredTypeID" Type="smallint" Nullable="false" />
+          <Property Name="requiredTypeID" Type="int" Nullable="false" />
           <Property Name="quantity" Type="int" />
           <Property Name="damagePerJob" Type="float" />
           <Property Name="recycle" Type="bit" />
@@ -927,11 +926,11 @@
           <Property Name="hub" Type="tinyint" />
           <Property Name="border" Type="tinyint" />
           <Property Name="ratio" Type="tinyint" />
-          <Property Name="caldariStationTypeID" Type="smallint" />
-          <Property Name="minmatarStationTypeID" Type="smallint" />
-          <Property Name="amarrStationTypeID" Type="smallint" />
-          <Property Name="gallenteStationTypeID" Type="smallint" />
-          <Property Name="joveStationTypeID" Type="smallint" />
+          <Property Name="caldariStationTypeID" Type="int" />
+          <Property Name="minmatarStationTypeID" Type="int" />
+          <Property Name="amarrStationTypeID" Type="int" />
+          <Property Name="gallenteStationTypeID" Type="int" />
+          <Property Name="joveStationTypeID" Type="int" />
         </EntityType>
         <EntityType Name="staServices">
           <Key>
@@ -945,7 +944,7 @@
           <Key>
             <PropertyRef Name="stationTypeID" />
           </Key>
-          <Property Name="stationTypeID" Type="smallint" Nullable="false" />
+          <Property Name="stationTypeID" Type="int" Nullable="false" />
           <Property Name="dockEntryX" Type="float" />
           <Property Name="dockEntryY" Type="float" />
           <Property Name="dockEntryZ" Type="float" />
@@ -967,7 +966,7 @@
           <Property Name="maxShipVolumeDockable" Type="float" />
           <Property Name="officeRentalCost" Type="int" />
           <Property Name="operationID" Type="tinyint" />
-          <Property Name="stationTypeID" Type="smallint" />
+          <Property Name="stationTypeID" Type="int" />
           <Property Name="corporationID" Type="int" />
           <Property Name="solarSystemID" Type="int" />
           <Property Name="constellationID" Type="int" />
@@ -1473,7 +1472,6 @@
           <Property Name="flagID" Type="Byte" Nullable="false" />
           <Property Name="flagName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="flagText" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="flagType" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
           <Property Name="orderID" Type="Int16" />
         </EntityType>
         <EntityType Name="invGroups">
@@ -2422,7 +2420,6 @@
                 <ScalarProperty Name="flagID" ColumnName="flagID" />
                 <ScalarProperty Name="flagName" ColumnName="flagName" />
                 <ScalarProperty Name="flagText" ColumnName="flagText" />
-                <ScalarProperty Name="flagType" ColumnName="flagType" />
                 <ScalarProperty Name="orderID" ColumnName="orderID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3028,7 +3025,7 @@
         <EntityTypeShape EntityType="EveStaticDataModel.invContrabandTypes" Width="1.5" PointX="14.75" PointY="11.75" Height="2.1725878906249996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResourcePurposes" Width="1.5" PointX="12.75" PointY="14.75" Height="1.4033821614583317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invControlTowerResources" Width="1.5" PointX="14.75" PointY="14.75" Height="2.1725878906249996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invFlags" Width="1.5" PointX="16.75" PointY="0.75" Height="1.9802864583333333" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invFlags" Width="1.5" PointX="16.75" PointY="0.75" Height="1.787985026041667" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invGroups" Width="1.5" PointX="16.75" PointY="3.75" Height="3.3263964843749996" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invMarketGroups" Width="1.5" PointX="4.75" PointY="16.75" Height="2.1725878906250031" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invMetaGroups" Width="1.5" PointX="6.75" PointY="16.75" Height="1.7879850260416674" IsExpanded="true" />

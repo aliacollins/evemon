@@ -113,11 +113,14 @@ namespace EVEMon
                 // safe for work implementation
                 MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
                 MainTableLayoutPanel.ColumnStyles[0].Width = 0;
+                CharacterPortrait.Visible = !Settings.UI.SafeForWork;
 
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
-                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
-                CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", m_character.CorporationName);
+                BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                    "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
+                CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                    "Corporation: {0}", m_character.CorporationName);
                 
                 FormatBalance();
 
@@ -137,7 +140,8 @@ namespace EVEMon
             if (m_character == null)
                 return;
 
-            BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture, "Balance: {0:N} ISK", m_character.Balance);
+            BalanceLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                "Balance: {0:N} ISK", m_character.Balance);
 
             var ccpCharacter = m_character as CCPCharacter;
 
@@ -284,11 +288,11 @@ namespace EVEMon
         /// </summary>
         private void FormatAttributes()
         {
-            SetAttributeLabel(AttributeInteligenceLabel, m_character, EveAttribute.Intelligence);
-            SetAttributeLabel(AttributePerceptionLabel, m_character, EveAttribute.Perception);
-            SetAttributeLabel(AttributeCharismaLabel, m_character, EveAttribute.Charisma);
-            SetAttributeLabel(AttributeWillpowerLabel, m_character, EveAttribute.Willpower);
-            SetAttributeLabel(AttributeMemoryLabel, m_character, EveAttribute.Memory);
+            SetAttributeLabel(lblINTAttribute, m_character, EveAttribute.Intelligence);
+            SetAttributeLabel(lblPERAttribute, m_character, EveAttribute.Perception);
+            SetAttributeLabel(lblCHAAttribute, m_character, EveAttribute.Charisma);
+            SetAttributeLabel(lblWILAttribute, m_character, EveAttribute.Willpower);
+            SetAttributeLabel(lblMEMAttribute, m_character, EveAttribute.Memory);
         }
 
         /// <summary>
@@ -427,7 +431,8 @@ namespace EVEMon
         /// <returns>New menu item for a monitor.</returns>
         private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
-            string menuText = String.Format(CultureConstants.DefaultCulture, "Update {0} {1}", monitor.ToString(), GenerateTimeToNextUpdateText(monitor));
+            string menuText = String.Format(CultureConstants.DefaultCulture,
+                "Update {0} {1}", monitor.ToString(), GenerateTimeToNextUpdateText(monitor));
 
             var menu = new ToolStripMenuItem(menuText)
             {
@@ -446,11 +451,7 @@ namespace EVEMon
         /// <returns>Formatted string describing the attribute and its value.</returns>
         private static void SetAttributeLabel(Label label, Character character, EveAttribute eveAttribute)
         {
-            label.Text = String.Format(
-                CultureConstants.DefaultCulture,
-                "{0}: {1:0.00}",
-                eveAttribute,
-                character[eveAttribute].EffectiveValue);
+            label.Text = character[eveAttribute].EffectiveValue.ToString(CultureConstants.DefaultCulture);
 
             label.Tag = eveAttribute;
         }
@@ -707,7 +708,7 @@ namespace EVEMon
 
         /// <summary>
         /// When the user hovers over one of the attribute label, we display a tooltip such as :
-        /// 19.8 [(7 base + 7 skills + 4 implants) * 1.10 from learning bonus]
+        /// 19.8 (7 base + 7 remap points + 4 implants)
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -719,7 +720,7 @@ namespace EVEMon
 
             // format the values for the tooltip
             ICharacterAttribute attribute = m_character[eveAttribute];
-            string toolTip = attribute.ToString("%e [(%b base + %s skills + %i implants) * %f from learning bonus]");
+            string toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
             ToolTip.SetToolTip(attributeLabel, toolTip);
         }
 

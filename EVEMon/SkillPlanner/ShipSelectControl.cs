@@ -169,47 +169,27 @@ namespace EVEMon.SkillPlanner
         {
             int numberOfItems = 0;
             tvItems.BeginUpdate();
-            tvItems.Nodes.Clear();
             try
             {
+                tvItems.Nodes.Clear();
+
                 // Create the nodes
-                foreach (var typeGroup in StaticItems.Ships.SubGroups)
+                foreach (MarketGroup group in StaticItems.Ships.SubGroups)
                 {
-                    // Sub groups
-                    TreeNode typeNode = new TreeNode(typeGroup.Name);
-                    foreach (var raceGroup in typeGroup.SubGroups)
+                    TreeNode node = new TreeNode() 
                     {
-                        // Items
-                        TreeNode raceNode = new TreeNode(raceGroup.Name);
-                        foreach (var ship in raceGroup.Items.Where(m_usabilityPredicate).Where(m_racePredicate))
-                        {
-                            TreeNode shipNode = new TreeNode(ship.Name);
-                            shipNode.Tag = ship;
+                        Text = group.Name
+                    };
 
-                            numberOfItems++;
-                            raceNode.Nodes.Add(shipNode);
-                        }
+                    int result = BuildSubtree(group, node.Nodes);
 
-                        // Dont display empty nodes
-                        if (raceNode.Nodes.Count != 0)
-                            typeNode.Nodes.Add(raceNode);
-                    }
-
-                    // Items
-                    foreach (var ship in typeGroup.Items)
+                    if (result != 0)
                     {
-                        TreeNode shipNode = new TreeNode(ship.Name);
-                        shipNode.Tag = ship;
-
-                        numberOfItems++;
-                        typeNode.Nodes.Add(shipNode);
+                        numberOfItems += result;
+                        tvItems.Nodes.Add(node);
                     }
-
-                    // Dont display empty nodes
-                    if (typeNode.Nodes.Count != 0)
-                        tvItems.Nodes.Add(typeNode);
                 }
-            }
+                            }
             finally
             {
                 tvItems.EndUpdate();
@@ -221,6 +201,48 @@ namespace EVEMon.SkillPlanner
                     m_allExpanded = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Create the tree nodes for the given group and add them to the given nodes collection
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="nodeCollection"></param>
+        /// <returns></returns>
+        private int BuildSubtree(MarketGroup group, TreeNodeCollection nodeCollection)
+        {
+            // Total items count in this category and its subcategories
+            int result = 0;
+
+            // Add all subcategories
+            foreach (MarketGroup childGroup in group.SubGroups)
+            {
+                TreeNode node = new TreeNode()
+                {
+                    Text = childGroup.Name
+                };
+
+                // Add this subcategory's items count
+                result += BuildSubtree(childGroup, node.Nodes);
+
+                // Only add if this subcategory has children
+                if (node.GetNodeCount(true) > 0)
+                    nodeCollection.Add(node);
+            }
+
+            // Add all items
+            foreach (Item childItem in group.Items.Where(m_usabilityPredicate).Where(m_racePredicate))
+            {
+                TreeNode node = new TreeNode()
+                {
+                    Text = childItem.Name,
+                    Tag = childItem
+                };
+
+                nodeCollection.Add(node);
+                result++;
+            }
+            return result;
         }
 
         #endregion

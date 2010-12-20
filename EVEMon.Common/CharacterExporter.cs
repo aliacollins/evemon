@@ -105,10 +105,12 @@ namespace EVEMon.Common
         {
             StringBuilder builder = new StringBuilder();
 
-            foreach (var skill in character.Skills.Where(x => (x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
-                                                                        && x.Group.ID != DBConstants.LearningSkillsGroupID
-                                                                        && x.Group.ID != DBConstants.SocialSkillsGroupID
-                                                                        && x.Group.ID != DBConstants.TradeSkillsGroupID)).Select(x => GetMergedSkill(plan, x)))
+            foreach (var skill in character.Skills
+                .Where(x => (x.IsPublic
+                    && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
+                && x.Group.ID != DBConstants.SocialSkillsGroupID
+                && x.Group.ID != DBConstants.TradeSkillsGroupID))
+                .Select(x => GetMergedSkill(plan, x)))
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0}={1}{2}", skill.Name, skill.Level, Environment.NewLine);
             }

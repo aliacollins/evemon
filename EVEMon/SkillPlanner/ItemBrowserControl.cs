@@ -13,8 +13,8 @@ namespace EVEMon.SkillPlanner
         public ItemBrowserControl()
         {
             InitializeComponent();
-            this.scObjectBrowser.RememberDistanceKey = "ItemBrowser_Left";
-            this.Initialize(lvItemProperties, itemSelectControl, false);
+            scObjectBrowser.RememberDistanceKey = "ItemBrowser_Left";
+            Initialize(lvItemProperties, itemSelectControl, false);
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace EVEMon.SkillPlanner
             tbDescription.Text = SelectedObject.Description;
 
             // Required Skills
-            this.requiredSkillsControl.Object = SelectedObject;
+            requiredSkillsControl.Object = SelectedObject;
         }
 
         /// <summary>

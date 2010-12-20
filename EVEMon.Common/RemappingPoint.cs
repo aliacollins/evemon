@@ -173,15 +173,15 @@ namespace EVEMon.Common
 
             if (bonusDifference == 0)
             {
-                return newScratchpad[attrib].ToString("%N (0) = %e = (%b + %s + %i) * %f");
+                return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
             }
             else if (bonusDifference > 0)
             {
-                return newScratchpad[attrib].ToString("%N (+" + bonusDifference.ToString() + ") = %e = (%b + %s + %i) * %f");
+                return newScratchpad[attrib].ToString(String.Format("%N (+{0}) = %e = (%B + %r + %i)", bonusDifference));
             }
             else
             {
-                return newScratchpad[attrib].ToString("%N (" + bonusDifference.ToString() + ") = %e = (%b + %s + %i) * %f");
+                return newScratchpad[attrib].ToString(String.Format("%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
             }
         }
 

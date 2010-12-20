@@ -22,27 +22,34 @@ namespace EVEMon.SkillPlanner
         public CertificateBrowserControl()
         {
             InitializeComponent();
-            this.rightSplitContainer.RememberDistanceKey = "CertificateBrowser_Right";
-            this.leftSplitContainer.RememberDistanceKey = "CertificateBrowser_Left";
+            rightSplitContainer.RememberDistanceKey = "CertificateBrowser_Right";
+            leftSplitContainer.RememberDistanceKey = "CertificateBrowser_Left";
+        }
 
-            this.lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
-            this.certSelectCtl.SelectionChanged += new EventHandler<EventArgs>(certSelectCtl_SelectionChanged);
-            this.certDisplayCtl.SelectionChanged += new EventHandler(certDisplayCtl_SelectionChanged);
+        /// <summary>
+        /// On load.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
 
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
+            certDisplayCtl.SelectionChanged += certDisplayCtl_SelectionChanged;
 
-            // Read the SafeForWork settings
-            if (Settings.UI.SafeForWork)
-            {
-                pictureBox1.Visible = false;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            }
-            else 
-            {
-                pictureBox1.Visible = true;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            }
+            EveClient.PlanChanged += EveClient_PlanChanged;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            Disposed += OnDisposed;
+            
+            // Reposition the help text along side the treeview
+            Control[] result = certSelectCtl.Controls.Find("pnlResults", true);
+            if (result.Length > 0)
+                lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
+
+            // Check SafeForWork setting
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -52,8 +59,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            certSelectCtl.SelectionChanged -= certSelectCtl_SelectionChanged;
+            certDisplayCtl.SelectionChanged -= certDisplayCtl_SelectionChanged;
+
+            EveClient.PlanChanged -= EveClient_PlanChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -74,8 +85,8 @@ namespace EVEMon.SkillPlanner
             {
                 m_plan = value;
 
-                this.certSelectCtl.Plan = m_plan;
-                this.certDisplayCtl.Plan = m_plan;
+                certSelectCtl.Plan = m_plan;
+                certDisplayCtl.Plan = m_plan;
                 UpdateEligibility();
             }
         }
@@ -87,11 +98,11 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                return this.certSelectCtl.SelectedCertificateClass;
+                return certSelectCtl.SelectedCertificateClass;
             }
             set
             {
-                this.certSelectCtl.SelectedCertificateClass = value;
+                certSelectCtl.SelectedCertificateClass = value;
             }
         }
 
@@ -102,9 +113,10 @@ namespace EVEMon.SkillPlanner
         {
             set
             {
-                if(this.SelectedCertificateClass != value.Class)
-                    this.SelectedCertificateClass = value.Class;
-                this.certDisplayCtl.ExpandCert(value);
+                if (SelectedCertificateClass != value.Class)
+                    SelectedCertificateClass = value.Class;
+
+                certDisplayCtl.ExpandCert(value);
             }
         }
 
@@ -115,31 +127,40 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void certSelectCtl_SelectionChanged(object sender, EventArgs e)
         {
-            var certClass = this.certSelectCtl.SelectedCertificateClass;
-            this.certDisplayCtl.CertificateClass = certClass;
+            var certClass = certSelectCtl.SelectedCertificateClass;
+            certDisplayCtl.CertificateClass = certClass;
 
             // When no certificate class is selected, we just hide the right panel.
             if (certClass == null)
             {
+                // View help message
+                lblHelp.Visible = true;
+
                 panelRight.Visible = false;
                 return;
             }
 
+            // Hide help message
+            lblHelp.Visible = false;
+
+            // Updates controls visibility
             panelRight.Visible = true;
+
             var firstCert = certClass.LowestGradeCertificate;
-            lblName.Text = certClass.Name + (firstCert == null ? String.Empty : " " + firstCert.Grade.ToString());
+            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                certClass.Name, (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             lblCategory.Text = certClass.Category.Name;
 
             // Initialize the labels' text for every existing grade
             List<Control> newItems = new List<Control>();
             Label[] labels = new Label[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
             int lbIndex = 0;
-            var rSplCont = this.rightSplitContainer;
+            var rSplCont = rightSplitContainer;
             foreach (var cert in certClass)
             {
                 var label = labels[lbIndex];
                 var time = cert.GetTrainingTime();
-                label.Text = String.Format("{0} : {1}",
+                label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
                     cert.Grade, time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
                 label.Visible = true;
                 lbIndex++;
@@ -154,7 +175,7 @@ namespace EVEMon.SkillPlanner
                     Label tsl = new Label();
                     tsl.AutoSize = true;
                     tsl.Dock = DockStyle.Top;
-                    tsl.Text = String.Format("Recommends {0}:", cert.Grade.ToString());
+                    tsl.Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade.ToString());
                     tsl.Font = new Font(tsl.Font, FontStyle.Bold);
                     tsl.Padding = new Padding(5);
                     newItems.Add(tsl);
@@ -178,7 +199,7 @@ namespace EVEMon.SkillPlanner
                     }
                 }
             }
-            this.rightSplitContainer.Panel2.Controls.Clear();
+            rightSplitContainer.Panel2.Controls.Clear();
             if (newItems.Count != 0)
             {
                 newItems.Reverse();
@@ -233,31 +254,53 @@ namespace EVEMon.SkillPlanner
         void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
             var cert = certDisplayCtl.SelectedCertificateLevel;
-            var certClass = this.certSelectCtl.SelectedCertificateClass;
+            var certClass = certSelectCtl.SelectedCertificateClass;
 
             // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
             if (cert == null || cert.Class != certClass)
             {
                 var firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
-                lblName.Text = certClass.Name + (firstCert == null ? String.Empty : " " + firstCert.Grade.ToString());
+                lblName.Text = String.Format("{0} {1}", certClass.Name,
+                    (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             }
             // So, one of our cert class's grades has been selected, we use its description
             else
             {
                 textboxDescription.Text = cert.Description;
-                lblName.Text = certClass.Name + " " + cert.Grade.ToString();
+                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade.ToString());
             }
         }
 
         /// <summary>
-        /// When the current plan changes (new skills, etc), we need to update some informations
+        /// When the current plan changes (new skills, etc), we need to update some informations.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
-            if(e.Plan == m_plan) UpdateEligibility();
+            if (e.Plan == m_plan)
+                UpdateEligibility();
+        }
+
+        /// <summary>
+        /// When the settings changes, we need to update.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            // Read the SafeForWork settings
+            if (Settings.UI.SafeForWork)
+            {
+                pictureBox1.Visible = false;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            }
+            else
+            {
+                pictureBox1.Visible = true;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            }
         }
 
         /// <summary>
@@ -266,14 +309,16 @@ namespace EVEMon.SkillPlanner
         private void UpdateEligibility()
         {
             Certificate lastEligibleCert = null;
-            var certClass = this.certSelectCtl.SelectedCertificateClass;
+            var certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass != null)
             {
                 // First we search the highest eligible certificate after this plan
                 foreach (var cert in certClass)
                 {
-                    if (!m_plan.WillGrantEligibilityFor(cert)) break;
+                    if (!m_plan.WillGrantEligibilityFor(cert))
+                        break;
+
                     lastEligibleCert = cert;
                 }
 
@@ -292,7 +337,8 @@ namespace EVEMon.SkillPlanner
                     }
                     else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
                     {
-                        tslbEligible.Text += " (improved from \"" + highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture) + "\")";
+                        tslbEligible.Text += String.Format(" (improved from \"{0}\")",
+                            highestClaimedCertificate.Grade.ToString().ToLower(CultureConstants.DefaultCulture));
                     }
                     else
                     {
@@ -314,7 +360,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="certClass">The selected certificate class</param>
         /// <param name="grade">The grade represent by this menu</param>
         /// <param name="lastEligibleCert">The highest eligible certificate after this plan</param>
-        private void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass, CertificateGrade grade, Certificate lastEligibleCert)
+        private void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass,
+                                              CertificateGrade grade, Certificate lastEligibleCert)
         {
             var cert = certClass[grade];
             if (cert == null)
@@ -332,25 +379,25 @@ namespace EVEMon.SkillPlanner
 
         private void tsPlanToBasic_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
+            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
             PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToStandard_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
+            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
             PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToImproved_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
+            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
             PlanHelper.SelectPerform(operation);
         }
 
         private void tsPlanToElite_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(this.certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
+            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
             PlanHelper.SelectPerform(operation);
         }
     }

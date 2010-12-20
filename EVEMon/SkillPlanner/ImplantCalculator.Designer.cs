@@ -29,7 +29,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.gbAttributes = new System.Windows.Forms.GroupBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.AtrributesPanel = new System.Windows.Forms.Panel();
             this.lblEffectiveWillpower = new System.Windows.Forms.Label();
             this.nudIntelligence = new System.Windows.Forms.NumericUpDown();
             this.lblEffectiveMemory = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@ namespace EVEMon.SkillPlanner
             this.nudWillpower = new System.Windows.Forms.NumericUpDown();
             this.lblAdjustPerception = new System.Windows.Forms.Label();
             this.lblAdjustIntelligence = new System.Windows.Forms.Label();
-            this.lblBase = new System.Windows.Forms.Label();
+            this.lblImplants = new System.Windows.Forms.Label();
             this.gbCurrentBase = new System.Windows.Forms.GroupBox();
             this.lblBaseDate = new System.Windows.Forms.Label();
             this.lblBaseSpan = new System.Windows.Forms.Label();
@@ -74,7 +74,7 @@ namespace EVEMon.SkillPlanner
             this.miJumpClone5 = new System.Windows.Forms.ToolStripMenuItem();
             this.lblNotice = new System.Windows.Forms.Label();
             this.gbAttributes.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.AtrributesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCharisma)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).BeginInit();
@@ -88,7 +88,7 @@ namespace EVEMon.SkillPlanner
             // 
             // gbAttributes
             // 
-            this.gbAttributes.Controls.Add(this.panel1);
+            this.gbAttributes.Controls.Add(this.AtrributesPanel);
             this.gbAttributes.Location = new System.Drawing.Point(9, 25);
             this.gbAttributes.Name = "gbAttributes";
             this.gbAttributes.Size = new System.Drawing.Size(249, 188);
@@ -98,37 +98,37 @@ namespace EVEMon.SkillPlanner
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lblEffectiveWillpower);
-            this.panel1.Controls.Add(this.nudIntelligence);
-            this.panel1.Controls.Add(this.lblEffectiveMemory);
-            this.panel1.Controls.Add(this.lblIntelligence);
-            this.panel1.Controls.Add(this.lblEffectivePerception);
-            this.panel1.Controls.Add(this.nudCharisma);
-            this.panel1.Controls.Add(this.nudPerception);
-            this.panel1.Controls.Add(this.lblMemory);
-            this.panel1.Controls.Add(this.lblCharisma);
-            this.panel1.Controls.Add(this.lblAdjustMemory);
-            this.panel1.Controls.Add(this.lblEffectiveCharisma);
-            this.panel1.Controls.Add(this.nudMemory);
-            this.panel1.Controls.Add(this.lblEffectiveIntelligence);
-            this.panel1.Controls.Add(this.lbWillpower);
-            this.panel1.Controls.Add(this.lblAdjustCharisma);
-            this.panel1.Controls.Add(this.lblEffective);
-            this.panel1.Controls.Add(this.lblAdjustWillpower);
-            this.panel1.Controls.Add(this.lblPerception);
-            this.panel1.Controls.Add(this.nudWillpower);
-            this.panel1.Controls.Add(this.lblAdjustPerception);
-            this.panel1.Controls.Add(this.lblAdjustIntelligence);
-            this.panel1.Controls.Add(this.lblBase);
-            this.panel1.Location = new System.Drawing.Point(12, 20);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(231, 157);
-            this.panel1.TabIndex = 5;
+            this.AtrributesPanel.Controls.Add(this.lblEffectiveWillpower);
+            this.AtrributesPanel.Controls.Add(this.nudIntelligence);
+            this.AtrributesPanel.Controls.Add(this.lblEffectiveMemory);
+            this.AtrributesPanel.Controls.Add(this.lblIntelligence);
+            this.AtrributesPanel.Controls.Add(this.lblEffectivePerception);
+            this.AtrributesPanel.Controls.Add(this.nudCharisma);
+            this.AtrributesPanel.Controls.Add(this.nudPerception);
+            this.AtrributesPanel.Controls.Add(this.lblMemory);
+            this.AtrributesPanel.Controls.Add(this.lblCharisma);
+            this.AtrributesPanel.Controls.Add(this.lblAdjustMemory);
+            this.AtrributesPanel.Controls.Add(this.lblEffectiveCharisma);
+            this.AtrributesPanel.Controls.Add(this.nudMemory);
+            this.AtrributesPanel.Controls.Add(this.lblEffectiveIntelligence);
+            this.AtrributesPanel.Controls.Add(this.lbWillpower);
+            this.AtrributesPanel.Controls.Add(this.lblAdjustCharisma);
+            this.AtrributesPanel.Controls.Add(this.lblEffective);
+            this.AtrributesPanel.Controls.Add(this.lblAdjustWillpower);
+            this.AtrributesPanel.Controls.Add(this.lblPerception);
+            this.AtrributesPanel.Controls.Add(this.nudWillpower);
+            this.AtrributesPanel.Controls.Add(this.lblAdjustPerception);
+            this.AtrributesPanel.Controls.Add(this.lblAdjustIntelligence);
+            this.AtrributesPanel.Controls.Add(this.lblImplants);
+            this.AtrributesPanel.Location = new System.Drawing.Point(12, 20);
+            this.AtrributesPanel.Name = "panel1";
+            this.AtrributesPanel.Size = new System.Drawing.Size(231, 157);
+            this.AtrributesPanel.TabIndex = 5;
             // 
             // lblEffectiveWillpower
             // 
             this.lblEffectiveWillpower.AutoSize = true;
-            this.lblEffectiveWillpower.Location = new System.Drawing.Point(168, 107);
+            this.lblEffectiveWillpower.Location = new System.Drawing.Point(174, 107);
             this.lblEffectiveWillpower.Name = "lblEffectiveWillpower";
             this.lblEffectiveWillpower.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveWillpower.TabIndex = 17;
@@ -150,6 +150,7 @@ namespace EVEMon.SkillPlanner
             this.nudIntelligence.Name = "nudIntelligence";
             this.nudIntelligence.Size = new System.Drawing.Size(39, 21);
             this.nudIntelligence.TabIndex = 3;
+            this.nudIntelligence.Tag = "0";
             this.nudIntelligence.Value = new decimal(new int[] {
             1,
             0,
@@ -160,7 +161,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveMemory
             // 
             this.lblEffectiveMemory.AutoSize = true;
-            this.lblEffectiveMemory.Location = new System.Drawing.Point(168, 134);
+            this.lblEffectiveMemory.Location = new System.Drawing.Point(174, 134);
             this.lblEffectiveMemory.Name = "lblEffectiveMemory";
             this.lblEffectiveMemory.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveMemory.TabIndex = 21;
@@ -178,7 +179,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectivePerception
             // 
             this.lblEffectivePerception.AutoSize = true;
-            this.lblEffectivePerception.Location = new System.Drawing.Point(168, 53);
+            this.lblEffectivePerception.Location = new System.Drawing.Point(174, 53);
             this.lblEffectivePerception.Name = "lblEffectivePerception";
             this.lblEffectivePerception.Size = new System.Drawing.Size(35, 13);
             this.lblEffectivePerception.TabIndex = 9;
@@ -200,6 +201,7 @@ namespace EVEMon.SkillPlanner
             this.nudCharisma.Name = "nudCharisma";
             this.nudCharisma.Size = new System.Drawing.Size(39, 21);
             this.nudCharisma.TabIndex = 11;
+            this.nudCharisma.Tag = "2";
             this.nudCharisma.Value = new decimal(new int[] {
             1,
             0,
@@ -223,6 +225,7 @@ namespace EVEMon.SkillPlanner
             this.nudPerception.Name = "nudPerception";
             this.nudPerception.Size = new System.Drawing.Size(39, 21);
             this.nudPerception.TabIndex = 7;
+            this.nudPerception.Tag = "1";
             this.nudPerception.Value = new decimal(new int[] {
             1,
             0,
@@ -260,7 +263,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveCharisma
             // 
             this.lblEffectiveCharisma.AutoSize = true;
-            this.lblEffectiveCharisma.Location = new System.Drawing.Point(168, 80);
+            this.lblEffectiveCharisma.Location = new System.Drawing.Point(174, 80);
             this.lblEffectiveCharisma.Name = "lblEffectiveCharisma";
             this.lblEffectiveCharisma.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveCharisma.TabIndex = 13;
@@ -282,6 +285,7 @@ namespace EVEMon.SkillPlanner
             this.nudMemory.Name = "nudMemory";
             this.nudMemory.Size = new System.Drawing.Size(39, 21);
             this.nudMemory.TabIndex = 19;
+            this.nudMemory.Tag = "4";
             this.nudMemory.Value = new decimal(new int[] {
             1,
             0,
@@ -292,7 +296,7 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveIntelligence
             // 
             this.lblEffectiveIntelligence.AutoSize = true;
-            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(168, 26);
+            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(174, 26);
             this.lblEffectiveIntelligence.Name = "lblEffectiveIntelligence";
             this.lblEffectiveIntelligence.Size = new System.Drawing.Size(35, 13);
             this.lblEffectiveIntelligence.TabIndex = 5;
@@ -359,6 +363,7 @@ namespace EVEMon.SkillPlanner
             this.nudWillpower.Name = "nudWillpower";
             this.nudWillpower.Size = new System.Drawing.Size(39, 21);
             this.nudWillpower.TabIndex = 15;
+            this.nudWillpower.Tag = "3";
             this.nudWillpower.Value = new decimal(new int[] {
             1,
             0,
@@ -384,14 +389,14 @@ namespace EVEMon.SkillPlanner
             this.lblAdjustIntelligence.TabIndex = 4;
             this.lblAdjustIntelligence.Text = "+0";
             // 
-            // lblBase
+            // lblImplants
             // 
-            this.lblBase.AutoSize = true;
-            this.lblBase.Location = new System.Drawing.Point(128, 2);
-            this.lblBase.Name = "lblBase";
-            this.lblBase.Size = new System.Drawing.Size(30, 13);
-            this.lblBase.TabIndex = 0;
-            this.lblBase.Text = "Base";
+            this.lblImplants.AutoSize = true;
+            this.lblImplants.Location = new System.Drawing.Point(117, 2);
+            this.lblImplants.Name = "lblImplants";
+            this.lblImplants.Size = new System.Drawing.Size(48, 13);
+            this.lblImplants.TabIndex = 0;
+            this.lblImplants.Text = "Implants";
             // 
             // gbCurrentBase
             // 
@@ -579,8 +584,8 @@ namespace EVEMon.SkillPlanner
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Implant Calculator";
             this.gbAttributes.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.AtrributesPanel.ResumeLayout(false);
+            this.AtrributesPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudIntelligence)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCharisma)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudPerception)).EndInit();
@@ -612,7 +617,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.NumericUpDown nudMemory;
         private System.Windows.Forms.NumericUpDown nudPerception;
         private System.Windows.Forms.NumericUpDown nudCharisma;
-        private System.Windows.Forms.Label lblBase;
+        private System.Windows.Forms.Label lblImplants;
         private System.Windows.Forms.Label lblEffectiveWillpower;
         private System.Windows.Forms.Label lblEffectiveMemory;
         private System.Windows.Forms.Label lblEffectivePerception;
@@ -633,7 +638,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.GroupBox gbWithThisAttributes;
         private System.Windows.Forms.Label lblThisDate;
         private System.Windows.Forms.Label lblThisSpan;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel AtrributesPanel;
         private System.Windows.Forms.Label lblComparedToCurrent;
         private System.Windows.Forms.Label lblComparedToBase;
         private System.Windows.Forms.MenuStrip menuStrip1;

@@ -338,7 +338,7 @@ namespace EVEMon.Common
             m_totalSP = character.SkillPoints + sp;
             m_trainingTime = character.GetTrainingTime(m_skill, m_level);
             m_naturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
-            m_spPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill)) * character.GetNewCharacterSkillTrainingBonus(sp);
+            m_spPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill));
             m_endTime = time + m_trainingTime;
             m_startTime = time;
             time = m_endTime;

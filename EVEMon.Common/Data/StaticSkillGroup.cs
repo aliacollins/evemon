@@ -53,14 +53,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets true if the group is the "learning" group
-        /// </summary>
-        public bool IsLearningGroup
-        {
-            get { return m_ID == DBConstants.LearningSkillsGroupID; }
-        }
-
-        /// <summary>
         /// Gets a skill from this group by its id
         /// </summary>
         /// <param name="name"></param>

@@ -7,7 +7,7 @@ using EVEMon.Common.Data;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a character class designed for computations and temporary modifications (skill learnings, new implants, remaps, etc)
+    /// Represents a character class designed for computations and temporary modifications (new implants, remaps, etc)
     /// </summary>
     public sealed class CharacterScratchpad : BaseCharacter
     {
@@ -19,7 +19,6 @@ namespace EVEMon.Common
         private readonly int[] m_skillSP;
 
         private TimeSpan m_trainingTime = TimeSpan.Zero;
-        private float m_learningFactor = 1.0f;
         private int m_totalSP;
 
         /// <summary>
@@ -41,6 +40,7 @@ namespace EVEMon.Common
         }
 
         #region Core properties
+
         /// <summary>
         /// Gets the character used to build this scratchpad
         /// </summary>
@@ -58,17 +58,11 @@ namespace EVEMon.Common
             set { m_totalSP = value; }
         }
 
-        /// <summary>
-        /// Gets the factor caused by the "learning" skill (number between 1.0 and 1.25).
-        /// </summary>
-        public float LearningFactor
-        {
-            get { return m_learningFactor; }
-        }
         #endregion
 
 
         #region Attributes
+
         /// <summary>
         /// Gets the intelligence of the character.
         /// </summary> 
@@ -142,10 +136,12 @@ namespace EVEMon.Common
                 m_attributes[i].ImplantBonus = 0;
             }
         }
+
         #endregion
 
 
         #region Overriden methods
+
         /// <summary>
         /// Gets the total skill points.
         /// </summary>
@@ -184,10 +180,12 @@ namespace EVEMon.Common
         {
             return m_attributes[(int)attribute];
         }
+
         #endregion
 
 
         #region Training and skill levels updates
+
         /// <summary>
         /// Gets or sets the total training time. Note the training time is always zero when you create a scratchpad from a character.
         /// </summary>
@@ -320,9 +318,6 @@ namespace EVEMon.Common
                 UpdateSP(skill, level);
             }
 
-            // Apply learning bonuses
-            ApplyEffects(skill, level);
-
             // Updates the skill level
             m_skillLevels[index] = level;
         }
@@ -341,39 +336,11 @@ namespace EVEMon.Common
             m_totalSP += difference;
         }
 
-        /// <summary>
-        /// Applies the effect of a learning skill
-        /// </summary>
-        /// <param name="staticSkill"></param>
-        /// <param name="level"></param>
-        private void ApplyEffects(StaticSkill staticSkill, int level)
-        {
-            switch(staticSkill.LearningClass)
-            {
-                case LearningClass.Learning:
-                    m_learningFactor = 1.0f + 0.02f * level;
-                    for (int i = 0; i < m_attributes.Length; i++)
-                    {
-                        m_attributes[i].Update(m_learningFactor);
-                    }
-                    return;
-
-                case LearningClass.LowerTierAttribute:
-                    m_attributes[(int)staticSkill.AttributeModified].LowerSkillBonus = level;
-                    return;
-
-                case LearningClass.UpperTierAttribute:
-                    m_attributes[(int)staticSkill.AttributeModified].UpperSkillBonus = level;
-                    return;
-
-                default:
-                    return;
-            }
-        }
         #endregion
         
 
         #region Cloning, reseting, temporary changes
+
         /// <summary>
         /// Clear all the skills
         /// </summary>
@@ -383,14 +350,11 @@ namespace EVEMon.Common
             for (int i = 0; i < m_skillLevels.Length; i++) m_skillLevels[i] = 0;
 
             m_totalSP = 0;
-            m_learningFactor = 1.0f;
             m_trainingTime = TimeSpan.Zero;
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
-                m_attributes[i].LowerSkillBonus = 0;
-                m_attributes[i].UpperSkillBonus = 0;
-                m_attributes[i].Update(1.0f);
+                m_attributes[i].UpdateEffectiveAttribute();
             }
         }
 
@@ -408,8 +372,14 @@ namespace EVEMon.Common
         /// </summary>
         public void Reset()
         {
-            if (m_character is CharacterScratchpad) Reset((CharacterScratchpad)m_character);
-            else ResetFromCharacter();
+            if (m_character is CharacterScratchpad)
+            {
+                Reset((CharacterScratchpad)m_character);
+            }
+            else
+            {
+                ResetFromCharacter();
+            }
         }
 
         /// <summary>
@@ -420,14 +390,13 @@ namespace EVEMon.Common
         {
             m_totalSP = scratchpad.m_totalSP;
             m_trainingTime = scratchpad.m_trainingTime;
-            m_learningFactor = scratchpad.m_learningFactor;
 
             m_trainedSkills.Clear();
             m_trainedSkills.AddRange(scratchpad.m_trainedSkills);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
-                m_attributes[i].Reset(scratchpad.m_attributes[i], m_learningFactor);
+                m_attributes[i].Reset(scratchpad.m_attributes[i]);
             }
 
             scratchpad.m_skillSP.CopyTo(m_skillSP, 0);
@@ -439,7 +408,6 @@ namespace EVEMon.Common
         /// </summary>
         private void ResetFromCharacter()
         {
-            m_learningFactor = 1.0f;
             m_trainingTime = TimeSpan.Zero;
             m_trainedSkills.Clear();
 
@@ -460,26 +428,6 @@ namespace EVEMon.Common
                 m_totalSP += sp;
                 m_skillSP[skill.ArrayIndex] = sp;
                 m_skillLevels[skill.ArrayIndex] = level;
-
-                // For learning classes, we update attributes.
-                switch (skill.LearningClass)
-                {
-                    case LearningClass.Learning:
-                        m_learningFactor = 1.0f + 0.02f * level;
-                        for (int i = 0; i < m_attributes.Length; i++) m_attributes[i].Update(m_learningFactor);
-                        break;
-
-                    case LearningClass.LowerTierAttribute:
-                        m_attributes[(int)skill.AttributeModified].LowerSkillBonus = level;
-                        break;
-
-                    case LearningClass.UpperTierAttribute:
-                        m_attributes[(int)skill.AttributeModified].UpperSkillBonus = level;
-                        break;
-
-                    default:
-                        break;
-                }
             }
         }
 
@@ -494,6 +442,7 @@ namespace EVEMon.Common
             var clone = this.Clone();
             return new DisposableWithCallback(() => Reset(clone));
         }
+
         #endregion
 
     }

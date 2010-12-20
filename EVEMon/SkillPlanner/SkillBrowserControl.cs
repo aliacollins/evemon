@@ -24,11 +24,32 @@ namespace EVEMon.SkillPlanner
         public SkillBrowser()
         {
             InitializeComponent();
-            this.verticalSplitContainer.RememberDistanceKey = "SkillBrowser_Vertical";
+            verticalSplitContainer.RememberDistanceKey = "SkillBrowser_Vertical";
+        }
 
-            skillTreeDisplay.SkillClicked += new SkillClickedHandler(skillTreeDisplay_SkillClicked);
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+        /// <summary>
+        /// On load.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            lblSkillName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold, GraphicsUnit.Point);
+            
+            // Reposition the help text along side the treeview
+            Control[] result = skillSelectControl.Controls.Find("pnlResults", true);
+            if (result.Length > 0)
+                lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
+
+            skillTreeDisplay.SkillClicked += skillTreeDisplay_SkillClicked;
+            
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.PlanChanged += EveClient_PlanChanged;
+            Disposed += OnDisposed;
+
+            //Update the controls
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -38,8 +59,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            skillTreeDisplay.SkillClicked -= skillTreeDisplay_SkillClicked;
+            EveClient.PlanChanged -= EveClient_PlanChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            Disposed -= OnDisposed;
         }
 
 
@@ -54,7 +77,7 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 skillTreeDisplay.Plan = value;
                 skillSelectControl.Plan = value;
-                UpdateHeader();
+                UpdateContent();
             }
         }
 
@@ -71,7 +94,7 @@ namespace EVEMon.SkillPlanner
                 m_selectedSkill = value;
                 skillTreeDisplay.RootSkill = value;
                 skillSelectControl.SelectedSkill = value;
-                UpdateHeader();
+                UpdateContent();
             }
         }
 
@@ -99,6 +122,25 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Occurs whenever the settings changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            if (!Settings.UI.SafeForWork)
+            {
+                planToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+                showSkillExplorerMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            }
+            else
+            {
+                planToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                showSkillExplorerMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            }
+        }
+
+        /// <summary>
         /// Updates the combo on the top right, to change the planned level.
         /// </summary>
         private void UpdatePlannedLevel()
@@ -119,31 +161,37 @@ namespace EVEMon.SkillPlanner
 
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
-            if (level == 0)
-            {
-                planToMenu.Text = "Plan To (none)...";
-            }
-            else
-            {
-                planToMenu.Text = "Plan To Level " + Skill.GetRomanForInt(level) + "...";
-            }
+
+            planToMenu.Text = (level == 0 ? "Plan To (none)..." :
+                String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...", Skill.GetRomanForInt(level)));
         }
 
         /// <summary>
-        /// Updates the tab's header.
+        /// Updates the browser's content.
         /// </summary>
-        public void UpdateHeader()
+        public void UpdateContent()
         {
             if (m_selectedSkill == null)
             {
-                headerPanel.Visible = false;
-                skillTreeDisplay.Visible = false;
+                // View help message
+                lblHelp.Visible = true;
+                
+                rightPanel.Visible = false;
                 return;
             }
 
+            // Hide help message
+            lblHelp.Visible = false;
+
+            // Updates controls visibility
+            rightPanel.Visible = true;
+
             // Updates the main labels
             lblSkillClass.Text = m_selectedSkill.Group.Name;
-            lblSkillName.Text = m_selectedSkill.Name + " (" + m_selectedSkill.Rank + ")  " + m_selectedSkill.FormattedCost + " ISK";
+            lblSkillName.Text = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                                m_selectedSkill.Name,
+                                                m_selectedSkill.Rank);
+            lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
             descriptionTextBox.Text = m_selectedSkill.Description;
             if (!m_selectedSkill.IsPublic)
             {
@@ -175,9 +223,6 @@ namespace EVEMon.SkillPlanner
             // Update "planned level" combo (on the top left)
             UpdatePlannedLevel();
 
-            // Updates controls visibility
-            headerPanel.Visible = true;
-            skillTreeDisplay.Visible = true;
         }
 
         /// <summary>
@@ -235,7 +280,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tmrTrainingUpdateTick(object sender, EventArgs e)
         {
-            UpdateHeader();
+            UpdateContent();
         }
 
         /// <summary>
@@ -256,7 +301,7 @@ namespace EVEMon.SkillPlanner
         private void ownsBookMenu_Click(object sender, EventArgs e)
         {
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
-            UpdateHeader();
+            UpdateContent();
             skillSelectControl.UpdateContent();
         }
 
@@ -293,7 +338,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                this.SelectedSkill = e.Skill;
+                SelectedSkill = e.Skill;
             }
         }
 

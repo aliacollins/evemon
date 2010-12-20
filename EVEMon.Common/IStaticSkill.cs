@@ -32,10 +32,6 @@ namespace EVEMon.Common
         EveAttribute PrimaryAttribute { get; }
         EveAttribute SecondaryAttribute { get; }
 
-        bool HasAttributeBonus { get; }
-        EveAttribute AttributeModified { get; }
-        LearningClass LearningClass { get; }
-
         Skill ToCharacter(Character character);
     }
     #endregion

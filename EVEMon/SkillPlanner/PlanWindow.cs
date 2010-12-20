@@ -33,8 +33,6 @@ namespace EVEMon.SkillPlanner
             InitializeComponent();
             RememberPositionKey = "PlanWindow";
 
-            ResizeEnd += PlanWindow_ResizeEnd;
-
             // ToolStripLabels don't support AutoEllipsis so we user a custom renderer
             // via: http://discuss.joelonsoftware.com/default.asp?dotnet.12.597246.5
             MainStatusStrip.Renderer = new AutoEllipsisToolStripRenderer();
@@ -48,9 +46,6 @@ namespace EVEMon.SkillPlanner
             : this()
         {
             Plan = plan;
-
-            // Global events (unsubscribed on window closing)
-            EveClient.PlanChanged += EveClient_PlanChanged;
         }
 
         /// <summary>
@@ -60,7 +55,14 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (DesignMode) return;
+
+            if (DesignMode)
+                return;
+
+            // Global events (unsubscribed on window closing)
+            EveClient.PlanChanged += EveClient_PlanChanged;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            ResizeEnd += PlanWindow_ResizeEnd;
 
             // Force an update
             tsddbPlans.DropDownItems.Add("<New Plan>");
@@ -82,6 +84,10 @@ namespace EVEMon.SkillPlanner
                               "view the list of skills you've added to your plan, choose " +
                               "\"View Plan\" from the drop down in the upper left.");
 
+            //Update the controls
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+            
+            //Update the status bar
             UpdateStatusBar();
         }
 
@@ -114,6 +120,7 @@ namespace EVEMon.SkillPlanner
 
             // Unsubscribe global events
             EveClient.PlanChanged -= EveClient_PlanChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
             Settings.Save();
 
             // We're closing down
@@ -201,7 +208,6 @@ namespace EVEMon.SkillPlanner
                 CheckInvalidEntries();
             }
         }
-
         #endregion
 
 
@@ -351,6 +357,30 @@ namespace EVEMon.SkillPlanner
             UpdateStatusBar();
         }
 
+        /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            tabControl.ImageList = (!Settings.UI.SafeForWork ?
+                ilTabIcons :
+                new ImageList() { ImageSize = new Size(24, 24)});
+
+            foreach (ToolStripItem button in upperToolStrip.Items)
+            {
+                button.DisplayStyle = (!Settings.UI.SafeForWork ?
+                    ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Text);
+            }
+
+            foreach (ToolStripItem label in MainStatusStrip.Items)
+            {
+                label.DisplayStyle = (!Settings.UI.SafeForWork ?
+                    ToolStripItemDisplayStyle.ImageAndText : ToolStripItemDisplayStyle.Text);
+            }
+        }
+
         #endregion
 
 
@@ -374,28 +404,19 @@ namespace EVEMon.SkillPlanner
                 uniqueCount);
         }
 
-        private void UpdateTimeStatusLabel(TimeSpan totalTime)
+        private void UpdateTimeStatusLabel(int skillCount, TimeSpan totalTime)
         {
-            UpdateTimeStatusLabel(false, totalTime, totalTime);
+            UpdateTimeStatusLabel(false, skillCount, totalTime);
         }
 
-        internal void UpdateTimeStatusLabel(bool selected, TimeSpan totalTime, TimeSpan timeWithLearning)
+        internal void UpdateTimeStatusLabel(bool selected, int skillCount, TimeSpan totalTime)
         {
             TimeStatusLabel.AutoToolTip = false;
             TimeStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} to train {1}",
                 totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                selected ? "selected skills" : "whole plan");
-
-            if (totalTime == timeWithLearning)
-            {
-                TimeStatusLabel.AutoToolTip = true;
-                return;
-            }
-
-            TimeStatusLabel.ToolTipText = String.Format(CultureConstants.DefaultCulture, "Training time of selected skills alone: {0}{2}Training time in the context of the plan: {1}",
-                totalTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                timeWithLearning.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                Environment.NewLine);
+                selected ? 
+                String.Format("selected skill{0}", skillCount == 1 ? String.Empty : "s")
+                : "whole plan");
         }
 
         internal void UpdateCostStatusLabel(bool selected, long totalcost, long cost)
@@ -421,26 +442,6 @@ namespace EVEMon.SkillPlanner
             }
         }
 
-        internal void UpdateSuggestions()
-        {
-            SuggestionStatusLabel.Visible = false;
-
-            // Suggestions
-            if (m_plan.GetSuggestions().Count == 0)
-                return;
-
-            if (Visible && !SuggestionStatusLabel.Visible)
-            {
-                SuggestionStatusLabel.Visible = true;
-                TipWindow.ShowTip(this, "suggestion",
-                                  "Plan Suggestion",
-                                  "EVEMon found learning skills that would lower " +
-                                  "the overall training time of the plan. To view those " +
-                                  "suggestions and the resulting change in plan time, click the " +
-                                  "\"Suggestion\" link in the planner status bar.");
-            }
-        }
-
         /// <summary>
         /// Autonomously updates the status bar with the plan's training time.
         /// </summary>
@@ -460,9 +461,8 @@ namespace EVEMon.SkillPlanner
             TimeSpan totalTime = planEditor.DisplayPlan.GetTotalTime(scratchpad, true);
 
             UpdateSkillStatusLabel(false, m_plan.Count, m_plan.UniqueSkillsCount);
-            UpdateTimeStatusLabel(totalTime);
+            UpdateTimeStatusLabel(m_plan.Count, totalTime);
             UpdateCostStatusLabel(false, m_plan.TotalBooksCost, m_plan.NotKnownSkillBooksCost);
-            UpdateSuggestions();
         }
 
         #endregion
@@ -523,22 +523,6 @@ namespace EVEMon.SkillPlanner
             if (tabControl.SelectedIndex == 0)
             {
                 planEditor.UpdateListColumns();
-            }
-        }
-
-        /// <summary>
-        /// Status bar > Suggestions label.
-        /// Open the suggestions window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tslSuggestion_Click(object sender, EventArgs e)
-        {
-            using (SuggestionWindow f = new SuggestionWindow(m_plan))
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
             }
         }
 

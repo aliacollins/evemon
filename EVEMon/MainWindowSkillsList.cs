@@ -770,13 +770,18 @@ namespace EVEMon
             return calculationErrorToolTip.ToString();
         }
 
-        private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill s)
+        /// <summary>
+        /// Adds the skill boiler plate.
+        /// </summary>
+        /// <param name="toolTip">The tool tip.</param>
+        /// <param name="skill">The skill.</param>
+        private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill skill)
         {
             toolTip.Append("\n\n");
-            toolTip.AppendLine(s.DescriptionNL);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "\nPrimary: {0}, ", s.PrimaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", s.SecondaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:#,##0} SP/hour)", s.SkillPointsPerHour);
+            toolTip.AppendLine(skill.DescriptionNL);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "\nPrimary: {0}, ", skill.PrimaryAttribute);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.SecondaryAttribute);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:#,##0} SP/hour)", skill.SkillPointsPerHour);
         }
 
         /// <summary>

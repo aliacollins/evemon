@@ -2,10 +2,10 @@
 {
     public static class EveConstants
     {
-        public const int NewCharacterTrainingThreshold = 1600000;
-        public const int NewCharacterTrainingFactor = 2;
         public const int SpareAttributePointsOnRemap = 14;
-        public const int MinAttributeValueOnRemap = 5;
+        public const int CharacterBaseAttributePoints = 17;
+        public const int MaxRemappablePointsPerAttribute = 10;
+        public const int MaxImplantPoints = 5;
         public const int DowntimeHour = 11;
         public const int DowntimeDuration = 30;
 

@@ -58,7 +58,6 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tslSort = new System.Windows.Forms.ToolStripLabel();
-            this.tsSortLearning = new System.Windows.Forms.ToolStripButton();
             this.tsSortPriorities = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbToggleSkills = new System.Windows.Forms.ToolStripButton();
@@ -82,19 +81,22 @@ namespace EVEMon.SkillPlanner
             this.pscPlan = new EVEMon.Controls.PersistentSplitContainer();
             this.lvSkills = new EVEMon.Controls.DraggableListView();
             this.pHeader = new System.Windows.Forms.Panel();
+            this.tsPreferences = new System.Windows.Forms.ToolStrip();
+            this.tsbSelectColumns = new System.Windows.Forms.ToolStripButton();
             this.cbChooseImplantSet = new System.Windows.Forms.ComboBox();
             this.lblChooseImplantSet = new System.Windows.Forms.Label();
-            this.columnsLink = new System.Windows.Forms.LinkLabel();
             this.skillSelectControl = new EVEMon.SkillPlanner.SkillSelectControl();
             this.cmsContextMenu.SuspendLayout();
             this.tsPlan.SuspendLayout();
             this.pFooter.SuspendLayout();
             this.gbColorKey.SuspendLayout();
             this.flpColorKey.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pscPlan)).BeginInit();
             this.pscPlan.Panel1.SuspendLayout();
             this.pscPlan.Panel2.SuspendLayout();
             this.pscPlan.SuspendLayout();
             this.pHeader.SuspendLayout();
+            this.tsPreferences.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmsContextMenu
@@ -114,7 +116,7 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator2,
             this.miPlanGroups});
             this.cmsContextMenu.Name = "cmsContextMenu";
-            this.cmsContextMenu.Size = new System.Drawing.Size(251, 264);
+            this.cmsContextMenu.Size = new System.Drawing.Size(251, 242);
             this.cmsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.cmsContextMenu_Opening);
             // 
             // miChangeNote
@@ -278,7 +280,6 @@ namespace EVEMon.SkillPlanner
             this.tsbMoveDown,
             this.toolStripSeparator1,
             this.tslSort,
-            this.tsSortLearning,
             this.tsSortPriorities,
             this.toolStripSeparator4,
             this.tsbToggleSkills,
@@ -331,16 +332,6 @@ namespace EVEMon.SkillPlanner
             this.tslSort.Size = new System.Drawing.Size(38, 15);
             this.tslSort.Text = "Sort:";
             // 
-            // tsSortLearning
-            // 
-            this.tsSortLearning.CheckOnClick = true;
-            this.tsSortLearning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsSortLearning.Image = global::EVEMon.Properties.Resources.Omega;
-            this.tsSortLearning.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsSortLearning.Name = "tsSortLearning";
-            this.tsSortLearning.Size = new System.Drawing.Size(38, 20);
-            this.tsSortLearning.Text = "Optimize learning skills order and put them ahead";
-            // 
             // tsSortPriorities
             // 
             this.tsSortPriorities.CheckOnClick = true;
@@ -349,7 +340,7 @@ namespace EVEMon.SkillPlanner
             this.tsSortPriorities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsSortPriorities.Name = "tsSortPriorities";
             this.tsSortPriorities.Size = new System.Drawing.Size(38, 20);
-            this.tsSortPriorities.Text = "Group by priorities";
+            this.tsSortPriorities.Text = "Group by priorities (Ascending only)";
             // 
             // toolStripSeparator4
             // 
@@ -606,27 +597,53 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.TabIndex = 0;
             this.lvSkills.UseCompatibleStateImageBehavior = false;
             this.lvSkills.View = System.Windows.Forms.View.Details;
-            this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
+            this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
+            this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
             this.lvSkills.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lvSkills_ItemHover);
             this.lvSkills.SelectedIndexChanged += new System.EventHandler(this.lvSkills_SelectedIndexChanged);
-            this.lvSkills.ListViewItemsDragged += new System.EventHandler<System.EventArgs>(this.lvSkills_ListViewItemsDragged);
             this.lvSkills.DragDrop += new System.Windows.Forms.DragEventHandler(this.lvSkills_DragDrop);
             this.lvSkills.DragEnter += new System.Windows.Forms.DragEventHandler(this.lvSkills_DragEnter);
-            this.lvSkills.DragLeave += new System.EventHandler(this.lvSkills_DragLeave);
-            this.lvSkills.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvSkills_ColumnReordered);
-            this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
             this.lvSkills.DragOver += new System.Windows.Forms.DragEventHandler(this.lvSkills_DragOver);
+            this.lvSkills.DragLeave += new System.EventHandler(this.lvSkills_DragLeave);
+            this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
+            this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
             // 
             // pHeader
             // 
+            this.pHeader.Controls.Add(this.tsPreferences);
             this.pHeader.Controls.Add(this.cbChooseImplantSet);
             this.pHeader.Controls.Add(this.lblChooseImplantSet);
-            this.pHeader.Controls.Add(this.columnsLink);
             this.pHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pHeader.Location = new System.Drawing.Point(0, 0);
             this.pHeader.Name = "pHeader";
             this.pHeader.Size = new System.Drawing.Size(719, 33);
             this.pHeader.TabIndex = 1;
+            // 
+            // tsPreferences
+            // 
+            this.tsPreferences.CanOverflow = false;
+            this.tsPreferences.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tsPreferences.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tsPreferences.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbSelectColumns});
+            this.tsPreferences.Location = new System.Drawing.Point(695, 0);
+            this.tsPreferences.Name = "tsPreferences";
+            this.tsPreferences.Padding = new System.Windows.Forms.Padding(0, 5, 1, 0);
+            this.tsPreferences.Size = new System.Drawing.Size(24, 33);
+            this.tsPreferences.TabIndex = 3;
+            this.tsPreferences.Text = "tsPreferences";
+            // 
+            // tsbSelectColumns
+            // 
+            this.tsbSelectColumns.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbSelectColumns.Image = global::EVEMon.Properties.Resources.Settings;
+            this.tsbSelectColumns.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSelectColumns.Name = "tsbSelectColumns";
+            this.tsbSelectColumns.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsbSelectColumns.Size = new System.Drawing.Size(21, 20);
+            this.tsbSelectColumns.Text = "Select Columns";
+            this.tsbSelectColumns.ToolTipText = "Select Columns";
+            this.tsbSelectColumns.Click += new System.EventHandler(this.tsbSelectColumns_Click);
             // 
             // cbChooseImplantSet
             // 
@@ -648,18 +665,6 @@ namespace EVEMon.SkillPlanner
             this.lblChooseImplantSet.Size = new System.Drawing.Size(102, 13);
             this.lblChooseImplantSet.TabIndex = 1;
             this.lblChooseImplantSet.Text = "Choose Implant Set:";
-            // 
-            // columnsLink
-            // 
-            this.columnsLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.columnsLink.Location = new System.Drawing.Point(535, 8);
-            this.columnsLink.Name = "columnsLink";
-            this.columnsLink.Size = new System.Drawing.Size(181, 22);
-            this.columnsLink.TabIndex = 0;
-            this.columnsLink.TabStop = true;
-            this.columnsLink.Text = "Select columns...";
-            this.columnsLink.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.columnsLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.columnsLink_Click);
             // 
             // skillSelectControl
             // 
@@ -692,9 +697,12 @@ namespace EVEMon.SkillPlanner
             this.flpColorKey.PerformLayout();
             this.pscPlan.Panel1.ResumeLayout(false);
             this.pscPlan.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pscPlan)).EndInit();
             this.pscPlan.ResumeLayout(false);
             this.pHeader.ResumeLayout(false);
             this.pHeader.PerformLayout();
+            this.tsPreferences.ResumeLayout(false);
+            this.tsPreferences.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -713,7 +721,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripButton tsbMoveDown;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Panel pHeader;
-        private System.Windows.Forms.LinkLabel columnsLink;
         private System.Windows.Forms.ToolStripMenuItem miChangeNote;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripLabel tslSort;
@@ -739,7 +746,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Timer tmrSelect;
         private System.Windows.Forms.ToolStripButton tsbToggleRemapping;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton tsSortLearning;
         private System.Windows.Forms.ToolStripButton tsSortPriorities;
         private System.Windows.Forms.ToolStripSeparator tssColorKey;
         private System.Windows.Forms.ToolStripButton tsbColorKey;
@@ -758,5 +764,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ComboBox cbChooseImplantSet;
         private System.Windows.Forms.Label lblChooseImplantSet;
         private System.Windows.Forms.ToolStripMenuItem MoveToTopMenuItem;
+        private System.Windows.Forms.ToolStrip tsPreferences;
+        private System.Windows.Forms.ToolStripButton tsbSelectColumns;
     }
 }

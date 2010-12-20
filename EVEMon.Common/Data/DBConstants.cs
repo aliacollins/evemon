@@ -77,14 +77,23 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Category IDs
+
+        public const int BlueprintCategoryID = 9;
+        public const int ImplantCategoryID = 20;
+        public const int SkillCategoryID = 16;
+
+        #endregion
+
+
         #region Group IDs
 
         public const int PlanetGroupID = 7;
         public const int CorporationManagementSkillsGroupID = 266;
-        public const int LearningSkillsGroupID = 267;
         public const int SocialSkillsGroupID = 278;
         public const int TradeSkillsGroupID = 274;
         public const int SubsystemsGroupID = 989;
+        public const int CyberLearningImplantsGroupID = 745;
 
         #endregion
 
@@ -95,6 +104,8 @@ namespace EVEMon.Common.Data
         public const int SkillGroupID = 150;
         public const int DronesGroupID = 157;
         public const int BlueprintsGroupID = 2;
+        public const int ImplantsGroupID = 27;
+        public const int ShipsBlueprintsGroupID = 204;
         public const int ComponentsGroupID = 475;
         public const int ShipEquipmentGroupID = 9;
         public const int AdvancedSubsystemsGroupID = 1112;
@@ -105,6 +116,7 @@ namespace EVEMon.Common.Data
 
         public const int MiningBargesGroupID = 495;
         public const int ExhumersGroupID = 875;
+        public const int IndustrialsGroupID = 1390;
         public const int CapitalIndustrialsGroupID = 1048;
 
         public const int ProjectileAmmunitionBlueprintsGroupID = 299;
@@ -113,12 +125,30 @@ namespace EVEMon.Common.Data
         public const int BombsBlueprintsGroupID = 1016;
         public const int BoostersChargesBlueprintsGroupID = 339;
 
+        public const int SkillHardwiringImplantGroupID = 531;
+        public const int AttributeEnhancersImplantsGroupID = 532;
+
+        public const int GallenteDesignShuttlesGroupID = 395;
+        public const int CaldariDesignShuttlesGroupID = 396;
+
         #endregion
 
 
         #region Custom market group IDs
 
-        public const int BlueprintRootNonMarketGroupID = 20002;
+        public const int RootUniqueDesignsGroupID = 10000;
+        public const int UniqueDesignShuttlesGroupID = 10001;
+        public const int UniqueDesignIndustrialsGroupID = 10002;
+        public const int UniqueDesignFrigatesGroupID = 10003;
+
+        public const int RootNonMarketGroupID = 11000;
+
+        public const int BlueprintRootNonMarketGroupID = 21000;
+        public const int BlueprintNonMarketStorylineGroupID = 21001;
+        public const int BlueprintNonMarketFactionGroupID = 21002;
+        public const int BlueprintNonMarketTechIGroupID = 21003;
+        public const int BlueprintNonMarketTechIIGroupID = 21004;
+        public const int BlueprintNonMarketTechIIIGroupID = 21005;
 
         #endregion
 
@@ -137,18 +167,6 @@ namespace EVEMon.Common.Data
         public const int ProcurementSkillID = 16594;
         public const int DaytradingSkillID = 16595;
         public const int VisibilitySkillID = 3447;
-
-        public const int LearningSkillID = 3374;
-        public const int IronWillSkillID = 3375;
-        public const int EmpathySkillID = 3376;
-        public const int AnalyticalMindSkillID = 3377;
-        public const int InstantRecallSkillID = 3378;
-        public const int SpatialAwarenessSkillID = 3379;
-        public const int LogicSkillID = 12376;
-        public const int PresenceSkillID = 12383;
-        public const int EideticMemorySkillID = 12385;
-        public const int FocusSkillID = 12386;
-        public const int ClaritySkillID = 12387;
 
         public const int ScienceSkillID = 3402;
         public const int IndustrySkillID = 3380;

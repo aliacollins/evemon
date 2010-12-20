@@ -31,7 +31,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabSummary = new System.Windows.Forms.TabPage();
             this.lvPoints = new System.Windows.Forms.ListView();
-            this.columnHeader = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panelWait = new System.Windows.Forms.Panel();
             this.lbWait = new System.Windows.Forms.Label();
             this.panelNoResult = new System.Windows.Forms.Panel();
@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(518, 433);
+            this.tabControl.Size = new System.Drawing.Size(439, 433);
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.TabIndex = 27;
             this.tabControl.Visible = false;
@@ -63,7 +63,7 @@ namespace EVEMon.SkillPlanner
             this.tabSummary.Location = new System.Drawing.Point(4, 22);
             this.tabSummary.Name = "tabSummary";
             this.tabSummary.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSummary.Size = new System.Drawing.Size(510, 407);
+            this.tabSummary.Size = new System.Drawing.Size(431, 407);
             this.tabSummary.TabIndex = 1;
             this.tabSummary.Text = "Summary";
             this.tabSummary.UseVisualStyleBackColor = true;
@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
             this.lvPoints.LabelWrap = false;
             this.lvPoints.Location = new System.Drawing.Point(3, 3);
             this.lvPoints.Name = "lvPoints";
-            this.lvPoints.Size = new System.Drawing.Size(504, 401);
+            this.lvPoints.Size = new System.Drawing.Size(425, 401);
             this.lvPoints.TabIndex = 0;
             this.lvPoints.UseCompatibleStateImageBehavior = false;
             this.lvPoints.View = System.Windows.Forms.View.Details;
@@ -93,13 +93,13 @@ namespace EVEMon.SkillPlanner
             this.panelWait.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelWait.Location = new System.Drawing.Point(0, 0);
             this.panelWait.Name = "panelWait";
-            this.panelWait.Size = new System.Drawing.Size(518, 433);
+            this.panelWait.Size = new System.Drawing.Size(439, 433);
             this.panelWait.TabIndex = 28;
             // 
             // lbWait
             // 
             this.lbWait.AutoSize = true;
-            this.lbWait.Location = new System.Drawing.Point(224, 175);
+            this.lbWait.Location = new System.Drawing.Point(178, 175);
             this.lbWait.Name = "lbWait";
             this.lbWait.Size = new System.Drawing.Size(118, 13);
             this.lbWait.TabIndex = 25;
@@ -111,14 +111,14 @@ namespace EVEMon.SkillPlanner
             this.panelNoResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelNoResult.Location = new System.Drawing.Point(0, 0);
             this.panelNoResult.Name = "panelNoResult";
-            this.panelNoResult.Size = new System.Drawing.Size(518, 433);
+            this.panelNoResult.Size = new System.Drawing.Size(439, 433);
             this.panelNoResult.TabIndex = 29;
             this.panelNoResult.Visible = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(78, 162);
+            this.label2.Location = new System.Drawing.Point(32, 162);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(371, 26);
             this.label2.TabIndex = 0;
@@ -128,7 +128,7 @@ namespace EVEMon.SkillPlanner
             // 
             // throbber
             // 
-            this.throbber.Location = new System.Drawing.Point(184, 169);
+            this.throbber.Location = new System.Drawing.Point(138, 169);
             this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
@@ -142,7 +142,7 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(518, 433);
+            this.ClientSize = new System.Drawing.Size(439, 433);
             this.Controls.Add(this.panelNoResult);
             this.Controls.Add(this.panelWait);
             this.Controls.Add(this.tabControl);

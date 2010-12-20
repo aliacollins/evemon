@@ -112,33 +112,33 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="tsPlanToMenu.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMwSURBVDhPbZPbT9MHFMf9J/aytyWLD5ose5jbC6tDAquA
-        xiwYteVSwAFKydwSBla52RUqJBRsKVDa4QWwpVzKBKojymbAWqr0QoUqIv0VBDNkOBU6krnPfjaLGdOT
-        fB/P55zzPeds2ybGvhPnd6YqLdMphebxFKWFZKWZvYWijrchFfXlMRNJBa0k5reQcFSPJOOHR6/z3kRK
-        kbkxpcj0d2nzCDlnesiu6kFRaSerwk5mRTcZ5VbST1tJLbKQkNdMXLqWrQCl2Vva/DPXxkPMPHrC9Nwy
-        0w+XCM4uMvVgAX8ogm9G4PHyCmtra+yQHPo/oDXcefM+JxqHyBIrZ5bbYkovsyIXK8tOXebIya7YWPFH
-        jW8DpMfNgu32HE3Xg1wLLjHsX2LIt8iVyQUcngi97jA21zznRx+QXGh6F6BN6Bqf5fvLt2gbvY/e6afe
-        4aG2b4Ia+23Udg81Dj8DzouEOg8zO6DBZ0nC17QzM+aF6LTQIY7wXcevGK4GWFxdJ/L0JYKo8MpL5n97
-        wcU+Hcs3SngWGIQXj1kL9DBWK30SA4hrEtpHZ/im/ToNQ0G0vR6qrC7KOm+hujCGyapjJVjJ5sJPLP9S
-        x8ZUH3+Fx/CZ86IxQFKBUWgbuccx01VqrwSp6Q9wptdHWbcXo93CarCMVxtjbMwpWZ0oYuZSLj6T7Klb
-        f2B7DJCYbxSMzgBfnxtE3eenwu5FZb2L3mri96mTvIq6WH+YRTQi5/m0Cm/jHry6xI/f3EJ8bpNwbtCH
-        oq6f07ZJSrruUNcqzuwp+Tc5k6gg44/gKYL6JPbvP7D1Dr7IMQj1jknkmm6KO0THWxqYchaLbd8kOp/L
-        n5EMnomdhIxS0gq0b69xd7ZB0PZ4OFTeRWVtNfeGVfidDSy6D7I+L2fVV4pXn4rmRydisXcDNLYJ0kov
-        0X02AZ6HCZnSuKF6n/GWvQyr91CotVJscbM7R8/2uK+ELb/wugON/Q5n+/2o8z5i02Vg092IWxOPNf9D
-        qk0OSto9fNvqQpKt54NP9l3YApAoDObPFQbiFHrSJO9RnbWDkZpkzFUHkSrUfCbX8alMxy5ZPbuO1A/8
-        N/kfKgpU8tMa830AAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMtSURBVDhPbZPbT9MHFMf9J/aytyWLD5osPszthdUpgVVA
+        wwOGSbkUdIBSMrcEwSo3u0KFhIKtBUo7vAC2lEuZQHVE2QhYSx29UKGKSH8FwYgMp0Il0X32o1nMmJ7k
+        +3g+55zvOWfbNjEOnLi4M0lhnkosMI0lKswkKEzsLxB1vAWpqG+OGYnPbyYur4nYozokGT892sx7F4mF
+        pobEQv3fJY1D5JztIruyC3mFjaxyG5nlnWSUWUg/YyGp0ExsbiMx6Rq2AhQmT0njr9wYCzL96AlTs0tM
+        PVwkMLPA5IN5fMEw3mmBx0vLrK6uskOS+n9AU6h95D4nGgbIEitnllmjSi+1IBMrp52+yuFTHdGx9h41
+        vA+QHjcJ1juzXLgZ4EZgkUHfIgPeBa5NzGN3h+l2hbA657g4/ICEAuOHAC1Cx9gMJ6/epmX4PjqHjzq7
+        m5qecaptd1DZ3FTbffQ5LhNs/5aZPjVeczzeCzszo16ITgtt4gg/tv2O/rqfhZU1ws9eIYgKLb9i7ulL
+        LvdoWbpVzHN/P7x8zKq/i5Ea6ZMoQFyT0Do8zfetN6kfCKDpdlNpcVLafhvlpVGMFi3LgQo25n9h6bda
+        1id7eBMaxWPIjUQB8fl6oWXoHseM16m5FqC618/Zbi+lnR4MNjMrgVLero+yPqtgZbyQ6StH8BpTn7l0
+        ydujgLg8vWBw+PnufD+qHh/lNg9Kyx/oLEb+nDzF24iTtYdZRMIyXkwp8TTsw6ON2/XuFvZk64Xz/V7k
+        tb2csU5Q3HGX2mZxZnfxv8mZRIQ0/gqcJqCL5+DB5K13sAmos08gU3dS1CY63lTPpKNIbHuEyNwRXocz
+        eC52EjRIScnXvL/GTYCmy01qWQcVNVXcG1Tic9Sz4DrE2pyMFW8JHl0S6p8dfJ2j/zBAbR0npeQKnedi
+        4UWIoDGFW8qPGWvaz6BqHwUaC0VmF3tydGyPSRa2/MJmB2rbXc71+lDlfsaGU8+GqwGXei+WvE+pMtop
+        bnXzQ7MTSbaOTz4/cGkLQCLXm76S64mR60iRfERV1g6GqhMwVR5CKlfxpUzLF2ladqfVsftwXd9/k/8B
+        5TRU0vhZ1zkAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

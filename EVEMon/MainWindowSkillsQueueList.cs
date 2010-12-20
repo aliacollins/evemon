@@ -307,13 +307,15 @@ namespace EVEMon
                 SkillQueue skillQueue = m_ccpCharacter.SkillQueue;
                 if (skill.Skill != null)
                 {
+                    Brush brush = (Settings.UI.SafeForWork ? Brushes.Gray : Brushes.RoyalBlue);
+
                     foreach (QueuedSkill qskill in skillQueue)
-                    {
+                    {                        
                         if ((!skill.Skill.IsTraining && skill.Equals(qskill) && level.Equals(qskill.Level))
                             ||
                             (skill.Equals(qskill) && level <= qskill.Level && level > skill.Skill.Level &&
                              percentComplete.Equals(0)))
-                            g.FillRectangle(Brushes.RoyalBlue, brect);
+                            g.FillRectangle(brush, brect);
 
                         // Blinking indicator of skill level in training
                         if (skill.Skill.IsTraining && skill.Equals(qskill) && level.Equals(skill.Level) &&
@@ -376,10 +378,11 @@ namespace EVEMon
         private void DrawQueueColorBar(Graphics g, DrawItemEventArgs e)
         {
             // Draw skill queue color bar
+            Brush brush = (Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue);
             var qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
             Rectangle skillRect = SkillQueueControl.GetSkillRect(m_item, qBarRect.Width, LowerBoxHeight - 1);
-            g.FillRectangle(Brushes.CornflowerBlue,
+            g.FillRectangle(brush,
                             new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
 
             // If we have more than one skill level in queue, we need to redraw them only every (24h / width in pixels)
@@ -680,6 +683,11 @@ namespace EVEMon
             return calculationErrorToolTip.ToString();
         }
 
+        /// <summary>
+        /// Adds the skill boiler plate.
+        /// </summary>
+        /// <param name="toolTip">The tool tip.</param>
+        /// <param name="skill">The skill.</param>
         private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill skill)
         {
             toolTip.Append("\n\n");

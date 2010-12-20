@@ -148,7 +148,7 @@ namespace EVEMon.Common
                 }
 
                 // Computes estimated current SP
-                var spPerHour = m_owner.GetBaseSPPerHour(m_skill) * BaseCharacter.GetNewCharacterSkillTrainingBonus(totalSP, 0);
+                var spPerHour = m_owner.GetBaseSPPerHour(m_skill);
                 var estimatedSP = m_endSP - (m_endTime - DateTime.UtcNow).TotalHours * spPerHour;
                 return (m_skill.IsTraining ? Math.Max((int)estimatedSP, m_startSP) : m_startSP);
             }

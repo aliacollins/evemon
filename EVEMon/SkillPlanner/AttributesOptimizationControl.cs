@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
 using EVEMon.Common;
 
 namespace EVEMon.SkillPlanner
@@ -37,7 +33,9 @@ namespace EVEMon.SkillPlanner
         /// Initializes a new instance of <see cref="AttributesOptimizationControl"/>.
         /// </summary>
         /// <param name="character">Character information</param>
+        /// <param name="plan">Skill plan</param>
         /// <param name="remapping">Optimized remapping</param>
+        /// <param name="description"></param>
         public AttributesOptimizationControl(Character character, BasePlan plan, AttributesOptimizer.RemappingResult remapping, string description)
         {
             InitializeComponent();
@@ -57,73 +55,74 @@ namespace EVEMon.SkillPlanner
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.lblUnassignedAttributePoints.Font = FontFactory.GetFont("Tahoma", 8.25F);
-            this.lbWarning.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.lblMemory.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.lblWillpower.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.lblCharisma.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.lblPerception.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            this.lblIntelligence.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblUnassignedAttributePoints.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            lbWarning.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblMemory.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblWillpower.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblCharisma.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblPerception.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
+            lblIntelligence.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
         }
 
         /// <summary>
         /// Updates bars and labels with given attributes from remapping.
         /// </summary>
         /// <param name="character">Character information</param>
+        /// <param name="plan">Skill plan</param>
         /// <param name="remapping">Remapping with attributes and training time</param>
+        /// <param name="description"></param>
         private void UpdateControls(Character character, BasePlan plan, AttributesOptimizer.RemappingResult remapping, string description)
         {
             var baseCharacter = character.After(plan.ChosenImplantSet);
-            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Perception, lbPER, pbPERBase, pbPERImplants, pbPERSkills);
-            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Willpower, lbWIL, pbWILBase, pbWILImplants, pbWILSkills);
-            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Memory, lbMEM, pbMEMBase, pbMEMImplants, pbMEMSkills);
-            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Intelligence, lbINT, pbINTBase, pbINTImplants, pbINTSkills);
-            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Charisma, lbCHA, pbCHABase, pbCHAImplants, pbCHASkills);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Perception, lbPER, pbPERRemappable, pbPERImplants);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Willpower, lbWIL, pbWILRemappable, pbWILImplants);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Memory, lbMEM, pbMEMRemappable, pbMEMImplants);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Intelligence, lbINT, pbINTRemappable, pbINTImplants);
+            UpdateAttributeControls(baseCharacter, remapping, EveAttribute.Charisma, lbCHA, pbCHARemappable, pbCHAImplants);
 
             // Update the description label
-            this.labelDescription.Text = description;
-            
+            labelDescription.Text = description;
+
             // Update the current time control
-            this.lbCurrentTime.Text = remapping.BaseDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lbCurrentTime.Text = remapping.BaseDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Update the optimized time control
-            this.lbOptimizedTime.Text = remapping.BestDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lbOptimizedTime.Text = remapping.BestDuration.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
             // Update the time benefit control
             if (remapping.BestDuration < remapping.BaseDuration)
             {
-                this.lbGain.ForeColor = Color.Black;
-                this.lbGain.Text = String.Format("{0} better than current",
+                lbGain.ForeColor = Color.Black;
+                lbGain.Text = String.Format("{0} better than current",
                     remapping.BaseDuration.Subtract(remapping.BestDuration).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
             }
             else
                 if (remapping.BaseDuration < remapping.BestDuration)
                 {
-                    this.lbGain.ForeColor = Color.DarkRed;
-                    this.lbGain.Text = String.Format("{0} slower than current",
+                    lbGain.ForeColor = Color.DarkRed;
+                    lbGain.Text = String.Format("{0} slower than current",
                         remapping.BestDuration.Subtract(remapping.BaseDuration).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                 }
                 else
                 {
-                    this.lbGain.ForeColor = Color.Black;
-                    this.lbGain.Text = "Same as current";
+                    lbGain.ForeColor = Color.Black;
+                    lbGain.Text = @"Same as current";
                 }
 
             // A plan may not have a years worth of skills in it,
             // only fair to warn the user
-            this.lbWarning.Visible = remapping.BestDuration < new TimeSpan(365, 0, 0, 0);
+            lbWarning.Visible = remapping.BestDuration < new TimeSpan(365, 0, 0, 0);
 
             // Spare points
             int sparePoints = EveConstants.SpareAttributePointsOnRemap;
             for (int i = 0; i < 5; i++)
             {
-                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base - EveConstants.MinAttributeValueOnRemap);
+                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base)- EveConstants.CharacterBaseAttributePoints;
             }
             pbUnassigned.Value = sparePoints;
 
             // If the implant set isn't the active one we notify the user
-            var implantSet = plan.ChosenImplantSet;
-            this.lblNotice.Visible = (implantSet != character.ImplantSets.Current);
+            lblNotice.Visible = (plan.ChosenImplantSet != character.ImplantSets.Current);
         }
 
         /// <summary>
@@ -133,32 +132,28 @@ namespace EVEMon.SkillPlanner
         /// <param name="remapping">Attribute remapping</param>
         /// <param name="attrib">Attribute that will be used to update controls</param>
         /// <param name="lb">Label control</param>
-        /// <param name="pbBase">Attribute bar for base value</param>
+        /// <param name="pbRemappable">Attribute bar for remappable value</param>
         /// <param name="pbImplants">Attribute bar for implants</param>
-        /// <param name="pbSkills">Attribute bar for skills</param>
         private void UpdateAttributeControls(
             BaseCharacter character,
             AttributesOptimizer.RemappingResult remapping,
             EveAttribute attrib,
             Label lb,
-            AttributeBarControl pbBase,
-            AttributeBarControl pbImplants,
-            AttributeBarControl pbSkills)
+            AttributeBarControl pbRemappable,
+            AttributeBarControl pbImplants)
         {
             // Compute base and effective attributes
-            float effectiveAttribute = remapping.BestScratchpad[attrib].EffectiveValue;
+            int effectiveAttribute = remapping.BestScratchpad[attrib].EffectiveValue;
             int oldBaseAttribute = remapping.BaseScratchpad[attrib].Base;
-            int baseAttribute = remapping.BestScratchpad[attrib].Base;
+            int remappableAttribute = remapping.BestScratchpad[attrib].Base;
             int implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
-            int skillsBonus = (int)effectiveAttribute - (baseAttribute + implantsBonus);
 
             // Update the label
-            lb.Text = effectiveAttribute.ToString("##.##") + " (new : " + baseAttribute.ToString() + " ; old : " + oldBaseAttribute.ToString() + ")";
+            lb.Text = String.Format("{0} (new : {1} ; old : {2})", effectiveAttribute, remappableAttribute, oldBaseAttribute);
 
             // Update the bars
-            pbBase.Value = baseAttribute;
+            pbRemappable.Value = remappableAttribute - EveConstants.CharacterBaseAttributePoints;
             pbImplants.Value = implantsBonus;
-            pbSkills.Value = skillsBonus;
         }
 
         /// <summary>
@@ -167,11 +162,11 @@ namespace EVEMon.SkillPlanner
         public void Recalculate()
         {
             var scratchpad = m_remapping.BaseScratchpad.Clone();
-            scratchpad.Memory.Base = pbMEMBase.Value;
-            scratchpad.Charisma.Base = pbCHABase.Value;
-            scratchpad.Willpower.Base = pbWILBase.Value;
-            scratchpad.Perception.Base = pbPERBase.Value;
-            scratchpad.Intelligence.Base = pbINTBase.Value;
+            scratchpad.Memory.Base = pbMEMRemappable.Value + EveConstants.CharacterBaseAttributePoints;
+            scratchpad.Charisma.Base = pbCHARemappable.Value + EveConstants.CharacterBaseAttributePoints;
+            scratchpad.Willpower.Base = pbWILRemappable.Value + EveConstants.CharacterBaseAttributePoints;
+            scratchpad.Perception.Base = pbPERRemappable.Value + EveConstants.CharacterBaseAttributePoints;
+            scratchpad.Intelligence.Base = pbINTRemappable.Value + EveConstants.CharacterBaseAttributePoints;
 
             // Get remapping for provided attributes
             var manualRemapping = new AttributesOptimizer.RemappingResult(m_remapping, scratchpad);
@@ -190,7 +185,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="deltaValue"></param>
-        private void pbBase_ValueChanging(AttributeBarControl sender, ref int deltaValue)
+        private void pbRemappable_ValueChanging(AttributeBarControl sender, ref int deltaValue)
         {
             // Adjust delta if there is no enough free points
             if (pbUnassigned.Value < deltaValue)
@@ -214,7 +209,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="highlightValue"></param>
-        private void pbBase_Highlighting(AttributeBarControl sender, ref int highlightValue)
+        private void pbRemappable_Highlighting(AttributeBarControl sender, ref int highlightValue)
         {
             // Adjust possible highlight using free points in pool
             if (highlightValue - sender.Value > pbUnassigned.Value)
@@ -266,7 +261,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void attributeButton_Click(object sender, EventArgs e)
         {
-            AttributeButtonControl button = (sender as AttributeButtonControl);
+            var button = (sender as AttributeButtonControl);
             if (button == null)
                 return;
             if (button.AttributeBar == null)

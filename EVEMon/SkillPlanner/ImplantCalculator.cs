@@ -54,6 +54,20 @@ namespace EVEMon.SkillPlanner
             m_characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
             m_set = m_plan.ChosenImplantSet;
 
+            // Set the min and max values of the NumericUpDown controls
+            // based on character attributes value
+            foreach (var control in AtrributesPanel.Controls)
+            {
+                NumericUpDown nud = control as NumericUpDown;
+                 
+                if (nud == null)
+                    continue;
+
+                var attrib = (EveAttribute)(int.Parse((string)nud.Tag));
+                nud.Minimum = m_character[attrib].EffectiveValue - m_character[attrib].ImplantBonus;
+                nud.Maximum = nud.Minimum + EveConstants.MaxImplantPoints;
+            }
+
             UpdateContent();
  	        base.OnLoad(e);
         }
@@ -66,11 +80,11 @@ namespace EVEMon.SkillPlanner
             gbAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Attributes of \"{0}\"", m_set.Name);
 
             m_isUpdating = true;
-            nudCharisma.Value = m_characterScratchpad.Charisma.PreLearningEffectiveAttribute;
-            nudWillpower.Value = m_characterScratchpad.Willpower.PreLearningEffectiveAttribute;
-            nudIntelligence.Value = m_characterScratchpad.Intelligence.PreLearningEffectiveAttribute;
-            nudPerception.Value = m_characterScratchpad.Perception.PreLearningEffectiveAttribute;
-            nudMemory.Value = m_characterScratchpad.Memory.PreLearningEffectiveAttribute;
+            nudCharisma.Value = m_characterScratchpad.Charisma.EffectiveValue;
+            nudWillpower.Value = m_characterScratchpad.Willpower.EffectiveValue;
+            nudIntelligence.Value = m_characterScratchpad.Intelligence.EffectiveValue;
+            nudPerception.Value = m_characterScratchpad.Perception.EffectiveValue;
+            nudMemory.Value = m_characterScratchpad.Memory.EffectiveValue;
             m_isUpdating = false;
 
             // If the implant set isn't the active one we notify the user
@@ -89,7 +103,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="lblEffective"></param>
         private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Label lblAdjust, Label lblEffective)
         {
-            int baseAttr = m_characterScratchpad[attrib].PreLearningEffectiveAttribute - m_characterScratchpad[attrib].ImplantBonus;
+            int baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
             int adjust = myValue - baseAttr;
 
             if (adjust >= 0)
@@ -103,7 +117,7 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString();
             }
 
-            lblEffective.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("#0.00");
+            lblEffective.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("0");
         }
         
         /// <summary>
@@ -295,11 +309,11 @@ namespace EVEMon.SkillPlanner
             m_characterScratchpad = m_character.After(m_set);
             CharacterScratchpad scratchpad = new CharacterScratchpad(m_characterScratchpad);
 
-            scratchpad.Memory.ImplantBonus += (int)this.nudMemory.Value - m_characterScratchpad.Memory.PreLearningEffectiveAttribute;
-            scratchpad.Charisma.ImplantBonus += (int)this.nudCharisma.Value - m_characterScratchpad.Charisma.PreLearningEffectiveAttribute;
-            scratchpad.Intelligence.ImplantBonus += (int)this.nudIntelligence.Value - m_characterScratchpad.Intelligence.PreLearningEffectiveAttribute;
-            scratchpad.Perception.ImplantBonus += (int)this.nudPerception.Value - m_characterScratchpad.Perception.PreLearningEffectiveAttribute;
-            scratchpad.Willpower.ImplantBonus += (int)this.nudWillpower.Value - m_characterScratchpad.Willpower.PreLearningEffectiveAttribute;
+            scratchpad.Memory.ImplantBonus += (int)nudMemory.Value - m_characterScratchpad.Memory.EffectiveValue;
+            scratchpad.Charisma.ImplantBonus += (int)nudCharisma.Value - m_characterScratchpad.Charisma.EffectiveValue;
+            scratchpad.Intelligence.ImplantBonus += (int)nudIntelligence.Value - m_characterScratchpad.Intelligence.EffectiveValue;
+            scratchpad.Perception.ImplantBonus += (int)nudPerception.Value - m_characterScratchpad.Perception.EffectiveValue;
+            scratchpad.Willpower.ImplantBonus += (int)nudWillpower.Value - m_characterScratchpad.Willpower.EffectiveValue;
 
             return scratchpad;
         }

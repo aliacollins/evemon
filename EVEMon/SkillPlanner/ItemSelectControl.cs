@@ -334,14 +334,19 @@ namespace EVEMon.SkillPlanner
             try
             {
                 tvItems.Nodes.Clear();
-                foreach (var group in StaticItems.MarketGroups)
+
+                // Create the nodes
+                foreach (MarketGroup group in StaticItems.MarketGroups)
                 {
                     // Skip some groups
                     if (!showAllGroupsCheckbox.Checked && !m_presetGroups.Contains(group))
                         continue;
 
-                    TreeNode node = new TreeNode();
-                    node.Text = group.Name;
+                    TreeNode node = new TreeNode()
+                    {
+                        Text = group.Name
+                    };
+
                     int result = BuildSubtree(group, node.Nodes);
 
                     if (result != 0)
@@ -364,7 +369,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Create the tree nodes for the given category and add them to the given nodes collection
         /// </summary>
-        /// <param name="cat"></param>
+        /// <param name="group"></param>
         /// <param name="nodeCollection"></param>
         /// <returns></returns>
         private int BuildSubtree(MarketGroup group, TreeNodeCollection nodeCollection)
@@ -373,31 +378,34 @@ namespace EVEMon.SkillPlanner
             int result = 0; 
 
             // Add all subcategories
-            var subcategories = group.SubGroups;
-            foreach (MarketGroup childGroup in subcategories)
+            foreach (MarketGroup childGroup in group.SubGroups)
             {
-                TreeNode tn = new TreeNode();
-                tn.Text = childGroup.Name;
+                TreeNode node = new TreeNode()
+                {
+                    Text = childGroup.Name
+                };
 
                 // Add this subcategory's items count
-                result += BuildSubtree(childGroup, tn.Nodes);
+                result += BuildSubtree(childGroup, node.Nodes);
 
                 // Only add if this subcategory has children
-                if (tn.GetNodeCount(true) > 0)
-                    nodeCollection.Add(tn);
+                if (node.GetNodeCount(true) > 0)
+                    nodeCollection.Add(node);
             }
 
             // Add all items
-            var items = group.Items.Where(
-                x => m_slotPredicate(x) && m_metaGroupPredicate(x) && m_fittingPredicate(x) && m_usabilityPredicate(x));
-
-            foreach (Item childItem in items)
+            foreach (Item childItem in group.Items.Where(x => m_slotPredicate(x)
+                                                            && m_metaGroupPredicate(x)
+                                                            && m_fittingPredicate(x)
+                                                            && m_usabilityPredicate(x)))
             {
-                TreeNode tn = new TreeNode();
-                tn.Text = childItem.Name;
-                tn.Tag = childItem;
+                TreeNode node = new TreeNode()
+                {
+                    Text = childItem.Name,
+                    Tag = childItem
+                };
 
-                nodeCollection.Add(tn);
+                nodeCollection.Add(node);
                 result++;
             }
             return result;

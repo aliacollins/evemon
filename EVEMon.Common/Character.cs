@@ -46,7 +46,6 @@ namespace EVEMon.Common
         protected bool m_isUpdatingPortrait;
 
         // Attributes
-        protected readonly Skill m_learningSkill;
         protected readonly CharacterAttribute[] m_attributes = new CharacterAttribute[5];
 
         // These are the new replacements for m_attributeBonuses
@@ -71,7 +70,9 @@ namespace EVEMon.Common
         protected DateTime m_skillPointTotalUpdated = DateTime.MinValue;
         protected int m_lastSkillPointTotal;
 
+
         #region Initialization
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -93,7 +94,6 @@ namespace EVEMon.Common
             m_implants = new ImplantSetCollection(this);
             m_plans = new PlanCollection(this);
 
-            m_learningSkill = m_skills[StaticSkills.LearningSkill];
             for (int i = 0; i < m_attributes.Length; i++)
             {
                 m_attributes[i] = new CharacterAttribute(this, (EveAttribute)i);
@@ -101,10 +101,12 @@ namespace EVEMon.Common
 
             m_uiSettings = new CharacterUISettings();
         }
+
         #endregion
 
 
         #region Bio
+
         /// <summary>
         /// Gets a global identifier for this character
         /// </summary>
@@ -242,12 +244,14 @@ namespace EVEMon.Common
             get { return m_isUpdatingPortrait; }
             set { m_isUpdatingPortrait = value; }
         }
+
         #endregion
 
 
         #region Attributes
+
         /// <summary>
-        /// Gets the base attribute value (without any learning bonus or implant) for the given attribute
+        /// Gets the base attribute value for the given attribute
         /// </summary>
         /// <param name="attribute">The attribute to retrieve</param>
         /// <returns></returns>
@@ -256,17 +260,11 @@ namespace EVEMon.Common
             return m_attributes[(int)attribute];
         }
 
-        /// <summary>
-        /// Gets the learning factor granted by the "learning" skill.
-        /// </summary>
-        public float LearningFactor
-        {
-            get { return (100 + m_learningSkill.Level * 2) * 0.01f; }
-        }
         #endregion
 
 
         #region Implants
+
         /// <summary>
         /// Gets the implants sets of the character and its clones
         /// </summary>
@@ -282,10 +280,12 @@ namespace EVEMon.Common
         {
             get { return m_implants.Current; }
         }
+
         #endregion
 
 
         #region Skills
+
         /// <summary>
         /// Gets the collection of skills
         /// </summary>
@@ -377,10 +377,12 @@ namespace EVEMon.Common
         {
             return m_skills[skill].SkillPoints;
         }
+
         #endregion
 
 
         #region Certificates
+
         /// <summary>
         /// Gets the collection of certificate categories.
         /// </summary>
@@ -404,10 +406,12 @@ namespace EVEMon.Common
         {
             get { return m_certificates; }
         }
+
         #endregion
 
 
         #region Plans
+
         /// <summary>
         /// Gets the collection of plans.
         /// </summary>
@@ -415,10 +419,12 @@ namespace EVEMon.Common
         {
             get { return m_plans; }
         }
+
         #endregion
 
 
         #region Training
+
         /// <summary>
         /// Gets true when the character is currently training, false otherwise
         /// </summary>
@@ -434,10 +440,12 @@ namespace EVEMon.Common
         {
             get { return null; }
         }
+
         #endregion
 
 
         #region Importation / exportation
+
         /// <summary>
         /// Create a serializable character sheet for this character
         /// </summary>
@@ -613,6 +621,7 @@ namespace EVEMon.Common
                 list.Add(plan.Export());
             }
         }
+
         #endregion
 
 

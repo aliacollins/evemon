@@ -30,7 +30,7 @@ namespace EVEMon.SkillPlanner
         protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             // Call the base method
@@ -40,9 +40,9 @@ namespace EVEMon.SkillPlanner
             BuildTreeView();
 
             // Initialize the "filter" combo box
-            this.cbUsabilityFilter.Items[0] = "All Blueprints";
-            this.cbUsabilityFilter.Items[1] = "Blueprints I can use";
-            this.cbUsabilityFilter.Items[2] = "Blueprints I cannot use";
+            cbUsabilityFilter.Items[0] = "All Blueprints";
+            cbUsabilityFilter.Items[1] = "Blueprints I can use";
+            cbUsabilityFilter.Items[2] = "Blueprints I cannot use";
             
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
@@ -52,11 +52,11 @@ namespace EVEMon.SkillPlanner
                 tbSearchText.Text = Settings.UI.BlueprintBrowser.TextSearch;
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
 
-                this.cbTech1.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
-                this.cbTech2.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
-                this.cbTech3.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
-                this.cbFaction.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
-                this.cbStoryline.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
+                cbTech1.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
+                cbTech2.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
+                cbTech3.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
+                cbFaction.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
+                cbStoryline.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
             }
             else
             {
@@ -209,9 +209,10 @@ namespace EVEMon.SkillPlanner
         {
             int numberOfItems = 0;
             tvItems.BeginUpdate();
-            tvItems.Nodes.Clear();
             try
             {
+                tvItems.Nodes.Clear();
+
                 // Create the nodes
                 foreach (var group in StaticBlueprints.BlueprintMarketGroups)
                 {
@@ -248,32 +249,31 @@ namespace EVEMon.SkillPlanner
             int result = 0; 
 
             // Add all subcategories
-            var subcategories = group.SubGroups;
-            foreach (BlueprintMarketGroup childGroup in subcategories)
+            foreach (BlueprintMarketGroup childGroup in group.SubGroups)
             {
-                TreeNode tn = new TreeNode();
-                tn.Text = childGroup.Name;
+                TreeNode node = new TreeNode()
+                {
+                    Text = childGroup.Name
+                };
 
                 // Add this subcategory's blueprints count
-                result += BuildSubtree(childGroup, tn.Nodes);
+                result += BuildSubtree(childGroup, node.Nodes);
 
                 // Only add if this subcategory has children
-                if (tn.GetNodeCount(true) > 0)
-                {
-                    nodeCollection.Add(tn);
-                }
+                if (node.GetNodeCount(true) > 0)
+                    nodeCollection.Add(node);
             }
 
             // Add all blueprints
-            var blueprints = group.Blueprints.Where(x => m_usabilityPredicate(x) && m_metaGroupPredicate(x));
-
-            foreach (Blueprint childItem in blueprints)
+            foreach (Blueprint childItem in group.Blueprints.Where(x => m_usabilityPredicate(x) && m_metaGroupPredicate(x)))
             {
-                TreeNode tn = new TreeNode();
-                tn.Text = childItem.Name;
-                tn.Tag = childItem;
+                TreeNode node = new TreeNode()
+                {
+                    Text = childItem.Name,
+                    Tag = childItem
+                };
 
-                nodeCollection.Add(tn);
+                nodeCollection.Add(node);
                 result++;
             }
             return result;

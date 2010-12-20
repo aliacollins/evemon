@@ -36,10 +36,6 @@ namespace EVEMon.SkillPlanner
         public EveObjectBrowserControl()
         {
             InitializeComponent();
-            this.lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, System.Drawing.FontStyle.Bold);
-
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            this.Disposed += new EventHandler(OnDisposed);
         }
 
 
@@ -50,8 +46,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            m_selectControl.SelectionChanged -= OnSelectionChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            Disposed -= OnDisposed;
         }
 
 
@@ -74,14 +71,19 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveObjectBrowserControl_Load(object sender, EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            
             // Watch for selection changes
-            this.m_selectControl.SelectionChanged += new EventHandler(OnSelectionChanged);
+            m_selectControl.SelectionChanged += OnSelectionChanged;
+
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
-            Control[] result = this.m_selectControl.Controls.Find("lowerPanel", true);
+            Control[] result = m_selectControl.Controls.Find("lowerPanel", true);
             if (result.Length > 0)
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
@@ -135,7 +137,7 @@ namespace EVEMon.SkillPlanner
             set
             {
                 m_plan = value;
-                this.m_selectControl.Plan = value;
+                m_selectControl.Plan = value;
                 OnPlanChanged();
             }
         }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -33,15 +34,6 @@ namespace EVEMon.SkillPlanner
         public CertificateSelectControl()
         {
             InitializeComponent();
-
-            tbSearchText.KeyPress += tbSearchText_KeyPress;
-            tbSearchText.Enter += tbSearchText_Enter;
-            tbSearchText.Leave += tbSearchText_Leave;
-            lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
-            tvItems.NodeMouseClick += tvItems_NodeMouseClick;
-            tvItems.AfterSelect += tvItems_AfterSelect;
-            cmListSkills.Opening += cmListSkills_Opening;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -56,6 +48,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            
             tbSearchText.KeyPress -= tbSearchText_KeyPress;
             tbSearchText.Enter -= tbSearchText_Enter;
             tbSearchText.Leave -= tbSearchText_Leave;
@@ -76,6 +70,17 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+
+            tbSearchText.KeyPress += tbSearchText_KeyPress;
+            tbSearchText.Enter += tbSearchText_Enter;
+            tbSearchText.Leave += tbSearchText_Leave;
+            lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
+            tvItems.NodeMouseClick += tvItems_NodeMouseClick;
+            tvItems.AfterSelect += tvItems_AfterSelect;
+            cmListSkills.Opening += cmListSkills_Opening;
+            Disposed += OnDisposed;
+
             m_iconsFont = FontFactory.GetFont("Tahoma", 8.0f, FontStyle.Bold, GraphicsUnit.Pixel);
 
             // Read the settings
@@ -93,7 +98,19 @@ namespace EVEMon.SkillPlanner
                 cbFilter.SelectedIndex = 0;
             }
 
-            // Updates the display
+            // Updates the controls
+            EveClient_SettingsChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// When the settings are changed, update the display
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            pbSearchImage.Visible = !Settings.UI.SafeForWork;
+
             UpdateContent();
         }
 
@@ -334,6 +351,9 @@ namespace EVEMon.SkillPlanner
             if (m_iconsFont == null)
                 return;
 
+            //Reset selection
+            SelectedCertificateClass = null;
+
             IEnumerable<CertificateClass> classes = GetFilteredData();
 
             // Nothing to display ?
@@ -397,6 +417,7 @@ namespace EVEMon.SkillPlanner
                     var category = (CertificateCategory)node.Tag;
                     node.ImageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
                     node.SelectedImageIndex = node.ImageIndex;
+
                     node.Nodes.Clear();
 
                     foreach (var certClass in classes)
@@ -640,7 +661,7 @@ namespace EVEMon.SkillPlanner
             // Create the image if it does not exist yet
             const int ImageSize = 24;
             const int MaxLetterWidth = 6;
-            Bitmap bmp = new Bitmap(ImageSize, ImageSize, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Bitmap bmp = new Bitmap(ImageSize, ImageSize, PixelFormat.Format32bppArgb);
 
             using (var g = Graphics.FromImage(bmp))
             {

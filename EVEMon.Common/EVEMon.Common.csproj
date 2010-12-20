@@ -419,7 +419,6 @@
     <Compile Include="SettingsObjects\PlanColumn.cs" />
     <Compile Include="PlanEntry.cs" />
     <Compile Include="PlanExporter.cs" />
-    <Compile Include="PlanSuggestions.cs" />
     <Compile Include="RemappingPoint.cs" />
     <Compile Include="Scheduling\Enumerations.cs" />
     <Compile Include="Scheduling\RecurringScheduleEntry.cs" />
