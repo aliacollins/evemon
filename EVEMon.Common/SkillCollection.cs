@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -54,7 +52,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill with the provided id
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public Skill this[long id]
         {
@@ -69,7 +67,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill representing the given static skill
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="skill"></param>
         /// <returns></returns>
         public Skill this[StaticSkill skill]
         {

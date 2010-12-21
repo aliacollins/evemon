@@ -46,11 +46,11 @@
             this.charactersMultiPanel = new EVEMon.Controls.MultiPanel();
             this.charactersListPage = new EVEMon.Controls.MultiPanelPage();
             this.charactersListView = new System.Windows.Forms.ListView();
-            this.columnMonitored = new System.Windows.Forms.ColumnHeader();
-            this.columnType = new System.Windows.Forms.ColumnHeader();
-            this.columnName = new System.Windows.Forms.ColumnHeader();
-            this.columnAccount = new System.Windows.Forms.ColumnHeader();
-            this.columnUri = new System.Windows.Forms.ColumnHeader();
+            this.columnMonitored = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnAccount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnUri = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.noCharactersPage = new EVEMon.Controls.MultiPanelPage();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.importCharacterMenu = new System.Windows.Forms.ToolStripButton();
@@ -220,6 +220,7 @@
             this.charactersListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
             this.charactersListView.Location = new System.Drawing.Point(0, 0);
+            this.charactersListView.MultiSelect = false;
             this.charactersListView.Name = "charactersListView";
             this.charactersListView.Size = new System.Drawing.Size(633, 364);
             this.charactersListView.TabIndex = 12;
@@ -280,7 +281,7 @@
             this.importCharacterMenu.Image = global::EVEMon.Properties.Resources.ImportCharacter;
             this.importCharacterMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.importCharacterMenu.Name = "importCharacterMenu";
-            this.importCharacterMenu.Size = new System.Drawing.Size(71, 22);
+            this.importCharacterMenu.Size = new System.Drawing.Size(72, 22);
             this.importCharacterMenu.Text = "&Import...";
             this.importCharacterMenu.Click += new System.EventHandler(this.importCharacterMenu_Click);
             // 
@@ -290,7 +291,7 @@
             this.deleteCharacterMenu.Image = global::EVEMon.Properties.Resources.DeleteCharacter;
             this.deleteCharacterMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteCharacterMenu.Name = "deleteCharacterMenu";
-            this.deleteCharacterMenu.Size = new System.Drawing.Size(70, 22);
+            this.deleteCharacterMenu.Size = new System.Drawing.Size(69, 22);
             this.deleteCharacterMenu.Text = "&Delete...";
             this.deleteCharacterMenu.Click += new System.EventHandler(this.deleteCharacterMenu_Click);
             // 
@@ -300,7 +301,7 @@
             this.editUriMenu.Image = global::EVEMon.Properties.Resources.EditChar;
             this.editUriMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.editUriMenu.Name = "editUriMenu";
-            this.editUriMenu.Size = new System.Drawing.Size(73, 22);
+            this.editUriMenu.Size = new System.Drawing.Size(74, 22);
             this.editUriMenu.Text = "&Edit Uri...";
             this.editUriMenu.Click += new System.EventHandler(this.editUriButton_Click);
             // 
@@ -314,7 +315,7 @@
             this.groupingMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.groupingMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.groupingMenu.Name = "groupingMenu";
-            this.groupingMenu.Size = new System.Drawing.Size(110, 22);
+            this.groupingMenu.Size = new System.Drawing.Size(117, 22);
             this.groupingMenu.Text = "&Group characters";
             this.groupingMenu.Click += new System.EventHandler(this.groupingMenu_Click);
             // 
@@ -415,7 +416,7 @@
             this.deleteAccountMenu.Image = global::EVEMon.Properties.Resources.DeleteAccount;
             this.deleteAccountMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteAccountMenu.Name = "deleteAccountMenu";
-            this.deleteAccountMenu.Size = new System.Drawing.Size(70, 22);
+            this.deleteAccountMenu.Size = new System.Drawing.Size(69, 22);
             this.deleteAccountMenu.Text = "&Delete...";
             this.deleteAccountMenu.Click += new System.EventHandler(this.deleteAccountMenu_Click);
             // 
@@ -425,7 +426,7 @@
             this.editAccountMenu.Image = global::EVEMon.Properties.Resources.EditAccount;
             this.editAccountMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.editAccountMenu.Name = "editAccountMenu";
-            this.editAccountMenu.Size = new System.Drawing.Size(57, 22);
+            this.editAccountMenu.Size = new System.Drawing.Size(56, 22);
             this.editAccountMenu.Text = "&Edit...";
             this.editAccountMenu.Click += new System.EventHandler(this.editAccountMenu_Click);
             // 

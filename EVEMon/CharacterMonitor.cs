@@ -21,7 +21,7 @@ namespace EVEMon
     public partial class CharacterMonitor : UserControl
     {
         private readonly Character m_character;
-        private readonly List<ToolStripButton> m_fullAPIKeyFeautures = new List<ToolStripButton>();
+        private readonly List<ToolStripButton> m_fullAPIKeyFeatures = new List<ToolStripButton>();
         private CredentialsLevel m_keyLevel;
         private bool m_pendingUpdate;
 
@@ -34,9 +34,6 @@ namespace EVEMon
         {
             InitializeComponent();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-
-            lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
-            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
 
             multiPanel.SelectionChange += multiPanel_SelectionChange;
         }
@@ -58,12 +55,12 @@ namespace EVEMon
             notificationList.Notifications = null;
 
             // Create a list of the full API Key features
-            m_fullAPIKeyFeautures.Add(ordersIcon);
-            m_fullAPIKeyFeautures.Add(jobsIcon);
-            m_fullAPIKeyFeautures.Add(researchIcon);
+            m_fullAPIKeyFeatures.Add(ordersIcon);
+            m_fullAPIKeyFeatures.Add(jobsIcon);
+            m_fullAPIKeyFeatures.Add(researchIcon);
 
             // Hide all full api key related controls
-            m_fullAPIKeyFeautures.ForEach(x => x.Visible = false);
+            m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
             featuresMenu.Visible = false;
             toggleSkillsIcon.Visible = tsToggleSeparator.Visible = false;
             toolStripContextual.Visible = false;
@@ -139,6 +136,9 @@ namespace EVEMon
         {
             base.OnLoad(e);
 
+            Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
+
             // Picks the last selected page
             multiPanel.SelectedPage = null;
             string tag = m_character.UISettings.SelectedPage;
@@ -146,11 +146,11 @@ namespace EVEMon
                 toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == x.Tag as string);
 
             // If it's not a full key feature page make it visible
-            if (item != null && !m_fullAPIKeyFeautures.Contains(item))
+            if (item != null && !m_fullAPIKeyFeatures.Contains(item))
                 item.Visible = true;
 
             // If it's a full key feature page reset to skills page
-            if (item != null && m_fullAPIKeyFeautures.Contains(item))
+            if (item != null && m_fullAPIKeyFeatures.Contains(item))
                 item = skillsIcon;
 
             toolbarIcon_Click((item ?? skillsIcon), EventArgs.Empty);
@@ -326,13 +326,16 @@ namespace EVEMon
             {
                 if (m_keyLevel == CredentialsLevel.Full)
                 {
-                    m_fullAPIKeyFeautures.ForEach(x => x.Visible = CheckEnabledFeatures(x.Text));
+                    m_fullAPIKeyFeatures.ForEach(x => x.Visible = CheckEnabledFeatures(x.Text));
                     featuresMenu.Visible = true;
                     tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
+
+                    ToggleFullAPIKeyFeaturesMonitoring();
+
                     return;
                 }
 
-                m_fullAPIKeyFeautures.ForEach(x => x.Visible = false);
+                m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
                 featuresMenu.Visible = tsToggleSeparator.Visible = false;
                 UpdateFullAPIKeyPagesSettings();
             }
@@ -370,6 +373,25 @@ namespace EVEMon
             {
                 toolStripContextual.Enabled = !ccpCharacter.ResearchPoints.IsEmpty();
                 groupMenu.Visible = false;
+            }
+        }
+
+        /// <summary>
+        /// Toggles the full API key features monitoring.
+        /// </summary>
+        private void ToggleFullAPIKeyFeaturesMonitoring()
+        {
+            // Exit if it's a non-CCPCharacter
+            var ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter == null)
+                return;
+
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.Where(x => x.IsFullKeyNeeded))
+            {
+                foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures.Where(x => monitor.Method.ToString().Contains(x.Text)))
+                {
+                    monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
+                }
             }
         }
 
@@ -501,7 +523,6 @@ namespace EVEMon
             }
             else
             {
-
                 foreach (ToolStripItem item in toolStripFeatures.Items)
                 {
                     if (item is ToolStripButton || item is ToolStripDropDownButton)
@@ -768,7 +789,8 @@ namespace EVEMon
             researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
 
             UpdateFullAPIKeyPagesSettings();
-        }
+            ToggleFullAPIKeyFeaturesMonitoring();
+       }
 
         /// <summary>
         /// On opening we create the menu items for "Group By..." in panel.

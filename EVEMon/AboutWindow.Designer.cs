@@ -50,11 +50,8 @@ namespace EVEMon
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ccpGamesLinkLabel = new System.Windows.Forms.LinkLabel();
             this.battleclinicLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.zofuLinkLabel = new System.Windows.Forms.LinkLabel();
             this.eveCentralLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.iconsLinkLabel = new System.Windows.Forms.LinkLabel();
             this.eveDevLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.josephAlbahariLinkLabel = new System.Windows.Forms.LinkLabel();
             this.googleDataLinkLabel = new System.Windows.Forms.LinkLabel();
             this.lironLeviLinkLabel = new System.Windows.Forms.LinkLabel();
             this.stackOverflowLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -285,11 +282,8 @@ namespace EVEMon
             // 
             this.flowLayoutPanel1.Controls.Add(this.ccpGamesLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.battleclinicLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.zofuLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.eveCentralLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.iconsLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.eveDevLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.josephAlbahariLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.googleDataLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.lironLeviLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.stackOverflowLinkLabel);
@@ -322,29 +316,16 @@ namespace EVEMon
             this.battleclinicLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.battleclinicLinkLabel.Name = "battleclinicLinkLabel";
             this.battleclinicLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.battleclinicLinkLabel.Size = new System.Drawing.Size(236, 19);
+            this.battleclinicLinkLabel.Size = new System.Drawing.Size(238, 19);
             this.battleclinicLinkLabel.TabIndex = 11;
             this.battleclinicLinkLabel.Text = "BattleClinic, which hosts and supports EVEMon.";
             this.battleclinicLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
-            // 
-            // zofuLinkLabel
-            // 
-            this.zofuLinkLabel.AutoSize = true;
-            this.zofuLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.zofuLinkLabel.Location = new System.Drawing.Point(0, 51);
-            this.zofuLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.zofuLinkLabel.Name = "zofuLinkLabel";
-            this.zofuLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.zofuLinkLabel.Size = new System.Drawing.Size(176, 19);
-            this.zofuLinkLabel.TabIndex = 6;
-            this.zofuLinkLabel.Text = "Zofu, who feeds us with datafiles.";
-            this.zofuLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // eveCentralLinkLabel
             // 
             this.eveCentralLinkLabel.AutoSize = true;
             this.eveCentralLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.eveCentralLinkLabel.Location = new System.Drawing.Point(0, 70);
+            this.eveCentralLinkLabel.Location = new System.Drawing.Point(0, 51);
             this.eveCentralLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.eveCentralLinkLabel.Name = "eveCentralLinkLabel";
             this.eveCentralLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -353,24 +334,11 @@ namespace EVEMon
             this.eveCentralLinkLabel.Text = "Eve-central for their market data and API.";
             this.eveCentralLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
-            // iconsLinkLabel
-            // 
-            this.iconsLinkLabel.AutoSize = true;
-            this.iconsLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.iconsLinkLabel.Location = new System.Drawing.Point(0, 89);
-            this.iconsLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.iconsLinkLabel.Name = "iconsLinkLabel";
-            this.iconsLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.iconsLinkLabel.Size = new System.Drawing.Size(229, 19);
-            this.iconsLinkLabel.TabIndex = 5;
-            this.iconsLinkLabel.Text = "Famfamfam.com and Wikimedia for the icons.";
-            this.iconsLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
-            // 
             // eveDevLinkLabel
             // 
             this.eveDevLinkLabel.AutoSize = true;
             this.eveDevLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.eveDevLinkLabel.Location = new System.Drawing.Point(0, 108);
+            this.eveDevLinkLabel.Location = new System.Drawing.Point(0, 70);
             this.eveDevLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.eveDevLinkLabel.Name = "eveDevLinkLabel";
             this.eveDevLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -379,24 +347,11 @@ namespace EVEMon
             this.eveDevLinkLabel.Text = "EVEDev for their documentation.";
             this.eveDevLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
-            // josephAlbahariLinkLabel
-            // 
-            this.josephAlbahariLinkLabel.AutoSize = true;
-            this.josephAlbahariLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.josephAlbahariLinkLabel.Location = new System.Drawing.Point(0, 127);
-            this.josephAlbahariLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.josephAlbahariLinkLabel.Name = "josephAlbahariLinkLabel";
-            this.josephAlbahariLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.josephAlbahariLinkLabel.Size = new System.Drawing.Size(161, 19);
-            this.josephAlbahariLinkLabel.TabIndex = 9;
-            this.josephAlbahariLinkLabel.Text = "Joseph Albahari for LinqBridge.";
-            this.josephAlbahariLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
-            // 
             // googleDataLinkLabel
             // 
             this.googleDataLinkLabel.AutoSize = true;
             this.googleDataLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.googleDataLinkLabel.Location = new System.Drawing.Point(0, 146);
+            this.googleDataLinkLabel.Location = new System.Drawing.Point(0, 89);
             this.googleDataLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.googleDataLinkLabel.Name = "googleDataLinkLabel";
             this.googleDataLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -409,7 +364,7 @@ namespace EVEMon
             // 
             this.lironLeviLinkLabel.AutoSize = true;
             this.lironLeviLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.lironLeviLinkLabel.Location = new System.Drawing.Point(0, 165);
+            this.lironLeviLinkLabel.Location = new System.Drawing.Point(0, 108);
             this.lironLeviLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.lironLeviLinkLabel.Name = "lironLeviLinkLabel";
             this.lironLeviLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -422,7 +377,7 @@ namespace EVEMon
             // 
             this.stackOverflowLinkLabel.AutoSize = true;
             this.stackOverflowLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.stackOverflowLinkLabel.Location = new System.Drawing.Point(0, 184);
+            this.stackOverflowLinkLabel.Location = new System.Drawing.Point(0, 127);
             this.stackOverflowLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.stackOverflowLinkLabel.Name = "stackOverflowLinkLabel";
             this.stackOverflowLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -434,7 +389,7 @@ namespace EVEMon
             // forgotLabel
             // 
             this.forgotLabel.AutoSize = true;
-            this.forgotLabel.Location = new System.Drawing.Point(0, 216);
+            this.forgotLabel.Location = new System.Drawing.Point(0, 159);
             this.forgotLabel.Margin = new System.Windows.Forms.Padding(0);
             this.forgotLabel.Name = "forgotLabel";
             this.forgotLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -511,16 +466,13 @@ namespace EVEMon
         private System.Windows.Forms.Label CreatedByLabel;
         private System.Windows.Forms.Label DonationsLabel;
         private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.LinkLabel iconsLinkLabel;
         private System.Windows.Forms.FlowLayoutPanel leftPanel;
         private System.Windows.Forms.Label DevContribLabel;
         private System.Windows.Forms.ListView devsList;
         private System.Windows.Forms.Label CredentialsLabels;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.LinkLabel ccpGamesLinkLabel;
-        private System.Windows.Forms.LinkLabel zofuLinkLabel;
         private System.Windows.Forms.LinkLabel eveDevLinkLabel;
-        private System.Windows.Forms.LinkLabel josephAlbahariLinkLabel;
         private System.Windows.Forms.LinkLabel googleDataLinkLabel;
         private System.Windows.Forms.LinkLabel battleclinicLinkLabel;
         private System.Windows.Forms.LinkLabel eveCentralLinkLabel;

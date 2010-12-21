@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Linq;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -58,32 +55,40 @@ namespace EVEMon.Common
 
             // Initializes the query monitors 
             m_charSheetMonitor = new CharacterQueryMonitor<SerializableAPICharacter>(this, APIMethods.CharacterSheet);
-            m_charSheetMonitor.Updated += new QueryCallback<SerializableAPICharacter>(OnCharacterSheetUpdated);
+            m_charSheetMonitor.Updated += OnCharacterSheetUpdated;
             m_monitors.Add(m_charSheetMonitor);
 
             m_skillQueueMonitor = new CharacterQueryMonitor<SerializableSkillQueue>(this, APIMethods.SkillQueue);
-            m_skillQueueMonitor.Updated += new QueryCallback<SerializableSkillQueue>(OnSkillQueueUpdated);
+            m_skillQueueMonitor.Updated += OnSkillQueueUpdated;
             m_monitors.Add(m_skillQueueMonitor);
 
             m_charMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIOrderList>(this, APIMethods.MarketOrders);
-            m_charMarketOrdersMonitor.Updated += new QueryCallback<SerializableAPIOrderList>(OnCharacterMarketOrdersUpdated);
+            m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
             m_monitors.Add(m_charMarketOrdersMonitor);
 
             m_corpMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIOrderList>(this, APIMethods.CorporationMarketOrders);
-            m_corpMarketOrdersMonitor.Updated += new QueryCallback<SerializableAPIOrderList>(OnCorporationMarketOrdersUpdated);
+            m_corpMarketOrdersMonitor.Updated += OnCorporationMarketOrdersUpdated;
             m_monitors.Add(m_corpMarketOrdersMonitor);
 
             m_charIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIJobList>(this, APIMethods.IndustryJobs);
-            m_charIndustryJobsMonitor.Updated += new QueryCallback<SerializableAPIJobList>(OnCharacterJobsUpdated);
+            m_charIndustryJobsMonitor.Updated += OnCharacterJobsUpdated;
             m_monitors.Add(m_charIndustryJobsMonitor);
 
             m_corpIndustryJobsMonitor = new CharacterQueryMonitor<SerializableAPIJobList>(this, APIMethods.CorporationIndustryJobs);
-            m_corpIndustryJobsMonitor.Updated += new QueryCallback<SerializableAPIJobList>(OnCorporationJobsUpdated);
+            m_corpIndustryJobsMonitor.Updated += OnCorporationJobsUpdated;
             m_monitors.Add(m_corpIndustryJobsMonitor);
 
             m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearchList>(this, APIMethods.ResearchPoints);
-            m_charResearchPointsMonitor.Updated += new QueryCallback<SerializableAPIResearchList>(OnCharacterResearchPointsUpdated);
+            m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
             m_monitors.Add(m_charResearchPointsMonitor);
+
+            // We enable only the monitors that require a limited api key
+            // Full api key required monitors will be enabled 
+            // individually through each character's enabled monitor
+            foreach (var monitor in m_monitors)
+            {
+                monitor.Enabled = !monitor.IsFullKeyNeeded;
+            }
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill queue for this character
+        /// Gets the skill queue for this character.
         /// </summary>
         public SkillQueue SkillQueue
         {
@@ -174,7 +179,7 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsInNPCCorporation
         {
-            get { return StaticGeography.AllStations.Any(x => x.CorporationID == this.CorporationID); }
+            get { return StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID); }
         }
 
         /// <summary>
@@ -274,7 +279,7 @@ namespace EVEMon.Common
         /// </summary>
         internal override void UpdateOnOneSecondTick()
         {
-            if (!this.Monitored)
+            if (!Monitored)
                 return;
 
             m_monitors.UpdateOnOneSecondTick();
@@ -297,10 +302,10 @@ namespace EVEMon.Common
                 return;
 
             // Imports the data
-            this.Import(result);
+            Import(result);
 
             // Check the character has a sufficient clone or send a notification
-            if (m_cloneSkillPoints < this.SkillPoints)
+            if (m_cloneSkillPoints < SkillPoints)
             {
                 EveClient.Notifications.NotifyInsufficientClone(this);
             }
@@ -467,6 +472,7 @@ namespace EVEMon.Common
         /// Checks whether we should notify an error.
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="method"></param>
         /// <returns></returns>
         private bool ShouldNotifyError(IAPIResult result, APIMethods method)
         {
@@ -564,7 +570,7 @@ namespace EVEMon.Common
         /// Add the queried jobs to a list.
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="ordersAdded"></param>
+        /// <param name="jobsAdded"></param>
         /// <param name="issuedFor"></param>
         /// <returns>True if jobs get added, false otherwise</returns>
         private bool AddJobs(APIResult<SerializableAPIJobList> result, bool jobsAdded, IssuedFor issuedFor)
@@ -588,7 +594,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Import the jobs from both industry jobs querying.
         /// </summary>
-        /// <param name="orders"></param>
+        /// <param name="jobs"></param>
         private void Import(List<SerializableAPIJob> jobs)
         {
             // Exclude jobs that wheren't issued by this character

@@ -47,6 +47,7 @@ namespace EVEMon
             
             // EVEMon Guru
             slDevelopers.Add("Richard Slater", "01");
+            slDevelopers.Add("Vehlin", "01");
 
             // Guru (Retired)
             slDevelopers.Add("Araan Sunn", "02");
@@ -58,6 +59,7 @@ namespace EVEMon
             // Developers
             slDevelopers.Add("MrCue", "03");
             slDevelopers.Add("Jimi", "03");
+            slDevelopers.Add("Tonto Auri", "03");
 
             // Developers (Retired)
             slDevelopers.Add("Collin Grady", "04");
@@ -137,7 +139,6 @@ namespace EVEMon
             slDevelopers.Add("TheConstructor", "05");
             slDevelopers.Add("Trin", "05");
             slDevelopers.Add("vardoj", "05");
-            slDevelopers.Add("Vehlin", "05");
             slDevelopers.Add("Waste Land", "05");
             slDevelopers.Add("wrok", "05");
             slDevelopers.Add("xNomeda", "05");
@@ -176,12 +177,8 @@ namespace EVEMon
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
-            AddLinkToLabel(zofuLinkLabel, "Zofu", "http://zofu.no-ip.de/");
             AddLinkToLabel(eveCentralLinkLabel, "Eve-central", "http://www.eve-central.com/");
-            AddLinkToLabel(iconsLinkLabel, "Famfamfam.com", "http://famfamfam.com/");
-            AddLinkToLabel(iconsLinkLabel, "Wikimedia", "http://wikimedia.org/");
             AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://www.eve-dev.net/");
-            AddLinkToLabel(josephAlbahariLinkLabel, "Joseph Albarari", "http://www.albahari.com/nutshell/linqbridge.aspx");
             AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");
             AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/KB/cs/multipanelcontrol.aspx");
             AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com");

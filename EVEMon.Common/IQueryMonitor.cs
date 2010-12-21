@@ -7,6 +7,12 @@ namespace EVEMon.Common
     public interface IQueryMonitor
     {
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IQueryMonitor"/> is enabled.
+        /// </summary>
+        /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+        bool Enabled { get; set; }
+        
+        /// <summary>
         /// Gets the status of the query.
         /// </summary>
         QueryStatus Status { get; }

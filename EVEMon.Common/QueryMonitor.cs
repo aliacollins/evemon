@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.API;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -56,7 +54,7 @@ namespace EVEMon.Common
         public bool Enabled
         {
             get { return m_enabled; }
-            internal set { m_enabled = value; }
+            set { m_enabled = value; }
         }
 
         /// <summary>

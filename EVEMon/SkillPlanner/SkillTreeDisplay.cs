@@ -37,7 +37,7 @@ namespace EVEMon.SkillPlanner
             /// </summary>
             public int Width
             {
-                get { return Count * m_std.CellWidth + (Count - 1) * SKILLBOX_MARGIN_LR; }
+                get { return Count * m_std.CellWidth + (Count - 1) * SkillboxMarginLr; }
             }
 
             /// <summary>
@@ -56,7 +56,7 @@ namespace EVEMon.SkillPlanner
                 var left = this[Math.Min(leftIndex, rightIndex)];
                 var right = this[Math.Max(leftIndex, rightIndex)];
 
-                space = right.Rectangle.Left - (left.Rectangle.Right + SKILLBOX_MARGIN_LR);
+                space = right.Rectangle.Left - (left.Rectangle.Right + SkillboxMarginLr);
                 return (space < 0);
             }
         }
@@ -105,7 +105,9 @@ namespace EVEMon.SkillPlanner
             /// <summary>
             /// Constructor for prerequisites
             /// </summary>
+            /// <param name="rows"></param>
             /// <param name="level"></param>
+            /// <param name="prereq"></param>
             private Cell(SkillLevel prereq, List<Row> rows, int level)
             {
                 Skill = prereq.Skill;
@@ -144,14 +146,14 @@ namespace EVEMon.SkillPlanner
                 Rectangle = new Rectangle(left - m_std.CellWidth / 2, top, m_std.CellWidth, m_std.CellHeight);
 
                 // Layout the children
-                int childrenTop = top + m_std.CellHeight + SKILLBOX_MARGIN_UD;
-                int childrenWidth = Cells.Count * m_std.CellWidth +(Cells.Count - 1) * SKILLBOX_MARGIN_LR;
+                int childrenTop = top + m_std.CellHeight + SkillboxMarginUd;
+                int childrenWidth = Cells.Count * m_std.CellWidth +(Cells.Count - 1) * SkillboxMarginLr;
 
                 left += (m_std.CellWidth - childrenWidth) / 2;
                 foreach (var cell in Cells)
                 {
                     cell.FirstPassLayout(left, childrenTop);
-                    left += m_std.CellWidth + SKILLBOX_MARGIN_LR;
+                    left += m_std.CellWidth + SkillboxMarginLr;
                 }
             }
 
@@ -159,7 +161,7 @@ namespace EVEMon.SkillPlanner
             /// The first pass may have created overlapping rectangles, so we check every row and shift boxes when required.
             /// </summary>
             /// <param name="rows"></param>
-            /// <param name="p"></param>
+            /// <param name="level"></param>
             private void SecondPassLayout(List<Row> rows, int level)
             {
                 // Gets the row for this level
@@ -169,7 +171,7 @@ namespace EVEMon.SkillPlanner
                 var row = rows[level];
 
                 // Scan every cell and, when there is a conflict, shift all the other cells
-                for (int i = 0; i < Cells.Count - 1; i++)
+                for (int i = 0; i < row.Count - 1; i++)
                 {
                     int space;
                     if (!row.AreOverlapping(i, i + 1, out space))
@@ -269,8 +271,8 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        private const int SKILLBOX_MARGIN_UD = 20;
-        private const int SKILLBOX_MARGIN_LR = 10;
+        private const int SkillboxMarginUd = 20;
+        private const int SkillboxMarginLr = 10;
         private const DescriptiveTextOptions TimeFormat = DescriptiveTextOptions.UppercaseText | DescriptiveTextOptions.IncludeCommas;
 
         public event SkillClickedHandler SkillClicked;
@@ -480,7 +482,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="g"></param>
         /// <param name="startCell"></param>
         /// <param name="endCell"></param>
-        /// <param name="linePen"></param>
+        /// <param name="pen"></param>
         /// <param name="ofsLeft"></param>
         /// <param name="ofsTop"></param>
         private void DrawLines(Graphics g, Cell startCell, Cell endCell, Pen pen, int ofsLeft, int ofsTop)
@@ -770,7 +772,7 @@ namespace EVEMon.SkillPlanner
 
     #region SkillClickedHandler
     /// <summary>
-    /// Handler for the <see cref="SkilltreeDisplay.SkillClicked"/> event.
+    /// Handler for the <see cref="SkillTreeDisplay.SkillClicked"/> event.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
