@@ -137,7 +137,7 @@ namespace EVEMon.Common
             }
             else if (m_state == OrderState.Modified)
             {
-                m_state = (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Active);
+                m_state = OrderState.Active;
             }
 
             // Update state
@@ -410,7 +410,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal bool IsModified (SerializableAPIOrder src)
         {
-            return src.RemainingVolume != 0 && (src.UnitaryPrice != m_unitaryPrice && src.Issued != m_issued 
+            return src.RemainingVolume != 0
+                && ((src.UnitaryPrice != m_unitaryPrice && src.Issued != m_issued)
                 || src.RemainingVolume != m_remainingVolume);
         }
 
@@ -424,16 +425,24 @@ namespace EVEMon.Common
             decimal abs = Math.Abs(value);
             if (format == AbbreviationFormat.AbbreviationWords)
             {
-                if (abs >= 1E9M) return Format("Billions", value / 1E9M);
-                if (abs >= 1E6M) return Format("Millions", value / 1E6M);
-                if (abs >= 1E3M) return Format("Thousands", value / 1E3M);
+                if (abs >= 1E9M)
+                    return Format("Billions", value / 1E9M);
+                if (abs >= 1E6M)
+                    return Format("Millions", value / 1E6M);
+                if (abs >= 1E3M)
+                    return Format("Thousands", value / 1E3M);
+                
                 return Format("", value);
             }
             else
             {
-                if (abs >= 1E9M) return Format("B", value / 1E9M);
-                if (abs >= 1E6M) return Format("M", value / 1E6M);
-                if (abs >= 1E3M) return Format("K", value / 1E3M);
+                if (abs >= 1E9M)
+                    return Format("B", value / 1E9M);
+                if (abs >= 1E6M)
+                    return Format("M", value / 1E6M);
+                if (abs >= 1E3M)
+                    return Format("K", value / 1E3M);
+                
                 return Format("", value);
             }
         }
