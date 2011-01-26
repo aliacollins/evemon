@@ -327,7 +327,7 @@ namespace EVEMon.Common
         /// </summary>
         public string RomanLevel
         {
-            get { return GetRomanForInt(this.Level); }
+            get { return GetRomanForInt(Level); }
         }
 
         /// <summary>
@@ -431,21 +431,14 @@ namespace EVEMon.Common
 
                 // Not partially trained ? Then it's 1.0
                 var levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
-                if (this.SkillPoints <= levelSp)
+                if (SkillPoints <= levelSp)
                     return 0.0f;
 
                 // Partially trained, let's compute the difference with the previous level
                 float nextLevelSp = (float)m_staticData.GetPointsRequiredForLevel(m_level + 1);
-                float fraction = (this.SkillPoints - levelSp) / (nextLevelSp - levelSp);
+                float fraction = (SkillPoints - levelSp) / (nextLevelSp - levelSp);
 
-                if (fraction <= 1)
-                {
-                    return fraction;
-                }
-                else
-                {
-                    return fraction % 1;
-                }
+                return (fraction <= 1 ? fraction : fraction % 1); 
             }
         }
 
@@ -550,7 +543,7 @@ namespace EVEMon.Common
         /// <returns>The name of the skill.</returns>
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         /// <summary>
@@ -589,7 +582,7 @@ namespace EVEMon.Common
         /// <returns>The required nr. of points.</returns>
         public int GetLeftPointsRequiredToLevel(int level)
         {
-            int result = m_staticData.GetPointsRequiredForLevel(level) - this.SkillPoints;
+            int result = m_staticData.GetPointsRequiredForLevel(level) - SkillPoints;
             
             if (result < 0)
                 return 0;
@@ -608,7 +601,7 @@ namespace EVEMon.Common
             if (level == 0)
                 return 0;
 
-            int startSP = Math.Max(this.SkillPoints, m_staticData.GetPointsRequiredForLevel(level - 1));
+            int startSP = Math.Max(SkillPoints, m_staticData.GetPointsRequiredForLevel(level - 1));
             int result = m_staticData.GetPointsRequiredForLevel(level) - startSP;
 
             if (result < 0)

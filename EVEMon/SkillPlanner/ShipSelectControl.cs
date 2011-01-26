@@ -167,6 +167,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void BuildTreeView()
         {
+            // Reset selected object
+            SelectedObject = null;
+            
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
@@ -193,6 +196,7 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
+                m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
                 if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))

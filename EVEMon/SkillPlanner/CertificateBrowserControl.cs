@@ -5,9 +5,11 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Controls;
 
 namespace EVEMon.SkillPlanner
 {
@@ -26,6 +28,9 @@ namespace EVEMon.SkillPlanner
             leftSplitContainer.RememberDistanceKey = "CertificateBrowser_Left";
         }
 
+
+        #region Inherited Events
+
         /// <summary>
         /// On load.
         /// </summary>
@@ -40,7 +45,7 @@ namespace EVEMon.SkillPlanner
             EveClient.PlanChanged += EveClient_PlanChanged;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             Disposed += OnDisposed;
-            
+
             // Reposition the help text along side the treeview
             Control[] result = certSelectCtl.Controls.Find("pnlResults", true);
             if (result.Length > 0)
@@ -66,6 +71,11 @@ namespace EVEMon.SkillPlanner
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the character this control is bound to
@@ -120,12 +130,15 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        #endregion
+
+
+        #region Content Update
+
         /// <summary>
-        /// When the user select a new certificate class, we update everything
+        /// Updates the content.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void certSelectCtl_SelectionChanged(object sender, EventArgs e)
+        private void UpdateContent()
         {
             var certClass = certSelectCtl.SelectedCertificateClass;
             certDisplayCtl.CertificateClass = certClass;
@@ -170,6 +183,7 @@ namespace EVEMon.SkillPlanner
                 {
                     ships.Add(s.Name, s);
                 }
+
                 if (ships.Count != 0)
                 {
                     Label tsl = new Label();
@@ -199,7 +213,30 @@ namespace EVEMon.SkillPlanner
                     }
                 }
             }
+
+            // Updates the recommendations for this certificate
+            UpdateRecommendations(newItems, rSplCont);
+
+            // Hides the other labels
+            while (lbIndex < labels.Length)
+            {
+                labels[lbIndex].Visible = false;
+                lbIndex++;
+            }
+
+            // Update the menus and such
+            UpdateEligibility();
+        }
+
+        /// <summary>
+        /// Updates the recommendations.
+        /// </summary>
+        /// <param name="newItems">The new items list.</param>
+        /// <param name="rSplCont">The right splitter container.</param>
+        private void UpdateRecommendations(List<Control> newItems, PersistentSplitContainer rSplCont)
+        {
             rightSplitContainer.Panel2.Controls.Clear();
+
             if (newItems.Count != 0)
             {
                 newItems.Reverse();
@@ -217,89 +254,6 @@ namespace EVEMon.SkillPlanner
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
                 rSplCont.Panel2MinSize = tslTextSize.Width + HPad;
                 rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
-            }
-
-            // Hides the other labels
-            while (lbIndex < labels.Length)
-            {
-                labels[lbIndex].Visible = false;
-                lbIndex++;
-            }
-
-            // Update the menus and such
-            UpdateEligibility();
-        }
-
-        /// <summary>
-        /// Handler for the ship-links generated for the recommendations
-        /// </summary>
-        void recommendations_MenuItem(object sender, EventArgs e)
-        {
-            Control tsi = sender as Control;
-            if (tsi == null)
-                return;
-            Item ship = tsi.Tag as Item;
-            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
-            if (ship != null && window != null && !window.IsDisposed)
-            {
-                window.ShowShipInBrowser(ship);
-            }
-        }
-
-        /// <summary>
-        /// When the display tree's selection changes, we may update the description
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
-        {
-            var cert = certDisplayCtl.SelectedCertificateLevel;
-            var certClass = certSelectCtl.SelectedCertificateClass;
-
-            // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
-            if (cert == null || cert.Class != certClass)
-            {
-                var firstCert = certClass.LowestGradeCertificate;
-                textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
-                lblName.Text = String.Format("{0} {1}", certClass.Name,
-                    (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
-            }
-            // So, one of our cert class's grades has been selected, we use its description
-            else
-            {
-                textboxDescription.Text = cert.Description;
-                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade.ToString());
-            }
-        }
-
-        /// <summary>
-        /// When the current plan changes (new skills, etc), we need to update some informations.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
-        {
-            if (e.Plan == m_plan)
-                UpdateEligibility();
-        }
-
-        /// <summary>
-        /// When the settings changes, we need to update.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
-        {
-            // Read the SafeForWork settings
-            if (Settings.UI.SafeForWork)
-            {
-                pictureBox1.Visible = false;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            }
-            else
-            {
-                pictureBox1.Visible = true;
-                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
         }
 
@@ -377,28 +331,148 @@ namespace EVEMon.SkillPlanner
 
         }
 
+        #endregion
+
+
+        #region Control Events
+
+        /// <summary>
+        /// When the user select a new certificate class, we update everything
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void certSelectCtl_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// Handler for the ship-links generated for the recommendations
+        /// </summary>
+        void recommendations_MenuItem(object sender, EventArgs e)
+        {
+            Control tsi = sender as Control;
+            if (tsi == null)
+                return;
+            Item ship = tsi.Tag as Item;
+            PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
+            if (ship != null && window != null && !window.IsDisposed)
+            {
+                window.ShowShipInBrowser(ship);
+            }
+        }
+
+        /// <summary>
+        /// When the display tree's selection changes, we may update the description
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
+        {
+            var cert = certDisplayCtl.SelectedCertificateLevel;
+            var certClass = certSelectCtl.SelectedCertificateClass;
+
+            // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
+            if (cert == null || cert.Class != certClass)
+            {
+                var firstCert = certClass.LowestGradeCertificate;
+                textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
+                lblName.Text = String.Format("{0} {1}", certClass.Name,
+                    (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
+            }
+            // So, one of our cert class's grades has been selected, we use its description
+            else
+            {
+                textboxDescription.Text = cert.Description;
+                lblName.Text = String.Format("{0} {1}", certClass.Name, cert.Grade.ToString());
+            }
+        }
+
+        #endregion
+
+
+        #region Event Handlers
+
+        /// <summary>
+        /// When the current plan changes (new skills, etc), we need to update some informations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        {
+            if (e.Plan == m_plan)
+                UpdateEligibility();
+        }
+
+        /// <summary>
+        /// When the settings changes, we need to update.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        {
+            // Read the SafeForWork settings
+            if (Settings.UI.SafeForWork)
+            {
+                pictureBox1.Visible = false;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            }
+            else
+            {
+                pictureBox1.Visible = true;
+                tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            }
+        }
+
+        #endregion
+
+
+        #region Context menu
+
+		/// <summary>
+        /// Handles the Click event of the tsPlanToBasic control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToBasic_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Handles the Click event of the tsPlanToStandard control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToStandard_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Handles the Click event of the tsPlanToImproved control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToImproved_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
             PlanHelper.SelectPerform(operation);
         }
 
+        /// <summary>
+        /// Handles the Click event of the tsPlanToElite control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToElite_Click(object sender, EventArgs e)
         {
             var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
             PlanHelper.SelectPerform(operation);
         }
+
+        #endregion
     }
 }

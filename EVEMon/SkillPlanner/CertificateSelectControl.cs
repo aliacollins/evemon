@@ -193,7 +193,9 @@ namespace EVEMon.SkillPlanner
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSettingsForFilter(cbFilter.SelectedIndex);
-            UpdateContent();
+            IEnumerable<CertificateClass> classes = GetFilteredData();
+            UpdateCategoryNodes();
+            UpdateTree(classes);
         }
 
         /// <summary>
@@ -351,54 +353,34 @@ namespace EVEMon.SkillPlanner
             if (m_iconsFont == null)
                 return;
 
-            //Reset selection
-            SelectedCertificateClass = null;
-
             IEnumerable<CertificateClass> classes = GetFilteredData();
+
+            tvItems.Visible = false;
+            lbSearchList.Visible = false;
+            lvSortedList.Visible = false;
+            lbNoMatches.Visible = false;
 
             // Nothing to display ?
             if (classes.IsEmpty())
             {
-                tvItems.Visible = false;
-                lbSearchList.Visible = false;
-                lvSortedList.Visible = false;
                 lbNoMatches.Visible = true;
             }
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
-                tvItems.Visible = false;
-                lbSearchList.Visible = false;
                 lvSortedList.Visible = true;
-                lbNoMatches.Visible = false;
-
-                lvSortedList.Location = tvItems.Location;
-                lvSortedList.Size = tvItems.Size;
-
                 UpdateListView(classes);
             }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                tvItems.Visible = false;
                 lbSearchList.Visible = true;
-                lvSortedList.Visible = false;
-                lbNoMatches.Visible = false;
-
-                lbSearchList.Location = tvItems.Location;
-                lbSearchList.Size = tvItems.Size;
-
                 UpdateListBox(classes);
             }
             // Regular display, the tree 
             else
             {
                 tvItems.Visible = true;
-                lbSearchList.Visible = false;
-                lvSortedList.Visible = false;
-                lbNoMatches.Visible = false;
-
-                UpdateTree(classes);
             }
         }
 
@@ -408,15 +390,22 @@ namespace EVEMon.SkillPlanner
         /// <param name="classes"></param>
         private void UpdateTree(IEnumerable<CertificateClass> classes)
         {
+            //Reset selected object
+            SelectedCertificateClass = null;
+            
             // Fill the tree
+            int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
             {
+                int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
+
                 foreach (TreeNode node in tvItems.Nodes)
                 {
+
                     var category = (CertificateCategory)node.Tag;
-                    node.ImageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
-                    node.SelectedImageIndex = node.ImageIndex;
+                    node.ImageIndex = imageIndex;
+                    node.SelectedImageIndex = imageIndex;
 
                     node.Nodes.Clear();
 
@@ -424,12 +413,18 @@ namespace EVEMon.SkillPlanner
                     {
                         if (certClass.Category == category)
                         {
-                            TreeNode child = new TreeNode(certClass.Name);
-                            child.ImageIndex = GetCertImageIndex(certClass);
-                            child.SelectedImageIndex = child.ImageIndex;
-                            child.Tag = certClass;
+                            int index = GetCertImageIndex(certClass);
+                            
+                            TreeNode childNode = new TreeNode()
+                            {
+                                Text = certClass.Name,
+                                ImageIndex = index,
+                                SelectedImageIndex = index,
+                                Tag = certClass
+                            };
 
-                            node.Nodes.Add(child);
+                            numberOfItems++;
+                            node.Nodes.Add(childNode);
                         }
                     }
                 }
@@ -437,6 +432,14 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
+                m_allExpanded = false;
+
+                // If the filtered set is small enough to fit all nodes on screen, call expandAll()
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                {
+                    tvItems.ExpandAll();
+                    m_allExpanded = true;
+                }
             }
         }
 

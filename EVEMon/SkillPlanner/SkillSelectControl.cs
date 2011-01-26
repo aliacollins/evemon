@@ -233,49 +233,32 @@ namespace EVEMon.SkillPlanner
 
             IEnumerable<Skill> skills = GetFilteredData();
 
+            tvItems.Visible = false;
+            lbSearchList.Visible = false;
+            lvSortedSkillList.Visible = false;
+            lbNoMatches.Visible = false;
+
             // Nothing to display ?
             if (skills.IsEmpty())
             {
-                tvItems.Visible = false;
-                lbSearchList.Visible = false;
-                lvSortedSkillList.Visible = false;
                 lbNoMatches.Visible = true;
             }
             // Is it sorted ?
             else if (cbSorting.SelectedIndex != 0)
             {
-                tvItems.Visible = false;
-                lbSearchList.Visible = false;
                 lvSortedSkillList.Visible = true;
-                lbNoMatches.Visible = false;
-
-                lvSortedSkillList.Location = tvItems.Location;
-                lvSortedSkillList.Size = tvItems.Size;
-
                 UpdateListView(skills);
-            }
+           }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                tvItems.Visible = false;
                 lbSearchList.Visible = true;
-                lvSortedSkillList.Visible = false;
-                lbNoMatches.Visible = false;
-
-                lbSearchList.Location = tvItems.Location;
-                lbSearchList.Size = tvItems.Size;
-
                 UpdateListBox(skills);
             }
-            // Regular display, the tree 
+            // Regular display, the tree
             else
             {
                 tvItems.Visible = true;
-                lbSearchList.Visible = false;
-                lvSortedSkillList.Visible = false;
-                lbNoMatches.Visible = false;
-
-                UpdateTree(skills);
             }
         }
 
@@ -374,25 +357,34 @@ namespace EVEMon.SkillPlanner
         /// <param name="skills"></param>
         private void UpdateTree(IEnumerable<Skill> skills)
         {
-            // Update the image list choice
-            int index = Settings.UI.SkillBrowser.IconsGroupIndex;
-            if (index == 0)
-                index = 1;
+            //Reset selected object
+            SelectedSkill = null;
 
-            tvItems.ImageList = GetIconSet(index);
+            // Update the image list choice
+            int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
+            if (iconGroupIndex == 0)
+                iconGroupIndex = 1;
+
+            tvItems.ImageList = GetIconSet(iconGroupIndex);
             tvItems.ImageList.ColorDepth = ColorDepth.Depth32Bit;
 
             // Rebuild the nodes
+            int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
             {
                 tvItems.Nodes.Clear();
                 foreach (var group in skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
                 {
-                    TreeNode groupNode = new TreeNode(group.Key.Name, 
-                        tvItems.ImageList.Images.IndexOfKey("book"), 
-                        tvItems.ImageList.Images.IndexOfKey("book"));
-                    groupNode.Tag = group.Key;
+                    int index = tvItems.ImageList.Images.IndexOfKey("book");
+
+                    TreeNode groupNode = new TreeNode()
+                    { 
+                        Text = group.Key.Name,
+                        ImageIndex = index,
+                        SelectedImageIndex = index,
+                        Tag = group.Key
+                    };
 
                     // Add nodes for skills in this group
                     foreach (var skill in group)
@@ -421,26 +413,33 @@ namespace EVEMon.SkillPlanner
                         }
 
                         // Create node and adds it
-                        TreeNode stn = new TreeNode(skill.Name + " (" + skill.Rank + ")", imageIndex, imageIndex);
-                        stn.Tag = skill;
+                        TreeNode node = new TreeNode()
+                        {
+                            Text = String.Format("{0} ({1})", skill.Name, skill.Rank),
+                            ImageIndex = imageIndex,
+                            SelectedImageIndex = imageIndex,
+                            Tag = skill
+                        };
+
 
                         // We color some nodes
                         if (!skill.IsPublic && Settings.UI.SkillBrowser.ShowNonPublicSkills)
-                            stn.ForeColor = Color.DarkRed;
+                            node.ForeColor = Color.DarkRed;
 
                         if (skill.IsPartiallyTrained && Settings.UI.PlanWindow.HighlightPartialSkills)
-                            stn.ForeColor = Color.Green;
+                            node.ForeColor = Color.Green;
 
                         if (skill.IsQueued && !skill.IsTraining && Settings.UI.PlanWindow.HighlightQueuedSkills)
-                            stn.ForeColor = Color.RoyalBlue;
+                            node.ForeColor = Color.RoyalBlue;
 
                         if (skill.IsTraining)
                         {
-                            stn.BackColor = Color.LightSteelBlue;
-                            stn.ForeColor = Color.Black;
+                            node.BackColor = Color.LightSteelBlue;
+                            node.ForeColor = Color.Black;
                         }
 
-                        groupNode.Nodes.Add(stn);
+                        numberOfItems++;
+                        groupNode.Nodes.Add(node);
                     }
 
                     // Add group when not empty
@@ -451,6 +450,13 @@ namespace EVEMon.SkillPlanner
             {
                 tvItems.EndUpdate();
                 m_allExpanded = false;
+
+                // If the filtered set is small enough to fit all nodes on screen, call expandAll()
+                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                {
+                    tvItems.ExpandAll();
+                    m_allExpanded = true;
+                }
             }
         }
 
@@ -719,7 +725,8 @@ namespace EVEMon.SkillPlanner
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
-            UpdateContent();
+            IEnumerable<Skill> skills = GetFilteredData();
+            UpdateTree(skills);
         }
 
         /// <summary>

@@ -276,7 +276,7 @@ namespace EVEMon.Common.Data
                 case 5:
                     return 256000 * m_rank;
                 default:
-                    throw new NotImplementedException("One of our devs messed up. Skill level was " + level.ToString() + " ?!");
+                    throw new NotImplementedException(String.Format("One of our devs messed up. Skill level was {0} ?!", level));
             }
         }
 

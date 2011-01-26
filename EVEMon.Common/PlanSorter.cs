@@ -51,7 +51,7 @@ namespace EVEMon.Common
 
             if (m_groupByPriority)
             {
-                foreach (var group in m_entries.GroupBy(x => x.Priority))
+                foreach (var group in m_entries.GroupBy(x => x.Priority).OrderBy(x => x.Key))
                 {
                     groupedPlan.Add(new PlanScratchpad(scratchpad, group));
                 }

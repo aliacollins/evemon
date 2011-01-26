@@ -207,6 +207,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void BuildTreeView()
         {
+            // Reset selected object
+            SelectedObject = null;
+
             int numberOfItems = 0;
             tvItems.BeginUpdate();
             try
@@ -216,8 +219,11 @@ namespace EVEMon.SkillPlanner
                 // Create the nodes
                 foreach (var group in StaticBlueprints.BlueprintMarketGroups)
                 {
-                    TreeNode node = new TreeNode();
-                    node.Text = group.Name;
+                    TreeNode node = new TreeNode()
+                    {
+                        Text = group.Name
+                    };
+
                     int result = BuildSubtree(group, node.Nodes);
 
                     if (result != 0)
@@ -230,10 +236,14 @@ namespace EVEMon.SkillPlanner
             finally
             {
                 tvItems.EndUpdate();
+                m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
                 if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                {
                     tvItems.ExpandAll();
+                    m_allExpanded = true;
+                }
             }
         }
 

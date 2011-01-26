@@ -130,9 +130,6 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void BuildListView()
         {
-            //Reset selected object and 'all expanded' flag
-            SelectedObject = null;
-            m_allExpanded = false;
             
             string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
            
