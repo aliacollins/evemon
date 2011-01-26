@@ -66,10 +66,11 @@ namespace InstallBuilder
             locations[0] = programDir + "/NSIS/makensis.exe";
             locations[1] = "C:/Program Files/NSIS/makensis.exe";
             locations[2] = "C:/Program Files (x86)/NSIS/makensis.exe";
-
+            
             foreach (string s in locations)
             {
-                if (File.Exists(s)) return s;
+                if (File.Exists(s))
+                    return s;
             }
 
             return String.Empty;
@@ -78,19 +79,25 @@ namespace InstallBuilder
         private static void PopulateEnvironment(string[] args)
         {
             config = "Release";
-            if (args.Length == 0) projectDir = Path.GetFullPath("../../..");
-            else projectDir = String.Join(" ", args);
+            if (args.Length == 0)
+            {
+                projectDir = Path.GetFullPath("../../..");
+            }
+            else
+            {
+                projectDir = String.Join(" ", args);
+            }
 
-            Console.WriteLine("Project directory : " + projectDir);
+            Console.WriteLine("Project directory : {0}", projectDir);
 
-            Assembly exeAsm = Assembly.LoadFrom("../../../../../EVEMon/bin/x86/" + config + "/EVEMon.exe");
+            Assembly exeAsm = Assembly.LoadFrom(String.Format("../../../../../EVEMon/bin/x86/{0}/EVEMon.exe", config));
             ver = exeAsm.GetName().Version.ToString();
 
-            binariesDir = Path.Combine(projectDir, "../../EVEMon/bin/x86/" + config);
-            Console.WriteLine("Binaries directory : " + binariesDir);
+            binariesDir = Path.Combine(projectDir, String.Format("../../EVEMon/bin/x86/{0}", config));
+            Console.WriteLine("Binaries directory : {0}", binariesDir);
 
             nsisExe = findMakeNsisExe();
-            Console.WriteLine("NSIS : " + nsisExe);
+            Console.WriteLine("NSIS : {0}", nsisExe);
         }
 
         private static void BuildZip()
@@ -117,7 +124,7 @@ namespace InstallBuilder
 
                 foreach (string file in filenames)
                 {
-                    string entryName = "EVEMon" + file.Remove(0, binariesDir.Length);
+                    string entryName = String.Format("EVEMon{0}", file.Remove(0, binariesDir.Length));
                     Console.WriteLine("Zipping {0}", entryName);
                     ZipEntry entry = new ZipEntry(entryName);
 
@@ -152,9 +159,7 @@ namespace InstallBuilder
 #endif
 
                 string param =
-                    "/DVERSION=" + ver + " " +
-                    "\"/DOUTDIR=" + desktopDir + "\" " +
-                    "\"" + nsisScript + "\"";
+                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", ver, desktopDir, nsisScript);
 
                 Console.WriteLine("NSIS script : " + nsisScript);
                 Console.WriteLine("Output directory : " + desktopDir);
@@ -215,7 +220,7 @@ namespace InstallBuilder
                             else if (tLine == "## INSTALLBUILDER: INSERT DELETES HERE ##")
                                 InsertFiles(sw, projectDir, false);
                             else if (tLine.Contains("INSTALLBUILDER"))
-                                throw new ApplicationException("unknown installbuilder command: " + tLine);
+                                throw new ApplicationException(String.Format("unknown installbuilder command: {0}", tLine));
                             else
                             {
                                 sw.WriteLine(tLine);
