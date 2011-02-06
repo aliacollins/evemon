@@ -45,7 +45,7 @@ namespace EVEMon.Common.Net
             try
             {
                 Uri tempUri = new Uri(url);
-                if (tempUri.Scheme != Uri.UriSchemeHttp)
+                if (tempUri.Scheme != Uri.UriSchemeHttp && tempUri.Scheme != Uri.UriSchemeHttps)
                 {
                     errorMsg = String.Format(CultureConstants.DefaultCulture, "The specified scheme ({0}) is not supported.", tempUri.Scheme);
                     return false;

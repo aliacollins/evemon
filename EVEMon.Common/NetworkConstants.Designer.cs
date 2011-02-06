@@ -61,7 +61,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://myeve.eve-online.com/api/default.asp.
+        ///   Looks up a localized string similar to https://www.eveonline.com/api/default.asp.
         /// </summary>
         public static string APIAccountCredentials {
             get {
@@ -70,7 +70,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.eve-online.com.
+        ///   Looks up a localized string similar to https://api.eveonline.com.
         /// </summary>
         public static string APIBase {
             get {
@@ -187,7 +187,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://apitest.eve-online.com.
+        ///   Looks up a localized string similar to https://apitest.eveonline.com.
         /// </summary>
         public static string APITestBase {
             get {
@@ -259,7 +259,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://img.eve.is/serv.asp?s=256&amp;c={0}.
+        ///   Looks up a localized string similar to http://image.eveonline.com/character/{0}_256.jpg.
         /// </summary>
         public static string CCPPortraits {
             get {
@@ -322,7 +322,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://myeve.eve-online.com/bitmaps/character/level.
+        ///   Looks up a localized string similar to http://www.eveonline.com/bitmaps/character/level.
         /// </summary>
         public static string MyEVELevelImage {
             get {

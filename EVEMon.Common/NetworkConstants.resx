@@ -130,7 +130,7 @@
     <value>/char/SkillQueue.xml.aspx</value>
   </data>
   <data name="APIBase" xml:space="preserve">
-    <value>http://api.eve-online.com</value>
+    <value>https://api.eveonline.com</value>
   </data>
   <data name="BatlleclinicTimeSynch" xml:space="preserve">
     <value>http://www.battleclinic.com/time.php</value>
@@ -161,7 +161,7 @@
     <value>http://www.google.com/calendar/feeds/default/private/full</value>
   </data>
   <data name="APIAccountCredentials" xml:space="preserve">
-    <value>http://myeve.eve-online.com/api/default.asp</value>
+    <value>https://www.eveonline.com/api/default.asp</value>
   </data>
   <data name="EVEMonBugReport" xml:space="preserve">
     <value>http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F</value>
@@ -180,7 +180,7 @@
     <comment>Used to check whether the API key is limited or not.</comment>
   </data>
   <data name="MyEVELevelImage" xml:space="preserve">
-    <value>http://myeve.eve-online.com/bitmaps/character/level</value>
+    <value>http://www.eveonline.com/bitmaps/character/level</value>
   </data>
   <data name="APIMarketOrders" xml:space="preserve">
     <value>/char/MarketOrders.xml.aspx</value>
@@ -209,7 +209,7 @@
     <comment>URL For EVE Online Stack Exchange Site</comment>
   </data>
   <data name="APITestBase" xml:space="preserve">
-    <value>http://apitest.eve-online.com</value>
+    <value>https://apitest.eveonline.com</value>
     <comment>Test API Service announced as part of Tyrannis 1.2</comment>
   </data>
   <data name="APIResearchPoints" xml:space="preserve">
