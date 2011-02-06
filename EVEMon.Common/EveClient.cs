@@ -140,7 +140,7 @@ namespace EVEMon.Common
                     try
                     {
                         InitializeEVEMonPaths();
-                        InitializeEvePortraitCachePath();
+                        InitializeDefaultEvePortraitCachePath();
                         return;
                     }
                     catch (UnauthorizedAccessException exc)
@@ -186,54 +186,64 @@ namespace EVEMon.Common
         /// <summary>
         /// Retrieves the portrait cache folder, from the game installation.
         /// </summary>
-        private static void InitializeEvePortraitCachePath()
+        private static void InitializeDefaultEvePortraitCachePath()
         {
-            EvePortraitCacheFolders = new string[] { };
+            DefaultEvePortraitCacheFolders = new string[] { };
             string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string EVEApplicationData = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
+            EVEApplicationDataDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}CCP{0}EVE", Path.DirectorySeparatorChar, LocalApplicationData);
 
             // Check folder exists
-            if (!Directory.Exists(EVEApplicationData))
+            if (!Directory.Exists(EVEApplicationDataDir))
                 return;
 
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
-            DirectoryInfo di = new DirectoryInfo(EVEApplicationData);
+            DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
             DirectoryInfo[] filesInEveCache = di.GetDirectories("*_tranquility");
 
-            if (filesInEveCache.Length > 0)
-            {
-                var evePortraitCacheFolders = new List<string>();
-
-                foreach (var eveDataPath in filesInEveCache)
-                {
-                    string PortraitCache = eveDataPath.Name;
-                    string evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, 
-                                                        "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
-                                                        Path.DirectorySeparatorChar, 
-                                                        PortraitCache, 
-                                                        EVEApplicationData);
-                    evePortraitCacheFolders.Add(evePortraitCacheFolder);
-                }
-
-                EvePortraitCacheFolders = evePortraitCacheFolders.ToArray();
+            if (filesInEveCache.Length == 0)
                 return;
+
+            var evePortraitCacheFolders = new List<string>();
+
+            foreach (var eveDataPath in filesInEveCache)
+            {
+                string PortraitCache = eveDataPath.Name;
+                string evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, 
+                                                    "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
+                                                    Path.DirectorySeparatorChar, 
+                                                    PortraitCache,
+                                                    EVEApplicationDataDir);
+                evePortraitCacheFolders.Add(evePortraitCacheFolder);
             }
+
+            EvePortraitCacheFolders = evePortraitCacheFolders.ToArray();
+            DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
         }
 
         /// <summary>
-        /// Gets the EVE Online installation's portrait cache folder.
+        /// Gets or sets the EVE Online installation's default portrait cache folder.
         /// </summary>
-        public static string[] EvePortraitCacheFolders { get; internal set; }
+        public static string[] DefaultEvePortraitCacheFolders { get; private set; }
+        
+        /// <summary>
+        /// Gets or sets the portrait cache folder defined by the user.
+        /// </summary>
+        public static string[] EvePortraitCacheFolders { get; private set; }
 
         /// <summary>
         /// Set the EVE Online installation's portrait cache folder.
         /// </summary>
         /// <param name="path">location of the folder</param>
-        internal static void SetEvePortraitCacheFolder(string path)
+        internal static void SetEvePortraitCacheFolder(string[] path)
         {
-            EvePortraitCacheFolders = new string[] { path };
+            EvePortraitCacheFolders = path;
         }
+
+        /// <summary>
+        /// Gets or sets the EVE Online application data folder.
+        /// </summary>
+        public static string EVEApplicationDataDir { get; private set; }
         
         /// <summary>
         /// Returns the current data storage directory and initializes SettingsFile.

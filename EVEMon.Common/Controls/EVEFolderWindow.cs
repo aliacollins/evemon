@@ -12,80 +12,23 @@ namespace EVEMon.Common.Controls
 {
     public partial class EVEFolderWindow : EVEMonForm
     {
-        private string DefaultFolderLocation;
+        private readonly string[] m_defaultFolderLocation = EveClient.DefaultEvePortraitCacheFolders;
+        private string[] m_specifiedPortraitFolder = new string[] { String.Empty };
 
         public EVEFolderWindow()
         {
             InitializeComponent();
-
-            string[] cacheFolders = EveClient.EvePortraitCacheFolders;
-
-            if (cacheFolders != null && cacheFolders.Length > 0)
-                DefaultFolderLocation = cacheFolders[0];
-
-            if (DefaultFolderLocation == null)
-            {
-                SpecifyFolderRadioButton.Checked = true;
-                DefaultFolderRadioButton.Enabled = false;
-            }
-        }
-
-        private void BrowseButton_Click(object sender, EventArgs e)
-        {
-            OpenDirFolderBrowserDialog.SelectedPath = m_portraitFolder;
-            DialogResult dr = OpenDirFolderBrowserDialog.ShowDialog();
-            if (dr == DialogResult.OK)
-            {
-                FilenameTextBox.Text = OpenDirFolderBrowserDialog.SelectedPath;
-                OKButton.Enabled = true;
-            }
-        }
-
-        private string m_portraitFolder;
-
-        public string EVEFolder
-        {
-            get { return m_portraitFolder; }
-            set
-            {
-                m_portraitFolder = value;
-                FilenameTextBox.Text = value;
-            }
-        }
-
-        private void OKButton_Click(object sender, EventArgs e)
-        {
-            if (SpecifyFolderRadioButton.Checked)
-            {
-                m_portraitFolder = FilenameTextBox.Text;
-            }
-
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
-
-        private void DefaultFolderRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (DefaultFolderRadioButton.Checked)
-            {
-                OKButton.Enabled = true;
-                m_portraitFolder = DefaultFolderLocation;
-            }
-        }
-
-        private void SpecifyFolderRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            BrowseButton.Enabled = SpecifyFolderRadioButton.Checked;
-
-            if (SpecifyFolderRadioButton.Checked)
-            {
-                OKButton.Enabled = (FilenameTextBox.Text != String.Empty);
-            }
         }
 
         private void EVEFolderWindow_Load(object sender, EventArgs e)
         {
-            if (m_portraitFolder == DefaultFolderLocation)
+            if (m_defaultFolderLocation == null)
+            {
+                SpecifyFolderRadioButton.Checked = true;
+                DefaultFolderRadioButton.Enabled = false;
+            }
+            
+            if (m_specifiedPortraitFolder == m_defaultFolderLocation)
             {
                 DefaultFolderRadioButton.Checked = true;
                 BrowseButton.Enabled = false;
@@ -95,6 +38,43 @@ namespace EVEMon.Common.Controls
                 SpecifyFolderRadioButton.Checked = true;
                 BrowseButton.Enabled = true;
             }
+        }
+
+        public string[] EVEPortraitCacheFolder
+        {
+            get { return m_specifiedPortraitFolder; }
+        }
+
+        private void BrowseButton_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = OpenDirFolderBrowserDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                FilenameTextBox.Text = OpenDirFolderBrowserDialog.SelectedPath;
+                m_specifiedPortraitFolder[0] = FilenameTextBox.Text;
+                OKButton.Enabled = true;
+            }
+        }
+
+        private void OKButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void DefaultFolderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DefaultFolderRadioButton.Checked)
+            {
+                m_specifiedPortraitFolder = m_defaultFolderLocation;
+                OKButton.Enabled = true;
+            }
+        }
+
+        private void SpecifyFolderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            BrowseButton.Enabled = SpecifyFolderRadioButton.Checked;
+            OKButton.Enabled = (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text != String.Empty);
         }
     }
 }

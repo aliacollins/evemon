@@ -57,7 +57,7 @@ namespace EVEMon.Common.Controls
             // 
             // OpenDirFolderBrowserDialog
             // 
-            this.OpenDirFolderBrowserDialog.Description = "Select the folder where EVE is installed.";
+            this.OpenDirFolderBrowserDialog.Description = "Select the folder that contains EVE Portraits.";
             // 
             // CancelButon
             // 

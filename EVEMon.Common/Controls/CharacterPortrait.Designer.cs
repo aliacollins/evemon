@@ -29,8 +29,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPortrait));
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPortrait));
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.cmsPictureOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.updatePicture = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,6 +39,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.cmsPictureOptions.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox.InitialImage")));
+            this.pictureBox.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(256, 256);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox.TabIndex = 0;
+            this.pictureBox.TabStop = false;
+            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             // 
             // cmsPictureOptions
             // 
@@ -70,18 +82,6 @@
             this.setEVEFolder.Text = "Set Portrait Folder";
             this.setEVEFolder.Click += new System.EventHandler(this.miSetEVEFolder_Click);
             // 
-            // pictureBox
-            // 
-            this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox.InitialImage")));
-            this.pictureBox.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(256, 256);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.Click += new System.EventHandler(pictureBox_Click);
-            // 
             // CharacterPortrait
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -92,6 +92,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.cmsPictureOptions.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
         #endregion
 
