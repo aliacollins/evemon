@@ -52,7 +52,7 @@ namespace EVEMon.Common
             foreach (var account in accountsNotTraining)
             {
                 builder.AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "* {0}", account.ToString());
+                builder.AppendFormat(CultureConstants.DefaultCulture, "* {0}", account);
             }
 
             // return
@@ -90,14 +90,14 @@ namespace EVEMon.Common
             // Invokes on the thread pool
             Dispatcher.BackgroundInvoke(() =>
                 {
-                    var charListResult = GlobalAPIProviderCollection.DefaultProvider.QueryCharactersList(userID, apiKey);
+                    var charListResult = EveClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
 
                     // Call char/AccountBalance.xml to check whether it is a full api key
                     APIResult<SerializableAccountBalanceList> balanceResult = null;
                     if (!charListResult.HasError && charListResult.Result.Characters.Count != 0)
                     {
                         var characterID = charListResult.Result.Characters[0].ID;
-                        balanceResult = GlobalAPIProviderCollection.DefaultProvider.QueryCharacterAccountBalance(userID, apiKey, characterID);
+                        balanceResult = EveClient.APIProviders.CurrentProvider.QueryCharacterAccountBalance(userID, apiKey, characterID);
                     }
 
                     // Invokes the callback on the UI thread

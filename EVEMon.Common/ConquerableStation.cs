@@ -62,7 +62,7 @@ namespace EVEMon.Common
                 return;
             
             // Set the update time and period
-            DateTime updateTime = DateTime.Today.AddHours(12);
+            DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
 
             // Check to see if file is up to date
@@ -73,7 +73,7 @@ namespace EVEMon.Common
             {
                 // Update the file
                 EveClient.Trace("ConquerableStationList.Update - begin");
-                var result = GlobalAPIProviderCollection.DefaultProvider.QueryConquerableStationList();
+                var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
                 OnUpdated(result);
             }
         }
