@@ -154,7 +154,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void cbMetagroup_CheckedChanged(object sender, EventArgs e)
         {
-            // Retrieve the race
+            // Retrieve the metagroup
             ItemMetaGroup metagroup = ItemMetaGroup.Empty;
             if (cbTech1.Checked)
                 metagroup |= ItemMetaGroup.T1;
@@ -166,6 +166,8 @@ namespace EVEMon.SkillPlanner
                 metagroup |= ItemMetaGroup.Faction;
             if (cbStoryline.Checked)
                 metagroup |= ItemMetaGroup.Storyline;
+            if (cbOfficer.Checked)
+                metagroup |= ItemMetaGroup.Officer;
 
             // Update the settings
             Settings.UI.BlueprintBrowser.MetagroupFilter |= metagroup;

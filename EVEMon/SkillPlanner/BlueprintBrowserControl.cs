@@ -247,7 +247,7 @@ namespace EVEMon.SkillPlanner
                 * GetFacilityResearchMultiplier(BlueprintActivity.ResearchingTimeProductivity) * GetImplantMultiplier("I");
             lblResearchPECharTime.Text = CharacterActivityTime(activityTime, DBConstants.ResearchSkillID, factor, false);
 
-            gbResearching.Visible = !BelongsInMarketGroup(m_blueprint.MarketGroup, new int [] { DBConstants.BlueprintRootNonMarketGroupID });
+            gbResearching.Visible = !m_blueprint.MarketGroup.BelongsIn(new int[] { DBConstants.BlueprintRootNonMarketGroupID });
             gbInvention.Text = (gbResearching.Visible ? "INVENTION" : "RESEARCHING");
             lblInventionTime.Text = (gbResearching.Visible ? "Invention Time:" : "Research Tech Time:");
             gbInvention.Location = (gbResearching.Visible ? new Point(3, 385) : new Point(3, 225));
@@ -387,37 +387,39 @@ namespace EVEMon.SkillPlanner
 
             cbFacility.Items.Add("NPC Station");
 
-            if (m_blueprint.ProducesItem != null)// This should not happen but be prepared if something changes in CCP DB
+            Item producedItem = m_blueprint.ProducesItem;
+
+            if (producedItem != null)// This should not happen but be prepared if something changes in CCP DB
             {
                 switch (Activity)
                 {
                     case BlueprintActivity.Manufacturing:
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.DronesGroupID })
-                            && !BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.SmallToXLargeShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.DronesGroupID })
+                            && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.AmmosAndChargesGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.AmmosAndChargesGroupID }))
                             cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.ShipEquipmentGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ShipEquipmentGroupID }))
                         {
                             cbFacility.Items.Add("Equipment Assembly Array");
                             cbFacility.Items.Add("Rapid Equipment Assembly Array");
                         }
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, new int[] { DBConstants.ComponentsGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ComponentsGroupID }))
                             cbFacility.Items.Add("Component Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.StategicComponentsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsGroupIDs))
                             cbFacility.Items.Add("Subsystem Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.SmallToXLargeShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsGroupIDs))
                             cbFacility.Items.Add("Ship Assembly Array (Ship Size)");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.CapitalShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsGroupIDs))
                             cbFacility.Items.Add("Capital Assembly Array");
 
-                        if (BelongsInMarketGroup((m_blueprint.ProducesItem).MarketGroup, DBConstants.AdvancedSmallToLargeShipsGroupIDs))
+                        if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsGroupIDs))
                             cbFacility.Items.Add("Advanced Ship Assembly Array (Ship Size)");
 
                         break;
@@ -456,28 +458,6 @@ namespace EVEMon.SkillPlanner
             // Update the selected index
             cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count ? 
                 Settings.UI.BlueprintBrowser.ImplantSetIndex : 0);
-        }
-
-        /// <summary>
-        /// Gets true if the item belongs to the questioned market group. 
-        /// </summary>
-        /// <param name="marketGroup"></param>
-        /// <param name="group"></param>
-        /// <returns></returns>
-        private bool BelongsInMarketGroup(MarketGroup marketGroup, IEnumerable<int> groups)
-        {
-            while (marketGroup != null)
-            {
-                foreach (var groupID in groups)
-                {
-                    if (marketGroup.ID == groupID)
-                        return true;
-                }
-
-                marketGroup = marketGroup.ParentGroup;
-            }
-
-            return false;
         }
 
         /// <summary>

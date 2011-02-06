@@ -35,10 +35,10 @@ namespace EVEMon.SkillPlanner
             this.panel1 = new System.Windows.Forms.Panel();
             this.persistentSplitContainer1 = new EVEMon.Controls.PersistentSplitContainer();
             this.lvLoadouts = new System.Windows.Forms.ListView();
-            this.colName = new System.Windows.Forms.ColumnHeader();
-            this.colAuthor = new System.Windows.Forms.ColumnHeader();
-            this.colRating = new System.Windows.Forms.ColumnHeader();
-            this.colDate = new System.Windows.Forms.ColumnHeader();
+            this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colRating = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tvLoadout = new System.Windows.Forms.TreeView();
             this.lbDate = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -57,8 +57,8 @@ namespace EVEMon.SkillPlanner
             this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportToEFT = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnLoad = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).BeginInit();
             this.persistentSplitContainer1.Panel1.SuspendLayout();
             this.persistentSplitContainer1.Panel2.SuspendLayout();
             this.persistentSplitContainer1.SuspendLayout();
@@ -129,14 +129,14 @@ namespace EVEMon.SkillPlanner
             this.lvLoadouts.FullRowSelect = true;
             this.lvLoadouts.Location = new System.Drawing.Point(0, 0);
             this.lvLoadouts.MinimumSize = new System.Drawing.Size(300, 190);
+            this.lvLoadouts.MultiSelect = false;
             this.lvLoadouts.Name = "lvLoadouts";
             this.lvLoadouts.Size = new System.Drawing.Size(373, 342);
             this.lvLoadouts.TabIndex = 0;
             this.lvLoadouts.UseCompatibleStateImageBehavior = false;
             this.lvLoadouts.View = System.Windows.Forms.View.Details;
-            this.lvLoadouts.DoubleClick += new System.EventHandler(this.lvLoadouts_DoubleClick);
             this.lvLoadouts.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvLoadouts_ColumnClick);
-            this.lvLoadouts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvLoadouts_ItemSelectionChanged);
+            this.lvLoadouts.Click += new System.EventHandler(this.lvLoadouts_Click);
             // 
             // colName
             // 
@@ -262,9 +262,9 @@ namespace EVEMon.SkillPlanner
             // 
             // lblPlanned
             // 
-            this.lblPlanned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPlanned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblPlanned.AutoSize = true;
-            this.lblPlanned.Location = new System.Drawing.Point(307, 481);
+            this.lblPlanned.Location = new System.Drawing.Point(191, 481);
             this.lblPlanned.Name = "lblPlanned";
             this.lblPlanned.Size = new System.Drawing.Size(0, 13);
             this.lblPlanned.TabIndex = 28;
@@ -273,7 +273,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(128, 481);
+            this.label6.Location = new System.Drawing.Point(12, 481);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(176, 13);
             this.label6.TabIndex = 26;
@@ -283,7 +283,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lblTrainTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTrainTime.AutoSize = true;
-            this.lblTrainTime.Location = new System.Drawing.Point(307, 481);
+            this.lblTrainTime.Location = new System.Drawing.Point(191, 481);
             this.lblTrainTime.Name = "lblTrainTime";
             this.lblTrainTime.Size = new System.Drawing.Size(35, 13);
             this.lblTrainTime.TabIndex = 27;
@@ -323,17 +323,6 @@ namespace EVEMon.SkillPlanner
             this.miExportToEFT.Text = "Export Loadout To EFT";
             this.miExportToEFT.Click += new System.EventHandler(this.miExportToEFT_Click);
             // 
-            // btnLoad
-            // 
-            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLoad.Location = new System.Drawing.Point(12, 476);
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(110, 23);
-            this.btnLoad.TabIndex = 30;
-            this.btnLoad.Text = "View Loadout";
-            this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
-            // 
             // ShipLoadoutSelectWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,16 +344,16 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblShip);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btnLoad);
-            this.MinimumSize = new System.Drawing.Size(480, 300);
+            this.MinimumSize = new System.Drawing.Size(744, 544);
             this.Name = "ShipLoadoutSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BattleClinic Loadout Selection";
-            this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
+            this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.panel1.ResumeLayout(false);
             this.persistentSplitContainer1.Panel1.ResumeLayout(false);
             this.persistentSplitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).EndInit();
             this.persistentSplitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbShip)).EndInit();
             this.cmNode.ResumeLayout(false);
@@ -401,7 +390,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Button btnPlan;
         private System.Windows.Forms.ContextMenuStrip cmNode;
         private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
-        private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.ToolStripMenuItem miExportToEFT;
     }
 }

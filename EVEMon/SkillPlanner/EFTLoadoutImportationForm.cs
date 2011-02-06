@@ -35,13 +35,13 @@ namespace EVEMon.SkillPlanner
         public EFTLoadoutImportationForm(Plan plan)
         {
             InitializeComponent();
-            this.topSplitContainer.RememberDistanceKey = "EFTLoadoutImportationForm";
+            topSplitContainer.RememberDistanceKey = "EFTLoadoutImportationForm";
 
             m_plan = plan;
             m_character = m_plan.Character;
 
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.PlanChanged += EveClient_PlanChanged;
         }
 
         #endregion
@@ -57,10 +57,10 @@ namespace EVEMon.SkillPlanner
 		{
 			base.OnActivated(e);
             
-			if (!this.Visible)
+			if (!Visible)
 				return;
 
-            if (this.PasteTextBox.Text.Length > 0)
+            if (PasteTextBox.Text.Length > 0)
                 return;
 
             if (!Clipboard.ContainsText())
@@ -71,17 +71,18 @@ namespace EVEMon.SkillPlanner
 			if (!IsLoadout(clipboardText))
 				return;
 
+            ExplanationLabel.Text = "The EFT formated loadout is shown below.";
 			PasteTextBox.Text = Clipboard.GetText();
 		}
 
         /// <summary>
-        /// unsubscribe events on closing.
+        /// Unsubscribe events on closing.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.PlanChanged -= EveClient_PlanChanged;
             base.OnClosing(e);
         }
 
@@ -135,7 +136,7 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Occur when the user changed the text box whiere he should paste the data from EFT.
-        /// We rebuimd the objects list and update the right pane.
+        /// We rebuild the objects list and update the right panel.
         /// </summary>
         /// <param name="sender">Source of the event.</param>
         /// <param name="e">Arguments of the event.</param>
@@ -186,7 +187,8 @@ namespace EVEMon.SkillPlanner
             for (int i = 1; i < PasteTextBox.Lines.Length; i++)
             {
                 line = PasteTextBox.Lines[i];
-                if (!String.IsNullOrEmpty(line)) AddItem(line);
+                if (!String.IsNullOrEmpty(line))
+                    AddItem(line);
             }
 
             // Update the controls
@@ -306,6 +308,9 @@ namespace EVEMon.SkillPlanner
             // Retrieve the item and its charge
             string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
             string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
+            
+            // Look up if it's a drone
+            itemName = itemName.Contains(" x") ? itemName.Substring(0, line.LastIndexOf(" x")) : itemName;
 
             Item item = StaticItems.GetItemByName(itemName);
             Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;
@@ -314,22 +319,36 @@ namespace EVEMon.SkillPlanner
             if (item != null)
             {
                 // Retrieve the tree node name for the slot
-                string slotNodeName = String.Empty;
+                string nodeName = String.Empty;
                 switch (item.FittingSlot)
                 {
                     case ItemSlot.High:
-                        slotNodeName = "High";
+                        nodeName = "High";
                         break;
                     case ItemSlot.Medium:
-                        slotNodeName = "Med";
+                        nodeName = "Med";
                         break;
                     case ItemSlot.Low:
-                        slotNodeName = "Low";
+                        nodeName = "Low";
                         break;
                 }
 
+                // Is it a rig?
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.ShipModificationsGroupID }))
+                    nodeName = "Rigs";
+
+                // Is it a subsystem?
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.AdvancedSubsystemsGroupID }))
+                    nodeName = "Subsystems";
+
+                // Is it a drone?
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.DronesGroupID }))
+                    nodeName = "Drones";
+
                 // Gets or create the node for the slot
-                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey(slotNodeName) ? ResultsTreeView.Nodes.Add(slotNodeName, slotNodeName) : ResultsTreeView.Nodes[slotNodeName];
+                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName) ?
+                    ResultsTreeView.Nodes.Add(nodeName, nodeName) :
+                    ResultsTreeView.Nodes[nodeName];
 
                 // Add a new node
                 TreeNode itemNode = new TreeNode();
@@ -337,28 +356,13 @@ namespace EVEMon.SkillPlanner
                 itemNode.Tag = item;
                 slotNode.Nodes.Add(itemNode);
             }
-            // Might be drone
-            else
-            {
-                // Retrieve the item
-                itemName = line.Contains(" x") ? line.Substring(0, line.LastIndexOf(" x")) : line;
-                item = StaticItems.GetItemByName(itemName);
-
-                // Add it to the drones node
-                if (item != null)
-                {
-                    TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey("Drones") ? ResultsTreeView.Nodes.Add("Drones", "Drones") : ResultsTreeView.Nodes["Drones"];
-                    TreeNode itemNode = new TreeNode();
-                    itemNode.Text = item.Name;
-                    itemNode.Tag = item;
-                    slotNode.Nodes.Add(itemNode);
-                }
-            }
 
             // Has charges ? 
             if (charge != null)
             {
-                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey("Ammunition") ? ResultsTreeView.Nodes.Add("Ammunition", "Ammunition") : ResultsTreeView.Nodes["Ammunition"];
+                TreeNode slotNode = !ResultsTreeView.Nodes.ContainsKey("Ammunition") ?
+                    ResultsTreeView.Nodes.Add("Ammunition", "Ammunition") :
+                    ResultsTreeView.Nodes["Ammunition"];
 
                 TreeNode ammoNode = new TreeNode();
                 ammoNode.Text = charge.Name;
@@ -367,8 +371,11 @@ namespace EVEMon.SkillPlanner
             }
 
             // Add the item and its charge to the objects list
-            if (item != null) m_objects.Add(item);
-            if (charge != null) m_objects.Add(charge);
+            if (item != null)
+                m_objects.Add(item);
+
+            if (charge != null)
+                m_objects.Add(charge);
         }
 
         /// <summary>
@@ -378,16 +385,20 @@ namespace EVEMon.SkillPlanner
         {
             // Compute the skills to add
             m_skillsToAdd.Clear();
-            var scratchpad = new CharacterScratchpad(m_character);
-            foreach (var obj in m_objects) scratchpad.Train(obj.Prerequisites);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+            Character character = m_character as Character;
+            foreach (var obj in m_objects)
+            {
+                scratchpad.Train(obj.Prerequisites.Where(x => character.Skills[x.Skill].Level < x.Level));
+            }
             m_skillsToAdd.AddRange(scratchpad.TrainedSkills);
 
-            // All skills already known ?
+            // All skills already trained ?
             if (m_skillsToAdd.Count == 0)
             {
                 AddToPlanButton.Enabled = false;
                 PlanedLabel.Visible = true;
-                PlanedLabel.Text = "All skills already known.";
+                PlanedLabel.Text = "All skills already trained.";
                 TrainTimeLabel.Visible = false;
             }
             // Are skills already planned ?
@@ -395,10 +406,10 @@ namespace EVEMon.SkillPlanner
             {
                 AddToPlanButton.Enabled = false;
                 PlanedLabel.Visible = true;
-                PlanedLabel.Text = "All skills already known or planned.";
+                PlanedLabel.Text = "All skills already trained or planned.";
                 TrainTimeLabel.Visible = false;
             }
-            // There is at least one unknown and non-planned skill
+            // There is at least one untrained or non-planned skill
             else
             {
                 AddToPlanButton.Enabled = true;

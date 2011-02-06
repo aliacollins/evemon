@@ -276,6 +276,7 @@
     <Compile Include="Data\BlueprintMarketGroup.cs" />
     <Compile Include="Data\ItemCollection.cs" />
     <Compile Include="Data\MarketGroupCollection.cs" />
+    <Compile Include="Data\MarketGroupExtensions.cs" />
     <Compile Include="Data\StaticBlueprints.cs" />
     <Compile Include="Data\StaticGeography.cs" />
     <Compile Include="Data\Implant.cs" />

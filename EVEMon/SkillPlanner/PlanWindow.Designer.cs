@@ -246,7 +246,7 @@ namespace EVEMon.SkillPlanner
             this.tsbEFTImport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbEFTImport.Name = "tsbEFTImport";
             this.tsbEFTImport.Size = new System.Drawing.Size(85, 22);
-            this.tsbEFTImport.Text = "EFT import";
+            this.tsbEFTImport.Text = "EFT Loadout Import";
             this.tsbEFTImport.Click += new System.EventHandler(this.tsbEFTImport_Click);
             // 
             // ttToolTip

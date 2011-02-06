@@ -36,6 +36,7 @@ namespace EVEMon.SkillPlanner
             this.cbTech3 = new System.Windows.Forms.CheckBox();
             this.lblActivity = new System.Windows.Forms.Label();
             this.cbActivityFilter = new System.Windows.Forms.ComboBox();
+            this.cbOfficer = new System.Windows.Forms.CheckBox();
             this.upperPanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
@@ -144,6 +145,7 @@ namespace EVEMon.SkillPlanner
             this.tlpGrouping.ColumnCount = 2;
             this.tlpGrouping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpGrouping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGrouping.Controls.Add(this.cbOfficer, 0, 2);
             this.tlpGrouping.Controls.Add(this.cbStoryline, 1, 1);
             this.tlpGrouping.Controls.Add(this.cbFaction, 1, 0);
             this.tlpGrouping.Controls.Add(this.cbTech1, 0, 0);
@@ -226,6 +228,18 @@ namespace EVEMon.SkillPlanner
             this.cbActivityFilter.TabIndex = 22;
             this.cbActivityFilter.SelectedIndexChanged += new System.EventHandler(this.cbActivity_SelectedIndexChanged);
             // 
+            // cbOfficer
+            // 
+            this.cbOfficer.AutoSize = true;
+            this.cbOfficer.Checked = true;
+            this.cbOfficer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbOfficer.Location = new System.Drawing.Point(109, 49);
+            this.cbOfficer.Name = "cbOfficer";
+            this.cbOfficer.Size = new System.Drawing.Size(57, 17);
+            this.cbOfficer.TabIndex = 5;
+            this.cbOfficer.Text = "Officer";
+            this.cbOfficer.UseVisualStyleBackColor = true;
+            // 
             // BlueprintSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,5 +267,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TableLayoutPanel tlpGrouping;
         private System.Windows.Forms.ComboBox cbActivityFilter;
         private System.Windows.Forms.Label lblActivity;
+        private System.Windows.Forms.CheckBox cbOfficer;
     }
 }

@@ -32,18 +32,13 @@ namespace EVEMon.SkillPlanner
         private static Dictionary<string, string> s_typeMap = new Dictionary<string, string>();
 
         #region Initialization, loading, closing
+
         /// <summary>
-        /// Static constructor
+        /// Initializes a new instance of the <see cref="ShipLoadoutSelectWindow"/> class.
         /// </summary>
-        static ShipLoadoutSelectWindow()
+        public ShipLoadoutSelectWindow()
         {
-            s_typeMap["high"] = "High Slots";
-            s_typeMap["med"] = "Medium Slots";
-            s_typeMap["lo"] = "Low Slots";
-            s_typeMap["rig"] = "Rig Slots";
-            s_typeMap["drone"] = "Drones";
-            s_typeMap["ammo"] = "Ammo";
-            s_typeMap["subSystem"] = "SubSystem";
+            InitializeComponent();
         }
 
         /// <summary>
@@ -52,8 +47,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="ship"></param>
         /// <param name="plan"></param>
         public ShipLoadoutSelectWindow(Item ship, Plan plan)
+            : this()
         {
-            InitializeComponent();
             this.persistentSplitContainer1.RememberDistanceKey = "ShipLoadoutBrowser";
 
             m_character = (Character)plan.Character;
@@ -76,8 +71,16 @@ namespace EVEMon.SkillPlanner
             if (this.DesignMode || this.IsDesignModeHosted())
                 return;
 
+            s_typeMap["high"] = "High Slots";
+            s_typeMap["med"] = "Medium Slots";
+            s_typeMap["lo"] = "Low Slots";
+            s_typeMap["rig"] = "Rig Slots";
+            s_typeMap["drone"] = "Drones";
+            s_typeMap["ammo"] = "Ammo";
+            s_typeMap["subSystem"] = "SubSystem";
+
             // Subscribe global events
-            EveClient.PlanChanged += new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.PlanChanged += EveClient_PlanChanged;
 
             QueryLoadoutsFeed();
         }
@@ -97,7 +100,6 @@ namespace EVEMon.SkillPlanner
             lbDate.Text = String.Empty;
             lblTrainTime.Text = "N/A";
             lblShip.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
-            btnLoad.Enabled = false;
             btnPlan.Enabled = false;
 
             // Download the ship's image
@@ -120,7 +122,7 @@ namespace EVEMon.SkillPlanner
         private void LoadoutSelect_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Unsubscribe global events
-            EveClient.PlanChanged -= new EventHandler<PlanChangedEventArgs>(EveClient_PlanChanged);
+            EveClient.PlanChanged -= EveClient_PlanChanged;
         }
 
         /// <summary>
@@ -171,7 +173,6 @@ namespace EVEMon.SkillPlanner
             // Restore the default cursor instead of the waiting one
             Cursor.Current = Cursors.Default;
             m_selectedLoadout = null;
-            btnLoad.Enabled = false;
             btnPlan.Enabled = false;
 
             // Was there an error ?
@@ -206,9 +207,6 @@ namespace EVEMon.SkillPlanner
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
-
-            // Enable the "load" button
-            btnLoad.Enabled = true;
         }
 
         /// <summary>
@@ -219,7 +217,6 @@ namespace EVEMon.SkillPlanner
         {
             // See the cursor to wait
             Cursor.Current = Cursors.WaitCursor; 
-            btnLoad.Enabled = false;
 
             // Retrieve the selected loadout
             m_selectedLoadout = loadout;
@@ -290,26 +287,26 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Update the plan status : training time, skills already known, etc
+        /// Update the plan status : training time, skills already trained, etc
         /// </summary>
         private void UpdatePlanningControls()
         {
-            // Are all the prerequisites known ?
-            if (m_prerequisites.All(x => m_character.GetSkillLevel(x.Skill) > x.Level))
+            // Are all the prerequisites trained ?
+            if (m_prerequisites.All(x => m_character.GetSkillLevel(x.Skill) >= x.Level))
             {
                 btnPlan.Enabled = false;
                 lblPlanned.Visible = true;
-                lblPlanned.Text = "All skills already known.";
+                lblPlanned.Text = "All skills already trained.";
                 lblTrainTime.Visible = false;
                 return;
             }
 
-            // Are all the prequisites planned
-            if (m_plan.AreSkillsPlanned(m_prerequisites))
+            // Are all the prerequisites planned ?
+            if (m_plan.AreSkillsPlanned(m_prerequisites.Where(x => m_character.Skills[x.Skill].Level < x.Level)))
             {
                 btnPlan.Enabled = false;
                 lblPlanned.Visible = true;
-                lblPlanned.Text = "All skills already known or planned.";
+                lblPlanned.Text = "All skills already trained or planned.";
                 lblTrainTime.Visible = false;
                 return;
             }
@@ -358,20 +355,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvLoadouts_DoubleClick(object sender, EventArgs e)
-        {
-            if (lvLoadouts.SelectedItems.Count == 1)
-            {
-                btnLoad_Click(this, e);
-            }
-        }
-
-        /// <summary>
-        /// When the user clicks the "Load" button, we download the selected loadout.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnLoad_Click(object sender, EventArgs e)
+        private void lvLoadouts_Click(object sender, EventArgs e)
         {
             if (lvLoadouts.SelectedItems.Count == 0)
                 return;
@@ -379,16 +363,6 @@ namespace EVEMon.SkillPlanner
             var loadout = lvLoadouts.SelectedItems[0].Tag as SerializableLoadout;
 
             DownloadLoadout(loadout);
-        }
-
-        /// <summary>
-        /// When the selected loadout changes, we enable or disable the "load" button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lvLoadouts_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            btnLoad.Enabled = (lvLoadouts.SelectedItems.Count != 0);
         }
 
         /// <summary>
@@ -462,7 +436,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tvLoadout_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void tvLoadout_MouseUp(object sender, MouseEventArgs e)
         {
             // Show menu only if the right mouse button is clicked.
             if (e.Button == MouseButtons.Right)
@@ -721,5 +695,6 @@ namespace EVEMon.SkillPlanner
             }
         }
         #endregion
+
     }
 }
