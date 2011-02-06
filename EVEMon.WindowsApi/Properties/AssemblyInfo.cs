@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon.WindowsApi")]
-[assembly: AssemblyDescription("EVEMon. Revision Number: 2493 Local Changes: Yes Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowsApi")] 
+[assembly: AssemblyDescription("EVEMon. Revision Number: 2494 Local Changes: No Repository URL: svn://svn.battleclinic.com/EVEMon/EVEMon/trunk/EVEMon.WindowsApi")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -29,6 +29,6 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.3.3.2493")]
+[assembly: AssemblyVersion("1.3.3.2494")]
 
 
