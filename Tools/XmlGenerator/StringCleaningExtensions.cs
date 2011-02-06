@@ -13,7 +13,7 @@ namespace EVEMon.XmlGenerator
     public static class StringCleaningExtensions
     {
         /// <summary>
-        /// Cleanus up a string by passing it through the following filters.
+        /// Cleans up and normalizes a string by passing it through the following filters.
         /// </summary>
         /// <param name="input"><c>string</c> to be cleaned.</param>
         /// <returns>cleaned <c>string</c></returns>
@@ -25,7 +25,8 @@ namespace EVEMon.XmlGenerator
             output = output.ReplaceTabs();
             output = output.CleanXmlTags();
             output = output.CollapseSpaces();
-            
+            output = output.Normalize();
+
             return output;
         }
 

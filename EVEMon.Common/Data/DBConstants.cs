@@ -53,6 +53,8 @@ namespace EVEMon.Common.Data
         public const int CargoCapacityPropertyID = 38;
         public const int VolumePropertyID = 161;
         public const int MassPropertyID = 4;
+        public const int TechLevelPropertyID = 422;
+        public const int MetaGroupPropertyID = 1692;
 
         public const int ImplantSlotPropertyID = 331;
         public const int CharismaModifierPropertyID = 175;
@@ -128,27 +130,24 @@ namespace EVEMon.Common.Data
         public const int SkillHardwiringImplantGroupID = 531;
         public const int AttributeEnhancersImplantsGroupID = 532;
 
-        public const int GallenteDesignShuttlesGroupID = 395;
-        public const int CaldariDesignShuttlesGroupID = 396;
-
         #endregion
 
 
         #region Custom market group IDs
 
-        public const int RootUniqueDesignsGroupID = 10000;
-        public const int UniqueDesignShuttlesGroupID = 10001;
-        public const int UniqueDesignIndustrialsGroupID = 10002;
-        public const int UniqueDesignFrigatesGroupID = 10003;
-
         public const int RootNonMarketGroupID = 11000;
 
+        public const int RootUniqueDesignsGroupID = 10000;
+        public const int UniqueDesignBattleshipsGroupID = 10200;
+        public const int UniqueDesignShuttlesGroupID = 10900;
+
         public const int BlueprintRootNonMarketGroupID = 21000;
-        public const int BlueprintNonMarketStorylineGroupID = 21001;
-        public const int BlueprintNonMarketFactionGroupID = 21002;
-        public const int BlueprintNonMarketTechIGroupID = 21003;
-        public const int BlueprintNonMarketTechIIGroupID = 21004;
-        public const int BlueprintNonMarketTechIIIGroupID = 21005;
+        public const int BlueprintNonMarketTechIGroupID = 21001;
+        public const int BlueprintNonMarketTechIIGroupID = 21002;
+        public const int BlueprintNonMarketStorylineGroupID = 21003;
+        public const int BlueprintNonMarketFactionGroupID = 21004;
+        public const int BlueprintNonMarketOfficerGroupID = 21005;
+        public const int BlueprintNonMarketTechIIIGroupID = 21014;
 
         #endregion
 

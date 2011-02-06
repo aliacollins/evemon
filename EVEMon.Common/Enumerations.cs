@@ -45,16 +45,14 @@ namespace EVEMon.Common
         T1 = 2,
         T2 = 4,
         T3 = 8,
-        Named = 0x100,
-        Faction = 0x200,
-        Officer = 0x400,
-        Deadspace = 0x800,
-        Storyline = 0x1000,
-        Other = 0x2000,
+        Faction = 0x100,
+        Officer = 0x200,
+        Deadspace = 0x400,
+        Storyline = 0x800,
 
         Empty = 0,
         AllTechLevel = T1 | T2 | T3,
-        AllNonTechLevel = Named | Faction | Officer | Deadspace | Storyline | Other,
+        AllNonTechLevel = Faction | Officer | Deadspace | Storyline,
         All = AllTechLevel | AllNonTechLevel | None
     }
 
@@ -192,69 +190,21 @@ namespace EVEMon.Common
     /// </summary>
     public enum PlanEntrySort
     {
-        /// <summary>
-        /// 
-        /// </summary>
         None,
-        /// <summary>
-        /// 
-        /// </summary>
         Cost,
-        /// <summary>
-        /// 
-        /// </summary>
         Rank,
-        /// <summary>
-        /// 
-        /// </summary>
         Name,
-        /// <summary>
-        /// 
-        /// </summary>
         Priority,
-        /// <summary>
-        /// 
-        /// </summary>
         PlanGroup,
-        /// <summary>
-        /// 
-        /// </summary>
         SPPerHour,
-        /// <summary>
-        /// 
-        /// </summary>
         TrainingTime,
-        /// <summary>
-        /// 
-        /// </summary>
         TrainingTimeNatural,
-        /// <summary>
-        /// 
-        /// </summary>
         PrimaryAttribute,
-        /// <summary>
-        /// 
-        /// </summary>
         SecondaryAttribute,
-        /// <summary>
-        /// 
-        /// </summary>
         SkillGroupDuration,
-        /// <summary>
-        /// 
-        /// </summary>
         PercentCompleted,
-        /// <summary>
-        /// 
-        /// </summary>
         TimeDifference,
-        /// <summary>
-        /// 
-        /// </summary>
         PlanType,
-        /// <summary>
-        /// 
-        /// </summary>
         Notes
     }
 

@@ -132,7 +132,7 @@ namespace EVEMon.XmlGenerator
             }
 
             Console.WriteLine("-----------------------------------------------");
-            Console.WriteLine("Updated : " + filename);
+            Console.WriteLine("Updated : {0}", filename);
             Console.WriteLine("-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
