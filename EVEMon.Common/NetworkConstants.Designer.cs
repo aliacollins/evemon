@@ -259,7 +259,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://image.eveonline.com/character/{0}_256.jpg.
+        ///   Looks up a localized string similar to http://image.eveonline.com/character/{0}_128.jpg.
         /// </summary>
         public static string CCPPortraits {
             get {
