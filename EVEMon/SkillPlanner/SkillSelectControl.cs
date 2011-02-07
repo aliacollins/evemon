@@ -24,6 +24,7 @@ namespace EVEMon.SkillPlanner
         private Character m_character;
         private Skill m_selectedSkill;
         private Plan m_plan;
+        private IEnumerable<Skill> m_skills;
 
         #region Lifecycle
 
@@ -231,7 +232,8 @@ namespace EVEMon.SkillPlanner
             if (m_plan == null)
                 return;
 
-            IEnumerable<Skill> skills = GetFilteredData();
+            m_skills = GetFilteredData();
+            UpdateTree();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -239,7 +241,7 @@ namespace EVEMon.SkillPlanner
             lbNoMatches.Visible = false;
 
             // Nothing to display ?
-            if (skills.IsEmpty())
+            if (m_skills.IsEmpty())
             {
                 lbNoMatches.Visible = true;
             }
@@ -247,13 +249,13 @@ namespace EVEMon.SkillPlanner
             else if (cbSorting.SelectedIndex != 0)
             {
                 lvSortedSkillList.Visible = true;
-                UpdateListView(skills);
+                UpdateListView();
            }
             // Not sorted but there is a text filter
             else if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 lbSearchList.Visible = true;
-                UpdateListBox(skills);
+                UpdateListBox();
             }
             // Regular display, the tree
             else
@@ -272,26 +274,24 @@ namespace EVEMon.SkillPlanner
 
             // Non-public skills
             if (!cbShowNonPublic.Checked)
-            {
                 skills = skills.Where(x => x.IsPublic);
-            }
+
             // Filter
-            if (cbSkillFilter.SelectedIndex != 0)
-            {
-                var predicate = GetFilter();
-                skills = skills.Where(x => predicate(x));
-            }
+            var predicate = GetFilter();
+            skills = skills.Where(x => predicate(x));
+
             // Text search
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
                 string searchText = tbSearchText.Text.ToLower(CultureConstants.DefaultCulture).Trim();
-                skills = skills.Where(x => (x.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText) || x.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText)));
+                skills = skills.Where(x => (x.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
+                                         || x.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText)));
             }
+
             // When sorting by "time to...", remove lv5 skills
             if (cbSorting.SelectedIndex == (int)SkillSort.TimeToLevel5 || cbSorting.SelectedIndex == (int)SkillSort.TimeToNextLevel)
-            {
                 skills = skills.Where(x => x.Level < 5);
-            }
+
             return skills;
         }
 
@@ -354,8 +354,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the skills tree.
         /// </summary>
-        /// <param name="skills"></param>
-        private void UpdateTree(IEnumerable<Skill> skills)
+        private void UpdateTree()
         {
             //Reset selected object
             SelectedSkill = null;
@@ -374,7 +373,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 tvItems.Nodes.Clear();
-                foreach (var group in skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
+                foreach (var group in m_skills.GroupBy(x => x.Group).ToArray().OrderBy(x => x.Key.Name))
                 {
                     int index = tvItems.ImageList.Images.IndexOfKey("book");
 
@@ -464,13 +463,13 @@ namespace EVEMon.SkillPlanner
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListBox(IEnumerable<Skill> skills)
+        private void UpdateListBox()
         {
             lbSearchList.BeginUpdate();
             try
             {
                 lbSearchList.Items.Clear();
-                foreach (var skill in skills)
+                foreach (var skill in m_skills)
                 {
                     lbSearchList.Items.Add(skill);
                 }
@@ -485,11 +484,11 @@ namespace EVEMon.SkillPlanner
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
         /// <param name="skills"></param>
-        private void UpdateListView(IEnumerable<Skill> skills)
+        private void UpdateListView()
         {
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
-            string column = GetSortedListData(ref skills, ref labels);
+            string column = GetSortedListData(ref m_skills, ref labels);
             if (labels == null)
                 return;
 
@@ -501,7 +500,7 @@ namespace EVEMon.SkillPlanner
 
                 using (var labelsEnumerator = labels.GetEnumerator())
                 {
-                    foreach (var skill in skills)
+                    foreach (var skill in m_skills)
                     {
                         // Retrieves the label for the second column (sort key)
                         labelsEnumerator.MoveNext();
@@ -572,7 +571,8 @@ namespace EVEMon.SkillPlanner
 
                 // Time to level 5
                 case SkillSort.TimeToLevel5:
-                    times = skills.Select(x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites) + x.GetLeftTrainingTimeToLevel(5));
+                    times = skills.Select(
+                        x => m_character.GetTrainingTimeToMultipleSkills(x.Prerequisites).Add(x.GetLeftTrainingTimeToLevel(5)));
 
                     timesArray = times.ToArray();
                     skillsArray = skills.ToArray();
@@ -725,8 +725,7 @@ namespace EVEMon.SkillPlanner
         private void cbSkillFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             Settings.UI.SkillBrowser.Filter = (SkillFilter)cbSkillFilter.SelectedIndex;
-            IEnumerable<Skill> skills = GetFilteredData();
-            UpdateTree(skills);
+            UpdateContent();
         }
 
         /// <summary>
