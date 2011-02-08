@@ -27,43 +27,49 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
-        {
-            // Return on design mode
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
+		protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
+		{
+			// Return on design mode
+			if (DesignMode || this.IsDesignModeHosted())
+				return;
 
-            // Call the base method
-            base.EveObjectSelectControl_Load(sender, e);
+			// Call the base method
+			base.EveObjectSelectControl_Load(sender, e);
 
-            // Build the blueprints tree
-            BuildTreeView();
+			// Build the blueprints tree
+			BuildTreeView();
 
-            // Initialize the "filter" combo box
-            cbUsabilityFilter.Items[0] = "All Blueprints";
-            cbUsabilityFilter.Items[1] = "Blueprints I can use";
-            cbUsabilityFilter.Items[2] = "Blueprints I cannot use";
-            
-            // Read the settings
-            if (Settings.UI.UseStoredSearchFilters)
-            {
-                cbUsabilityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.UsabilityFilter;
-                cbActivityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.ActivityFilter;           
-                tbSearchText.Text = Settings.UI.BlueprintBrowser.TextSearch;
-                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+			// Initialize the "filter" combo box
+			cbUsabilityFilter.Items[0] = "All Blueprints";
+			cbUsabilityFilter.Items[1] = "Blueprints I can use";
+			cbUsabilityFilter.Items[2] = "Blueprints I cannot use";
 
-                cbTech1.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
-                cbTech2.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
-                cbTech3.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
-                cbFaction.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
-                cbStoryline.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
-            }
-            else
-            {
-                cbUsabilityFilter.SelectedIndex = 0;
-                cbActivityFilter.SelectedIndex = 0;
-            }
-        }
+			// Read the settings
+			if (Settings.UI.UseStoredSearchFilters)
+			{
+				cbUsabilityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.UsabilityFilter;
+				cbActivityFilter.SelectedIndex = (int)Settings.UI.BlueprintBrowser.ActivityFilter;
+				tbSearchText.Text = Settings.UI.BlueprintBrowser.TextSearch;
+				lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
+				// It is possible that this variable could contain ItemMetaGroup.Other or
+				// ItemMetaGroup.Named however if they are set the following code will ignore
+				// these values. When the Enumeration is constructed in cbMetagroup_CheckedChanged
+				// obsolete values will not be utilized.
+				var metaGroupFilter = Settings.UI.BlueprintBrowser.MetagroupFilter;
+
+				cbTech1.Checked = (metaGroupFilter & ItemMetaGroup.T1) != ItemMetaGroup.Empty;
+				cbTech2.Checked = (metaGroupFilter & ItemMetaGroup.T2) != ItemMetaGroup.Empty;
+				cbTech3.Checked = (metaGroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
+				cbFaction.Checked = (metaGroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
+				cbStoryline.Checked = (metaGroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
+			}
+			else
+			{
+				cbUsabilityFilter.SelectedIndex = 0;
+				cbActivityFilter.SelectedIndex = 0;
+			}
+		}
 
         #endregion
 
@@ -155,7 +161,8 @@ namespace EVEMon.SkillPlanner
         private void cbMetagroup_CheckedChanged(object sender, EventArgs e)
         {
             // Retrieve the metagroup
-            ItemMetaGroup metagroup = ItemMetaGroup.Empty;
+			var metagroup = ItemMetaGroup.Empty;
+
             if (cbTech1.Checked)
                 metagroup |= ItemMetaGroup.T1;
             if (cbTech2.Checked)

@@ -42,10 +42,10 @@ namespace EVEMon.Common
 	public enum ItemMetaGroup
 	{
 		[Obsolete]
-		Other = -1,
+		Other = -1, // Removed in 2506 - retained for XML Backwards Compat
 
 		[Obsolete]
-		Named = -2,
+		Named = -2, // Removed in 2506 - retained for XML Backwards Compat
 
 		None = 1,
 		T1 = 2,
