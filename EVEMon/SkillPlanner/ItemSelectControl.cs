@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentGroupID));
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesGroupID));
 
-            // Initialize the meta group (named, faction) combo
+            // Initialize the metagroup combo
             this.ccbGroupFilter.Items.Clear();
             this.ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
             this.ccbGroupFilter.ItemCheck += new ItemCheckEventHandler(ccbGroupFilter_ItemCheck);

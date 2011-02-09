@@ -57,6 +57,7 @@ namespace EVEMon.SkillPlanner
                 cbTech3.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.T3) != ItemMetaGroup.Empty;
                 cbFaction.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Faction) != ItemMetaGroup.Empty;
                 cbStoryline.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Storyline) != ItemMetaGroup.Empty;
+                cbOfficer.Checked = (Settings.UI.BlueprintBrowser.MetagroupFilter & ItemMetaGroup.Officer) != ItemMetaGroup.Empty;
             }
             else
             {

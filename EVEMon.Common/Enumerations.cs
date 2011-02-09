@@ -45,10 +45,15 @@ namespace EVEMon.Common
         T1 = 2,
         T2 = 4,
         T3 = 8,
-        Faction = 0x100,
-        Officer = 0x200,
-        Deadspace = 0x400,
-        Storyline = 0x800,
+        Faction = 0x10,
+        Officer = 0x20,
+        Deadspace = 0x40,
+        Storyline = 0x80,
+
+        // Obsolete enumerations, can be safely removed
+        // after version 1.3.4
+        Named = 257,
+        Other = 513,
 
         Empty = 0,
         AllTechLevel = T1 | T2 | T3,
