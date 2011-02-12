@@ -11,4 +11,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.3.3.$WCREV$")]
+[assembly: AssemblyVersion("1.3.4.$WCREV$")]
