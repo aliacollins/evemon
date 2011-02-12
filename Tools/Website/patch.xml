@@ -1,73 +1,109 @@
 <?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>16 August 2010</date>
-    <version>1.3.3.2418</version>
+    <date>12 February 2011</date>
+    <version>1.3.4.2523</version>
     <url>http://forum.battleclinic.com/index.php/topic,108969</url>
-    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.3.3.2418.exe</autopatchurl>
+    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.3.4.2523.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[Contributors for this version
+    <message><![CDATA[== Breaking Changes ==
+
+ * EVEMon now runs under .NET Framework version 4.0
+ * Grouping selection in item browser may need reselection.
+
+== Contributors for this version ==
+
+ * Jimi
  * Richard Slater
- * Tonto Auri 
+ * Robert Winkler
+ * Tonto Auri
+ * Optica
+ * Vehlin
 
-New Features
- * A troubleshooter will be displayed in the event that an API request times out.
- * Added link to the EVE Online Stack Exchange Site (Help -> EVE Online Q&A).
- * Increased default HTTP Timeout from 10 to 20 seconds. 
+== New Features ==
 
-Bugfixes
- * The setting "Use Advanced Entry Addition" has been renamed to "Set priority when adding skills to plan." ]]></message>
+ * EVEMon will now search multiple instances of EVE folders for portraits.
+ * Refactored Planner Window Status Bar.
+ * Updated EVEMon to the changes made to database ID's (see CCP's blog for Tyrannis 1.2 API changes)
+ * Added support for Test API server.
+ * EVEMon will now show which character you are to delete in Account manager. Also "Downtime" indicator is now in sync with EVE.  
+ * EVEMon now has a Research Points monitor.
+ * Removal of the learning skills.
+ * Updated EVEMon to download portraits from CCP's Image server.
+ * EVEMon will now query the API server from a secure connection.
+ * Character portrait updating now supports all image files.
+ * All API calls can now be done via API proxy services.
+
+== Bugfixes ==
+
+ * Possibly fixed the "account not in training" issue.
+ * Resolved EVEMon crashing when a character in accounts is not a CCP character.
+ * EVEMon will no longer try and recenter a window.
+ * Fixes EVEMon crashing in certificate manager.
+ * Fix for hidden exception when dragging to end of plan.
+ * Fixes EVEMon crashing on multiselect of ship types.
+ * Fulfilled market orders will no longer appear as Expired.
+ * Fixes a visual bug (paint bar positioning not updating for more than one skill level in queue) in characters skill queue.
+ * Fixes a bug when trying to add an increased skill level, via priorities window, from skill browser to plan, it doesn't get added. 
+ * Fixes EVEMon crashing when an unknown skill is in skill queue.
+ * Permafix the "account not in training" issue.
+ * Fixes the BP browser filtering logic. Resets the info part of a browser when filtering changes. Adds help label in skill and certificate browser.
+ * Fixes a visual bug in skill browser when selecting the Tyccon skill. Also disables the multi-selection from account manager.
+ * Fixes some issues in browsers when combining various filtering and sorting.
+ * EVEMon will now notify on fulfilled market orders.
+ * EVEMon will no longer crash when the EFT Loadout text box is edited. Resolved faulty "Add to plan" logic.
+ * Portraits downloaded image size is now 128px to avoid pixelation.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>42a78099e063681c8fa484797e7f363d</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) blueprints data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>4350a476c0e34acaea3c3fadc991b324</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>9ced7a636195498d6df59a3e669e585a</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) certificates data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>0e0beef2a7d3d8196d42b587babb3e35</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>7e056b23b59ec95574de83b39373e333</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) geography data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>5256bb3516f2b76425f638b30b9ee172</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>ec0f511e8ac48e8d7dd711b4c6cc3ba7</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) items data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>7b9867e9d3e9828dd4fec6f244dc2fca</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>080d2af1030cbc8d98948e5b0032acca</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) properties data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>89f576720412523e81351cb113a8bae5</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>403b063503e613e8c28ddff022034b23</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) reprocessing data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>322a64607ae565e7d0af03ea9bfc9783</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>11 July 2010</date>
-      <md5>e1e4d177d8d2e116337c37ab988e4cd4</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Tyrannis/167296</url>
-      <message><![CDATA[Tyrannis 1.0.1 (167296) skills data file by the EVEMon Development Team]]></message>
+      <date>12 February 2011</date>
+      <md5>2fa813b6ee92ffde809346abf32dda68</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
+      <message><![CDATA[Incursion 1.1.0 (224393) properties data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
