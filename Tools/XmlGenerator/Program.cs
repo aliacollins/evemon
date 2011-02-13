@@ -1738,27 +1738,24 @@ namespace EVEMon.XmlGenerator
             foreach (DgmTypeAttribute attribute in s_typeAttributes
                     .Where(x => x.ItemID == requirement.RequiredTypeID))
             {
-                if (attribute.ValueFloat != null)
+                int attributeIntValue = (attribute.ValueInt.HasValue
+                                                ? attribute.ValueInt.Value
+                                                : (int)attribute.ValueFloat.Value);
+
+                // Is it a prereq skill ?
+                int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, attribute.AttributeID);
+                if (prereqIndex >= 0)
                 {
-                    int attributeIntValue = (attribute.ValueInt.HasValue
-                                                 ? attribute.ValueInt.Value
-                                                 : (int) attribute.ValueFloat.Value);
+                    prereqSkills[prereqIndex] = attributeIntValue;
+                    continue;
+                }
 
-                    // Is it a prereq skill ?
-                    int prereqIndex = Array.IndexOf(DBConstants.RequiredSkillPropertyIDs, attribute.AttributeID);
-                    if (prereqIndex >= 0)
-                    {
-                        prereqSkills[prereqIndex] = attributeIntValue;
-                        continue;
-                    }
-
-                    // Is it a prereq level ?
-                    prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, attribute.AttributeID);
-                    if (prereqIndex >= 0)
-                    {
-                        prereqLevels[prereqIndex] = attributeIntValue;
-                        continue;
-                    }
+                // Is it a prereq level ?
+                prereqIndex = Array.IndexOf(DBConstants.RequiredSkillLevelPropertyIDs, attribute.AttributeID);
+                if (prereqIndex >= 0)
+                {
+                    prereqLevels[prereqIndex] = attributeIntValue;
+                    continue;
                 }
             }
 
