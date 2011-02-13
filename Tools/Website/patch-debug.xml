@@ -59,9 +59,9 @@
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
       <date>12 February 2011</date>
-      <md5>4350a476c0e34acaea3c3fadc991b324</md5>
+      <md5>4c97954c8b3a0cf448785624c82b4344</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/224393</url>
-      <message><![CDATA[Incursion 1.1.0 (224393) blueprints data file by the EVEMon Development Team]]></message>
+      <message><![CDATA[Updated Incursion 1.1.0 (224393) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
