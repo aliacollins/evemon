@@ -50,12 +50,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EVEMon\EVEMon.csproj">
-      <Project>{A2E5EFE0-614A-4567-95E5-92A4D94169AC}</Project>
-      <Name>EVEMon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="EVEMon Installer Script.nsi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

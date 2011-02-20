@@ -10,37 +10,42 @@ namespace InstallBuilder
 {
     public class Program
     {
-        private static string desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        private static string programDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        private static string s_desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private static string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-        private static string config;
-        private static string projectDir;
-        private static string ver;
-        private static string binariesDir;
-        private static string nsisExe;
+        private static string s_config;
+        private static string s_projectDir;
+        private static string s_version;
+        private static string s_binariesDir;
+        private static string s_nsisExe;
 
         public static int Main(string[] args)
         {
             CheckDebug();
-            
+
+            bool NSISExist = PopulateEnvironment(args);
+
+            if (!NSISExist)
+                return 0;
+
             try
             {
-                PopulateEnvironment(args);
-
-                if (!String.IsNullOrEmpty(nsisExe))
+                if (!String.IsNullOrEmpty(s_nsisExe))
                 {
-                    // create an installer on the developers desktop
+                    // Create an installer on the developers desktop
                     Console.WriteLine("Starting Installer creation.");
                     BuildInstaller();
                     Console.WriteLine("Installer creation finished.");
+                    Console.WriteLine();
                 }
 
-                // create a zip file on the developers desktop
+                // Create a zip file on the developers desktop
                 Console.WriteLine("Starting zip installer creation.");
                 BuildZip();
                 Console.WriteLine("Zip installer creation finished.");
                 Console.WriteLine("Done");
-                if (Debugger.IsAttached) Console.ReadLine();
+                if (Debugger.IsAttached)
+                    Console.ReadLine();
                 return 0;
             }
             catch (Exception ex)
@@ -48,7 +53,8 @@ namespace InstallBuilder
                 Console.WriteLine("An error occurred: {0} in {1}", ex.Message, ex.Source);
                 Console.WriteLine();
                 Console.WriteLine(ex.StackTrace);
-                if (Debugger.IsAttached) Console.ReadLine();
+                if (Debugger.IsAttached)
+                    Console.ReadLine();
                 return 1;
             }
         }
@@ -59,13 +65,13 @@ namespace InstallBuilder
             Application.Exit();
         }
 
-        private static string findMakeNsisExe()
+        private static string FindMakeNsisExe()
         {
             string[] locations = new string[3];
 
-            locations[0] = programDir + "/NSIS/makensis.exe";
-            locations[1] = "C:/Program Files/NSIS/makensis.exe";
-            locations[2] = "C:/Program Files (x86)/NSIS/makensis.exe";
+            locations[0] = s_programFilesDir + @"\NSIS\makensis.exe";
+            locations[1] = @"C:\Program Files\NSIS\makensis.exe";
+            locations[2] = @"C:\Program Files (x86)\NSIS\makensis.exe";
             
             foreach (string s in locations)
             {
@@ -76,44 +82,56 @@ namespace InstallBuilder
             return String.Empty;
         }
 
-        private static void PopulateEnvironment(string[] args)
+        private static bool PopulateEnvironment(string[] args)
         {
-            config = "Release";
+            s_config = "Release";
             if (args.Length == 0)
             {
-                projectDir = Path.GetFullPath("../../..");
+                s_projectDir = Path.GetFullPath(@"..\..\..");
             }
             else
             {
-                projectDir = String.Join(" ", args);
+                s_projectDir = String.Join(" ", args);
             }
 
-            Console.WriteLine("Project directory : {0}", projectDir);
+            try
+            {
+                Assembly exeAsm = Assembly.LoadFrom(String.Format(@"..\..\..\..\..\EVEMon\bin\x86\{0}\EVEMon.exe", s_config));
+                s_version = exeAsm.GetName().Version.ToString();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("A \"Release\" has to be compiled first.");
+                Console.WriteLine("Install Builder will now close.");
+                Console.ReadLine();
+                return false;
+            }
 
-            Assembly exeAsm = Assembly.LoadFrom(String.Format("../../../../../EVEMon/bin/x86/{0}/EVEMon.exe", config));
-            ver = exeAsm.GetName().Version.ToString();
+            Console.WriteLine("Project directory : {0}", s_projectDir);
 
-            binariesDir = Path.Combine(projectDir, String.Format("../../EVEMon/bin/x86/{0}", config));
-            Console.WriteLine("Binaries directory : {0}", binariesDir);
+            s_binariesDir = Path.GetFullPath(String.Format(@"..\..\..\..\..\EVEMon\bin\x86\{0}", s_config));
+            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            Console.WriteLine();
 
-            nsisExe = findMakeNsisExe();
-            Console.WriteLine("NSIS : {0}", nsisExe);
+            s_nsisExe = FindMakeNsisExe();
+            Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe) ? "Not Found - Installer will not be created." : s_nsisExe);
+            Console.WriteLine();
+
+            return true;
         }
 
         private static void BuildZip()
         {
             string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
-            string svnRevision = ver.Substring(ver.LastIndexOf('.') + 1, ver.Length - (ver.LastIndexOf('.') + 1));
-            string zipFileName = String.Format("EVEMon-binaries-{0}.zip", ver);
-            zipFileName = Path.Combine(desktopDir, zipFileName);
+            string svnRevision = s_version.Substring(s_version.LastIndexOf('.') + 1, s_version.Length - (s_version.LastIndexOf('.') + 1));
+            string zipFileName = String.Format("EVEMon-binaries-{0}.zip", s_version);
+            zipFileName = Path.Combine(s_desktopDir, zipFileName);
 
-            string[] filenames = Directory.GetFiles(binariesDir, "*", SearchOption.AllDirectories);
+            string[] filenames = Directory.GetFiles(s_binariesDir, "*", SearchOption.AllDirectories);
 
-            FileInfo fi = new FileInfo(zipFileName);
-            if (fi.Exists)
-            {
-                fi.Delete();
-            }
+            FileInfo zipFile = new FileInfo(zipFileName);
+            if (zipFile.Exists)
+                zipFile.Delete();
 
             using (ZipOutputStream zipStream = new ZipOutputStream(File.Create(zipFileName)))
             {
@@ -124,7 +142,10 @@ namespace InstallBuilder
 
                 foreach (string file in filenames)
                 {
-                    string entryName = String.Format("EVEMon{0}", file.Remove(0, binariesDir.Length));
+                    if (file.Contains("vshost") || file.Contains("exe.config"))
+                        continue;
+
+                    string entryName = String.Format("EVEMon{0}", file.Remove(0, s_binariesDir.Length));
                     Console.WriteLine("Zipping {0}", entryName);
                     ZipEntry entry = new ZipEntry(entryName);
 
@@ -150,22 +171,20 @@ namespace InstallBuilder
         {
             try
             {
-                ProcessInstallScripts(projectDir);
-
 #if DEBUG
-                string nsisScript = Path.Combine(projectDir, "bin\\x86\\Debug\\EVEMon Installer Script.nsi");
+                string nsisScript = Path.Combine(s_projectDir, "bin\\x86\\Debug\\EVEMon Installer Script.nsi");
 #else
-                string nsisScript = Path.Combine(projectDir, "bin\\x86\\Release\\EVEMon Installer Script.nsi");
+                string nsisScript = Path.Combine(s_projectDir, "bin\\x86\\Release\\EVEMon Installer Script.nsi");
 #endif
 
                 string param =
-                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", ver, desktopDir, nsisScript);
+                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_desktopDir, nsisScript);
 
                 Console.WriteLine("NSIS script : " + nsisScript);
-                Console.WriteLine("Output directory : " + desktopDir);
+                Console.WriteLine("Output directory : " + s_desktopDir);
 
-                ProcessStartInfo psi = new ProcessStartInfo(nsisExe, param);
-                psi.WorkingDirectory = projectDir;
+                ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param);
+                psi.WorkingDirectory = s_projectDir;
                 psi.UseShellExecute = false;
                 psi.RedirectStandardOutput = true;
                 Process makensisProcess = Process.Start(psi);
@@ -175,89 +194,11 @@ namespace InstallBuilder
                 makensisProcess.Dispose();
 
                 if (exitCode == 1)
-                {
                     MessageBox.Show("MakeNSIS exited with Errors");
-                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-        }
-
-        private static void ProcessInstallScripts(string projectDir)
-        {
-            List<string> filesToProcess = new List<string>();
-            foreach (string s in Directory.GetFiles(projectDir + "\\bin\\x86\\Release", "*.nsi"))
-            {
-                filesToProcess.Add(s);
-            }
-            foreach (string s in Directory.GetFiles(projectDir + "\\bin\\x86\\Release", "*.nsh"))
-            {
-                filesToProcess.Add(s);
-            }
-            foreach (string s in Directory.GetFiles(projectDir + "\\bin\\x86\\Debug", "*.nsi"))
-            {
-                filesToProcess.Add(s);
-            }
-            foreach (string s in Directory.GetFiles(projectDir + "\\bin\\x86\\Debug", "*.nsh"))
-            {
-                filesToProcess.Add(s);
-            }
-
-            foreach (string fn in filesToProcess)
-            {
-                using (MemoryStream ms = new MemoryStream())
-                using (StreamWriter sw = new StreamWriter(ms))
-                {
-                    using (StreamReader sr = new StreamReader(fn))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            string tLine = sr.ReadLine();
-                            if (tLine == "## INSTALLBUILDER: INSERT FILES HERE ##")
-                                InsertFiles(sw, projectDir, true);
-                            else if (tLine == "## INSTALLBUILDER: INSERT DELETES HERE ##")
-                                InsertFiles(sw, projectDir, false);
-                            else if (tLine.Contains("INSTALLBUILDER"))
-                                throw new ApplicationException(String.Format("unknown installbuilder command: {0}", tLine));
-                            else
-                            {
-                                sw.WriteLine(tLine);
-                            }
-                        }
-                    }
-                    sw.Flush();
-                    ms.Seek(0, SeekOrigin.Begin);
-                    using (StreamReader sr = new StreamReader(ms))
-                    using (FileStream fs = new FileStream(fn, FileMode.Create))
-                    using (StreamWriter fsw = new StreamWriter(fs))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            fsw.WriteLine(sr.ReadLine());
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void InsertFiles(StreamWriter sw, string projectDir, bool adding)
-        {
-            foreach (string fn in Directory.GetFiles(projectDir + "\\bin\\x86\\Release", "*.*"))
-            {
-                if (adding)
-                {
-                    sw.Write(" File \"");
-                    sw.Write(fn);
-                    sw.WriteLine("\"");
-                }
-                else
-                {
-                    sw.Write(" Delete \"$INSTDIR\\");
-                    sw.Write(Path.GetFileName(fn));
-                    sw.WriteLine("\"");
-                }
             }
         }
     }
