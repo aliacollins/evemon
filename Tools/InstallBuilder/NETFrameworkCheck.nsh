@@ -24,7 +24,7 @@ Section "Microsoft .NET Framework v4.0"
   goto lbl_Done
 
   lbl_StartInstallNotFound:
-  MessageBox MB_ICONEXCLAMATION|MB_YESNO|MB_DEFBUTTON2 "Microsoft .NET Framework 4 is required, and does not appear to be installed..$\nYou must \
+  MessageBox MB_ICONEXCLAMATION|MB_YESNO|MB_DEFBUTTON2 "Microsoft .NET Framework 4 is required, and does not appear to be installed.$\nYou must \
                     install it before continuing.$\nIf you choose to continue, you will need to be connected \
                     to the internet before proceeding.$\nWould you like to continue with the installation?" /SD IDNO IDYES lbl_Confirmed IDNO lbl_Cancelled
 
