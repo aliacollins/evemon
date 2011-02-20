@@ -1,6 +1,7 @@
 #
 #  This is an NSIS Installer build script
-#  for NSIS 2.44 with the UAC plugin installed
+#  for NSIS 2.46 with the UAC plugin installed.
+#  Script is compatible with UAC v0.2.x.
 #  (UAC.dll must be copied to NSIS\Plugins)
 #
 
@@ -34,6 +35,7 @@ Var MUI_TEMP
 !define MUI_UNICON "..\..\..\..\..\EVEMon\EVEMon.ico"
 
 !insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE "..\..\..\..\..\EVEMon\Resources\gpl.txt"
 !insertmacro MUI_PAGE_DIRECTORY
 
 # Start menu folder page configuration
@@ -60,41 +62,72 @@ Var MUI_TEMP
 !include "NETFrameworkCheck.nsh"
 
 Function .onInit
-  UAC::RunElevated 
+	!insertmacro UAC_RunElevated 
 
 	StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
 	StrCmp 0 $0 0 UAC_Err ; Error?
-	StrCmp 1 $1 0 UAC_Success ;Are we the real deal or just the wrapper?
+	StrCmp 1 $1 0 UAC_Success ; Are we the real deal or just the wrapper?
 	Quit
+	
 	UAC_Err:
-	MessageBox mb_iconstop "Unable to to install EVEMon without Administrator permissions. (error $0)"
+	MessageBox mb_iconstop "Unable to install EVEMon without Administrator permissions. (error $0)"
 	Abort
+	
 	UAC_ElevationAborted:
 	# elevation was aborted, we still run as normal
+	
 	UAC_Success:
-
 	# fix it so it only computes the space needed for EVEMon itself if .net is not installed
 	SectionSetSize 0 0
 	Call GetDotNETVersion
 	Pop $0
-	StrCmp $0 "" 0 isInstalled
-		SectionSetSize 0 60331
+	StrCmp $0 "" 0 .NetIsInstalled
+		SectionSetSize 0 49268 ; The size of .NET v4 in KiB
 
-	isInstalled:
+	.NetIsInstalled:
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon\" checkForExeInDir
 	StrCmp "$INSTDIR" "$PROGRAMFILES\EVEMon" checkForExeInDir
-	Goto noCheckForExeInDir
+	Goto done
 
 	checkForExeInDir:
-	IfFileExists "$EXEDIR\EVEMon.exe" 0 noCheckForExeInDir
-	StrCpy $INSTDIR "$EXEDIR"
+	IfFileExists "$INSTDIR\EVEMon.exe" 0 done
 
-	noCheckForExeInDir:
+    MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+    "Setup detected that another version of EVEMon is already installed. $\n$\n\
+	Click `OK` to remove the existing version or `Cancel` to cancel this installation." \
+    IDOK uninstall
+	Abort
+
+	;Remove previous installation
+	uninstall:	
+	Delete "$INSTDIR\*.*"
+	RMDir /R "$INSTDIR\Resources"
+	RMDir $INSTDIR
+	
+	!insertmacro MUI_STARTMENU_GETFOLDER EVEMon $MUI_TEMP
+	Delete "$SMPROGRAMS\$MUI_TEMP\EVEMon.lnk"
+	Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall EVEMon.lnk"
+
+	StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
+
+	startMenuDeleteLoop:
+    ClearErrors
+	RMDir $MUI_TEMP
+	GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
+	IfErrors startMenuDeleteLoopDone
+	StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
+		 
+	startMenuDeleteLoopDone:
+	DeleteRegKey /ifempty HKLM "Software\EVEMon"
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon"
+	
+	done:
 FunctionEnd
 
 Function EnsureNotRunning
 	IfFileExists "$INSTDIR\EVEMon.exe" 0 lbl_Done
 	IntOp $1 0 + 0
+	
 	lbl_tryAgain:
 	ClearErrors
 	FileOpen $0 "$INSTDIR\EVEMon.exe" a
@@ -196,8 +229,6 @@ FunctionEnd
  FunctionEnd
 
 Function .onInstSuccess
-	; delete the UAC.dll from the users %TEMP%
-	UAC::Unload ;Must call unload!
 
 	; skip if not in silent mode
 	IfSilent 0 lbl_skipRun
@@ -215,11 +246,7 @@ Function .onInstSuccess
 	lbl_skipRun:
 FunctionEnd
 
-Function .OnInstFailed
-	UAC::Unload ;Must call unload!
-FunctionEnd
-
-Section "Installer Section" 
+Section "Install EVEMon" 
 
 	Call EnsureNotRunning
 
@@ -231,11 +258,8 @@ Section "Installer Section"
 
 	lbl_noLegacyUninstall:
 	SetOutPath "$INSTDIR"
-## INSTALLBUILDER: INSERT FILES HERE ##
-	File /r /x *vshost* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
-	File "..\..\..\..\..\EVEMon\EVEMon.ico"
-	File "..\..\..\..\..\EVEMon\EVEMon.ico"
-	SetOutPath "$INSTDIR"
+	File /r /x *vshost* /x *exe.config* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
+	
  
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 
@@ -256,9 +280,9 @@ Section "Installer Section"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "Publisher" "battleclinic.com"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "URLUpdateInfo" "http://EVEMon.battleclinic.com/"
+				 "URLUpdateInfo" "http://evemon.battleclinic.com/"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "URLInfoAbout" "http://EVEMon.battleclinic.com/"
+				 "URLInfoAbout" "http://evemon.battleclinic.com/"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "DisplayVersion" "${VERSION}"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
@@ -267,36 +291,28 @@ Section "Installer Section"
 				 "NoRepair" 1
 SectionEnd
 
-Section "un.Uninstaller Section"
+Section "un.Uninstall EVEMon"
 	Call un.EnsureNotRunning
 	SetShellVarContext current
-	Delete "$INSTDIR\Debugging Tools\EVEMon (with network logging).lnk"
-	RMDir "$INSTDIR\Debugging Tools"
-## INSTALLBUILDER: INSERT DELETES HERE ##
-	Delete "$INSTDIR\EVEMon.ico"
-	Delete "$INSTDIR\EVEMon-all.ico"
+	Delete "$INSTDIR\EVEMon.*"
 	Delete "$INSTDIR\uninstall.exe"
-	SetShellVarContext all
+	Delete "$INSTDIR\*.dll"
 	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\EVEMon.lnk"
 	Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall EVEMon.lnk"
-	RmDir "$SMPROGRAMS\$STARTMENU_FOLDER"
-	RmDir /R "$INSTDIR\Resources"
-	RmDir /R "$INSTDIR\Microsoft.VC90.CRT"
-	
-	; Just to be sure it gets cleaned up if it was locked...
-	Delete /REBOOTOK "$INSTDIR\EVEMon.WinHook.dll"
-	IfRebootFlag rmDirWithReboot rmDirWithoutReboot
+	RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
+	RMDir /R "$INSTDIR\Resources"
 
-	rmDirWithoutReboot:
-	RMDir $INSTDIR
-	Goto afterRmDir
+	IfRebootFlag rmDirWithReboot rmDirWithoutReboot
 
 	rmDirWithReboot:
 	RMDir /REBOOTOK $INSTDIR
 	Goto afterRmDir
+	
+	rmDirWithoutReboot:
+	RMDir $INSTDIR
+	Goto afterRmDir
 
 	afterRmDir:
-
 	!insertmacro MUI_STARTMENU_GETFOLDER EVEMon $MUI_TEMP
 	Delete "$SMPROGRAMS\$MUI_TEMP\EVEMon.lnk"
 	Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall EVEMon.lnk"
@@ -304,13 +320,13 @@ Section "un.Uninstaller Section"
 	StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
 
 	startMenuDeleteLoop:
-		 ClearErrors
-		 RMDir $MUI_TEMP
-		 GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
-		 IfErrors startMenuDeleteLoopDone
-		 StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
-	startMenuDeleteLoopDone:
+	ClearErrors
+	RMDir $MUI_TEMP
+	GetFullPathName $MUI_TEMP "$MUI_TEMP\.."
+	IfErrors startMenuDeleteLoopDone
+	StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
 
+    startMenuDeleteLoopDone:
 	DeleteRegKey /ifempty HKLM "Software\EVEMon"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon"
 SectionEnd
