@@ -475,9 +475,9 @@ namespace EVEMon
 
             // Right click for skills below lv5 : we display a context menu to plan higher levels.
             m_item = lbSkillsQueue.Items[index] as QueuedSkill;
-            if (m_item != null)
+            var skill = m_item.Skill;
+            if (skill != null)
             {
-                var skill = m_item.Skill;
                 if (e.Button.Equals(MouseButtons.Right))
                 {
                     // "Show in Skill Explorer" menu item
@@ -504,15 +504,10 @@ namespace EVEMon
 
                             int level1 = level;
                             m_character.Plans.AddTo(menuLevel.DropDownItems, (menuPlanItem, plan) =>
-                                                                                 {
-                                                                                     menuPlanItem.Click +=
-                                                                                         menuPlanItem_Click;
-                                                                                     menuPlanItem.Tag =
-                                                                                         new Pair<Plan, SkillLevel>(plan,
-                                                                                                                    new SkillLevel
-                                                                                                                        (skill,
-                                                                                                                         level1));
-                                                                                 });
+                                                    {
+                                                        menuPlanItem.Click += menuPlanItem_Click;
+                                                        menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan, new SkillLevel(skill, level1));
+                                                    });
                         }
 
                         // Add to the context menu
