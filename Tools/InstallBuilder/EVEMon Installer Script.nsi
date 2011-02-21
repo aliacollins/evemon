@@ -77,6 +77,8 @@ Function .onInit
 	# elevation was aborted, we still run as normal
 	
 	UAC_Success:
+	Call EnsureNotRunning
+	
 	# fix it so it only computes the space needed for EVEMon itself if .net is not installed
 	SectionSetSize 0 0
 	Call GetDotNETVersion
@@ -101,6 +103,7 @@ Function .onInit
 	;Remove previous installation
 	uninstall:	
 	Delete "$INSTDIR\*.*"
+	RMDir /R "$INSTDIR\Microsoft.VC90.CRT"
 	RMDir /R "$INSTDIR\Resources"
 	RMDir $INSTDIR
 	
@@ -154,6 +157,26 @@ Function EnsureNotRunning
 	Abort "Operation cancelled by user."
  
 	lbl_Done:
+FunctionEnd
+
+Function un.onInit
+	!insertmacro UAC_RunElevated 
+
+	StrCmp 1223 $0 UAC_ElevationAborted ; UAC dialog aborted by user?
+	StrCmp 0 $0 0 UAC_Err ; Error?
+	StrCmp 1 $1 0 UAC_Success ; Are we the real deal or just the wrapper?
+	Quit
+	
+	UAC_Err:
+	MessageBox mb_iconstop "Unable to uninstall EVEMon without Administrator permissions. (error $0)"
+	Abort
+	
+	UAC_ElevationAborted:
+	# elevation was aborted, we still run as normal
+	
+	UAC_Success:
+	# fix it so it only computes the space needed for EVEMon itself if .net is not installed
+	Call un.EnsureNotRunning
 FunctionEnd
 
 Function un.EnsureNotRunning
@@ -247,9 +270,6 @@ Function .onInstSuccess
 FunctionEnd
 
 Section "Install EVEMon" 
-
-	Call EnsureNotRunning
-
 	ClearErrors
 	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{B3C090CF-5539-42EA-90EB-8648A79C7F8B}" \
 				"UninstallString"
@@ -292,7 +312,6 @@ Section "Install EVEMon"
 SectionEnd
 
 Section "un.Uninstall EVEMon"
-	Call un.EnsureNotRunning
 	SetShellVarContext current
 	Delete "$INSTDIR\EVEMon.*"
 	Delete "$INSTDIR\uninstall.exe"
