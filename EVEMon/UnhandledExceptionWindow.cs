@@ -149,7 +149,8 @@ namespace EVEMon
                     stackTraceBuilder.Append(ex.ToString()).AppendLine();
                 }
 
-                stackTraceBuilder = stackTraceBuilder.Replace("D:\\EVEMon\\", String.Empty);
+                stackTraceBuilder = stackTraceBuilder.Replace(@"D:\EVEMon\", String.Empty);
+                stackTraceBuilder = stackTraceBuilder.Replace(@"G:\EVEMon Project\EVEMon\", String.Empty);
                 return stackTraceBuilder.ToString();
             }
         }
