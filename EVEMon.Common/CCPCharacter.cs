@@ -110,6 +110,7 @@ namespace EVEMon.Common
             : this(identity, Guid.NewGuid())
         {
             m_charSheetMonitor.ForceUpdate(true);
+            m_skillQueueMonitor.ForceUpdate(true);
         }
 
         /// <summary>
@@ -225,7 +226,12 @@ namespace EVEMon.Common
             // Last API updates
             foreach (var monitor in m_monitors)
             {
-                var update = new SerializableAPIUpdate { Method = monitor.Method, Time = monitor.LastUpdate };
+                var update = new SerializableAPIUpdate
+                {
+                    Method = monitor.Method,
+                    Time = monitor.LastUpdate
+                };
+
                 serial.LastUpdates.Add(update);
             }
             
@@ -284,6 +290,16 @@ namespace EVEMon.Common
 
             m_monitors.UpdateOnOneSecondTick();
             m_queue.UpdateOnTimerTick();
+
+            // Exit if API key is a limited one
+            Account account = m_identity.Account;
+            if (account == null || account.KeyLevel != CredentialsLevel.Full)
+                return;
+
+            // Exit if industry jobs monitoring is disabled
+            if (!m_charIndustryJobsMonitor.Enabled)
+                return;
+
             m_industryJobs.UpdateOnTimerTick();
         }
 
@@ -305,14 +321,13 @@ namespace EVEMon.Common
             Import(result);
 
             // Check the character has a sufficient clone or send a notification
-            if (m_cloneSkillPoints < SkillPoints)
+            if (Monitored && (m_cloneSkillPoints < SkillPoints))
             {
                 EveClient.Notifications.NotifyInsufficientClone(this);
+                return;
             }
-            else
-            {
-                EveClient.Notifications.InvalidateInsufficientClone(this);
-            }
+
+            EveClient.Notifications.InvalidateInsufficientClone(this);
         }
 
         /// <summary>
@@ -332,19 +347,17 @@ namespace EVEMon.Common
             // Import the data
             m_queue.Import(result.Result.Queue);
 
-            // Check the account is in training
-            var account = m_identity.Account;
-            account.CharacterInTraining();
+            // Check the account has a character in training
+            m_identity.Account.CharacterInTraining();
 
             // Check the character has room in skill queue
             if (IsTraining && (SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))
             {
                 EveClient.Notifications.NotifySkillQueueRoomAvailable(this);
+                return;
             }
-            else
-            {
-                EveClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
-            }
+
+            EveClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
         }
 
         /// <summary>
@@ -534,22 +547,21 @@ namespace EVEMon.Common
 
             NotifyOnEndedOrders(endedOrders);
 
-            // Check the character has sufficient balance
-            // for its buying orders or send a notification
-            if (!HasSufficientBalance)
-            {
-                EveClient.Notifications.NotifyInsufficientBalance(this);
-            }
-            else
-            {
-                EveClient.Notifications.InvalidateInsufficientBalance(this);
-            }
-
             // Reset flags
             m_charOrdersUpdated = false;
             m_corpOrdersUpdated = false;
             m_charOrdersAdded = false;
             m_corpOrdersAdded = false;
+
+            // Check the character has sufficient balance
+            // for its buying orders or send a notification
+            if (!HasSufficientBalance)
+            {
+                EveClient.Notifications.NotifyInsufficientBalance(this);
+                return;
+            }
+
+            EveClient.Notifications.InvalidateInsufficientBalance(this);
         }
 
         /// <summary>
