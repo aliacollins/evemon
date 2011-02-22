@@ -98,21 +98,27 @@ namespace EVEMon.Common
         /// </summary>
         internal void UpdateOnTimerTick()
         {
+            // We exit if there are no jobs
+            if (m_items.IsEmpty())
+                return;
+
             List<IndustryJob> jobsCompleted = new List<IndustryJob>();
 
+            // Add the not notified "Ready" jobs to the completed list
             foreach (var job in m_items.Where(x => x.ActiveJobState == ActiveJobState.Ready && !x.NotificationSend))
             {
                 jobsCompleted.Add(job);
                 job.NotificationSend = true;
             }
 
+            // We exit if no jobs have been completed
             if (jobsCompleted.IsEmpty())
                 return;
 
             // Sends a notification
             EveClient.Notifications.NotifyIndustryJobCompletion(m_character, jobsCompleted);
 
-            // Fires the event regarding industry jobs update
+            // Fires the event regarding industry jobs completed
             EveClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
         }
     }
