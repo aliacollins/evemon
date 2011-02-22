@@ -431,16 +431,16 @@ namespace EVEMon.Common
         /// Notifies a character finished training a skill.
         /// </summary>
         /// <param name="account"></param>
-        internal void NotifyServerStatusChange(ServerStatus status)
+        internal void NotifyServerStatusChanged(string serverName, ServerStatus status)
         {
             string text = String.Empty;
             switch(status)
             {
                 case ServerStatus.Offline:
-                    text = "Tranquility is offline.";
+                    text = String.Format("{0} is offline.", serverName);
                     break;
                 case ServerStatus.Online:
-                    text = "Tranquility is online.";
+                    text = String.Format("{0} is online.", serverName);
                     break;
                 case ServerStatus.CheckDisabled:
                 case ServerStatus.Unknown:

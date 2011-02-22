@@ -209,7 +209,7 @@
     <comment>URL For EVE Online Stack Exchange Site</comment>
   </data>
   <data name="APITestBase" xml:space="preserve">
-    <value>https://apitest.eveonline.com</value>
+    <value>http://apitest.eveonline.com</value>
     <comment>Test API Service announced as part of Tyrannis 1.2</comment>
   </data>
   <data name="APIResearchPoints" xml:space="preserve">

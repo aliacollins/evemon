@@ -25,7 +25,7 @@ namespace EVEMon.Common
             m_status = ServerStatus.Online;
 
             m_monitor = new QueryMonitor<SerializableServerStatus>(APIMethods.ServerStatus);
-            m_monitor.Updated += new QueryCallback<SerializableServerStatus>(OnMonitorUpdated);
+            m_monitor.Updated += OnMonitorUpdated;
         }
 
         /// <summary>
@@ -45,26 +45,38 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the server's name
+        /// </summary>
+        public string Name
+        {
+            get 
+            { 
+                return (EveClient.APIProviders.CurrentProvider != APIProvider.TestProvider ?
+                        "Tranquility" : "Sinqularity");
+            }
+        }
+
+        /// <summary>
         /// Gets the server status message
         /// </summary>
         public string StatusText
         {
             get
-            {
+            {               
                 switch(m_status)
                 {
                     case ServerStatus.Online:
-                        return String.Format(CultureConstants.TidyInteger, "Server Online ({0:n} Pilots)", m_users);
+                        return String.Format(CultureConstants.TidyInteger,
+                            "{0} Server Online ({1:n} Pilots)", Name, m_users);
                     case ServerStatus.Offline:
-                        return "Server Offline";
+                        return String.Format("{0} Server Offline", Name);
                     case ServerStatus.CheckDisabled:
                         return "Server Status Check Disabled";
                     default:
-                        return "Server Status Unknown";
+                        return String.Format("{0} Server Status Unknown", Name);
                 }
             }
         }
-
 
         /// <summary>
         /// Update on a time tick
@@ -72,6 +84,14 @@ namespace EVEMon.Common
         public void UpdateOnOneSecondTick()
         {
             m_monitor.UpdateOnOneSecondTick();
+        }
+
+        /// <summary>
+        /// Forces an update of the server status
+        /// </summary>
+        public void ForceUpdate()
+        {
+            m_monitor.ForceUpdate(false);
         }
 
         /// <summary>
@@ -98,8 +118,13 @@ namespace EVEMon.Common
             EveClient.OnServerStatusUpdated(this, lastStatus, m_status);
 
             // Send a notification
-            if (lastStatus != m_status) EveClient.Notifications.NotifyServerStatusChange(m_status);
-            else EveClient.Notifications.InvalidateServerStatusChange();
+            if (lastStatus != m_status)
+            {
+                EveClient.Notifications.NotifyServerStatusChanged(Name, m_status);
+                return;
+            }
+
+            EveClient.Notifications.InvalidateServerStatusChange();
         }
     }
 }

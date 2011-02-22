@@ -237,13 +237,13 @@ namespace EVEMon
             // 
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(102, 17);
-            this.lblStatus.Text = "Current EVE Time:";
+            this.lblStatus.Text = "EVE Time:";
             // 
             // lblServerStatus
             // 
             this.lblServerStatus.Name = "lblServerStatus";
             this.lblServerStatus.Size = new System.Drawing.Size(201, 17);
-            this.lblServerStatus.Text = "// Tranquility Server Status Unknown";
+            this.lblServerStatus.Text = "// Server Status Unknown";
             // 
             // saveFileDialog
             // 

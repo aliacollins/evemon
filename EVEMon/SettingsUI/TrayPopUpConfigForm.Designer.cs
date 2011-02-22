@@ -61,7 +61,7 @@ namespace EVEMon.SettingsUI
             this.cbUseIncreasedContrast = new System.Windows.Forms.CheckBox();
             this.cbShowEveTime = new System.Windows.Forms.CheckBox();
             this.cbShowWarning = new System.Windows.Forms.CheckBox();
-            this.cbShowTQStatus = new System.Windows.Forms.CheckBox();
+            this.cbShowServerStatus = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ttHelp = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
@@ -390,7 +390,7 @@ namespace EVEMon.SettingsUI
             this.groupBox3.Controls.Add(this.cbUseIncreasedContrast);
             this.groupBox3.Controls.Add(this.cbShowEveTime);
             this.groupBox3.Controls.Add(this.cbShowWarning);
-            this.groupBox3.Controls.Add(this.cbShowTQStatus);
+            this.groupBox3.Controls.Add(this.cbShowServerStatus);
             this.groupBox3.Location = new System.Drawing.Point(3, 317);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(362, 64);
@@ -432,16 +432,16 @@ namespace EVEMon.SettingsUI
                     "ing a skill.");
             this.cbShowWarning.UseVisualStyleBackColor = true;
             // 
-            // cbShowTQStatus
+            // cbShowServerStatus
             // 
-            this.cbShowTQStatus.AutoSize = true;
-            this.cbShowTQStatus.Location = new System.Drawing.Point(204, 20);
-            this.cbShowTQStatus.Name = "cbShowTQStatus";
-            this.cbShowTQStatus.Size = new System.Drawing.Size(103, 17);
-            this.cbShowTQStatus.TabIndex = 14;
-            this.cbShowTQStatus.Text = "Show TQ Status";
-            this.ttHelp.SetToolTip(this.cbShowTQStatus, "When enabled, displays the current\r\nTranquility server status");
-            this.cbShowTQStatus.UseVisualStyleBackColor = true;
+            this.cbShowServerStatus.AutoSize = true;
+            this.cbShowServerStatus.Location = new System.Drawing.Point(204, 20);
+            this.cbShowServerStatus.Name = "cbShowServerStatus";
+            this.cbShowServerStatus.Size = new System.Drawing.Size(103, 17);
+            this.cbShowServerStatus.TabIndex = 14;
+            this.cbShowServerStatus.Text = "Show Server Status";
+            this.ttHelp.SetToolTip(this.cbShowServerStatus, "When enabled, displays the current\r\nTranquility server status");
+            this.cbShowServerStatus.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel1
             // 
@@ -489,7 +489,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tpGeneral;
-        private System.Windows.Forms.CheckBox cbShowTQStatus;
+        private System.Windows.Forms.CheckBox cbShowServerStatus;
         private System.Windows.Forms.ToolTip ttHelp;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.CheckBox cbHideNotTraining;

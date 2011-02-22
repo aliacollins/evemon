@@ -88,7 +88,7 @@ namespace EVEMon.SettingsUI
             cbPortraitSize.Items.AddRange(m_portraitSize);
             cbPortraitSize.SelectedIndex = (int)config.PortraitSize;
             cbShowWarning.Checked = config.ShowWarning;
-            cbShowTQStatus.Checked = config.ShowTQStatus;
+            cbShowServerStatus.Checked = config.ShowServerStatus;
             cbShowEveTime.Checked = config.ShowEveTime;
 			cbIndentGroupedAccounts.Checked = config.IndentGroupedAccounts;
             cbUseIncreasedContrast.Checked = config.UseIncreasedContrast;
@@ -110,7 +110,7 @@ namespace EVEMon.SettingsUI
             m_settings.ShowPortrait = cbShowPortrait.Checked;
             m_settings.PortraitSize = (PortraitSizes)cbPortraitSize.SelectedIndex;
             m_settings.ShowWarning = cbShowWarning.Checked;
-            m_settings.ShowTQStatus = cbShowTQStatus.Checked;
+            m_settings.ShowServerStatus = cbShowServerStatus.Checked;
             m_settings.ShowEveTime = cbShowEveTime.Checked;
 			m_settings.IndentGroupedAccounts = cbIndentGroupedAccounts.Checked;
             m_settings.UseIncreasedContrast = cbUseIncreasedContrast.Checked;

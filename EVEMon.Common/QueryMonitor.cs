@@ -88,12 +88,13 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (EveClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider)
+                if (EveClient.APIProviders.CurrentProvider != APIProvider.DefaultProvider &&
+                    EveClient.APIProviders.CurrentProvider != APIProvider.TestProvider)
                     return false;
 
                 var cachedTime = (m_lastResult == null ? NextUpdate : m_lastResult.CachedUntil);
 
-                return DateTime.UtcNow < cachedTime; 
+                return DateTime.UtcNow < cachedTime;
             }
         }
 
@@ -170,11 +171,6 @@ namespace EVEMon.Common
         /// </summary>
         internal void ForceUpdate(bool retryOnError)
         {
-            // If the cache timer has not expired
-            // give up as it will fail anyway (if APIProvider is CCP)
-            if (ForceUpdateWillCauseError)
-                return;
-
             m_forceUpdate = true;
             m_retryOnForceUpdateError |= retryOnError;
             UpdateOnOneSecondTick();
@@ -212,7 +208,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            // Check for a full key.
+            // Check for a full key
             if (m_isFullKeyNeeded && !HasFullKey())
             {
                 m_status = QueryStatus.NoFullKey;

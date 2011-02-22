@@ -61,7 +61,7 @@ namespace EVEMon.Common
                 Characters = new GlobalCharacterCollection();
                 s_datafiles = new GlobalDatafileCollection();
                 Accounts = new GlobalAccountCollection();
-                TranquilityServer = new EveServer();
+                EVEServer = new EveServer();
 
                 // Load static datas (min order to follow : skills before anything else, items before certs)
                 Trace("Load Datafiles - begin");
@@ -294,9 +294,9 @@ namespace EVEMon.Common
         public static GlobalAPIProviderCollection APIProviders { get; private set; }
 
         /// <summary>
-        /// Gets the tranquility server's informations
+        /// Gets the EVE server's informations
         /// </summary>
-        public static EveServer TranquilityServer { get; private set; }
+        public static EveServer EVEServer { get; private set; }
         
         /// <summary>
         /// Apply some settings changes
@@ -344,8 +344,8 @@ namespace EVEMon.Common
             if (!s_running)
                 return;
 
-            // Updates tranquility status
-            TranquilityServer.UpdateOnOneSecondTick();
+            // Updates EVE server status
+            EVEServer.UpdateOnOneSecondTick();
 
             // Updates the accounts
             foreach(var account in Accounts)

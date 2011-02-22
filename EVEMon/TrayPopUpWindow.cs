@@ -270,7 +270,7 @@ namespace EVEMon
             }
 
             // TQ Server Status
-            if (Settings.UI.SystemTrayPopup.ShowTQStatus)
+            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
             {
                 m_serverStatusLabel = new Label();
                 m_serverStatusLabel.AutoSize = true;
@@ -418,8 +418,8 @@ namespace EVEMon
             if (m_serverStatusLabel == null)
                 return;
 
-            if (Settings.UI.SystemTrayPopup.ShowTQStatus)
-                m_serverStatusLabel.Text = EveClient.TranquilityServer.StatusText;
+            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
+                m_serverStatusLabel.Text = EveClient.EVEServer.StatusText;
         }
         #endregion
 

@@ -18,7 +18,7 @@ namespace EVEMon.Common.SettingsObjects
             ShowSkillInTraining = true;
             ShowRemainingTime = true;
             ShowPortrait = true;
-            ShowTQStatus = true;
+            ShowServerStatus = true;
             ShowEveTime = true;
             ShowWarning = true;
             IndentGroupedAccounts = true;
@@ -116,8 +116,8 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("showTranquilityStatus")]
-        public bool ShowTQStatus
+        [XmlElement("showServerStatus")]
+        public bool ShowServerStatus
         {
             get;
             set;

@@ -47,6 +47,7 @@ namespace EVEMon
 
         private readonly List<Notification> m_popupNotifications = new List<Notification>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
+        private APIProvider m_APIProvider = EveClient.APIProviders.CurrentProvider;
 
         /// <summary>
         /// Constructor.
@@ -1879,6 +1880,20 @@ namespace EVEMon
             // Rebuild tabs (the overview may have been removed)
             if (tcCharacterTabs.TabPages.Contains(tpOverview) != Settings.UI.MainWindow.ShowOverview)
                 UpdateTabs();
+
+            // Whenever we switch API provider we update
+            // the server status and every monitored CCP character
+            if (m_APIProvider != EveClient.APIProviders.CurrentProvider)
+            {
+                EveClient.EVEServer.ForceUpdate();
+
+                foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+                {
+                    character.QueryMonitors.QueryEverything();
+                }
+
+                m_APIProvider = EveClient.APIProviders.CurrentProvider;
+            }
         }
 
         /// <summary>
