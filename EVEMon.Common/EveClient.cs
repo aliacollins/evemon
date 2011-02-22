@@ -210,7 +210,7 @@ namespace EVEMon.Common
             {
                 string PortraitCache = eveDataPath.Name;
                 string evePortraitCacheFolder = String.Format(CultureConstants.DefaultCulture, 
-                                                    "{2}{0}{1}{0}cache{0}Pictures{0}Portraits",
+                                                    "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
                                                     Path.DirectorySeparatorChar, 
                                                     PortraitCache,
                                                     EVEApplicationDataDir);
@@ -225,7 +225,7 @@ namespace EVEMon.Common
         /// Gets or sets the EVE Online installation's default portrait cache folder.
         /// </summary>
         public static string[] DefaultEvePortraitCacheFolders { get; private set; }
-        
+
         /// <summary>
         /// Gets or sets the portrait cache folder defined by the user.
         /// </summary>
