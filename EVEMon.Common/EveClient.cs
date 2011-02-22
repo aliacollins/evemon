@@ -541,7 +541,7 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal static void OnCharacterListChanged(Account account)
         {
-            Trace("EveClient.OnCharacterListChanged - " + account);
+            Trace("EveClient.OnCharacterListChanged - {0}", account);
             Settings.Save();
             if (CharacterListChanged != null)
                 CharacterListChanged(null, EventArgs.Empty);
@@ -553,7 +553,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterChanged(Character character)
         {
-            Trace("EveClient.OnCharacterChanged - " + character.Name);
+            Trace("EveClient.OnCharacterChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterChanged != null)
                 CharacterChanged(null, new CharacterChangedEventArgs(character));
@@ -565,7 +565,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterSkillQueueChanged(Character character)
         {
-            Trace("EveClient.OnSkillQueueChanged - " + character.Name);
+            Trace("EveClient.OnSkillQueueChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterSkillQueueChanged != null)
                 CharacterSkillQueueChanged(null, new CharacterChangedEventArgs(character));
@@ -578,7 +578,7 @@ namespace EVEMon.Common
         /// <param name="skillsCompleted"></param>
         internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
         {
-            Trace("EveClient.OnCharacterQueuedSkillsCompleted - " + character.Name);
+            Trace("EveClient.OnCharacterQueuedSkillsCompleted - {0}", character.Name);
             if (QueuedSkillsCompleted != null)
                 QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
@@ -588,7 +588,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterMarketOrdersChanged(Character character)
         {
-            Trace("EveClient.OnCharacterMarketOrdersChanged - " + character.Name);
+            Trace("EveClient.OnCharacterMarketOrdersChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterMarketOrdersChanged != null)
                 CharacterMarketOrdersChanged(null, new CharacterChangedEventArgs(character));
@@ -600,7 +600,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterIndustryJobsChanged(Character character)
         {
-            Trace("EveClient.OnCharacterIndustryJobsChanged - " + character.Name);
+            Trace("EveClient.OnCharacterIndustryJobsChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterIndustryJobsChanged != null)
                 CharacterIndustryJobsChanged(null, new CharacterChangedEventArgs(character));
@@ -624,7 +624,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterResearchPointsChanged(Character character)
         {
-            Trace("EveClient.OnCharacterResearchPointsChanged - " + character.Name);
+            Trace("EveClient.OnCharacterResearchPointsChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterResearchPointsChanged != null)
                 CharacterResearchPointsChanged(null, new CharacterChangedEventArgs(character));
@@ -636,7 +636,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterPortraitChanged(Character character)
         {
-            Trace("EveClient.OnCharacterPortraitChanged - " + character.Name);
+            Trace("EveClient.OnCharacterPortraitChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterPortraitChanged != null)
                 CharacterPortraitChanged(null, new CharacterChangedEventArgs(character));
@@ -648,7 +648,7 @@ namespace EVEMon.Common
         /// <param name="character"></param>
         internal static void OnCharacterPlanCollectionChanged(Character character)
         {
-            Trace("EveClient.OnCharacterPlanCollectionChanged - " + character.Name);
+            Trace("EveClient.OnCharacterPlanCollectionChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterPlanCollectionChanged != null)
                 CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
@@ -661,7 +661,7 @@ namespace EVEMon.Common
         /// <param name="plan"></param>
         internal static void OnPlanChanged(Plan plan)
         {
-            Trace("EveClient.OnPlanChanged - " + plan.Name);
+            Trace("EveClient.OnPlanChanged - {0}", plan.Name);
             Settings.Save();
             if (PlanChanged != null)
                 PlanChanged(null, new PlanChangedEventArgs(plan));
@@ -673,7 +673,7 @@ namespace EVEMon.Common
         /// <param name="plan"></param>
         internal static void OnPlanNameChanged(Plan plan)
         {
-            Trace("EveClient.OnPlanNameChanged - " + plan.Name);
+            Trace("EveClient.OnPlanNameChanged - {0}", plan.Name);
             Settings.Save();
             if (PlanNameChanged != null)
                 PlanNameChanged(null, new PlanChangedEventArgs(plan));
@@ -698,7 +698,7 @@ namespace EVEMon.Common
         /// <param name="notification"></param>
         internal static void OnNotificationSent(Notification notification)
         {
-            Trace("EveClient.OnNotificationSent - " + notification.ToString());
+            Trace("EveClient.OnNotificationSent - {0}", notification);
             if (NotificationSent != null)
                 NotificationSent(null, notification);
         }
@@ -727,7 +727,8 @@ namespace EVEMon.Common
         public static void Trace(string message)
         {
             var time = DateTime.UtcNow - s_startTime;
-            string timeStr = String.Format(CultureConstants.DefaultCulture, "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+            string timeStr = String.Format(CultureConstants.DefaultCulture,
+                "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
             System.Diagnostics.Trace.WriteLine(timeStr + message);
         }
 
