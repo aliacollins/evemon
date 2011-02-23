@@ -7,7 +7,7 @@
 
 SetCompressor /solid lzma
 
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 !include "UAC.nsh"
 !include "Library.nsh"
@@ -173,9 +173,8 @@ Function un.onInit
 	
 	UAC_ElevationAborted:
 	# elevation was aborted, we still run as normal
-	
 	UAC_Success:
-	# fix it so it only computes the space needed for EVEMon itself if .net is not installed
+
 	Call un.EnsureNotRunning
 FunctionEnd
 
@@ -278,9 +277,8 @@ Section "Install EVEMon"
 
 	lbl_noLegacyUninstall:
 	SetOutPath "$INSTDIR"
-	File /r /x *vshost* /x *exe.config* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
-	
- 
+	File /r /x *vshost* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
+
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 
 	!insertmacro MUI_STARTMENU_WRITE_BEGIN EVEMon
@@ -296,7 +294,7 @@ Section "Install EVEMon"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "UninstallString" "$INSTDIR\uninstall.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "DisplayIcon" "$INSTDIR\EVEMon.ico"
+				 "DisplayIcon" "$INSTDIR\EVEMon.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "Publisher" "battleclinic.com"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \

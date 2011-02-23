@@ -142,7 +142,7 @@ namespace InstallBuilder
 
                 foreach (string file in filenames)
                 {
-                    if (file.Contains("vshost") || file.Contains("exe.config"))
+                    if (file.Contains("vshost"))
                         continue;
 
                     string entryName = String.Format("EVEMon{0}", file.Remove(0, s_binariesDir.Length));
