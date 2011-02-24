@@ -804,7 +804,7 @@ namespace EVEMon.Common
             var sorter = new PlanSorter(m_character, m_items, sort, reverseOrder, groupByPriority);
 
             // Perform the sort
-            var entries = sorter.Sort(m_character.SkillPoints);
+            var entries = sorter.Sort();
 
             // Update plan
             this.RebuildPlanFrom(entries);
@@ -817,7 +817,7 @@ namespace EVEMon.Common
         public void Sort(PlanSorting settings)
         {
             var criteria = (settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria);
-            this.Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
+            Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
         }
         #endregion
 

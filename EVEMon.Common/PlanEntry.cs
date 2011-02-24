@@ -34,6 +34,7 @@ namespace EVEMon.Common
         private DateTime m_endTime;
         private int m_spPerHour;
         private int m_totalSP;
+        private  int m_skillPointsRequired;
 
         /// <summary>
         /// Constructor
@@ -326,6 +327,13 @@ namespace EVEMon.Common
             }
         }
 
+        /// How many skill points are required to train this skill
+        /// </summary>
+        public int SkillPointsRequired
+        {
+            get { return m_skillPointsRequired; }
+        }
+
         /// <summary>
         /// Updates the column statistics (with the exception of the <see cref="UpdateOldTrainingTime"/>) from the given scratchpad.
         /// </summary>
@@ -334,8 +342,8 @@ namespace EVEMon.Common
         /// <param name="time"></param>
         internal void UpdateStatistics(BaseCharacter character, BaseCharacter characterWithoutImplants, ref DateTime time)
         {
-            var sp = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
-            m_totalSP = character.SkillPoints + sp;
+            m_skillPointsRequired = m_skill.GetPointsRequiredForLevel(m_level) - character.GetSkillPoints(m_skill);
+            m_totalSP = character.SkillPoints + m_skillPointsRequired;
             m_trainingTime = character.GetTrainingTime(m_skill, m_level);
             m_naturalTrainingTime = characterWithoutImplants.GetTrainingTime(m_skill, m_level);
             m_spPerHour = (int)Math.Round(character.GetBaseSPPerHour(m_skill));

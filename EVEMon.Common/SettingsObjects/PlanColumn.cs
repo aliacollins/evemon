@@ -81,6 +81,10 @@ namespace EVEMon.Common.SettingsObjects
 
         [Header("Cost")]
         [Description("Cost")]
-        Cost = 17
+        Cost = 17,
+
+        [Header("Skill Points Required")]
+        [Description("Skill Points Required")]
+        SkillPointsRequired = 18
     }
 }

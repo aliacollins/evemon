@@ -657,6 +657,9 @@ namespace EVEMon.SkillPlanner
 
                     return entry.Skill.FormattedCost;
 
+                case PlanColumn.SkillPointsRequired:
+                    return entry.SkillPointsRequired.ToString("N00", format);
+
                 default:
                     throw new NotImplementedException();
             }
@@ -1273,6 +1276,8 @@ namespace EVEMon.SkillPlanner
                     return PlanEntrySort.Notes;
                 case PlanColumn.PlanType:
                     return PlanEntrySort.PlanType;
+                case PlanColumn.SkillPointsRequired:
+                    return PlanEntrySort.SkillPointsRequired;
                 default:
                     return PlanEntrySort.None;
             }
@@ -1287,8 +1292,6 @@ namespace EVEMon.SkillPlanner
         /// resulting in the wrong icon being selected for the sort:
         /// https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=395739
         /// </remarks>
-        /// <param name="column">The column, may be null when no sort.</param>
-        /// <param name="reversed">if set to <c>true</c> [reversed].</param>
         private void UpdateSortVisualFeedback()
         {
             // Updates the menu icons on the left toolbar

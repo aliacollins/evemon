@@ -156,6 +156,9 @@ namespace EVEMon.Common
                 case PlanEntrySort.SPPerHour:
                     m_items.StableSort(PlanSorter.CompareBySPPerHour);
                     break;
+                case PlanEntrySort.SkillPointsRequired:
+                    m_items.StableSort(PlanSorter.CompareBySkillPointsRequired);
+                    break;
                 default:
                     break;
             }

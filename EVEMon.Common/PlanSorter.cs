@@ -15,7 +15,6 @@ namespace EVEMon.Common
         private bool m_reverseOrder;
         private bool m_groupByPriority;
         private IEnumerable<PlanEntry> m_entries;
-        private Dictionary<StaticSkillGroup, TimeSpan> m_skillGroupsDurations = new Dictionary<StaticSkillGroup, TimeSpan>();
         private BaseCharacter m_character;
 
         /// <summary>
@@ -38,9 +37,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Performs the sort
         /// </summary>
-        /// <param name="startSp"></param>
         /// <returns></returns>
-        public IEnumerable<PlanEntry> Sort(int startSp)
+        public IEnumerable<PlanEntry> Sort()
         {
             int initialCount = m_entries.Count();
 
@@ -87,7 +85,7 @@ namespace EVEMon.Common
         /// Ensures the prerequsiites order is correct
         /// </summary>
         /// <param name="list"></param>
-        private void FixPrerequisitesOrder(List<PlanEntry> list)
+        private static void FixPrerequisitesOrder(List<PlanEntry> list)
         {
             // Gather prerequisites/postrequisites relationships and use them to connect nodes - O(n²) operation
             var dependencies = new Dictionary<PlanEntry,List<PlanEntry>>();
@@ -193,6 +191,11 @@ namespace EVEMon.Common
         public static int CompareByRank(PlanEntry x, PlanEntry y)
         {
             return x.Skill.Rank - y.Skill.Rank;
+        }
+
+        public static int CompareBySkillPointsRequired(PlanEntry x, PlanEntry y)
+        {
+            return x.SkillPointsRequired.CompareTo(y.SkillPointsRequired);
         }
 
         public static int CompareBySkillGroupDuration(PlanEntry x, PlanEntry y, IEnumerable<PlanEntry> entries, Dictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)

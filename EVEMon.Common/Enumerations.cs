@@ -210,7 +210,8 @@ namespace EVEMon.Common
         PercentCompleted,
         TimeDifference,
         PlanType,
-        Notes
+        Notes,
+        SkillPointsRequired
     }
 
     /// <summary>
@@ -560,13 +561,6 @@ namespace EVEMon.Common
         MarketOrders,
 
         /// <summary>
-        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        CorporationMarketOrders,
-
-        /// <summary>
         /// The personal issued industry jobs of a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
@@ -579,17 +573,10 @@ namespace EVEMon.Common
         /// The research points of a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        [Header("Research")]
+        [Header("Research Points")]
         [Description("Research Points for a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
         ResearchPoints,
-
-        /// <summary>
-        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationIndustryJobs,
 
         /// <summary>
         /// Mail messages for a character. Only downloaded when a full API key is provided.
@@ -610,21 +597,35 @@ namespace EVEMon.Common
         Notifications,
 
         /// <summary>
+        /// The skill in training of a character. Used to determine if an account has a character in training.
+        /// </summary>
+        CharacterSkillInTraining,
+
+        /// <summary>
         /// A frequently updated wallet balance. Only used for testing whether the API key is full or limited.
         /// </summary>
         [FullKey]
         CharacterAccountBalance,
 
         /// <summary>
+        /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders,
+
+        /// <summary>
+        /// The corporation issued industry jobs of a character. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationIndustryJobs,
+
+        /// <summary>
         /// The conquerable station list. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         ConquerableStationList,
-
-        /// <summary>
-        /// The skill in training of a character. Used to determine if an account has a character in training.
-        /// </summary>
-        CharacterSkillInTraining
     }
 
     #endregion
