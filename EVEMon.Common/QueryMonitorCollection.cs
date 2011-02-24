@@ -129,7 +129,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Requests an update from CCP now, for both the character sheet and the skill queue.
+        /// Requests an update from CCP now.
         /// </summary>
         public void QueryEverything()
         {

@@ -30,7 +30,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when the character is currently training (non-empty and non-paused skll queue), false otherwise
+        /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise
         /// </summary>
         public bool IsTraining
         {

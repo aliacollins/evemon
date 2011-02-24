@@ -31,19 +31,19 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// On load, we read the settings
+        /// On load, we read the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void EveObjectSelectControl_Load(object sender, EventArgs e)
         {
             // Return on design mode
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
             
             // Call the base method
             base.EveObjectSelectControl_Load(sender, e);
-            
+
             m_metaGroups.AddRange(EnumExtensions.GetBaseValues<ItemMetaGroup>());
 
             // Set the presets
@@ -55,15 +55,15 @@ namespace EVEMon.SkillPlanner
             m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesGroupID));
 
             // Initialize the metagroup combo
-            this.ccbGroupFilter.Items.Clear();
-            this.ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
-            this.ccbGroupFilter.ItemCheck += new ItemCheckEventHandler(ccbGroupFilter_ItemCheck);
-            this.ccbGroupFilter.ToolTip = this.toolTip;
+            ccbGroupFilter.Items.Clear();
+            ccbGroupFilter.Items.AddRange(m_metaGroups.Cast<Object>().ToArray());
+            ccbGroupFilter.ItemCheck += ccbGroupFilter_ItemCheck;
+            ccbGroupFilter.ToolTip = toolTip;
 
             // Initialize the "skills" combo box
-            this.cbUsabilityFilter.Items[0] = "All Items";
-            this.cbUsabilityFilter.Items[1] = "Items I can use";
-            this.cbUsabilityFilter.Items[2] = "Items I cannot use";
+            cbUsabilityFilter.Items[0] = "All Items";
+            cbUsabilityFilter.Items[1] = "Items I can use";
+            cbUsabilityFilter.Items[2] = "Items I cannot use";
             
             // Read the settings
             if (Settings.UI.UseStoredSearchFilters)
@@ -74,7 +74,8 @@ namespace EVEMon.SkillPlanner
                 // Metagroups combo
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
-                    this.ccbGroupFilter.SetItemChecked(i, (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
+                    ccbGroupFilter.SetItemChecked(i,
+                        (Settings.UI.ItemBrowser.MetagroupFilter & m_metaGroups[i]) != ItemMetaGroup.Empty);
                 }
 
                 // Slots combo
@@ -117,7 +118,8 @@ namespace EVEMon.SkillPlanner
 
         #region Events handlers
         /// <summary>
-        /// When the search text changed, we store the next settings and update the list view and the list/tree visibilities.
+        /// When the search text changed, we store the next settings
+        /// and update the list view and the list/tree visibilities.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,7 +131,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the skill filter combo is changed, we update the settings, the predicate and the content
+        /// When the skill filter combo is changed, we update the settings, the predicate and the content.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -217,7 +219,7 @@ namespace EVEMon.SkillPlanner
                 Settings.UI.ItemBrowser.MetagroupFilter = ItemMetaGroup.Empty;
                 for (int i = 0; i < m_metaGroups.Count; i++)
                 {
-                    if (this.ccbGroupFilter.GetItemChecked(i))
+                    if (ccbGroupFilter.GetItemChecked(i))
                         Settings.UI.ItemBrowser.MetagroupFilter |= m_metaGroups[i];
                 }
             }
@@ -231,27 +233,29 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// When the CPU's numeric box changed, we update the predicate and the content (no settings), and the numeric box's availability.
+        /// When the CPU's numeric box changed, we update the predicate, the content (no settings)
+        /// and the numeric box's availability.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void cbCPU_CheckedChanged(object sender, EventArgs e)
         {
-            this.numCPU.Enabled = this.cbCPU.Checked;
-            this.UpdateFittingPredicate();
-            this.UpdateContent();
+            numCPU.Enabled = cbCPU.Checked;
+            UpdateFittingPredicate();
+            UpdateContent();
         }
 
         /// <summary>
-        /// When the powergrid's numeric box changed, we update the predicate and the content (no settings), and the numeric box's availability.
+        /// When the powergrid's numeric box changed, we update the predicate, the content (no settings)
+        /// and the numeric box's availability.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void cbPowergrid_CheckedChanged(object sender, EventArgs e)
         {
-            this.numPowergrid.Enabled = this.cbPowergrid.Checked;
-            this.UpdateFittingPredicate();
-            this.UpdateContent();
+            numPowergrid.Enabled = cbPowergrid.Checked;
+            UpdateFittingPredicate();
+            UpdateContent();
         }
 
         /// <summary>
@@ -261,8 +265,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void numCPU_ValueChanged(object sender, EventArgs e)
         {
-            this.UpdateFittingPredicate();
-            this.UpdateContent();
+            UpdateFittingPredicate();
+            UpdateContent();
         }
 
         /// <summary>
@@ -272,12 +276,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void numPowergrid_ValueChanged(object sender, EventArgs e)
         {
-            this.UpdateFittingPredicate();
-            this.UpdateContent();
+            UpdateFittingPredicate();
+            UpdateContent();
         }
 
         /// <summary>
-        /// When the "show all items" checkbox changed, we update the settings and trigger a content update
+        /// When the "show all items" checkbox changed, we update the settings and trigger a content update.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -288,13 +292,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the fitting predicate
+        /// Updates the fitting predicate.
         /// </summary>
         private void UpdateFittingPredicate()
         {
-            if (!this.numCPU.Enabled && !this.numPowergrid.Enabled)
+            if (!numCPU.Enabled && !numPowergrid.Enabled)
             {
-                this.m_fittingPredicate = (x) => true;
+                m_fittingPredicate = (x) => true;
             }
             else
             {
@@ -306,7 +310,7 @@ namespace EVEMon.SkillPlanner
                 if (numCPU.Enabled)
                     cpuAvailable = (double)numCPU.Value;
 
-                this.m_fittingPredicate = (item) => item.CanActivate(cpuAvailable, gridAvailable);
+                m_fittingPredicate = (item) => item.CanActivate(cpuAvailable, gridAvailable);
             }
         }
         #endregion
@@ -314,7 +318,7 @@ namespace EVEMon.SkillPlanner
 
         #region Content creation
         /// <summary>
-        /// Refresh the controls
+        /// Refresh the controls.
         /// </summary>
         private void UpdateContent()
         {
@@ -326,7 +330,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Rebuild the tree view
+        /// Rebuild the tree view.
         /// </summary>
         private void BuildTreeView()
         {
@@ -375,7 +379,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Create the tree nodes for the given category and add them to the given nodes collection
+        /// Create the tree nodes for the given category and add them to the given nodes collection.
         /// </summary>
         /// <param name="group"></param>
         /// <param name="nodeCollection"></param>

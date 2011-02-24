@@ -42,9 +42,7 @@ namespace EVEMon.SettingsUI
 
             // Run with Mono ?
             if (Type.GetType("Mono.Runtime") != null)
-            {
                 treeView.Nodes["generalNode"].Nodes["g15Node"].Remove();
-            }
 
             // Fill the overview portraits sizes
             overviewPortraitSizeComboBox.Items.AddRange(

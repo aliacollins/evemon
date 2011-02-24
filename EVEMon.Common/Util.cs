@@ -477,7 +477,8 @@ namespace EVEMon.Common
             var match = regex.Match(content);
 
             // No match ? Then there was no "revision" attribute, this is an old format.
-            if (!match.Success || match.Groups.Count < 2) return 0;
+            if (!match.Success || match.Groups.Count < 2)
+                return 0;
 
             // Returns the revision number (first group is the whole match, the second one the capture)
             int revision = 0;
@@ -543,9 +544,7 @@ namespace EVEMon.Common
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element)
-                {
                     return reader.Name;
-                }
             }
 
             return null;

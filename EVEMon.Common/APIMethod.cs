@@ -48,7 +48,7 @@ namespace EVEMon.Common
             foreach (string methodName in Enum.GetNames(typeof(APIMethods)))
             {
                 APIMethods methodEnum = (APIMethods)Enum.Parse(typeof(APIMethods), methodName);
-                string methodURL = NetworkConstants.ResourceManager.GetString("API" + methodName);
+                string methodURL = NetworkConstants.ResourceManager.GetString(String.Format("API{0}", methodName));
                 yield return new APIMethod(methodEnum, methodURL);
             }
         }

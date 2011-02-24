@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.API
         /// <summary>
         /// If this is non 0 then an error has occurred
         /// </summary>
-        /// <value>105</value> Invaid character id
+        /// <value>105</value> Invalid character id
         /// <value>201</value> Character does not belong to account
         /// <value>202</value> Invalid API Key
         /// <value>""</value> or <value>null</value> when the operation was successful (will be one of 5 values - "characterID", "TryAgainIn", "currentTimeTQOffset" and "currentTime"

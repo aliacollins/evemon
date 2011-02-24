@@ -32,22 +32,23 @@ namespace EVEMon.Accounting
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode) return;
+            if (this.DesignMode)
+                return;
 
             accountsListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            accountsListBox.SelectedIndexChanged += new EventHandler(accountsListBox_SelectedIndexChanged);
-            accountsListBox.DoubleClick += new EventHandler(accountsListBox_DoubleClick);
-            accountsListBox.KeyDown += new KeyEventHandler(accountsListBox_KeyDown);
+            accountsListBox.SelectedIndexChanged += accountsListBox_SelectedIndexChanged;
+            accountsListBox.DoubleClick += accountsListBox_DoubleClick;
+            accountsListBox.KeyDown += accountsListBox_KeyDown;
 
             charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            charactersListView.SelectedIndexChanged += new EventHandler(charactersListView_SelectedIndexChanged);
-            charactersListView.DoubleClick += new EventHandler(charactersListView_DoubleClick);
-            charactersListView.KeyDown += new KeyEventHandler(charactersListView_KeyDown);
-            charactersListView.ItemChecked += new ItemCheckedEventHandler(charactersListView_ItemChecked);
+            charactersListView.SelectedIndexChanged += charactersListView_SelectedIndexChanged;
+            charactersListView.DoubleClick += charactersListView_DoubleClick;
+            charactersListView.KeyDown += charactersListView_KeyDown;
+            charactersListView.ItemChecked += charactersListView_ItemChecked;
 
-            EveClient.AccountCollectionChanged += new EventHandler(EveClient_AccountCollectionChanged);
-            EveClient.CharacterCollectionChanged += new EventHandler(EveClient_CharacterCollectionChanged);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            EveClient.AccountCollectionChanged += EveClient_AccountCollectionChanged;
+            EveClient.CharacterCollectionChanged += EveClient_CharacterCollectionChanged;
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
 
             EveClient_AccountCollectionChanged(null, null);
             EveClient_CharacterCollectionChanged(null, null);
@@ -63,9 +64,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveClient.AccountCollectionChanged -= new EventHandler(EveClient_AccountCollectionChanged);
-            EveClient.CharacterCollectionChanged -= new EventHandler(EveClient_CharacterCollectionChanged);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            EveClient.AccountCollectionChanged -= EveClient_AccountCollectionChanged;
+            EveClient.CharacterCollectionChanged -= EveClient_CharacterCollectionChanged;
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
             base.OnClosing(e);
         }
 
@@ -75,7 +76,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            if (charactersListView != null) AdjustColumns();
+            if (charactersListView != null)
+                AdjustColumns();
+
             base.OnSizeChanged(e);
         }
 
@@ -271,26 +274,44 @@ namespace EVEMon.Accounting
                         // Uri character ?
                         if (uriCharacter != null)
                         {
-                            if (uriCharacter.Uri.IsFile) hasFileChars = true;
-                            else hasUrlChars = true;
+                            if (uriCharacter.Uri.IsFile)
+                            {
+                                hasFileChars = true;
+                            }
+                            else
+                            {
+                                hasUrlChars = true;
+                            }
                         }
                         // CCP character ?
                         else
                         {
                             var account = character.Identity.Account;
-                            if (account == null) hasNoAccount = true;
+                            if (account == null)
+                            {
+                                hasNoAccount = true;
+                            }
                             else if (!accountGroups.ContainsKey(account))
                             {
-                                accountGroups.Add(account, new ListViewGroup("Account #" + account.UserID.ToString()));
+                                accountGroups.Add(account, new ListViewGroup(String.Format("Account #{0}", account.UserID)));
                             }
                         }
                     }
 
                     // Add the groups
-                    if (hasNoAccount) charactersListView.Groups.Add(noAccountsGroup);
-                    foreach (var group in accountGroups.Values) charactersListView.Groups.Add(group);
-                    if (hasFileChars) charactersListView.Groups.Add(fileGroup);
-                    if (hasUrlChars) charactersListView.Groups.Add(urlGroup);
+                    if (hasNoAccount)
+                        charactersListView.Groups.Add(noAccountsGroup);
+
+                    foreach (var group in accountGroups.Values)
+                    {
+                        charactersListView.Groups.Add(group);
+                    }
+
+                    if (hasFileChars)
+                        charactersListView.Groups.Add(fileGroup);
+
+                    if (hasUrlChars)
+                        charactersListView.Groups.Add(urlGroup);
                 }
                 
                 // Add items
@@ -301,10 +322,10 @@ namespace EVEMon.Accounting
                     item.Tag = character;
 
                     // Retrieve the texts for the different columns.
-                    var account = character.Identity.Account;
-                    var accountText = (account == null ? String.Empty : account.UserID.ToString());
-                    var typeText = "CCP";
-                    var uriText = "-";
+                    Account account = character.Identity.Account;
+                    string accountText = (account == null ? String.Empty : account.UserID.ToString());
+                    string typeText = "CCP";
+                    string uriText = "-";
 
                     if (character is UriCharacter)
                     {
@@ -313,9 +334,7 @@ namespace EVEMon.Accounting
                         uriText = uriCharacter.Uri.ToString();
 
                         if (isGrouping)
-                        {
                             item.Group = (uriCharacter.Uri.IsFile ? fileGroup : urlGroup);
-                        }
                     }
                     // Grouping CCP characters
                     else if (isGrouping)
@@ -330,7 +349,8 @@ namespace EVEMon.Accounting
                     item.SubItems.Add(new ListViewItem.ListViewSubItem(item, uriText));
 
                     charactersListView.Items.Add(item);
-                    if (oldSelection.Contains(character)) item.Selected = true;
+                    if (oldSelection.Contains(character))
+                        item.Selected = true;
                 }
             }
             finally
@@ -350,7 +370,8 @@ namespace EVEMon.Accounting
             int width = 0;
             foreach(ColumnHeader column in charactersListView.Columns)
             {
-                if (column != columnUri) width += column.Width;
+                if (column != columnUri)
+                    width += column.Width;
             }
             columnUri.Width = charactersListView.ClientSize.Width - width;
         }

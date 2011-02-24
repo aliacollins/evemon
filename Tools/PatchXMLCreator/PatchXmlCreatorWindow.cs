@@ -500,14 +500,13 @@ namespace PatchXmlCreator
         {
             SerializablePatch patch = ExportPatchXml();
             string filenamePath = Path.Combine(patchDir, patchFilename);
-            string backupFilenamePath = Path.Combine(patchDir, String.Concat(patchFilename, ".bak"));
 
             try
             {
                 // Create our file
                 using (FileStream fs = File.Open(filenamePath, FileMode.Create, FileAccess.Write))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SerializablePatch));
+                    XmlSerializer serializer = new XmlSerializer(patch.GetType());
                     serializer.Serialize(fs, patch);
                     fs.Flush();
                 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Controls;
+using EVEMon.Controls;
 using EVEMon.Common;
 
 namespace EVEMon.Accounting
@@ -42,7 +43,7 @@ namespace EVEMon.Accounting
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            if (this.DesignMode)
+            if (DesignMode)
                 return;
 
             // Update controls depending on the update mode
@@ -53,7 +54,7 @@ namespace EVEMon.Accounting
             charactersListView.Items.Clear();
 
             multiPanel.SelectedPage = credentialsPage;
-            multiPanel.SelectionChange += new EVEMon.Controls.MultiPanelSelectionChangeHandler(multiPanel_SelectionChange);
+            multiPanel.SelectionChange += multiPanel_SelectionChange;
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        void multiPanel_SelectionChange(object sender, EVEMon.Controls.MultiPanelSelectionChangeEventArgs args)
+        void multiPanel_SelectionChange(object sender, MultiPanelSelectionChangeEventArgs args)
         {
             if (args.NewPage == credentialsPage)
             {
@@ -103,7 +104,7 @@ namespace EVEMon.Accounting
         private void cancelButton_Click(object sender, EventArgs e)
         {
             m_creationArgs = null;
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace EVEMon.Accounting
             }
 
             // Selects the last page
-            throbber.State = EVEMon.Controls.ThrobberState.Stopped;
+            throbber.State = ThrobberState.Stopped;
             multiPanel.SelectedPage = resultPage;
         }
 
@@ -215,7 +216,7 @@ namespace EVEMon.Accounting
             }
 
             // Closes the window
-            this.Close();
+            Close();
         }
 
         /// <summary>

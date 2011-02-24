@@ -89,7 +89,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Implicitly converts fromm a non-static training
+        /// Implicitly converts from a non-static training
         /// </summary>
         /// <param name="training"></param>
         /// <returns></returns>

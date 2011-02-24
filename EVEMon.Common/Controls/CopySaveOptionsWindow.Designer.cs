@@ -35,6 +35,7 @@ namespace EVEMon.Common.Controls
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbIncludeHeader = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cbEntryCost = new System.Windows.Forms.CheckBox();
             this.cbEntryFinishDate = new System.Windows.Forms.CheckBox();
             this.cbEntryStartDate = new System.Windows.Forms.CheckBox();
             this.cbEntryTrainingTimes = new System.Windows.Forms.CheckBox();
@@ -49,7 +50,6 @@ namespace EVEMon.Common.Controls
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cbShoppingList = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cbEntryCost = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -124,7 +124,7 @@ namespace EVEMon.Common.Controls
             this.cbIncludeHeader.AutoSize = true;
             this.cbIncludeHeader.Location = new System.Drawing.Point(16, 20);
             this.cbIncludeHeader.Name = "cbIncludeHeader";
-            this.cbIncludeHeader.Size = new System.Drawing.Size(199, 17);
+            this.cbIncludeHeader.Size = new System.Drawing.Size(196, 17);
             this.cbIncludeHeader.TabIndex = 0;
             this.cbIncludeHeader.Text = "Include header with character name";
             this.cbIncludeHeader.UseVisualStyleBackColor = true;
@@ -145,12 +145,22 @@ namespace EVEMon.Common.Controls
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Body Options";
             // 
+            // cbEntryCost
+            // 
+            this.cbEntryCost.AutoSize = true;
+            this.cbEntryCost.Location = new System.Drawing.Point(16, 67);
+            this.cbEntryCost.Name = "cbEntryCost";
+            this.cbEntryCost.Size = new System.Drawing.Size(145, 17);
+            this.cbEntryCost.TabIndex = 4;
+            this.cbEntryCost.Text = "Include cost (if unknown)";
+            this.cbEntryCost.UseVisualStyleBackColor = true;
+            // 
             // cbEntryFinishDate
             // 
             this.cbEntryFinishDate.AutoSize = true;
             this.cbEntryFinishDate.Location = new System.Drawing.Point(169, 43);
             this.cbEntryFinishDate.Name = "cbEntryFinishDate";
-            this.cbEntryFinishDate.Size = new System.Drawing.Size(138, 17);
+            this.cbEntryFinishDate.Size = new System.Drawing.Size(136, 17);
             this.cbEntryFinishDate.TabIndex = 3;
             this.cbEntryFinishDate.Text = "Include finish date/time";
             this.cbEntryFinishDate.UseVisualStyleBackColor = true;
@@ -160,7 +170,7 @@ namespace EVEMon.Common.Controls
             this.cbEntryStartDate.AutoSize = true;
             this.cbEntryStartDate.Location = new System.Drawing.Point(169, 20);
             this.cbEntryStartDate.Name = "cbEntryStartDate";
-            this.cbEntryStartDate.Size = new System.Drawing.Size(136, 17);
+            this.cbEntryStartDate.Size = new System.Drawing.Size(132, 17);
             this.cbEntryStartDate.TabIndex = 2;
             this.cbEntryStartDate.Text = "Include start date/time";
             this.cbEntryStartDate.UseVisualStyleBackColor = true;
@@ -170,7 +180,7 @@ namespace EVEMon.Common.Controls
             this.cbEntryTrainingTimes.AutoSize = true;
             this.cbEntryTrainingTimes.Location = new System.Drawing.Point(16, 43);
             this.cbEntryTrainingTimes.Name = "cbEntryTrainingTimes";
-            this.cbEntryTrainingTimes.Size = new System.Drawing.Size(123, 17);
+            this.cbEntryTrainingTimes.Size = new System.Drawing.Size(120, 17);
             this.cbEntryTrainingTimes.TabIndex = 1;
             this.cbEntryTrainingTimes.Text = "Include training time";
             this.cbEntryTrainingTimes.UseVisualStyleBackColor = true;
@@ -180,7 +190,7 @@ namespace EVEMon.Common.Controls
             this.cbEntryNumber.AutoSize = true;
             this.cbEntryNumber.Location = new System.Drawing.Point(16, 20);
             this.cbEntryNumber.Name = "cbEntryNumber";
-            this.cbEntryNumber.Size = new System.Drawing.Size(99, 17);
+            this.cbEntryNumber.Size = new System.Drawing.Size(97, 17);
             this.cbEntryNumber.TabIndex = 0;
             this.cbEntryNumber.Text = "Number entries";
             this.cbEntryNumber.UseVisualStyleBackColor = true;
@@ -203,10 +213,9 @@ namespace EVEMon.Common.Controls
             // cbFooterCost
             // 
             this.cbFooterCost.AutoSize = true;
-            this.cbFooterCost.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.cbFooterCost.Location = new System.Drawing.Point(16, 90);
             this.cbFooterCost.Name = "cbFooterCost";
-            this.cbFooterCost.Size = new System.Drawing.Size(167, 17);
+            this.cbFooterCost.Size = new System.Drawing.Size(168, 17);
             this.cbFooterCost.TabIndex = 3;
             this.cbFooterCost.Text = "Include cost of unknown skills";
             this.cbFooterCost.UseVisualStyleBackColor = true;
@@ -216,7 +225,7 @@ namespace EVEMon.Common.Controls
             this.cbFooterDate.AutoSize = true;
             this.cbFooterDate.Location = new System.Drawing.Point(16, 66);
             this.cbFooterDate.Name = "cbFooterDate";
-            this.cbFooterDate.Size = new System.Drawing.Size(164, 17);
+            this.cbFooterDate.Size = new System.Drawing.Size(163, 17);
             this.cbFooterDate.TabIndex = 2;
             this.cbFooterDate.Text = "Include completion date/time";
             this.cbFooterDate.UseVisualStyleBackColor = true;
@@ -226,7 +235,7 @@ namespace EVEMon.Common.Controls
             this.cbFooterTotalTime.AutoSize = true;
             this.cbFooterTotalTime.Location = new System.Drawing.Point(16, 43);
             this.cbFooterTotalTime.Name = "cbFooterTotalTime";
-            this.cbFooterTotalTime.Size = new System.Drawing.Size(148, 17);
+            this.cbFooterTotalTime.Size = new System.Drawing.Size(143, 17);
             this.cbFooterTotalTime.TabIndex = 1;
             this.cbFooterTotalTime.Text = "Include total training time";
             this.cbFooterTotalTime.UseVisualStyleBackColor = true;
@@ -236,7 +245,7 @@ namespace EVEMon.Common.Controls
             this.cbFooterCount.AutoSize = true;
             this.cbFooterCount.Location = new System.Drawing.Point(16, 20);
             this.cbFooterCount.Name = "cbFooterCount";
-            this.cbFooterCount.Size = new System.Drawing.Size(110, 17);
+            this.cbFooterCount.Size = new System.Drawing.Size(111, 17);
             this.cbFooterCount.TabIndex = 0;
             this.cbFooterCount.Text = "Include skill count";
             this.cbFooterCount.UseVisualStyleBackColor = true;
@@ -302,16 +311,6 @@ namespace EVEMon.Common.Controls
             this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Formatting:";
-            // 
-            // cbEntryCost
-            // 
-            this.cbEntryCost.AutoSize = true;
-            this.cbEntryCost.Location = new System.Drawing.Point(16, 67);
-            this.cbEntryCost.Name = "cbEntryCost";
-            this.cbEntryCost.Size = new System.Drawing.Size(147, 17);
-            this.cbEntryCost.TabIndex = 4;
-            this.cbEntryCost.Text = "Include cost (if unknown)";
-            this.cbEntryCost.UseVisualStyleBackColor = true;
             // 
             // CopySaveOptionsWindow
             // 

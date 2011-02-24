@@ -524,7 +524,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
-            lblServerStatus.Text = "// " + e.Server.StatusText;
+            lblServerStatus.Text = String.Format("// {0}", e.Server.StatusText);
         }
 
         /// <summary>
@@ -1857,7 +1857,7 @@ namespace EVEMon
             relocatorSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
             relocatorTrayToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
 
-            // Updates manager.
+            // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)

@@ -88,10 +88,10 @@
             ccpLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(40, 43);
             ccpLinkLabel.Location = new System.Drawing.Point(15, 22);
             ccpLinkLabel.Name = "ccpLinkLabel";
-            ccpLinkLabel.Size = new System.Drawing.Size(408, 18);
+            ccpLinkLabel.Size = new System.Drawing.Size(413, 18);
             ccpLinkLabel.TabIndex = 5;
             ccpLinkLabel.TabStop = true;
-            ccpLinkLabel.Text = "Your API credentials are available at : http://www.eveonline.com/api/default.asp";
+            ccpLinkLabel.Text = "Your API credentials are available at : https://www.eveonline.com/api/default.asp";
             ccpLinkLabel.UseCompatibleTextRendering = true;
             ccpLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ccpLinkLabel_LinkClicked);
             // 
@@ -160,7 +160,7 @@
             this.multiPanel.Controls.Add(this.resultPage);
             this.multiPanel.Location = new System.Drawing.Point(0, 0);
             this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.resultPage;
+            this.multiPanel.SelectedPage = this.credentialsPage;
             this.multiPanel.Size = new System.Drawing.Size(503, 171);
             this.multiPanel.TabIndex = 0;
             // 

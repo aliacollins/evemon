@@ -43,10 +43,12 @@ namespace EVEMon.Common
         {
             // If the id was not in list, returns the existing character or null if it does not exist.
             var ccpCharacter = id.CCPCharacter;
-            if (!m_items.Remove(id)) return ccpCharacter;
+            if (!m_items.Remove(id))
+                return ccpCharacter;
 
             // If character exists, returns it.
-            if (ccpCharacter != null) return ccpCharacter;
+            if (ccpCharacter != null)
+                return ccpCharacter;
                 
             // Create a new CCP character
             ccpCharacter = new CCPCharacter(id);
@@ -62,7 +64,9 @@ namespace EVEMon.Common
         public void Add(CCPCharacter character)
         {
             var id = character.Identity;
-            if (m_items.Contains(id)) return;
+            if (m_items.Contains(id))
+                return;
+
             m_items.Add(id);
 
             // If the identity was belonging to this account, remove the character (won't be serialized anymore !)

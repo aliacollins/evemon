@@ -32,7 +32,8 @@ namespace EVEMon.Common
             {
                 foreach (var character in m_items)
                 {
-                    if (character.Guid == guid) return character;
+                    if (character.Guid == guid)
+                        return character;
                 }
                 return null;
             }
@@ -46,7 +47,8 @@ namespace EVEMon.Common
         internal void Add(Character character, bool notify)
         {
             m_items.Add(character);
-            if (notify) EveClient.OnCharacterCollectionChanged();
+            if (notify)
+                EveClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>
@@ -74,7 +76,8 @@ namespace EVEMon.Common
             if (character is CCPCharacter)
             {
                 var account = character.Identity.Account;
-                if (account != null) account.IgnoreList.Add(character as CCPCharacter);
+                if (account != null)
+                    account.IgnoreList.Add(character as CCPCharacter);
             }
 
             if (notify) EveClient.OnCharacterCollectionChanged();

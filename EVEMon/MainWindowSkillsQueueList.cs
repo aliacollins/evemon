@@ -668,7 +668,7 @@ namespace EVEMon
 
             // Error in calculating SkillPoints
             var calculationErrorToolTip = new StringBuilder();
-            calculationErrorToolTip.AppendLine("Partially Trained (Could not cacluate all skill details)");
+            calculationErrorToolTip.AppendLine("Partially Trained (Could not calculate all skill details)");
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                  "Next level {0}: {1:#,##0} skill points remaining\n", nextLevel,
                                                  pointsLeft);

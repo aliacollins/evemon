@@ -43,15 +43,15 @@ namespace EVEMon.Common
             get { return m_account; }
             internal set
             {
-                if (m_account == value) return;
+                if (m_account == value)
+                    return;
+
                 m_account = value;
 
                 // Notify subscribers
                 CCPCharacter ccpCharacter = CCPCharacter;
                 if (ccpCharacter != null)
-                {
                     EveClient.OnCharacterChanged(ccpCharacter);
-                }
             }
         }
 
@@ -65,9 +65,7 @@ namespace EVEMon.Common
                 foreach (Character character in EveClient.Characters)
                 {
                     if (character is CCPCharacter && character.CharacterID == m_id)
-                    {
                         return (CCPCharacter) character;
-                    }
                 }
                 return null;
             }
@@ -83,7 +81,8 @@ namespace EVEMon.Common
                 foreach (Character character in EveClient.Characters)
                 {
                     var uriCharacter = character as UriCharacter;
-                    if (uriCharacter != null) yield return uriCharacter;
+                    if (uriCharacter != null)
+                        yield return uriCharacter;
                 }
             }
         }
