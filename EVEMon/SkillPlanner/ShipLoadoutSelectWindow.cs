@@ -93,25 +93,21 @@ namespace EVEMon.SkillPlanner
             // Wait cursor until we retrieved the loadout.
             Cursor.Current = Cursors.WaitCursor;
 
-            // Set labels while the user wait
-            lblShipType.Text = m_ship.Name;
-            lblName.Text = "No Loadout Selected";
-            lblAuthor.Text = String.Empty;
-            lbDate.Text = String.Empty;
-            lblTrainTime.Text = "N/A";
-            lblShip.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
-            btnPlan.Enabled = false;
-
-            // Download the ship's image
-            ImageService.GetImageAsync(String.Format(CultureConstants.DefaultCulture, NetworkConstants.CCPIconsBig, m_ship.ID.ToString()), true, (img) =>
-            {
-                pbShip.SizeMode = PictureBoxSizeMode.StretchImage;
-                pbShip.Image = img;
-            });
+            //Download the eve image
+            eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed, m_ship.ID.ToString());
             Util.DownloadXMLAsync<SerializableLoadoutFeed>(url, null, OnLoadoutFeedDownloaded);
+
+            // Set labels while the user wait
+            lblShipName.Text = m_ship.Name;
+            lblLoadoutName.Text = "No Loadout Selected";
+            lblAuthor.Text = String.Empty;
+            lblSubmitDate.Text = String.Empty;
+            lblTrainTime.Text = "N/A";
+            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
+            btnPlan.Enabled = false;
         }
 
         /// <summary>
@@ -178,14 +174,14 @@ namespace EVEMon.SkillPlanner
             // Was there an error ?
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}", errorMessage);
+                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "There was a problem connecting to BattleClinic, it may be down for maintainance.\r\n{0}", errorMessage);
                 return;
             }
 
             // Are there no feeds ?
             if (feed.Race == null || feed.Race.Loadouts.Length == 0)
             {
-                lblShip.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
+                lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
                 return;
             }
 
@@ -203,7 +199,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the header
-            lblShip.Text = String.Format(CultureConstants.DefaultCulture, "Found {0} loadouts", lvLoadouts.Items.Count);
+            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Found {0} loadouts", lvLoadouts.Items.Count);
 
             // Update the listview's comparer and sort
             lvLoadouts.Sort();
@@ -222,9 +218,9 @@ namespace EVEMon.SkillPlanner
             m_selectedLoadout = loadout;
 
             // Set the headings
-            lblName.Text = m_selectedLoadout.LoadoutName;
+            lblLoadoutName.Text = m_selectedLoadout.LoadoutName;
             lblAuthor.Text = m_selectedLoadout.Author;
-            lbDate.Text = m_selectedLoadout.SubmissionDate.ToString();
+            lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString();
 
             // Download the loadout details
             string url = String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails, m_selectedLoadout.LoadoutId.ToString());
@@ -536,7 +532,7 @@ namespace EVEMon.SkillPlanner
         {
             // Build the output format for EFT
             StringBuilder exportText = new StringBuilder();
-            exportText.AppendFormat(CultureConstants.DefaultCulture, "[{0}, EVEMon {1}]", m_ship.Name, lblName.Text);
+            exportText.AppendFormat(CultureConstants.DefaultCulture, "[{0}, EVEMon {1}]", m_ship.Name, lblLoadoutName.Text);
             exportText.AppendLine();
 
             if (items.ContainsKey(s_typeMap["lo"]))

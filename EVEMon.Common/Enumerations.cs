@@ -157,6 +157,19 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// Represents the image size of an EVE icon.
+    /// </summary>
+    public enum EveImageSize
+    {
+        x0 = 0,
+        x16 = 16,
+        x32 = 32,
+        x64 = 64,
+        x128 = 128,
+        x256 = 256
+    }
+
+    /// <summary>
     /// Represents a certificate's status from a character's point of view
     /// </summary>
     public enum CertificateStatus
@@ -550,6 +563,17 @@ namespace EVEMon.Common
         [Description("A character's skill queue.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         SkillQueue,
+
+        /// <summary>
+        /// The account status. Used to retreive account create and expiration date.
+        /// Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Account Status")]
+        [Description("The status of an Account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        AccountStatus,
 
         /// <summary>
         /// The personal issued market orders of a character. Only downloaded when a full API key is provided.

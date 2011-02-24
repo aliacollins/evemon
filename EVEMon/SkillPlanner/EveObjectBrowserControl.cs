@@ -108,13 +108,13 @@ namespace EVEMon.SkillPlanner
         {
             if (Settings.UI.SafeForWork)
             {
-                eoImage.ImageSize = EveImage.EveImageSize.x0;
+                eoImage.ImageSize = EveImageSize.x0;
                 lblEveObjCategory.Location = new Point(3, lblEveObjCategory.Location.Y);
                 lblEveObjName.Location = new Point(3, lblEveObjName.Location.Y);
             }
             else
             {
-                eoImage.ImageSize = EveImage.EveImageSize.x64;
+                eoImage.ImageSize = EveImageSize.x64;
                 if (m_selectControl.SelectedObject != null)
                     eoImage.EveItem = m_selectControl.SelectedObject;
 

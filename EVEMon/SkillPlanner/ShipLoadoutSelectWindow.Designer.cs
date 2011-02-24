@@ -30,9 +30,9 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.lblShip = new System.Windows.Forms.Label();
+            this.lblLoadouts = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.lowerPanel = new System.Windows.Forms.Panel();
             this.persistentSplitContainer1 = new EVEMon.Controls.PersistentSplitContainer();
             this.lvLoadouts = new System.Windows.Forms.ListView();
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -40,40 +40,39 @@ namespace EVEMon.SkillPlanner
             this.colRating = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tvLoadout = new System.Windows.Forms.TreeView();
-            this.lbDate = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lblSubmitDate = new System.Windows.Forms.Label();
+            this.SubDateLabel = new System.Windows.Forms.Label();
             this.lblForum = new System.Windows.Forms.LinkLabel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.AuthorLabel = new System.Windows.Forms.Label();
+            this.LoadoutNameLabel = new System.Windows.Forms.Label();
+            this.ShipLabel = new System.Windows.Forms.Label();
             this.lblAuthor = new System.Windows.Forms.Label();
-            this.lblName = new System.Windows.Forms.Label();
-            this.lblShipType = new System.Windows.Forms.Label();
-            this.pbShip = new System.Windows.Forms.PictureBox();
+            this.lblLoadoutName = new System.Windows.Forms.Label();
+            this.lblShipName = new System.Windows.Forms.Label();
             this.lblPlanned = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.TrainingTimeLabel = new System.Windows.Forms.Label();
             this.lblTrainTime = new System.Windows.Forms.Label();
             this.btnPlan = new System.Windows.Forms.Button();
             this.cmNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportToEFT = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1.SuspendLayout();
+            this.eveImage = new EVEMon.Common.Controls.EveImage();
+            this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).BeginInit();
             this.persistentSplitContainer1.Panel1.SuspendLayout();
             this.persistentSplitContainer1.Panel2.SuspendLayout();
             this.persistentSplitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).BeginInit();
             this.cmNode.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblShip
+            // lblLoadouts
             // 
-            this.lblShip.AutoSize = true;
-            this.lblShip.Location = new System.Drawing.Point(109, 82);
-            this.lblShip.Name = "lblShip";
-            this.lblShip.Size = new System.Drawing.Size(70, 13);
-            this.lblShip.TabIndex = 1;
-            this.lblShip.Text = "{0} Loadouts";
+            this.lblLoadouts.AutoSize = true;
+            this.lblLoadouts.Location = new System.Drawing.Point(104, 82);
+            this.lblLoadouts.Name = "lblLoadouts";
+            this.lblLoadouts.Size = new System.Drawing.Size(103, 13);
+            this.lblLoadouts.TabIndex = 1;
+            this.lblLoadouts.Text = "Found {0} Loadouts";
             // 
             // btnCancel
             // 
@@ -87,16 +86,16 @@ namespace EVEMon.SkillPlanner
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // panel1
+            // lowerPanel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.lowerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.persistentSplitContainer1);
-            this.panel1.Location = new System.Drawing.Point(0, 123);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(716, 342);
-            this.panel1.TabIndex = 6;
+            this.lowerPanel.Controls.Add(this.persistentSplitContainer1);
+            this.lowerPanel.Location = new System.Drawing.Point(0, 123);
+            this.lowerPanel.Name = "lowerPanel";
+            this.lowerPanel.Size = new System.Drawing.Size(716, 342);
+            this.lowerPanel.TabIndex = 6;
             // 
             // persistentSplitContainer1
             // 
@@ -168,23 +167,23 @@ namespace EVEMon.SkillPlanner
             this.tvLoadout.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             this.tvLoadout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
-            // lbDate
+            // lblSubmitDate
             // 
-            this.lbDate.AutoSize = true;
-            this.lbDate.Location = new System.Drawing.Point(199, 51);
-            this.lbDate.Name = "lbDate";
-            this.lbDate.Size = new System.Drawing.Size(35, 13);
-            this.lbDate.TabIndex = 25;
-            this.lbDate.Text = "label6";
+            this.lblSubmitDate.AutoSize = true;
+            this.lblSubmitDate.Location = new System.Drawing.Point(194, 51);
+            this.lblSubmitDate.Name = "lblSubmitDate";
+            this.lblSubmitDate.Size = new System.Drawing.Size(62, 13);
+            this.lblSubmitDate.TabIndex = 25;
+            this.lblSubmitDate.Text = "SubmitDate";
             // 
-            // label5
+            // SubDateLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(109, 51);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 13);
-            this.label5.TabIndex = 24;
-            this.label5.Text = "Submission Date:";
+            this.SubDateLabel.AutoSize = true;
+            this.SubDateLabel.Location = new System.Drawing.Point(104, 51);
+            this.SubDateLabel.Name = "SubDateLabel";
+            this.SubDateLabel.Size = new System.Drawing.Size(89, 13);
+            this.SubDateLabel.TabIndex = 24;
+            this.SubDateLabel.Text = "Submission Date:";
             // 
             // lblForum
             // 
@@ -198,67 +197,59 @@ namespace EVEMon.SkillPlanner
             this.lblForum.Text = "Discuss this loadout";
             this.lblForum.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblForum_LinkClicked);
             // 
-            // label4
+            // AuthorLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(109, 38);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 13);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "Author:";
+            this.AuthorLabel.AutoSize = true;
+            this.AuthorLabel.Location = new System.Drawing.Point(104, 38);
+            this.AuthorLabel.Name = "AuthorLabel";
+            this.AuthorLabel.Size = new System.Drawing.Size(44, 13);
+            this.AuthorLabel.TabIndex = 22;
+            this.AuthorLabel.Text = "Author:";
             // 
-            // label3
+            // LoadoutNameLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(109, 25);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(80, 13);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "Loadout Name:";
+            this.LoadoutNameLabel.AutoSize = true;
+            this.LoadoutNameLabel.Location = new System.Drawing.Point(104, 25);
+            this.LoadoutNameLabel.Name = "LoadoutNameLabel";
+            this.LoadoutNameLabel.Size = new System.Drawing.Size(80, 13);
+            this.LoadoutNameLabel.TabIndex = 21;
+            this.LoadoutNameLabel.Text = "Loadout Name:";
             // 
-            // label2
+            // ShipLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(109, 12);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 20;
-            this.label2.Text = "Ship:";
+            this.ShipLabel.AutoSize = true;
+            this.ShipLabel.Location = new System.Drawing.Point(104, 12);
+            this.ShipLabel.Name = "ShipLabel";
+            this.ShipLabel.Size = new System.Drawing.Size(31, 13);
+            this.ShipLabel.TabIndex = 20;
+            this.ShipLabel.Text = "Ship:";
             // 
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Location = new System.Drawing.Point(199, 38);
+            this.lblAuthor.Location = new System.Drawing.Point(194, 38);
             this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(35, 13);
+            this.lblAuthor.Size = new System.Drawing.Size(67, 13);
             this.lblAuthor.TabIndex = 19;
-            this.lblAuthor.Text = "label1";
+            this.lblAuthor.Text = "AuthorName";
             // 
-            // lblName
+            // lblLoadoutName
             // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(199, 25);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(35, 13);
-            this.lblName.TabIndex = 18;
-            this.lblName.Text = "label2";
+            this.lblLoadoutName.AutoSize = true;
+            this.lblLoadoutName.Location = new System.Drawing.Point(194, 25);
+            this.lblLoadoutName.Name = "lblLoadoutName";
+            this.lblLoadoutName.Size = new System.Drawing.Size(73, 13);
+            this.lblLoadoutName.TabIndex = 18;
+            this.lblLoadoutName.Text = "LoadoutName";
             // 
-            // lblShipType
+            // lblShipName
             // 
-            this.lblShipType.AutoSize = true;
-            this.lblShipType.Location = new System.Drawing.Point(199, 12);
-            this.lblShipType.Name = "lblShipType";
-            this.lblShipType.Size = new System.Drawing.Size(35, 13);
-            this.lblShipType.TabIndex = 17;
-            this.lblShipType.Text = "label1";
-            // 
-            // pbShip
-            // 
-            this.pbShip.Location = new System.Drawing.Point(12, 12);
-            this.pbShip.Name = "pbShip";
-            this.pbShip.Size = new System.Drawing.Size(91, 83);
-            this.pbShip.TabIndex = 16;
-            this.pbShip.TabStop = false;
+            this.lblShipName.AutoSize = true;
+            this.lblShipName.Location = new System.Drawing.Point(194, 12);
+            this.lblShipName.Name = "lblShipName";
+            this.lblShipName.Size = new System.Drawing.Size(54, 13);
+            this.lblShipName.TabIndex = 17;
+            this.lblShipName.Text = "ShipName";
             // 
             // lblPlanned
             // 
@@ -269,15 +260,15 @@ namespace EVEMon.SkillPlanner
             this.lblPlanned.Size = new System.Drawing.Size(0, 13);
             this.lblPlanned.TabIndex = 28;
             // 
-            // label6
+            // TrainingTimeLabel
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 481);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(176, 13);
-            this.label6.TabIndex = 26;
-            this.label6.Text = "Training Time for selected loadout: ";
+            this.TrainingTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.TrainingTimeLabel.AutoSize = true;
+            this.TrainingTimeLabel.Location = new System.Drawing.Point(12, 481);
+            this.TrainingTimeLabel.Name = "TrainingTimeLabel";
+            this.TrainingTimeLabel.Size = new System.Drawing.Size(176, 13);
+            this.TrainingTimeLabel.TabIndex = 26;
+            this.TrainingTimeLabel.Text = "Training Time for selected loadout: ";
             // 
             // lblTrainTime
             // 
@@ -285,9 +276,9 @@ namespace EVEMon.SkillPlanner
             this.lblTrainTime.AutoSize = true;
             this.lblTrainTime.Location = new System.Drawing.Point(191, 481);
             this.lblTrainTime.Name = "lblTrainTime";
-            this.lblTrainTime.Size = new System.Drawing.Size(35, 13);
+            this.lblTrainTime.Size = new System.Drawing.Size(25, 13);
             this.lblTrainTime.TabIndex = 27;
-            this.lblTrainTime.Text = "label2";
+            this.lblTrainTime.Text = "N/A";
             // 
             // btnPlan
             // 
@@ -307,7 +298,7 @@ namespace EVEMon.SkillPlanner
             this.miShowInBrowser,
             this.miExportToEFT});
             this.cmNode.Name = "cmNode";
-            this.cmNode.Size = new System.Drawing.Size(203, 70);
+            this.cmNode.Size = new System.Drawing.Size(203, 48);
             // 
             // miShowInBrowser
             // 
@@ -323,39 +314,49 @@ namespace EVEMon.SkillPlanner
             this.miExportToEFT.Text = "Export Loadout To EFT";
             this.miExportToEFT.Click += new System.EventHandler(this.miExportToEFT_Click);
             // 
+            // eveImage
+            // 
+            this.eveImage.EveItem = null;
+            this.eveImage.ImageSize = EVEMon.Common.EveImageSize.x128;
+            this.eveImage.Location = new System.Drawing.Point(12, 12);
+            this.eveImage.Name = "eveImage";
+            this.eveImage.PopUpEnabled = true;
+            this.eveImage.Size = new System.Drawing.Size(80, 80);
+            this.eveImage.SizeMode = EVEMon.Common.Controls.EveImage.EveImageSizeMode.StretchImage;
+            this.eveImage.TabIndex = 30;
+            // 
             // ShipLoadoutSelectWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(728, 506);
+            this.Controls.Add(this.eveImage);
             this.Controls.Add(this.btnPlan);
             this.Controls.Add(this.lblPlanned);
-            this.Controls.Add(this.lbDate);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblSubmitDate);
+            this.Controls.Add(this.TrainingTimeLabel);
+            this.Controls.Add(this.SubDateLabel);
             this.Controls.Add(this.lblTrainTime);
             this.Controls.Add(this.lblForum);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.AuthorLabel);
+            this.Controls.Add(this.LoadoutNameLabel);
+            this.Controls.Add(this.ShipLabel);
             this.Controls.Add(this.lblAuthor);
-            this.Controls.Add(this.lblName);
-            this.Controls.Add(this.lblShipType);
-            this.Controls.Add(this.pbShip);
+            this.Controls.Add(this.lblLoadoutName);
+            this.Controls.Add(this.lblShipName);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.lblShip);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lblLoadouts);
+            this.Controls.Add(this.lowerPanel);
             this.MinimumSize = new System.Drawing.Size(744, 544);
             this.Name = "ShipLoadoutSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BattleClinic Loadout Selection";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
-            this.panel1.ResumeLayout(false);
+            this.lowerPanel.ResumeLayout(false);
             this.persistentSplitContainer1.Panel1.ResumeLayout(false);
             this.persistentSplitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer1)).EndInit();
             this.persistentSplitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbShip)).EndInit();
             this.cmNode.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -364,7 +365,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        private System.Windows.Forms.Label lblShip;
+        private System.Windows.Forms.Label lblLoadouts;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ListView lvLoadouts;
         private System.Windows.Forms.ColumnHeader colName;
@@ -372,24 +373,24 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader colRating;
         private System.Windows.Forms.ColumnHeader colDate;
         private EVEMon.Controls.PersistentSplitContainer persistentSplitContainer1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lbDate;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel lowerPanel;
+        private System.Windows.Forms.Label lblSubmitDate;
+        private System.Windows.Forms.Label SubDateLabel;
         private System.Windows.Forms.LinkLabel lblForum;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label AuthorLabel;
+        private System.Windows.Forms.Label LoadoutNameLabel;
+        private System.Windows.Forms.Label ShipLabel;
         private System.Windows.Forms.Label lblAuthor;
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.Label lblShipType;
-        private System.Windows.Forms.PictureBox pbShip;
+        private System.Windows.Forms.Label lblLoadoutName;
+        private System.Windows.Forms.Label lblShipName;
         private System.Windows.Forms.TreeView tvLoadout;
         private System.Windows.Forms.Label lblPlanned;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label TrainingTimeLabel;
         private System.Windows.Forms.Label lblTrainTime;
         private System.Windows.Forms.Button btnPlan;
         private System.Windows.Forms.ContextMenuStrip cmNode;
         private System.Windows.Forms.ToolStripMenuItem miShowInBrowser;
         private System.Windows.Forms.ToolStripMenuItem miExportToEFT;
+        private Common.Controls.EveImage eveImage;
     }
 }

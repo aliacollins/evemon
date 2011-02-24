@@ -86,6 +86,7 @@
     <Compile Include="ResearchPointComparer.cs" />
     <Compile Include="SellOrder.cs" />
     <Compile Include="Serialization\API\CCPOrderState.cs" />
+    <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIJobList.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrderList.cs" />
@@ -369,7 +370,6 @@
     <Compile Include="QueryMonitorCollection.cs" />
     <Compile Include="Serialization\API\APIErrors.cs" />
     <Compile Include="Serialization\API\IAPIResult.cs" />
-    <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAPIJob.cs" />
     <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
     <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
@@ -603,6 +603,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\MD5Sums.txt" />
+    <None Include="Resources\Overlay icons\Deadspace.png" />
+    <None Include="Resources\Overlay icons\Faction.png" />
+    <None Include="Resources\Overlay icons\Officer.png" />
+    <None Include="Resources\Overlay icons\Storyline.png" />
+    <None Include="Resources\Overlay icons\T1.png" />
+    <None Include="Resources\Overlay icons\T2.png" />
+    <None Include="Resources\Overlay icons\T3.png" />
+    <None Include="Resources\Overlay icons\T4.png" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
   </ItemGroup>

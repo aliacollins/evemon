@@ -60,6 +60,27 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Deadspace {
+            get {
+                object obj = ResourceManager.GetObject("Deadspace", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Faction {
+            get {
+                object obj = ResourceManager.GetObject("Faction", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Officer {
+            get {
+                object obj = ResourceManager.GetObject("Officer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;
@@ -102,6 +123,41 @@ namespace EVEMon.Common.Properties {
         internal static string SettingsAndPlanImport {
             get {
                 return ResourceManager.GetString("SettingsAndPlanImport", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Storyline {
+            get {
+                object obj = ResourceManager.GetObject("Storyline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap T1 {
+            get {
+                object obj = ResourceManager.GetObject("T1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap T2 {
+            get {
+                object obj = ResourceManager.GetObject("T2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap T3 {
+            get {
+                object obj = ResourceManager.GetObject("T3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap T4 {
+            get {
+                object obj = ResourceManager.GetObject("T4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
