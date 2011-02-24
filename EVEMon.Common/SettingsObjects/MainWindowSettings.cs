@@ -16,7 +16,7 @@ namespace EVEMon.Common.SettingsObjects
             Research = new ResearchSettings();
             OverviewItemSize = PortraitSizes.x96;
             TitleFormat = MainWindowTitleFormat.NextCharToFinish;
-            ShowOverviewSkillQueueFreeRoom = true;
+            ShowOverviewSkillQueueTrainingTime = true;
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
             PutTrainingSkillsFirstOnOverview = true;
@@ -165,8 +165,8 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("showOverviewSkillQueueFreeRoom")]
-        public bool ShowOverviewSkillQueueFreeRoom
+        [XmlElement("showOverviewSkillQueueTrainingTime")]
+        public bool ShowOverviewSkillQueueTrainingTime
         {
             get;
             set;

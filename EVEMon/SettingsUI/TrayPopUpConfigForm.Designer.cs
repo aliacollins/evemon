@@ -48,7 +48,7 @@ namespace EVEMon.SettingsUI
             this.lblDisplayOrder2 = new System.Windows.Forms.Label();
             this.cbDisplayOrder1 = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cbShowSkillQueueFreeRoom = new System.Windows.Forms.CheckBox();
+            this.cbShowSkillQueueTrainingTime = new System.Windows.Forms.CheckBox();
             this.cbHighLightConflicts = new System.Windows.Forms.CheckBox();
             this.cbShowSkill = new System.Windows.Forms.CheckBox();
             this.cbShowCompletionTime = new System.Windows.Forms.CheckBox();
@@ -169,7 +169,7 @@ namespace EVEMon.SettingsUI
             this.cbIndentGroupedAccounts.AutoSize = true;
             this.cbIndentGroupedAccounts.Location = new System.Drawing.Point(132, 72);
             this.cbIndentGroupedAccounts.Name = "cbIndentGroupedAccounts";
-            this.cbIndentGroupedAccounts.Size = new System.Drawing.Size(149, 17);
+            this.cbIndentGroupedAccounts.Size = new System.Drawing.Size(148, 17);
             this.cbIndentGroupedAccounts.TabIndex = 19;
             this.cbIndentGroupedAccounts.Text = "Indent Grouped Accounts";
             this.ttHelp.SetToolTip(this.cbIndentGroupedAccounts, "When enabled, characters will be indented\r\nunder the first character in each acco" +
@@ -202,7 +202,7 @@ namespace EVEMon.SettingsUI
             this.cbHideNotTraining.AutoSize = true;
             this.cbHideNotTraining.Location = new System.Drawing.Point(6, 20);
             this.cbHideNotTraining.Name = "cbHideNotTraining";
-            this.cbHideNotTraining.Size = new System.Drawing.Size(161, 17);
+            this.cbHideNotTraining.Size = new System.Drawing.Size(157, 17);
             this.cbHideNotTraining.TabIndex = 12;
             this.cbHideNotTraining.Text = "Hide Characters not training";
             this.ttHelp.SetToolTip(this.cbHideNotTraining, "When enabled, only characters currently\r\ntraining a skill will be displayed");
@@ -269,7 +269,7 @@ namespace EVEMon.SettingsUI
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cbShowSkillQueueFreeRoom);
+            this.groupBox2.Controls.Add(this.cbShowSkillQueueTrainingTime);
             this.groupBox2.Controls.Add(this.cbHighLightConflicts);
             this.groupBox2.Controls.Add(this.cbShowSkill);
             this.groupBox2.Controls.Add(this.cbShowCompletionTime);
@@ -285,16 +285,16 @@ namespace EVEMon.SettingsUI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Character Details";
             // 
-            // cbShowSkillQueueFreeRoom
+            // cbShowSkillQueueTrainingTime
             // 
-            this.cbShowSkillQueueFreeRoom.AutoSize = true;
-            this.cbShowSkillQueueFreeRoom.Location = new System.Drawing.Point(9, 88);
-            this.cbShowSkillQueueFreeRoom.Name = "cbShowSkillQueueFreeRoom";
-            this.cbShowSkillQueueFreeRoom.Size = new System.Drawing.Size(162, 17);
-            this.cbShowSkillQueueFreeRoom.TabIndex = 35;
-            this.cbShowSkillQueueFreeRoom.Text = "Show Skill Queue Free Room";
-            this.ttHelp.SetToolTip(this.cbShowSkillQueueFreeRoom, "When enabled, shows the character\'s\r\nskill queue free room");
-            this.cbShowSkillQueueFreeRoom.UseVisualStyleBackColor = true;
+            this.cbShowSkillQueueTrainingTime.AutoSize = true;
+            this.cbShowSkillQueueTrainingTime.Location = new System.Drawing.Point(9, 88);
+            this.cbShowSkillQueueTrainingTime.Name = "cbShowSkillQueueTrainingTime";
+            this.cbShowSkillQueueTrainingTime.Size = new System.Drawing.Size(173, 17);
+            this.cbShowSkillQueueTrainingTime.TabIndex = 35;
+            this.cbShowSkillQueueTrainingTime.Text = "Show Skill Queue Training Time";
+            this.ttHelp.SetToolTip(this.cbShowSkillQueueTrainingTime, "When enabled, shows the character\'s\r\nskill queue training time");
+            this.cbShowSkillQueueTrainingTime.UseVisualStyleBackColor = true;
             // 
             // cbHighLightConflicts
             // 
@@ -403,7 +403,7 @@ namespace EVEMon.SettingsUI
             this.cbUseIncreasedContrast.AutoSize = true;
             this.cbUseIncreasedContrast.Location = new System.Drawing.Point(204, 43);
             this.cbUseIncreasedContrast.Name = "cbUseIncreasedContrast";
-            this.cbUseIncreasedContrast.Size = new System.Drawing.Size(140, 17);
+            this.cbUseIncreasedContrast.Size = new System.Drawing.Size(137, 17);
             this.cbUseIncreasedContrast.TabIndex = 21;
             this.cbUseIncreasedContrast.Text = "Use Increased Contrast";
             this.ttHelp.SetToolTip(this.cbUseIncreasedContrast, "When enabled, increases the contrast of the shown info");
@@ -414,7 +414,7 @@ namespace EVEMon.SettingsUI
             this.cbShowEveTime.AutoSize = true;
             this.cbShowEveTime.Location = new System.Drawing.Point(6, 43);
             this.cbShowEveTime.Name = "cbShowEveTime";
-            this.cbShowEveTime.Size = new System.Drawing.Size(98, 17);
+            this.cbShowEveTime.Size = new System.Drawing.Size(103, 17);
             this.cbShowEveTime.TabIndex = 20;
             this.cbShowEveTime.Text = "Show EVE Time";
             this.ttHelp.SetToolTip(this.cbShowEveTime, "When enabled, displays the current EVE time");
@@ -425,7 +425,7 @@ namespace EVEMon.SettingsUI
             this.cbShowWarning.AutoSize = true;
             this.cbShowWarning.Location = new System.Drawing.Point(6, 20);
             this.cbShowWarning.Name = "cbShowWarning";
-            this.cbShowWarning.Size = new System.Drawing.Size(195, 17);
+            this.cbShowWarning.Size = new System.Drawing.Size(193, 17);
             this.cbShowWarning.TabIndex = 19;
             this.cbShowWarning.Text = "Show non-training account warning";
             this.ttHelp.SetToolTip(this.cbShowWarning, "When enabled, shows a warning message when\r\nno characters on an account are train" +
@@ -437,7 +437,7 @@ namespace EVEMon.SettingsUI
             this.cbShowServerStatus.AutoSize = true;
             this.cbShowServerStatus.Location = new System.Drawing.Point(204, 20);
             this.cbShowServerStatus.Name = "cbShowServerStatus";
-            this.cbShowServerStatus.Size = new System.Drawing.Size(103, 17);
+            this.cbShowServerStatus.Size = new System.Drawing.Size(120, 17);
             this.cbShowServerStatus.TabIndex = 14;
             this.cbShowServerStatus.Text = "Show Server Status";
             this.ttHelp.SetToolTip(this.cbShowServerStatus, "When enabled, displays the current\r\nTranquility server status");
@@ -515,7 +515,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnUseDefaults;
         private System.Windows.Forms.CheckBox cbHighLightConflicts;
         private System.Windows.Forms.CheckBox cbShowEveTime;
-		private System.Windows.Forms.CheckBox cbShowSkillQueueFreeRoom;
+		private System.Windows.Forms.CheckBox cbShowSkillQueueTrainingTime;
 		private System.Windows.Forms.CheckBox cbIndentGroupedAccounts;
         private System.Windows.Forms.CheckBox cbUseIncreasedContrast;
 

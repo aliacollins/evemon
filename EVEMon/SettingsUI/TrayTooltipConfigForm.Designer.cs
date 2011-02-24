@@ -405,7 +405,7 @@ namespace EVEMon.SettingsUI
             this.cbTooltipOrder.AutoSize = true;
             this.cbTooltipOrder.Location = new System.Drawing.Point(6, 17);
             this.cbTooltipOrder.Name = "cbTooltipOrder";
-            this.cbTooltipOrder.Size = new System.Drawing.Size(110, 17);
+            this.cbTooltipOrder.Size = new System.Drawing.Size(112, 17);
             this.cbTooltipOrder.TabIndex = 0;
             this.cbTooltipOrder.Text = "Same as in Popup";
             this.cbTooltipOrder.UseVisualStyleBackColor = true;

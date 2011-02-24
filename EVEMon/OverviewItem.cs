@@ -35,12 +35,12 @@ namespace EVEMon
         private bool m_showWalletBalance;
         private bool m_showPortrait;
         private bool m_showConflicts;
-        private bool m_showSkillQueueFreeRoom;
+        private bool m_showSkillQueueTrainingTime;
 
         private bool m_hasRemainingTime;
         private bool m_hasCompletionTime;
         private bool m_hasSkillInTraining;
-		private bool m_hasSkillQueueFreeRoom;
+		private bool m_hasSkillQueueTrainingTime;
 
         private bool m_tooltip = false;
 
@@ -59,7 +59,7 @@ namespace EVEMon
             this.lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Regular);
             this.lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
             this.lblCompletionTime.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
-            this.lblSkillQueueFreeRoom.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            this.lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
 
             // Misc fields
             m_showPortrait = true;
@@ -68,12 +68,12 @@ namespace EVEMon
             m_showCompletionTime = true;
             m_showSkillInTraining = true;
             m_showConflicts = true;
-            m_showSkillQueueFreeRoom = true;
+            m_showSkillQueueTrainingTime = true;
             m_portraitSize = 96;
             m_lightForeColor = lblCompletionTime.ForeColor;
 
             // Initialize the skill queue free room label text
-            lblSkillQueueFreeRoom.Text = String.Empty;
+            lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
             EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
@@ -112,7 +112,7 @@ namespace EVEMon
             m_showSkillInTraining = settings.ShowSkillInTraining;
             m_showWalletBalance = settings.ShowWallet;
             m_showPortrait = settings.ShowPortrait;
-            m_showSkillQueueFreeRoom = settings.ShowSkillQueueFreeRoom;
+            m_showSkillQueueTrainingTime = settings.ShowSkillQueueTrainingTime;
             m_tooltip = true;
 
             // Initializes colors
@@ -136,7 +136,7 @@ namespace EVEMon
         {
             m_showWalletBalance = settings.ShowOverviewWallet;
             m_showPortrait = settings.ShowOverviewPortrait;
-            m_showSkillQueueFreeRoom = settings.ShowOverviewSkillQueueFreeRoom;
+            m_showSkillQueueTrainingTime = settings.ShowOverviewSkillQueueTrainingTime;
 
             // Initializes colors
             if (!Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
@@ -248,13 +248,13 @@ namespace EVEMon
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
                 // Update the skill queue free room label
-                UpdateSkillQueueFreeRoom();
+                UpdateSkillQueueTrainingTime();
 
                 // Show the training labels
                 m_hasSkillInTraining = true;
                 m_hasCompletionTime = true;
                 m_hasRemainingTime = true;
-                m_hasSkillQueueFreeRoom = true; // Yes, it's a lie! It's done for initialization
+                m_hasSkillQueueTrainingTime = true;
             }
             else
             {
@@ -262,7 +262,7 @@ namespace EVEMon
                 m_hasSkillInTraining = false;
                 m_hasCompletionTime = false;
                 m_hasRemainingTime = false;
-				m_hasSkillQueueFreeRoom = false; // Yes, it's a lie!
+				m_hasSkillQueueTrainingTime = false;
             }
 
             // Adjusts all the controls layout.
@@ -278,15 +278,15 @@ namespace EVEMon
             lblRemainingTime.Visible = m_hasRemainingTime & m_showRemainingTime;
             lblCompletionTime.Visible = m_hasCompletionTime & m_showCompletionTime;
             lblSkillInTraining.Visible = m_hasSkillInTraining & m_showSkillInTraining;
-			lblSkillQueueFreeRoom.Visible = m_hasSkillQueueFreeRoom & m_showSkillQueueFreeRoom;
+			lblSkillQueueTrainingTime.Visible = m_hasSkillQueueTrainingTime & m_showSkillQueueTrainingTime;
             lblBalance.Visible = m_showWalletBalance;
         }
 
         /// <summary>
-        /// Updates the skill queue free room.
+        /// Updates the skill queue training time.
         /// </summary>
         /// <returns></returns>
-        private void UpdateSkillQueueFreeRoom()
+        private void UpdateSkillQueueTrainingTime()
         {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
@@ -298,26 +298,38 @@ namespace EVEMon
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
             string timeLeftText;
 
-            // Negative time ? We shouldn't displayed anything
+            // Negative time ?
             if (timeLeft < TimeSpan.Zero)
             {
-                lblSkillQueueFreeRoom.Text = String.Empty;
+                // More than one entry in queue ? Display total queue remaining time
+                if (ccpCharacter.SkillQueue.Count > 1)
+                {
+                    lblSkillQueueTrainingTime.ForeColor = lblRemainingTime.ForeColor;
+                    lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
+                        "Queue finishes in: {0}", skillQueueEndTime.ToRemainingTimeShortDescription());
+                    return;
+                }
+
+                // We don't display anything
+                lblSkillQueueTrainingTime.Text = String.Empty;
                 return;
             }
 
             // Training completed ?
             if (timeLeft == TimeSpan.Zero)
             {
-                lblSkillQueueFreeRoom.Text = "Completed";
+                lblSkillQueueTrainingTime.Text = "Completed";
                 return;
             }
 
-            // Less than minute ? Display seconds else display time without seconds
+            // Less than one minute ? Display seconds else display time without seconds
             timeLeftText = (timeLeft < TimeSpan.FromMinutes(1) ?
                 timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas) :
                 timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
-            lblSkillQueueFreeRoom.Text = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue", timeLeftText);
+            lblSkillQueueTrainingTime.ForeColor = Color.Red;
+            lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
+                "{0} free room in skill queue", timeLeftText);
         }
 
         /// <summary>
@@ -335,7 +347,7 @@ namespace EVEMon
                 var remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
                 lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
-                UpdateSkillQueueFreeRoom();
+                UpdateSkillQueueTrainingTime();
             }
         }
 
@@ -571,10 +583,10 @@ namespace EVEMon
         /// </summary>
         public bool ShowSkillQueueFreeRoom
         {
-            get { return m_showSkillQueueFreeRoom; }
+            get { return m_showSkillQueueTrainingTime; }
             set
             {
-                m_showSkillQueueFreeRoom = value;
+                m_showSkillQueueTrainingTime = value;
                 PerformCustomLayout(m_tooltip);
             }
         }
@@ -639,7 +651,7 @@ namespace EVEMon
                 mediumFontSize = 8.25f;
 
             // Margin between the two labels groups
-            int verticalMargin = (m_showSkillQueueFreeRoom ? 4 : 16);
+            int verticalMargin = (m_showSkillQueueTrainingTime ? 4 : 16);
             if (portraitSize <= 80)
                 verticalMargin = 0;
 
@@ -708,13 +720,13 @@ namespace EVEMon
                 top += smallLabelHeight;
             }
             
-            if (lblSkillQueueFreeRoom.Visible)
+            if (lblSkillQueueTrainingTime.Visible)
             {
-                lblSkillQueueFreeRoom.Location = new Point(left, top);
-                if (lblSkillQueueFreeRoom.PreferredWidth + right > labelWidth)
-                    labelWidth = lblSkillQueueFreeRoom.PreferredWidth + right;
-                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueFreeRoom.Font.Height);
-                lblSkillQueueFreeRoom.Size = new Size(labelWidth, smallLabelHeight);
+                lblSkillQueueTrainingTime.Location = new Point(left, top);
+                if (lblSkillQueueTrainingTime.PreferredWidth + right > labelWidth)
+                    labelWidth = lblSkillQueueTrainingTime.PreferredWidth + right;
+                smallLabelHeight = Math.Max(smallLabelHeight, lblSkillQueueTrainingTime.Font.Height);
+                lblSkillQueueTrainingTime.Size = new Size(labelWidth, smallLabelHeight);
                 top += smallLabelHeight;
             }
 

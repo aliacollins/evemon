@@ -14,7 +14,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             PortraitSize = PortraitSizes.x48;
             HighlightConflicts = true;
-            ShowSkillQueueFreeRoom = true;
+            ShowSkillQueueTrainingTime = true;
             ShowSkillInTraining = true;
             ShowRemainingTime = true;
             ShowPortrait = true;
@@ -102,8 +102,8 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        [XmlElement("showSkillQueueFreeRoom")]
-        public bool ShowSkillQueueFreeRoom
+        [XmlElement("showSkillQueueTrainingTime")]
+        public bool ShowSkillQueueTrainingTime
         {
             get;
             set;

@@ -29,7 +29,7 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.pbCharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
-            this.lblSkillQueueFreeRoom = new EVEMon.OverviewLabel();
+            this.lblSkillQueueTrainingTime = new EVEMon.OverviewLabel();
             this.lblCompletionTime = new EVEMon.OverviewLabel();
             this.lblCharName = new EVEMon.OverviewLabel();
             this.lblSkillInTraining = new EVEMon.OverviewLabel();
@@ -50,15 +50,15 @@ namespace EVEMon
             // 
             // lblSkillQueueFreeRoom
             // 
-            this.lblSkillQueueFreeRoom.AutoEllipsis = true;
-            this.lblSkillQueueFreeRoom.BackColor = System.Drawing.Color.Transparent;
-            this.lblSkillQueueFreeRoom.Enabled = false;
-            this.lblSkillQueueFreeRoom.ForeColor = System.Drawing.Color.Red;
-            this.lblSkillQueueFreeRoom.Location = new System.Drawing.Point(107, 92);
-            this.lblSkillQueueFreeRoom.Name = "lblSkillQueueFreeRoom";
-            this.lblSkillQueueFreeRoom.Size = new System.Drawing.Size(186, 13);
-            this.lblSkillQueueFreeRoom.TabIndex = 12;
-            this.lblSkillQueueFreeRoom.Text = "23h, 59m free room in skill queue";
+            this.lblSkillQueueTrainingTime.AutoEllipsis = true;
+            this.lblSkillQueueTrainingTime.BackColor = System.Drawing.Color.Transparent;
+            this.lblSkillQueueTrainingTime.Enabled = false;
+            this.lblSkillQueueTrainingTime.ForeColor = System.Drawing.Color.Red;
+            this.lblSkillQueueTrainingTime.Location = new System.Drawing.Point(107, 92);
+            this.lblSkillQueueTrainingTime.Name = "lblSkillQueueFreeRoom";
+            this.lblSkillQueueTrainingTime.Size = new System.Drawing.Size(186, 13);
+            this.lblSkillQueueTrainingTime.TabIndex = 12;
+            this.lblSkillQueueTrainingTime.Text = "23h, 59m free room in skill queue";
             // 
             // lblCompletionTime
             // 
@@ -123,7 +123,7 @@ namespace EVEMon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblSkillQueueFreeRoom);
+            this.Controls.Add(this.lblSkillQueueTrainingTime);
             this.Controls.Add(this.lblCompletionTime);
             this.Controls.Add(this.lblCharName);
             this.Controls.Add(this.lblSkillInTraining);
@@ -145,6 +145,6 @@ namespace EVEMon
         private EVEMon.OverviewLabel lblRemainingTime;
         private EVEMon.OverviewLabel lblBalance;
         private EVEMon.OverviewLabel lblCompletionTime;
-        private OverviewLabel lblSkillQueueFreeRoom;
+        private OverviewLabel lblSkillQueueTrainingTime;
     }
 }

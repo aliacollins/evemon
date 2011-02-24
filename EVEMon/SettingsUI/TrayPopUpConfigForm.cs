@@ -81,7 +81,7 @@ namespace EVEMon.SettingsUI
             cbShowSkill.Checked = config.ShowSkillInTraining;
             cbShowTimeToCompletion.Checked = config.ShowRemainingTime;
             cbShowCompletionTime.Checked = config.ShowCompletionTime;
-            cbShowSkillQueueFreeRoom.Checked = config.ShowSkillQueueFreeRoom;
+            cbShowSkillQueueTrainingTime.Checked = config.ShowSkillQueueTrainingTime;
             cbHighLightConflicts.Checked = config.HighlightConflicts;
             cbShowWallet.Checked = config.ShowWallet;
             cbShowPortrait.Checked = config.ShowPortrait;
@@ -104,7 +104,7 @@ namespace EVEMon.SettingsUI
             m_settings.ShowSkillInTraining = cbShowSkill.Checked;
             m_settings.ShowRemainingTime = cbShowTimeToCompletion.Checked;
             m_settings.ShowCompletionTime = cbShowCompletionTime.Checked;
-            m_settings.ShowSkillQueueFreeRoom = cbShowSkillQueueFreeRoom.Checked;
+            m_settings.ShowSkillQueueTrainingTime = cbShowSkillQueueTrainingTime.Checked;
             m_settings.HighlightConflicts = cbHighLightConflicts.Checked;
             m_settings.ShowWallet = cbShowWallet.Checked;
             m_settings.ShowPortrait = cbShowPortrait.Checked;

@@ -149,7 +149,7 @@ namespace EVEMon.SettingsUI
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.cbUseIncreasedContrastOnOverview = new System.Windows.Forms.CheckBox();
             this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
-            this.overviewShowSkillQueueFreeRoomCheckBox = new System.Windows.Forms.CheckBox();
+            this.overviewShowSkillQueueTrainingTimeCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewShowWalletCheckBox = new System.Windows.Forms.CheckBox();
             this.overviewShowPortraitCheckBox = new System.Windows.Forms.CheckBox();
             this.cbShowOverViewTab = new System.Windows.Forms.CheckBox();
@@ -275,9 +275,9 @@ namespace EVEMon.SettingsUI
             this.RemoveAllLabel = new System.Windows.Forms.Label();
             this.AlwaysAskLabel = new System.Windows.Forms.Label();
             this.RemoveConfirmedLabel = new System.Windows.Forms.Label();
-            this.AlwaysAskRadioButton = new System.Windows.Forms.RadioButton();
-            this.RemoveAllRadioButton = new System.Windows.Forms.RadioButton();
-            this.RemoveConfirmedRadioButton = new System.Windows.Forms.RadioButton();
+            this.alwaysAskRadioButton = new System.Windows.Forms.RadioButton();
+            this.removeAllRadioButton = new System.Windows.Forms.RadioButton();
+            this.removeConfirmedRadioButton = new System.Windows.Forms.RadioButton();
             bottomPanel = new System.Windows.Forms.Panel();
             lblMainWindowPage = new System.Windows.Forms.Label();
             lblSize = new System.Windows.Forms.Label();
@@ -1262,16 +1262,16 @@ namespace EVEMon.SettingsUI
             this.ttToolTipCodes.SetToolTip(this.overviewGroupCharactersInTrainingCheckBox, "When enabled, groups the character\'s\r\nthat are currently in training");
             this.overviewGroupCharactersInTrainingCheckBox.UseVisualStyleBackColor = true;
             // 
-            // overviewShowSkillQueueFreeRoomCheckBox
+            // overviewShowSkillQueueTrainingTimeCheckBox
             // 
-            this.overviewShowSkillQueueFreeRoomCheckBox.AutoSize = true;
-            this.overviewShowSkillQueueFreeRoomCheckBox.Location = new System.Drawing.Point(161, 3);
-            this.overviewShowSkillQueueFreeRoomCheckBox.Name = "overviewShowSkillQueueFreeRoomCheckBox";
-            this.overviewShowSkillQueueFreeRoomCheckBox.Size = new System.Drawing.Size(162, 17);
-            this.overviewShowSkillQueueFreeRoomCheckBox.TabIndex = 32;
-            this.overviewShowSkillQueueFreeRoomCheckBox.Text = "Show Skill Queue Free Room";
-            this.ttToolTipCodes.SetToolTip(this.overviewShowSkillQueueFreeRoomCheckBox, "When enabled, shows the character\'s\r\nskill queue free room");
-            this.overviewShowSkillQueueFreeRoomCheckBox.UseVisualStyleBackColor = true;
+            this.overviewShowSkillQueueTrainingTimeCheckBox.AutoSize = true;
+            this.overviewShowSkillQueueTrainingTimeCheckBox.Location = new System.Drawing.Point(161, 3);
+            this.overviewShowSkillQueueTrainingTimeCheckBox.Name = "overviewShowSkillQueueTrainingTimeCheckBox";
+            this.overviewShowSkillQueueTrainingTimeCheckBox.Size = new System.Drawing.Size(173, 17);
+            this.overviewShowSkillQueueTrainingTimeCheckBox.TabIndex = 32;
+            this.overviewShowSkillQueueTrainingTimeCheckBox.Text = "Show Skill Queue Training Time";
+            this.ttToolTipCodes.SetToolTip(this.overviewShowSkillQueueTrainingTimeCheckBox, "When enabled, shows the character\'s\r\nskill queue training time");
+            this.overviewShowSkillQueueTrainingTimeCheckBox.UseVisualStyleBackColor = true;
             // 
             // overviewShowWalletCheckBox
             // 
@@ -1464,7 +1464,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.networkPage;
+            this.multiPanel.SelectedPage = this.mainWindowPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1500,7 +1500,7 @@ namespace EVEMon.SettingsUI
             this.overviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.overviewPanel.Controls.Add(this.overviewGroupCharactersInTrainingCheckBox);
-            this.overviewPanel.Controls.Add(this.overviewShowSkillQueueFreeRoomCheckBox);
+            this.overviewPanel.Controls.Add(this.overviewShowSkillQueueTrainingTimeCheckBox);
             this.overviewPanel.Controls.Add(this.overviewShowWalletCheckBox);
             this.overviewPanel.Controls.Add(lblSize);
             this.overviewPanel.Controls.Add(this.overviewShowPortraitCheckBox);
@@ -2827,9 +2827,9 @@ namespace EVEMon.SettingsUI
             this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveAllLabel);
             this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.AlwaysAskLabel);
             this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveConfirmedLabel);
-            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.AlwaysAskRadioButton);
-            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveAllRadioButton);
-            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.RemoveConfirmedRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.alwaysAskRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.removeAllRadioButton);
+            this.ObsoleteEntryRemovalGroupBox.Controls.Add(this.removeConfirmedRadioButton);
             this.ObsoleteEntryRemovalGroupBox.Location = new System.Drawing.Point(5, 120);
             this.ObsoleteEntryRemovalGroupBox.Name = "ObsoleteEntryRemovalGroupBox";
             this.ObsoleteEntryRemovalGroupBox.Size = new System.Drawing.Size(425, 187);
@@ -2866,39 +2866,39 @@ namespace EVEMon.SettingsUI
             // 
             // AlwaysAskRadioButton
             // 
-            this.AlwaysAskRadioButton.AutoSize = true;
-            this.AlwaysAskRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
-            this.AlwaysAskRadioButton.Location = new System.Drawing.Point(7, 73);
-            this.AlwaysAskRadioButton.Name = "AlwaysAskRadioButton";
-            this.AlwaysAskRadioButton.Size = new System.Drawing.Size(88, 17);
-            this.AlwaysAskRadioButton.TabIndex = 2;
-            this.AlwaysAskRadioButton.TabStop = true;
-            this.AlwaysAskRadioButton.Text = "Always ask";
-            this.AlwaysAskRadioButton.UseVisualStyleBackColor = true;
+            this.alwaysAskRadioButton.AutoSize = true;
+            this.alwaysAskRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.alwaysAskRadioButton.Location = new System.Drawing.Point(7, 73);
+            this.alwaysAskRadioButton.Name = "AlwaysAskRadioButton";
+            this.alwaysAskRadioButton.Size = new System.Drawing.Size(88, 17);
+            this.alwaysAskRadioButton.TabIndex = 2;
+            this.alwaysAskRadioButton.TabStop = true;
+            this.alwaysAskRadioButton.Text = "Always ask";
+            this.alwaysAskRadioButton.UseVisualStyleBackColor = true;
             // 
             // RemoveAllRadioButton
             // 
-            this.RemoveAllRadioButton.AutoSize = true;
-            this.RemoveAllRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
-            this.RemoveAllRadioButton.Location = new System.Drawing.Point(7, 126);
-            this.RemoveAllRadioButton.Name = "RemoveAllRadioButton";
-            this.RemoveAllRadioButton.Size = new System.Drawing.Size(245, 17);
-            this.RemoveAllRadioButton.TabIndex = 1;
-            this.RemoveAllRadioButton.TabStop = true;
-            this.RemoveAllRadioButton.Text = "Remove entry once training completes";
-            this.RemoveAllRadioButton.UseVisualStyleBackColor = true;
+            this.removeAllRadioButton.AutoSize = true;
+            this.removeAllRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.removeAllRadioButton.Location = new System.Drawing.Point(7, 126);
+            this.removeAllRadioButton.Name = "RemoveAllRadioButton";
+            this.removeAllRadioButton.Size = new System.Drawing.Size(245, 17);
+            this.removeAllRadioButton.TabIndex = 1;
+            this.removeAllRadioButton.TabStop = true;
+            this.removeAllRadioButton.Text = "Remove entry once training completes";
+            this.removeAllRadioButton.UseVisualStyleBackColor = true;
             // 
             // RemoveConfirmedRadioButton
             // 
-            this.RemoveConfirmedRadioButton.AutoSize = true;
-            this.RemoveConfirmedRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
-            this.RemoveConfirmedRadioButton.Location = new System.Drawing.Point(7, 21);
-            this.RemoveConfirmedRadioButton.Name = "RemoveConfirmedRadioButton";
-            this.RemoveConfirmedRadioButton.Size = new System.Drawing.Size(264, 17);
-            this.RemoveConfirmedRadioButton.TabIndex = 0;
-            this.RemoveConfirmedRadioButton.TabStop = true;
-            this.RemoveConfirmedRadioButton.Text = "Remove confirmed entry (Recommended)";
-            this.RemoveConfirmedRadioButton.UseVisualStyleBackColor = true;
+            this.removeConfirmedRadioButton.AutoSize = true;
+            this.removeConfirmedRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.removeConfirmedRadioButton.Location = new System.Drawing.Point(7, 21);
+            this.removeConfirmedRadioButton.Name = "RemoveConfirmedRadioButton";
+            this.removeConfirmedRadioButton.Size = new System.Drawing.Size(264, 17);
+            this.removeConfirmedRadioButton.TabIndex = 0;
+            this.removeConfirmedRadioButton.TabStop = true;
+            this.removeConfirmedRadioButton.Text = "Remove confirmed entry (Recommended)";
+            this.removeConfirmedRadioButton.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -3132,7 +3132,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbShowPrereqMetSkills;
         private System.Windows.Forms.CheckBox cbColorQueuedSkills;
         private System.Windows.Forms.CheckBox cbHighlightQueuedSiklls;
-        private System.Windows.Forms.CheckBox overviewShowSkillQueueFreeRoomCheckBox;
+        private System.Windows.Forms.CheckBox overviewShowSkillQueueTrainingTimeCheckBox;
         private System.Windows.Forms.TextBox igbPortTextBox;
         private System.Windows.Forms.Panel panelCycleCharInfo;
         private System.Windows.Forms.CheckBox cbG15ACycle;
@@ -3164,9 +3164,9 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label RemoveAllLabel;
         private System.Windows.Forms.Label AlwaysAskLabel;
         private System.Windows.Forms.Label RemoveConfirmedLabel;
-        private System.Windows.Forms.RadioButton AlwaysAskRadioButton;
-        private System.Windows.Forms.RadioButton RemoveAllRadioButton;
-        private System.Windows.Forms.RadioButton RemoveConfirmedRadioButton;
+        private System.Windows.Forms.RadioButton alwaysAskRadioButton;
+        private System.Windows.Forms.RadioButton removeAllRadioButton;
+        private System.Windows.Forms.RadioButton removeConfirmedRadioButton;
         private System.Windows.Forms.GroupBox gbMessageBox;
         private System.Windows.Forms.Label lblPrioritesConflict;
         private System.Windows.Forms.Button btnPrioritiesReset;

@@ -197,7 +197,7 @@ namespace EVEMon.SettingsUI
             overviewShowWalletCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewWallet;
             overviewShowPortraitCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewPortrait;
             overviewPortraitSizeComboBox.SelectedIndex = (int)m_settings.UI.MainWindow.OverviewItemSize;
-            overviewShowSkillQueueFreeRoomCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueFreeRoom;
+            overviewShowSkillQueueTrainingTimeCheckBox.Checked = m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime;
             overviewGroupCharactersInTrainingCheckBox.Checked = m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
 
             // IGB Server
@@ -209,6 +209,7 @@ namespace EVEMon.SettingsUI
             notificationsControl.Settings = m_settings.Notifications;
             cbPlaySoundOnSkillComplete.Checked = m_settings.Notifications.PlaySoundOnSkillCompletion;
 
+            // Email Notifications
             mailNotificationCheckBox.Checked = m_settings.Notifications.SendMailAlert;
             tbMailServer.Text = m_settings.Notifications.EmailSmtpServer;
             emailPortTextBox.Text = m_settings.Notifications.EmailPortNumber.ToString();
@@ -240,9 +241,10 @@ namespace EVEMon.SettingsUI
             cbSummaryOnMultiSelectOnly.Checked = m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect;
             cbAdvanceEntryAdd.Checked = m_settings.UI.PlanWindow.UseAdvanceEntryAddition;
 
-            AlwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.AlwaysAsk);
-            RemoveAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveAll);
-            RemoveConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
+            // Obsolete plan entry removal behaviour
+            alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.AlwaysAsk);
+            removeAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveAll);
+            removeConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
 
             // Skill Browser Icon Set
             if (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGroupIndex > 0)
@@ -343,11 +345,11 @@ namespace EVEMon.SettingsUI
             m_settings.UI.PlanWindow.OnlyShowSelectionSummaryOnMultiSelect = cbSummaryOnMultiSelectOnly.Checked;
             m_settings.UI.PlanWindow.UseAdvanceEntryAddition = cbAdvanceEntryAdd.Checked;
 
-            if (AlwaysAskRadioButton.Checked)
+            if (alwaysAskRadioButton.Checked)
             {
                 m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.AlwaysAsk;
             }
-            else if (RemoveAllRadioButton.Checked)
+            else if (removeAllRadioButton.Checked)
             {
                 m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour = ObsoleteEntryRemovalBehaviour.RemoveAll;
             }
@@ -433,7 +435,7 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.ShowOverviewWallet = overviewShowWalletCheckBox.Checked;
             m_settings.UI.MainWindow.ShowOverviewPortrait = overviewShowPortraitCheckBox.Checked;
             m_settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview = overviewGroupCharactersInTrainingCheckBox.Checked;
-            m_settings.UI.MainWindow.ShowOverviewSkillQueueFreeRoom = overviewShowSkillQueueFreeRoomCheckBox.Checked;
+            m_settings.UI.MainWindow.ShowOverviewSkillQueueTrainingTime = overviewShowSkillQueueTrainingTimeCheckBox.Checked;
             m_settings.UI.MainWindow.OverviewItemSize = (PortraitSizes)overviewPortraitSizeComboBox.SelectedIndex;
 
             // Tray icon window style
