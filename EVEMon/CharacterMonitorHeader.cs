@@ -118,7 +118,9 @@ namespace EVEMon
                 CharacterPortrait.Character = m_character;
                 CharacterNameLabel.Text = m_character.AdornedName;
                 BioInfoLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                    "{0} {1} {2}", m_character.Gender, m_character.Race, m_character.Bloodline);
+                    "{0} - {1} - {2} - {3}", m_character.Gender, m_character.Race, m_character.Bloodline, m_character.Ancestry);
+                BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                    "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
                     "Corporation: {0}", m_character.CorporationName);
                 
@@ -636,7 +638,7 @@ namespace EVEMon
             // Add monitor items
             foreach (var monitor in ccpCharacter.QueryMonitors)
             {
-                // Skip market orders monitor if api key is a limited one
+                // Skip full api key related monitor, if api key is a limited one
                 if (monitor.IsFullKeyNeeded && ccpCharacter.Identity.Account.KeyLevel != CredentialsLevel.Full)
                     continue;
 
@@ -722,6 +724,20 @@ namespace EVEMon
             ICharacterAttribute attribute = m_character[eveAttribute];
             string toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
             ToolTip.SetToolTip(attributeLabel, toolTip);
+        }
+
+        /// <summary>
+        /// Handles the MouseHover event of the CorporationNameLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void CorporationNameLabel_MouseHover(object sender, EventArgs e)
+        {
+            if (m_character.AllianceID == 0)
+                return;
+
+            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}", m_character.AllianceName);
+            ToolTip.SetToolTip(sender as Label, tooltipText);
         }
 
         /// <summary>

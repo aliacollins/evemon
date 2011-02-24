@@ -31,6 +31,17 @@ namespace EVEMon.Common.Serialization
             set;
         }
 
+        [XmlElement("DoB")]
+        public string BirthdayXml
+        {
+            get { return Birthday.ToCCPTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    Birthday = value.CCPTimeStringToDateTime();
+            }
+        }
+
         [XmlElement("race")]
         public string Race
         {
@@ -40,6 +51,13 @@ namespace EVEMon.Common.Serialization
 
         [XmlElement("bloodLine")]
         public string BloodLine
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("ancestry")]
+        public string Ancestry
         {
             get;
             set;
@@ -61,6 +79,20 @@ namespace EVEMon.Common.Serialization
 
         [XmlElement("corporationID")]
         public int CorporationID
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("allianceName")]
+        public string AllianceName
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("allianceID")]
+        public int AllianceID
         {
             get;
             set;
@@ -105,6 +137,16 @@ namespace EVEMon.Common.Serialization
         [XmlArray("certificates")]
         [XmlArrayItem("certificate")]
         public List<SerializableCharacterCertificate> Certificates
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The date and time the character was created.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime Birthday
         {
             get;
             set;

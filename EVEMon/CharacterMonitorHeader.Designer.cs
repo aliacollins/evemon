@@ -41,6 +41,7 @@
             this.BioFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.CharacterNameLabel = new System.Windows.Forms.Label();
             this.BioInfoLabel = new System.Windows.Forms.Label();
+            this.BirthdayLabel = new System.Windows.Forms.Label();
             this.CorporationNameLabel = new System.Windows.Forms.Label();
             this.BalanceLabel = new System.Windows.Forms.Label();
             this.SkillSummaryPanel = new System.Windows.Forms.Panel();
@@ -85,15 +86,15 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 131);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 144);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
             // 
             this.CharacterPortrait.Character = null;
             this.CharacterPortrait.CharacterID = ((long)(-1));
-            this.CharacterPortrait.Location = new System.Drawing.Point(0, 0);
-            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.CharacterPortrait.Location = new System.Drawing.Point(0, 7);
+            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 7, 3, 3);
             this.CharacterPortrait.MinimumSize = new System.Drawing.Size(128, 128);
             this.CharacterPortrait.Name = "CharacterPortrait";
             this.MainTableLayoutPanel.SetRowSpan(this.CharacterPortrait, 2);
@@ -159,12 +160,13 @@
             // UpdateLabel
             // 
             this.UpdateLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.UpdateLabel.AutoSize = true;
             this.ThrobberFlowLayoutPanel.SetFlowBreak(this.UpdateLabel, true);
             this.UpdateLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.UpdateLabel.Location = new System.Drawing.Point(0, 30);
+            this.UpdateLabel.Location = new System.Drawing.Point(11, 30);
             this.UpdateLabel.Margin = new System.Windows.Forms.Padding(0);
             this.UpdateLabel.Name = "UpdateLabel";
-            this.UpdateLabel.Size = new System.Drawing.Size(60, 13);
+            this.UpdateLabel.Size = new System.Drawing.Size(49, 13);
             this.UpdateLabel.TabIndex = 5;
             this.UpdateLabel.Text = "00:00:00";
             this.UpdateLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -176,13 +178,15 @@
             this.BioFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BioFlowLayoutPanel.Controls.Add(this.CharacterNameLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BioInfoLabel);
+            this.BioFlowLayoutPanel.Controls.Add(this.BirthdayLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.CorporationNameLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BalanceLabel);
+            this.BioFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BioFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(96, 52);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(189, 65);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
@@ -205,20 +209,31 @@
             this.BioInfoLabel.TabIndex = 5;
             this.BioInfoLabel.Text = "Bio Info";
             // 
+            // BirthdayLabel
+            // 
+            this.BirthdayLabel.AutoSize = true;
+            this.BirthdayLabel.Location = new System.Drawing.Point(0, 26);
+            this.BirthdayLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.BirthdayLabel.Name = "BirthdayLabel";
+            this.BirthdayLabel.Size = new System.Drawing.Size(45, 13);
+            this.BirthdayLabel.TabIndex = 8;
+            this.BirthdayLabel.Text = "Birthday";
+            // 
             // CorporationNameLabel
             // 
             this.CorporationNameLabel.AutoSize = true;
-            this.CorporationNameLabel.Location = new System.Drawing.Point(0, 26);
+            this.CorporationNameLabel.Location = new System.Drawing.Point(0, 39);
             this.CorporationNameLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.CorporationNameLabel.Name = "CorporationNameLabel";
             this.CorporationNameLabel.Size = new System.Drawing.Size(82, 13);
             this.CorporationNameLabel.TabIndex = 6;
             this.CorporationNameLabel.Text = "Corporation Info";
+            this.CorporationNameLabel.MouseHover += new System.EventHandler(this.CorporationNameLabel_MouseHover);
             // 
             // BalanceLabel
             // 
             this.BalanceLabel.AutoSize = true;
-            this.BalanceLabel.Location = new System.Drawing.Point(0, 39);
+            this.BalanceLabel.Location = new System.Drawing.Point(0, 52);
             this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BalanceLabel.Name = "BalanceLabel";
             this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
@@ -231,7 +246,7 @@
             this.SkillSummaryPanel.Controls.Add(this.tlpAttributes);
             this.SkillSummaryPanel.Controls.Add(this.SkillSummaryLabel);
             this.SkillSummaryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 52);
+            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 65);
             this.SkillSummaryPanel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
             this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 79);
@@ -263,13 +278,13 @@
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(92, 79);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 79);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
             // 
             this.lblMEMAttribute.AutoSize = true;
-            this.lblMEMAttribute.Location = new System.Drawing.Point(70, 57);
+            this.lblMEMAttribute.Location = new System.Drawing.Point(67, 57);
             this.lblMEMAttribute.Name = "lblMEMAttribute";
             this.lblMEMAttribute.Size = new System.Drawing.Size(19, 13);
             this.lblMEMAttribute.TabIndex = 9;
@@ -279,7 +294,7 @@
             // lblWILAttribute
             // 
             this.lblWILAttribute.AutoSize = true;
-            this.lblWILAttribute.Location = new System.Drawing.Point(70, 44);
+            this.lblWILAttribute.Location = new System.Drawing.Point(67, 44);
             this.lblWILAttribute.Name = "lblWILAttribute";
             this.lblWILAttribute.Size = new System.Drawing.Size(19, 13);
             this.lblWILAttribute.TabIndex = 8;
@@ -289,7 +304,7 @@
             // lblCHAAttribute
             // 
             this.lblCHAAttribute.AutoSize = true;
-            this.lblCHAAttribute.Location = new System.Drawing.Point(70, 31);
+            this.lblCHAAttribute.Location = new System.Drawing.Point(67, 31);
             this.lblCHAAttribute.Name = "lblCHAAttribute";
             this.lblCHAAttribute.Size = new System.Drawing.Size(19, 13);
             this.lblCHAAttribute.TabIndex = 7;
@@ -299,7 +314,7 @@
             // lblPERAttribute
             // 
             this.lblPERAttribute.AutoSize = true;
-            this.lblPERAttribute.Location = new System.Drawing.Point(70, 18);
+            this.lblPERAttribute.Location = new System.Drawing.Point(67, 18);
             this.lblPERAttribute.Name = "lblPERAttribute";
             this.lblPERAttribute.Size = new System.Drawing.Size(19, 13);
             this.lblPERAttribute.TabIndex = 6;
@@ -312,9 +327,9 @@
             this.AttributeCharismaLabel.Location = new System.Drawing.Point(0, 31);
             this.AttributeCharismaLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeCharismaLabel.Name = "AttributeCharismaLabel";
-            this.AttributeCharismaLabel.Size = new System.Drawing.Size(56, 13);
+            this.AttributeCharismaLabel.Size = new System.Drawing.Size(53, 13);
             this.AttributeCharismaLabel.TabIndex = 2;
-            this.AttributeCharismaLabel.Text = "Charisma :";
+            this.AttributeCharismaLabel.Text = "Charisma:";
             // 
             // AttributePerceptionLabel
             // 
@@ -322,9 +337,9 @@
             this.AttributePerceptionLabel.Location = new System.Drawing.Point(0, 18);
             this.AttributePerceptionLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AttributePerceptionLabel.Name = "AttributePerceptionLabel";
-            this.AttributePerceptionLabel.Size = new System.Drawing.Size(64, 13);
+            this.AttributePerceptionLabel.Size = new System.Drawing.Size(61, 13);
             this.AttributePerceptionLabel.TabIndex = 1;
-            this.AttributePerceptionLabel.Text = "Perception :";
+            this.AttributePerceptionLabel.Text = "Perception:";
             // 
             // AttributeIntelligenceLabel
             // 
@@ -332,9 +347,9 @@
             this.AttributeIntelligenceLabel.Location = new System.Drawing.Point(0, 5);
             this.AttributeIntelligenceLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeIntelligenceLabel.Name = "AttributeIntelligenceLabel";
-            this.AttributeIntelligenceLabel.Size = new System.Drawing.Size(67, 13);
+            this.AttributeIntelligenceLabel.Size = new System.Drawing.Size(64, 13);
             this.AttributeIntelligenceLabel.TabIndex = 0;
-            this.AttributeIntelligenceLabel.Text = "Intelligence :";
+            this.AttributeIntelligenceLabel.Text = "Intelligence:";
             // 
             // AttributeMemoryLabel
             // 
@@ -342,9 +357,9 @@
             this.AttributeMemoryLabel.Location = new System.Drawing.Point(0, 57);
             this.AttributeMemoryLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeMemoryLabel.Name = "AttributeMemoryLabel";
-            this.AttributeMemoryLabel.Size = new System.Drawing.Size(50, 13);
+            this.AttributeMemoryLabel.Size = new System.Drawing.Size(47, 13);
             this.AttributeMemoryLabel.TabIndex = 4;
-            this.AttributeMemoryLabel.Text = "Memory :";
+            this.AttributeMemoryLabel.Text = "Memory:";
             // 
             // AttributeWillpowerLabel
             // 
@@ -352,14 +367,14 @@
             this.AttributeWillpowerLabel.Location = new System.Drawing.Point(0, 44);
             this.AttributeWillpowerLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeWillpowerLabel.Name = "AttributeWillpowerLabel";
-            this.AttributeWillpowerLabel.Size = new System.Drawing.Size(59, 13);
+            this.AttributeWillpowerLabel.Size = new System.Drawing.Size(56, 13);
             this.AttributeWillpowerLabel.TabIndex = 3;
-            this.AttributeWillpowerLabel.Text = "Willpower :";
+            this.AttributeWillpowerLabel.Text = "Willpower:";
             // 
             // lblINTAttribute
             // 
             this.lblINTAttribute.AutoSize = true;
-            this.lblINTAttribute.Location = new System.Drawing.Point(70, 5);
+            this.lblINTAttribute.Location = new System.Drawing.Point(67, 5);
             this.lblINTAttribute.Name = "lblINTAttribute";
             this.lblINTAttribute.Size = new System.Drawing.Size(19, 13);
             this.lblINTAttribute.TabIndex = 5;
@@ -368,13 +383,14 @@
             // 
             // SkillSummaryLabel
             // 
+            this.SkillSummaryLabel.AutoSize = true;
             this.SkillSummaryLabel.BackColor = System.Drawing.Color.Transparent;
             this.SkillSummaryLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.SkillSummaryLabel.Location = new System.Drawing.Point(144, 0);
+            this.SkillSummaryLabel.Location = new System.Drawing.Point(192, 0);
             this.SkillSummaryLabel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryLabel.Name = "SkillSummaryLabel";
             this.SkillSummaryLabel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.SkillSummaryLabel.Size = new System.Drawing.Size(154, 79);
+            this.SkillSummaryLabel.Size = new System.Drawing.Size(106, 70);
             this.SkillSummaryLabel.TabIndex = 1;
             this.SkillSummaryLabel.Text = "0 Known Skills\r\n0 Skills at Level V\r\n0 Total SP\r\n0 Clone Limit\r\nClone Grade Nothi" +
                 "ng";
@@ -394,11 +410,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(429, 133);
+            this.Size = new System.Drawing.Size(429, 144);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
             this.ThrobberFlowLayoutPanel.ResumeLayout(false);
+            this.ThrobberFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateThrobber)).EndInit();
             this.ThrobberContextMenu.ResumeLayout(false);
             this.BioFlowLayoutPanel.ResumeLayout(false);
@@ -442,5 +459,6 @@
         private System.Windows.Forms.Label lblCHAAttribute;
         private System.Windows.Forms.Label lblPERAttribute;
         private System.Windows.Forms.Label lblINTAttribute;
+        private System.Windows.Forms.Label BirthdayLabel;
     }
 }

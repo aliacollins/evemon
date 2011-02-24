@@ -540,9 +540,12 @@ namespace EVEMon
             // "Update Calendar" button
             btnAddToCalendar.Visible = Settings.Calendar.Enabled;
 
-            // Skill queue time
             var ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter != null && ccpCharacter.SkillQueue.Count == 1)
+            if (ccpCharacter == null)
+                return;
+
+            // Skill queue time
+            if (ccpCharacter.SkillQueue.Count == 1)
                 skillQueueTimePanel.Visible = ccpCharacter.IsTraining && Settings.UI.MainWindow.AlwaysShowSkillQueueTime;
         }
 

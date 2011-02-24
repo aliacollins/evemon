@@ -613,7 +613,7 @@ namespace EVEMon.Common
         /// <param name="jobsCompleted"></param>
         internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
-            Trace("EveClient.OnCharacterIndustryJobsCompleted - " + character.Name);
+            Trace("EveClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
             if (CharacterIndustryJobsCompleted != null)
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }

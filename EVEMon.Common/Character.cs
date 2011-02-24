@@ -36,11 +36,15 @@ namespace EVEMon.Common
         // Attributes
         protected decimal m_balance;
         protected string m_name;
+        protected DateTime m_birthday;
         protected string m_race;
         protected string m_bloodLine;
+        protected string m_ancestry;
         protected string m_gender;
         protected string m_corporationName;
         protected int m_corporationID;
+        protected string m_allianceName;
+        protected int m_allianceID;
         protected string m_cloneName;
         protected int m_cloneSkillPoints;
         protected bool m_isUpdatingPortrait;
@@ -171,6 +175,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the character's birthday.
+        /// </summary>
+        public DateTime Birthday
+        {
+            get { return m_birthday; }
+        }
+
+        /// <summary>
         /// Gets the character's race
         /// </summary>
         public string Race
@@ -184,6 +196,14 @@ namespace EVEMon.Common
         public string Bloodline
         {
             get { return m_bloodLine; }
+        }
+
+        /// <summary>
+        /// Gets the character's ancestry.
+        /// </summary>
+        public string Ancestry
+        {
+            get { return m_ancestry; }
         }
 
         /// <summary>
@@ -208,6 +228,22 @@ namespace EVEMon.Common
         public int CorporationID
         {
             get { return m_corporationID; }
+        }
+
+        /// <summary>
+        /// Gets the name of the character's alliance
+        /// </summary>
+        public string AllianceName
+        {
+            get { return m_allianceName; }
+        }
+
+        /// <summary>
+        /// Gets the id of the character's alliance
+        /// </summary>
+        public int AllianceID
+        {
+            get { return m_allianceID; }
         }
 
         /// <summary>
@@ -462,35 +498,39 @@ namespace EVEMon.Common
             serial.Guid = m_guid;
             serial.ID = m_identity.CharacterID;
             serial.Name = m_name;
+            serial.Birthday = m_birthday;
             serial.Race = m_race;
+            serial.Ancestry = m_ancestry;
             serial.Gender = m_gender;
             serial.BloodLine = m_bloodLine;
             serial.CorporationName = m_corporationName;
             serial.CorporationID = m_corporationID;
+            serial.AllianceName = m_allianceName;
+            serial.AllianceID = m_allianceID;
             serial.CloneSkillPoints = m_cloneSkillPoints;
             serial.CloneName = m_cloneName;
             serial.Balance = m_balance;
 
             // Attributes
-            serial.Attributes.Intelligence = this.Intelligence.Base;
-            serial.Attributes.Perception = this.Perception.Base;
-            serial.Attributes.Willpower = this.Willpower.Base;
-            serial.Attributes.Charisma = this.Charisma.Base;
-            serial.Attributes.Memory = this.Memory.Base;
+            serial.Attributes.Intelligence = Intelligence.Base;
+            serial.Attributes.Perception = Perception.Base;
+            serial.Attributes.Willpower = Willpower.Base;
+            serial.Attributes.Charisma = Charisma.Base;
+            serial.Attributes.Memory = Memory.Base;
 
             // Implants sets
-            serial.ImplantSets = this.ImplantSets.Export();
+            serial.ImplantSets = ImplantSets.Export();
 
             // Certificates
             serial.Certificates = new List<SerializableCharacterCertificate>();
-            foreach(var cert in this.Certificates.Where(x => x.IsGranted))
+            foreach(var cert in Certificates.Where(x => x.IsGranted))
             {
                 serial.Certificates.Add(new SerializableCharacterCertificate{ CertificateID = cert.ID });
             }
 
             // Skills
             serial.Skills = new List<SerializableCharacterSkill>();
-            foreach(var skill in this.Skills.Where(x => x.IsKnown || x.IsOwned))
+            foreach(var skill in Skills.Where(x => x.IsKnown || x.IsOwned))
             {
                 serial.Skills.Add(skill.Export());
             }
@@ -543,12 +583,16 @@ namespace EVEMon.Common
 
             // Bio
             m_name = serial.Name;
+            m_birthday = serial.Birthday;
             m_race = serial.Race;
+            m_ancestry = serial.Ancestry;
             m_gender = serial.Gender;
             m_balance = serial.Balance;
             m_bloodLine = serial.BloodLine;
             m_corporationName = serial.CorporationName;
             m_corporationID = serial.CorporationID;
+            m_allianceName = serial.AllianceName;
+            m_allianceID = serial.AllianceID;
             m_cloneName = serial.CloneName;
             m_cloneSkillPoints = serial.CloneSkillPoints;
 
