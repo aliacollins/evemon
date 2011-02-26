@@ -2,9 +2,9 @@
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableCharacter : SerializableCharacterSheetBase
+    public sealed class SerializableAPICharacterSheet : SerializableCharacterSheetBase
     {
-        public SerializableCharacter()
+        public SerializableAPICharacterSheet()
         {
             Implants = new SerializableImplantSet();
         }

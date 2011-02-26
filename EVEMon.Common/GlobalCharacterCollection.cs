@@ -97,7 +97,7 @@ namespace EVEMon.Common
                 switch (format.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
-                        var apiResult = Util.DeserializeAPIResult<SerializableCharacter>(uri.ToString(), APIProvider.RowsetsTransform);
+                        var apiResult = Util.DeserializeAPIResult<SerializableAPICharacterSheet>(uri.ToString(), APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
@@ -131,7 +131,7 @@ namespace EVEMon.Common
             // So, it's a web address, let's do it in an async way.
             else
             {
-                Util.DownloadAPIResultAsync<SerializableCharacter>(uri.ToString(), null, APIProvider.RowsetsTransform, 
+                Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri.ToString(), null, APIProvider.RowsetsTransform, 
                     (result) => callback(null, new UriCharacterEventArgs(uri, result)));
             }
         }

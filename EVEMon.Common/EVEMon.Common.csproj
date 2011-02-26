@@ -430,7 +430,7 @@
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
     <Compile Include="Serialization\Battleclinic\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
-    <Compile Include="Serialization\API\SerializableCharacter.cs" />
+    <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
     <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\API\SerializableImplantSet.cs" />

@@ -528,7 +528,7 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        internal void Import(APIResult<SerializableCharacter> serial)
+        internal void Import(APIResult<SerializableAPICharacterSheet> serial)
         {
             if (serial.HasError)
                 return;
@@ -553,7 +553,7 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        protected void Import(SerializableCharacter serial)
+        protected void Import(SerializableAPICharacterSheet serial)
         {
             Import((SerializableCharacterSheetBase)serial);
 
@@ -567,7 +567,7 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         protected void Import(SerializableCharacterSheetBase serial)
         {
-            bool fromCCP = (serial is SerializableCharacter);
+            bool fromCCP = (serial is SerializableAPICharacterSheet);
 
             // Bio
             m_name = serial.Name;

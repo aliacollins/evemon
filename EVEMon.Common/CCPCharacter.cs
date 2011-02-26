@@ -15,7 +15,7 @@ namespace EVEMon.Common
     {
         private readonly SkillQueue m_queue;
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
-        private readonly CharacterQueryMonitor<SerializableCharacter> m_charSheetMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearchList> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
@@ -55,7 +55,7 @@ namespace EVEMon.Common
             m_monitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
-            m_charSheetMonitor = new CharacterQueryMonitor<SerializableCharacter>(this, APIMethods.CharacterSheet);
+            m_charSheetMonitor = new CharacterQueryMonitor<SerializableAPICharacterSheet>(this, APIMethods.CharacterSheet);
             m_charSheetMonitor.Updated += OnCharacterSheetUpdated;
             m_monitors.Add(m_charSheetMonitor);
 
@@ -308,7 +308,7 @@ namespace EVEMon.Common
         /// Processed the queried skill queue information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharacterSheetUpdated(APIResult<SerializableCharacter> result)
+        private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacterSheet> result)
         {
             // Notify an error occurred
             if (ShouldNotifyError(result, APIMethods.CharacterSheet))

@@ -214,7 +214,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableCharacter> result)
+        internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacterSheet> result)
         {
             var notification = new APIErrorNotification(character, result)
             {

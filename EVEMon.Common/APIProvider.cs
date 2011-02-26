@@ -259,7 +259,7 @@ namespace EVEMon.Common
             // If the result is a character sheet, we store the result
             if (method == APIMethods.CharacterSheet && !result.HasError)
             {
-                SerializableCharacter sheet = (SerializableCharacter)(Object)result.Result;
+                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
                 LocalXmlCache.Save(sheet.Name, result.XmlDocument);
             }
 
@@ -296,7 +296,7 @@ namespace EVEMon.Common
                 // If the result is a character sheet, we store the result
                 if (method == APIMethods.CharacterSheet && !result.HasError)
                 {
-                    SerializableCharacter sheet = (SerializableCharacter)(Object)result.Result;
+                    SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
                     LocalXmlCache.Save(sheet.Name, result.XmlDocument);
                 }
 

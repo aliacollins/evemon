@@ -11,7 +11,7 @@ namespace EVEMon.Common
     public sealed class UriCharacterEventArgs : EventArgs
     {
         private Uri m_uri;
-        private APIResult<SerializableCharacter> m_apiResult;
+        private APIResult<SerializableAPICharacterSheet> m_apiResult;
         private SerializableCharacterSheetBase m_result;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">API Result</param>
-        public UriCharacterEventArgs(Uri uri, APIResult<SerializableCharacter> result)
+        public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacterSheet> result)
         {
             m_uri = uri;
             m_apiResult = result;
