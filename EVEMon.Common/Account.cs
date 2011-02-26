@@ -19,7 +19,7 @@ namespace EVEMon.Common
         private readonly AccountQueryMonitor<SerializableAPICharacters> m_charactersListMonitor;
         private readonly AccountIgnoreList m_ignoreList;
 
-        private readonly Dictionary<String, SkillQueueResponse> m_skillQueueCache =
+        private readonly Dictionary<String, SkillQueueResponse> m_skillInTrainingCache =
             new Dictionary<String, SkillQueueResponse>();
 
         private readonly long m_userId;
@@ -27,6 +27,7 @@ namespace EVEMon.Common
         private bool m_firstCheck = true;
         private CredentialsLevel m_keyLevel;
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
+        private bool m_updatePending;
 
         #region Constructors
 
@@ -169,7 +170,11 @@ namespace EVEMon.Common
         /// </summary>
         internal void CharacterInTraining()
         {
-            m_skillQueueCache.Clear();
+            if (m_updatePending)
+                return;
+
+            m_updatePending = true;
+            m_skillInTrainingCache.Clear();
 
             EveClient.Trace("Account.CharacterInTraining - {0}", this);
 
@@ -177,8 +182,8 @@ namespace EVEMon.Common
             {
                 string identity = id.Name;
 
-                if (!m_skillQueueCache.ContainsKey(identity))
-                    m_skillQueueCache.Add(identity, new SkillQueueResponse());
+                if (!m_skillInTrainingCache.ContainsKey(identity))
+                    m_skillInTrainingCache.Add(identity, new SkillQueueResponse());
 
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
                     APIMethods.CharacterSkillInTraining,
@@ -287,19 +292,19 @@ namespace EVEMon.Common
             if (result.HasError)
             {
                 EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : Error Response", this, character);
-                m_skillQueueCache[character].State = ResponseState.InError;
+                m_skillInTrainingCache[character].State = ResponseState.InError;
                 return;
             }
 
-            m_skillQueueCache[character].State = result.Result.SkillInTraining == 1
+            m_skillInTrainingCache[character].State = result.Result.SkillInTraining == 1
                                                      ? ResponseState.Training
                                                      : ResponseState.NotTraining;
 
             EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : {2} ({3}\\{4})",
                             this,
                             character,
-                            m_skillQueueCache[character].State,
-                            m_skillQueueCache.Count(x => x.Value.State != ResponseState.Unknown),
+                            m_skillInTrainingCache[character].State,
+                            m_skillInTrainingCache.Count(x => x.Value.State != ResponseState.Unknown),
                             CharacterIdentities.Count());
 
 
@@ -307,19 +312,22 @@ namespace EVEMon.Common
             // and characters have been removed from the account since they were queried
             // remove those characters from the cache.
             IEnumerable<KeyValuePair<string, SkillQueueResponse>> toRemove =
-                m_skillQueueCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
+                m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
 
             foreach (var charToRemove in toRemove)
             {
-                m_skillQueueCache.Remove(charToRemove.Key);
+                m_skillInTrainingCache.Remove(charToRemove.Key);
             }
 
             // if we did not get response from any characters yet we are not sure
             // so wait until next time.
-            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Unknown))
+            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown))
                 return;
 
             OnAllCharactersSkillTrainingUpdated();
+
+            // Reset update pending flag
+            m_updatePending = false;
         }
 
         /// <summary>
@@ -338,13 +346,6 @@ namespace EVEMon.Common
             // Invalidates the notification and update
             EveClient.Notifications.InvalidateAccountError(this);
             Import(result);
-
-            // On startup check for character in training on this account
-            if (m_firstCheck)
-            {
-                CharacterInTraining();
-                m_firstCheck = false;
-            }
         }
 
         /// <summary>
@@ -377,23 +378,23 @@ namespace EVEMon.Common
         /// </summary>
         private void OnAllCharactersSkillTrainingUpdated()
         {
-            foreach (string key in m_skillQueueCache.Keys)
+            foreach (string key in m_skillInTrainingCache.Keys)
                 EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0}\\{1} = {2} ({3})",
                                 this,
                                 key,
-                                m_skillQueueCache[key].State,
-                                m_skillQueueCache[key].Timestamp);
+                                m_skillInTrainingCache[key].State,
+                                m_skillInTrainingCache[key].Timestamp);
 
 
             // one of the remaining characters was training; account is training.
-            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.Training))
+            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Training))
             {
                 EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.", this);
                 EveClient.Notifications.InvalidateAccountNotInTraining(this);
                 return;
             }
 
-            if (m_skillQueueCache.Any(x => x.Value.State == ResponseState.InError))
+            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.InError))
             {
                 EveClient.Trace(
                     "Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.",
