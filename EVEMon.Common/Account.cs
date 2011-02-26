@@ -19,12 +19,11 @@ namespace EVEMon.Common
         private readonly AccountQueryMonitor<SerializableAPICharacters> m_charactersListMonitor;
         private readonly AccountIgnoreList m_ignoreList;
 
-        private readonly Dictionary<String, SkillQueueResponse> m_skillInTrainingCache =
-            new Dictionary<String, SkillQueueResponse>();
+        private readonly Dictionary<String, SkillInTrainingResponse> m_skillInTrainingCache =
+            new Dictionary<String, SkillInTrainingResponse>();
 
         private readonly long m_userId;
         private string m_apiKey;
-        private bool m_firstCheck = true;
         private CredentialsLevel m_keyLevel;
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
         private bool m_updatePending;
@@ -176,14 +175,16 @@ namespace EVEMon.Common
             m_updatePending = true;
             m_skillInTrainingCache.Clear();
 
-            EveClient.Trace("Account.CharacterInTraining - {0}", this);
+            // Quits if no network
+            if (!NetworkMonitor.IsNetworkAvailable)
+                return;
 
             foreach (CharacterIdentity id in CharacterIdentities)
             {
                 string identity = id.Name;
 
                 if (!m_skillInTrainingCache.ContainsKey(identity))
-                    m_skillInTrainingCache.Add(identity, new SkillQueueResponse());
+                    m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
                 EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
                     APIMethods.CharacterSkillInTraining,
@@ -191,8 +192,6 @@ namespace EVEMon.Common
                     m_apiKey,
                     id.CharacterID,
                     x => OnSkillInTrainingUpdated(x, identity));
-
-                EveClient.Trace("Account.CharacterInTraining - Querying {0}", identity);
             }
         }
 
@@ -280,38 +279,36 @@ namespace EVEMon.Common
         #endregion
 
         #region Response To Events
-
         /// <summary>
         /// Called when character's skill in training gets updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="character">The character.</param>
-        private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string character)
+        /// <param name="character">The character's name.</param>
+        private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
         {
+            CCPCharacter ccpCharacter = EveClient.Characters.FirstOrDefault(x => x.Name == characterName) as CCPCharacter;
+
             // Return on error
             if (result.HasError)
             {
-                EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : Error Response", this, character);
-                m_skillInTrainingCache[character].State = ResponseState.InError;
+                if (ccpCharacter != null)
+                    EveClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
+
+                m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
 
-            m_skillInTrainingCache[character].State = result.Result.SkillInTraining == 1
+            if (ccpCharacter != null)
+                EveClient.Notifications.InvalidateCharacterAPIError(ccpCharacter);
+
+            m_skillInTrainingCache[characterName].State = result.Result.SkillInTraining == 1
                                                      ? ResponseState.Training
                                                      : ResponseState.NotTraining;
 
-            EveClient.Trace("Account.OnSkillInTrainingUpdated - {0}\\{1} : {2} ({3}\\{4})",
-                            this,
-                            character,
-                            m_skillInTrainingCache[character].State,
-                            m_skillInTrainingCache.Count(x => x.Value.State != ResponseState.Unknown),
-                            CharacterIdentities.Count());
-
-
-            // in the event this becomes a very long running process because of latency
+            // In the event this becomes a very long running process because of latency
             // and characters have been removed from the account since they were queried
             // remove those characters from the cache.
-            IEnumerable<KeyValuePair<string, SkillQueueResponse>> toRemove =
+            IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
                 m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
 
             foreach (var charToRemove in toRemove)
@@ -319,12 +316,19 @@ namespace EVEMon.Common
                 m_skillInTrainingCache.Remove(charToRemove.Key);
             }
 
-            // if we did not get response from any characters yet we are not sure
-            // so wait until next time.
-            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown))
+            // If we did not get response from a character in account yet
+            // or there was an error in any responce,
+            // we are not sure so wait until next time.
+            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown
+                                             || x.Value.State == ResponseState.InError))
                 return;
 
-            OnAllCharactersSkillTrainingUpdated();
+            // We have successful responces from all characters in account,
+            // so we notify the user and fire the event
+            NotifyAccountNotInTraining();
+
+            // Fires the event regarding the account characters skill in training update
+            EveClient.OnAccountCharactersSkillInTrainingUpdated(this);
 
             // Reset update pending flag
             m_updatePending = false;
@@ -438,6 +442,22 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Notifies if an account is not in training.
+        /// </summary>
+        private void NotifyAccountNotInTraining()
+        {
+            // One of the remaining characters was training; account is training.
+            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Training))
+            {
+                EveClient.Notifications.InvalidateAccountNotInTraining(this);
+                return;
+            }
+
+            // No training characters found up until
+            EveClient.Notifications.NotifyAccountNotInTraining(this);
+        }
+
         #endregion
 
         #region Public Methods
@@ -535,11 +555,11 @@ namespace EVEMon.Common
 
         #region Nested type: SkillQueueResponse
 
-        private class SkillQueueResponse
+        private class SkillInTrainingResponse
         {
             private ResponseState m_state;
 
-            public SkillQueueResponse()
+            public SkillInTrainingResponse()
             {
                 State = ResponseState.Unknown;
                 Timestamp = DateTime.MinValue;

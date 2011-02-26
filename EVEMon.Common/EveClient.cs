@@ -415,6 +415,11 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
+        /// Occurs when a character training check on an account have been updated.
+        /// </summary>
+        public static event EventHandler AccountCharactersSkillInTrainingUpdated;
+
+        /// <summary>
         /// Occurs when the conquerable station list has been updated.
         /// </summary>
         public static event EventHandler ConquerableStationListUpdated;
@@ -710,6 +715,18 @@ namespace EVEMon.Common
             Trace("EveClient.OnServerStatusUpdated");
             if (ServerStatusUpdated != null)
                 ServerStatusUpdated(null, new EveServerEventArgs(server, previousStatus, status));
+        }
+
+        /// <summary>
+        /// Called when all account characters 'skill in training' check has been updated.
+        /// </summary>
+        /// <param name="account">The account.</param>
+        /// <param name="character">The character.</param>
+        internal static void OnAccountCharactersSkillInTrainingUpdated(Account account)
+        {
+            Trace("EveClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
+            if (AccountCharactersSkillInTrainingUpdated != null)
+                AccountCharactersSkillInTrainingUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>

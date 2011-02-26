@@ -184,7 +184,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies an account's characters list querying error.
+        /// Notifies an API key level querying error.
         /// </summary>
         /// <param name="account"></param>
         /// <param name="result"></param>
@@ -208,6 +208,22 @@ namespace EVEMon.Common
         internal void InvalidateCharacterAPIError(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.QueryingError));
+        }
+
+        /// <summary>
+        /// Notifies a character skill in training querying error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifySkillInTrainingError(CCPCharacter character, APIResult<SerializableAPISkillInTraining> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occurred while querying the skill in training.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
         }
 
         /// <summary>
