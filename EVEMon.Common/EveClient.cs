@@ -145,10 +145,15 @@ namespace EVEMon.Common
                     }
                     catch (UnauthorizedAccessException exc)
                     {
-                        string msg = "An error occurred while EVEMon was looking for its data directory. You may have insufficient rights or a synchronization may be taking place.";
-                        msg += "\r\n\r\nThe message was :\r\n" + exc.Message;
+                        string msg = String.Format("An error occurred while EVEMon was looking for its data directory. " +
+                        "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}", 
+                            Environment.NewLine, exc.Message);
 
-                        var result = MessageBox.Show(msg, "Couldn't read the data directory", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                        var result = MessageBox.Show(
+                            msg,
+                            "Couldn't read the data directory",
+                            MessageBoxButtons.RetryCancel,
+                            MessageBoxIcon.Error);
 
                         if (result == DialogResult.Cancel)
                         {
@@ -410,6 +415,11 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
+        /// Occurs when the conquerable station list has been updated.
+        /// </summary>
+        public static event EventHandler ConquerableStationListUpdated;
+
+        /// <summary>
         /// Occurs when one or many queued skills have been completed.
         /// </summary>
         public static event EventHandler<QueuedSkillsEventArgs> QueuedSkillsCompleted;
@@ -533,6 +543,16 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterCollectionChanged != null)
                 CharacterCollectionChanged(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the conquerable station list has been updated.
+        /// </summary>
+        internal static void OnConquerableStationListUpdated()
+        {
+            Trace("EveClient.OnAccountStatusUpdated");
+            if (ConquerableStationListUpdated != null)
+                ConquerableStationListUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace EVEMon.Common
             // Exit on market orders "Never" update setting
             if (updatePeriods.Count != 0 && updatePeriods[APIMethods.MarketOrders] == UpdatePeriod.Never)
                 return;
-            
+
             // Set the update time and period
             DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
@@ -69,7 +69,6 @@ namespace EVEMon.Common
             if (!fileUpToDate)
             {
                 // Update the file
-                EveClient.Trace("ConquerableStationList.Update - begin");
                 var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
                 OnUpdated(result);
             }
@@ -87,12 +86,13 @@ namespace EVEMon.Common
                 return;
             }
 
+            EveClient.Notifications.InvalidateAPIError();
+
             // Deserialize the list
             Import(result.Result.Outposts);
-            EveClient.Notifications.InvalidateConquerableStationListError();
 
-            // Notify about update
-            EveClient.Trace("ConquerableStationList.Update - done");
+            // Notify the subscribers
+            EveClient.OnConquerableStationListUpdated();
         }
         #endregion
 

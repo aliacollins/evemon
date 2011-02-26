@@ -109,7 +109,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an API server querying error for ConquerableStationList.
         /// </summary>
-        internal void InvalidateConquerableStationListError()
+        internal void InvalidateAPIError()
         {
             Invalidate(new NotificationInvalidationEventArgs(null, NotificationCategory.QueryingError));
         }
@@ -123,7 +123,8 @@ namespace EVEMon.Common
         {
             var notification = new APIErrorNotification(null, result)
             {
-                Description = "An error occurred while querying the API server.", Behaviour = NotificationBehaviour.Overwrite,
+                Description = "An error occurred while querying the conquerable station list.",
+                Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
             Notify(notification);
