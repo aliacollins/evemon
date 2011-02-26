@@ -92,18 +92,12 @@ namespace EVEMon.Common
             Dispatcher.BackgroundInvoke(() =>
                 {
                     var charListResult = EveClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
+
+                    // Call account/AccountStatus.xml to check whether it is a full api key
                     var accountStatusResult = EveClient.APIProviders.CurrentProvider.QueryAccountStatus(userID, apiKey);
 
-                    // Call char/AccountBalance.xml to check whether it is a full api key
-                    APIResult<SerializableAPIAccountBalance> balanceResult = null;
-                    if (!charListResult.HasError && charListResult.Result.Characters.Count != 0)
-                    {
-                        var characterID = charListResult.Result.Characters[0].ID;
-                        balanceResult = EveClient.APIProviders.CurrentProvider.QueryCharacterAccountBalance(userID, apiKey, characterID);
-                    }
-
                     // Invokes the callback on the UI thread
-                    Dispatcher.Invoke(() => callback(null, new AccountCreationEventArgs(userID, apiKey, charListResult, accountStatusResult, balanceResult)));
+                    Dispatcher.Invoke(() => callback(null, new AccountCreationEventArgs(userID, apiKey, accountStatusResult, charListResult)));
                 });
         }
 

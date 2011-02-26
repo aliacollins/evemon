@@ -240,15 +240,9 @@ namespace EVEMon.Common
                 if (!NetworkMonitor.IsNetworkAvailable)
                     return;
 
-                // Use the first character ID
-                CharacterIdentity characterID = CharacterIdentities.FirstOrDefault();
-                if (characterID == null)
-                    return;
-
-                // Query the wallet balance
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountBalance>(
-                    APIMethods.CharacterAccountBalance, m_userId, m_apiKey, characterID.CharacterID,
-                    OnKeyLevelUpdated);
+                // Query the account status
+                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountStatus>(
+                    APIMethods.AccountStatus, m_userId, m_apiKey, OnKeyLevelUpdated);
             }
         }
 
@@ -256,7 +250,7 @@ namespace EVEMon.Common
         /// Gets the credential level from the given result.
         /// </summary>
         /// <param name="result"></param>
-        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAPIAccountBalance> result)
+        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAPIAccountStatus> result)
         {
             // No error ? Then it is a full key
             if (!result.HasError)
@@ -336,7 +330,7 @@ namespace EVEMon.Common
         /// Update when we can update the key level.
         /// </summary>
         /// <param name="result"></param>
-        private void OnKeyLevelUpdated(APIResult<SerializableAPIAccountBalance> result)
+        private void OnKeyLevelUpdated(APIResult<SerializableAPIAccountStatus> result)
         {
             m_lastKeyLevelUpdate = DateTime.UtcNow;
             m_keyLevel = GetCredentialsLevel(result);

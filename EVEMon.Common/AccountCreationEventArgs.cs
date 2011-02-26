@@ -25,39 +25,30 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="serialCharacterList"></param>
         /// <param name="serialBalanceList"></param>
-        internal AccountCreationEventArgs(long userID, string apiKey,
-            APIResult<SerializableAPICharacters> serialCharacterList,
+        internal AccountCreationEventArgs(long userID, string apiKey, 
             APIResult<SerializableAPIAccountStatus> serialAccountStatus,
-            APIResult<SerializableAPIAccountBalance> serialBalanceList)
+            APIResult<SerializableAPICharacters> serialCharacterList)
         {
             m_userID = userID;
             m_apiKey = apiKey;
-            m_serialCharacterList = serialCharacterList;
             m_serialAccountStatus = serialAccountStatus;
+            m_serialCharacterList = serialCharacterList;
             m_keyLevel = CredentialsLevel.Unknown;
             m_fullKeyError = String.Empty;
 
-            // Didn't test whether the ley was full because the character list was not retrieved.
-            if (serialBalanceList == null)
-            {
-                m_fullKeyError = serialCharacterList.ErrorMessage;
-            }
-            // No error ? Determine the key level
-            else
-            {
-                m_keyLevel = Account.GetCredentialsLevel(serialBalanceList);
+            //Determine the API key level
+            m_keyLevel = Account.GetCredentialsLevel(serialAccountStatus);
 
-                // On error, retrieve the error message.
-                if (m_keyLevel == CredentialsLevel.Unknown)
-                    m_fullKeyError = serialBalanceList.ErrorMessage;
-            }
+            // On error, retrieve the error message
+            if (m_keyLevel == CredentialsLevel.Unknown)
+                m_fullKeyError = serialAccountStatus.ErrorMessage;
 
             // Retrieves the characters list
             if (m_serialCharacterList.HasError) return;
 
             foreach (var serialID in m_serialCharacterList.Result.Characters)
             {
-                // Look for an existing char ID and update its name.
+                // Look for an existing char ID and update its name
                 var id = EveClient.CharacterIdentities[serialID.ID];
                 if (id != null)
                 {

@@ -207,7 +207,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="account"></param>
         /// <param name="result"></param>
-        internal void NotifyKeyLevelError(Account account, APIResult<SerializableAPIAccountBalance> result)
+        internal void NotifyKeyLevelError(Account account, APIResult<SerializableAPIAccountStatus> result)
         {
             var notification = new APIErrorNotification(account, result)
             {
