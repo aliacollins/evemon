@@ -105,9 +105,10 @@ namespace EVEMon.Common
             return foundAny;
         }
 
+
         #region API Server error
         /// <summary>
-        /// Invalidates the notification for an API server querying error for ConquerableStationList.
+        /// Invalidates the notification for an API server querying error.
         /// </summary>
         internal void InvalidateAPIError()
         {
@@ -115,7 +116,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies an API server querying error for ConquerableStationList.
+        /// Notifies a conquerable station list querying error.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
@@ -132,7 +133,7 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Server status error
+        #region Server status API error
         /// <summary>
         /// Invalidates the notification for a server status querying error.
         /// </summary>
@@ -151,7 +152,8 @@ namespace EVEMon.Common
             var notification = new APIErrorNotification(null, result)
             {
                 Description = "An error occurred while querying the server status.",
-                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
             };
             Notify(notification);
         }
@@ -178,10 +180,27 @@ namespace EVEMon.Common
             var notification = new APIErrorNotification(account, result)
             {
                 Description = String.Format("An error occurred while querying the character list for account {0}.", account),
-                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
             };
             Notify(notification);
         }
+
+        /// <summary>
+        /// Notifies an account's status querying error.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="result"></param>
+        internal void NotifyAccountStatusError(Account account, APIResult<SerializableAPIAccountStatus> result)
+        {
+            var notification = new APIErrorNotification(account, result)
+            {
+                Description = String.Format("An error occurred while querying the account status for account {0}.", account),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+       }
 
         /// <summary>
         /// Notifies an API key level querying error.
@@ -236,7 +255,8 @@ namespace EVEMon.Common
             var notification = new APIErrorNotification(character, result)
             {
                 Description = "An error occurred while querying the character sheet.",
-                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Error
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
             };
             Notify(notification);
         }
@@ -328,12 +348,42 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearchList> result)
         {
-            var notification = new APIErrorNotification(character, result);
-            notification.Description = "An error occured while querying the research points.";
-            notification.Behaviour = NotificationBehaviour.Overwrite;
-            notification.Priority = NotificationPriority.Error;
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the research points.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
+        #endregion
+
+
+        #region Account Expiration
+        /// <summary>
+        /// Invalidates the notification for an account expiration.
+        /// </summary>
+        internal void InvalidateAccountExpiration(Account account)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountExpiration));
+        }
+
+        /// <summary>
+        /// Notifies an account is to expire within a week.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyAccountExpiration(Account account, DateTime expireDate, NotificationPriority priority)
+        {
+            var notification = new Notification(NotificationCategory.AccountExpiration, account)
+            {
+                Description = String.Format("This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(), account),
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = priority
+            };
+            Notify(notification);
+        }
+
         #endregion
 
 
@@ -343,7 +393,6 @@ namespace EVEMon.Common
         /// </summary>
         internal void InvalidateAccountNotInTraining(Account account)
         {
-            EveClient.Trace("EveClient.Notification.InvalidateAccountNotInTraining - {0}", account);
             Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountNotInTraining));
         }
 
@@ -353,8 +402,6 @@ namespace EVEMon.Common
         /// <param name="account"></param>
         internal void NotifyAccountNotInTraining(Account account)
         {
-            EveClient.Trace("EveClient.Notification.NotifyAccountNotInTraining - {0}", account);
-
             var notification = new Notification(NotificationCategory.AccountNotInTraining, account)
             {
                 Description = String.Format("This account has no characters in training: {0}.", account),
@@ -558,7 +605,8 @@ namespace EVEMon.Common
             var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character)
             {
                 Description = "This character has free room in the skill queue.",
-                Behaviour = NotificationBehaviour.Overwrite, Priority = NotificationPriority.Warning
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
             };
             Notify(notification);
         }

@@ -79,7 +79,8 @@ namespace EVEMon.Common
                     account.IgnoreList.Add(character as CCPCharacter);
             }
 
-            if (notify) EveClient.OnCharacterCollectionChanged();
+            if (notify)
+                EveClient.OnCharacterCollectionChanged();
         }
 
         /// <summary>

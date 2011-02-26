@@ -215,4 +215,7 @@
   <data name="APIResearchPoints" xml:space="preserve">
     <value>/char/Research.xml.aspx</value>
   </data>
+  <data name="APIAccountStatus" xml:space="preserve">
+    <value>/account/AccountStatus.xml.aspx</value>
+  </data>
 </root>

@@ -11,6 +11,11 @@ namespace EVEMon.Common.Notifications
     public enum NotificationCategory
     {
         /// <summary>
+        /// An account is to expire.
+        /// </summary>
+        [Header("Account expiration")]
+        AccountExpiration,
+        /// <summary>
         /// None of the characters are currently in training.
         /// </summary>
         [Header("Account is not training")]
@@ -63,7 +68,9 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Testing notification.
         /// </summary>
-        [Header("Test Notification")]
-        TestNofitication
+#if DEBUG
+		[Header("Test Notification")]
+#endif
+        TestNofitication,
     }
 }

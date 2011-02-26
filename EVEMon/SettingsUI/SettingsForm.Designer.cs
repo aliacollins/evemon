@@ -2000,19 +2000,20 @@ namespace EVEMon.SettingsUI
             // 
             this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.notificationsControl.AutoScroll = true;
             this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
             this.notificationsControl.Location = new System.Drawing.Point(3, 56);
             this.notificationsControl.Name = "notificationsControl";
             this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(417, 309);
+            this.notificationsControl.Size = new System.Drawing.Size(429, 341);
             this.notificationsControl.TabIndex = 4;
             // 
             // cbPlaySoundOnSkillComplete
             // 
             this.cbPlaySoundOnSkillComplete.AutoSize = true;
-            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(3, 380);
+            this.cbPlaySoundOnSkillComplete.Location = new System.Drawing.Point(3, 403);
             this.cbPlaySoundOnSkillComplete.Name = "cbPlaySoundOnSkillComplete";
-            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(215, 17);
+            this.cbPlaySoundOnSkillComplete.Size = new System.Drawing.Size(216, 17);
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
@@ -2164,10 +2165,11 @@ namespace EVEMon.SettingsUI
             this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateSettingsControl.Location = new System.Drawing.Point(15, 136);
+            this.updateSettingsControl.AutoScroll = true;
+            this.updateSettingsControl.Location = new System.Drawing.Point(15, 98);
             this.updateSettingsControl.Name = "updateSettingsControl";
             this.updateSettingsControl.Settings = null;
-            this.updateSettingsControl.Size = new System.Drawing.Size(413, 287);
+            this.updateSettingsControl.Size = new System.Drawing.Size(413, 325);
             this.updateSettingsControl.TabIndex = 10;
             // 
             // lblUpdatesPage
@@ -2175,7 +2177,7 @@ namespace EVEMon.SettingsUI
             this.lblUpdatesPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lblUpdatesPage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.lblUpdatesPage.Location = new System.Drawing.Point(3, 29);
+            this.lblUpdatesPage.Location = new System.Drawing.Point(3, 16);
             this.lblUpdatesPage.Name = "lblUpdatesPage";
             this.lblUpdatesPage.Size = new System.Drawing.Size(429, 34);
             this.lblUpdatesPage.TabIndex = 9;
@@ -2185,7 +2187,7 @@ namespace EVEMon.SettingsUI
             // cbCheckTimeOnStartup
             // 
             this.cbCheckTimeOnStartup.AutoSize = true;
-            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(15, 77);
+            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(15, 52);
             this.cbCheckTimeOnStartup.Name = "cbCheckTimeOnStartup";
             this.cbCheckTimeOnStartup.Size = new System.Drawing.Size(201, 17);
             this.cbCheckTimeOnStartup.TabIndex = 0;
@@ -2195,9 +2197,9 @@ namespace EVEMon.SettingsUI
             // cbAutomaticallySearchForNewVersions
             // 
             this.cbAutomaticallySearchForNewVersions.AutoSize = true;
-            this.cbAutomaticallySearchForNewVersions.Location = new System.Drawing.Point(15, 100);
+            this.cbAutomaticallySearchForNewVersions.Location = new System.Drawing.Point(15, 75);
             this.cbAutomaticallySearchForNewVersions.Name = "cbAutomaticallySearchForNewVersions";
-            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(248, 17);
+            this.cbAutomaticallySearchForNewVersions.Size = new System.Drawing.Size(249, 17);
             this.cbAutomaticallySearchForNewVersions.TabIndex = 0;
             this.cbAutomaticallySearchForNewVersions.Text = "Automatically search for new EVEMon versions";
             this.cbAutomaticallySearchForNewVersions.UseVisualStyleBackColor = true;

@@ -15,8 +15,6 @@ namespace EVEMon.Accounting
     /// </summary>
     public sealed class AccountsListBox : NoFlickerListBox
     {
-        private const int UserIDLength = 64;
-
         private readonly List<Account> m_accounts = new List<Account>();
         private bool m_pendingUpdate;
 
@@ -26,9 +24,8 @@ namespace EVEMon.Accounting
         public AccountsListBox()
             : base()
         {
-            this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.DrawItem += new System.Windows.Forms.DrawItemEventHandler(OnDrawItem);
-            this.ItemHeight = 40;
+            DrawMode = DrawMode.OwnerDrawFixed;
+            DrawItem += OnDrawItem;
         }
 
         /// <summary>
@@ -39,12 +36,17 @@ namespace EVEMon.Accounting
         {
             get
             {
-                foreach (var account in m_accounts) yield return account;
+                foreach (var account in m_accounts)
+                {
+                    yield return account;
+                }
             }
             set
             {
                 m_accounts.Clear();
-                if (value != null) m_accounts.AddRange(value);
+                if (value != null)
+                    m_accounts.AddRange(value);
+
                 UpdateContent();
             }
         }
@@ -54,27 +56,28 @@ namespace EVEMon.Accounting
         /// </summary>
         private void UpdateContent()
         {
-            if (!this.Visible)
+            if (!Visible)
             {
                 m_pendingUpdate = true;
                 return;
             }
             m_pendingUpdate = false;
 
-            Account oldSelection = this.SelectedItem as Account;
-            this.BeginUpdate();
+            Account oldSelection = SelectedItem as Account;
+            BeginUpdate();
             try
             {
-                this.Items.Clear();
+                Items.Clear();
                 foreach (var account in EveClient.Accounts)
                 {
-                    this.Items.Add(account);
-                    if (account == oldSelection) this.SelectedIndex = this.Items.Count - 1;
+                    Items.Add(account);
+                    if (account == oldSelection)
+                        SelectedIndex = Items.Count - 1;
                 }
             }
             finally
             {
-                this.EndUpdate();
+                EndUpdate();
             }
         }
 
@@ -84,7 +87,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible && m_pendingUpdate) UpdateContent();
+            if (Visible && m_pendingUpdate)
+                UpdateContent();
+
             base.OnVisibleChanged(e);
         }
 
@@ -101,10 +106,12 @@ namespace EVEMon.Accounting
             var fontBrush = (isSelected ? SystemBrushes.HighlightText : SystemBrushes.ControlText);
             e.DrawBackground();
 
-            if (e.Index < 0 || e.Index >= this.Items.Count)return;
-            var account = (Account)this.Items[e.Index];
+            if (e.Index < 0 || e.Index >= Items.Count)
+                return;
 
-            int height = this.ItemHeight;
+            var account = (Account)Items[e.Index];
+
+            int height = ItemHeight;
             int margin = (height - 32) / 2;
 
             // Updates the picture and label for key level
@@ -122,54 +129,82 @@ namespace EVEMon.Accounting
                     break;
             }
 
-            g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + margin, e.Bounds.Top + margin));
+            g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + margin, e.Bounds.Top + margin * 2));
 
             // Texts drawing
-            using (var boldFont = FontFactory.GetFont(this.Font, FontStyle.Bold))
+            using (var boldFont = FontFactory.GetFont(Font, FontStyle.Bold))
             {
-                // Draws the texts on the upper half
+                // Draws the texts on the upper third
                 int left = e.Bounds.Left + 32 + 2 * margin;
                 int top = e.Bounds.Top + margin;
                 string UserID = account.UserID.ToString();
                 Size UserIDTextSize = TextRenderer.MeasureText(g, UserID, boldFont);
                 g.DrawString(UserID, boldFont, fontBrush, new PointF(left, top));
-                g.DrawString(account.APIKey.ToLower(CultureConstants.DefaultCulture), this.Font, fontBrush, new PointF(left + UserIDTextSize.Width, top));
+                g.DrawString(account.APIKey.ToLower(CultureConstants.DefaultCulture),
+                    Font, fontBrush, new PointF(left + UserIDTextSize.Width, top));
 
-                // Draws the identities bounds to this account
-                top = e.Bounds.Top + height / 2 + 4;
-                bool isFirst = true;
-                var identities = new List<CharacterIdentity>();
-                identities.AddRange(account.CharacterIdentities.Where(x => !account.IgnoreList.Contains(x)).ToArray().OrderBy(x => x.Name));
-                identities.AddRange(account.IgnoreList.OrderBy(x => x.Name));
-
-                using (var smallFont = FontFactory.GetFont(this.Font.FontFamily, 6.5f, FontStyle.Regular))
+                using (var middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f, FontStyle.Regular))
                 {
-                    using (var strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
+                    // Draw the texts on the middle third
+                    top = e.Bounds.Top + height / 3 + 4;
+                    string accountCreated = String.Format(CultureConstants.DefaultCulture, "Created: {0}",
+                                            (account.KeyLevel == CredentialsLevel.Full ?
+                                            account.AccountCreated.ToString() :
+                                            "Full API Key Required"));
+                    g.DrawString(accountCreated, middleFont, fontBrush, new PointF(left, top));
+                    left += (int)g.MeasureString(accountCreated, middleFont).Width + margin * 4;
+
+                    string accountExpires = String.Format(CultureConstants.DefaultCulture, "Paid Until: {0}",
+                                            (account.KeyLevel == CredentialsLevel.Full ?
+                                            account.AccountExpiration.ToString() :
+                                            "Full API Key Required"));
+                    g.DrawString(accountExpires, middleFont, fontBrush, new PointF(left, top));
+
+                    using (var smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f, FontStyle.Regular))
                     {
-                        using (var smallBoldFont = FontFactory.GetFont(smallFont, FontStyle.Bold))
+                        using (var strikeoutFont = FontFactory.GetFont(smallFont, FontStyle.Strikeout))
                         {
-                            foreach (var id in identities)
+                            using (var smallBoldFont = FontFactory.GetFont(smallFont, FontStyle.Bold))
                             {
-                                // Skip if no CCP character
-                                var ccpCharacter = id.CCPCharacter;
-                                if (ccpCharacter == null) continue;
+                                // Draws the texts on the lower third
+                                top = e.Bounds.Top + (height / 3) * 2 + 4;
+                                left = e.Bounds.Left + 32 + 2 * margin;
+                                bool isFirst = true;
+                                var identities = new List<CharacterIdentity>();
+                                identities.AddRange(account.CharacterIdentities
+                                    .Where(x => !account.IgnoreList.Contains(x)).ToArray().OrderBy(x => x.Name));
+                                identities.AddRange(account.IgnoreList.OrderBy(x => x.Name));
 
-                                // Draws "; " between ids
-                                if (!isFirst)
+                                foreach (var id in identities)
                                 {
-                                    g.DrawString("; ", smallFont, fontBrush, new PointF(left, top));
-                                    left += (int)g.MeasureString("; ", this.Font).Width;
+                                    // Skip if no CCP character
+                                    var ccpCharacter = id.CCPCharacter;
+                                    if (ccpCharacter == null)
+                                        continue;
+
+                                    // Draws "; " between ids
+                                    if (!isFirst)
+                                    {
+                                        g.DrawString("; ", smallFont, fontBrush, new PointF(left, top));
+                                        left += (int)g.MeasureString("; ", Font).Width;
+                                    }
+                                    isFirst = false;
+
+                                    // Selects font
+                                    var font = smallFont;
+                                    if (account.IgnoreList.Contains(id))
+                                    {
+                                        font = strikeoutFont;
+                                    }
+                                    else if (ccpCharacter.Monitored)
+                                    {
+                                        font = smallBoldFont;
+                                    }
+
+                                    // Draws character's name
+                                    g.DrawString(id.Name, font, fontBrush, new PointF(left, top));
+                                    left += (int)g.MeasureString(id.Name, font).Width;
                                 }
-                                isFirst = false;
-
-                                // Selects font
-                                var font = smallFont;
-                                if (account.IgnoreList.Contains(id)) font = strikeoutFont;
-                                else if (ccpCharacter.Monitored) font = smallBoldFont;
-
-                                // Draws character's name
-                                g.DrawString(id.Name, font, fontBrush, new PointF(left, top));
-                                left += (int)g.MeasureString(id.Name, font).Width;
                             }
                         }
                     }

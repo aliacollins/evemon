@@ -70,6 +70,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /account/AccountStatus.xml.aspx.
+        /// </summary>
+        public static string APIAccountStatus {
+            get {
+                return ResourceManager.GetString("APIAccountStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://api.eveonline.com.
         /// </summary>
         public static string APIBase {

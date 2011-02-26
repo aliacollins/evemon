@@ -19,8 +19,6 @@ namespace EVEMon.Common
         private static XslCompiledTransform s_rowsetsTransform;
 
         private List<APIMethod> m_methods;
-        private string m_url;
-        private string m_name;
 
         /// <summary>
         /// Default constructor 
@@ -28,28 +26,20 @@ namespace EVEMon.Common
         internal APIProvider()
         {
             m_methods = new List<APIMethod>(APIMethod.CreateDefaultSet());
-            m_url = "http://your-custom-API-provider.com";
-            m_name = "your provider's name";
+            Url = "http://your-custom-API-provider.com";
+            Name = "your provider's name";
         }
 
         #region Configuration
         /// <summary>
         /// Returns the name of this APIConfiguration.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Returns the server host for this APIConfiguration.
         /// </summary>
-        public string Url
-        {
-            get { return m_url; }
-            set { m_url = value; }
-        }
+        public string Url { get; set; }
 
         /// <summary>
         /// Returns a list of APIMethods supported by this APIConfiguration.
@@ -96,7 +86,7 @@ namespace EVEMon.Common
         public string GetMethodUrl(APIMethods requestMethod)
         {
             // Gets the proper data
-            var url = m_url;
+            var url = Url;
             var path = GetMethod(requestMethod).Path;
             if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(url))
             {
@@ -159,21 +149,32 @@ namespace EVEMon.Common
         /// <returns></returns>
         public APIResult<SerializableAPIAccountBalance> QueryCharacterAccountBalance(long userID, string apiKey, long charID)
         {
-            HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
             return QueryMethod<SerializableAPIAccountBalance>(APIMethods.CharacterAccountBalance, postData, RowsetsTransform);
         }
 
         /// <summary>
         /// Query the characters skill in training.
         /// </summary>
-        /// <param name="userID"></param>
-        /// <param name="apiKey"></param>
-        /// <param name="charID"></param>
+        /// <param name="userID">The account's ID</param>
+        /// <param name="apiKey">The account's API key</param>
+        /// <param name="charID">The character's ID</param>
         /// <returns></returns>
         public APIResult<SerializableAPISkillInTraining> QuerySkillInTraining(long userID, string apiKey, long charID)
         {
-            HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
             return QueryMethod<SerializableAPISkillInTraining>(APIMethods.CharacterSkillInTraining, postData, RowsetsTransform);
+        }
+
+        /// <summary>
+        /// Query the status for the provided account. Requires full api key.
+        /// </summary>
+        /// <param name="userID">The account's ID</param>
+        /// <param name="apiKey">The account's API key</param>
+        public APIResult<SerializableAPIAccountStatus> QueryAccountStatus(long userID, string apiKey)
+        {
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
+            return QueryMethod<SerializableAPIAccountStatus>(APIMethods.AccountStatus, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace EVEMon.Common
         /// <param name="apiKey">The account's API key</param>
         public APIResult<SerializableAPICharacters> QueryCharactersList(long userID, string apiKey)
         {
-            HttpPostData postData = new HttpPostData("userID=" + userID.ToString() + "&apiKey=" + apiKey);
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
             return QueryMethod<SerializableAPICharacters>(APIMethods.CharacterList, postData, RowsetsTransform);
         }
 
@@ -216,7 +217,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
         public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData("userID=" + userID.ToString() + "&apiKey=" + apiKey);
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}", userID, apiKey));
             QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
         }
 
@@ -231,7 +232,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed. It will be done on the data actor (see <see cref="DataObject.CommonActor"/>).</param>
         public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long charID, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
+            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
             QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
         }
         #endregion
@@ -316,7 +317,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
+            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
         }
 
         /// <summary>
@@ -340,7 +341,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
     }
 }

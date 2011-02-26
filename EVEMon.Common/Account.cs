@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Attributes;
+using EVEMon.Common.Notifications;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
@@ -16,6 +17,7 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class Account
     {
+        private readonly AccountQueryMonitor<SerializableAPIAccountStatus> m_accountStatusMonitor;
         private readonly AccountQueryMonitor<SerializableAPICharacters> m_charactersListMonitor;
         private readonly AccountIgnoreList m_ignoreList;
 
@@ -26,7 +28,10 @@ namespace EVEMon.Common
         private string m_apiKey;
         private CredentialsLevel m_keyLevel;
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
+        private DateTime m_accountExpiration;
+        private DateTime m_accountCreated;
         private bool m_updatePending;
+        private bool m_characterListUpdated;
 
         #region Constructors
 
@@ -37,6 +42,9 @@ namespace EVEMon.Common
         {
             m_charactersListMonitor = new AccountQueryMonitor<SerializableAPICharacters>(this, APIMethods.CharacterList);
             m_charactersListMonitor.Updated += OnCharactersListUpdated;
+
+            m_accountStatusMonitor = new AccountQueryMonitor<SerializableAPIAccountStatus>(this, APIMethods.AccountStatus);
+            m_accountStatusMonitor.Updated += OnAccountStatusUpdated;
 
             m_ignoreList = new AccountIgnoreList(this);
         }
@@ -51,6 +59,8 @@ namespace EVEMon.Common
             m_userId = serial.ID;
             m_apiKey = serial.Key;
             m_keyLevel = serial.KeyLevel;
+            m_accountExpiration = serial.PaidUntil;
+            m_accountCreated = serial.CreateDate;
             m_ignoreList.Import(serial.IgnoreList);
         }
 
@@ -99,6 +109,22 @@ namespace EVEMon.Common
         public AccountIgnoreList IgnoreList
         {
             get { return m_ignoreList; }
+        }
+
+        /// <summary>
+        /// Gets the account expiration date and time.
+        /// </summary>
+        public DateTime AccountExpiration
+        {
+            get { return m_accountExpiration.ToLocalTime(); }
+        }
+
+        /// <summary>
+        /// Gets the account expiration date and time.
+        /// </summary>
+        public DateTime AccountCreated
+        {
+            get { return m_accountCreated.ToLocalTime(); }
         }
 
         /// <summary>
@@ -201,6 +227,11 @@ namespace EVEMon.Common
         internal void UpdateOnOneSecondTick()
         {
             m_charactersListMonitor.UpdateOnOneSecondTick();
+            
+            // We trigger the account status check when we have the character list of the account
+            // in order to have better acccount related info in the trace file
+            if (m_characterListUpdated)
+                m_accountStatusMonitor.UpdateOnOneSecondTick();
 
             // While the key status is unknown, every five minutes, we try to update it.
             if (m_keyLevel == CredentialsLevel.Unknown && DateTime.UtcNow >= m_lastKeyLevelUpdate.AddMinutes(5))
@@ -225,8 +256,6 @@ namespace EVEMon.Common
         /// Gets the credential level from the given result.
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="?"></param>
-        /// <returns></returns>
         internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAPIAccountBalance> result)
         {
             // No error ? Then it is a full key
@@ -271,6 +300,9 @@ namespace EVEMon.Common
                            ID = m_userId,
                            Key = m_apiKey,
                            KeyLevel = m_keyLevel,
+                           PaidUntil = m_accountExpiration,
+                           CreateDate = m_accountCreated,
+                           LastAccountStatusUpdate = m_accountStatusMonitor.LastUpdate,
                            LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
                            IgnoreList = m_ignoreList.Export()
                        };
@@ -279,6 +311,52 @@ namespace EVEMon.Common
         #endregion
 
         #region Response To Events
+
+        /// <summary>
+        /// Used when the character list has been queried.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnCharactersListUpdated(APIResult<SerializableAPICharacters> result)
+        {
+            // Notify on error
+            if (result.HasError)
+            {
+                EveClient.Notifications.NotifyCharacterListError(this, result);
+                return;
+            }
+
+            // Invalidates the notification and update
+            EveClient.Notifications.InvalidateAccountError(this);
+            Import(result);
+
+            m_characterListUpdated = true;
+        }
+
+        /// <summary>
+        /// Update when we can update the key level.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnKeyLevelUpdated(APIResult<SerializableAPIAccountBalance> result)
+        {
+            m_lastKeyLevelUpdate = DateTime.UtcNow;
+            m_keyLevel = GetCredentialsLevel(result);
+
+            // Notify error if any
+            if (m_keyLevel == CredentialsLevel.Unknown)
+            {
+                EveClient.Notifications.NotifyKeyLevelError(this, result);
+                return;
+            }
+
+            // Notify characters changed
+            foreach (CharacterIdentity id in CharacterIdentities)
+            {
+                CCPCharacter ccpCharacter = id.CCPCharacter;
+                if (ccpCharacter != null)
+                    EveClient.OnCharacterChanged(ccpCharacter);
+            }
+        }
+
         /// <summary>
         /// Called when character's skill in training gets updated.
         /// </summary>
@@ -293,7 +371,7 @@ namespace EVEMon.Common
             {
                 if (ccpCharacter != null)
                     EveClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
-
+                
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
                 return;
             }
@@ -335,79 +413,28 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Used when the character list has been queried.
+        /// Called when the account status has been updated.
         /// </summary>
-        /// <param name="result"></param>
-        private void OnCharactersListUpdated(APIResult<SerializableAPICharacters> result)
+        /// <param name="result">The result.</param>
+        private void OnAccountStatusUpdated(APIResult<SerializableAPIAccountStatus> result)
         {
-            // Notify on error
+            // Return on error
             if (result.HasError)
             {
-                EveClient.Notifications.NotifyCharacterListError(this, result);
+                EveClient.Notifications.NotifyAccountStatusError(this, result);
                 return;
             }
 
-            // Invalidates the notification and update
             EveClient.Notifications.InvalidateAccountError(this);
-            Import(result);
-        }
 
-        /// <summary>
-        /// Update when we can update the key level.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnKeyLevelUpdated(APIResult<SerializableAPIAccountBalance> result)
-        {
-            m_lastKeyLevelUpdate = DateTime.UtcNow;
-            m_keyLevel = GetCredentialsLevel(result);
+            m_accountCreated = result.Result.CreateDate;
+            m_accountExpiration = result.Result.PaidUntil;
 
-            // Notify error if any
-            if (m_keyLevel == CredentialsLevel.Unknown)
-            {
-                EveClient.Notifications.NotifyKeyLevelError(this, result);
-                return;
-            }
+            // Notifies for the account expiration
+            NotifyAccountExpiration();
 
-            // Notify characters changed
-            foreach (CharacterIdentity id in CharacterIdentities)
-            {
-                CCPCharacter ccpCharacter = id.CCPCharacter;
-                if (ccpCharacter != null)
-                    EveClient.OnCharacterChanged(ccpCharacter);
-            }
-        }
-
-        /// <summary>
-        /// Called when all characters skill training has been updated.
-        /// </summary>
-        private void OnAllCharactersSkillTrainingUpdated()
-        {
-            foreach (string key in m_skillInTrainingCache.Keys)
-                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0}\\{1} = {2} ({3})",
-                                this,
-                                key,
-                                m_skillInTrainingCache[key].State,
-                                m_skillInTrainingCache[key].Timestamp);
-
-
-            // one of the remaining characters was training; account is training.
-            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Training))
-            {
-                EveClient.Trace("Account.OnAllCharactersSkillTrainingUpdated - {0} : Training character found.", this);
-                EveClient.Notifications.InvalidateAccountNotInTraining(this);
-                return;
-            }
-
-            if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.InError))
-            {
-                EveClient.Trace(
-                    "Account.OnAllCharactersSkillTrainingUpdated - {0} : One or more characters returned an error.",
-                    this);
-                return;
-            }
-
-            // no training characters found up until
-            EveClient.Notifications.NotifyAccountNotInTraining(this);
+            // Fires the event regarding the account status update
+            EveClient.OnAccountStatusUpdated(this);
         }
 
         #endregion
@@ -458,6 +485,29 @@ namespace EVEMon.Common
             EveClient.Notifications.NotifyAccountNotInTraining(this);
         }
 
+        /// <summary>
+        /// Notifies for the account expiration.
+        /// </summary>
+        private void NotifyAccountExpiration()
+        {
+            // Is it to expire within 7 days? Sent am informative notification
+            TimeSpan daysToExpire = m_accountExpiration.Subtract(DateTime.UtcNow);
+            if (daysToExpire < TimeSpan.FromDays(7) && daysToExpire > TimeSpan.FromDays(1))
+            {
+                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpiration, NotificationPriority.Information);
+                return;
+            }
+
+            // Is it to expire within the day? Sent a warning notification
+            if (daysToExpire <= TimeSpan.FromDays(1) && daysToExpire > TimeSpan.Zero)
+            {
+                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpiration, NotificationPriority.Warning);
+                return;
+            }
+
+            EveClient.Notifications.InvalidateAccountExpiration(this);
+        }
+
         #endregion
 
         #region Public Methods
@@ -479,13 +529,15 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="keyLevel"></param>
         /// <param name="identities"></param>
-        /// <param name="queryResult"></param>
+        /// <param name="charListQueryResult"></param>
         internal void UpdateAPIKey(string apiKey, CredentialsLevel keyLevel, IEnumerable<CharacterIdentity> identities,
-                                   APIResult<SerializableAPICharacters> queryResult)
+                                    APIResult<SerializableAPICharacters> charListQueryResult,
+                                    APIResult<SerializableAPIAccountStatus> accountStatusQueryResult)
         {
             m_apiKey = apiKey;
             m_keyLevel = keyLevel;
-            m_charactersListMonitor.UpdateWith(queryResult);
+            m_charactersListMonitor.UpdateWith(charListQueryResult);
+            m_accountStatusMonitor.UpdateWith(accountStatusQueryResult);
 
             // Clear the account for the currently associated identities
             foreach (CharacterIdentity id in EveClient.CharacterIdentities)
@@ -553,7 +605,7 @@ namespace EVEMon.Common
 
         #endregion
 
-        #region Nested type: SkillQueueResponse
+        #region Nested type: SkillInTrainingResponse
 
         private class SkillInTrainingResponse
         {

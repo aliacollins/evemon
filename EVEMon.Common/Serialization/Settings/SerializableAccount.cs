@@ -35,6 +35,27 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlElement("paidUntil")]
+        public DateTime PaidUntil
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("createDate")]
+        public DateTime CreateDate
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("lastAccountStatusUpdate")]
+        public DateTime LastAccountStatusUpdate
+        {
+            get;
+            set;
+        }
+
         [XmlElement("lastCharacterListUpdate")]
         public DateTime LastCharacterListUpdate
         {
@@ -55,6 +76,9 @@ namespace EVEMon.Common.Serialization.Settings
             clone.ID = this.ID;
             clone.Key = this.Key;
             clone.KeyLevel = this.KeyLevel;
+            clone.PaidUntil = this.PaidUntil;
+            clone.CreateDate = this.CreateDate;
+            clone.LastAccountStatusUpdate = this.LastAccountStatusUpdate;
             clone.LastCharacterListUpdate = this.LastCharacterListUpdate;
             clone.IgnoreList.AddRange(this.IgnoreList.Select(x => x.Clone()));
             return clone;

@@ -88,6 +88,7 @@
     <Compile Include="Serialization\API\APIEnumerations.cs" />
     <Compile Include="Serialization\API\SerializableAPIAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalanceListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIAccountStatus.cs" />
     <Compile Include="Serialization\API\SerializableImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
     <Compile Include="Serialization\API\SerializableAPIMarketOrders.cs" />

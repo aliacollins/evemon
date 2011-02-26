@@ -420,6 +420,11 @@ namespace EVEMon.Common
         public static event EventHandler AccountCharactersSkillInTrainingUpdated;
 
         /// <summary>
+        /// Occurs when an account status has been updated.
+        /// </summary>
+        public static event EventHandler AccountStatusUpdated;
+
+        /// <summary>
         /// Occurs when the conquerable station list has been updated.
         /// </summary>
         public static event EventHandler ConquerableStationListUpdated;
@@ -727,6 +732,17 @@ namespace EVEMon.Common
             Trace("EveClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
             if (AccountCharactersSkillInTrainingUpdated != null)
                 AccountCharactersSkillInTrainingUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when an account status has been updated.
+        /// </summary>
+        /// <param name="account">The account.</param>
+        internal static void OnAccountStatusUpdated(Account account)
+        {
+            Trace("EveClient.OnAccountStatusUpdated - {0}", account);
+            if (AccountStatusUpdated != null)
+                AccountStatusUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>

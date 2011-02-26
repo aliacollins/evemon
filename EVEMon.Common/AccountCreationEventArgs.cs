@@ -12,6 +12,7 @@ namespace EVEMon.Common
     {
         private readonly long m_userID;
         private readonly string m_apiKey;
+        private readonly APIResult<SerializableAPIAccountStatus> m_serialAccountStatus;
         private readonly APIResult<SerializableAPICharacters> m_serialCharacterList;
         private readonly List<CharacterIdentity> m_identities = new List<CharacterIdentity>();
         private readonly string m_fullKeyError;
@@ -24,13 +25,15 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="serialCharacterList"></param>
         /// <param name="serialBalanceList"></param>
-        internal AccountCreationEventArgs(long userID, string apiKey, 
-            APIResult<SerializableAPICharacters> serialCharacterList, 
+        internal AccountCreationEventArgs(long userID, string apiKey,
+            APIResult<SerializableAPICharacters> serialCharacterList,
+            APIResult<SerializableAPIAccountStatus> serialAccountStatus,
             APIResult<SerializableAPIAccountBalance> serialBalanceList)
         {
             m_userID = userID;
             m_apiKey = apiKey;
             m_serialCharacterList = serialCharacterList;
+            m_serialAccountStatus = serialAccountStatus;
             m_keyLevel = CredentialsLevel.Unknown;
             m_fullKeyError = String.Empty;
 
@@ -39,18 +42,15 @@ namespace EVEMon.Common
             {
                 m_fullKeyError = serialCharacterList.ErrorMessage;
             }
-            // No error ? Then it is a full key
+            // No error ? Determine the key level
             else
             {
                 m_keyLevel = Account.GetCredentialsLevel(serialBalanceList);
 
                 // On error, retrieve the error message.
                 if (m_keyLevel == CredentialsLevel.Unknown)
-                {
                     m_fullKeyError = serialBalanceList.ErrorMessage;
-                }
             }
-
 
             // Retrieves the characters list
             if (m_serialCharacterList.HasError) return;
@@ -59,7 +59,10 @@ namespace EVEMon.Common
             {
                 // Look for an existing char ID and update its name.
                 var id = EveClient.CharacterIdentities[serialID.ID];
-                if (id != null) id.Name = serialID.Name;
+                if (id != null)
+                {
+                    id.Name = serialID.Name;
+                }
                 else
                 {
                     // Create an identity if necessary
@@ -95,7 +98,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the possible error message gotten when testing the key security (excluding the error meaning the ley was a limited one).
+        /// Gets the possible error message gotten when testing the key security (excluding the error meaning the key was a limited one).
         /// </summary>
         public string FullKeyTestError
         {
@@ -134,7 +137,7 @@ namespace EVEMon.Common
             var account = EveClient.Accounts[m_userID];
             if (account != null)
             {
-                account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList);
+                account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList, m_serialAccountStatus);
 
                 // Collection did not change but there is no "AccountChanged" event
                 EveClient.OnAccountCollectionChanged();
@@ -142,7 +145,7 @@ namespace EVEMon.Common
             else
             {
                 account = new Account(m_userID);
-                account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList);
+                account.UpdateAPIKey(m_apiKey, m_keyLevel, m_identities, m_serialCharacterList, m_serialAccountStatus);
                 EveClient.Accounts.Add(account, true);
             }
 

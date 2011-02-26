@@ -30,7 +30,10 @@ namespace EVEMon.SettingsUI
 
             // Add the controls for every member of the enumeration
             int height = RowHeight;
-            var categories = Enum.GetValues(typeof(NotificationCategory)).Cast<NotificationCategory>();
+            var categories = Enum.GetValues(typeof(NotificationCategory))
+                .Cast<NotificationCategory>()
+                .Where(x=> x.HasHeader());
+
             foreach (var cat in categories)
             {
                 // Add the label
@@ -55,7 +58,7 @@ namespace EVEMon.SettingsUI
                 combo.Width = labelBehaviour.Width;
                 combo.DropDownStyle = ComboBoxStyle.DropDownList;
                 combo.Location = new Point(labelBehaviour.Location.X, height + 2);
-                combo.SelectedIndexChanged += new EventHandler(combo_SelectedIndexChanged);
+                combo.SelectedIndexChanged += combo_SelectedIndexChanged;
                 this.Controls.Add(combo);
                 m_combos.Add(combo);
 
@@ -67,7 +70,7 @@ namespace EVEMon.SettingsUI
                 checkbox.Height = RowHeight - 4;
                 checkbox.Width = labelMainWindow.Width;
                 checkbox.Location = new Point(labelMainWindow.Location.X + 15, height + 2);
-                checkbox.CheckedChanged += new EventHandler(checkbox_CheckedChanged);
+                checkbox.CheckedChanged += checkbox_CheckedChanged;
                 this.Controls.Add(checkbox);
                 m_checkboxes.Add(checkbox);
 
