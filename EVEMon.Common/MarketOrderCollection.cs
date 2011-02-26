@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -48,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns>The list of expired orders.</returns>
-        internal void Import(IEnumerable<SerializableAPIOrder> src, List<MarketOrder> endedOrders)
+        internal void Import(IEnumerable<SerializableOrderListItem> src, List<MarketOrder> endedOrders)
         {
             // Mark all orders for deletion 
             // If they are found again on the API feed, they won't be deleted

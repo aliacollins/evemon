@@ -233,7 +233,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData, XslCompiledTransform transform)
         {
-            APIResult<T> result = new APIResult<T>(APIErrors.Http, "Time out on querying " + url);
+            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http, "Time out on querying " + url);
 
             // Query async and wait.
             using (var wait = new EventWaitHandle(false, EventResetMode.AutoReset))
@@ -256,7 +256,7 @@ namespace EVEMon.Common
                     catch (Exception e)
                     {
                         ExceptionHandler.LogException(e, true);
-                        result = new APIResult<T>(APIErrors.Http, e.Message);
+                        result = new APIResult<T>(APIEnumerations.APIErrors.Http, e.Message);
                     }
                     finally
                     {

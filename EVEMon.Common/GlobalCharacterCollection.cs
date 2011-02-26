@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Threading;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Importation;
 
@@ -98,7 +97,7 @@ namespace EVEMon.Common
                 switch (format.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
-                        var apiResult = Util.DeserializeAPIResult<SerializableAPICharacter>(uri.ToString(), APIProvider.RowsetsTransform);
+                        var apiResult = Util.DeserializeAPIResult<SerializableCharacter>(uri.ToString(), APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;
                     case "serializableccpcharacter":
@@ -132,7 +131,7 @@ namespace EVEMon.Common
             // So, it's a web address, let's do it in an async way.
             else
             {
-                Util.DownloadAPIResultAsync<SerializableAPICharacter>(uri.ToString(), null, APIProvider.RowsetsTransform, 
+                Util.DownloadAPIResultAsync<SerializableCharacter>(uri.ToString(), null, APIProvider.RowsetsTransform, 
                     (result) => callback(null, new UriCharacterEventArgs(uri, result)));
             }
         }

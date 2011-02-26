@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Xml.Serialization;
+
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -169,7 +165,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="serial"></param>
         /// <param name="overrideManual"></param>
-        internal void Import(SerializableAPIImplantSet serial)
+        internal void Import(SerializableImplantSet serial)
         {
             Import(ImplantSlots.Intelligence, serial.Intelligence);
             Import(ImplantSlots.Perception, serial.Perception);
@@ -183,7 +179,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="slot"></param>
         /// <param name="src"></param>
-        private void Import(ImplantSlots slot, SerializableAPIImplant src)
+        private void Import(ImplantSlots slot, SerializableImplant src)
         {
             int index = (int)slot;
             m_values[index] = (src == null ? Implant.None : StaticItems.GetImplants(slot)[src.Name]);

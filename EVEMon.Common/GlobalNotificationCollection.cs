@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
@@ -118,7 +119,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyConquerableStationListError(APIResult<SerializableConquerableStationList> result)
+        internal void NotifyConquerableStationListError(APIResult<SerializableAPIConquerableStationList> result)
         {
             var notification = new APIErrorNotification(null, result)
             {
@@ -144,7 +145,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyServerStatusError(APIResult<SerializableServerStatus> result)
+        internal void NotifyServerStatusError(APIResult<SerializableAPIServerStatus> result)
         {
             var notification = new APIErrorNotification(null, result)
             {
@@ -171,7 +172,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="account"></param>
         /// <param name="result"></param>
-        internal void NotifyCharacterListError(Account account, APIResult<SerializableCharacterList> result)
+        internal void NotifyCharacterListError(Account account, APIResult<SerializableAPICharacters> result)
         {
             var notification = new APIErrorNotification(account, result)
             {
@@ -186,7 +187,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="account"></param>
         /// <param name="result"></param>
-        internal void NotifyKeyLevelError(Account account, APIResult<SerializableAccountBalanceList> result)
+        internal void NotifyKeyLevelError(Account account, APIResult<SerializableAPIAccountBalance> result)
         {
             var notification = new APIErrorNotification(account, result)
             {
@@ -213,7 +214,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacter> result)
+        internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableCharacter> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
@@ -228,7 +229,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableSkillQueue> result)
+        internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableAPISkillQueue> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
@@ -244,7 +245,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
+        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
@@ -260,7 +261,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIOrderList> result)
+        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
@@ -276,7 +277,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
+        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
@@ -292,7 +293,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIJobList> result)
+        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
             var notification = new APIErrorNotification(character, result)
             {

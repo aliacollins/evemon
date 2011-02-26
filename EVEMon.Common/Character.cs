@@ -1,21 +1,9 @@
 using System;
-using System.IO;
-using System.Xml;
 using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Threading;
-using System.Reflection;
-using System.Diagnostics;
-using System.Collections;
-using System.Windows.Forms;
-using System.IO.Compression;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 
 using EVEMon.Common.Data;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -540,7 +528,7 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        internal void Import(APIResult<SerializableAPICharacter> serial)
+        internal void Import(APIResult<SerializableCharacter> serial)
         {
             if (serial.HasError)
                 return;
@@ -555,7 +543,7 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         protected void Import(SerializableSettingsCharacter serial)
         {
-            Import((SerializableCharacterBase)serial);
+            Import((SerializableCharacterSheetBase)serial);
 
             // Implants
             m_implants.Import(serial.ImplantSets);
@@ -565,9 +553,9 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        protected void Import(SerializableAPICharacter serial)
+        protected void Import(SerializableCharacter serial)
         {
-            Import((SerializableCharacterBase)serial);
+            Import((SerializableCharacterSheetBase)serial);
 
             // Implants
             m_implants.Import(serial.Implants);
@@ -577,9 +565,9 @@ namespace EVEMon.Common
         /// Imports data from the given character sheet informations
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        protected void Import(SerializableCharacterBase serial)
+        protected void Import(SerializableCharacterSheetBase serial)
         {
-            bool fromCCP = (serial is SerializableAPICharacter);
+            bool fromCCP = (serial is SerializableCharacter);
 
             // Bio
             m_name = serial.Name;

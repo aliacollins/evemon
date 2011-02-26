@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
-using EVEMon.Common.Serialization;
+
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
@@ -129,7 +127,7 @@ namespace EVEMon.Common
         /// <param name="uri">The source uri</param>
         /// <param name="result">The deserialization object acquired from the given uri</param>
         /// <returns>The created character, or null if there was errors on the provided CCP data.</returns>
-        internal UriCharacter Add(Uri uri, APIResult<SerializableAPICharacter> result)
+        internal UriCharacter Add(Uri uri, APIResult<SerializableCharacter> result)
         {
             if (result.HasError) return null;
 

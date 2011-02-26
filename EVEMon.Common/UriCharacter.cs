@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
-using EVEMon.Common.Threading;
-using EVEMon.Common.Serialization;
-using System.Xml;
+
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
 
@@ -23,7 +18,7 @@ namespace EVEMon.Common
         /// <param name="identity">The identitiy for this character</param>
         /// <param name="uri">The uri the provided deserialization object was acquired from</param>
         /// <param name="source">A deserialization object for characters</param>
-        internal UriCharacter(CharacterIdentity identity, Uri uri, APIResult<SerializableAPICharacter> source)
+        internal UriCharacter(CharacterIdentity identity, Uri uri, APIResult<SerializableCharacter> source)
             : base(identity, Guid.NewGuid())
         {
             m_uri = uri;
@@ -114,7 +109,7 @@ namespace EVEMon.Common
         /// <param name="identity"></param>
         /// <param name="uri"></param>
         /// <param name="result"></param>
-        internal void Update(CharacterIdentity identity, Uri uri, APIResult<SerializableAPICharacter> result)
+        internal void Update(CharacterIdentity identity, Uri uri, APIResult<SerializableCharacter> result)
         {
             m_characterID = identity.CharacterID;
             m_identity = identity;

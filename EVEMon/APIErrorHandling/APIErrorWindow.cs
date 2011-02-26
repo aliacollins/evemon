@@ -1,17 +1,17 @@
-﻿using EVEMon.APIErrorHandling;
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+
+using EVEMon.APIErrorHandling;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
-
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Reflection;
-using System.Text;
-using System.Runtime.InteropServices;
 
 namespace EVEMon.ApiErrorHandling
 {
@@ -160,24 +160,24 @@ namespace EVEMon.ApiErrorHandling
         {
             switch (result.ErrorType)
             {
-                case APIErrors.None:
+                case APIEnumerations.APIErrors.None:
                     return "No error specified";
 
-                case APIErrors.CCP:
+                case APIEnumerations.APIErrors.CCP:
                     return String.Format(CultureConstants.DefaultCulture,
                         "CCP Error {0} : {1}",
                         result.CCPError.ErrorCode,
                         result.CCPError.ErrorMessage);
 
-                case APIErrors.Http:
+                case APIEnumerations.APIErrors.Http:
                     return String.Format(CultureConstants.DefaultCulture,
                         "HTTP error: {0}", result.ErrorMessage);
 
-                case APIErrors.Xml:
+                case APIEnumerations.APIErrors.Xml:
                     return String.Format(CultureConstants.DefaultCulture,
                         "XML error: {0}", result.ErrorMessage);
 
-                case APIErrors.Xslt:
+                case APIEnumerations.APIErrors.Xslt:
                     return String.Format(CultureConstants.DefaultCulture,
                         "XSLT error: {0}", result.ErrorMessage);
 

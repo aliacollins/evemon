@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using EVEMon.Common.Threading;
+
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -93,7 +94,7 @@ namespace EVEMon.Common
                     var charListResult = EveClient.APIProviders.CurrentProvider.QueryCharactersList(userID, apiKey);
 
                     // Call char/AccountBalance.xml to check whether it is a full api key
-                    APIResult<SerializableAccountBalanceList> balanceResult = null;
+                    APIResult<SerializableAPIAccountBalance> balanceResult = null;
                     if (!charListResult.HasError && charListResult.Result.Characters.Count != 0)
                     {
                         var characterID = charListResult.Result.Characters[0].ID;

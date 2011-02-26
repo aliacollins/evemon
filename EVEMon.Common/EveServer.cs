@@ -1,10 +1,6 @@
 using System;
-using System.Timers;
-using System.Xml;
-using EVEMon.Common.Net;
-using EVEMon.Common.Serialization;
+
 using EVEMon.Common.Serialization.API;
-using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -15,7 +11,7 @@ namespace EVEMon.Common
     {
         private int m_users;
         private ServerStatus m_status;
-        private QueryMonitor<SerializableServerStatus> m_monitor;
+        private QueryMonitor<SerializableAPIServerStatus> m_monitor;
 
         /// <summary>
         /// Constructor
@@ -24,7 +20,7 @@ namespace EVEMon.Common
         {
             m_status = ServerStatus.Online;
 
-            m_monitor = new QueryMonitor<SerializableServerStatus>(APIMethods.ServerStatus);
+            m_monitor = new QueryMonitor<SerializableAPIServerStatus>(APIMethods.ServerStatus);
             m_monitor.Updated += OnMonitorUpdated;
         }
 
@@ -98,7 +94,7 @@ namespace EVEMon.Common
         /// Occurs when CCP returns new data
         /// </summary>
         /// <param name="result"></param>
-        private void OnMonitorUpdated(APIResult<SerializableServerStatus> result)
+        private void OnMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
         {
             // Was there an error ?
             var lastStatus = m_status;

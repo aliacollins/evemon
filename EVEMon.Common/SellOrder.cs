@@ -1,4 +1,4 @@
-using System;
+
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -13,7 +13,7 @@ namespace EVEMon.Common
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal SellOrder(SerializableAPIOrder src)
+        internal SellOrder(SerializableOrderListItem src)
             : base(src)
         {
         }

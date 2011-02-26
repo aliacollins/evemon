@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
-using EVEMon.Common.Net;
 using System.Xml.Xsl;
+
+using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.API
 {
     [XmlRoot("eveapi")]
     public sealed class APIResult<T> : IAPIResult
     {
-        private APIErrors m_error = APIErrors.None;
+        private APIEnumerations.APIErrors m_error = APIEnumerations.APIErrors.None;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
@@ -19,7 +20,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public APIResult()
         {
-            m_error = APIErrors.None;
+            m_error = APIEnumerations.APIErrors.None;
             m_errorMessage = String.Empty;
             m_exception = null;
         }
@@ -41,7 +42,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(HttpWebServiceException exc)
             : this(exc as Exception)
         {
-            m_error = APIErrors.Http;
+            m_error = APIEnumerations.APIErrors.Http;
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(XmlException exc)
             : this((Exception)exc)
         {
-            m_error = APIErrors.Xml;
+            m_error = APIEnumerations.APIErrors.Xml;
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace EVEMon.Common.Serialization.API
         public APIResult(XsltException exc)
             : this(exc as Exception)
         {
-            m_error = APIErrors.Xslt;
+            m_error = APIEnumerations.APIErrors.Xslt;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace EVEMon.Common.Serialization.API
         /// <param name="exc">The exception.</param>
         public APIResult(InvalidOperationException exc)
         {
-            m_error = APIErrors.Xml;
+            m_error = APIEnumerations.APIErrors.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;
         }
@@ -80,7 +81,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         /// <param name="error">The error.</param>
         /// <param name="message">The message.</param>
-        public APIResult(APIErrors error, string message)
+        public APIResult(APIEnumerations.APIErrors error, string message)
         {
             m_error = error;
             m_errorMessage = message;
@@ -111,19 +112,19 @@ namespace EVEMon.Common.Serialization.API
                 if (CCPError != null)
                     return true;
 
-                return m_error != APIErrors.None; 
+                return m_error != APIEnumerations.APIErrors.None; 
             }
         }
 
         /// <summary>
         /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
         /// </summary>
-        public APIErrors ErrorType
+        public APIEnumerations.APIErrors ErrorType
         {
             get 
             {
                 if (CCPError != null)
-                    return APIErrors.CCP;
+                    return APIEnumerations.APIErrors.CCP;
 
                 return m_error; 
             }
@@ -219,7 +220,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("error")]
-        public CCPError CCPError
+        public APICCPError CCPError
         {
             get;
             set;
@@ -234,7 +235,7 @@ namespace EVEMon.Common.Serialization.API
         #endregion
 
 
-        #region Times fixing
+        #region Time fixing
         /// <summary>
         /// Fixup the currentTime and cachedUntil time to match the user's clock.
         /// This should ONLY be called when the xml is first recieved from CCP

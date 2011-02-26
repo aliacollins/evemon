@@ -157,10 +157,10 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="charID"></param>
         /// <returns></returns>
-        public APIResult<SerializableAccountBalanceList> QueryCharacterAccountBalance(long userID, string apiKey, long charID)
+        public APIResult<SerializableAPIAccountBalance> QueryCharacterAccountBalance(long userID, string apiKey, long charID)
         {
             HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
-            return QueryMethod<SerializableAccountBalanceList>(APIMethods.CharacterAccountBalance, postData, RowsetsTransform);
+            return QueryMethod<SerializableAPIAccountBalance>(APIMethods.CharacterAccountBalance, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -170,10 +170,10 @@ namespace EVEMon.Common
         /// <param name="apiKey"></param>
         /// <param name="charID"></param>
         /// <returns></returns>
-        public APIResult<SerializableSkillInTraining> QuerySkillInTraining(long userID, string apiKey, long charID)
+        public APIResult<SerializableAPISkillInTraining> QuerySkillInTraining(long userID, string apiKey, long charID)
         {
             HttpPostData postData = new HttpPostData("userID=" + userID + "&apiKey=" + apiKey + "&characterID=" + charID.ToString());
-            return QueryMethod<SerializableSkillInTraining>(APIMethods.CharacterSkillInTraining, postData, RowsetsTransform);
+            return QueryMethod<SerializableAPISkillInTraining>(APIMethods.CharacterSkillInTraining, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -181,18 +181,18 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="userID">The account's ID</param>
         /// <param name="apiKey">The account's API key</param>
-        public APIResult<SerializableCharacterList> QueryCharactersList(long userID, string apiKey)
+        public APIResult<SerializableAPICharacters> QueryCharactersList(long userID, string apiKey)
         {
             HttpPostData postData = new HttpPostData("userID=" + userID.ToString() + "&apiKey=" + apiKey);
-            return QueryMethod<SerializableCharacterList>(APIMethods.CharacterList, postData, RowsetsTransform);
+            return QueryMethod<SerializableAPICharacters>(APIMethods.CharacterList, postData, RowsetsTransform);
         }
 
         /// <summary>
         /// Query the conquerable station list.
         /// </summary>
-        public APIResult<SerializableConquerableStationList> QueryConquerableStationList()
+        public APIResult<SerializableAPIConquerableStationList> QueryConquerableStationList()
         {
-            return QueryMethod<SerializableConquerableStationList>(APIMethods.ConquerableStationList, null, RowsetsTransform);
+            return QueryMethod<SerializableAPIConquerableStationList>(APIMethods.ConquerableStationList, null, RowsetsTransform);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace EVEMon.Common
             // If the result is a character sheet, we store the result
             if (method == APIMethods.CharacterSheet && !result.HasError)
             {
-                SerializableAPICharacter sheet = (SerializableAPICharacter)(Object)result.Result;
+                SerializableCharacter sheet = (SerializableCharacter)(Object)result.Result;
                 LocalXmlCache.Save(sheet.Name, result.XmlDocument);
             }
 
@@ -296,7 +296,7 @@ namespace EVEMon.Common
                 // If the result is a character sheet, we store the result
                 if (method == APIMethods.CharacterSheet && !result.HasError)
                 {
-                    SerializableAPICharacter sheet = (SerializableAPICharacter)(Object)result.Result;
+                    SerializableCharacter sheet = (SerializableCharacter)(Object)result.Result;
                     LocalXmlCache.Save(sheet.Name, result.XmlDocument);
                 }
 
@@ -316,7 +316,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && result.HasError && result.ErrorType != APIErrors.CCP);
+            return (s_ccpProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
         }
 
         /// <summary>

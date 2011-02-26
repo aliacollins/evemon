@@ -85,15 +85,17 @@
     <Compile Include="ResearchPointCollection.cs" />
     <Compile Include="ResearchPointComparer.cs" />
     <Compile Include="SellOrder.cs" />
-    <Compile Include="Serialization\API\CCPOrderState.cs" />
-    <Compile Include="Serialization\API\SerializableAccountBalance.cs" />
-    <Compile Include="Serialization\API\SerializableAPIImplant.cs" />
-    <Compile Include="Serialization\API\SerializableAPIJobList.cs" />
-    <Compile Include="Serialization\API\SerializableAPIOrderList.cs" />
-    <Compile Include="Serialization\API\SerializableAPIResearchPoint.cs" />
+    <Compile Include="Serialization\API\APIEnumerations.cs" />
+    <Compile Include="Serialization\API\SerializableAPIAccountBalance.cs" />
+    <Compile Include="Serialization\API\SerializableAccountBalanceListItem.cs" />
+    <Compile Include="Serialization\API\SerializableImplant.cs" />
+    <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
+    <Compile Include="Serialization\API\SerializableAPIMarketOrders.cs" />
+    <Compile Include="Serialization\API\SerializableAPIResearch.cs" />
     <Compile Include="Serialization\API\SerializableCharacterListItem.cs" />
     <Compile Include="Serialization\API\SerializableOutpost.cs" />
-    <Compile Include="Serialization\ISerializableCharacterIdentity.cs" />
+    <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
+    <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
@@ -146,7 +148,7 @@
     <Compile Include="Controls\BusyDialog.Designer.cs">
       <DependentUpon>BusyDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\API\CCPError.cs" />
+    <Compile Include="Serialization\API\APICCPError.cs" />
     <Compile Include="Controls\CopySaveOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,7 +172,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\API\SerializableSkillQueue.cs" />
+    <Compile Include="Serialization\API\SerializableAPISkillQueue.cs" />
     <Compile Include="Controls\EVEMonForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,7 +191,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\SerializableCharacterBase.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterSheetBase.cs" />
     <Compile Include="Controls\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -368,13 +370,12 @@
     <Compile Include="Pricer.cs" />
     <Compile Include="QueryMonitor.cs" />
     <Compile Include="QueryMonitorCollection.cs" />
-    <Compile Include="Serialization\API\APIErrors.cs" />
     <Compile Include="Serialization\API\IAPIResult.cs" />
-    <Compile Include="Serialization\API\SerializableAPIJob.cs" />
-    <Compile Include="Serialization\API\SerializableAPIOrder.cs" />
-    <Compile Include="Serialization\API\SerializableConquerableStationList.cs" />
+    <Compile Include="Serialization\API\SerializableJobListItem.cs" />
+    <Compile Include="Serialization\API\SerializableOrderListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIConquerableStationList.cs" />
     <Compile Include="Serialization\Datafiles\BlueprintsDatafile.cs" />
-    <Compile Include="Serialization\API\SerializableSkillInTraining.cs" />
+    <Compile Include="Serialization\API\SerializableAPISkillInTraining.cs" />
     <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -429,10 +430,10 @@
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
     <Compile Include="Serialization\Battleclinic\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacter.cs" />
-    <Compile Include="Serialization\API\SerializableAttributes.cs" />
+    <Compile Include="Serialization\API\SerializableCharacter.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
     <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
-    <Compile Include="Serialization\API\SerializableAPIImplantSet.cs" />
+    <Compile Include="Serialization\API\SerializableImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableSimpleScheduleEntry.cs" />
     <Compile Include="SettingsObjects\CalendarSettings.cs" />
@@ -489,8 +490,8 @@
     <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProviders.cs" />
     <Compile Include="Serialization\API\SerializableSkill.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterList.cs" />
-    <Compile Include="Serialization\API\SerializableServerStatus.cs" />
+    <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
+    <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="QueuedSkill.cs" />
     <Compile Include="UriCharacterEventArgs.cs" />
     <None Include="Diagrams\Certificates.cd" />

@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization.API
         /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
         /// </summary>
         /// <value>The type of the error.</value>
-        APIErrors ErrorType { get; }
+        APIEnumerations.APIErrors ErrorType { get; }
 
         /// <summary>
         /// Gets the error message without bothering about its nature.
@@ -36,7 +36,7 @@ namespace EVEMon.Common.Serialization.API
         /// Gets the error returned by CCP.
         /// </summary>
         /// <value>The CCP error.</value>
-        CCPError CCPError { get; set; }
+        APICCPError CCPError { get; set; }
 
         /// <summary>
         /// Gets the returned XML document.

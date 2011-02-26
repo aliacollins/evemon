@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.API;
+using System.Linq;
+
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
@@ -22,7 +22,7 @@ namespace EVEMon.Common
             {
                 foreach(var station in StaticGeography.AllSystems.First(x => x.Name == "Jita").Constellation)
                 {
-                    yield return new SellOrder(new SerializableAPIOrder 
+                    yield return new SellOrder(new SerializableOrderListItem 
                     { 
                         Range = 0, 
                         MinVolume = 1, 

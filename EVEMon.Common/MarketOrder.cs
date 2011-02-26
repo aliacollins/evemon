@@ -39,7 +39,7 @@ namespace EVEMon.Common
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        protected MarketOrder(SerializableAPIOrder src)
+        protected MarketOrder(SerializableOrderListItem src)
         {
             m_state = GetState(src);
             m_orderID = src.OrderID;
@@ -111,7 +111,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        internal bool TryImport(SerializableAPIOrder src, List<MarketOrder> endedOrders)
+        internal bool TryImport(SerializableOrderListItem src, List<MarketOrder> endedOrders)
         {
             // Note that, before a match is found, all orders have been marked for deletion : m_markedForDeletion == true
 
@@ -224,20 +224,20 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private static OrderState GetState(SerializableAPIOrder src)
+        private static OrderState GetState(SerializableOrderListItem src)
         {
-            switch ((CCPOrderState)src.State)
+            switch ((APIEnumerations.CCPOrderState)src.State)
             {
-                case CCPOrderState.Closed:
-                case CCPOrderState.Canceled:
-                case CCPOrderState.CharacterDeleted:
+                case APIEnumerations.CCPOrderState.Closed:
+                case APIEnumerations.CCPOrderState.Canceled:
+                case APIEnumerations.CCPOrderState.CharacterDeleted:
                     return OrderState.Canceled;
 
-                case CCPOrderState.Pending:
-                case CCPOrderState.Opened:
+                case APIEnumerations.CCPOrderState.Pending:
+                case APIEnumerations.CCPOrderState.Opened:
                     return OrderState.Active;
 
-                case CCPOrderState.ExpiredOrFulfilled:
+                case APIEnumerations.CCPOrderState.ExpiredOrFulfilled:
                     return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
 
                 default:
@@ -398,7 +398,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        internal bool MatchesWith(SerializableAPIOrder src)
+        internal bool MatchesWith(SerializableOrderListItem src)
         {
             return src.OrderID == m_orderID;
         }
@@ -408,7 +408,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        internal bool IsModified (SerializableAPIOrder src)
+        internal bool IsModified (SerializableOrderListItem src)
         {
             return src.RemainingVolume != 0
                 && ((src.UnitaryPrice != m_unitaryPrice && src.Issued != m_issued)

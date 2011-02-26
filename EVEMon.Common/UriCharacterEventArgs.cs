@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
@@ -13,15 +11,15 @@ namespace EVEMon.Common
     public sealed class UriCharacterEventArgs : EventArgs
     {
         private Uri m_uri;
-        private APIResult<SerializableAPICharacter> m_apiResult;
-        private SerializableCharacterBase m_result;
+        private APIResult<SerializableCharacter> m_apiResult;
+        private SerializableCharacterSheetBase m_result;
 
         /// <summary>
         /// Constructor for API Characters
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">API Result</param>
-        public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacter> result)
+        public UriCharacterEventArgs(Uri uri, APIResult<SerializableCharacter> result)
         {
             m_uri = uri;
             m_apiResult = result;
@@ -132,7 +130,7 @@ namespace EVEMon.Common
             }
         }
 
-        private CharacterIdentity GetIdentity(SerializableCharacterBase character)
+        private CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
         {
             // Retrieve the identity and create one if needed
             var identity = EveClient.CharacterIdentities[character.ID];

@@ -32,7 +32,7 @@ namespace EVEMon.Common
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal ResearchPoint(SerializableAPIResearchPoint src)
+        internal ResearchPoint(SerializableResearchListItem src)
         {
             GetAgentInfoByID(src.AgentID);
 

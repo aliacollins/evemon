@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -44,7 +45,7 @@ namespace EVEMon.Common
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal IndustryJob(SerializableAPIJob src)
+        internal IndustryJob(SerializableJobListItem src)
         {
             m_state = GetState(src);
             m_jobID = src.JobID;
@@ -138,7 +139,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>True if import sucessful otherwise, false.</returns>
-        internal bool TryImport(SerializableAPIJob src)
+        internal bool TryImport(SerializableJobListItem src)
         {
             // Note that, before a match is found, all jobs have been marked for deletion : m_markedForDeletion == true
 
@@ -211,25 +212,25 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">The serializable source.</param>
         /// <returns>State of the seriallzable job.</returns>
-        private JobState GetState(SerializableAPIJob src)
+        private JobState GetState(SerializableJobListItem src)
         {
             if (src.Completed == (int) JobState.Delivered)
             {
-                switch ((CCPJobCompletedStatus) src.CompletedStatus)
+                switch ((APIEnumerations.CCPJobCompletedStatus) src.CompletedStatus)
                 {
                         // Canceled States
-                    case CCPJobCompletedStatus.Aborted:
-                    case CCPJobCompletedStatus.GM_Aborted:
+                    case APIEnumerations.CCPJobCompletedStatus.Aborted:
+                    case APIEnumerations.CCPJobCompletedStatus.GM_Aborted:
                         return JobState.Canceled;
 
                         // Failed States
-                    case CCPJobCompletedStatus.Inflight_Unanchored:
-                    case CCPJobCompletedStatus.Destroyed:
-                    case CCPJobCompletedStatus.Failed:
+                    case APIEnumerations.CCPJobCompletedStatus.Inflight_Unanchored:
+                    case APIEnumerations.CCPJobCompletedStatus.Destroyed:
+                    case APIEnumerations.CCPJobCompletedStatus.Failed:
                         return JobState.Failed;
 
                         // Delivered States
-                    case CCPJobCompletedStatus.Delivered:
+                    case APIEnumerations.CCPJobCompletedStatus.Delivered:
                         return JobState.Delivered;
 
                     default:
@@ -473,7 +474,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        internal bool MatchesWith(SerializableAPIJob src)
+        internal bool MatchesWith(SerializableJobListItem src)
         {
             return src.JobID == m_jobID;
         }
@@ -483,7 +484,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        internal bool IsModified(SerializableAPIJob src)
+        internal bool IsModified(SerializableJobListItem src)
         {
             return src.EndProductionTime != m_endProductionTime
                    || src.PauseProductionTime != m_pauseProductionTime;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Serialization;
+
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -9,7 +9,7 @@ namespace EVEMon.Common.Serialization.Settings
     /// <summary>
     /// Represents a base for character serialization in the settings
     /// </summary>
-    public class SerializableSettingsCharacter : SerializableCharacterBase
+    public class SerializableSettingsCharacter : SerializableCharacterSheetBase
     {
         public SerializableSettingsCharacter()
         {

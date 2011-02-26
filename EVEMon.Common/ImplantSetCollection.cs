@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Serialization;
+
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -162,7 +160,7 @@ namespace EVEMon.Common
         /// Imports data from an API serialization object provided by CCP
         /// </summary>
         /// <param name="serial"></param>
-        internal void Import(SerializableAPIImplantSet serial)
+        internal void Import(SerializableImplantSet serial)
         {
             // Search whether the api infos are different from the ones currently stored.
             var newSet = new ImplantSet(m_owner, "temp");

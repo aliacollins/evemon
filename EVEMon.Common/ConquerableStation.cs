@@ -1,9 +1,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using System.Linq;
 
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
@@ -81,7 +78,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Processes the conquerable station list.
         /// </summary>
-        private static void OnUpdated(APIResult<SerializableConquerableStationList> result)
+        private static void OnUpdated(APIResult<SerializableAPIConquerableStationList> result)
         {
             // Was there an error ?
             if (result.HasError)
@@ -116,7 +113,7 @@ namespace EVEMon.Common
             if (!File.Exists(file))
                 return;
 
-            var result = Util.DeserializeAPIResult<SerializableConquerableStationList>(file, APIProvider.RowsetsTransform);
+            var result = Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
             if (result.HasError)

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
@@ -37,7 +35,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable research points from the API.</param>
-        internal void Import(IEnumerable<SerializableAPIResearchPoint> src)
+        internal void Import(IEnumerable<SerializableResearchListItem> src)
         {            
             m_items.Clear();
 

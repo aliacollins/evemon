@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
+
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common.Serialization.Importation
@@ -45,9 +43,9 @@ namespace EVEMon.Common.Serialization.Importation
             set;
         }
 
-        internal SerializableAttributes ToSerializableAttributes()
+        internal SerializableCharacterAttributes ToSerializableAttributes()
         {
-            var ccpAttributes = new SerializableAttributes();
+            var ccpAttributes = new SerializableCharacterAttributes();
 
             ccpAttributes.Charisma = Charisma;
             ccpAttributes.Intelligence = Intelligence;

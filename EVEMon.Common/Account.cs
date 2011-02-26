@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization;
@@ -15,7 +16,7 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class Account
     {
-        private readonly AccountQueryMonitor<SerializableCharacterList> m_charactersListMonitor;
+        private readonly AccountQueryMonitor<SerializableAPICharacters> m_charactersListMonitor;
         private readonly AccountIgnoreList m_ignoreList;
 
         private readonly Dictionary<String, SkillQueueResponse> m_skillQueueCache =
@@ -34,7 +35,7 @@ namespace EVEMon.Common
         /// </summary>
         private Account()
         {
-            m_charactersListMonitor = new AccountQueryMonitor<SerializableCharacterList>(this, APIMethods.CharacterList);
+            m_charactersListMonitor = new AccountQueryMonitor<SerializableAPICharacters>(this, APIMethods.CharacterList);
             m_charactersListMonitor.Updated += OnCharactersListUpdated;
 
             m_ignoreList = new AccountIgnoreList(this);
@@ -179,7 +180,7 @@ namespace EVEMon.Common
                 if (!m_skillQueueCache.ContainsKey(identity))
                     m_skillQueueCache.Add(identity, new SkillQueueResponse());
 
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableSkillInTraining>(
+                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
                     APIMethods.CharacterSkillInTraining,
                     m_userId,
                     m_apiKey,
@@ -210,7 +211,7 @@ namespace EVEMon.Common
                     return;
 
                 // Query the wallet balance
-                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAccountBalanceList>(
+                EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIAccountBalance>(
                     APIMethods.CharacterAccountBalance, m_userId, m_apiKey, characterID.CharacterID,
                     OnKeyLevelUpdated);
             }
@@ -222,7 +223,7 @@ namespace EVEMon.Common
         /// <param name="result"></param>
         /// <param name="?"></param>
         /// <returns></returns>
-        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAccountBalanceList> result)
+        internal static CredentialsLevel GetCredentialsLevel(APIResult<SerializableAPIAccountBalance> result)
         {
             // No error ? Then it is a full key
             if (!result.HasError)
@@ -240,7 +241,7 @@ namespace EVEMon.Common
         /// Updates the characters list with the given CCP data
         /// </summary>
         /// <param name="result"></param>
-        internal void Import(APIResult<SerializableCharacterList> result)
+        internal void Import(APIResult<SerializableAPICharacters> result)
         {
             if (result.HasError)
             {
@@ -280,7 +281,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="character">The character.</param>
-        private void OnSkillInTrainingUpdated(APIResult<SerializableSkillInTraining> result, string character)
+        private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string character)
         {
             // Return on error
             if (result.HasError)
@@ -325,7 +326,7 @@ namespace EVEMon.Common
         /// Used when the character list has been queried.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharactersListUpdated(APIResult<SerializableCharacterList> result)
+        private void OnCharactersListUpdated(APIResult<SerializableAPICharacters> result)
         {
             // Notify on error
             if (result.HasError)
@@ -350,7 +351,7 @@ namespace EVEMon.Common
         /// Update when we can update the key level.
         /// </summary>
         /// <param name="result"></param>
-        private void OnKeyLevelUpdated(APIResult<SerializableAccountBalanceList> result)
+        private void OnKeyLevelUpdated(APIResult<SerializableAPIAccountBalance> result)
         {
             m_lastKeyLevelUpdate = DateTime.UtcNow;
             m_keyLevel = GetCredentialsLevel(result);
@@ -459,7 +460,7 @@ namespace EVEMon.Common
         /// <param name="identities"></param>
         /// <param name="queryResult"></param>
         internal void UpdateAPIKey(string apiKey, CredentialsLevel keyLevel, IEnumerable<CharacterIdentity> identities,
-                                   APIResult<SerializableCharacterList> queryResult)
+                                   APIResult<SerializableAPICharacters> queryResult)
         {
             m_apiKey = apiKey;
             m_keyLevel = keyLevel;

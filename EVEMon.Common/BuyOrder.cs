@@ -1,4 +1,5 @@
 using System;
+
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
@@ -16,7 +17,7 @@ namespace EVEMon.Common
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal BuyOrder(SerializableAPIOrder src)
+        internal BuyOrder(SerializableOrderListItem src)
             : base(src)
         {
             Escrow = src.Escrow;

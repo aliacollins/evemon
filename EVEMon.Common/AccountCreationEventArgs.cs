@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -12,7 +12,7 @@ namespace EVEMon.Common
     {
         private readonly long m_userID;
         private readonly string m_apiKey;
-        private readonly APIResult<SerializableCharacterList> m_serialCharacterList;
+        private readonly APIResult<SerializableAPICharacters> m_serialCharacterList;
         private readonly List<CharacterIdentity> m_identities = new List<CharacterIdentity>();
         private readonly string m_fullKeyError;
         private readonly CredentialsLevel m_keyLevel;
@@ -25,8 +25,8 @@ namespace EVEMon.Common
         /// <param name="serialCharacterList"></param>
         /// <param name="serialBalanceList"></param>
         internal AccountCreationEventArgs(long userID, string apiKey, 
-            APIResult<SerializableCharacterList> serialCharacterList, 
-            APIResult<SerializableAccountBalanceList> serialBalanceList)
+            APIResult<SerializableAPICharacters> serialCharacterList, 
+            APIResult<SerializableAPIAccountBalance> serialBalanceList)
         {
             m_userID = userID;
             m_apiKey = apiKey;
