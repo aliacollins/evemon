@@ -625,12 +625,6 @@ namespace EVEMon.Common
                 if (!updatedAnything)
                     break;
             }
-
-            // Not from CCP ?
-            if (!fromCCP)
-            {
-                SerializableSettingsCharacter nonCCPSerial = (SerializableSettingsCharacter)serial;
-            }
         }
 
         /// <summary>

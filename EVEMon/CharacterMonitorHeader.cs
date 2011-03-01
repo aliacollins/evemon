@@ -29,14 +29,11 @@ namespace EVEMon
         {
             InitializeComponent();
 
-            // fonts
+            // Fonts
             Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            // layout
-            Height = MainTableLayoutPanel.Height;
-
-            // subscribe to events
+            // Subscribe to events
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.CharacterChanged += EveClient_CharacterChanged;
@@ -123,7 +120,7 @@ namespace EVEMon
                     "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
                     "Corporation: {0}", m_character.CorporationName);
-                
+
                 FormatBalance();
 
                 FormatAttributes();
@@ -363,7 +360,7 @@ namespace EVEMon
         /// Generates text representing the time to next update.
         /// </summary>
         /// <param name="monitor">The monitor.</param>
-        /// <returns>String describing the time untill the next update.</returns>
+        /// <returns>String describing the time until the next update.</returns>
         private static string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
         {
             TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
@@ -390,7 +387,7 @@ namespace EVEMon
         {
             var output = new StringBuilder();
 
-            output.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", monitor.ToString());
+            output.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", monitor);
 
             if (monitor.Status == QueryStatus.Pending)
             {

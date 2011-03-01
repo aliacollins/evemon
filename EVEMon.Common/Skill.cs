@@ -311,7 +311,6 @@ namespace EVEMon.Common
         {
             get
             {
-                int level = Math.Min(m_level + 1, 5);
                 var spPerHour = m_character.GetBaseSPPerHour(this);
                 return (int)Math.Round(spPerHour);
             }

@@ -689,7 +689,7 @@ namespace EVEMon
         /// Toggles all the skill groups to collapse or open.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void toggleSkillsIcon_Click(object sender, EventArgs e)
         {
             skillsList.ToggleAll();

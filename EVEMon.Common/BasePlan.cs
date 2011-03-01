@@ -592,7 +592,6 @@ namespace EVEMon.Common
                     continue;
 
                 // Let's first gather dependencies
-                var item = new StaticSkillLevel(itemToRemove);
                 foreach (var dependencyEntry in m_items)
                 {
                     // Already in the "entries to remove" list ? We skip it.
@@ -881,8 +880,6 @@ namespace EVEMon.Common
         /// <param name="trainSkills">When true, the character will train every skill, increasing SP, etc.</param>
         public void UpdateOldTrainingTimes(CharacterScratchpad scratchpad, bool applyRemappingPoints, bool trainSkills)
         {
-            DateTime time = DateTime.Now;
-
             // Update the statistics
             foreach (var entry in m_items)
             {
