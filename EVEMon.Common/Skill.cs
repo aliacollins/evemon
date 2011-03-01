@@ -447,27 +447,7 @@ namespace EVEMon.Common
         /// </summary>
         public double PercentCompleted
         {
-            get { return Math.Round(FractionCompleted * 100); }
-        }
-
-        /// <summary>
-        /// Calculates the percentage trained (in terms of skill points) to the next level of this skill.
-        /// If the skill is already at level 5, we return 100.0.
-        /// </summary>
-        /// <returns>Percentage of skill points to the next level that have already been trained.</returns>
-        public double GetPercentDone
-        {
-            get
-            {
-                if (Level == 5)
-                    return 100.0;
-
-                int reqToThisLevel = GetLeftPointsRequiredToLevel(Level);
-                int pointsInThisLevel = SkillPoints - reqToThisLevel;
-                int reqToNextLevel = GetLeftPointsRequiredToLevel(Level + 1);
-                double deltaPointsOfLevel = Convert.ToDouble(reqToNextLevel - reqToThisLevel);
-                return pointsInThisLevel / deltaPointsOfLevel;
-            }
+            get { return FractionCompleted * 100; }
         }
 
         /// <summary>
