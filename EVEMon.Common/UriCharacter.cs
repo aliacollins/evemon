@@ -56,13 +56,14 @@ namespace EVEMon.Common
         {
             get 
             {
-                if (m_uri.IsFile) return m_name + " (file)";
-                return m_name + " (url)"; 
+                return String.Format("{0} {1}", m_name, (m_uri.IsFile ? "(file)" : "(url)")); 
             }
         }
 
         /// <summary>
-        /// Gets or sets the source's name. By default, it's the character's name but it may be overriden to help distinct tabs on the main window.
+        /// Gets or sets the source's name.
+        /// By default, it's the character's name
+        /// but it may be overriden to help distinct tabs on the main window.
         /// </summary>
         public Uri Uri
         {

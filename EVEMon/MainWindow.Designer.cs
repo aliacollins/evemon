@@ -76,6 +76,7 @@ namespace EVEMon
             this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillsPieChartMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addBlankCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsSchedulerImplantGroupsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.implantsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showOwnedSkillbooksMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -236,13 +237,13 @@ namespace EVEMon
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(102, 17);
+            this.lblStatus.Size = new System.Drawing.Size(59, 17);
             this.lblStatus.Text = "EVE Time:";
             // 
             // lblServerStatus
             // 
             this.lblServerStatus.Name = "lblServerStatus";
-            this.lblServerStatus.Size = new System.Drawing.Size(201, 17);
+            this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
             this.lblServerStatus.Text = "// Server Status Unknown";
             // 
             // saveFileDialog
@@ -481,6 +482,7 @@ namespace EVEMon
             this.mineralWorksheetToolStripMenuItem,
             this.skillsPieChartMenu,
             this.schedulerToolStripMenuItem,
+            this.addBlankCharacterMenu,
             this.toolsSchedulerImplantGroupsToolStripSeparator,
             this.implantsMenu,
             this.showOwnedSkillbooksMenu,
@@ -516,6 +518,14 @@ namespace EVEMon
             this.schedulerToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.schedulerToolStripMenuItem.Text = "&Scheduler...";
             this.schedulerToolStripMenuItem.Click += new System.EventHandler(this.schedulerToolStripMenuItem_Click);
+            // 
+            // addBlankCharacterMenu
+            // 
+            this.addBlankCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("addBlankCharacterMenu.Image")));
+            this.addBlankCharacterMenu.Name = "addBlankCharacterMenu";
+            this.addBlankCharacterMenu.Size = new System.Drawing.Size(209, 22);
+            this.addBlankCharacterMenu.Text = "Blank Character Creator...";
+            this.addBlankCharacterMenu.Click += new System.EventHandler(this.addBlankCharacterMenu_Click);
             // 
             // toolsSchedulerImplantGroupsToolStripSeparator
             // 
@@ -921,9 +931,9 @@ namespace EVEMon
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
             this.trayIcon.MouseHoverTime = 200;
             this.trayIcon.Text = "";
-            this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
+            this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             // 
             // MainWindow
             // 
@@ -939,8 +949,8 @@ namespace EVEMon
             this.MinimumSize = new System.Drawing.Size(480, 350);
             this.Name = "MainWindow";
             this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.trayIconToolStrip.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
@@ -1052,5 +1062,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stackExchangeMenu;
+        private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
     }
 }

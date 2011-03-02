@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 
 using EVEMon.Accounting;
+using EVEMon.BlankCharacter;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.IgbService;
@@ -135,9 +136,7 @@ namespace EVEMon
 
             // Initialize G15
             if (OsFeatureCheck.IsWindowsNT)
-            {
                 G15Handler.Init();
-            }
 
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();
@@ -1084,28 +1083,20 @@ namespace EVEMon
         #region Menus and toolbar
 
         /// <summary>
-        /// Tray icon's context menu > Close.
-        /// Quit the application.
+        /// File > Add Account...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void addAccountMenu_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            using (var window = new AccountUpdateOrAdditionWindow())
+            {
+                window.ShowDialog(this);
+            }
         }
 
         /// <summary>
-        /// File > Exit.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        /// <summary>
-        /// File > Manage Accounts.
+        /// File > Manage Accounts...
         /// Open the accounts management window.
         /// </summary>
         /// <param name="sender"></param>
@@ -1119,20 +1110,22 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > Add character...
+        /// File > Hide Character...
+        /// Unmonitor this character. It will still be in the settings unless the users removes the account and confirm the deletion of characters.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void addAccountMenu_Click(object sender, EventArgs e)
+        private void hideCharacterMenu_Click(object sender, EventArgs e)
         {
-            using (var window = new AccountUpdateOrAdditionWindow())
-            {
-                window.ShowDialog(this);
-            }
+            var character = GetCurrentCharacter();
+            if (character == null)
+                return;
+
+            character.Monitored = false;
         }
 
         /// <summary>
-        /// File > Delete character...
+        /// File > Delete Character...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1149,144 +1142,22 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > Remove Character.
-        /// Unmonitor this character. It will still be in the settings unless the users removes the account and confirm the deletion of characters.
+        /// File > Export Character...
+        /// Exports the character's infos.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void hideCharacterMenu_Click(object sender, EventArgs e)
+        private void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
         {
             var character = GetCurrentCharacter();
             if (character == null)
                 return;
 
-            character.Monitored = false;
+            UIHelper.ExportCharacter(character);
         }
 
         /// <summary>
-        /// Tools > Options.
-        /// Open the settings form.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (SettingsForm form = new SettingsForm())
-            {
-                form.ShowDialog(this);
-            }
-        }
-
-        /// <summary>
-        /// Help > About.
-        /// Open the "about" form.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory<AboutWindow>.ShowUnique();
-        }
-
-        /// <summary>
-        /// Tools > Scheduler.
-        /// Open the scheduler window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory<ScheduleEditorWindow>.ShowUnique();
-        }
-
-        /// <summary>
-        /// Tools > Mineral Worksheet.
-        /// Open the worksheet window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WindowsFactory<MineralWorksheet>.ShowUnique();
-        }
-
-        /// <summary>
-        /// Tray icon's context menu > Restore.
-        /// Restore the window to its normal size.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Visible = true;
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
-            Activate();
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
-        }
-
-        /// <summary>
-        /// Tools > Reset settings.
-        /// Called when the user clickes the "reset cache" toolbar's button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Manually delete the Settings file for any non-recoverble errors.
-            DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
-                "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-
-            if (dr == DialogResult.Yes)
-                Settings.Reset();
-        }
-
-        /// <summary>
-        /// Initializes tool strip menu item for the plan.
-        /// </summary>
-        /// <param name="planItem"></param>
-        /// <param name="plan"></param>
-        private void InitializePlanItem(ToolStripItem planItem, Plan plan)
-        {
-            planItem.Tag = plan;
-            planItem.Click += planItem_Click;
-        }
-
-        /// <summary>
-        /// Plans > Name of the plan.
-        /// Open the plan.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void planItem_Click(object sender, EventArgs e)
-        {
-            // Retrieve the plan
-            var menuItem = (ToolStripMenuItem)sender;
-            Plan plan = (Plan)menuItem.Tag;
-
-            // Show or bring to front if a window with the same plan as tag already exists
-            WindowsFactory<PlanWindow>.ShowByTag(plan);
-        }
-
-        /// <summary>
-        /// Tools > Skills pie chart.
-        /// Displays the skills pie chart
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsSkillsPieChartTool_Click(object sender, EventArgs e)
-        {
-            // Return if no selected tab (cannot infere which character the chart should represent)
-            var character = GetCurrentCharacter();
-            if (character == null)
-                return;
-
-            // Create the window
-            WindowsFactory<SkillsPieChart>.ShowByTag(character);
-        }
-
-        /// <summary>
-        /// File > Save settings.
+        /// File > Save settings...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1310,7 +1181,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > Restore settings.
+        /// File > Restore settings...
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1335,31 +1206,66 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// File > Save character infos.
+        /// File > Reset settings.
+        /// Called when the user clickes the "reset cache" toolbar's button.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
+        private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var character = GetCurrentCharacter();
-            if (character == null)
-                return;
+            // Manually delete the Settings file for any non-recoverble errors.
+            DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
+                "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
-            UIHelper.ExportCharacter(character);
+            if (dr == DialogResult.Yes)
+                Settings.Reset();
         }
 
         /// <summary>
-        /// Tools > Manual implants group.
+        /// File > Exit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// Edit's drop down menu opening.
+        /// Enabled/disable the items.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            Character character = GetCurrentCharacter();
+            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = (character != null);
+        }
+
+        /// <summary>
+        /// Edit > Copy skills to clipboard (BBCode format).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copySkillsToClipboardBBFormatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
-            WindowsFactory<ImplantSetsWindow>.ShowByTag(character);
+            try
+            {
+                // Try to copy
+                Clipboard.Clear();
+                Clipboard.SetText(CharacterExporter.ExportAsBBCode(character));
+            }
+            catch (ExternalException ex)
+            {
+                // Occurs when another process is using the clipboard
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process.");
+            }
         }
 
         /// <summary>
@@ -1390,6 +1296,39 @@ namespace EVEMon
                 return;
 
             character.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
+        }
+
+        /// <summary>
+        /// Plans > New Plan...
+        /// Displays the "New Plan" window.
+        /// </summary>
+        /// <param name="sender">menu item clicked</param>
+        /// <param name="e"></param>
+        private void newPlanMenuItem_Click(object sender, EventArgs e)
+        {
+            Character character = GetCurrentCharacter();
+            if (character == null)
+                return;
+
+            // Ask the user for a new name
+            string planName;
+            using (NewPlanWindow npw = new NewPlanWindow())
+            {
+                DialogResult dr = npw.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
+
+                planName = npw.Result;
+            }
+
+            // Create a new plan
+            Plan newPlan = new Plan(character) { Name = planName };
+
+            // Add plan and save
+            character.Plans.Add(newPlan);
+
+            // Show the editor for this plan
+            WindowsFactory<PlanWindow>.ShowByTag(newPlan);
         }
         
         /// <summary>
@@ -1445,36 +1384,98 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Plans > New Plan...
-        /// Displays the "New Plan" window.
+        /// Initializes tool strip menu item for the plan.
         /// </summary>
-        /// <param name="sender">menu item clicked</param>
+        /// <param name="planItem"></param>
+        /// <param name="plan"></param>
+        private void InitializePlanItem(ToolStripItem planItem, Plan plan)
+        {
+            planItem.Tag = plan;
+            planItem.Click += planItem_Click;
+        }
+
+        /// <summary>
+        /// Plans > Name of the plan.
+        /// Open the plan.
+        /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void newPlanMenuItem_Click(object sender, EventArgs e)
+        void planItem_Click(object sender, EventArgs e)
+        {
+            // Retrieve the plan
+            var menuItem = (ToolStripMenuItem)sender;
+            Plan plan = (Plan)menuItem.Tag;
+
+            // Show or bring to front if a window with the same plan as tag already exists
+            WindowsFactory<PlanWindow>.ShowByTag(plan);
+        }
+
+        /// <summary>
+        /// Tools > Mineral Worksheet.
+        /// Open the worksheet window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mineralWorksheetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory<MineralWorksheet>.ShowUnique();
+        }
+
+        /// <summary>
+        /// Tools > Skills pie chart.
+        /// Displays the skills pie chart
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsSkillsPieChartTool_Click(object sender, EventArgs e)
+        {
+            // Return if no selected tab (cannot infere which character the chart should represent)
+            var character = GetCurrentCharacter();
+            if (character == null)
+                return;
+
+            // Create the window
+            WindowsFactory<SkillsPieChart>.ShowByTag(character);
+        }
+
+        /// <summary>
+        /// Tools > Scheduler.
+        /// Open the scheduler window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void schedulerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory<ScheduleEditorWindow>.ShowUnique();
+        }
+
+        /// <summary>
+        /// Tools > Blank Character Creator.
+        /// Open the blank character creation window.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void addBlankCharacterMenu_Click(object sender, EventArgs e)
+        {
+            using (var window = new BlankCharacterWindow())
+            {
+                window.ShowDialog(this);
+            }
+
+        }
+
+        /// <summary>
+        /// Tools > Manual implants group.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void manualImplantGroupsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
-            // Ask the user for a new name
-            string planName;
-            using (NewPlanWindow npw = new NewPlanWindow())
-            {
-                DialogResult dr = npw.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
-
-                planName = npw.Result;
-            }
-
-            // Create a new plan
-            Plan newPlan = new Plan(character) { Name = planName };
-
-            // Add plan and save
-            character.Plans.Add(newPlan);
-
-            // Show the editor for this plan
-            WindowsFactory<PlanWindow>.ShowByTag(newPlan);
+            WindowsFactory<ImplantSetsWindow>.ShowByTag(character);
         }
 
         /// <summary>
@@ -1515,6 +1516,71 @@ namespace EVEMon
                 sb.Append("You don't have any skill books marked as \"Owned\".");
 
             MessageBox.Show(sb.ToString(), "Skill books owned by " + character.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// Tools > Options.
+        /// Open the settings form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (SettingsForm form = new SettingsForm())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
+        /// Help > Known problems and solutions.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void knownProblemsMenu_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
+        }
+
+        /// <summary>
+        /// Help > UserVoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void userVoiceMenuItem_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.EVEMonUserVoice);
+        }
+
+        /// <summary>
+        /// Help > EVE Online Q&A
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void stackExchangeMenu_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.StackExchangeEveOnlineURL);
+        }
+
+        /// <summary>
+        /// Help > Forums.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void forumsMenu_Click(object sender, EventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.EVEMonForums);
+        }
+
+        /// <summary>
+        /// Help > About.
+        /// Open the "about" form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WindowsFactory<AboutWindow>.ShowUnique();
         }
 
         /// <summary>
@@ -1569,83 +1635,6 @@ namespace EVEMon
         {
             menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
-        }
-
-        /// <summary>
-        /// Edit's drop down menu opening.
-        /// Enabled/disable the items.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            Character character = GetCurrentCharacter();
-            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = (character != null);
-        }
-
-        /// <summary>
-        /// Edit > Copy skills to clipboard (BBCode format).
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void copySkillsToClipboardBBFormatToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Character character = GetCurrentCharacter();
-            if (character == null)
-                return;
-
-            try
-            {
-                // Try to copy
-                Clipboard.Clear();
-                Clipboard.SetText(CharacterExporter.ExportAsBBCode(character));
-            }
-            catch (ExternalException ex)
-            {
-                // Occurs when another process is using the clipboard
-                ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process.");
-            }
-        }
-
-        /// <summary>
-        /// Help > Known problems and solutions.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void knownProblemsMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.EVEMonKnownProblems);
-        }
-
-        /// <summary>
-        /// Help > Forums.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void forumsMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.EVEMonForums);
-        }
-
-        /// <summary>
-        /// Help > UserVoice
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void userVoiceMenuItem_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.EVEMonUserVoice);
-        }
-
-        /// <summary>
-        /// Help - EVE Online Q&A
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void stackExchangeMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(NetworkConstants.StackExchangeEveOnlineURL);
         }
 
         /// <summary>
@@ -1821,6 +1810,32 @@ namespace EVEMon
             // Create the Relocator sub-menu
             if (Settings.UI.MainWindow.ShowRelocationMenu)
                 relocationMenu_DropDownOpening(relocatorTrayToolStripMenuItem, e);
+        }
+
+        /// <summary>
+        /// Tray icon's context menu > Restore.
+        /// Restore the window to its normal size.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Visible = true;
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            Activate();
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
+        }
+
+        /// <summary>
+        /// Tray icon's context menu > Close.
+        /// Quit the application.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         /// <summary>
@@ -2010,6 +2025,7 @@ namespace EVEMon
         }
 
         #endregion
+
 
     }
 }

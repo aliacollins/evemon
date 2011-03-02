@@ -20,16 +20,15 @@ namespace EVEMon.Common
         /// </summary>
         public static void Initialize()
         {
-            string EVEMonDir = Path.Combine(EveClient.EVEMonDataDir, "cache");
+            string EVEMonCacheDir = Path.Combine(EveClient.EVEMonDataDir, "cache");
+            if (!Directory.Exists(EVEMonCacheDir))
+                Directory.CreateDirectory(EVEMonCacheDir);
 
-            if (!Directory.Exists(EVEMonDir))
-                Directory.CreateDirectory(EVEMonDir);
+            string EVEMonXmlCacheDir = Path.Combine(EVEMonCacheDir, "xml");
+            if (!Directory.Exists(EVEMonXmlCacheDir))
+                Directory.CreateDirectory(EVEMonXmlCacheDir);
 
-            EVEMonDir = Path.Combine(EVEMonDir, "xml");
-            if (!Directory.Exists(EVEMonDir))
-                Directory.CreateDirectory(EVEMonDir);
-
-            m_cacheDirectory = EVEMonDir + Path.DirectorySeparatorChar;
+            m_cacheDirectory = String.Format("{0}{1}", EVEMonXmlCacheDir, Path.DirectorySeparatorChar);
         }
 
         /// <summary>
@@ -41,8 +40,7 @@ namespace EVEMon.Common
         {
             lock (m_syncLock)
             {
-                string encodedName = filename + ".xml";
-                return new FileInfo(m_cacheDirectory + encodedName);
+                return new FileInfo(String.Format("{0}{1}.xml", m_cacheDirectory, filename));
             }
         }
 
@@ -56,7 +54,7 @@ namespace EVEMon.Common
             lock (m_syncLock)
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(m_cacheDirectory + charName + ".xml");
+                doc.Load(String.Format("{0}{1}.xml", m_cacheDirectory, charName));
                 return doc;
             }
         }
@@ -64,8 +62,9 @@ namespace EVEMon.Common
         /// <summary>
         /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument"/> straight from CCP.
         /// </summary>
+        /// <param name="key">The key.</param>
         /// <param name="xdoc">The xml to save.</param>
-        internal static void Save(string key, XmlDocument xdoc)
+        public static void Save(string key, XmlDocument xdoc)
         {
             lock (m_syncLock)
             {
@@ -73,7 +72,7 @@ namespace EVEMon.Common
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file
-                string fileName = Path.Combine(m_cacheDirectory, name + ".xml");
+                string fileName = Path.Combine(m_cacheDirectory, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
                 {
@@ -97,7 +96,7 @@ namespace EVEMon.Common
         {
             lock (m_syncLock)
             {
-                return new Uri(m_cacheDirectory + characterName + ".xml");
+                return new Uri(String.Format("{0}{1}.xml", m_cacheDirectory, characterName));
             }
         }
 
@@ -109,7 +108,7 @@ namespace EVEMon.Common
         internal static bool CheckFileUpToDate(string filename, DateTime updateTime, TimeSpan period)
         {
             var file = GetFile(filename);
-            var previousUpdateTime = updateTime - period;
+            var previousUpdateTime = updateTime.Subtract(period);
 
             // File is already downloaded ?
             if (File.Exists(file.FullName))
@@ -118,7 +117,9 @@ namespace EVEMon.Common
                 // (file is updated after the update time
                 // or was updated between the previous day update time
                 // and today's update time and its not time to update yet) ?
-                if (file.LastWriteTimeUtc > updateTime || (file.LastWriteTimeUtc > previousUpdateTime && file.LastWriteTimeUtc < updateTime) && DateTime.UtcNow < updateTime)
+                if ((file.LastWriteTimeUtc > updateTime
+                    || (file.LastWriteTimeUtc > previousUpdateTime && file.LastWriteTimeUtc < updateTime))
+                    && DateTime.UtcNow < updateTime)
                     return true; 
             }
 

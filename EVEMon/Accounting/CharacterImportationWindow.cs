@@ -70,7 +70,7 @@ namespace EVEMon.Accounting
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
+            urlTextBox.TextChanged += urlTextBox_TextChanged;
         }
 
         /// <summary>
@@ -123,7 +123,8 @@ namespace EVEMon.Accounting
                 form.FilterIndex = 0;
 
                 DialogResult dr = form.ShowDialog();
-                if (dr == DialogResult.Cancel) return;
+                if (dr == DialogResult.Cancel)
+                    return;
 
                 fileTextBox.Text = form.FileName;
                 fileRadio.Checked = true;
@@ -150,7 +151,9 @@ namespace EVEMon.Accounting
             int version = m_version;
             EveClient.Characters.TryAddOrUpdateFromUriAsync(new Uri(uri), (sender, args) =>
                 {
-                    if (version != m_version) return;
+                    if (version != m_version)
+                        return;
+
                     urlThrobber.State = ThrobberState.Stopped;
 
                     // Was there an error ?
@@ -174,21 +177,28 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void okButton_Click(object sender, System.EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             // Shouldn't occur but, well...
             if (m_args == null || m_args.HasError)
             {
-                this.DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.Cancel;
                 return;
             }
 
             // Generates or updates the character
-            if (m_character == null) m_character = m_args.CreateCharacter();
-            else m_args.UpdateCharacter(m_character);
+            if (m_character == null)
+            {
+                m_character = m_args.CreateCharacter();
+            }
+            else
+            {
+                m_args.UpdateCharacter(m_character);
+            }
+            
             m_character.Name = nameTextBox.Text;
 
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
     }
 }
