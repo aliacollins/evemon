@@ -34,20 +34,18 @@ namespace EVEMon.Sales
                     Assembly asm = Assembly.GetExecutingAssembly();
                     s = asm.GetManifestResourceStream("EVEMon.Sales.icons." + value + ".png");
                     i = Image.FromStream(s, true, true);
-                    this.icon.Image = i;
+                    icon.Image = i;
                 }
                 catch (Exception e)
                 {
                     ExceptionHandler.LogException(e, true);
                     if (i != null)
-                    {
                         i.Dispose();
-                    }
+
                     if (s != null)
-                    {
                         s.Dispose();
-                    }
-                    this.icon.Image = null;
+
+                    icon.Image = null;
                 }
             }
         }
@@ -98,18 +96,14 @@ namespace EVEMon.Sales
             tbSubtotal.Text = m_subtotal.ToString("N");
 
             if (SubtotalChanged != null)
-            {
                 SubtotalChanged(this, new EventArgs());
-            }
         }
 
         private void txtLastSell_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
             if (MineralPriceChanged != null)
-            {
                 MineralPriceChanged(this, new EventArgs());
-            }
         }
 
         private void txtStock_TextChanged(object sender, EventArgs e)

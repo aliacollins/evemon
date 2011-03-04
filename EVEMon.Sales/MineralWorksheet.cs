@@ -28,7 +28,7 @@ namespace EVEMon.Sales
 		{
 			get
 			{
-				foreach (Control c in this.MineralTileTableLayout.Controls)
+				foreach (Control c in MineralTileTableLayout.Controls)
 				{
 					if (c is MineralTile)
 					{
@@ -107,7 +107,8 @@ namespace EVEMon.Sales
 			if (e.Error != null)
 			{
 				ExceptionHandler.LogException(e.Error, true);
-				MessageBox.Show("Failed to retrieve mineral pricing data:\n" + e.Error.Message, "Failed to Retrieve Data",
+                MessageBox.Show(String.Format("Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
+                                "Failed to Retrieve Data",
 								MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			else
@@ -123,7 +124,7 @@ namespace EVEMon.Sales
 						}
 					}
 
-					tslCourtesy.Text = "Mineral Prices Courtesy of " + MineralDataRequest.GetCourtesyText(m_source);
+                    tslCourtesy.Text = String.Format("Mineral Prices Courtesy of {0}", MineralDataRequest.GetCourtesyText(m_source));
 					m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source);
 					tslCourtesy.Visible = true;
 				}

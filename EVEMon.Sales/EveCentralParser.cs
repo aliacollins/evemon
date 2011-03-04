@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common;
-using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Text.RegularExpressions;
+using EVEMon.Common;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
