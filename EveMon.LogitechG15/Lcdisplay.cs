@@ -1,28 +1,50 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Text;
-using System.Threading;
-using System.Globalization;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Reflection;
 using System.Drawing.Text;
-
-using lgLcdClassLibrary;
 
 using EVEMon.Common;
 
 namespace EVEMon.LogitechG15
 {
-    public delegate void CharacterHandler(Character character);
-    public delegate void CharRefreshHandler(Character character);
-    public delegate void CharAutoCycleHandler(bool cycle);
-
-    public partial class Lcdisplay : IDisposable
+    public class Lcdisplay : IDisposable
     {
+
+        public static int G15Width = (int)LgLcd.LGLCD_BMP_WIDTH;
+        public static int G15Height = (int)LgLcd.LGLCD_BMP_HEIGHT;
+        public const float G15DpiX = 46;
+        public const float G15DpiY = 46;
+
+        private static Lcdisplay s_singleInstance;
+
+        private Font m_defaultFont;
+        private Bitmap m_bmpLCD;
+        private Bitmap m_bmpLCDX;
+        private Graphics m_lcdCanvas;
+        private Graphics m_lcdOverlay;
+        private int m_currentCharacterIndex;
+        private int m_oldButtonState;
+        private DateTime m_buttonStateHld;
+        private DateTime m_paintTime;
+        private DateTime m_holdTime;
+        private LcdState m_state;
+        private DateTime m_cycleTime;
+        private DateTime m_cycleQueueInfoTime;
+        private bool m_showingCycledQueueInfo;
+        private int m_completedSkills;
+
+        private List<LineProcess> m_lcdLines = new List<LineProcess>();
+
+        private LgLcd.lgLcdConnectContext m_connectContext = new LgLcd.lgLcdConnectContext();
+        private LgLcd.lgLcdOpenContext m_openContext = new LgLcd.lgLcdOpenContext();
+        private LgLcd.lgLcdBitmap160x43x1 m_lcdBitmap = new LgLcd.lgLcdBitmap160x43x1();
+
+
+        #region Delegates and Events
+        public delegate void CharacterHandler(Character character);
+        public delegate void CharAutoCycleHandler(bool cycle);
+
         /// <summary>
         /// Fired whenever a button has been pressed which require EVEMon to requery the API for the specified character.
         /// </summary>
@@ -37,209 +59,191 @@ namespace EVEMon.LogitechG15
         /// Fired whenever the auto cycle should change (because of a button press).
         /// </summary>
         public static event CharAutoCycleHandler AutoCycleChanged;
+        
+        #endregion
 
 
-        private List<ILcdLine> m_lcdLines = new List<ILcdLine>();
-
-        private Lcdisplay() 
+        #region Instantiation
+        private Lcdisplay()
         {
             m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
 
-            m_bmpLCD = new Bitmap(G15Constants.G15Width, G15Constants.G15Height, PixelFormat.Format24bppRgb);
-            m_bmpLCD.SetResolution(G15Constants.G15DpiX, G15Constants.G15DpiY);
+            m_bmpLCD = new Bitmap(G15Width, G15Height, PixelFormat.Format24bppRgb);
+            m_bmpLCD.SetResolution(G15DpiX, G15DpiY);
             m_lcdCanvas = Graphics.FromImage(m_bmpLCD);
             m_lcdCanvas.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
-            m_bmpLCDX = new Bitmap(G15Constants.G15Width, G15Constants.G15Height, PixelFormat.Format24bppRgb);
-            m_bmpLCDX.SetResolution(G15Constants.G15DpiX, G15Constants.G15DpiY);
+            m_bmpLCDX = new Bitmap(G15Width, G15Height, PixelFormat.Format24bppRgb);
+            m_bmpLCDX.SetResolution(G15DpiX, G15DpiY);
             m_lcdOverlay = Graphics.FromImage(m_bmpLCDX);
             m_lcdOverlay.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
-            m_lcd = new LCDInterface();
-            m_buttonDelegate = new ButtonDelegate(this.OnButtonsPressed);
-            m_lcd.AssignButtonDelegate(m_buttonDelegate);
-            m_lcd.Open("EVEMon", false);
             m_buttonStateHld = DateTime.Now;
             m_cycleTime = DateTime.Now.AddSeconds(10);
             m_cycleQueueInfoTime = DateTime.Now.AddSeconds(5);
-            m_cycle = false;
-            m_showTime = false;
-            m_cycleCharacterSkillQueueInfo = false;
             m_showingCycledQueueInfo = false;
-            m_leasttime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+
+            Cycle = false;
+            ShowSystemTime = false;
+            CycleSkillQueueTime = false;
+            FirstSkillCompletionRemaingTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+
+            LCDOpen("EVEMon", false);
         }
+
+        public static Lcdisplay Instance()
+        {
+            return s_singleInstance ?? new Lcdisplay();
+        } 
+        #endregion
+
+
+        #region LCD Opening and Closing
+
+        /// <summary>
+        /// Opens the LCD connection.
+        /// </summary>
+        private void LCDOpen(string appName, bool isAutoStartable)
+        {
+            int err = LgLcd.lgLcdInit();
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to initialize LgLcd.");
+
+            m_connectContext.appFriendlyName = appName;
+            m_connectContext.isAutostartable = isAutoStartable;
+            m_connectContext.isPersistent = true;
+            m_connectContext.onConfigure.configCallback = null;
+            m_connectContext.onConfigure.configContext = IntPtr.Zero;
+            m_connectContext.connection = LgLcd.LGLCD_INVALID_CONNECTION;
+
+            err = LgLcd.lgLcdConnect(ref m_connectContext);
+
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to open a connection to the device.");
+
+            m_openContext.connection = m_connectContext.connection;
+            m_openContext.index = 0;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnButtonsPressed;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
+            m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
+
+            err = LgLcd.lgLcdOpen(ref m_openContext);
+
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to open a communication context with the screen.");
+
+            m_lcdBitmap.hdr.Format = LgLcd.LGLCD_BMP_FORMAT_160x43x1;
+            m_lcdBitmap.pixels = new byte[m_bmpLCD.Width * m_bmpLCD.Height];
+        }
+
+
+        /// <summary>
+        /// Closes the LCD connection.
+        /// </summary>
+        private void LCDClose()
+        {
+            int err = LgLcd.lgLcdClose(m_openContext.device);
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to close the open connection.");
+
+            err = LgLcd.lgLcdDisconnect(m_connectContext.connection);
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to disconnect from the keyboard interface.");
+
+            err = LgLcd.lgLcdDeInit();
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to de-initialize LgLcd.");
+        } 
+
+        #endregion
+
 
         #region Cleanup
 
         private bool m_disposed = false;
 
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="Lcdisplay"/> is reclaimed by garbage collection.
+        /// </summary>
         ~Lcdisplay()
         {
             Dispose(false);
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="isDisposing">
+        /// <c>true</c> to release both managed and unmanaged resources;
+        /// <c>false</c> to release only unmanaged resources.
+        /// </param>
         private void Dispose(bool isDisposing)
         {
-            if (!this.m_disposed)
+            if (!m_disposed)
             {
-                if (isDisposing || m_lcd != null) 
-                {
-                    m_lcd.Close();
-                    m_lcd = null;
-                }
+                if (isDisposing) 
+                    LCDClose();
+
                 s_singleInstance = null;
             }
             m_disposed = true;
         }
+
         #endregion
 
-        public const uint BUTTON1_VALUE = 1;
-        public const uint BUTTON2_VALUE = 2;
-        public const uint BUTTON3_VALUE = 4;
-        public const uint BUTTON4_VALUE = 8;
-   
-        private static Lcdisplay s_singleInstance;
-        private LCDInterface m_lcd;
-        private Font m_defaultFont;
-        private Bitmap m_bmpLCD;
-        private Bitmap m_bmpLCDX;
-        private Graphics m_lcdCanvas;
-        private Graphics m_lcdOverlay;
-        private int m_currentCharacterIndex;
-        private string m_currentSkillTraining;
-        private double m_currentPerc;
-        private TimeSpan m_timeToSkillComplete;
-        private Character m_firstCharacterToComplete;
-        private TimeSpan m_leasttime;
-        private uint m_oldButtonState;
-        private DateTime m_buttonStateHld;
-        private DateTime m_paintTime;
-        private DateTime m_holdTime;
-        private LcdState m_state;
-        private bool m_cycle;
-        private int m_cycleInterval;
-        private DateTime m_cycleTime;
-        private bool m_cycleCharacterSkillQueueInfo;
-        private int m_cycleCharacterInfoTimeInterval;
-        private DateTime m_cycleQueueInfoTime;
-        private bool m_showingCycledQueueInfo;
-        private bool m_showTime;
-        private bool m_showEVETime;
-        private Character m_refreshCharacter;
-        private ButtonDelegate m_buttonDelegate;
-        private int m_completedSkills;
 
-        public bool Cycle 
-        {
-            get 
-            {
-                return m_cycle;
-            }
-            set
-            {
-                m_cycle = value;
-            }
-        }
+        #region Properties
+        public bool Cycle { get; set; }
 
-        public int CycleInterval 
-        {
-            get
-            {
-                return m_cycleInterval;
-            }
-            set
-            {
-                m_cycleInterval = value;
-            }
-        }
+        public int CycleInterval { get; set; }
 
-        public bool ShowSystemTime
-        {
-            get
-            {
-                return m_showTime;
-            }
-            set
-            {
-                m_showTime = value;
-            }
-        }
+        public bool ShowSystemTime { get; set; }
 
-        public bool ShowEVETime
-        {
-            get
-            {
-                return m_showEVETime;
-            }
-            set
-            {
-                m_showEVETime = value;
-            }
-        }
+        public bool ShowEVETime { get; set; }
 
-        public bool CycleSkillQueueTime
-        {
-            get
-            {
-                return m_cycleCharacterSkillQueueInfo;
-            }
-            set 
-            {
-                m_cycleCharacterSkillQueueInfo = value;
-            }
-        }
+        public bool CycleSkillQueueTime { get; set; }
 
-        public int CycleCompletionInterval
-        {
-            get
-            {
-                return m_cycleCharacterInfoTimeInterval;
-            }
-            set
-            {
-                m_cycleCharacterInfoTimeInterval = value;
-            }
-        }
+        public int CycleCompletionInterval { get; set; }
 
-        public Character RefreshCharacter
-        {
-            get
-            {
-                return m_refreshCharacter;
-            }
-            set
-            {
-                m_refreshCharacter = value;
-            }
-        }
+        public Character RefreshCharacter { get; set; }
+
+        public string CurrentSkillTrainingText { get; set; }
+
+        public TimeSpan TimeToComplete { get; set; }
+
+        public Character FirstCharacterToCompleteSkill { get; set; }
+
+        public TimeSpan FirstSkillCompletionRemaingTime { get; set; }
+
+        public double CurrentCharacterTrainingProgression { get; set; }
+
+        public CCPCharacter[] Characters { get; set; }
 
         public int CurrentCharacterIndex
         {
-            get
-            {
-                return m_currentCharacterIndex;
-            }
+            get { return m_currentCharacterIndex; }
         }
 
-        public string CurrentCharacterName 
+        public string CurrentCharacterName
         {
-            get 
+            get
             {
                 if (m_currentCharacterIndex >= Characters.Length)
-                {
                     m_currentCharacterIndex = Characters.Length - 1;
-                }
 
                 if (m_currentCharacterIndex < 0 || Characters == null)
-                {
                     return "No CCP Character";
-                }
+
                 return Characters[m_currentCharacterIndex].AdornedName;
             }
         }
@@ -249,98 +253,27 @@ namespace EVEMon.LogitechG15
             get
             {
                 if (m_currentCharacterIndex < 0 || Characters == null || m_currentCharacterIndex >= Characters.Length)
-                {
                     return null;
-                }
+
                 return Characters[m_currentCharacterIndex];
             }
             set
             {
                 m_currentCharacterIndex = Array.IndexOf(Characters, value);
+
                 if (m_currentCharacterIndex == -1)
                     m_currentCharacterIndex = 0;
             }
         }
+        
+        #endregion
 
-        public string CurrentSkillTrainingText 
-        {
-            get
-            {
-                return m_currentSkillTraining;
-            }
-            set
-            {
-                m_currentSkillTraining = value;
-            }
-        }
-
-        public TimeSpan TimeToComplete 
-        {
-            get
-            {
-                return m_timeToSkillComplete;
-            }
-            set
-            {
-                m_timeToSkillComplete = value;
-            }
-        }
-
-        public Character FirstCharacterToCompleteSkill 
-        {
-            get
-            {
-                return m_firstCharacterToComplete;
-            }
-            set
-            {
-                m_firstCharacterToComplete = value;
-            }
-        }
-
-        public TimeSpan FirstSkillCompletionRemaingTime
-        {
-            get
-            {
-                return m_leasttime;
-            }
-            set
-            {
-                m_leasttime = value;
-            }
-        }
-        public double CurrentCharacterTrainingProgression 
-        {
-            get
-            {
-                return m_currentPerc;
-            }
-            set
-            {
-                m_currentPerc = value;
-            }
-        }
-
-        public CCPCharacter[] Characters
-        {
-            get;
-            set;
-        }
-
-        public static Lcdisplay Instance() 
-        {
-            if (s_singleInstance == null) 
-            {
-                s_singleInstance = new Lcdisplay();
-            }
-            return s_singleInstance;
-        }
 
         #region Painting
         /// <summary>
         /// Performs the repainting of the screen.
         /// </summary>
-        public void Paint() 
+        public void Paint()
         {
             TimeSpan test = TimeSpan.FromTicks(m_paintTime.Ticks - DateTime.Now.Ticks);
             if (test.TotalMilliseconds > 0)
@@ -348,36 +281,31 @@ namespace EVEMon.LogitechG15
 
             TimeSpan now = TimeSpan.FromTicks(DateTime.Now.Ticks - m_holdTime.Ticks);
             if (m_state == LcdState.SplashScreen && now.TotalSeconds > 4)
-            {
                 SwitchState(LcdState.Character);
-            }
+
             if (m_state == LcdState.CharacterList && now.TotalMilliseconds > 2000)
-            {
                 SwitchState(LcdState.Character);
-            }
+
             if (m_state == LcdState.SkillComplete && now.TotalSeconds > 14)
-            {
                 SwitchState(LcdState.Character);
-            }
+
             if ((m_state == LcdState.CycleSettings || m_state == LcdState.Refreshing) && now.TotalSeconds > 2)
-            {
                 SwitchState(LcdState.Character);
-            }
-            
-            switch (m_state) 
+
+            switch (m_state)
             {
                 case LcdState.SplashScreen:
                     m_paintTime = m_paintTime.AddSeconds(2);
                     PaintSplash();
                     return;
                 case LcdState.Character:
-                    if (m_cycle)
+                    if (Cycle)
                     {
-                        if (TimeSpan.FromTicks(DateTime.Now.Ticks-m_cycleTime.Ticks).TotalSeconds > m_cycleInterval)
+                        if (TimeSpan.FromTicks(DateTime.Now.Ticks - m_cycleTime.Ticks).TotalSeconds > CycleInterval)
                         {
                             m_cycleTime = DateTime.Now;
                             MoveToNextChar();
-                            
+
                             // When moving to next character
                             // we reset the queue info timer
                             m_cycleQueueInfoTime = DateTime.Now;
@@ -400,7 +328,7 @@ namespace EVEMon.LogitechG15
                     PaintCycleSettings();
                     return;
                 case LcdState.Refreshing:
-                    if (m_refreshCharacter != null)
+                    if (RefreshCharacter != null)
                     {
                         m_paintTime = m_paintTime.AddSeconds(2);
                         PaintRefreshingMessage();
@@ -420,22 +348,22 @@ namespace EVEMon.LogitechG15
 
             if (CurrentCharacter == null)
             {
-                m_lcdLines.Add(new TextLine("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
-                UpdateLcdDisplay();
+                UpdateLcdisplay();
                 return;
             }
-            
-            if (m_cycleCharacterSkillQueueInfo)
+
+            if (CycleSkillQueueTime)
             {
-                if (TimeSpan.FromTicks(DateTime.Now.Ticks - m_cycleQueueInfoTime.Ticks).TotalSeconds > m_cycleCharacterInfoTimeInterval)
+                if (TimeSpan.FromTicks(DateTime.Now.Ticks - m_cycleQueueInfoTime.Ticks).TotalSeconds > CycleCompletionInterval)
                 {
                     m_cycleQueueInfoTime = DateTime.Now;
                     m_showingCycledQueueInfo = !m_showingCycledQueueInfo;
                 }
             }
 
-            m_lcdLines.Add(new TextLine(CurrentCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
 
             if (CurrentCharacter.SkillQueue.IsTraining)
             {
@@ -447,23 +375,23 @@ namespace EVEMon.LogitechG15
                     if (freeTime)
                     {
                         // Place holder for skill queue free room rendering
-                        m_lcdLines.Add(new TextLine(" ", m_defaultFont));
+                        m_lcdLines.Add(new LineProcess(" ", m_defaultFont));
                     }
                     else
                     {
                         var time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween, true);
-                        m_lcdLines.Add(new TextLine(
+                        m_lcdLines.Add(new LineProcess(
                             String.Format(CultureConstants.DefaultCulture, "Queue populated for: {0}", time), m_defaultFont));
                     }
                 }
                 else
                 {
                     var skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
-                    m_lcdLines.Add(new TextLine(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                 }
 
-                m_lcdLines.Add(new TextLine(TimeToComplete.ToDescriptiveText(
+                m_lcdLines.Add(new LineProcess(TimeToComplete.ToDescriptiveText(
                     DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
             }
             else
@@ -471,17 +399,17 @@ namespace EVEMon.LogitechG15
                 if (CurrentCharacter.SkillQueue.IsPaused)
                 {
                     var skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
-                    m_lcdLines.Add(new TextLine(skill.ToString(), m_defaultFont));
-                    m_lcdLines.Add(new TextLine("Skill Training Is Paused", m_defaultFont));
+                    m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LineProcess("Skill Training Is Paused", m_defaultFont));
                 }
                 else
                 {
-                    m_lcdLines.Add(new TextLine("No Skill In Training", m_defaultFont));
-                    m_lcdLines.Add(new TextLine("Skill Queue Is Empty", m_defaultFont));
+                    m_lcdLines.Add(new LineProcess("No Skill In Training", m_defaultFont));
+                    m_lcdLines.Add(new LineProcess("Skill Queue Is Empty", m_defaultFont));
                 }
             }
-            
-            m_lcdLines.Add(new ProgressLine(CurrentCharacterTrainingProgression, m_defaultFont));
+
+            m_lcdLines.Add(new LineProcess(CurrentCharacterTrainingProgression, m_defaultFont));
 
             RenderLines();
             RenderWalletBalance();
@@ -490,7 +418,7 @@ namespace EVEMon.LogitechG15
             RenderEVETime();
             RenderSystemTime();
 
-            UpdateLcdDisplay();
+            UpdateLcdisplay();
         }
 
         private void RenderLines()
@@ -512,7 +440,7 @@ namespace EVEMon.LogitechG15
             string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0} ISK", balance.ToString("#,##0.#0"));
             SizeF size = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             SizeF charNameSize = m_lcdCanvas.MeasureString(CurrentCharacter.AdornedName, m_defaultFont);
-            float availableWidth = (G15Constants.G15Width - charNameSize.Width);
+            float availableWidth = (G15Width - charNameSize.Width);
 
             if (availableWidth < size.Width)
             {
@@ -520,7 +448,7 @@ namespace EVEMon.LogitechG15
                 size = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             }
 
-            RectangleF line = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
+            RectangleF line = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             line.Offset(0f, 0f);
             m_lcdCanvas.DrawString(walletBalance, m_defaultFont, new SolidBrush(Color.Black), line);
         }
@@ -530,9 +458,7 @@ namespace EVEMon.LogitechG15
             bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
 
             if (CurrentCharacter.IsTraining && m_showingCycledQueueInfo && freeTime)
-            {
                 UpdateSkillQueueFreeRoom();
-            }
         }
 
         private void RenderCompletionTime()
@@ -543,7 +469,7 @@ namespace EVEMon.LogitechG15
                 string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
                 completionDateTime.ToShortDateString(), completionDateTime.ToCustomShortTimeString());
                 SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
-                RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
+                RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
                 timeLine.Offset(0f, 22f);
                 m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, new SolidBrush(Color.Black), timeLine);
             }
@@ -551,34 +477,33 @@ namespace EVEMon.LogitechG15
 
         private void RenderEVETime()
         {
-            if (m_showEVETime)
-            {
-                string curEVETime = DateTime.UtcNow.ToString("HH:mm");
-                SizeF size = m_lcdCanvas.MeasureString(curEVETime, m_defaultFont);
-                RectangleF timeLine = new RectangleF(new PointF(0f, 0f), size);
-                timeLine.Offset(0f, 32f);
-                m_lcdCanvas.DrawString(curEVETime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
-            }
+            if (!ShowEVETime)
+                return;
+
+            string curEVETime = DateTime.UtcNow.ToString("HH:mm");
+            SizeF size = m_lcdCanvas.MeasureString(curEVETime, m_defaultFont);
+            RectangleF timeLine = new RectangleF(new PointF(0f, 0f), size);
+            timeLine.Offset(0f, 32f);
+            m_lcdCanvas.DrawString(curEVETime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
         }
 
         private void RenderSystemTime()
         {
-            if (m_showTime)
-            {
-                string curTime = DateTime.Now.ToCustomShortTimeString();
-                SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
-                RectangleF timeLine = new RectangleF(new PointF(G15Constants.G15Width - size.Width, 0f), size);
-                timeLine.Offset(0f, 32f);
-                m_lcdCanvas.DrawString(curTime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
-            }
+            if (!ShowSystemTime)
+                return;
+
+            string curTime = DateTime.Now.ToCustomShortTimeString();
+            SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
+            RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
+            timeLine.Offset(0f, 32f);
+            m_lcdCanvas.DrawString(curTime, m_defaultFont, new SolidBrush(Color.Black), timeLine);
         }
 
         /// <summary>
         /// Paints a message for skill completion.
         /// </summary>
-        private void PaintSkillCompletionMessage() 
+        private void PaintSkillCompletionMessage()
         {
-
             if (CurrentCharacter.SkillQueue.LastCompleted == null)
                 return;
 
@@ -586,51 +511,51 @@ namespace EVEMon.LogitechG15
 
             if (CurrentCharacter == null)
             {
-                m_lcdLines.Add(new TextLine("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
-                UpdateLcdDisplay();
+                UpdateLcdisplay();
                 return;
             }
 
-            m_lcdLines.Add(new TextLine(CurrentCharacter.AdornedName, m_defaultFont));
-            m_lcdLines.Add(new TextLine("has finished training", m_defaultFont));
+            m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LineProcess("has finished training", m_defaultFont));
 
             if (m_completedSkills > 1)
             {
-                m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills), m_defaultFont)); 
+                m_lcdLines.Add(new LineProcess(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills), m_defaultFont));
             }
             else
             {
-                m_lcdLines.Add(new TextLine(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
+                m_lcdLines.Add(new LineProcess(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
             }
 
             var skillCount = CurrentCharacter.SkillQueue.Count;
 
             if (skillCount == 0)
             {
-                m_lcdLines.Add(new TextLine("NO SKILLS IN QUEUE", m_defaultFont)); 
+                m_lcdLines.Add(new LineProcess("NO SKILLS IN QUEUE", m_defaultFont));
             }
             else
             {
-                m_lcdLines.Add(new TextLine(String.Format(CultureConstants.DefaultCulture, "{0} more skill{1} in queue", skillCount, skillCount == 1 ? String.Empty : "s"), m_defaultFont));
+                m_lcdLines.Add(new LineProcess(String.Format(CultureConstants.DefaultCulture, "{0} more skill{1} in queue", skillCount, skillCount == 1 ? String.Empty : "s"), m_defaultFont));
             }
 
             RenderLines();
-            UpdateLcdDisplay(LcdisplayPriority.Alert);
+            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_ALERT);
         }
 
         /// <summary>
         /// Paints the characters list.
         /// </summary>
-        private void PaintCharactersList() 
+        private void PaintCharactersList()
         {
             m_lcdLines.Clear();
-            
+
             if (Characters.Length == 0)
             {
-                m_lcdLines.Add(new TextLine("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
-                UpdateLcdDisplay();
+                UpdateLcdisplay();
                 return;
             }
 
@@ -645,23 +570,23 @@ namespace EVEMon.LogitechG15
             {
                 charList.Add(Characters[i]);
             }
-                        
+
             // Perform the painting
             ClearGraphics();
-            
+
             foreach (var character in charList)
             {
-                m_lcdLines.Add(new TextLine(character.AdornedName, m_defaultFont));
+                m_lcdLines.Add(new LineProcess(character.AdornedName, m_defaultFont));
             }
 
             RenderLines();
             RenderSelector();
-            UpdateLcdDisplay();
+            UpdateLcdisplay();
         }
 
         private void RenderSelector()
         {
-            m_lcdOverlay.FillRectangle(new SolidBrush(Color.Black), 0, 0, G15Constants.G15Width, 11);
+            m_lcdOverlay.FillRectangle(new SolidBrush(Color.Black), 0, 0, G15Width, 11);
         }
 
         /// <summary>
@@ -671,16 +596,16 @@ namespace EVEMon.LogitechG15
         {
             ClearGraphics();
             m_lcdLines.Clear();
-            
-            string status = m_cycle ? "on" : "off";
+
+            string status = Cycle ? "on" : "off";
             string statusMsg = String.Format(CultureConstants.DefaultCulture, "Autocycle is now {0}", status);
-            m_lcdLines.Add(new TextLine(statusMsg, m_defaultFont));
-            
-            string cycleMsg = String.Format(CultureConstants.DefaultCulture, "Cycle Time is: {0}s", m_cycleInterval);
-            m_lcdLines.Add(new TextLine(cycleMsg, m_defaultFont));
+            m_lcdLines.Add(new LineProcess(statusMsg, m_defaultFont));
+
+            string cycleMsg = String.Format(CultureConstants.DefaultCulture, "Cycle Time is: {0}s", CycleInterval);
+            m_lcdLines.Add(new LineProcess(cycleMsg, m_defaultFont));
 
             RenderLines();
-            UpdateLcdDisplay();
+            UpdateLcdisplay();
         }
 
         /// <summary>
@@ -691,108 +616,36 @@ namespace EVEMon.LogitechG15
             ClearGraphics();
             m_lcdLines.Clear();
 
-            m_lcdLines.Add(new TextLine("Refreshing Character Information", m_defaultFont));
-            m_lcdLines.Add(new TextLine("of", m_defaultFont));
-            m_lcdLines.Add(new TextLine(m_refreshCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LineProcess("Refreshing Character Information", m_defaultFont));
+            m_lcdLines.Add(new LineProcess("of", m_defaultFont));
+            m_lcdLines.Add(new LineProcess(RefreshCharacter.AdornedName, m_defaultFont));
 
             RenderLines();
-            UpdateLcdDisplay();
+            UpdateLcdisplay();
         }
 
         /// <summary>
         /// Paints the EVEMon icon at the initialization of the LCD screen.
         /// </summary>
-        private void PaintSplash() 
+        private void PaintSplash()
         {
-            // Load the icon from the assembly
-            Bitmap splashLogo;
-            using (Stream strm = Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.LogitechG15.LCDSplash.bmp"))
-            {
-                splashLogo = new Bitmap(strm);
-            }
+            // Load the icon
+            Bitmap splashLogo = new Bitmap(Properties.Resources.LCDSplash);
 
             // Clear the graphics
             ClearGraphics();
-            
+
             // Display the splash logo
-            int left = (int)((G15Constants.G15Width / 2) - (splashLogo.Width / 2));
-            int top = (int)((G15Constants.G15Height /2) - (splashLogo.Height / 2));
+            int left = (int)((G15Width / 2) - (splashLogo.Width / 2));
+            int top = (int)((G15Height / 2) - (splashLogo.Height / 2));
             m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
-            UpdateLcdDisplay(LcdisplayPriority.Alert);
+            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_ALERT);
         }
 
         private void ClearGraphics()
         {
             m_lcdCanvas.Clear(Color.White);
             m_lcdOverlay.Clear(Color.White);
-        }
-
-        /// <summary>
-        /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen with a <see cref="LcdisplayPriority.Normal"/> priority.
-        /// </summary>
-        private void UpdateLcdDisplay() 
-        { 
-            UpdateLcdDisplay(LcdisplayPriority.Normal); 
-        }
-
-        /// <summary>
-        /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen.
-        /// </summary>
-        /// <param name="priority"></param>
-        private unsafe void UpdateLcdDisplay(LcdisplayPriority priority)
-        {
-            // locking should not be necesseray but i'll keep it here
-            lock (m_bmpLCD)
-            {
-                int width = m_bmpLCD.Width;
-                int height = m_bmpLCD.Height;
-                byte[] buffer = new byte[6880];
-                Rectangle rect = new Rectangle(0, 0, width, height);
-
-                BitmapData bmData = m_bmpLCD.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCD.PixelFormat);
-                try
-                {
-                    BitmapData bmDataX = m_bmpLCDX.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCDX.PixelFormat);
-                    try
-                    {
-                        // Extract bits per pixel and length infos
-                        int stride = bmData.Stride;
-                        int bpp = stride / width;
-                        int length = stride * height;
-
-                        // Copy the content of the bitmap to our buffers 
-                        // Unsafe code removes the boundaries checks - a lot faster.
-                        fixed (byte* buffer0 = buffer)
-                        {
-                            byte* output = buffer0;
-                            byte* inputX = (byte*)bmDataX.Scan0.ToPointer();
-                            byte* input = (byte*)bmData.Scan0.ToPointer();;
-
-                            for (int i = 0; i < height; i++)
-                            {
-                                for (int j = 0; j < width; j ++)
-                                {
-                                    *output = (byte)((*input) ^ (*inputX));
-                                    inputX += bpp;
-                                    input += bpp;
-                                    output++;
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        m_bmpLCDX.UnlockBits(bmDataX);
-                    }
-                }
-                finally
-                {
-                    m_bmpLCD.UnlockBits(bmData);
-                }
-
-                // Fetches the buffer to the LCD screen
-                m_lcd.DisplayBitmap(ref buffer[0], (int)priority);
-            }
         }
 
         /// <summary>
@@ -824,6 +677,73 @@ namespace EVEMon.LogitechG15
             line.Offset(0f, 11f);
             m_lcdCanvas.FillRectangle(new SolidBrush(Color.Black), 0, 13, 160, 10);
             m_lcdOverlay.DrawString(skillQueueFreemRoom, m_defaultFont, new SolidBrush(Color.Black), line);
+        }
+
+        /// <summary>
+        /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen with a <see cref="LcdisplayPriority.Normal"/> priority.
+        /// </summary>
+        private void UpdateLcdisplay()
+        {
+            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_NORMAL);
+        }
+
+        /// <summary>
+        /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen.
+        /// </summary>
+        /// <param name="priority"></param>
+        private unsafe void UpdateLcdisplay(uint priority)
+        {
+            // Locking should not be necesseray but i'll keep it here
+            lock (m_bmpLCD)
+            {
+                int width = m_bmpLCD.Width;
+                int height = m_bmpLCD.Height;
+                Rectangle rect = new Rectangle(0, 0, width, height);
+
+                BitmapData bmData = m_bmpLCD.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCD.PixelFormat);
+                try
+                {
+                    BitmapData bmDataX = m_bmpLCDX.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCDX.PixelFormat);
+                    try
+                    {
+                        // Extract bits per pixel and length infos
+                        int stride = bmData.Stride;
+                        int bpp = stride / width;
+                        int length = stride * height;
+
+                        // Copy the content of the bitmap to our buffers 
+                        // Unsafe code removes the boundaries checks - a lot faster.
+                        fixed (byte* buffer0 = m_lcdBitmap.pixels)
+                        {
+                            byte* output = buffer0;
+                            byte* inputX = (byte*)bmDataX.Scan0.ToPointer();
+                            byte* input = (byte*)bmData.Scan0.ToPointer(); ;
+
+                            for (int i = 0; i < height; i++)
+                            {
+                                for (int j = 0; j < width; j++)
+                                {
+                                    *output = (byte)((*input) ^ (*inputX));
+                                    inputX += bpp;
+                                    input += bpp;
+                                    output++;
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        m_bmpLCDX.UnlockBits(bmDataX);
+                    }
+                }
+                finally
+                {
+                    m_bmpLCD.UnlockBits(bmData);
+                }
+
+                // Fetches the buffer to the LCD screen
+                LgLcd.lgLcdUpdateBitmap(m_openContext.device, ref m_lcdBitmap, priority);
+            }
         }
         #endregion
 
@@ -881,27 +801,25 @@ namespace EVEMon.LogitechG15
         /// <param name="dwButtons"></param>
         /// <param name="pContext"></param>
         /// <returns></returns>
-        private int OnButtonsPressed(int device, uint dwButtons, IntPtr pContext)
-        {
+        private int OnButtonsPressed(int device, int dwButtons, IntPtr pContext)
+         {
             if (m_oldButtonState == dwButtons)
                 return 0;
 
-            // Gets all buttons who havent been pressed last time
-            uint press = (m_oldButtonState ^ dwButtons) & dwButtons;
+            // Gets all buttons who haven't been pressed last time
+            int press = (m_oldButtonState ^ dwButtons) & dwButtons;
 
             // Displays the characters' list or move to the next char if the list is already displayed.
-            if ((press & BUTTON1_VALUE) != 0)
-            {
+            if ((press & LgLcd.LGLCDBUTTON_BUTTON0) != 0)
                 DisplayCharactersList();
-            }
 
             // Move to the first character to complete his training
-            if ((press & BUTTON2_VALUE) != 0)
+            if ((press & LgLcd.LGLCDBUTTON_BUTTON1) != 0)
             {
                 // Select next skill ready char
                 if (Characters == null)
                     return 0;
-                
+
                 CurrentCharacter = FirstCharacterToCompleteSkill as CCPCharacter;
 
                 if (AutoCycleChanged != null)
@@ -911,25 +829,26 @@ namespace EVEMon.LogitechG15
             }
 
             // Forces a refresh from CCP
-            if ((press & BUTTON3_VALUE) != 0)
+            if ((press & LgLcd.LGLCDBUTTON_BUTTON2) != 0)
             {
                 if (m_state == LcdState.Character || m_state == LcdState.CharacterList)
                 {
-                    m_refreshCharacter = CurrentCharacter;
+                    RefreshCharacter = CurrentCharacter;
                     if (APIUpdateRequested != null)
-                        APIUpdateRequested(m_refreshCharacter);
+                        APIUpdateRequested(RefreshCharacter);
 
                     SwitchState(LcdState.Refreshing);
                 }
             }
 
             // Switch autocycle ON/OFF
-            if ((press & BUTTON4_VALUE) != 0)
+            if ((press & LgLcd.LGLCDBUTTON_BUTTON3) != 0)
             {
-                // switch autocycle on/off
+                // Switch autocycle on/off
                 SwitchCycle();
+
                 if (AutoCycleChanged != null)
-                    AutoCycleChanged(m_cycle);
+                    AutoCycleChanged(Cycle);
 
                 SwitchState(LcdState.CycleSettings);
                 m_cycleTime = DateTime.Now;
@@ -959,7 +878,7 @@ namespace EVEMon.LogitechG15
         }
 
         /// <summary>
-        /// Swutches the state and updates some of the internal times variables.
+        /// Switches the state and updates some of the internal times variables.
         /// </summary>
         /// <param name="state"></param>
         public void SwitchState(LcdState newState)
@@ -979,7 +898,7 @@ namespace EVEMon.LogitechG15
 
             if (now.TotalMilliseconds < 2000)
             {
-                m_cycle = false;
+                Cycle = false;
                 MoveToNextChar();
             }
 
@@ -1010,7 +929,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         public void SwitchCycle()
         {
-            m_cycle = !m_cycle;
+            Cycle = !Cycle;
         }
         #endregion
     }

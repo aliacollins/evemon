@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -136,7 +135,7 @@ namespace EVEMon
 
             // Initialize G15
             if (OsFeatureCheck.IsWindowsNT)
-                G15Handler.Init();
+                G15Handler.Initialize();
 
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();

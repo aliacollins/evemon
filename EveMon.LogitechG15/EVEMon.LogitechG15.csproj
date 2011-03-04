@@ -57,25 +57,23 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="lgLCDNETWrapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\lgLCDNETWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <None Include="Properties\AssemblyInfo.template.cs" />
-    <Compile Include="G15Constants.cs" />
-    <Compile Include="ILcdLine.cs" />
-    <Compile Include="LcdDisplayPriority.cs" />
     <Compile Include="Lcdisplay.cs" />
     <Compile Include="LcdState.cs" />
-    <Compile Include="ProgressLine.cs" />
+    <Compile Include="LgLcdNET.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LineProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextLine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
@@ -85,11 +83,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LCDSplash.bmp" />
-    <None Include="lgLcdLibWrapper.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="lgLCDNETWrapper.dll">
+    <EmbeddedResource Include="Resources\LCDSplash.bmp" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LgLcd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

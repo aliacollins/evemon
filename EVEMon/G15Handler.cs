@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using System.Threading;
 using EVEMon.Common;
-using EVEMon.LogitechG15;
 using EVEMon.Common.Threading;
-using System.Globalization;
+using EVEMon.LogitechG15;
 
 namespace EVEMon
 {
@@ -26,30 +20,24 @@ namespace EVEMon
 
         private static Object m_syncLock = new Object();
 
+        #region Initialize
         /// <summary>
         /// Initialises the G15 event handles
         /// </summary>
-        public static void Init()
+        public static void Initialize()
         {
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
             EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
 
-            // Subscribe to events which occur of G15 buttons presses
-            Lcdisplay.APIUpdateRequested += new CharacterHandler(Lcdisplay_APIUpdateRequested);
-            Lcdisplay.AutoCycleChanged += new CharAutoCycleHandler(Lcdisplay_AutoCycleChanged);
-            Lcdisplay.CurrentCharacterChanged += new CharacterHandler(Lcdisplay_CurrentCharacterChanged);
-        }
+            // Subscribe to events which occur of G15 buttons pressed
+            Lcdisplay.APIUpdateRequested += new Lcdisplay.CharacterHandler(Lcdisplay_APIUpdateRequested);
+            Lcdisplay.AutoCycleChanged += new Lcdisplay.CharAutoCycleHandler(Lcdisplay_AutoCycleChanged);
+            Lcdisplay.CurrentCharacterChanged += new Lcdisplay.CharacterHandler(Lcdisplay_CurrentCharacterChanged);
+        }       
+        #endregion
 
-        /// <summary>
-        /// On every second, we check whether we should start ot stop the LCD display, updated its data, etc.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void EveClient_TimerTick(object sender, EventArgs e)
-        {
-            UpdateOnTimerTick();
-        }
 
+        #region LCD Updater
         /// <summary>
         /// Update on every second (and when some of the G15 buttons are pressed)
         /// </summary>
@@ -81,8 +69,10 @@ namespace EVEMon
                 m_lcd.Paint();
             }
         }
+        #endregion
 
 
+        #region Helper Methods
         /// <summary>
         /// Starts the LCD display
         /// </summary>
@@ -91,7 +81,7 @@ namespace EVEMon
             try
             {
                 m_lcd = Lcdisplay.Instance();
-                m_lcd.SwitchState(LogitechG15.LcdState.SplashScreen);
+                m_lcd.SwitchState(LcdState.SplashScreen);
                 m_running = true;
             }
             catch
@@ -163,6 +153,20 @@ namespace EVEMon
                 }
             }
         }
+        
+        #endregion
+
+
+        #region Event Handlers
+        /// <summary>
+        /// On every second, we check whether we should start ot stop the LCD display, updated its data, etc.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void EveClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateOnTimerTick();
+        }
 
         /// <summary>
         /// When skills are completed, we display a special message
@@ -183,6 +187,8 @@ namespace EVEMon
                 }
             }
         }
+        #endregion
+
 
         #region Events triggered by the G15 buttons
         /// <summary>
@@ -205,9 +211,7 @@ namespace EVEMon
                 {
                     var ccpCharacter = character as CCPCharacter;
                     if (ccpCharacter != null)
-                    {
                         ccpCharacter.QueryMonitors.QueryEverything();
-                    }
                 });
         }
 
