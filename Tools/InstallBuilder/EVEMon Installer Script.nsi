@@ -277,7 +277,7 @@ Section "Install EVEMon"
 
 	lbl_noLegacyUninstall:
 	SetOutPath "$INSTDIR"
-	File /r /x *vshost* "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
+	File /r /x *vshost* /x *.config "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
 
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 
