@@ -74,7 +74,7 @@ namespace EVEMon
 
         #region Helper Methods
         /// <summary>
-        /// Starts the LCD display
+        /// Starts the LCD display.
         /// </summary>
         private static void Start()
         {
@@ -84,21 +84,32 @@ namespace EVEMon
                 m_lcd.SwitchState(LcdState.SplashScreen);
                 m_running = true;
             }
-            catch
+            catch(Exception ex)
             {
+                EveClient.Trace(ex.Message);
                 m_startupError = true;
                 m_running = false;
             }
         }
 
         /// <summary>
-        /// Stop the LCD display
+        /// Stop the LCD display.
         /// </summary>
         private static void Stop()
         {
-            m_lcd.Dispose();
-            m_lcd = null;
-            m_running = false;
+            try
+            {
+                m_lcd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                EveClient.Trace(ex.Message);
+            }
+            finally
+            {
+                m_lcd = null;
+                m_running = false;
+            }
         }
 
         /// <summary>

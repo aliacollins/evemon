@@ -117,7 +117,6 @@ namespace EVEMon.LogitechG15
             m_connectContext.connection = LgLcd.LGLCD_INVALID_CONNECTION;
 
             err = LgLcd.lgLcdConnect(ref m_connectContext);
-
             if (err != 0)
                 throw new Exception("InitializeLCD(): Unable to open a connection to the device.");
 
@@ -128,12 +127,11 @@ namespace EVEMon.LogitechG15
             m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
 
             err = LgLcd.lgLcdOpen(ref m_openContext);
-
             if (err != 0)
                 throw new Exception("InitializeLCD(): Unable to open a communication context with the screen.");
 
             m_lcdBitmap.hdr.Format = LgLcd.LGLCD_BMP_FORMAT_160x43x1;
-            m_lcdBitmap.pixels = new byte[m_bmpLCD.Width * m_bmpLCD.Height];
+            m_lcdBitmap.pixels = new byte[G15Width * G15Height];
         }
 
 
