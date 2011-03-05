@@ -6,11 +6,12 @@ using System.Drawing.Text;
 
 using EVEMon.Common;
 
+using Microsoft.Win32;
+
 namespace EVEMon.LogitechG15
 {
     public class Lcdisplay : IDisposable
     {
-
         public static int G15Width = (int)LgLcd.LGLCD_BMP_WIDTH;
         public static int G15Height = (int)LgLcd.LGLCD_BMP_HEIGHT;
         public const float G15DpiX = 46;
@@ -33,6 +34,7 @@ namespace EVEMon.LogitechG15
         private DateTime m_cycleQueueInfoTime;
         private bool m_showingCycledQueueInfo;
         private int m_completedSkills;
+        private bool m_disposed;
 
         private List<LineProcess> m_lcdLines = new List<LineProcess>();
 
@@ -42,6 +44,7 @@ namespace EVEMon.LogitechG15
 
 
         #region Delegates and Events
+
         public delegate void CharacterHandler(Character character);
         public delegate void CharAutoCycleHandler(bool cycle);
 
@@ -64,6 +67,10 @@ namespace EVEMon.LogitechG15
 
 
         #region Instantiation
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Lcdisplay"/> class.
+        /// </summary>
         private Lcdisplay()
         {
             m_defaultFont = FontFactory.GetFont("Microsoft Sans Serif", 13.5f, FontStyle.Regular, GraphicsUnit.Point);
@@ -78,6 +85,9 @@ namespace EVEMon.LogitechG15
             m_lcdOverlay = Graphics.FromImage(m_bmpLCDX);
             m_lcdOverlay.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
+            m_lcdBitmap.hdr.Format = LgLcd.LGLCD_BMP_FORMAT_160x43x1;
+            m_lcdBitmap.pixels = new byte[G15Width * G15Height];
+
             m_buttonStateHld = DateTime.Now;
             m_cycleTime = DateTime.Now.AddSeconds(10);
             m_cycleQueueInfoTime = DateTime.Now.AddSeconds(5);
@@ -89,118 +99,27 @@ namespace EVEMon.LogitechG15
             FirstSkillCompletionRemaingTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
 
             LCDOpen("EVEMon", false);
+
+            SystemEvents.PowerModeChanged += OnPowerModeChanged;
         }
 
+        /// <summary>
+        /// Instances this instance.
+        /// </summary>
+        /// <returns></returns>
         public static Lcdisplay Instance()
         {
-            return s_singleInstance ?? new Lcdisplay();
-        } 
-        #endregion
+            if (s_singleInstance == null)
+                s_singleInstance = new Lcdisplay();
 
-
-        #region LCD Opening and Closing
-
-        /// <summary>
-        /// Opens the LCD connection.
-        /// </summary>
-        private void LCDOpen(string appName, bool isAutoStartable)
-        {
-            int err = LgLcd.lgLcdInit();
-            if (err != 0)
-                throw new Exception("InitializeLCD(): Unable to initialize LgLcd.");
-
-            m_connectContext.appFriendlyName = appName;
-            m_connectContext.isAutostartable = isAutoStartable;
-            m_connectContext.isPersistent = true;
-            m_connectContext.onConfigure.configCallback = null;
-            m_connectContext.onConfigure.configContext = IntPtr.Zero;
-            m_connectContext.connection = LgLcd.LGLCD_INVALID_CONNECTION;
-
-            err = LgLcd.lgLcdConnect(ref m_connectContext);
-            if (err != 0)
-                throw new Exception("InitializeLCD(): Unable to open a connection to the device.");
-
-            m_openContext.connection = m_connectContext.connection;
-            m_openContext.index = 0;
-            m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnButtonsPressed;
-            m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
-            m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
-
-            err = LgLcd.lgLcdOpen(ref m_openContext);
-            if (err != 0)
-                throw new Exception("InitializeLCD(): Unable to open a communication context with the screen.");
-
-            m_lcdBitmap.hdr.Format = LgLcd.LGLCD_BMP_FORMAT_160x43x1;
-            m_lcdBitmap.pixels = new byte[G15Width * G15Height];
+            return s_singleInstance;
         }
-
-
-        /// <summary>
-        /// Closes the LCD connection.
-        /// </summary>
-        private void LCDClose()
-        {
-            int err = LgLcd.lgLcdClose(m_openContext.device);
-            if (err != 0)
-                throw new Exception("CloseLCD(): Unable to close the open connection.");
-
-            err = LgLcd.lgLcdDisconnect(m_connectContext.connection);
-            if (err != 0)
-                throw new Exception("CloseLCD(): Unable to disconnect from the keyboard interface.");
-
-            err = LgLcd.lgLcdDeInit();
-            if (err != 0)
-                throw new Exception("CloseLCD(): Unable to de-initialize LgLcd.");
-        } 
-
-        #endregion
-
-
-        #region Cleanup
-
-        private bool m_disposed = false;
-
-        /// <summary>
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Lcdisplay"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Lcdisplay()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="isDisposing">
-        /// <c>true</c> to release both managed and unmanaged resources;
-        /// <c>false</c> to release only unmanaged resources.
-        /// </param>
-        private void Dispose(bool isDisposing)
-        {
-            if (!m_disposed)
-            {
-                if (isDisposing) 
-                    LCDClose();
-
-                s_singleInstance = null;
-            }
-            m_disposed = true;
-        }
-
+        
         #endregion
 
 
         #region Properties
+
         public bool Cycle { get; set; }
 
         public int CycleInterval { get; set; }
@@ -267,7 +186,137 @@ namespace EVEMon.LogitechG15
         #endregion
 
 
+        #region LCD Opening and Closing
+
+        /// <summary>
+        /// Opens the LCD connection.
+        /// </summary>
+        private void LCDOpen(string appName, bool isAutoStartable)
+        {
+            int err = LgLcd.lgLcdInit();
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to initialize LgLcd.");
+
+            m_connectContext.appFriendlyName = appName;
+            m_connectContext.isAutostartable = isAutoStartable;
+            m_connectContext.isPersistent = true;
+            m_connectContext.onConfigure.configCallback = null;
+            m_connectContext.onConfigure.configContext = IntPtr.Zero;
+            m_connectContext.connection = LgLcd.LGLCD_INVALID_CONNECTION;
+
+            err = LgLcd.lgLcdConnect(ref m_connectContext);
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to open a connection to the device.");
+
+            m_openContext.connection = m_connectContext.connection;
+            m_openContext.index = 0;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnButtonsPressed;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
+            m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
+
+            LCDOpenContext();
+        }
+
+        /// <summary>
+        /// Opens the LCDs communication context.
+        /// </summary>
+        private void LCDOpenContext()
+        {
+            int err = LgLcd.lgLcdOpen(ref m_openContext);
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to open a communication context with the screen.");
+        }
+
+        /// <summary>
+        /// Closes the LCD connection.
+        /// </summary>
+        private void LCDClose()
+        {
+            int err = LgLcd.lgLcdClose(m_openContext.device);
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to close the open connection.");
+
+            err = LgLcd.lgLcdDisconnect(m_connectContext.connection);
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to disconnect from the keyboard interface.");
+
+            err = LgLcd.lgLcdDeInit();
+            if (err != 0)
+                throw new Exception("CloseLCD(): Unable to de-initialize LgLcd.");
+        } 
+
+        #endregion
+
+
+        #region Cleanup
+
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="Lcdisplay"/> is reclaimed by garbage collection.
+        /// </summary>
+        ~Lcdisplay()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="isDisposing">
+        /// <c>true</c> to release both managed and unmanaged resources;
+        /// <c>false</c> to release only unmanaged resources.
+        /// </param>
+        private void Dispose(bool isDisposing)
+        {
+            if (!m_disposed)
+            {
+                if (isDisposing)
+                    LCDClose();
+
+                s_singleInstance = null;
+            }
+            m_disposed = true;
+        }
+
+        #endregion
+
+
+        #region Event Handler
+
+        /// <summary>
+        /// Called when resuming from suspend mode.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="Microsoft.Win32.PowerModeChangedEventArgs"/> instance containing the event data.</param>
+        private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode != PowerModes.Resume)
+                return;
+
+            try
+            {
+                LCDOpenContext();
+            }
+            catch (Exception ex)
+            {
+                EveClient.Trace(ex.Message);
+            }
+        }
+        
+        #endregion
+
+
         #region Painting
+
         /// <summary>
         /// Performs the repainting of the screen.
         /// </summary>
@@ -539,7 +588,7 @@ namespace EVEMon.LogitechG15
             }
 
             RenderLines();
-            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_ALERT);
+            UpdateLcdDisplay(LgLcd.LGLCD_PRIORITY_ALERT);
         }
 
         /// <summary>
@@ -637,7 +686,7 @@ namespace EVEMon.LogitechG15
             int left = (int)((G15Width / 2) - (splashLogo.Width / 2));
             int top = (int)((G15Height / 2) - (splashLogo.Height / 2));
             m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
-            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_ALERT);
+            UpdateLcdDisplay(LgLcd.LGLCD_PRIORITY_ALERT);
         }
 
         private void ClearGraphics()
@@ -682,14 +731,14 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void UpdateLcdisplay()
         {
-            UpdateLcdisplay(LgLcd.LGLCD_PRIORITY_NORMAL);
+            UpdateLcdDisplay(LgLcd.LGLCD_PRIORITY_NORMAL);
         }
 
         /// <summary>
         /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen.
         /// </summary>
         /// <param name="priority"></param>
-        private unsafe void UpdateLcdisplay(uint priority)
+        private unsafe void UpdateLcdDisplay(uint priority)
         {
             // Locking should not be necesseray but i'll keep it here
             lock (m_bmpLCD)
@@ -747,6 +796,7 @@ namespace EVEMon.LogitechG15
 
 
         #region Helper Methods
+
         /// <summary>
         /// Formats the wallet balance value in an abbreviation form
         /// </summary>
@@ -788,10 +838,12 @@ namespace EVEMon.LogitechG15
 
             return balance;
         }
+
         #endregion
 
 
         #region Controlling logic
+
         /// <summary>
         /// Occurs when some of the G15 screen buttons are pressed.
         /// </summary>
@@ -929,6 +981,7 @@ namespace EVEMon.LogitechG15
         {
             Cycle = !Cycle;
         }
+
         #endregion
     }
 }

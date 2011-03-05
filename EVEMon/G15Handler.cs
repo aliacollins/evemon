@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EVEMon.Common;
 using EVEMon.Common.Threading;
 using EVEMon.LogitechG15;
@@ -20,7 +21,9 @@ namespace EVEMon
 
         private static Object m_syncLock = new Object();
 
+
         #region Initialize
+
         /// <summary>
         /// Initialises the G15 event handles
         /// </summary>
@@ -33,11 +36,13 @@ namespace EVEMon
             Lcdisplay.APIUpdateRequested += new Lcdisplay.CharacterHandler(Lcdisplay_APIUpdateRequested);
             Lcdisplay.AutoCycleChanged += new Lcdisplay.CharAutoCycleHandler(Lcdisplay_AutoCycleChanged);
             Lcdisplay.CurrentCharacterChanged += new Lcdisplay.CharacterHandler(Lcdisplay_CurrentCharacterChanged);
-        }       
+        }
+
         #endregion
 
 
         #region LCD Updater
+
         /// <summary>
         /// Update on every second (and when some of the G15 buttons are pressed)
         /// </summary>
@@ -69,10 +74,12 @@ namespace EVEMon
                 m_lcd.Paint();
             }
         }
+
         #endregion
 
 
         #region Helper Methods
+
         /// <summary>
         /// Starts the LCD display.
         /// </summary>
@@ -169,6 +176,7 @@ namespace EVEMon
 
 
         #region Event Handlers
+
         /// <summary>
         /// On every second, we check whether we should start ot stop the LCD display, updated its data, etc.
         /// </summary>
@@ -198,10 +206,12 @@ namespace EVEMon
                 }
             }
         }
+
         #endregion
 
 
         #region Events triggered by the G15 buttons
+
         /// <summary>
         /// Occurs whenever the current character changed (because of a button press or cycling).
         /// </summary>
@@ -233,6 +243,7 @@ namespace EVEMon
         {
             Settings.G15.UseCharactersCycle = cycle;
         }
+
         #endregion
     }
 }
