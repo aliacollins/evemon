@@ -65,11 +65,13 @@ namespace EVEMon.SkillPlanner
 
                 var attrib = (EveAttribute)(int.Parse((string)nud.Tag));
                 nud.Minimum = m_character[attrib].EffectiveValue - m_character[attrib].ImplantBonus;
-                nud.Maximum = nud.Minimum + EveConstants.MaxImplantPoints;
+                nud.Maximum = (m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints ?
+                                nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus :
+                                nud.Minimum + EveConstants.MaxImplantPoints);
             }
 
             UpdateContent();
- 	        base.OnLoad(e);
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -80,6 +82,7 @@ namespace EVEMon.SkillPlanner
             gbAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Attributes of \"{0}\"", m_set.Name);
 
             m_isUpdating = true;
+
             nudCharisma.Value = m_characterScratchpad.Charisma.EffectiveValue;
             nudWillpower.Value = m_characterScratchpad.Willpower.EffectiveValue;
             nudIntelligence.Value = m_characterScratchpad.Intelligence.EffectiveValue;
