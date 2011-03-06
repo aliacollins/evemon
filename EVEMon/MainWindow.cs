@@ -47,7 +47,7 @@ namespace EVEMon
 
         private readonly List<Notification> m_popupNotifications = new List<Notification>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
-        private APIProvider m_APIProvider = EveClient.APIProviders.CurrentProvider;
+        private string m_APIProviderName = EveClient.APIProviders.CurrentProvider.Name;
 
         /// <summary>
         /// Constructor.
@@ -1897,7 +1897,7 @@ namespace EVEMon
 
             // Whenever we switch API provider we update
             // the server status and every monitored CCP character
-            if (m_APIProvider != EveClient.APIProviders.CurrentProvider)
+            if (m_APIProviderName != EveClient.APIProviders.CurrentProvider.Name)
             {
                 EveClient.EVEServer.ForceUpdate();
 
@@ -1906,7 +1906,7 @@ namespace EVEMon
                     character.QueryMonitors.QueryEverything();
                 }
 
-                m_APIProvider = EveClient.APIProviders.CurrentProvider;
+                m_APIProviderName = EveClient.APIProviders.CurrentProvider.Name;
             }
         }
 
