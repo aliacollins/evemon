@@ -432,17 +432,18 @@ namespace PatchXmlCreator
         }
 
         /// <summary>
-        /// Serializes the patch file.
+        /// Serializes the patch file to string.
         /// </summary>
         /// <returns></returns>
-        private SerializablePatch ExportPatchXml()
+        private string ExportPatchXml()
         {
             SerializablePatch serial = new SerializablePatch();
 
             ExportRelease(serial.Release);
             ExportDatafiles(serial.Datafiles);
 
-            return serial;
+            var doc = Util.SerializeToXmlDocument(serial.GetType(), serial);
+            return (doc != null ? Util.GetXMLStringRepresentation(doc) : String.Empty);
         }
 
         /// <summary>
@@ -494,22 +495,25 @@ namespace PatchXmlCreator
         }
 
         /// <summary>
-        /// Creates the patch file and backup's any previous existing file.
+        /// Creates the patch xml file.
         /// </summary>
         private void SaveFile()
         {
-            SerializablePatch patch = ExportPatchXml();
+            string patch = ExportPatchXml();
             string filenamePath = Path.Combine(patchDir, patchFilename);
 
             try
             {
-                // Create our file
-                using (FileStream fs = File.Open(filenamePath, FileMode.Create, FileAccess.Write))
+                FileHelper.OverwriteOrWarnTheUser(filenamePath, fs =>
                 {
-                    XmlSerializer serializer = new XmlSerializer(patch.GetType());
-                    serializer.Serialize(fs, patch);
-                    fs.Flush();
-                }
+                    using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                    {
+                        sw.Write(patch);
+                        sw.Flush();
+                        sw.Close();
+                    }
+                    return true;
+                });
             }
             finally
             {
@@ -602,9 +606,9 @@ namespace PatchXmlCreator
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
             string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            string message = patch.Datafiles[0].MessageXml.Value.Remove(0, (expansionName.Length + 1));
-            string version = message.Remove((message.IndexOf("(") - 1),
-                (message.Length - (message.IndexOf("(") - 1)));
+            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName) + (expansionName.Length + 1);
+            string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
+            string version = message.Remove((message.IndexOf("(") - 1), (message.Length - (message.IndexOf("(") - 1)));
 
             foreach (var datafile in patch.Datafiles)
             {
