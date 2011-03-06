@@ -1,7 +1,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace PatchXmlCreator
+namespace EVEMon.Common.Serialization.BattleClinic
 {
     public sealed class SerializableRelease
     {
@@ -48,10 +48,21 @@ namespace PatchXmlCreator
         }
 
         [XmlElement("message")]
-        public XmlCDataSection Message
+        public XmlCDataSection MessageXml
         {
             get;
             set;
+        }
+
+        [XmlIgnore]
+        public string Message
+        {
+            get { return MessageXml.InnerText; }
+            set
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                MessageXml = xmlDoc.CreateCDataSection(value);
+            }
         }
     }
 }

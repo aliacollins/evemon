@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon
 {
@@ -39,9 +40,11 @@ namespace EVEMon
         {
             StringBuilder changedFiles = new StringBuilder();
             StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
-            foreach (DatafileVersion dfv in m_args.ChangedFiles)
+            foreach (SerializableDatafile dfv in m_args.ChangedFiles)
             {
-                changedFiles.AppendFormat(CultureConstants.DefaultCulture, "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}", dfv.Name, dfv.DateChanged, dfv.Url, Environment.NewLine);
+                changedFiles.AppendFormat(CultureConstants.DefaultCulture,
+                                        "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
+                                        dfv.Name, dfv.Date, dfv.Url, Environment.NewLine);
                 notes.AppendLine(dfv.Message);
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
@@ -77,35 +80,38 @@ namespace EVEMon
             // if no files were updated, abort the update process.
             if (m_args.ChangedFiles.Count == changedFilesCount)
             {
-                this.DialogResult = DialogResult.Abort;
+                DialogResult = DialogResult.Abort;
             }
             else
             {
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
 
-            this.Close();
+            Close();
         }
 
+        /// <summary>
+        /// Downloads the updates.
+        /// </summary>
         private void DownloadUpdates()
         {
-            List<DatafileVersion> datafiles = new List<DatafileVersion>();
+            List<SerializableDatafile> datafiles = new List<SerializableDatafile>();
 
-            // copy the list of datafiles
+            // Copy the list of datafiles
             m_args.ChangedFiles.ForEach(x => datafiles.Add(x));
 
             foreach (var dfv in datafiles)
             {
-                // work out the new names of the files
+                // Work out the new names of the files
                 string urn = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", dfv.Url, dfv.Name);
                 string oldFilename = Path.Combine(EveClient.EVEMonDataDir, dfv.Name);
                 string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
 
-                // if the file already exists delete it
+                // If the file already exists delete it
                 if (File.Exists(newFilename))
                     File.Delete(newFilename);
 
-                // show the download dialog, which will download the file
+                // Show the download dialog, which will download the file
                 using (UpdateDownloadForm f = new UpdateDownloadForm(urn, newFilename))
                 {
                     if (f.ShowDialog() == DialogResult.OK)
@@ -113,7 +119,7 @@ namespace EVEMon
                         string filename = Path.GetFileName(newFilename);
                         Datafile datafile = new Datafile(filename);
 
-                        if (datafile.MD5Sum != dfv.Md5)
+                        if (datafile.MD5Sum != dfv.MD5Sum)
                         {
                             File.Delete(newFilename);
                             continue;
@@ -126,12 +132,17 @@ namespace EVEMon
             }
         }
 
+        /// <summary>
+        /// Replaces the datafile.
+        /// </summary>
+        /// <param name="oldFilename">The old filename.</param>
+        /// <param name="newFilename">The new filename.</param>
         private static void ReplaceDatafile(string oldFilename, string newFilename)
         {
             try
             {
-                File.Delete(oldFilename + ".bak");
-                File.Copy(oldFilename, oldFilename + ".bak");
+                File.Delete(String.Format("{0}.bak", oldFilename));
+                File.Copy(oldFilename, String.Format("{0}.bak", oldFilename));
                 File.Delete(oldFilename);
                 File.Move(newFilename, oldFilename);
             }
@@ -148,8 +159,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void btnLater_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

@@ -62,9 +62,9 @@ namespace EVEMon
         {
             if (cbAutoInstall.Enabled && cbAutoInstall.Checked)
             {
-                Uri updateURI = new Uri(m_args.AutoInstallUrl);
+                Uri updateURI = new Uri(m_args.InstallerUrl);
                 string localFilename = Path.Combine(EveClient.EVEMonDataDir, Path.GetFileName(updateURI.AbsolutePath));
-                using (UpdateDownloadForm f = new UpdateDownloadForm(m_args.AutoInstallUrl, localFilename))
+                using (UpdateDownloadForm f = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
                 {
                     f.ShowDialog();
                     if (f.DialogResult == DialogResult.OK)
@@ -75,7 +75,7 @@ namespace EVEMon
             }
             else
             {
-                Process.Start(m_args.UpdateUrl);
+                Process.Start(m_args.ForumUrl);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -132,7 +132,7 @@ namespace EVEMon
         {
             UpdateInformation();
             cbAutoInstall.Checked = m_args.CanAutoInstall;
-            UpdateManager.UpdateAvailable += new UpdateAvailableHandler(UpdateNotifyForm_UpdateAvailable);
+            EveClient.UpdateAvailable += UpdateNotifyForm_UpdateAvailable;
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void UpdateNotifyForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            UpdateManager.UpdateAvailable -= new UpdateAvailableHandler(UpdateNotifyForm_UpdateAvailable);
+            EveClient.UpdateAvailable -= UpdateNotifyForm_UpdateAvailable;
         }
     }
 }

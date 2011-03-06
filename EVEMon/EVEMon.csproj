@@ -718,7 +718,6 @@
     <Compile Include="UpdateDownloadForm.Designer.cs">
       <DependentUpon>UpdateDownloadForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdateManager.cs" />
     <Compile Include="UpdateNotifyForm.cs">
       <SubType>Form</SubType>
     </Compile>

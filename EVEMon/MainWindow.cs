@@ -1876,15 +1876,15 @@ namespace EVEMon
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
-                UpdateManager.UpdateAvailable += OnUpdateAvailable;
-                UpdateManager.DataUpdateAvailable += OnDataUpdateAvailable;
+                EveClient.UpdateAvailable += OnUpdateAvailable;
+                EveClient.DataUpdateAvailable += OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = true;
             }
 
             if (!Settings.Updates.CheckEVEMonVersion && m_isUpdateEventsSubscribed)
             {
-                UpdateManager.UpdateAvailable -= OnUpdateAvailable;
-                UpdateManager.DataUpdateAvailable -= OnDataUpdateAvailable;
+                EveClient.UpdateAvailable -= OnUpdateAvailable;
+                EveClient.DataUpdateAvailable -= OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = false;
             }
 

@@ -75,6 +75,14 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="EveConstants.cs" />
     <Compile Include="EveClient.cs" />
+    <Compile Include="EventArgs\CharacterChangedEventArgs.cs" />
+    <Compile Include="EventArgs\CharacterIdentityChangedEventArgs.cs" />
+    <Compile Include="EventArgs\DataUpdateAvailableEventArgs.cs" />
+    <Compile Include="EventArgs\EveServerEventArgs.cs" />
+    <Compile Include="EventArgs\IndustryJobsEventArgs.cs" />
+    <Compile Include="EventArgs\PlanChangedEventArgs.cs" />
+    <Compile Include="EventArgs\QueuedSkillsEventArgs.cs" />
+    <Compile Include="EventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="FontFactory.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="Pair.cs" />
@@ -97,6 +105,9 @@
     <Compile Include="Serialization\API\SerializableOutpost.cs" />
     <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
     <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
+    <Compile Include="Serialization\Battleclinic\SerializableDatafile.cs" />
+    <Compile Include="Serialization\Battleclinic\SerializablePatch.cs" />
+    <Compile Include="Serialization\Battleclinic\SerializableRelease.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
@@ -213,6 +224,7 @@
     </Compile>
     <Compile Include="Controls\TreeViewExtensions.cs" />
     <Compile Include="Threading\Actor.cs" />
+    <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
@@ -228,7 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountComparer.cs" />
-    <Compile Include="AccountCreationEventArgs.cs" />
+    <Compile Include="EventArgs\AccountCreationEventArgs.cs" />
     <Compile Include="AccountIgnoreList.cs" />
     <Compile Include="AccountQueryMonitor.cs" />
     <Compile Include="Attributes\EnforceUIThreadAffinity.cs" />
@@ -314,7 +326,6 @@
     <Compile Include="IGBService\IgbServer.cs" />
     <Compile Include="IGBService\IgbTcpClient.cs" />
     <Compile Include="IGBService\IgbTcpListener.cs" />
-    <Compile Include="IgnoredCharacter.cs" />
     <Compile Include="Attributes\UpdateAttribute.cs" />
     <Compile Include="IndustryJob.cs" />
     <Compile Include="IndustryJobCollection.cs" />
@@ -487,14 +498,13 @@
     <Compile Include="GlobalAPIProviderCollection.cs" />
     <Compile Include="GlobalCharacterIdentityCollection.cs" />
     <Compile Include="GlobalMonitoredCharacterCollection.cs" />
-    <Compile Include="EventArgs.cs" />
     <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProviders.cs" />
     <Compile Include="Serialization\API\SerializableSkill.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="QueuedSkill.cs" />
-    <Compile Include="UriCharacterEventArgs.cs" />
+    <Compile Include="EventArgs\UriCharacterEventArgs.cs" />
     <None Include="Diagrams\Certificates.cd" />
     <None Include="Diagrams\Characters - accounting.cd" />
     <None Include="Diagrams\Settings.cd" />

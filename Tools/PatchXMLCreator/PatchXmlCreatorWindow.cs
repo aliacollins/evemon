@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Serialization.BattleClinic;
 
 namespace PatchXmlCreator
 {
@@ -40,7 +41,6 @@ namespace PatchXmlCreator
         private const string installerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string additionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
 
-        private XmlDocument m_xmlDoc = new XmlDocument();
         private Control m_activeTextBox;
         private string m_text;
         private bool m_init;
@@ -458,7 +458,7 @@ namespace PatchXmlCreator
             serialRelease.Url = String.Concat(rtbReleaseUrl.Text, String.Format(installerFilename, lblEVEMonVersion.Text));
             serialRelease.InstallerArgs = installerArgs;
             serialRelease.AdditionalArgs = additionalArgs;
-            serialRelease.Message = m_xmlDoc.CreateCDataSection(rtbReleaseMessage.Text);
+            serialRelease.Message = rtbReleaseMessage.Text;
 
             return serialRelease;
         }
@@ -486,7 +486,7 @@ namespace PatchXmlCreator
                     serialDatafile.Date = datafileControl.dtpDatafiles.Value.ToString(dateTimeFormat, enUS_Culture);
                     serialDatafile.MD5Sum = datafileControl.lblMD5Sum.Text;
                     serialDatafile.Url = url;
-                    serialDatafile.Message = m_xmlDoc.CreateCDataSection(datafileControl.rtbDatafileMessage.Text);
+                    serialDatafile.Message = datafileControl.rtbDatafileMessage.Text;
                 }
             }
 
@@ -581,7 +581,7 @@ namespace PatchXmlCreator
             rtbReleaseUrl.Text = patch.Release.Url.Remove(
                 patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1,
                 patch.Release.Url.Length - (patch.Release.Url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
-            rtbReleaseMessage.Text = patch.Release.Message.Value;
+            rtbReleaseMessage.Text = patch.Release.Message;
 
             UpdateCreateButtonEnabled();
         }
@@ -602,7 +602,7 @@ namespace PatchXmlCreator
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
             string expansionName = url.Remove(0, (url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1));
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            string message = patch.Datafiles[0].Message.Value.Remove(0, (expansionName.Length + 1));
+            string message = patch.Datafiles[0].MessageXml.Value.Remove(0, (expansionName.Length + 1));
             string version = message.Remove((message.IndexOf("(") - 1),
                 (message.Length - (message.IndexOf("(") - 1)));
 
@@ -629,7 +629,7 @@ namespace PatchXmlCreator
 
                     datafileControl.dtpDatafiles.Value = date;
                     datafileControl.lblMD5Sum.Text = datafile.MD5Sum;
-                    datafileControl.rtbDatafileMessage.Text = datafile.Message.Value;
+                    datafileControl.rtbDatafileMessage.Text = datafile.Message;
                 }
             }
 

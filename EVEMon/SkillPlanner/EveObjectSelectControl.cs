@@ -316,7 +316,8 @@ namespace EVEMon.SkillPlanner
                 foreach (Object node in lbSearchList.SelectedItems)
                 {
                     var obj = node as Item;
-                    if (obj != null) selectedObjects.Add(obj);
+                    if (obj != null)
+                        selectedObjects.Add(obj);
                 }
                 SetSelectedObjects(selectedObjects);
             }

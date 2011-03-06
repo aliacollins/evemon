@@ -10,6 +10,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
@@ -500,7 +501,17 @@ namespace EVEMon.Common
         public static event EventHandler<NotificationInvalidationEventArgs> NotificationInvalidated;
 
         /// <summary>
-        /// Fires the <see cref="SettingsChanged"/> event.
+        /// Occurs when an application update is available.
+        /// </summary>
+        public static event EventHandler<UpdateAvailableEventArgs> UpdateAvailable;
+
+        /// <summary>
+        /// Occurs when a data files update is available.
+        /// </summary>
+        public static event EventHandler<DataUpdateAvailableEventArgs> DataUpdateAvailable;
+
+        /// <summary>
+        /// 
         /// </summary>
         public static void OnSettingsChanged()
         {
@@ -512,7 +523,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Fires the <see cref="SchedulerChanged"/> event.
+        /// 
         /// </summary>
         public static void OnSchedulerChanged()
         {
@@ -765,6 +776,32 @@ namespace EVEMon.Common
             Trace("EveClient.OnNotificationInvalidated");
             if (NotificationInvalidated != null)
                 NotificationInvalidated(null, args);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        internal static void OnUpdateAvailable(string forumUrl, string installerUrl, string updateMessage,
+                                                Version currentVersion, Version newestVersion,
+                                                bool canAutoInstall, string installArgs)
+        {
+            Trace("UpdateManager.OnUpdateAvailable({0} -> {1}, {2}, {3})",
+                currentVersion, newestVersion, canAutoInstall, installArgs);
+            if (UpdateAvailable != null)
+                UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
+                                        currentVersion, newestVersion, canAutoInstall, installArgs));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        internal static void OnDataUpdateAvailable(string updateUrl, List<SerializableDatafile> changedFiles)
+        {
+            Trace("UpdateManager.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
+            if (DataUpdateAvailable != null)
+                DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(updateUrl, changedFiles));
         }
 
         #endregion 

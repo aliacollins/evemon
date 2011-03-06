@@ -7,34 +7,33 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using EVEMon.Common;
+
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
+using EVEMon.Common.Serialization.BattleClinic;
 
-namespace EVEMon
+
+namespace EVEMon.Common
 {
     /// <summary>
     /// Takes care of looking for new versions of EVEMon and its datafiles.
     /// </summary>
     public static class UpdateManager
     {
-        public static event UpdateAvailableHandler UpdateAvailable;
-        public static event DataUpdateAvailableHandler DataUpdateAvailable;
-
         private static bool s_checkScheduled = false;
         private static bool s_enabled;
         private static TimeSpan s_frequency = TimeSpan.FromMinutes(Settings.Updates.UpdateFrequency);
 
         /// <summary>
-        /// Delete the installation files on a previous autodupdate.
+        /// Delete the installation files on a previous autoupdate.
         /// </summary>
         public static void DeleteInstallationFiles()
         {
-            foreach (string s in Directory.GetFiles(EveClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(EveClient.EVEMonDataDir, "EVEMon-install-*.exe", SearchOption.TopDirectoryOnly))
             {
                 try
                 {
-                    File.Delete(s);
+                    File.Delete(file);
                 }
                 catch (Exception e)
                 {
@@ -59,7 +58,7 @@ namespace EVEMon
                 if (s_checkScheduled)
                     return;
 
-                // schedule a check in 10 seconds
+                // Schedule a check in 10 seconds
                 ScheduleCheck(TimeSpan.FromSeconds(10));
             }
         }
@@ -72,6 +71,7 @@ namespace EVEMon
         {
             s_checkScheduled = true;
             Dispatcher.Schedule(time, () => BeginCheck());
+            EveClient.Trace("UpdateManager.ScheduleCheck() in {0}", time);
         }
 
         /// <summary>
@@ -81,15 +81,15 @@ namespace EVEMon
         /// <returns></returns>
         private static void BeginCheck()
         {
-            // if update manager has been disabled since the last
-            // update was triggered quit out here.
+            // If update manager has been disabled since the last
+            // update was triggered quit out here
             if (!s_enabled)
             {
                 s_checkScheduled = false;
                 return;
             }
 
-            // No connection ? Recheck in one minute.
+            // No connection ? Recheck in one minute
             if (!NetworkMonitor.IsNetworkAvailable)
             {
                 ScheduleCheck(TimeSpan.FromMinutes(1));
@@ -112,8 +112,8 @@ namespace EVEMon
         /// <param name="userState"></param>
         private static void OnCheckCompleted(DownloadXmlAsyncResult e, object userState)
         {
-            // if update manager has been disabled since the last
-            // update was triggered quit out here.
+            // If update manager has been disabled since the last
+            // update was triggered quit out here
             if (!s_enabled)
             {
                 s_checkScheduled = false;
@@ -124,7 +124,7 @@ namespace EVEMon
             if (e.Error != null)
             {
                 // Logs the error and reschedule
-                Trace.WriteLine("UpdateManager: " + e.Error.Message);
+                EveClient.Trace("UpdateManager: {0}", e.Error.Message);
                 ScheduleCheck(s_frequency);
                 return;
             }
@@ -149,25 +149,27 @@ namespace EVEMon
         }
         
         /// <summary>
-        /// Scans the feed returned by BC.
+        /// Scans the feed returned by BattleClinic.
         /// </summary>
         /// <remarks>Invoked on some background thread.</remarks>
         /// <param name="xdoc"></param>
         private static void ScanUpdateFeed(XmlDocument xdoc)
         {
-            if (xdoc.DocumentElement.Name != "evemon") return;
+            if (xdoc.DocumentElement.Name != "evemon")
+                return;
 
             XmlElement newestEl = xdoc.DocumentElement.SelectSingleNode("newest") as XmlElement;
-            if (newestEl == null) return;
+            if (newestEl == null)
+                return;
 
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             Version newestVersion = new Version(newestEl.SelectSingleNode("version").InnerText);
-            string updateUrl = newestEl.SelectSingleNode("url").InnerText;
+            string forumUrl = newestEl.SelectSingleNode("url").InnerText;
             string updateMessage = newestEl.SelectSingleNode("message").InnerText;
 
             bool canAutoInstall = false;
             string installArgs = String.Empty;
-            string installUrl = String.Empty;
+            string installerUrl = String.Empty;
             string additionalArgs = String.Empty;
             XmlElement argEl = newestEl.SelectSingleNode("autopatchargs") as XmlElement;
             XmlElement iUrlEl = newestEl.SelectSingleNode("autopatchurl") as XmlElement;
@@ -175,7 +177,7 @@ namespace EVEMon
             if (iUrlEl != null && argEl != null)
             {
                 canAutoInstall = true;
-                installUrl = iUrlEl.InnerText;
+                installerUrl = iUrlEl.InnerText;
                 installArgs = argEl.InnerText;
                 additionalArgs = argAdd.InnerText;
 
@@ -190,81 +192,42 @@ namespace EVEMon
             // Is the program out of date ?
             if (newestVersion > currentVersion)
             {
-                // Requests a notification to subscribers and quit.
-                Dispatcher.BeginInvoke(() => 
-                    OnUpdateAvailable(updateUrl, updateMessage, newestVersion, currentVersion, 
-                    canAutoInstall, installArgs, installUrl));
+                // Requests a notification to subscribers and quit
+                EveClient.OnUpdateAvailable(forumUrl, installerUrl, updateMessage, currentVersion,
+                                            newestVersion, canAutoInstall, installArgs);
                 return;
             }
 
             // Code is up to date. Lets try the data.
             XmlElement datafilesEl = xdoc.DocumentElement as XmlElement;
-            XmlSerializer xs = new XmlSerializer(typeof(DatafileVersions));
-            DatafileVersions dfv = null;
+            XmlSerializer xs = new XmlSerializer(typeof(SerializablePatch));
+            SerializablePatch dfv = null;
             using (XmlNodeReader xnr = new XmlNodeReader(datafilesEl))
             {
-                dfv = (DatafileVersions)xs.Deserialize(xnr);
+                dfv = (SerializablePatch)xs.Deserialize(xnr);
             }
+
             if (dfv.FilesHaveChanged)
             {
                 // Requests a notification to subscribers and quit.
-                Dispatcher.BeginInvoke(() => OnDataUpdateAvailable(updateUrl, dfv.ChangedDataFiles));
+                EveClient.OnDataUpdateAvailable(forumUrl, dfv.ChangedDataFiles);
                 return;
             }
-        }
-
-        /// <summary>
-        /// Notify subscribers about an update of the binaries.
-        /// </summary>
-        /// <remarks>Invoked on the UI thread.</remarks>
-        private static void OnUpdateAvailable(string updateUrl, string updateMessage,
-                                       Version newestVersion, Version currentVersion, bool canAutoInstall,
-                                       string installArgs, string installUrl)
-        {
-            if (UpdateAvailable == null)
-                return;
-
-            EveClient.Trace("UpdateManager.OnUpdateAvailable({0}, {1}, {2}, {3}, {4}, {5}, {6})", updateUrl, updateMessage, newestVersion, currentVersion, canAutoInstall, installArgs, installUrl);
-
-            UpdateAvailableEventArgs e = new UpdateAvailableEventArgs();
-            e.CurrentVersion = currentVersion;
-            e.NewestVersion = newestVersion;
-            e.UpdateMessage = updateMessage;
-            e.UpdateUrl = updateUrl;
-            e.CanAutoInstall = canAutoInstall;
-            e.AutoInstallUrl = installUrl;
-            e.AutoInstallArguments = installArgs;
-            UpdateAvailable(null, e);
-        }
-
-        /// <summary>
-        /// Notify subscribers about an update of the datafiles.
-        /// </summary>
-        /// <remarks>Invoked on the UI thread.</remarks>
-        private static void OnDataUpdateAvailable(string updateUrl, List<DatafileVersion> changedFiles)
-        {
-            if (DataUpdateAvailable == null)
-                return;
-
-            EveClient.Trace("UpdateManager.OnDataUpdateAvailable({0}, changedFiles.Count = {1})", updateUrl, changedFiles.Count);
-
-            DataUpdateAvailableEventArgs e = new DataUpdateAvailableEventArgs();
-            e.UpdateUrl = updateUrl;
-            e.ChangedFiles = changedFiles;
-            DataUpdateAvailable(null, e);
         }
     }
 
 
-    #region DatafileVersions
+   /* #region DatafileVersions
     [XmlRoot("evemon")]
     public class DatafileVersions
     {
-        [XmlArray("datafiles"), XmlArrayItem("datafile", typeof(DatafileVersion))]
+        [XmlArray("datafiles")]
+        [XmlArrayItem("datafile", typeof(SerializableDatafile))]
         public ArrayList Datafiles = new ArrayList();
 
-        private List<DatafileVersion> m_changedList = new List<DatafileVersion>();
-        public List<DatafileVersion> ChangedDataFiles
+        private List<SerializableDatafile> m_changedList = new List<SerializableDatafile>();
+        
+        public List<SerializableDatafile> ChangedDataFiles
         {
             get { return m_changedList; }
         }
@@ -276,16 +239,15 @@ namespace EVEMon
             {
                 m_changedList.Clear();
 
-                foreach (DatafileVersion dfv in Datafiles)
+                foreach (SerializableDatafile dfv in Datafiles)
                 {
                     foreach (var datafile in EveClient.Datafiles)
                     {
                         if (datafile.Filename == dfv.Name)
                         {
-                            if (datafile.MD5Sum != dfv.Md5)
-                            {
+                            if (datafile.MD5Sum != dfv.MD5Sum)
                                 m_changedList.Add(dfv);
-                            }
+
                             break;
                         }
                     }
@@ -296,117 +258,6 @@ namespace EVEMon
 
         }
     }
-    #endregion
-
-
-    #region DatafileVersion
-    public class DatafileVersion
-    {
-        [XmlElement("name")]
-        public string Name;
-
-        [XmlElement("date")]
-        public string DateChanged;
-
-        [XmlElement("md5")]
-        public string Md5;
-
-        [XmlElement("message")]
-        public string Message;
-
-        [XmlElement("url")]
-        public string Url;
-
-    }
-    #endregion
-
-
-    #region UpdateAvailableHandler
-    public delegate void UpdateAvailableHandler(object sender, UpdateAvailableEventArgs e);
-
-    public class UpdateAvailableEventArgs
-    {
-        private string m_updateUrl;
-
-        public string UpdateUrl
-        {
-            get { return m_updateUrl; }
-            set { m_updateUrl = value; }
-        }
-
-        private string m_updateMessage;
-
-        public string UpdateMessage
-        {
-            get { return m_updateMessage; }
-            set { m_updateMessage = value; }
-        }
-
-        private Version m_currentVersion;
-
-        public Version CurrentVersion
-        {
-            get { return m_currentVersion; }
-            set { m_currentVersion = value; }
-        }
-
-        private Version m_newestVersion;
-
-        public Version NewestVersion
-        {
-            get { return m_newestVersion; }
-            set { m_newestVersion = value; }
-        }
-
-        private bool m_canAutoInstall = false;
-
-        public bool CanAutoInstall
-        {
-            get { return m_canAutoInstall; }
-            set { m_canAutoInstall = value; }
-        }
-
-        private string m_autoInstallUrl = String.Empty;
-
-        public string AutoInstallUrl
-        {
-            get { return m_autoInstallUrl; }
-            set { m_autoInstallUrl = value; }
-        }
-
-        private string m_autoInstallArguments = String.Empty;
-
-        public string AutoInstallArguments
-        {
-            get { return m_autoInstallArguments; }
-            set { m_autoInstallArguments = value; }
-        }
-    }
-    #endregion
-
-
-    #region DataUpdateAvailableEventArgs
-    public delegate void DataUpdateAvailableHandler(object sender, DataUpdateAvailableEventArgs e);
-
-    public class DataUpdateAvailableEventArgs
-    {
-        private string m_updateUrl;
-
-        public string UpdateUrl
-        {
-            get { return m_updateUrl; }
-            set { m_updateUrl = value; }
-        }
-
-        private List<DatafileVersion> m_changedFiles;
-
-        public List<DatafileVersion> ChangedFiles
-        {
-            get { return m_changedFiles; }
-            set { m_changedFiles = value; }
-        }
-
-    }
-    #endregion
+    #endregion*/
 
 }
