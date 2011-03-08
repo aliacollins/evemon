@@ -10,10 +10,9 @@ namespace InstallBuilder
 {
     public class Program
     {
-        private static string s_desktopDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private static string s_installerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installer";
         private static string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-        private static string s_config;
         private static string s_projectDir;
         private static string s_version;
         private static string s_binariesDir;
@@ -27,6 +26,10 @@ namespace InstallBuilder
 
             if (!NSISExist)
                 return 0;
+
+            // Create the installer folder if it doesn't exist
+            if (!Directory.Exists(s_installerDir))
+                Directory.CreateDirectory(s_installerDir);
 
             try
             {
@@ -84,7 +87,6 @@ namespace InstallBuilder
 
         private static bool PopulateEnvironment(string[] args)
         {
-            s_config = "Release";
             if (args.Length == 0)
             {
                 s_projectDir = Path.GetFullPath(@"..\..\..");
@@ -96,7 +98,7 @@ namespace InstallBuilder
 
             try
             {
-                Assembly exeAsm = Assembly.LoadFrom(String.Format(@"..\..\..\..\..\EVEMon\bin\x86\{0}\EVEMon.exe", s_config));
+                Assembly exeAsm = Assembly.LoadFrom(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe");
                 s_version = exeAsm.GetName().Version.ToString();
             }
             catch (Exception)
@@ -109,7 +111,7 @@ namespace InstallBuilder
 
             Console.WriteLine("Project directory : {0}", s_projectDir);
 
-            s_binariesDir = Path.GetFullPath(String.Format(@"..\..\..\..\..\EVEMon\bin\x86\{0}", s_config));
+            s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
             Console.WriteLine("Binaries directory : {0}", s_binariesDir);
             Console.WriteLine();
 
@@ -125,7 +127,7 @@ namespace InstallBuilder
             string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
             string svnRevision = s_version.Substring(s_version.LastIndexOf('.') + 1, s_version.Length - (s_version.LastIndexOf('.') + 1));
             string zipFileName = String.Format("EVEMon-binaries-{0}.zip", s_version);
-            zipFileName = Path.Combine(s_desktopDir, zipFileName);
+            zipFileName = Path.Combine(s_installerDir, zipFileName);
 
             string[] filenames = Directory.GetFiles(s_binariesDir, "*", SearchOption.AllDirectories);
 
@@ -178,10 +180,10 @@ namespace InstallBuilder
 #endif
 
                 string param =
-                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_desktopDir, nsisScript);
+                    String.Format("/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"", s_version, s_installerDir, nsisScript);
 
-                Console.WriteLine("NSIS script : " + nsisScript);
-                Console.WriteLine("Output directory : " + s_desktopDir);
+                Console.WriteLine("NSIS script : {0}", nsisScript);
+                Console.WriteLine("Output directory : {0}", s_installerDir);
 
                 ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param);
                 psi.WorkingDirectory = s_projectDir;
