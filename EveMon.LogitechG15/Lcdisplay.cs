@@ -98,10 +98,6 @@ namespace EVEMon.LogitechG15
             CycleSkillQueueTime = false;
             FirstSkillCompletionRemaingTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
 
-            int err = LgLcd.lgLcdInit();
-            if (err != 0)
-                throw new Exception("InitializeLCD(): Unable to initialize LgLcd.");
-
             LCDOpen("EVEMon", false);
 
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
@@ -197,6 +193,10 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void LCDOpen(string appName, bool isAutoStartable)
         {
+            int err = LgLcd.lgLcdInit();
+            if (err != 0)
+                throw new Exception("InitializeLCD(): Unable to initialize LgLcd.");
+
             m_connectContext.appFriendlyName = appName;
             m_connectContext.isAutostartable = isAutoStartable;
             m_connectContext.isPersistent = true;
@@ -204,9 +204,15 @@ namespace EVEMon.LogitechG15
             m_connectContext.onConfigure.configContext = IntPtr.Zero;
             m_connectContext.connection = LgLcd.LGLCD_INVALID_CONNECTION;
 
-            int err = LgLcd.lgLcdConnect(ref m_connectContext);
+            err = LgLcd.lgLcdConnect(ref m_connectContext);
             if (err != 0)
                 throw new Exception("InitializeLCD(): Unable to open a connection to the device.");
+
+            m_openContext.connection = m_connectContext.connection;
+            m_openContext.index = 0;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnButtonsPressed;
+            m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
+            m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
 
             LCDOpenContext();
         }
@@ -216,12 +222,6 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void LCDOpenContext()
         {
-            m_openContext.connection = m_connectContext.connection;
-            m_openContext.index = 0;
-            m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = OnButtonsPressed;
-            m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
-            m_openContext.device = LgLcd.LGLCD_INVALID_DEVICE;
-
             int err = LgLcd.lgLcdOpen(ref m_openContext);
             if (err != 0)
                 throw new Exception("InitializeLCD(): Unable to open a communication context with the screen.");
@@ -243,7 +243,7 @@ namespace EVEMon.LogitechG15
             err = LgLcd.lgLcdDeInit();
             if (err != 0)
                 throw new Exception("CloseLCD(): Unable to de-initialize LgLcd.");
-        }
+        } 
 
         #endregion
 
@@ -302,7 +302,6 @@ namespace EVEMon.LogitechG15
             if (e.Mode != PowerModes.Resume)
                 return;
 
-            // On resume re-establish connection
             try
             {
                 LCDOpenContext();
