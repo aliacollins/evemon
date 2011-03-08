@@ -10,7 +10,7 @@ namespace InstallBuilder
 {
     public class Program
     {
-        private static string s_installerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installer";
+        private static string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installer");
         private static string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         private static string s_projectDir;
@@ -113,6 +113,7 @@ namespace InstallBuilder
 
             s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
             Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            Console.WriteLine("Installer directory : {0}", s_installerDir);
             Console.WriteLine();
 
             s_nsisExe = FindMakeNsisExe();

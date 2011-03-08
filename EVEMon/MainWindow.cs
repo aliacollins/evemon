@@ -1008,13 +1008,13 @@ namespace EVEMon
         /// </summary>
         private void RestartApplication()
         {
-            // save the settings to make sure we don't loose anything.
+            // Save the settings to make sure we don't loose anything
             Settings.SaveImmediate();
 
-            // set the updating data flag so EVEMon exits cleanly.
+            // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
 
-            // find the expected path for EVEMon.Watchdog.exe.
+            // Find the expected path for EVEMon.Watchdog.exe
             Assembly assembly = Assembly.GetEntryAssembly();
             string path = Path.GetDirectoryName(assembly.Location);
             string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
