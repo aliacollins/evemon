@@ -103,7 +103,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)lglcdclasslibrary\Bin\$(ConfigurationName)\lgLCDNETWrapper.dll" "$(ProjectDir)"
-"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)UpdateSVNRevision.cmd" "$(ProjectDir)" $(ConfigurationName)
+</PreBuildEvent>
   </PropertyGroup>
 </Project>
