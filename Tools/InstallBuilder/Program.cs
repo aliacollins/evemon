@@ -73,12 +73,11 @@ namespace InstallBuilder
             string[] locations = new string[3];
 
             locations[0] = s_programFilesDir + @"\NSIS\makensis.exe";
-            locations[1] = @"C:\Program Files\NSIS\makensis.exe";
-            locations[2] = @"C:\Program Files (x86)\NSIS\makensis.exe";
+            locations[1] = @"D:\Program Files\NSIS\makensis.exe"; // Posible location in TeamCity server
+            locations[2] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
             
             foreach (string path in locations)
             {
-                Console.WriteLine("Looking in : {0}", path);
                 if (File.Exists(path))
                     return path;
             }
