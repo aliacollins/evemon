@@ -76,10 +76,11 @@ namespace InstallBuilder
             locations[1] = @"C:\Program Files\NSIS\makensis.exe";
             locations[2] = @"C:\Program Files (x86)\NSIS\makensis.exe";
             
-            foreach (string s in locations)
+            foreach (string path in locations)
             {
-                if (File.Exists(s))
-                    return s;
+                Console.WriteLine("Looking in : {0}", path);
+                if (File.Exists(path))
+                    return path;
             }
 
             return String.Empty;
