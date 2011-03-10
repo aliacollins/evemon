@@ -36,19 +36,15 @@ namespace EVEMon.Common.Serialization.BattleClinic
         [XmlElement("message")]
         public XmlCDataSection MessageXml
         {
-            get;
-            set;
+            get { return new XmlDocument().CreateCDataSection(Message); }
+            set { Message = value.Data; }
         }
 
         [XmlIgnore]
         public string Message
         {
-            get { return MessageXml.InnerText; }
-            set
-            {
-                XmlDocument xmlDoc = new XmlDocument();
-                MessageXml = xmlDoc.CreateCDataSection(value);
-            }
+            get;
+            set;
         }
     }
 }

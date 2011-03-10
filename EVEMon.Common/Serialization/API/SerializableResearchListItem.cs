@@ -3,7 +3,6 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-
     public sealed class SerializableResearchListItem
     {
         [XmlAttribute("agentID")]

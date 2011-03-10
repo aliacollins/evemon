@@ -4,12 +4,11 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of the account status. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIAccountStatus
     {
-        public SerializableAPIAccountStatus()
-        {
-        }
-
         [XmlElement("userID")]
         public long ID
         {

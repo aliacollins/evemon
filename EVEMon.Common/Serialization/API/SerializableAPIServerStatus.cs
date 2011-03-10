@@ -4,17 +4,10 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
-    /// This class represents a server status. Used for querying CCP.
+    /// Represents a serializable version of a server status. Used for querying CCP.
     /// </summary>
     public sealed class SerializableAPIServerStatus
     {
-        /// <summary>
-        /// Default constructor for XML serializer
-        /// </summary>
-        public SerializableAPIServerStatus()
-        {
-        }
-
         [XmlElement("serverOpen")]
         public string CCPOpen
         {

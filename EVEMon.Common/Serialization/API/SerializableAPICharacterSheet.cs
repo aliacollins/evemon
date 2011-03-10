@@ -2,13 +2,11 @@
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of a characters' sheet. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPICharacterSheet : SerializableCharacterSheetBase
     {
-        public SerializableAPICharacterSheet()
-        {
-            Implants = new SerializableImplantSet();
-        }
-
         [XmlElement("attributeEnhancers")]
         public SerializableImplantSet Implants
         {

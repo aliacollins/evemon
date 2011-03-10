@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of a characters' research points. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIResearchList
     {
-        public SerializableAPIResearchList()
-        {
-            this.ResearchPoints = new List<SerializableResearchListItem>();
-        }
-
         [XmlArray("research")]
-        [XmlArrayItem("researc")]
+        [XmlArrayItem("points")]
         public List<SerializableResearchListItem> ResearchPoints
         {
             get;

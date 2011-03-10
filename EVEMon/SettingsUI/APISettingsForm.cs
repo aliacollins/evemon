@@ -57,7 +57,8 @@ namespace EVEMon.SettingsUI
             foreach (var method in m_provider.Methods)
             {
                 // Skip "none"
-                if (method.Method == APIMethods.None) continue;
+                if (method.Method == APIMethods.None)
+                    continue;
 
                 // Add row
                 int rowIndex = dgMethods.Rows.Add(method.Method, method.Path);
@@ -79,9 +80,7 @@ namespace EVEMon.SettingsUI
                 foreach (APIMethod defaultMethod in defaultMethods)
                 {
                     if (defaultMethod.Method == rowMethod.Method)
-                    {
                         row.Cells[1].Value = defaultMethod.Path;
-                    }
                 }
             }
         }
@@ -135,7 +134,8 @@ namespace EVEMon.SettingsUI
 
             if (exist)
             {
-                ShowValidationError(txtConfigurationName, "There is already a provider named " + configName + ".");
+                ShowValidationError(txtConfigurationName,
+                    String.Format("There is already a provider named {0}.", configName));
                 e.Cancel = true;
                 return;
             }
@@ -185,7 +185,8 @@ namespace EVEMon.SettingsUI
         {
             if ((string)e.FormattedValue == String.Empty)
             {
-                ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture, "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
+                ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture,
+                    "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
                 e.Cancel = true;
             }
         }
@@ -216,7 +217,7 @@ namespace EVEMon.SettingsUI
         /// <param name="control"></param>
         private void ClearValidationError(Control control)
         {
-            errorProvider.SetError(control,String.Empty);
+            errorProvider.SetError(control, String.Empty);
         }
     }
 }

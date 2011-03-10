@@ -22,7 +22,14 @@
           <xsl:with-param name="rowName" select="'skill'"/>
         </xsl:call-template>
       </xsl:when>
-      <!-- By default bahviour, the rowset is a plural so we just remove the last character to get the row name-->
+      <!-- (research, row) are transformed into (research, points) -->
+      <xsl:when test="@name='research'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'research'"/>
+          <xsl:with-param name="rowName" select="'points'"/>
+        </xsl:call-template>
+      </xsl:when>
+      <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->
       <xsl:otherwise>
         <xsl:call-template name="rowsets">
           <xsl:with-param name="setName" select="@name"/>

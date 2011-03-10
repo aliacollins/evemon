@@ -8,14 +8,6 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPICharacters
     {
-        /// <summary>
-        /// Default constructor for <see cref="XMLSerializer"/>
-        /// </summary>
-        public SerializableAPICharacters()
-        {
-            Characters = new List<SerializableCharacterListItem>();
-        }
-
         [XmlArray("characters")]
         [XmlArrayItem("character")]
         public List<SerializableCharacterListItem> Characters

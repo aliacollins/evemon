@@ -4,17 +4,10 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
-    /// This class represents the skill in training of a character.
+    /// Represents a serializable version of a characters' skill in training. Used for querying CCP.
     /// </summary>
     public sealed class SerializableAPISkillInTraining : ISynchronizableWithLocalClock
     {
-        /// <summary>
-        /// Default constructor for XML serializer
-        /// </summary>
-        public SerializableAPISkillInTraining()
-        {
-        }
-
         [XmlElement("currentTQTime")]
         public string CurrentTQTime
         {

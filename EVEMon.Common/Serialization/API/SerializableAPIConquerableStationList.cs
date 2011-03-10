@@ -8,11 +8,6 @@ namespace EVEMon.Common.Serialization.API
     /// </summary>
     public sealed class SerializableAPIConquerableStationList
     {
-        public SerializableAPIConquerableStationList()
-        {
-            Outposts = new List<SerializableOutpost>();
-        }
-
         [XmlArray("outposts")]
         [XmlArrayItem("outpost")]
         public List<SerializableOutpost> Outposts
