@@ -160,11 +160,56 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/MailBodies.xml.aspx.
+        /// </summary>
+        public static string APIMailBodies {
+            get {
+                return ResourceManager.GetString("APIMailBodies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/MailingLists.xml.aspx.
+        /// </summary>
+        public static string APIMailingLists {
+            get {
+                return ResourceManager.GetString("APIMailingLists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/MailMessages.xml.aspx.
+        /// </summary>
+        public static string APIMailMessages {
+            get {
+                return ResourceManager.GetString("APIMailMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/MarketOrders.xml.aspx.
         /// </summary>
         public static string APIMarketOrders {
             get {
                 return ResourceManager.GetString("APIMarketOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/Notifications.xml.aspx.
+        /// </summary>
+        public static string APINotifications {
+            get {
+                return ResourceManager.GetString("APINotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/NotificationTexts.xml.aspx.
+        /// </summary>
+        public static string APINotificationTexts {
+            get {
+                return ResourceManager.GetString("APINotificationTexts", resourceCulture);
             }
         }
         

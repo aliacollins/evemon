@@ -3,10 +3,10 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableMailBodiesListItem
+    public sealed class SerializableNotificationTextsListItem
     {
-        [XmlAttribute("messageID")]
-        public long MessageID
+        [XmlAttribute("notificationID")]
+        public long NotificationID
         {
             get;
             set;

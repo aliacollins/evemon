@@ -218,4 +218,19 @@
   <data name="APIAccountStatus" xml:space="preserve">
     <value>/account/AccountStatus.xml.aspx</value>
   </data>
+  <data name="APIMailBodies" xml:space="preserve">
+    <value>/char/MailBodies.xml.aspx</value>
+  </data>
+  <data name="APIMailingLists" xml:space="preserve">
+    <value>/char/MailingLists.xml.aspx</value>
+  </data>
+  <data name="APIMailMessages" xml:space="preserve">
+    <value>/char/MailMessages.xml.aspx</value>
+  </data>
+  <data name="APINotifications" xml:space="preserve">
+    <value>/char/Notifications.xml.aspx</value>
+  </data>
+  <data name="APINotificationTexts" xml:space="preserve">
+    <value>/char/NotificationTexts.xml.aspx</value>
+  </data>
 </root>

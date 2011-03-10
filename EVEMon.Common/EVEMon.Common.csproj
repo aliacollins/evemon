@@ -101,6 +101,7 @@
     <Compile Include="Serialization\API\SerializableAPIMailingLists.cs" />
     <Compile Include="Serialization\API\SerializableAPIMailMessages.cs" />
     <Compile Include="Serialization\API\SerializableAPINotifications.cs" />
+    <Compile Include="Serialization\API\SerializableAPINotificationTexts.cs" />
     <Compile Include="Serialization\API\SerializableNotificationsListItem.cs" />
     <Compile Include="Serialization\API\SerializableImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Serialization\API\SerializableMailBodiesListItem.cs" />
     <Compile Include="Serialization\API\SerializableMailingListsListItem.cs" />
     <Compile Include="Serialization\API\SerializableMailMessagesListItem.cs" />
+    <Compile Include="Serialization\API\SerializableNotificationTextsListItem.cs" />
     <Compile Include="Serialization\API\SerializableOutpost.cs" />
     <Compile Include="Serialization\API\SerializableQueuedSkill.cs" />
     <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
