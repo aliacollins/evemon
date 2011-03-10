@@ -215,49 +215,4 @@ namespace EVEMon.Common
             }
         }
     }
-
-
-   /* #region DatafileVersions
-    [XmlRoot("evemon")]
-    public class DatafileVersions
-    {
-        [XmlArray("datafiles")]
-        [XmlArrayItem("datafile", typeof(SerializableDatafile))]
-        public ArrayList Datafiles = new ArrayList();
-
-        private List<SerializableDatafile> m_changedList = new List<SerializableDatafile>();
-        
-        public List<SerializableDatafile> ChangedDataFiles
-        {
-            get { return m_changedList; }
-        }
-
-        [XmlIgnore]
-        public bool FilesHaveChanged
-        {
-            get
-            {
-                m_changedList.Clear();
-
-                foreach (SerializableDatafile dfv in Datafiles)
-                {
-                    foreach (var datafile in EveClient.Datafiles)
-                    {
-                        if (datafile.Filename == dfv.Name)
-                        {
-                            if (datafile.MD5Sum != dfv.MD5Sum)
-                                m_changedList.Add(dfv);
-
-                            break;
-                        }
-                    }
-                }
-
-                return m_changedList.Count > 0;
-            }
-
-        }
-    }
-    #endregion*/
-
 }
