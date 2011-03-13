@@ -312,7 +312,6 @@
     <Compile Include="ExternalCalendar\ExternalCalendarWindow.designer.cs">
       <DependentUpon>ExternalCalendarWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="G15Handler.cs" />
     <Compile Include="ImplantControls\ImplantSetsWindow.cs">
       <SubType>Form</SubType>
     </Compile>

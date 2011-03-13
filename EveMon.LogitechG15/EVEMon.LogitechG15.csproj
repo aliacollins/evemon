@@ -61,6 +61,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="G15Handler.cs" />
     <Compile Include="LCDInterface.cs">
       <SubType>Code</SubType>
     </Compile>

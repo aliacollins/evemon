@@ -128,15 +128,9 @@ namespace EVEMon.LogitechG15
 
         public Character RefreshCharacter { get; set; }
 
-        public string CurrentSkillTrainingText { get; set; }
-
-        public TimeSpan TimeToComplete { get; set; }
-
         public Character FirstCharacterToCompleteSkill { get; set; }
 
         public TimeSpan FirstSkillCompletionRemaingTime { get; set; }
-
-        public double CurrentCharacterTrainingProgression { get; set; }
 
         public CCPCharacter[] Characters { get; set; }
 
@@ -319,12 +313,13 @@ namespace EVEMon.LogitechG15
 
             m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
 
+            var skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
             if (CurrentCharacter.SkillQueue.IsTraining)
             {
+                var skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime;
                 if (m_showingCycledQueueInfo)
                 {
-                    var skillQueueEndTime = CurrentCharacter.SkillQueue.EndTime;
-                    bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
+                    bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
 
                     if (freeTime)
                     {
@@ -341,18 +336,16 @@ namespace EVEMon.LogitechG15
                 }
                 else
                 {
-                    var skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
                     m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                 }
 
-                m_lcdLines.Add(new LineProcess(TimeToComplete.ToDescriptiveText(
+                m_lcdLines.Add(new LineProcess(skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                     DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
             }
             else
             {
                 if (CurrentCharacter.SkillQueue.IsPaused)
                 {
-                    var skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
                     m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                     m_lcdLines.Add(new LineProcess("Skill Training Is Paused", m_defaultFont));
                 }
@@ -363,7 +356,7 @@ namespace EVEMon.LogitechG15
                 }
             }
 
-            m_lcdLines.Add(new LineProcess(CurrentCharacterTrainingProgression, m_defaultFont));
+            m_lcdLines.Add(new LineProcess((skill != null ? skill.FractionCompleted : 0), m_defaultFont));
 
             RenderLines();
             RenderWalletBalance();
@@ -431,7 +424,7 @@ namespace EVEMon.LogitechG15
         {
             if (CurrentCharacter.IsTraining)
             {
-                DateTime completionDateTime = DateTime.Now.Add(TimeToComplete);
+                DateTime completionDateTime = CurrentCharacter.SkillQueue.EndTime.ToLocalTime();
                 string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
                 completionDateTime.ToShortDateString(), completionDateTime.ToCustomShortTimeString());
                 SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);

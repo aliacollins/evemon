@@ -4,9 +4,8 @@ using System.Linq;
 
 using EVEMon.Common;
 using EVEMon.Common.Threading;
-using EVEMon.LogitechG15;
 
-namespace EVEMon
+namespace EVEMon.LogitechG15
 {
     /// <summary>
     /// This class takes care to drive the <see cref="Lcdisplay"/> according to the settings, the characters, the global events, etc. 
@@ -29,13 +28,13 @@ namespace EVEMon
         /// </summary>
         public static void Initialize()
         {
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
 
             // Subscribe to events which occur of G15 buttons pressed
-            Lcdisplay.APIUpdateRequested += new Lcdisplay.CharacterHandler(Lcdisplay_APIUpdateRequested);
-            Lcdisplay.AutoCycleChanged += new Lcdisplay.CharAutoCycleHandler(Lcdisplay_AutoCycleChanged);
-            Lcdisplay.CurrentCharacterChanged += new Lcdisplay.CharacterHandler(Lcdisplay_CurrentCharacterChanged);
+            Lcdisplay.APIUpdateRequested += Lcdisplay_APIUpdateRequested;
+            Lcdisplay.AutoCycleChanged += Lcdisplay_AutoCycleChanged;
+            Lcdisplay.CurrentCharacterChanged += Lcdisplay_CurrentCharacterChanged;
         }
 
         #endregion
@@ -148,27 +147,6 @@ namespace EVEMon
             {
                 m_lcd.FirstSkillCompletionRemaingTime = nextChar.CurrentlyTrainingSkill.RemainingTime;
                 m_lcd.FirstCharacterToCompleteSkill = nextChar;
-            }
-
-            // Updates the character name
-            var currentCharacter = m_lcd.CurrentCharacter;
-            if (currentCharacter != null)
-            {
-                if (currentCharacter.IsTraining)
-                {
-                    var skill = currentCharacter.CurrentlyTrainingSkill;
-
-                    m_lcd.CurrentCharacter = currentCharacter;
-                    m_lcd.CurrentCharacterTrainingProgression = skill.FractionCompleted;
-                    m_lcd.CurrentSkillTrainingText = skill.ToString();
-                    m_lcd.TimeToComplete = skill.RemainingTime;
-                }
-                else
-                {
-                    m_lcd.CurrentSkillTrainingText = String.Empty;
-                    m_lcd.TimeToComplete = TimeSpan.Zero;
-                    m_lcd.CurrentCharacterTrainingProgression = 0;
-                }
             }
         }
         

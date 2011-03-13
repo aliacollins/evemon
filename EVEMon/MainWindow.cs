@@ -21,6 +21,7 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.ImplantControls;
+using EVEMon.LogitechG15;
 using EVEMon.Sales;
 using EVEMon.Schedule;
 using EVEMon.SettingsUI;
