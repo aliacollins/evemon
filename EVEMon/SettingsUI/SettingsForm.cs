@@ -227,7 +227,7 @@ namespace EVEMon.SettingsUI
 
             // Updates
             cbCheckTimeOnStartup.Checked = m_settings.Updates.CheckTimeOnStartup;
-            cbAutomaticallySearchForNewVersions.Checked = m_settings.Updates.CheckEVEMonVersion;
+            cbCheckForUpdates.Checked = m_settings.Updates.CheckEVEMonVersion;
             updateSettingsControl.Settings = m_settings.Updates;
 
             // Skill Planner
@@ -458,7 +458,7 @@ namespace EVEMon.SettingsUI
             m_settings.Proxy.Host = proxyHttpHostTextBox.Text;
 
             // Updates
-            m_settings.Updates.CheckEVEMonVersion = cbAutomaticallySearchForNewVersions.Checked;
+            m_settings.Updates.CheckEVEMonVersion = cbCheckForUpdates.Checked;
             m_settings.Updates.CheckTimeOnStartup = cbCheckTimeOnStartup.Checked;
 
             // Scheduler colors
@@ -873,7 +873,6 @@ namespace EVEMon.SettingsUI
                     InitialiseAPIProvidersDropDown();
                     cbAPIServer.SelectedIndex = 0;
                 }
-
             }
         }
 
@@ -886,6 +885,19 @@ namespace EVEMon.SettingsUI
         {
             Settings.UI.PlanWindow.PrioritiesMsgBox.ShowDialogBox = true;
             Settings.UI.PlanWindow.PrioritiesMsgBox.DialogResult = DialogResult.None;
+        }
+
+        /// <summary>
+        /// Updates the timers of the query monitors.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void btnUpdateQueryTimers_Click(object sender, EventArgs e)
+        {
+            foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            {
+                character.QueryMonitors.QueryEverything();
+            }
         }
         #endregion
 
