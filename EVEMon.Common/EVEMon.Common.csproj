@@ -121,11 +121,14 @@
     <Compile Include="Serialization\Battleclinic\SerializableRelease.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
+    <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
+    <Compile Include="Serialization\Settings\SerializableCCPCharacter.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializablePlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableRemappingPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableResearchPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableSettings.cs" />
+    <Compile Include="Serialization\Settings\SerializableUriCharacter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsObjects\Enumerations.cs" />
     <Compile Include="SettingsObjects\ProxyAuthentication.cs" />
