@@ -1,5 +1,7 @@
 using System;
 
+using EVEMon.Common;
+
 namespace EVEMon.SkillPlanner
 {
     public partial class ItemBrowserControl : EveObjectBrowserControl

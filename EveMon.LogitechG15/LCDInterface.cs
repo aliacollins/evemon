@@ -21,15 +21,15 @@ namespace lgLcdClassLibrary
     /// </summary>
     public static class LCDInterface
     {
-        private static bool LCDAvailable;
-        private static bool LCDInterfaceInitialized;
-        private static int result;
+        private static bool s_LCDAvailable;
+        private static bool s_LCDInterfaceInitialized;
+        private static int s_result;
                 
-        private static lgLcdConnectContext m_connectContext = new lgLcdConnectContext();
-        private static lgLcdOpenContext m_openContext = new lgLcdOpenContext();
-        private static lgLcdBitmap160x43x1 m_lcdBitmap = new lgLcdBitmap160x43x1();
-        private static lgLcdOnConfigureCB m_configCallback;
-        private static lgLcdOnSoftButtonsCB m_buttonCallback;
+        private static lgLcdConnectContext s_connectContext = new lgLcdConnectContext();
+        private static lgLcdOpenContext s_openContext = new lgLcdOpenContext();
+        private static lgLcdBitmap160x43x1 s_lcdBitmap = new lgLcdBitmap160x43x1();
+        private static lgLcdOnConfigureCB s_configCallback;
+        private static lgLcdOnSoftButtonsCB s_buttonCallback;
 
 
         #region Public Methods
@@ -44,7 +44,7 @@ namespace lgLcdClassLibrary
             if (bDelegate == null)
                 return false;
 
-            m_buttonCallback = bDelegate.Invoke;
+            s_buttonCallback = bDelegate.Invoke;
             return true;
         }
 
@@ -58,7 +58,7 @@ namespace lgLcdClassLibrary
             if (cDelegate == null)
                 return false;
 
-            m_configCallback = cDelegate.Invoke;
+            s_configCallback = cDelegate.Invoke;
             return true;
         }
 
@@ -72,50 +72,50 @@ namespace lgLcdClassLibrary
         {
             try
             {
-                if (!LCDAvailable)
+                if (!s_LCDAvailable)
                 {
                     // Initialize interface to LCD library if needed
-                    if (!LCDInterfaceInitialized)
+                    if (!s_LCDInterfaceInitialized)
                     {
                         // Initialize the library
-                        result = lgLcdInit();
+                        s_result = lgLcdInit();
 
-                        m_connectContext.appFriendlyName = appName;
-                        m_connectContext.isAutostartable = isAutostartable;
-                        m_connectContext.isPersistent = true;
+                        s_connectContext.appFriendlyName = appName;
+                        s_connectContext.isAutostartable = isAutostartable;
+                        s_connectContext.isPersistent = true;
 
                         // We might have a configuration screen
-                        m_connectContext.onConfigure.configCallback = m_configCallback;
-                        m_connectContext.onConfigure.configContext = IntPtr.Zero;
+                        s_connectContext.onConfigure.configCallback = s_configCallback;
+                        s_connectContext.onConfigure.configContext = IntPtr.Zero;
 
                         // The "connection" member will be returned upon return
-                        m_connectContext.connection = LGLCD_INVALID_CONNECTION;
+                        s_connectContext.connection = LGLCD_INVALID_CONNECTION;
 
                         // Connect
-                        result = lgLcdConnect(ref m_connectContext);
+                        s_result = lgLcdConnect(ref s_connectContext);
 
-                        LCDInterfaceInitialized = true;
+                        s_LCDInterfaceInitialized = true;
                     }
 
                     // Is an LCD available?
                     lgLcdDeviceDesc deviceDescription;
-                    result = lgLcdEnumerate(m_connectContext.connection, 0, out deviceDescription);
-                    if (result == 0)
+                    s_result = lgLcdEnumerate(s_connectContext.connection, 0, out deviceDescription);
+                    if (s_result == 0)
                     {
                         // Open it
-                        m_openContext.connection = m_connectContext.connection;
-                        m_openContext.index = 0;
+                        s_openContext.connection = s_connectContext.connection;
+                        s_openContext.index = 0;
 
                         // We might have softbutton notification callback
-                        m_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = m_buttonCallback;
-                        m_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
+                        s_openContext.onSoftbuttonsChanged.softbuttonsChangedCallback = s_buttonCallback;
+                        s_openContext.onSoftbuttonsChanged.softbuttonsChangedContext = IntPtr.Zero;
 
                         // The "device" member will be returned upon return
-                        m_openContext.device = LGLCD_INVALID_DEVICE;
-                        result = lgLcdOpen(ref m_openContext);
+                        s_openContext.device = LGLCD_INVALID_DEVICE;
+                        s_result = lgLcdOpen(ref s_openContext);
 
-                        if (result == 0)
-                            LCDAvailable = true;
+                        if (s_result == 0)
+                            s_LCDAvailable = true;
                     }
                 }
             }
@@ -126,7 +126,7 @@ namespace lgLcdClassLibrary
                 Console.WriteLine(ex.Message);
             }
 
-            return LCDAvailable;
+            return s_LCDAvailable;
         }
 
         /// <summary>
@@ -138,24 +138,24 @@ namespace lgLcdClassLibrary
             try
             {
                 // Let's close the device again
-                result = lgLcdClose(m_openContext.device);
+                s_result = lgLcdClose(s_openContext.device);
 
                 // Take down the connection
-                result = lgLcdDisconnect(m_connectContext.connection);
+                s_result = lgLcdDisconnect(s_connectContext.connection);
 
                 // Shutdown the library
-                result = lgLcdDeInit();
+                s_result = lgLcdDeInit();
 
-                LCDAvailable = false;
-                LCDInterfaceInitialized = false;
+                s_LCDAvailable = false;
+                s_LCDInterfaceInitialized = false;
             }
             catch (Exception ex)
             {
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("Close Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                LCDAvailable = false;
-                LCDInterfaceInitialized = false;
+                s_LCDAvailable = false;
+                s_LCDInterfaceInitialized = false;
             }
 
             return true;
@@ -171,22 +171,22 @@ namespace lgLcdClassLibrary
         {
             try
             {
-                if (!LCDAvailable && LCDInterfaceInitialized)
-                    Open(m_connectContext.appFriendlyName, m_connectContext.isAutostartable);
+                if (!s_LCDAvailable && s_LCDInterfaceInitialized)
+                    Open(s_connectContext.appFriendlyName, s_connectContext.isAutostartable);
 
                 // Display bitmap if LCD is found
-                if (LCDAvailable)
+                if (s_LCDAvailable)
                 {
-                    m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
-                    m_lcdBitmap.pixels = samplebitmap;
-                    result = lgLcdUpdateBitmap(m_openContext.device, ref m_lcdBitmap, priority);
+                    s_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
+                    s_lcdBitmap.pixels = samplebitmap;
+                    s_result = lgLcdUpdateBitmap(s_openContext.device, ref s_lcdBitmap, priority);
 
                     // Has the LCD been disconnected?
-                    if (result != 0)
+                    if (s_result != 0)
                     {
                         // Close the device
-                        result = lgLcdClose(m_openContext.device);
-                        LCDAvailable = false;
+                        s_result = lgLcdClose(s_openContext.device);
+                        s_LCDAvailable = false;
                     }
                 }
             }
@@ -195,10 +195,10 @@ namespace lgLcdClassLibrary
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("DisplayBitmap Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                LCDAvailable = false;
+                s_LCDAvailable = false;
             }
 
-            return LCDAvailable;
+            return s_LCDAvailable;
         }
 
         /// <summary>
@@ -211,16 +211,16 @@ namespace lgLcdClassLibrary
             try
             {
                 // Display bitmap if LCD is found
-                if (LCDAvailable)
+                if (s_LCDAvailable)
                 {
-                    result = lgLcdReadSoftButtons(m_openContext.device, out buttons);
+                    s_result = lgLcdReadSoftButtons(s_openContext.device, out buttons);
 
                     // Has the LCD been disconnected?
-                    if (result != 0)
+                    if (s_result != 0)
                     {
                         // Close the device
-                        result = lgLcdClose(m_openContext.device);
-                        LCDAvailable = false;
+                        s_result = lgLcdClose(s_openContext.device);
+                        s_LCDAvailable = false;
                     }
                 }
             }
@@ -229,10 +229,10 @@ namespace lgLcdClassLibrary
                 // This might happen for a number of reasons .. most likely missing the lgLcd library (lgLcd.dll)
                 Console.Write("ReadSoftButtons Caught Exception: ");
                 Console.WriteLine(ex.Message);
-                LCDAvailable = false;
+                s_LCDAvailable = false;
             }
 
-            return LCDAvailable;
+            return s_LCDAvailable;
         }
         
         #endregion

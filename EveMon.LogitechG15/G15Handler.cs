@@ -14,11 +14,11 @@ namespace EVEMon.LogitechG15
     /// </summary>
     public static class G15Handler
     {
-        private static Lcdisplay m_lcd;
-        private static bool m_running;
-        private static bool m_startupError;
+        private static Lcdisplay s_lcd;
+        private static bool s_running;
+        private static bool s_startupError;
 
-        private static Object m_syncLock = new Object();
+        private static Object s_syncLock = new Object();
 
 
         #region Initialize
@@ -48,16 +48,16 @@ namespace EVEMon.LogitechG15
         private static void UpdateOnTimerTick()
         {
             // No G15 keyboard connected
-            if (m_startupError)
+            if (s_startupError)
                 return;
 
             // Did the state changed ?
-            if (Settings.G15.Enabled != m_running)
+            if (Settings.G15.Enabled != s_running)
             {
-                if (!m_running)
+                if (!s_running)
                 {
                     Start();
-                    if (m_startupError)
+                    if (s_startupError)
                         return;
                 }
                 else
@@ -67,10 +67,10 @@ namespace EVEMon.LogitechG15
             }
 
             // Run
-            if (m_running)
+            if (s_running)
             {
                 UpdateG15Data();
-                m_lcd.Paint();
+                s_lcd.Paint();
             }
         }
 
@@ -86,15 +86,15 @@ namespace EVEMon.LogitechG15
         {
             try
             {
-                m_lcd = Lcdisplay.Instance();
-                m_lcd.SwitchState(LcdState.SplashScreen);
-                m_running = true;
+                s_lcd = Lcdisplay.Instance();
+                s_lcd.SwitchState(LcdState.SplashScreen);
+                s_running = true;
             }
             catch(Exception ex)
             {
                 EveClient.Trace(ex.Message);
-                m_startupError = true;
-                m_running = false;
+                s_startupError = true;
+                s_running = false;
             }
         }
 
@@ -105,7 +105,7 @@ namespace EVEMon.LogitechG15
         {
             try
             {
-                m_lcd.Dispose();
+                s_lcd.Dispose();
             }
             catch (Exception ex)
             {
@@ -113,8 +113,8 @@ namespace EVEMon.LogitechG15
             }
             finally
             {
-                m_lcd = null;
-                m_running = false;
+                s_lcd = null;
+                s_running = false;
             }
         }
 
@@ -124,12 +124,12 @@ namespace EVEMon.LogitechG15
         private static void UpdateG15Data()
         {
             // Settings
-            m_lcd.Cycle = Settings.G15.UseCharactersCycle;
-            m_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
-            m_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
-            m_lcd.CycleCompletionInterval = Settings.G15.TimeFormatsCycleInterval;
-            m_lcd.ShowSystemTime = Settings.G15.ShowSystemTime;
-            m_lcd.ShowEVETime = Settings.G15.ShowEVETime;
+            s_lcd.Cycle = Settings.G15.UseCharactersCycle;
+            s_lcd.CycleInterval = Settings.G15.CharactersCycleInterval;
+            s_lcd.CycleSkillQueueTime = Settings.G15.UseTimeFormatsCycle;
+            s_lcd.CycleCompletionInterval = Settings.G15.TimeFormatsCycleInterval;
+            s_lcd.ShowSystemTime = Settings.G15.ShowSystemTime;
+            s_lcd.ShowEVETime = Settings.G15.ShowEVETime;
 
             // Characters names
             List<CCPCharacter> lcdCharacters = new List<CCPCharacter>();
@@ -139,14 +139,14 @@ namespace EVEMon.LogitechG15
                 lcdCharacters.Add(character as CCPCharacter);
             }
 
-            m_lcd.Characters = lcdCharacters.ToArray();
+            s_lcd.Characters = lcdCharacters.ToArray();
 
             // First character to complete a skill
             var nextChar = EveClient.MonitoredCharacters.Where(x => x.IsTraining).ToArray().OrderBy(x => x.CurrentlyTrainingSkill.EndTime).FirstOrDefault();
             if (nextChar != null)
             {
-                m_lcd.FirstSkillCompletionRemaingTime = nextChar.CurrentlyTrainingSkill.RemainingTime;
-                m_lcd.FirstCharacterToCompleteSkill = nextChar;
+                s_lcd.FirstSkillCompletionRemaingTime = nextChar.CurrentlyTrainingSkill.RemainingTime;
+                s_lcd.FirstCharacterToCompleteSkill = nextChar;
             }
         }
         
@@ -172,15 +172,15 @@ namespace EVEMon.LogitechG15
         /// <param name="e"></param>
         private static void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
-            if (m_running)
+            if (s_running)
             {
                 if (e.CompletedSkills.Count == 1)
                 {
-                    m_lcd.SkillCompleted(e.Character);
+                    s_lcd.SkillCompleted(e.Character);
                 }
                 else
                 {
-                    m_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
+                    s_lcd.SkillCompleted(e.Character, e.CompletedSkills.Count);
                 }
             }
         }

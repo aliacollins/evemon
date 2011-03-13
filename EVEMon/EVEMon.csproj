@@ -319,7 +319,6 @@
       <DependentUpon>ImplantSetsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="ListViewExporter.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
