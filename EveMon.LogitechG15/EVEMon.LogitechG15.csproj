@@ -61,6 +61,9 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LCDInterface.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -69,9 +72,6 @@
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Lcdisplay.cs" />
     <Compile Include="LcdState.cs" />
-    <Compile Include="LgLcdNET.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LineProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -90,9 +90,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LgLcd.dll">
+    <Content Include="LgLcd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
