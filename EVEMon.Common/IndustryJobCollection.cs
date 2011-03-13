@@ -39,7 +39,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src">The enumeration of serilizable jobs from the API.</param>
+        /// <param name="src">The enumeration of serializable jobs from the API.</param>
         internal void Import(IEnumerable<SerializableJobListItem> src)
         {
             // Mark all jobs for deletion 

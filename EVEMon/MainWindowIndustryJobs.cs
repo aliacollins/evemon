@@ -58,17 +58,17 @@ namespace EVEMon
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             industryExpPanelControl.Visible = false;
 
-            lvJobs.ColumnClick += new ColumnClickEventHandler(lvJobs_ColumnClick);
-            lvJobs.KeyDown += new KeyEventHandler(lvJobs_KeyDown);
-            lvJobs.ColumnWidthChanged += new ColumnWidthChangedEventHandler(lvJobs_ColumnWidthChanged);
-            lvJobs.ColumnReordered += new ColumnReorderedEventHandler(lvJobs_ColumnReordered);
+            lvJobs.ColumnClick += lvJobs_ColumnClick;
+            lvJobs.KeyDown += lvJobs_KeyDown;
+            lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
+            lvJobs.ColumnReordered += lvJobs_ColumnReordered;
 
-            this.Resize += new EventHandler(MainWindowIndustryJobsList_Resize);
+            Resize += MainWindowIndustryJobsList_Resize;
 
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.CharacterIndustryJobsChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterIndustryJobsChanged);
-            EveClient.CharacterIndustryJobsCompleted += new EventHandler<IndustryJobsEventArgs>(EveClient_IndustryJobsCompleted);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsCompleted += EveClient_IndustryJobsCompleted;
+            this.Disposed += OnDisposed;
         }
                 
         /// <summary>
@@ -212,10 +212,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.CharacterIndustryJobsChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterIndustryJobsChanged);
-            EveClient.CharacterIndustryJobsCompleted -= new EventHandler<IndustryJobsEventArgs>(EveClient_IndustryJobsCompleted);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsCompleted -= EveClient_IndustryJobsCompleted;
+            this.Disposed -= OnDisposed;
         }
 
         /// <summary>

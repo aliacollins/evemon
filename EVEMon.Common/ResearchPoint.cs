@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {

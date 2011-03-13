@@ -61,6 +61,5 @@ namespace EVEMon.Common
 
             return serial;
         }
-
     }
 }

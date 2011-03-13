@@ -58,10 +58,10 @@ namespace EVEMon
 
             m_requireRefresh = true;
 
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.CharacterChanged +=EveClient_CharacterChanged;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.TimerTick += EveClient_TimerTick;
+            this.Disposed +=OnDisposed;
         }
         
         /// <summary>
@@ -78,10 +78,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.TimerTick -= EveClient_TimerTick;
+            this.Disposed -= OnDisposed;
         }
 
         /// <summary>

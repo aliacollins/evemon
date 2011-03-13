@@ -49,7 +49,7 @@ namespace EVEMon
             lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;
             lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
 
-            this.Resize += new EventHandler(MainWindowResearchPointsList_Resize);
+            Resize += MainWindowResearchPointsList_Resize;
 
             EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
             Disposed += OnDisposed;
