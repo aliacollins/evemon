@@ -76,48 +76,48 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.Label lblRelocatorPage;
             System.Windows.Forms.Label label1;
             System.Windows.Forms.GroupBox gbSkillBrowserIconSet;
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Node1");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Node2");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Node3");
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Node4");
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Node5");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Node6");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Node7");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Node8");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
-            treeNode25,
-            treeNode26,
-            treeNode27,
-            treeNode28,
-            treeNode29,
-            treeNode30,
-            treeNode31,
-            treeNode32});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node1");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Node3");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Node4");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Node5");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Node6");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Node7");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Node8");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Node0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7,
+            treeNode8});
             System.Windows.Forms.Label label2;
-            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
-            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("Network", 8, 8);
-            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
-            System.Windows.Forms.TreeNode treeNode37 = new System.Windows.Forms.TreeNode("IGB Server", 4, 4);
-            System.Windows.Forms.TreeNode treeNode38 = new System.Windows.Forms.TreeNode("Relocator", 2, 2);
-            System.Windows.Forms.TreeNode treeNode39 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
-            treeNode34,
-            treeNode35,
-            treeNode36,
-            treeNode37,
-            treeNode38});
-            System.Windows.Forms.TreeNode treeNode40 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
-            System.Windows.Forms.TreeNode treeNode41 = new System.Windows.Forms.TreeNode("Icons", 14, 14);
-            System.Windows.Forms.TreeNode treeNode42 = new System.Windows.Forms.TreeNode("Messages", 15, 15);
-            System.Windows.Forms.TreeNode treeNode43 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9, new System.Windows.Forms.TreeNode[] {
-            treeNode41,
-            treeNode42});
-            System.Windows.Forms.TreeNode treeNode44 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
-            System.Windows.Forms.TreeNode treeNode45 = new System.Windows.Forms.TreeNode("External Calendar", 6, 6);
-            System.Windows.Forms.TreeNode treeNode46 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
-            treeNode45});
-            System.Windows.Forms.TreeNode treeNode47 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 13, 13);
-            System.Windows.Forms.TreeNode treeNode48 = new System.Windows.Forms.TreeNode("Notifications", 10, 10, new System.Windows.Forms.TreeNode[] {
-            treeNode47});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Updates", 12, 12);
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 8, 8);
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 5, 5);
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 4, 4);
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Relocator", 2, 2);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 11, 11, new System.Windows.Forms.TreeNode[] {
+            treeNode10,
+            treeNode11,
+            treeNode12,
+            treeNode13,
+            treeNode14});
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 7, 7);
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Icons", 14, 14);
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Messages", 15, 15);
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Skill Planner", 9, 9, new System.Windows.Forms.TreeNode[] {
+            treeNode17,
+            treeNode18});
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("System Tray Icon", 3, 3);
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("External Calendar", 6, 6);
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
+            treeNode21});
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 13, 13);
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Notifications", 10, 10, new System.Windows.Forms.TreeNode[] {
+            treeNode23});
             this.applyButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -1104,26 +1104,26 @@ namespace EVEMon.SettingsUI
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tvlist.Location = new System.Drawing.Point(3, 30);
             this.tvlist.Name = "tvlist";
-            treeNode25.Name = "Node1";
-            treeNode25.Text = "Node1";
-            treeNode26.Name = "Node2";
-            treeNode26.Text = "Node2";
-            treeNode27.Name = "Node3";
-            treeNode27.Text = "Node3";
-            treeNode28.Name = "Node4";
-            treeNode28.Text = "Node4";
-            treeNode29.Name = "Node5";
-            treeNode29.Text = "Node5";
-            treeNode30.Name = "Node6";
-            treeNode30.Text = "Node6";
-            treeNode31.Name = "Node7";
-            treeNode31.Text = "Node7";
-            treeNode32.Name = "Node8";
-            treeNode32.Text = "Node8";
-            treeNode33.Name = "Node0";
-            treeNode33.Text = "Node0";
+            treeNode1.Name = "Node1";
+            treeNode1.Text = "Node1";
+            treeNode2.Name = "Node2";
+            treeNode2.Text = "Node2";
+            treeNode3.Name = "Node3";
+            treeNode3.Text = "Node3";
+            treeNode4.Name = "Node4";
+            treeNode4.Text = "Node4";
+            treeNode5.Name = "Node5";
+            treeNode5.Text = "Node5";
+            treeNode6.Name = "Node6";
+            treeNode6.Text = "Node6";
+            treeNode7.Name = "Node7";
+            treeNode7.Text = "Node7";
+            treeNode8.Name = "Node8";
+            treeNode8.Text = "Node8";
+            treeNode9.Name = "Node0";
+            treeNode9.Text = "Node0";
             this.tvlist.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode33});
+            treeNode9});
             this.tvlist.Size = new System.Drawing.Size(213, 151);
             this.tvlist.TabIndex = 9;
             // 
@@ -1324,88 +1324,88 @@ namespace EVEMon.SettingsUI
             this.treeView.ItemHeight = 20;
             this.treeView.Location = new System.Drawing.Point(6, 6);
             this.treeView.Name = "treeView";
-            treeNode34.ImageIndex = 12;
-            treeNode34.Name = "Node9";
-            treeNode34.SelectedImageIndex = 12;
-            treeNode34.Tag = "updatesPage";
-            treeNode34.Text = "Updates";
-            treeNode35.ImageIndex = 8;
-            treeNode35.Name = "Node5";
-            treeNode35.SelectedImageIndex = 8;
-            treeNode35.Tag = "networkPage";
-            treeNode35.Text = "Network";
-            treeNode36.ImageIndex = 5;
-            treeNode36.Name = "g15Node";
-            treeNode36.SelectedImageIndex = 5;
-            treeNode36.Tag = "g15Page";
-            treeNode36.Text = "Logitech Keyboards";
-            treeNode37.ImageIndex = 4;
-            treeNode37.Name = "Node2";
-            treeNode37.SelectedImageIndex = 4;
-            treeNode37.Tag = "igbServerPage";
-            treeNode37.Text = "IGB Server";
-            treeNode38.ImageIndex = 2;
-            treeNode38.Name = "relocationNode";
-            treeNode38.SelectedImageIndex = 2;
-            treeNode38.Tag = "relocatorPage";
-            treeNode38.Text = "Relocator";
-            treeNode39.ImageIndex = 11;
-            treeNode39.Name = "generalNode";
-            treeNode39.SelectedImageIndex = 11;
-            treeNode39.Tag = "generalPage";
-            treeNode39.Text = "General";
-            treeNode40.ImageIndex = 7;
-            treeNode40.Name = "Node3";
-            treeNode40.SelectedImageIndex = 7;
-            treeNode40.Tag = "mainWindowPage";
-            treeNode40.Text = "Main Window";
-            treeNode41.ImageIndex = 14;
-            treeNode41.Name = "IconsNode";
-            treeNode41.SelectedImageIndex = 14;
-            treeNode41.Tag = "iconsPage";
-            treeNode41.Text = "Icons";
-            treeNode42.ImageIndex = 15;
-            treeNode42.Name = "MassagesNode";
-            treeNode42.SelectedImageIndex = 15;
-            treeNode42.Tag = "messagesPage";
-            treeNode42.Text = "Messages";
-            treeNode43.ImageIndex = 9;
-            treeNode43.Name = "Node4";
-            treeNode43.SelectedImageIndex = 9;
-            treeNode43.Tag = "skillPlannerPage";
-            treeNode43.Text = "Skill Planner";
-            treeNode44.ImageIndex = 3;
-            treeNode44.Name = "trayIconNode";
-            treeNode44.SelectedImageIndex = 3;
-            treeNode44.Tag = "trayIconPage";
-            treeNode44.Text = "System Tray Icon";
-            treeNode45.ImageIndex = 6;
-            treeNode45.Name = "Node11";
-            treeNode45.SelectedImageIndex = 6;
-            treeNode45.Tag = "externalCalendarPage";
-            treeNode45.Text = "External Calendar";
-            treeNode46.ImageIndex = 1;
-            treeNode46.Name = "Node10";
-            treeNode46.SelectedImageIndex = 1;
-            treeNode46.Tag = "schedulerUIPage";
-            treeNode46.Text = "Scheduler";
-            treeNode47.ImageIndex = 13;
-            treeNode47.Name = "Node7";
-            treeNode47.SelectedImageIndex = 13;
-            treeNode47.Tag = "emailNotificationsPage";
-            treeNode47.Text = "Skill Completion Mails";
-            treeNode48.ImageIndex = 10;
-            treeNode48.Name = "Node2";
-            treeNode48.SelectedImageIndex = 10;
-            treeNode48.Tag = "notificationsPage";
-            treeNode48.Text = "Notifications";
+            treeNode10.ImageIndex = 12;
+            treeNode10.Name = "Node9";
+            treeNode10.SelectedImageIndex = 12;
+            treeNode10.Tag = "updatesPage";
+            treeNode10.Text = "Updates";
+            treeNode11.ImageIndex = 8;
+            treeNode11.Name = "Node5";
+            treeNode11.SelectedImageIndex = 8;
+            treeNode11.Tag = "networkPage";
+            treeNode11.Text = "Network";
+            treeNode12.ImageIndex = 5;
+            treeNode12.Name = "g15Node";
+            treeNode12.SelectedImageIndex = 5;
+            treeNode12.Tag = "g15Page";
+            treeNode12.Text = "Logitech Keyboards";
+            treeNode13.ImageIndex = 4;
+            treeNode13.Name = "Node2";
+            treeNode13.SelectedImageIndex = 4;
+            treeNode13.Tag = "igbServerPage";
+            treeNode13.Text = "IGB Server";
+            treeNode14.ImageIndex = 2;
+            treeNode14.Name = "relocationNode";
+            treeNode14.SelectedImageIndex = 2;
+            treeNode14.Tag = "relocatorPage";
+            treeNode14.Text = "Relocator";
+            treeNode15.ImageIndex = 11;
+            treeNode15.Name = "generalNode";
+            treeNode15.SelectedImageIndex = 11;
+            treeNode15.Tag = "generalPage";
+            treeNode15.Text = "General";
+            treeNode16.ImageIndex = 7;
+            treeNode16.Name = "Node3";
+            treeNode16.SelectedImageIndex = 7;
+            treeNode16.Tag = "mainWindowPage";
+            treeNode16.Text = "Main Window";
+            treeNode17.ImageIndex = 14;
+            treeNode17.Name = "IconsNode";
+            treeNode17.SelectedImageIndex = 14;
+            treeNode17.Tag = "iconsPage";
+            treeNode17.Text = "Icons";
+            treeNode18.ImageIndex = 15;
+            treeNode18.Name = "MassagesNode";
+            treeNode18.SelectedImageIndex = 15;
+            treeNode18.Tag = "messagesPage";
+            treeNode18.Text = "Messages";
+            treeNode19.ImageIndex = 9;
+            treeNode19.Name = "Node4";
+            treeNode19.SelectedImageIndex = 9;
+            treeNode19.Tag = "skillPlannerPage";
+            treeNode19.Text = "Skill Planner";
+            treeNode20.ImageIndex = 3;
+            treeNode20.Name = "trayIconNode";
+            treeNode20.SelectedImageIndex = 3;
+            treeNode20.Tag = "trayIconPage";
+            treeNode20.Text = "System Tray Icon";
+            treeNode21.ImageIndex = 6;
+            treeNode21.Name = "Node11";
+            treeNode21.SelectedImageIndex = 6;
+            treeNode21.Tag = "externalCalendarPage";
+            treeNode21.Text = "External Calendar";
+            treeNode22.ImageIndex = 1;
+            treeNode22.Name = "Node10";
+            treeNode22.SelectedImageIndex = 1;
+            treeNode22.Tag = "schedulerUIPage";
+            treeNode22.Text = "Scheduler";
+            treeNode23.ImageIndex = 13;
+            treeNode23.Name = "Node7";
+            treeNode23.SelectedImageIndex = 13;
+            treeNode23.Tag = "emailNotificationsPage";
+            treeNode23.Text = "Skill Completion Mails";
+            treeNode24.ImageIndex = 10;
+            treeNode24.Name = "Node2";
+            treeNode24.SelectedImageIndex = 10;
+            treeNode24.Tag = "notificationsPage";
+            treeNode24.Text = "Notifications";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode39,
-            treeNode40,
-            treeNode43,
-            treeNode44,
-            treeNode46,
-            treeNode48});
+            treeNode15,
+            treeNode16,
+            treeNode19,
+            treeNode20,
+            treeNode22,
+            treeNode24});
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
             this.treeView.ShowPlusMinus = false;
@@ -2167,9 +2167,9 @@ namespace EVEMon.SettingsUI
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.btnResetUpdateQueryTimers);
-            this.groupBox1.Location = new System.Drawing.Point(324, 35);
+            this.groupBox1.Location = new System.Drawing.Point(325, 35);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(100, 44);
+            this.groupBox1.Size = new System.Drawing.Size(105, 44);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Queries Updater";
@@ -2596,7 +2596,7 @@ namespace EVEMon.SettingsUI
             0,
             0});
             this.ACycleTimesInterval.Name = "ACycleTimesInterval";
-            this.ACycleTimesInterval.Size = new System.Drawing.Size(41, 21);
+            this.ACycleTimesInterval.Size = new System.Drawing.Size(45, 21);
             this.ACycleTimesInterval.TabIndex = 8;
             this.ACycleTimesInterval.Value = new decimal(new int[] {
             10,
@@ -2643,7 +2643,7 @@ namespace EVEMon.SettingsUI
             0,
             0});
             this.ACycleInterval.Name = "ACycleInterval";
-            this.ACycleInterval.Size = new System.Drawing.Size(41, 21);
+            this.ACycleInterval.Size = new System.Drawing.Size(45, 21);
             this.ACycleInterval.TabIndex = 5;
             this.ACycleInterval.Value = new decimal(new int[] {
             20,
