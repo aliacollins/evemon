@@ -2169,7 +2169,7 @@ namespace EVEMon.SettingsUI
             this.groupBox1.Controls.Add(this.btnResetUpdateQueryTimers);
             this.groupBox1.Location = new System.Drawing.Point(325, 35);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(105, 44);
+            this.groupBox1.Size = new System.Drawing.Size(100, 45);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Queries Updater";

@@ -957,8 +957,6 @@ namespace EVEMon.SkillPlanner
             Settings.UI.PlanWindow.Columns = ExportColumnSettings().ToArray();
         }
 
-        // TODO: Refactor Move Up, Move Down and Move To Top into a single method.
-
         /// <summary>
         /// When the user click moves up, we move the list view items and rebuild the plan from 
         /// </summary>
@@ -1910,9 +1908,7 @@ namespace EVEMon.SkillPlanner
                     break;
                 case Keys.A:
                     if (e.Control)
-                    {
                         lvSkills.SelectAll();
-                    }
                     break;
                 default:
                     break;

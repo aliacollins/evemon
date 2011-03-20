@@ -44,7 +44,7 @@ namespace System.Linq
                 var value = list[i];
                 int j = i - 1;
 
-                // Move the key backward while the previous items are lesser than it, shifting those items to thr right
+                // Move the key backward while the previous items are lesser than it, shifting those items to the right
                 while (j >= 0 && comparison(list[j], value) > 0)
                 {
                     list[j + 1] = list[j];

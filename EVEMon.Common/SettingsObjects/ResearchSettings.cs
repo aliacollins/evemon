@@ -38,7 +38,7 @@ namespace EVEMon.Common.SettingsObjects
         public ResearchSettings Clone()
         {
             ResearchSettings clone = (ResearchSettings)MemberwiseClone();
-            clone.Columns = this.Columns.Select(x => x.Clone()).ToArray();
+            clone.Columns = Columns.Select(x => x.Clone()).ToArray();
             return clone;
         }
     }

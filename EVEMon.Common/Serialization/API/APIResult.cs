@@ -180,7 +180,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("currentTime")]
-        public string _CurrentTime
+        public string CurrentTimeXml
         {
             get { return CurrentTime.ToCCPTimeString(); }
             set
@@ -193,7 +193,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("cachedUntil")]
-        public string _CachedUntil
+        public string CachedUntilXml
         {
             get { return CachedUntil.ToCCPTimeString(); }
             set

@@ -51,9 +51,9 @@ namespace EVEMon.Common.SettingsObjects
         public MarketOrderSettings Clone()
         {
             MarketOrderSettings clone = (MarketOrderSettings)MemberwiseClone();
-            clone.Columns = this.Columns.Select(x => x.Clone()).ToArray();
-            clone.HideInactiveOrders = this.HideInactiveOrders;
-            clone.NumberAbsFormat = this.NumberAbsFormat;
+            clone.Columns = Columns.Select(x => x.Clone()).ToArray();
+            clone.HideInactiveOrders = HideInactiveOrders;
+            clone.NumberAbsFormat = NumberAbsFormat;
             return clone;
         }
     }

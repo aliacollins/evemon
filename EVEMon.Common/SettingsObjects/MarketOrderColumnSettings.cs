@@ -11,7 +11,7 @@ namespace EVEMon.Common.SettingsObjects
     {
         public MarketOrderColumnSettings()
         {
-            this.Width = -1;
+            Width = -1;
         }
 
         [XmlAttribute("column")]

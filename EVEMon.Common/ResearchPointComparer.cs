@@ -5,7 +5,7 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Performs a comparison between two <see cref="IndustryJob" /> types.
+    /// Performs a comparison between two <see cref="ResearchPoint"/> types.
     /// </summary>
     public sealed class ResearchPointComparer : Comparer<ResearchPoint>
     {
@@ -13,7 +13,7 @@ namespace EVEMon.Common
         private bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IndustryJobComparer"/> class.
+        /// Initializes a new instance of the <see cref="ResearchPointComparer"/> class.
         /// </summary>
         /// <param name="column">The industry job column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
@@ -45,7 +45,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="IndustryJob" /> type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+        /// Performs a comparison of two objects of the <see cref="ResearchPoint" /> type and returns a value
+        /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
         /// <param name="y">The second object to compare.</param>

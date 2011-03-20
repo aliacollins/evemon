@@ -525,7 +525,7 @@ namespace EVEMon
             this.addBlankCharacterMenu.Name = "addBlankCharacterMenu";
             this.addBlankCharacterMenu.Size = new System.Drawing.Size(209, 22);
             this.addBlankCharacterMenu.Text = "Blank Character Creator...";
-            this.addBlankCharacterMenu.Click += new System.EventHandler(this.addBlankCharacterMenu_Click);
+            this.addBlankCharacterMenu.Click += new System.EventHandler(this.blankCharacterMenu_Click);
             // 
             // toolsSchedulerImplantGroupsToolStripSeparator
             // 

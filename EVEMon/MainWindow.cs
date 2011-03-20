@@ -1455,7 +1455,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void addBlankCharacterMenu_Click(object sender, EventArgs e)
+        private void blankCharacterMenu_Click(object sender, EventArgs e)
         {
             using (var window = new BlankCharacterWindow())
             {

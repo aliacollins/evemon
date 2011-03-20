@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common;
-using EVEMon.Controls;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon
 {

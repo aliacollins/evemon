@@ -161,7 +161,7 @@ namespace EVEMon.Common
         {
             get
             {
-                TimeSpan left = (m_endTime - DateTime.UtcNow);
+                TimeSpan left = m_endTime.Subtract(DateTime.UtcNow);
                 if (left < TimeSpan.Zero)
                     return TimeSpan.Zero;
                 return left;

@@ -51,8 +51,8 @@ namespace EVEMon.Common.SettingsObjects
         public IndustryJobSettings Clone()
         {
             IndustryJobSettings clone = (IndustryJobSettings)MemberwiseClone();
-            clone.Columns = this.Columns.Select(x => x.Clone()).ToArray();
-            clone.HideInactiveJobs = this.HideInactiveJobs;
+            clone.Columns = Columns.Select(x => x.Clone()).ToArray();
+            clone.HideInactiveJobs = HideInactiveJobs;
             return clone;
         }
     }
