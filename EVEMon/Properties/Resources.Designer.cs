@@ -256,6 +256,13 @@ namespace EVEMon.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap EVEMail {
+            get {
+                object obj = ResourceManager.GetObject("EVEMail", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon EVEMon {
             get {
                 object obj = ResourceManager.GetObject("EVEMon", resourceCulture);
