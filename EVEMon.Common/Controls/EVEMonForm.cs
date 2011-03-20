@@ -42,6 +42,7 @@ namespace EVEMon.Common.Controls
             base.OnLoad(e);
             RestoreLocation();
             m_loaded = true;
+            SaveLocation();
         }
 
         /// <summary>
@@ -79,8 +80,11 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void SaveLocation()
         {
-            if (!m_loaded) return;
-            if (String.IsNullOrEmpty(RememberPositionKey)) return;
+            if (!m_loaded)
+                return;
+
+            if (String.IsNullOrEmpty(RememberPositionKey))
+                return;
 
             Rectangle r = new Rectangle(Location, Size);
             if (WindowState == FormWindowState.Normal && VerifyValidWindowLocation(r) == r)
@@ -95,18 +99,26 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void RestoreLocation()
         {
-            if (String.IsNullOrEmpty(RememberPositionKey)) return;
+            if (String.IsNullOrEmpty(RememberPositionKey))
+                return;
 
             if (Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
             {
                 Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
+                
+                // Moves the location of the form (excluding the Main Window)
+                // so the next window won't open exactly
+                // on the same location as the previous
+                if (RememberPositionKey != "MainWindow")
+                    r.Location = new Point(r.X + 20, r.Y + 20);
+
                 r = VerifyValidWindowLocation(r);
-                SetBounds(r.Left, r.Top, r.Width, r.Height);
+                SetBounds(r.X, r.Y, r.Width, r.Height);
             }
         }
 
         /// <summary>
-        /// Verify the window location is validation and trims it when necessary.
+        /// Verify the window location is validation and resets it when necessary.
         /// </summary>
         /// <param name="inRect">The proposed rectangle.</param>
         /// <returns>The corrected rectangle.</returns>
@@ -120,13 +132,12 @@ namespace EVEMon.Common.Controls
             foreach (Screen ts in Screen.AllScreens)
             {
                 if (ts.WorkingArea.Contains(inRect))
-                {
                     return inRect;
-                }
+
                 if (ts.WorkingArea.Contains(p))
                 {
-                    p.X = Math.Min(p.X, ts.WorkingArea.Right - s.Width);
-                    p.Y = Math.Min(p.Y, ts.WorkingArea.Bottom - s.Height);
+                    p.X = ts.WorkingArea.Left + 50;
+                    p.Y = ts.WorkingArea.Top + 100;
                     return new Rectangle(p, s);
                 }
             }
