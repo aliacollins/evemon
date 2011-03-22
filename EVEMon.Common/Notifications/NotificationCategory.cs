@@ -70,12 +70,12 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         [Header("New EVE mail message")]
         NewEveMailMessage,
-#if DEBUG
         /// <summary>
         /// Testing notification.
         /// </summary>
-		[Header("Test Notification")]
-        TestNofitication,
+#if DEBUG
+        [Header("Test Notification")]
 #endif
+        TestNofitication,
     }
 }
