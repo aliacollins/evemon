@@ -124,7 +124,7 @@
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
     <Compile Include="Serialization\Settings\SerializableCCPCharacter.cs" />
-    <Compile Include="Serialization\Settings\SerializableImpantSetCollection.cs" />
+    <Compile Include="Serialization\Settings\SerializableImplantSetCollection.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializablePlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableRemappingPoint.cs" />
