@@ -46,8 +46,7 @@ namespace EVEMon
             slDevelopers = new SortedList();
             
             // EVEMon Guru
-            slDevelopers.Add("Richard Slater", "01");
-            slDevelopers.Add("Vehlin", "01");
+            slDevelopers.Add("Jimi", "01");
 
             // Guru (Retired)
             slDevelopers.Add("Araan Sunn", "02");
@@ -55,10 +54,11 @@ namespace EVEMon
             slDevelopers.Add("Anders Chydenius", "02");
             slDevelopers.Add("Brad Stone", "02");
             slDevelopers.Add("Eewec Ourbyni", "02");
+            slDevelopers.Add("Richard Slater", "02");
+            slDevelopers.Add("Vehlin", "02");
 
             // Developers
             slDevelopers.Add("MrCue", "03");
-            slDevelopers.Add("Jimi", "03");
             slDevelopers.Add("Tonto Auri", "03");
 
             // Developers (Retired)
@@ -124,6 +124,7 @@ namespace EVEMon
             slDevelopers.Add("Pharazon", "05");
             slDevelopers.Add("Phoenix Flames", "05");
             slDevelopers.Add("phorge", "05");
+            slDevelopers.Add("Optica", "05");
             slDevelopers.Add("Risako", "05");
             slDevelopers.Add("Ruldar", "05");
             slDevelopers.Add("Safarian Lanar", "05");
@@ -142,6 +143,7 @@ namespace EVEMon
             slDevelopers.Add("Waste Land", "05");
             slDevelopers.Add("wrok", "05");
             slDevelopers.Add("xNomeda", "05");
+            slDevelopers.Add("ykoehler", "05");
             slDevelopers.Add("Zarra Kri", "05");
             slDevelopers.Add("Zofu", "05");
     
