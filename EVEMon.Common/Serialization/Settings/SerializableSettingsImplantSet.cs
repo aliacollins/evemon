@@ -7,47 +7,6 @@ using EVEMon.Common.Data;
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// Represents a collection of implants sets
-    /// </summary>
-    public sealed class SerializableImplantSetCollection
-    {
-        public SerializableImplantSetCollection()
-        {
-            API = new SerializableSettingsImplantSet();
-            OldAPI = new SerializableSettingsImplantSet();
-            CustomSets = new List<SerializableSettingsImplantSet>();
-        }
-
-        [XmlElement("api")]
-        public SerializableSettingsImplantSet API
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("oldApi")]
-        public SerializableSettingsImplantSet OldAPI
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("customSet")]
-        public List<SerializableSettingsImplantSet> CustomSets
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("selectedIndex")]
-        public int SelectedIndex
-        {
-            get;
-            set;
-        }
-    }
-
-    /// <summary>
     /// Represents the set of attributes enhancers
     /// </summary>
     public sealed class SerializableSettingsImplantSet
