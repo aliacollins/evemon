@@ -16,7 +16,7 @@ namespace EVEMon.Common
         private readonly SkillQueue m_queue;
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIResearchList> m_charResearchPointsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
@@ -79,7 +79,7 @@ namespace EVEMon.Common
             m_corpIndustryJobsMonitor.Updated += OnCorporationJobsUpdated;
             m_monitors.Add(m_corpIndustryJobsMonitor);
 
-            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearchList>(this, APIMethods.ResearchPoints);
+            m_charResearchPointsMonitor = new CharacterQueryMonitor<SerializableAPIResearch>(this, APIMethods.ResearchPoints);
             m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
             m_monitors.Add(m_charResearchPointsMonitor);
 
@@ -465,7 +465,7 @@ namespace EVEMon.Common
         /// Processes the queried character's research points.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearchList> result)
+        private void OnCharacterResearchPointsUpdated(APIResult<SerializableAPIResearch> result)
         {
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.ResearchPoints))

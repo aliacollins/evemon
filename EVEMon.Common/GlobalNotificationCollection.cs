@@ -346,7 +346,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
-        internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearchList> result)
+        internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearch> result)
         {
             var notification = new APIErrorNotification(character, result)
             {
