@@ -268,14 +268,14 @@ namespace EVEMon
         /// <param name="isSynchronised"></param>
         /// <param name="serverTime"></param>
         /// <param name="localTime"></param>
-        private static void TimeCheckCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime)
+        private static void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
         {
-            if (isSynchronised == false)
+            if (isSynchronised)
+                return;
+
+            using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
             {
-                using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
-                {
-                    timeDialog.ShowDialog();
-                }
+                timeDialog.ShowDialog();
             }
         }
         #endregion
@@ -646,7 +646,7 @@ namespace EVEMon
                         {
                             case 0:
                                 tooltipText = tooltipText.Replace(".", " ");
-                                tooltipText += String.Format(CultureConstants.DefaultCulture, "by {0}.", notification.SenderCharacter);
+                                tooltipText += String.Format(CultureConstants.DefaultCulture, "for {0}.", notification.SenderCharacter);
                                 break;
                             case 1:
                                 string character = notification.SenderCharacter.ToString();
@@ -997,7 +997,7 @@ namespace EVEMon
                 if (f.DialogResult == DialogResult.OK)
                 {
                     m_isUpdating = true;
-                    Settings.SaveImmediate();
+                    Settings.Save();
                     Close();
                 }
             }
@@ -1020,11 +1020,11 @@ namespace EVEMon
             string path = Path.GetDirectoryName(assembly.Location);
             string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
 
-            // if the watchdog dosn't exist just quit.
+            // If the watchdog dosn't exist just quit.
             if (!File.Exists(executable))
                 Application.Exit();
 
-            // start the watchdog process.
+            // Start the watchdog process.
             StartProcess(executable, Environment.GetCommandLineArgs());
 
             Application.Exit();

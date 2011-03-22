@@ -1,6 +1,6 @@
 namespace EVEMon.Common.Controls
 {
-    partial class EVEFolderWindow
+    partial class EveFolderWindow
     {
         /// <summary>
         /// Required designer variable.

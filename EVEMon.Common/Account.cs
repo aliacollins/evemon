@@ -284,7 +284,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports the data to a serialization object
+        /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
         internal SerializableAccount Export()

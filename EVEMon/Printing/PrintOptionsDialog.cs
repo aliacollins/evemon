@@ -112,7 +112,7 @@ namespace EVEMon.Printing
         private void OnSetAsDefaults(object sender, EventArgs e)
         {
             OnAccept(sender,e) ;
-            Settings.SaveImmediate();
+            Settings.Save();
         }
 
         private void OnAccept(object sender, EventArgs e)

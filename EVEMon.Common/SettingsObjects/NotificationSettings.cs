@@ -10,7 +10,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             Categories = new SerializableDictionary<NotificationCategory, NotificationCategorySettings>();
             Categories[NotificationCategory.AccountNotInTraining] = 
-                new NotificationCategorySettings(ToolTipNotificationBehaviour.RepeatUntiClicked);
+                new NotificationCategorySettings(ToolTipNotificationBehaviour.RepeatUntilClicked);
             EmailPortNumber = 25;
         }
 

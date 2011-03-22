@@ -275,7 +275,7 @@ namespace EVEMon.Common
                 FileInfo settingsInfo = new FileInfo(settingsFile);
                 if (settingsInfo.Length > 0)
                 {
-                    // Gets the revision number of the assembly which generated this file.
+                    // Gets the revision number of the assembly which generated this file
                     int revision = Util.GetRevisionNumber(settingsFile);
 
                     // Try to load from a file
@@ -300,7 +300,7 @@ namespace EVEMon.Common
                 }
             }
 
-            // Try to recover from the backup.
+            // Try to recover from the backup
             return TryDeserializeBackup(backupFile, settingsFile, true);
         }
 
@@ -331,7 +331,7 @@ namespace EVEMon.Common
                             return null;
                         }
                     }
-                    // Gets the revision number of the assembly which generated this file.
+                    // Gets the revision number of the assembly which generated this file
                     int revision = Util.GetRevisionNumber(backupFile);
 
                     // Try to load from a backup file
@@ -460,7 +460,8 @@ namespace EVEMon.Common
         internal static void UpdateOnOneSecondTick()
         {
             // Is a save requested and is the last save older than 10s ?
-            if (m_savePending && DateTime.UtcNow > m_lastSaveTime.AddSeconds(10)) SaveImmediate();
+            if (m_savePending && DateTime.UtcNow > m_lastSaveTime.AddSeconds(10))
+                SaveImmediate();
         }
 
         /// <summary>

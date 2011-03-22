@@ -1,17 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+
 using EVEMon.Common;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
-using System.Globalization;
+using EVEMon.Common.Notifications;
 
 namespace EVEMon
 {
@@ -54,12 +52,12 @@ namespace EVEMon
             InitializeComponent();
 
             // Initializes fonts and colors
-            this.lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            this.lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
-            this.lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Regular);
-            this.lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
-            this.lblCompletionTime.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
-            this.lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
+            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Regular);
+            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
+            lblCompletionTime.Font = FontFactory.GetFont("Tahoma", FontStyle.Regular);
+            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Regular);
 
             // Misc fields
             m_showPortrait = true;
@@ -76,11 +74,11 @@ namespace EVEMon
             lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
-            EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.SchedulerChanged += new EventHandler(EveClient_SchedulerChanged);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            this.Disposed += new EventHandler(OnDisposed);
+            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveClient.TimerTick += EveClient_TimerTick;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -156,11 +154,11 @@ namespace EVEMon
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.QueuedSkillsCompleted -= new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            EveClient.SchedulerChanged -= new EventHandler(EveClient_SchedulerChanged);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
+            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveClient.TimerTick -= EveClient_TimerTick;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -170,7 +168,7 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             // Returns in design mode or when no char
-            if (this.DesignMode || this.IsDesignModeHosted())
+            if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             // Character Name
@@ -185,7 +183,7 @@ namespace EVEMon
         #region Global events and content update
 
         /// <summary>
-        /// Gets the character this control is bound to.
+        /// Gets the character control is bound to.
         /// </summary>
         [Browsable(false)]
         public Character Character
@@ -196,7 +194,6 @@ namespace EVEMon
                 if (m_character == value)
                     return;
 
-                pbCharacterPortrait.Character = value;
                 m_character = value;
 
                 UpdateContent();
@@ -208,7 +205,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateContent()
         {
-            if (!this.Visible)
+            if (!Visible)
             {
                 m_pendingUpdate = true;
                 return;
@@ -217,7 +214,7 @@ namespace EVEMon
             m_pendingUpdate = false;
 
             lblCharName.Text = m_character.Name;
-
+            pbCharacterPortrait.Character = m_character;
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter != null)
                 lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
@@ -339,7 +336,7 @@ namespace EVEMon
         /// <param name="e"></param>
         void EveClient_TimerTick(object sender, EventArgs e)
         {
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             if (m_character.IsTraining)
@@ -408,7 +405,7 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.Visible)
+            if (Visible)
             {
                 if (m_pendingUpdate)
                     UpdateContent();
@@ -426,7 +423,7 @@ namespace EVEMon
         {
             if (m_hovered)
             {
-                ButtonRenderer.DrawButton(e.Graphics, this.DisplayRectangle, m_pressed ?
+                ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed ?
                     PushButtonState.Pressed :
                     PushButtonState.Hot);
             }
@@ -434,17 +431,17 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// When the mouse enters this control, we need to display the back button.
+        /// When the mouse enters control, we need to display the back button.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (!this.Clickable)
+            if (!Clickable)
                 return;
 
             // Show back button
             m_hovered = true;
-            this.Invalidate();
+            Invalidate();
 
             base.OnMouseEnter(e);
         }
@@ -457,7 +454,7 @@ namespace EVEMon
         protected override void OnMouseLeave(EventArgs e)
         {
             m_hovered = false;
-            this.Invalidate();
+            Invalidate();
             base.OnMouseLeave(e);
         }
 
@@ -730,15 +727,15 @@ namespace EVEMon
                 top += smallLabelHeight;
             }
 
-            this.Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin);
+            Height = (pbCharacterPortrait.Visible ? Math.Max(pbCharacterPortrait.Height + 2 * margin, top + margin) : top + margin);
 
-            this.Width = left + labelWidth + margin;
-            m_preferredHeight = this.Height;
-            m_preferredWidth = this.Width;
+            Width = left + labelWidth + margin;
+            m_preferredHeight = Height;
+            m_preferredWidth = Width;
         }
 
         /// <summary>
-        /// Gets the preferred size for this control. Used by parents to decide which size they will grant to their children.
+        /// Gets the preferred size for control. Used by parents to decide which size they will grant to their children.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>

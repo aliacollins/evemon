@@ -143,6 +143,7 @@ namespace EVEMon.Common.Controls
         /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images), then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
+        /// <remarks>Note this method will first check the ImageService cache before to resort to download.</remarks>
         private void UpdateContent()
         {
             if (!Visible)
@@ -168,7 +169,6 @@ namespace EVEMon.Common.Controls
             }
 
             // The image does not exist in cache, we try to retrieve it from CCP
-            // Note this method will first check the ImageService cache before to resort to download.
             pictureBox.Image = pictureBox.InitialImage;
             UpdateCharacterImageFromCCP();
         }
@@ -187,9 +187,9 @@ namespace EVEMon.Common.Controls
 
             try
             {
-                // we need to load the data into a MemoryStream before
+                // We need to load the data into a MemoryStream before
                 // returning the image or GDI+ will lock the file for 
-                // the lifetime of the image.
+                // the lifetime of the image
                 Image image;
 
                 byte[] imageBytes = File.ReadAllBytes(cacheFileName);
@@ -404,7 +404,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private static bool ChangeEVEPortraitCache()
         {
-            using (EVEFolderWindow f = new EVEFolderWindow())
+            using (EveFolderWindow f = new EveFolderWindow())
             {
                 if (f.ShowDialog() == DialogResult.OK)
                 {
@@ -419,6 +419,11 @@ namespace EVEMon.Common.Controls
 
 
         #region Controls and global events handler
+        /// <summary>
+        /// Handles the CharacterPortraitChanged event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_CharacterPortraitChanged(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible)
@@ -431,21 +436,41 @@ namespace EVEMon.Common.Controls
             pictureBox.Image = (image != null ? image : pictureBox.InitialImage);
         }
 
+        /// <summary>
+        /// Handles the Click event of the miUpdatePicture control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void miUpdatePicture_Click(object sender, EventArgs e)
         {
             UpdateCharacterImageFromCCP();
         }
 
+        /// <summary>
+        /// Handles the Click event of the miUpdatePictureFromEVECache control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void miUpdatePictureFromEVECache_Click(object sender, EventArgs e)
         {
             UpdateCharacterFromEVECache();
         }
 
+        /// <summary>
+        /// Handles the Click event of the miSetEVEFolder control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void miSetEVEFolder_Click(object sender, EventArgs e)
         {
             ChangeEVEPortraitCache();
         }
 
+        /// <summary>
+        /// Handles the Click event of the pictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void pictureBox_Click(object sender, EventArgs e)
         {
             if (IsUpdating)

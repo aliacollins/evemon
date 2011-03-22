@@ -70,7 +70,7 @@ namespace EVEMon.SettingsUI
         {
             // Update settings
             Settings.Import(m_oldSettings, true);
-            Settings.SaveImmediate();
+            Settings.Save();
 
             // Close
             DialogResult = DialogResult.Cancel;
@@ -88,7 +88,7 @@ namespace EVEMon.SettingsUI
             // Return settings
             ApplyToSettings();
             Settings.Import(m_settings, true);
-            Settings.SaveImmediate();
+            Settings.Save();
 
             // Close
             DialogResult = DialogResult.OK;
@@ -106,7 +106,7 @@ namespace EVEMon.SettingsUI
             // Return settings
             ApplyToSettings();
             Settings.Import(m_settings, true);
-            Settings.SaveImmediate();
+            Settings.Save();
         }
 
         /// <summary>

@@ -10,12 +10,12 @@ using EVEMon.Common;
 
 namespace EVEMon.Common.Controls
 {
-    public partial class EVEFolderWindow : EVEMonForm
+    public partial class EveFolderWindow : EVEMonForm
     {
         private readonly string[] m_defaultFolderLocation = EveClient.DefaultEvePortraitCacheFolders;
         private string[] m_specifiedPortraitFolder = new string[] { String.Empty };
 
-        public EVEFolderWindow()
+        public EveFolderWindow()
         {
             InitializeComponent();
         }

@@ -14,9 +14,9 @@ namespace EVEMon.Common
     public sealed class ConquerableStation : Station
     {
         private readonly static Dictionary<long, ConquerableStation> s_conqStationsByID = new Dictionary<long, ConquerableStation>();
-        private readonly static string m_filename = "ConquerableStationList";
+        private readonly static string s_filename = "ConquerableStationList";
 
-        private static bool m_loaded;
+        private static bool s_loaded;
         private string m_corp;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace EVEMon.Common
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
 
             // Check to see if file is up to date
-            bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(m_filename, updateTime, updatePeriod);
+            bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(s_filename, updateTime, updatePeriod);
 
             // Not up to date ?
             if (!fileUpToDate)
@@ -104,10 +104,10 @@ namespace EVEMon.Common
         private static void Import()
         {
             // Exit if we have already imported the list
-            if (m_loaded)
+            if (s_loaded)
                 return;
 
-            var file = LocalXmlCache.GetFile(m_filename).FullName;
+            var file = LocalXmlCache.GetFile(s_filename).FullName;
 
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(file))
@@ -144,7 +144,7 @@ namespace EVEMon.Common
             }
             finally
             {
-                m_loaded = true;
+                s_loaded = true;
                 EveClient.Trace("ConquerableStationList.Import() - done");
             }
         }

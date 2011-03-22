@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace EVEMon.Common
 {
-    public delegate void TimeSynchronisationCallback(bool? isSynchronised, DateTime serverTime, DateTime localTime);
+    public delegate void TimeSynchronisationCallback(bool isSynchronised, DateTime serverTime, DateTime localTime);
 
     /// <summary>
     /// Ensures synchronization of local time to a know time source
@@ -31,7 +31,7 @@ namespace EVEMon.Common
         {
             DateTime completionTime = DateTime.Now;
             SyncState state = (SyncState)userState;
-            bool? isSynchronised = null;
+            bool isSynchronised = true;
             DateTime timeNow = DateTime.MinValue;
             if (e.Error == null)
             {

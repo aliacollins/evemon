@@ -14,7 +14,7 @@ namespace EVEMon
         /// </summary>
         public OverviewLabel()
         {
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
         }
 
         /// <summary>
@@ -23,19 +23,13 @@ namespace EVEMon
         /// <value></value>
         /// <returns>true if the control can respond to user interaction; otherwise, false. The default is true.
         /// </returns>
-        /// <PermissionSet>
-        /// 	<IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true"/>
-        /// 	<IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true"/>
-        /// 	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence"/>
-        /// 	<IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true"/>
-        /// </PermissionSet>
         public new Boolean Enabled
         {
             get { return base.Enabled; }
             set
             {
                 base.Enabled = value;
-                this.Invalidate();
+                Invalidate();
             }
         }
 
@@ -49,10 +43,10 @@ namespace EVEMon
             {
                 var format = new StringFormat();
                 
-                if (this.AutoEllipsis)
+                if (AutoEllipsis)
                     format.Trimming = StringTrimming.EllipsisCharacter;
 
-                e.Graphics.DrawString(this.Text, this.Font, foreground, Padding.Left, Padding.Right, format);
+                e.Graphics.DrawString(Text, Font, foreground, Padding.Left, Padding.Right, format);
             }
         }
     }
