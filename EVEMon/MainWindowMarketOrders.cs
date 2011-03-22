@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Serialization.Settings;
+using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -61,26 +58,28 @@ namespace EVEMon
             InitializeComponent();
             InitializeExpandablePanelControls();
 
-            listView.Visible = false;
-            listView.ShowItemToolTips = true;
-            listView.AllowColumnReorder = true;
-            listView.Columns.Clear();
-            noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lvOrders.Visible = false;
+            lvOrders.ShowItemToolTips = true;
+            lvOrders.AllowColumnReorder = true;
+            lvOrders.Columns.Clear();
 
-            ListViewHelper.EnableDoubleBuffer(listView);
+            noOrdersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             marketExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             marketExpPanelControl.Visible = false;
 
-            listView.ColumnClick += new ColumnClickEventHandler(listView_ColumnClick);
-            listView.KeyDown += new KeyEventHandler(listView_KeyDown);
-            listView.ColumnWidthChanged += new ColumnWidthChangedEventHandler(listView_ColumnWidthChanged);
-            listView.ColumnReordered += new ColumnReorderedEventHandler(listView_ColumnReordered);
+            DoubleBuffered = true;
+            ListViewHelper.EnableDoubleBuffer(lvOrders);
 
-            this.Resize += new EventHandler(MainWindowMarketOrdersList_Resize);
+            lvOrders.ColumnClick += listView_ColumnClick;
+            lvOrders.KeyDown += listView_KeyDown;
+            lvOrders.ColumnWidthChanged += listView_ColumnWidthChanged;
+            lvOrders.ColumnReordered += listView_ColumnReordered;
 
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.CharacterMarketOrdersChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            Resize += MainWindowMarketOrdersList_Resize;
+
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace EVEMon
             { 
                 // Add the visible columns; matching the display order
                 var newColumns = new List<MarketOrderColumnSettings>();
-                foreach (var header in listView.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
+                foreach (var header in lvOrders.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
                     var columnSetting = m_columns.First(x => x.Column == (MarketOrderColumn)header.Tag);
                     if (columnSetting.Width != -1)
@@ -220,9 +219,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.CharacterMarketOrdersChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterMarketOrdersChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -231,23 +230,29 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted() || m_character == null)
+            if (DesignMode || this.IsDesignModeHosted() || m_character == null)
                 return;
 
             base.OnVisibleChanged(e);
 
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
+            // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
-            var ccpCharacter = m_character as CCPCharacter;
-            this.Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
-            this.Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-            this.Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
 
-            UpdateColumns();
+            var ccpCharacter = m_character as CCPCharacter;
+            Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
+            Columns = Settings.UI.MainWindow.MarketOrders.Columns;
+            Grouping = (m_character == null ? MarketOrderGrouping.State : m_character.UISettings.OrdersGroupBy);
+
             UpdateExpPanelContent();
+            UpdateColumns();
+
             m_init = true;
+
+            if (Orders.Count() == 0)
+                MainWindowMarketOrdersList_Resize(null, null);
         }
 
         # endregion
@@ -261,16 +266,20 @@ namespace EVEMon
         /// </summary>
         public void UpdateColumns()
         {
-            listView.BeginUpdate();
+            // Returns if not visible
+            if (!Visible)
+                return;
+
+            lvOrders.BeginUpdate();
             m_isUpdatingColumns = true;
 
             try
             {
-                listView.Columns.Clear();
+                lvOrders.Columns.Clear();
 
                 foreach (var column in m_columns.Where(x => x.Visible))
                 {
-                    var header = listView.Columns.Add(column.Column.GetHeader(), column.Width);
+                    var header = lvOrders.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = (object)column.Column;
 
                     switch (column.Column)
@@ -295,7 +304,7 @@ namespace EVEMon
                 UpdateContent();
 
                 // Force the auto-resize of the columns with -1 width
-                var resizeStyle = (listView.Items.Count == 0 ?
+                var resizeStyle = (lvOrders.Items.Count == 0 ?
                     ColumnHeaderAutoResizeStyle.HeaderSize :
                     ColumnHeaderAutoResizeStyle.ColumnContent);
 
@@ -303,14 +312,14 @@ namespace EVEMon
                 foreach (var column in m_columns.Where(x => x.Visible))
                 {
                     if (column.Width == -1)
-                        listView.AutoResizeColumn(index, resizeStyle);
+                        lvOrders.AutoResizeColumn(index, resizeStyle);
 
                     index++;
                 }
             }
             finally
             {
-                listView.EndUpdate();
+                lvOrders.EndUpdate();
                 m_isUpdatingColumns = false;
             }
         }
@@ -321,13 +330,17 @@ namespace EVEMon
         public void UpdateContent()
         {
             // Returns if not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
- 
+
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (lvOrders.SelectedItems.Count > 0 ?
+                                lvOrders.SelectedItems[0].Tag.GetHashCode() : 0);
+
             m_hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
             m_numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
             
-            listView.BeginUpdate();
+            lvOrders.BeginUpdate();
             try
             {
                 var text = m_textFilter.ToLowerInvariant();
@@ -391,16 +404,26 @@ namespace EVEMon
                         break;
                 }
 
-                // Display or hide the "no orders" label.
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in lvOrders.Items)
+                    {
+                        if (lvItem.Tag.GetHashCode() == selectedItem)
+                            lvItem.Selected = true;
+                    }
+                }
+
+                // Display or hide the "no orders" label
                 if (m_init)
                 {
                     noOrdersLabel.Visible = orders.IsEmpty();
-                    listView.Visible = !orders.IsEmpty();
+                    lvOrders.Visible = !orders.IsEmpty();
                 }
             }
             finally
             {
-                listView.EndUpdate();
+                lvOrders.EndUpdate();
             }
         }
 
@@ -411,8 +434,8 @@ namespace EVEMon
         /// <param name="groups"></param>
         private void UpdateContent<TKey>(IEnumerable<IGrouping<TKey, MarketOrder>> groups)
         {
-            listView.Items.Clear();
-            listView.Groups.Clear();
+            lvOrders.Items.Clear();
+            lvOrders.Groups.Clear();
 
             // Add the groups
             foreach (var group in groups)
@@ -420,7 +443,7 @@ namespace EVEMon
                 string groupText = String.Empty;
                 if (group.Key is OrderState)
                 {
-                    groupText = ((OrderState)(Object)group.Key).GetHeader().ToString();
+                    groupText = ((OrderState)(Object)group.Key).GetHeader();
                 }
                 else if (group.Key is DateTime)
                 {
@@ -432,7 +455,7 @@ namespace EVEMon
                 }
 
                 var listGroup = new ListViewGroup(groupText);
-                listView.Groups.Add(listGroup);
+                lvOrders.Groups.Add(listGroup);
 
                 // Add the items in every group
                 foreach (var order in group)
@@ -453,15 +476,15 @@ namespace EVEMon
                         item.ForeColor = SystemColors.HotTrack;
 
                     // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < listView.Columns.Count + 1)
+                    while (item.SubItems.Count < lvOrders.Columns.Count + 1)
                     {
                         item.SubItems.Add(String.Empty);
                     }
 
                     // Creates the subitems
-                    for (int i = 0; i < listView.Columns.Count; i++)
+                    for (int i = 0; i < lvOrders.Columns.Count; i++)
                     {
-                        var header = listView.Columns[i];
+                        var header = lvOrders.Columns[i];
                         var column = (MarketOrderColumn)header.Tag;
                         SetColumn(order, item.SubItems[i], column);
                     }
@@ -476,7 +499,7 @@ namespace EVEMon
                     builder.Append("Station: ").AppendLine(order.Station.Name);
                     item.ToolTipText = builder.ToString();
 
-                    listView.Items.Add(item);
+                    lvOrders.Items.Add(item);
                 }
             }
 
@@ -487,7 +510,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateSort()
         {
-            listView.ListViewItemSorter = new ListViewItemComparerByTag<MarketOrder>(
+            lvOrders.ListViewItemSorter = new ListViewItemComparerByTag<MarketOrder>(
                 new MarketOrderComparer(m_sortCriteria, m_sortAscending));
             
             UpdateSortVisualFeedback();
@@ -498,16 +521,16 @@ namespace EVEMon
         /// </summary>
         private void UpdateSortVisualFeedback()
         {
-            for (int i = 0; i < listView.Columns.Count; i++)
+            for (int i = 0; i < lvOrders.Columns.Count; i++)
             {
-                var column = (MarketOrderColumn)listView.Columns[i].Tag;
+                var column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
                 if (m_sortCriteria == column)
                 {
-                    listView.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
+                    lvOrders.Columns[i].ImageIndex = (m_sortAscending ? 0 : 1);
                 }
                 else
                 {
-                    listView.Columns[i].ImageIndex = 2;
+                    lvOrders.Columns[i].ImageIndex = 2;
                 }
             }
         }
@@ -681,28 +704,28 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Gets the text and formatting for the expration cell
+        /// Gets the text and formatting for the expiration cell
         /// </summary>
         /// <param name="order">Order to generate a format for</param>
         /// <returns>CellFormat object describing the format of the cell</returns>
         private static CellFormat FormatExpiration(MarketOrder order)
         {
-            // initialize to sensible defaults
+            // Initialize to sensible defaults
             var format = new CellFormat()
             {
                 TextColor = Color.Black,
                 Text = order.Expiration.ToLocalTime().ToRemainingTimeShortDescription().ToUpper(CultureConstants.DefaultCulture)
             };
 
-            // order is expiring soon
+            // Order is expiring soon
             if (order.IsAvailable && order.Expiration < DateTime.UtcNow.AddDays(1))
                 format.TextColor = Color.DarkOrange;
 
-            // we have all the information for formatting an available order
+            // We have all the information for formatting an available order
             if (order.IsAvailable)
                 return format;
 
-            // order isn't available so lets format it as such
+            // Order isn't available so lets format it as such
             format.Text = order.State.ToString();
 
             if (order.State == OrderState.Expired)
@@ -735,11 +758,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On column reorder we update the settings
+        /// On column reorder we update the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void listView_ColumnReordered(object sender, EventArgs e)
+        void listView_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         } 
@@ -754,7 +777,7 @@ namespace EVEMon
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
-            m_columns[e.ColumnIndex].Width = listView.Columns[e.ColumnIndex].Width;
+            m_columns[e.ColumnIndex].Width = lvOrders.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
 
@@ -765,7 +788,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void listView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            var column = (MarketOrderColumn)listView.Columns[e.Column].Tag;
+            var column = (MarketOrderColumn)lvOrders.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
             {
                 m_sortAscending = !m_sortAscending;
@@ -790,14 +813,14 @@ namespace EVEMon
             {
                 case Keys.A:
                     if (e.Control)
-                        listView.SelectAll();
+                        lvOrders.SelectAll();
                     break;
                 case Keys.Delete:
-                    if (listView.SelectedItems.Count == 0)
+                    if (lvOrders.SelectedItems.Count == 0)
                         return;
 
                     // Mark as ignored
-                    foreach (ListViewItem item in listView.SelectedItems)
+                    foreach (ListViewItem item in lvOrders.SelectedItems)
                     {
                         var order = (MarketOrder)item.Tag;
                         order.Ignored = true;
@@ -841,9 +864,13 @@ namespace EVEMon
         {
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.MarketOrders.Columns = this.Columns.Select(x => x.Clone()).ToArray();
-                m_columnsChanged = false;
+                Settings.UI.MainWindow.MarketOrders.Columns = Columns.Select(x => x.Clone()).ToArray();
+
+                // Recreate the columns
+                Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             }
+
+            m_columnsChanged = false;
         }
 
         /// <summary>
@@ -858,7 +885,7 @@ namespace EVEMon
             if (e.Character != ccpCharacter)
                 return;
             
-            this.Orders = ccpCharacter.MarketOrders;
+            Orders = ccpCharacter.MarketOrders;
             UpdateColumns();
             UpdateExpPanelContent();
         }

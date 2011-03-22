@@ -32,40 +32,41 @@
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Sell Orders", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Buy Orders", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowMarketOrdersList));
-            this.listView = new System.Windows.Forms.ListView();
-            this.itemColumn = new System.Windows.Forms.ColumnHeader();
-            this.volumeColumn = new System.Windows.Forms.ColumnHeader();
-            this.priceColumn = new System.Windows.Forms.ColumnHeader();
-            this.locationColumn = new System.Windows.Forms.ColumnHeader();
+            this.lvOrders = new System.Windows.Forms.ListView();
+            this.itemColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.volumeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.priceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilListIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
             this.marketExpPanelControl = new EVEMon.Controls.ExpandablePanelControl();
             this.SuspendLayout();
             // 
-            // listView
+            // lvOrders
             // 
-            this.listView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvOrders.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvOrders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.itemColumn,
             this.volumeColumn,
             this.priceColumn,
             this.locationColumn});
-            this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView.FullRowSelect = true;
+            this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvOrders.FullRowSelect = true;
             listViewGroup1.Header = "Sell Orders";
             listViewGroup1.Name = "sellGroup";
             listViewGroup2.Header = "Buy Orders";
             listViewGroup2.Name = "buyGroup";
-            this.listView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            this.lvOrders.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
             listViewGroup2});
-            this.listView.Location = new System.Drawing.Point(0, 0);
-            this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(454, 334);
-            this.listView.SmallImageList = this.ilListIcons;
-            this.listView.TabIndex = 0;
-            this.listView.UseCompatibleStateImageBehavior = false;
-            this.listView.View = System.Windows.Forms.View.Details;
+            this.lvOrders.HideSelection = false;
+            this.lvOrders.Location = new System.Drawing.Point(0, 0);
+            this.lvOrders.Name = "lvOrders";
+            this.lvOrders.Size = new System.Drawing.Size(454, 334);
+            this.lvOrders.SmallImageList = this.ilListIcons;
+            this.lvOrders.TabIndex = 0;
+            this.lvOrders.UseCompatibleStateImageBehavior = false;
+            this.lvOrders.View = System.Windows.Forms.View.Details;
             // 
             // itemColumn
             // 
@@ -125,7 +126,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.listView);
+            this.Controls.Add(this.lvOrders);
             this.Controls.Add(this.marketExpPanelControl);
             this.Controls.Add(this.noOrdersLabel);
             this.Name = "MainWindowMarketOrdersList";
@@ -136,7 +137,7 @@
 
         #endregion
 
-        internal protected System.Windows.Forms.ListView listView;
+        internal protected System.Windows.Forms.ListView lvOrders;
         private System.Windows.Forms.Label noOrdersLabel;
         private System.Windows.Forms.ColumnHeader itemColumn;
         private System.Windows.Forms.ColumnHeader volumeColumn;
