@@ -315,7 +315,7 @@ namespace EVEMon.Common
                 PlanEntry entry = m_items[i];
                 bool jumpBack = false;
 
-                // Scroll through prerequsiites
+                // Scroll through prerequisites
                 foreach (var prereq in entry.Skill.Prerequisites)
                 {
                     // We check for this prereq or insert it. Did we have to insert or move an entry ?
@@ -364,7 +364,7 @@ namespace EVEMon.Common
                 return true;
 
 
-            // The prerequsite is not planned yet, we insert it just before this very entry
+            // The prerequisite is not planned yet, we insert it just before this very entry
             if (skillIndex == -1)
             {
                 PlanEntry newEntry = new PlanEntry(this, skill, level);

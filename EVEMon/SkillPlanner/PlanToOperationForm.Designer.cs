@@ -98,7 +98,7 @@
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(285, 26);
             label3.TabIndex = 6;
-            label3.Text = "You have exisiting pre-requsites in your plan, so you must\r\n\r\n";
+            label3.Text = "You have exisiting pre-requisites in your plan, so you must\r\n\r\n";
             // 
             // previousButton
             // 

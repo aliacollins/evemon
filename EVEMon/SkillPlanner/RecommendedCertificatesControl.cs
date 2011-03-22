@@ -311,7 +311,7 @@ namespace EVEMon.SkillPlanner
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
                     trainTime += cert.GetTrainingTime();
             }
-            // Or a skill prerequsiite ?
+            // Or a skill prerequisite ?
             else
             {
                 var skillPrereq = (SkillLevel)e.Node.Tag;

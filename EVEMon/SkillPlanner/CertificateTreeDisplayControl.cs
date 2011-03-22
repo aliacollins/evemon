@@ -116,7 +116,7 @@ namespace EVEMon.SkillPlanner
 
         /// <summary>
         /// Gets the selected certificate, null if none is selected. 
-        /// Note that the selected certificate may be a prerequsite and therefore
+        /// Note that the selected certificate may be a prerequisite and therefore
         /// not have the same class than the one represented by this control.
         /// </summary>
         public Certificate SelectedCertificate
@@ -444,7 +444,7 @@ namespace EVEMon.SkillPlanner
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
-            // Or a skill prerequsiite ?
+            // Or a skill prerequisite ?
             else
             {
                 if (!Settings.UI.SafeForWork)

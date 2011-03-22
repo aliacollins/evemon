@@ -238,7 +238,7 @@ namespace EVEMon.Common
         /// Checks whether the provided skill is an immediate prerequisite
         /// </summary>
         /// <param name="skill">The skill to test</param>
-        /// <param name="neededLevel">When this skill is an immediate prerequsiite, this parameter will held the required level</param>
+        /// <param name="neededLevel">When this skill is an immediate prerequisite, this parameter will held the required level</param>
         /// <returns></returns>
         public bool HasAsImmediatePrerequisite(Skill skill, out int neededLevel)
         {

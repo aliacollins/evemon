@@ -82,7 +82,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Ensures the prerequsiites order is correct
+        /// Ensures the prerequisites order is correct
         /// </summary>
         /// <param name="list"></param>
         private static void FixPrerequisitesOrder(List<PlanEntry> list)

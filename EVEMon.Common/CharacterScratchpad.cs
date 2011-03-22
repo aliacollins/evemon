@@ -277,7 +277,7 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <param name="updateSP"></param>
-        /// <param name="includePrerequsites"></param>
+        /// <param name="includePrerequisites"></param>
         public void SetSkillLevel(StaticSkill skill, int level, LearningOptions options)
         {
             int index = skill.ArrayIndex;

@@ -1021,7 +1021,7 @@ namespace EVEMon.XmlGenerator
                                                       : false;
 
                     // Export prerequesities
-                    var listOfPrerequsites = new List<SerializableSkillPrerequisite>();
+                    var listOfPrerequisites = new List<SerializableSkillPrerequisite>();
 
                     for (int i = 0; i < DBConstants.RequiredSkillPropertyIDs.Length; i++)
                     {
@@ -1041,13 +1041,13 @@ namespace EVEMon.XmlGenerator
                             if (prereqSkill != null)
                                 preReq.Name = prereqSkill.Name;
 
-                            // Add prerequesities
-                            listOfPrerequsites.Add(preReq);
+                            // Add prerequisites
+                            listOfPrerequisites.Add(preReq);
                         }
                     }
 
-                    // Add prerequesities to skill
-                    singleSkill.Prereqs = listOfPrerequsites.ToArray();
+                    // Add prerequesites to skill
+                    singleSkill.Prereqs = listOfPrerequisites.ToArray();
 
                     // Add skill
                     listOfSkillsInGroup.Add(singleSkill);
