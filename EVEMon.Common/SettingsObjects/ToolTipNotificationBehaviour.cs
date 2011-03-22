@@ -18,6 +18,8 @@ namespace EVEMon.Common.SettingsObjects
         /// <summary>
         /// Every minutes, the warning is repeated until the user clicks the tool tip
         /// </summary>
-        RepeatUntilClicked = 2
+        RepeatUntilClicked = 2,
+        // TODO: deprecate after version 1.3.5
+        RepeatUntiClicked = 3
     }
 }
