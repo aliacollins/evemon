@@ -26,6 +26,11 @@ namespace EVEMon.Common.Notifications
         [Header("Skill completion")]
         SkillCompletion,
         /// <summary>
+        /// Skill queue has room for more skills.
+        /// </summary>
+        [Header("Skill queue room availability")]
+        SkillQueueRoomAvailable,
+        /// <summary>
         /// A character has not enough balance to fulfill its buy orders.
         /// </summary>
         [Header("Insufficient balance")]
@@ -61,16 +66,16 @@ namespace EVEMon.Common.Notifications
         [Header("Industry jobs completion")]
         IndustryJobsCompletion,
         /// <summary>
-        /// Skill queue has room for more skills.
+        /// A new EVE mail message is available.
         /// </summary>
-        [Header("Skill queue room availability")]
-        SkillQueueRoomAvailable,
+        [Header("New EVE mail message")]
+        NewEveMailMessage,
+#if DEBUG
         /// <summary>
         /// Testing notification.
         /// </summary>
-#if DEBUG
 		[Header("Test Notification")]
-#endif
         TestNofitication,
+#endif
     }
 }

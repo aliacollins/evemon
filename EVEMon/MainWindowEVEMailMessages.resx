@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,123 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="APICharacterList" xml:space="preserve">
-    <value>/account/Characters.xml.aspx</value>
+  <metadata name="ilIcons.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="ilIcons.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAADi
+        AAAAAk1TRnQBSQFMAgEBAwEAATQBCAE0AQgBEAEAARABAAT/AREBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        AwABEAMAAQEBAAEQBgABCP8A/wD/AP8A/wD/AP8A/wAaAAFCAU0BPgcAAT4DAAEoAwABQAMAARADAAEB
+        AQABAQUAAYAXAAP/AQAG/wIABv8CAAb/AgAG/wIABv8CAAb/AgAB8AEPAf4BfwL/AgAB+AEfAfwBPwL/
+        AgAB/AE/AfgBHwL/AgAB/gF/AfABDwL/AgAG/wIABv8CAAb/AgAG/wIABv8CAAb/AgAL
+</value>
   </data>
-  <data name="APICharacterSheet" xml:space="preserve">
-    <value>/char/CharacterSheet.xml.aspx</value>
-  </data>
-  <data name="APIServerStatus" xml:space="preserve">
-    <value>/server/ServerStatus.xml.aspx</value>
-  </data>
-  <data name="APISkillQueue" xml:space="preserve">
-    <value>/char/SkillQueue.xml.aspx</value>
-  </data>
-  <data name="APIBase" xml:space="preserve">
-    <value>https://api.eveonline.com</value>
-  </data>
-  <data name="BatlleclinicTimeSynch" xml:space="preserve">
-    <value>http://www.battleclinic.com/time.php</value>
-  </data>
-  <data name="BattleclinicLoadoutDetails" xml:space="preserve">
-    <value>http://eve.battleclinic.com/ship_loadout_feed.php?id={0}</value>
-  </data>
-  <data name="BattleclinicLoadoutsFeed" xml:space="preserve">
-    <value>http://eve.battleclinic.com/ship_loadout_feed.php?typeID={0}</value>
-  </data>
-  <data name="BattleclinicLoadoutTopic" xml:space="preserve">
-    <value>http://forum.battleclinic.com/index.php/topic,{0}.0.html</value>
-  </data>
-  <data name="BattleclinicUpdates" xml:space="preserve">
-    <value>http://evemon.static.battleclinic.com/builds/patch.xml</value>
-  </data>
-  <data name="CCPIcons" xml:space="preserve">
-    <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>
-  </data>
-  <data name="CCPIconsBig" xml:space="preserve">
-    <value>http://eve.no-ip.de/icons/256_256/{0}.png</value>
-  </data>
-  <data name="CCPPortraits" xml:space="preserve">
-    <value>http://image.eveonline.com/character/{0}_128.jpg</value>
-    <comment>New web address for portraits as part of Incursion 1.1.0</comment>
-  </data>
-  <data name="GoogleCalendarURL" xml:space="preserve">
-    <value>http://www.google.com/calendar/feeds/default/private/full</value>
-  </data>
-  <data name="APIAccountCredentials" xml:space="preserve">
-    <value>https://www.eveonline.com/api/default.asp</value>
-  </data>
-  <data name="EVEMonBugReport" xml:space="preserve">
-    <value>http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F</value>
-  </data>
-  <data name="EVEMonKnownProblems" xml:space="preserve">
-    <value>http://wiki.battleclinic.com/index.php/Known_problems_%28EVEMon%29</value>
-  </data>
-  <data name="EVEMonMainPage" xml:space="preserve">
-    <value>http://evemon.battleclinic.com/</value>
-  </data>
-  <data name="EVEMonForums" xml:space="preserve">
-    <value>http://forum.battleclinic.com/index.php#c36</value>
-  </data>
-  <data name="APICharacterAccountBalance" xml:space="preserve">
-    <value>/char/AccountBalance.xml.aspx</value>
-    <comment>Used to check whether the API key is limited or not.</comment>
-  </data>
-  <data name="MyEVELevelImage" xml:space="preserve">
-    <value>http://www.eveonline.com/bitmaps/character/level</value>
-  </data>
-  <data name="APIMarketOrders" xml:space="preserve">
-    <value>/char/MarketOrders.xml.aspx</value>
-  </data>
-  <data name="APICorporationMarketOrders" xml:space="preserve">
-    <value>/corp/MarketOrders.xml.aspx</value>
-  </data>
-  <data name="APIConquerableStationList" xml:space="preserve">
-    <value>/eve/ConquerableStationList.xml.aspx</value>
-  </data>
-  <data name="EVEMonUserVoice" xml:space="preserve">
-    <value>http://evemon.uservoice.com/</value>
-  </data>
-  <data name="APICharacterSkillInTraining" xml:space="preserve">
-    <value>/char/SkillInTraining.xml.aspx</value>
-    <comment>Used to check whether a character is training a skill or not.</comment>
-  </data>
-  <data name="APIIndustryJobs" xml:space="preserve">
-    <value>/char/IndustryJobs.xml.aspx</value>
-  </data>
-  <data name="APICorporationIndustryJobs" xml:space="preserve">
-    <value>/corp/IndustryJobs.xml.aspx</value>
-  </data>
-  <data name="StackExchangeEveOnlineURL" xml:space="preserve">
-    <value>http://area51.stackexchange.com/proposals/3371/eve-online?referrer=YrSyuyuqKBzSZ2Kzwn8oXQ2</value>
-    <comment>URL For EVE Online Stack Exchange Site</comment>
-  </data>
-  <data name="APITestBase" xml:space="preserve">
-    <value>http://apitest.eveonline.com</value>
-    <comment>Test API Service announced as part of Tyrannis 1.2</comment>
-  </data>
-  <data name="APIResearchPoints" xml:space="preserve">
-    <value>/char/Research.xml.aspx</value>
-  </data>
-  <data name="APIAccountStatus" xml:space="preserve">
-    <value>/account/AccountStatus.xml.aspx</value>
-  </data>
-  <data name="APIMailBodies" xml:space="preserve">
-    <value>/char/MailBodies.xml.aspx</value>
-  </data>
-  <data name="APIMailingLists" xml:space="preserve">
-    <value>/char/MailingLists.xml.aspx</value>
-  </data>
-  <data name="APIMailMessages" xml:space="preserve">
-    <value>/char/MailMessages.xml.aspx</value>
-  </data>
-  <data name="APINotifications" xml:space="preserve">
-    <value>/char/Notifications.xml.aspx</value>
-  </data>
-  <data name="APINotificationTexts" xml:space="preserve">
-    <value>/char/NotificationTexts.xml.aspx</value>
-  </data>
-  <data name="APICharacterName" xml:space="preserve">
-    <value>/eve/CharacterName.xml.aspx</value>
-  </data>
+  <metadata name="timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>103, 17</value>
+  </metadata>
 </root>

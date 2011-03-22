@@ -148,6 +148,63 @@ namespace EVEMon.Common.SettingsObjects
     
     #endregion
 
+
+    #region EVEMailMessagesSettings
+
+    /// <summary>
+    /// Enumeration for the EVE mail messages to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum EVEMailMessagesGrouping
+    {
+        [Header("Group by mail state")]
+        State = 0,
+        [Header("Group by mail state (Desc)")]
+        StateDesc = 1,
+        [Header("Group by received date")]
+        SendDate = 2,
+        [Header("Group by received date (Desc)")]
+        SendDateDesc = 3,
+        [Header("Group by subject")]
+        Subject = 4,
+        [Header("Group by subject (Desc)")]
+        SubjectDesc = 5,
+        [Header("Group by recipient")]
+        Recipient = 6,
+        [Header("Group by recipient (Desc)")]
+        RecipientDesc = 7,
+        [Header("Group by Corp or Alliance")]
+        CorpOrAlliance = 8,
+        [Header("Group by Corp or Alliance (Desc)")]
+        CorpOrAllianceDesc = 9,
+        [Header("Group by mailing list")]
+        MailingList = 10,
+        [Header("Group by mailing list (Desc)")]
+        MailingListDesc = 11
+    }
+
+    /// <summary>
+    /// Enumeration for the reading pane position of the EVE mail bodies.
+    /// </summary>
+    public enum ReadingPanePositioning
+    {
+        /// <summary>
+        /// No reading pane
+        /// </summary>
+        Off = 0,
+        /// <summary>
+        /// Position the reading pane positioning at the bottom
+        /// </summary>
+        Bottom = 1,
+        /// <summary>
+        /// Position the reading pane positioning at the right
+        /// </summary>
+        Right = 2,
+    }
+
+    #endregion
+
+
     #region Full API Key Features
 
     public enum FullAPIKeyFeatures
@@ -157,7 +214,9 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Industry")]
         IndustryJobs,
         [Header("Research")]
-        ResearchPoints,   
+        ResearchPoints,
+        [Header("Mail")]
+        MailMessages,
     }
 
     #endregion

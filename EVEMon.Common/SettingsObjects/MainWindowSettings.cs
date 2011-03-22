@@ -14,6 +14,7 @@ namespace EVEMon.Common.SettingsObjects
             MarketOrders = new MarketOrderSettings();
             IndustryJobs = new IndustryJobSettings();
             Research = new ResearchSettings();
+            EVEMailMessages = new EveMailMessagesSettings();
             OverviewItemSize = PortraitSizes.x96;
             TitleFormat = MainWindowTitleFormat.NextCharToFinish;
             ShowOverviewSkillQueueTrainingTime = true;
@@ -202,6 +203,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("research")]
         public ResearchSettings Research
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("eveMailMessages")]
+        public EveMailMessagesSettings EVEMailMessages
         {
             get;
             set;

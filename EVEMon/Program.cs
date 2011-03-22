@@ -71,6 +71,7 @@ namespace EVEMon
             finally
             {
                 Settings.SaveImmediate();
+                EveIDtoName.Save();
                 EveClient.Trace("Closed");
                 EveClient.StopTraceLogging();
             }

@@ -147,7 +147,7 @@ namespace EVEMon.Common
                     catch (UnauthorizedAccessException exc)
                     {
                         string msg = String.Format("An error occurred while EVEMon was looking for its data directory. " +
-                        "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}", 
+                        "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
                             Environment.NewLine, exc.Message);
 
                         var result = MessageBox.Show(
@@ -165,7 +165,6 @@ namespace EVEMon.Common
                 }
             }
         }
-
 
         /// <summary>
         /// Retrieves the settings file path
@@ -474,7 +473,12 @@ namespace EVEMon.Common
         /// Occurs when the research points of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterResearchPointsChanged;
-        
+
+        /// <summary>
+        /// Occurs when the mail messages of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailMessagesUpdated;
+
         /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
@@ -670,7 +674,19 @@ namespace EVEMon.Common
             if (CharacterResearchPointsChanged != null)
                 CharacterResearchPointsChanged(null, new CharacterChangedEventArgs(character));
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterEVEMailMessagesUpdated(Character character)
+        {
+            Trace("EveClient.OnCharacterEVEMailMessagesUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterEVEMailMessagesUpdated != null)
+                CharacterEVEMailMessagesUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
         /// <summary>
         /// 
         /// </summary>

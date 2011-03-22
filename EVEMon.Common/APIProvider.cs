@@ -197,6 +197,29 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Query the character name from the provided list of IDs.
+        /// </summary>
+        public APIResult<SerializableAPICharacterName> QueryCharacterName(string IDs)
+        {
+            HttpPostData postData = new HttpPostData(String.Format("ids={0}",IDs));
+            return QueryMethod<SerializableAPICharacterName>(APIMethods.CharacterName, postData, RowsetsTransform);
+        }
+
+        /// <summary>
+        /// Query the body text for the provided EVE mail message.
+        /// </summary>
+        /// <param name="userID">The account's ID</param>
+        /// <param name="apiKey">The account's API key</param>
+        /// <param name="messageID">The message ID.</param>
+        /// <returns></returns>
+        public APIResult<SerializableAPIMailBodies> QueryMailBody(long userID, string apiKey, long characterID, long messageID)
+        {
+            HttpPostData postData = new HttpPostData(String.Format(
+                    "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
+            return QueryMethod<SerializableAPIMailBodies>(APIMethods.MailBodies, postData, RowsetsTransform);
+        }
+
+        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>

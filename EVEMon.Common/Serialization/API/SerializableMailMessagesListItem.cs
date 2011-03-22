@@ -7,6 +7,12 @@ namespace EVEMon.Common.Serialization.API
 {
     public sealed class SerializableMailMessagesListItem
     {
+        public SerializableMailMessagesListItem()
+        {
+            ToCharacterIDs = new List<string>();
+            ToListID = new List<string>();
+        }
+
         [XmlAttribute("messageID")]
         public long MessageID
         {
@@ -40,7 +46,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("toCorpOrAllianceID")]
-        public long ToCorpOrAllianceID
+        public string ToCorpOrAllianceID
         {
             get;
             set;

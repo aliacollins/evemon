@@ -62,15 +62,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notifications with the given key and notify an event.
         /// </summary>
-        /// <param name="notification"></param>
-        public void Remove(Notification notification)
-        {
-            m_items.Remove(notification);
-        }
-
-        /// <summary>
-        /// Invalidates the notifications with the given key and notify an event.
-        /// </summary>
         /// <param name="args"></param>
         public void Invalidate(NotificationInvalidationEventArgs args)
         {
@@ -87,7 +78,7 @@ namespace EVEMon.Common
             int index = 0;
             bool foundAny = false;
 
-            // Removes all the notifications with the given key.
+            // Removes all the notifications with the given key
             while (index < m_items.Count)
             {
                 if (m_items[index].InvalidationKey != key)
@@ -125,6 +116,22 @@ namespace EVEMon.Common
             var notification = new APIErrorNotification(null, result)
             {
                 Description = "An error occurred while querying the conquerable station list.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a character Id to name querying error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyCharacterNameError(APIResult<SerializableAPICharacterName> result)
+        {
+            var notification = new APIErrorNotification(null, result)
+            {
+                Description = "An error occurred while querying the ID to Name conversion.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -356,6 +363,38 @@ namespace EVEMon.Common
             };
             Notify(notification);
         }
+
+        /// <summary>
+        /// Notifies a mail messages error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyEVEMailMessagesError(CCPCharacter character, APIResult<SerializableAPIMailMessages> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the EVE mail messages.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a mail body error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyEVEMailBodiesError(CCPCharacter character, APIResult<SerializableAPIMailBodies> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the EVE mail message body.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
         #endregion
 
 
@@ -483,6 +522,33 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Skill queue room available
+        /// <summary>
+        /// Invalidates the notification for skill queue availability.
+        /// </summary>
+        internal void InvalidateSkillQueueRoomAvailability(CCPCharacter character)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable));
+        }
+
+        /// <summary>
+        /// Notify when we have room to queue more skills.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="expiredOrders"></param>
+        internal void NotifySkillQueueRoomAvailable(CCPCharacter character)
+        {
+            var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character)
+            {
+                Description = "This character has free room in the skill queue.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Warning
+            };
+            Notify(notification);
+        }
+        #endregion
+
+
         #region Server status
         /// <summary>
         /// Invalidates the notification for an skill completion.
@@ -586,27 +652,18 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Skill queue room available
+        #region New EVE mail message
         /// <summary>
-        /// Invalidates the notification for skill queue availability.
-        /// </summary>
-        internal void InvalidateSkillQueueRoomAvailability(CCPCharacter character)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable));
-        }
-
-        /// <summary>
-        /// Notify when we have room to queue more skills.
+        /// Notify new EVE mail message is available.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="expiredOrders"></param>
-        internal void NotifySkillQueueRoomAvailable(Character character)
+        internal void NotifyNewEveMailMessage(Character character, int newMessage)
         {
-            var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character)
+            var notification = new NewEveMailMessageNotification(character, newMessage)
             {
-                Description = "This character has free room in the skill queue.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Warning
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
             };
             Notify(notification);
         }

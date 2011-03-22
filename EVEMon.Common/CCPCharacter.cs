@@ -13,7 +13,6 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class CCPCharacter : Character
     {
-        private readonly SkillQueue m_queue;
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
@@ -21,9 +20,12 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly MarketOrderCollection m_marketOrders;
         private readonly IndustryJobCollection m_industryJobs;
         private readonly ResearchPointCollection m_researchPoints;
+        private readonly EveMailMessagesCollection m_eveMailMessages;
+        private readonly SkillQueue m_queue;
         private readonly QueryMonitorCollection m_monitors;
 
         private List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
@@ -40,6 +42,8 @@ namespace EVEMon.Common
         private bool m_charJobsAdded;
         private bool m_corpJobsAdded;
 
+        #region Constructors
+
         /// <summary>
         /// Base constructor.
         /// </summary>
@@ -52,6 +56,7 @@ namespace EVEMon.Common
             m_marketOrders = new MarketOrderCollection(this);
             m_industryJobs = new IndustryJobCollection(this);
             m_researchPoints = new ResearchPointCollection(this);
+            m_eveMailMessages = new EveMailMessagesCollection(this);
             m_monitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
@@ -83,9 +88,13 @@ namespace EVEMon.Common
             m_charResearchPointsMonitor.Updated += OnCharacterResearchPointsUpdated;
             m_monitors.Add(m_charResearchPointsMonitor);
 
-            // We enable only the monitors that require a limited api key
-            // Full api key required monitors will be enabled 
-            // individually through each character's enabled monitor
+            m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages);
+            m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
+            m_monitors.Add(m_charEVEMailMessagesMonitor);
+
+            // We enable only the monitors that require a limited api key,
+            // full api key required monitors will be enabled individually
+            // through each character's enabled full api key feature
             foreach (var monitor in m_monitors)
             {
                 monitor.Enabled = !monitor.IsFullKeyNeeded;
@@ -113,18 +122,23 @@ namespace EVEMon.Common
             m_charSheetMonitor.ForceUpdate(true);
             m_skillQueueMonitor.ForceUpdate(true);
         }
+        
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public override string AdornedName
         {
-            get 
+            get
             {
                 if (m_charSheetMonitor.LastResult != null && m_charSheetMonitor.LastResult.HasError)
                     return String.Format("{0} (cached)", m_name);
 
-                return m_name; 
+                return m_name;
             }
         }
 
@@ -161,6 +175,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the collection of EVE mail messages.
+        /// </summary>
+        public EveMailMessagesCollection EVEMailMessages
+        {
+            get { return m_eveMailMessages; }
+        }
+
+        /// <summary>
         /// Gets true when the character is currently actively training, false otherwise
         /// </summary>
         public override bool IsTraining
@@ -192,7 +214,7 @@ namespace EVEMon.Common
             get
             {
                 var activeBuyOrdersIssuedForCharacter = m_marketOrders
-                    .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified) 
+                    .Where(x => (x.State == OrderState.Active || x.State == OrderState.Modified)
                     && x is BuyOrder && x.IssuedFor == IssuedFor.Character);
 
                 decimal activeTotal = activeBuyOrdersIssuedForCharacter.Sum(x => x.TotalPrice);
@@ -202,6 +224,19 @@ namespace EVEMon.Common
                 return m_balance >= additionalToCover;
             }
         }
+
+        /// <summary>
+        /// Gets the query monitors enumeration.
+        /// </summary>
+        public QueryMonitorCollection QueryMonitors
+        {
+            get { return m_monitors; }
+        }
+        
+        #endregion
+
+
+        #region Importing & Exporting
 
         /// <summary>
         /// Create a serializable character sheet for this character
@@ -214,16 +249,19 @@ namespace EVEMon.Common
 
             // Skill queue
             serial.SkillQueue = m_queue.Export();
-            
+
             // Market orders
             serial.MarketOrders = m_marketOrders.Export();
 
             // Industry jobs
             serial.IndustryJobs = m_industryJobs.Export();
-            
+
             // Research points
             serial.ResearchPoints = m_researchPoints.Export();
-             
+
+            // Eve mail messages IDs
+            serial.EveMailMessagesIDs = m_eveMailMessages.Export();
+
             // Last API updates
             foreach (var monitor in m_monitors)
             {
@@ -235,7 +273,7 @@ namespace EVEMon.Common
 
                 serial.LastUpdates.Add(update);
             }
-            
+
             return serial;
         }
 
@@ -250,18 +288,21 @@ namespace EVEMon.Common
             // Skill queue
             m_queue.Import(serial.SkillQueue);
             m_queue.UpdateOnTimerTick();
-            
+
             // Market orders
             m_marketOrders.Import(serial.MarketOrders);
-            
+
             // Industry jobs
             m_industryJobs.Import(serial.IndustryJobs);
 
             // Research points
             m_researchPoints.Import(serial.ResearchPoints);
 
+            // EVE mail messages IDs
+            m_eveMailMessages.Import(serial.EveMailMessagesIDs);
+
             // Last API updates
-            foreach(var lastUpdate in serial.LastUpdates)
+            foreach (var lastUpdate in serial.LastUpdates)
             {
                 var monitor = m_monitors[lastUpdate.Method] as IQueryMonitorEx;
                 if (monitor != null)
@@ -271,15 +312,11 @@ namespace EVEMon.Common
             // Fire the global event
             EveClient.OnCharacterChanged(this);
         }
-
+        
+        #endregion
+        
+        
         #region Querying
-        /// <summary>
-        /// Gets the query monitors enumeration.
-        /// </summary>
-        public QueryMonitorCollection QueryMonitors
-        {
-            get { return m_monitors; }
-        }
 
         /// <summary>
         /// Updates the character on a timer tick.
@@ -482,13 +519,49 @@ namespace EVEMon.Common
             EveClient.OnCharacterResearchPointsChanged(this);
         }
 
+        private void OnCharacterEVEMailMessagesUpdated(APIResult<SerializableAPIMailMessages> result)
+        {
+            // Notify an error occured
+            if (ShouldNotifyError(result, APIMethods.MailMessages))
+                EveClient.Notifications.NotifyEVEMailMessagesError(this, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_eveMailMessages.Import(result.Result.Messages);
+
+            // Notify on new messages
+            if (m_eveMailMessages.NewMessages != 0)
+                EveClient.Notifications.NotifyNewEveMailMessage(this, m_eveMailMessages.NewMessages);
+
+            // Fires the event regarding EVE mail messages update.
+            EveClient.OnCharacterEVEMailMessagesUpdated(this);
+        }
+
+        #endregion
+
+
+        # region Helper Methods
+
+        /// <summary>
+        /// Forces an update on the selected query monitor.
+        /// </summary>
+        /// <param name="queryMonitor">The query monitor.</param>
+        public void ForceUpdate(IQueryMonitor queryMonitor)
+        {
+            var monitor = m_monitors[queryMonitor.Method] as IQueryMonitorEx;
+            monitor.ForceUpdate(false);
+        }
+
         /// <summary>
         /// Checks whether we should notify an error.
         /// </summary>
         /// <param name="result"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private bool ShouldNotifyError(IAPIResult result, APIMethods method)
+        internal bool ShouldNotifyError(IAPIResult result, APIMethods method)
         {
             // Notify an error occurred
             if (result.HasError)

@@ -53,6 +53,13 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("mailMessagesGroupBy")]
+        public EVEMailMessagesGrouping EVEMailMessagesGroupBy
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Clones this serialization object.
         /// </summary>
@@ -60,11 +67,12 @@ namespace EVEMon.Common.SettingsObjects
         internal CharacterUISettings Clone()
         {
             var clone = new CharacterUISettings();
-            clone.CollapsedGroups.AddRange(this.CollapsedGroups);
-            clone.FullAPIKeyEnabledPages.AddRange(this.FullAPIKeyEnabledPages);
-            clone.SelectedPage = this.SelectedPage;
-            clone.OrdersGroupBy = this.OrdersGroupBy;
-            clone.JobsGroupBy = this.JobsGroupBy;
+            clone.CollapsedGroups.AddRange(CollapsedGroups);
+            clone.FullAPIKeyEnabledPages.AddRange(FullAPIKeyEnabledPages);
+            clone.SelectedPage = SelectedPage;
+            clone.OrdersGroupBy = OrdersGroupBy;
+            clone.JobsGroupBy = JobsGroupBy;
+            clone.EVEMailMessagesGroupBy = EVEMailMessagesGroupBy;
             return clone;
         }
     }

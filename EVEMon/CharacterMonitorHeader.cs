@@ -40,7 +40,6 @@ namespace EVEMon
             EveClient.CharacterMarketOrdersChanged += EveClient_MarketOrdersChanged;
             Disposed += OnDisposed;
         }
-
         #endregion
 
 
@@ -83,7 +82,7 @@ namespace EVEMon
                 SuspendLayout();
                 RefreshThrobber();
 
-                // only update the skill summary when the skill points change
+                // Only update the skill summary when the skill points change
                 if (m_spAtLastRedraw != m_character.SkillPoints)
                     SkillSummaryLabel.Text = FormatSkillSummary(m_character);
 
@@ -107,7 +106,7 @@ namespace EVEMon
             {
                 SuspendLayout();
 
-                // safe for work implementation
+                // Safe for work implementation
                 MainTableLayoutPanel.ColumnStyles[0].SizeType = Settings.UI.SafeForWork ? SizeType.Absolute : SizeType.AutoSize;
                 MainTableLayoutPanel.ColumnStyles[0].Width = 0;
                 CharacterPortrait.Visible = !Settings.UI.SafeForWork;
@@ -464,7 +463,7 @@ namespace EVEMon
         {
             StringBuilder output = new StringBuilder();
 
-            // using the .AppendLine() method of creating a multi line
+            // Using the .AppendLine() method of creating a multi line
             // string in this case as it is an interface requirement,
             // rather than a cultural preference.
             output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", character.KnownSkillCount).AppendLine();
@@ -516,7 +515,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
-            // no need to do this if control is not visible
+            // No need to do this if control is not visible
             if (!Visible)
                 return;
 
@@ -530,7 +529,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveClient_SettingsChanged(object sender, EventArgs e)
         {
-            // no need to do this if control is not visible
+            // No need to do this if control is not visible
             if (!Visible)
                 return;
 
@@ -544,7 +543,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            // no need to do this if control is not visible
+            // No need to do this if control is not visible
             if (!Visible)
                 return;
 
@@ -558,7 +557,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_MarketOrdersChanged(object sender, CharacterChangedEventArgs e)
         {
-            // no need to do this if control is not visible
+            // No need to do this if control is not visible
             if (!Visible)
                 return;
 
@@ -575,25 +574,25 @@ namespace EVEMon
         {
             var ccpCharacter = m_character as CCPCharacter;
 
-            // this is not a CCP account, it can't be updated
+            // This is not a CCP account, it can't be updated
             if (ccpCharacter == null)
                 return;
             
-            // there has been an error in the past (Authorization, Server Error, etc.)
+            // There has been an error in the past (Authorization, Server Error, etc.)
             if (UpdateThrobber.State == ThrobberState.Strobing)
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
             }
 
-            // updating now will return an API error because the cache has not expired.
+            // Updating now will return an API error because the cache has not expired.
             if (ccpCharacter.QueryMonitors.Any(x => x.ForceUpdateWillCauseError))
             {
                 ThrobberContextMenu.Show(MousePosition);
                 return;
             }
 
-            // all checks out query everything
+            // All checks out query everything
             ccpCharacter.QueryMonitors.QueryEverything();
         }
 
@@ -676,7 +675,7 @@ namespace EVEMon
 
             ccpCharacter.QueryMonitors.Query(method);
 
-            // additionaly trigger the update of corporaiton equivalants
+            // Additionaly trigger the update of corporaiton equivalants
             if (method == APIMethods.MarketOrders)
                 ccpCharacter.QueryMonitors.Query(APIMethods.CorporationMarketOrders);
 
@@ -713,11 +712,11 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void AttributeLabel_MouseHover(object sender, EventArgs e)
         {
-            // retrieve the attribute from the sender
+            // Retrieve the attribute from the sender
             Label attributeLabel = sender as Label;
             EveAttribute eveAttribute = (EveAttribute)attributeLabel.Tag;
 
-            // format the values for the tooltip
+            // Format the values for the tooltip
             ICharacterAttribute attribute = m_character[eveAttribute];
             string toolTip = attribute.ToString("%e (%B base + %r remap points + %i implants)");
             ToolTip.SetToolTip(attributeLabel, toolTip);
@@ -763,6 +762,5 @@ namespace EVEMon
         }
 
         #endregion
-
     }
 }

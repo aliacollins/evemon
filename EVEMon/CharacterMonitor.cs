@@ -52,12 +52,14 @@ namespace EVEMon
             ordersList.Character = character;
             jobsList.Character = character;
             researchList.Character = character;
+            mailMessagesList.Character = character;
             notificationList.Notifications = null;
 
             // Create a list of the full API Key features
             m_fullAPIKeyFeatures.Add(ordersIcon);
             m_fullAPIKeyFeatures.Add(jobsIcon);
             m_fullAPIKeyFeatures.Add(researchIcon);
+            m_fullAPIKeyFeatures.Add(mailMessagesIcon);
 
             // Hide all full api key related controls
             m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
@@ -90,6 +92,7 @@ namespace EVEMon
             EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesChanged;
             EveClient.NotificationSent += EveClient_NotificationSent;
             EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
             Disposed += OnDisposed;
@@ -109,6 +112,7 @@ namespace EVEMon
             EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterResearchPointsChanged -= EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesChanged;
             EveClient.NotificationSent -= EveClient_NotificationSent;
             EveClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
             Disposed -= OnDisposed;
@@ -242,9 +246,8 @@ namespace EVEMon
                 if (ccpCharacter != null)
                 {
                     DateTime queueCompletionTime = ccpCharacter.SkillQueue.EndTime.ToLocalTime();
-                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                                                                queueCompletionTime.ToString("ddd"),
-                                                                queueCompletionTime.ToString("G"));
+                    lblQueueCompletionTime.Text = String.Format(CultureConstants.DefaultCulture,
+                                                                "{0:ddd} {0:G}", queueCompletionTime);
                     if (skillQueueList.QueueHasChanged(ccpCharacter.SkillQueue.ToArray()))
                         skillQueueControl.Invalidate();
                     skillQueuePanel.Visible = true;
@@ -374,6 +377,11 @@ namespace EVEMon
                 toolStripContextual.Enabled = !ccpCharacter.ResearchPoints.IsEmpty();
                 groupMenu.Visible = false;
             }
+
+            // Enables/Disables the research points page related controls
+            if (multiPanel.SelectedPage == mailMessagesPage)
+                toolStripContextual.Enabled = !ccpCharacter.EVEMailMessages.IsEmpty();
+
         }
 
         /// <summary>
@@ -392,6 +400,9 @@ namespace EVEMon
                 {
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
+
+                if (monitor.Method == APIMethods.MailMessages && monitor.Enabled)
+                    ccpCharacter.ForceUpdate(monitor);
             }
         }
 
@@ -402,7 +413,8 @@ namespace EVEMon
         {
             if ((multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
                 || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible)
-                || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible))
+                || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible)
+                || (multiPanel.SelectedPage == mailMessagesPage && !mailMessagesIcon.Visible))
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
 
             var enabledFullAPIKeyPages = new List<string>();
@@ -423,7 +435,9 @@ namespace EVEMon
         /// <returns></returns>
         private bool CheckEnabledFeatures(string page)
         {
-            return m_character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
+            
+            bool enabled = m_character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
+            return enabled;
         }
 
         /// <summary>
@@ -476,13 +490,25 @@ namespace EVEMon
             UpdatePageControls();
         }
 
-
         /// <summary>
         /// Handles the CharacterResearchPointsChanged event of the EveClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveClient_CharacterResearchPointsChanged(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Handles the CharacterEVEMailMessagesChanged event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterEVEMailMessagesChanged(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -650,7 +676,7 @@ namespace EVEMon
                     multiPanel.SelectedPage =
                         multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string) item.Tag);
 
-                    // Checks it.
+                    // Checks it
                     button.Checked = true;
                 }
                 // Or another one representing another page ?
@@ -660,9 +686,6 @@ namespace EVEMon
                     button.Checked = false;
                 }
             }
-
-            // Update the page controls
-            UpdatePageControls();
         }
 
         /// <summary>
@@ -678,11 +701,13 @@ namespace EVEMon
             // Stores the setting
             m_character.UISettings.SelectedPage = e.NewPage.Text;
 
-            // Update the buttons visibility.
+            // Update the buttons visibility
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
             tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
-
             toolStripContextual.Visible = (e.NewPage != skillsPage && e.NewPage != skillQueuePage);
+
+            // Update the page controls
+            UpdatePageControls();
         }
 
         /// <summary>
@@ -790,6 +815,7 @@ namespace EVEMon
             ordersIcon.Visible = (item.Text == ordersIcon.Text ? item.Checked : ordersIcon.Visible);
             jobsIcon.Visible = (item.Text == jobsIcon.Text ? item.Checked : jobsIcon.Visible);
             researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
+            mailMessagesIcon.Visible = (item.Text == mailMessagesIcon.Text ? item.Checked : mailMessagesIcon.Visible);
 
             UpdateFullAPIKeyPagesSettings();
             ToggleFullAPIKeyFeaturesMonitoring();
@@ -827,6 +853,18 @@ namespace EVEMon
                     groupMenu.DropDownItems.Add(menu);
                 }
             }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                foreach (EVEMailMessagesGrouping grouping in EnumExtensions.GetValues<EVEMailMessagesGrouping>())
+                {
+                    var menu = new ToolStripButton(grouping.GetHeader());
+                    menu.Checked = (mailMessagesList.Grouping == grouping);
+                    menu.Tag = grouping;
+
+                    groupMenu.DropDownItems.Add(menu);
+                }
+            }
         }
 
         /// <summary>
@@ -848,6 +886,12 @@ namespace EVEMon
                 var grouping = (IndustryJobGrouping) item.Tag;
                 m_character.UISettings.JobsGroupBy = jobsList.Grouping = grouping;
             }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                var grouping = (EVEMailMessagesGrouping)item.Tag;
+                m_character.UISettings.EVEMailMessagesGroupBy = mailMessagesList.Grouping = grouping;
+            }
         }
 
         /// <summary>
@@ -858,19 +902,16 @@ namespace EVEMon
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
             if (multiPanel.SelectedPage == ordersPage)
-            {
                 ordersList.TextFilter = searchTextBox.Text;
-            }
             
             if (multiPanel.SelectedPage == jobsPage)
-            {
                 jobsList.TextFilter = searchTextBox.Text;
-            }
 
             if (multiPanel.SelectedPage == researchPage)
-            {
                 researchList.TextFilter = searchTextBox.Text;
-            }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+                mailMessagesList.TextFilter = searchTextBox.Text;
         }
 
         /// <summary>
@@ -921,6 +962,20 @@ namespace EVEMon
                     }
                 }
             }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                using (var f = new EveMailMessagesColumnsSelectWindow(mailMessagesList.Columns.Select(x => x.Clone())))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        mailMessagesList.Columns = f.Columns.Cast<EveMailMessagesColumnSettings>();
+                        Settings.UI.MainWindow.EVEMailMessages.Columns =
+                            mailMessagesList.Columns.Select(x => x.Clone()).ToArray();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -938,6 +993,8 @@ namespace EVEMon
                 hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
                 numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
                 preferencesMenu.DropDownItems.Insert(3, numberAbsFormatMenuItem);
+                preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
+                preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
                 numberAbsFormatMenuItem.Text = (numberFormat ? "Number Full Format" : "Number Abbreviating Format");
                 showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
@@ -949,12 +1006,24 @@ namespace EVEMon
                 preferencesMenu.DropDownItems.Remove(numberAbsFormatMenuItem);
                 showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+                preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
+                preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
             }
 
             if (multiPanel.SelectedPage == researchPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Remove(tsReadingPaneSeparator);
+                preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
+            }
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Add(tsReadingPaneSeparator);
+                preferencesMenu.DropDownItems.Add(readingPaneMenuItem);
             }
 
             hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
@@ -974,7 +1043,8 @@ namespace EVEMon
                 Settings.UI.MainWindow.MarketOrders.HideInactiveOrders = !hideInactive;
                 ordersList.UpdateColumns();
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
                 Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs = !hideInactive;
@@ -1006,12 +1076,13 @@ namespace EVEMon
             if (multiPanel.SelectedPage == ordersPage)
             {
                 ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
+                showOnlyCorpMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Corporation);
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+                showOnlyCorpMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Corporation);
             }
         }
 
@@ -1025,13 +1096,79 @@ namespace EVEMon
             if (multiPanel.SelectedPage == ordersPage)
             {
                 ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
+                showOnlyCharMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Character);
             }
-            else if (multiPanel.SelectedPage == jobsPage)
+            
+            if (multiPanel.SelectedPage == jobsPage)
             {
                 jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
+                showOnlyCharMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Character);
             }
+        }
+
+        /// <summary>
+        /// Handles the DropDownOpening event of the readingPaneMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void readingPaneMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            string paneSetting = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition.ToString();
+            foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
+            {
+                menuItem.Checked = ((string)menuItem.Tag == paneSetting);
+            }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the paneRightMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void paneRightMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
+            {
+                menuItem.Checked = false;
+            }
+
+            paneRightMenuItem.Checked = true;
+            mailMessagesList.PanePosition = ReadingPanePositioning.Right;
+            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the paneBottomMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void paneBottomMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
+            {
+                menuItem.Checked = false;
+            }
+
+            paneBottomMenuItem.Checked = true;
+            mailMessagesList.PanePosition = ReadingPanePositioning.Bottom;
+            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the paneOffMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void paneOffMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
+            {
+                menuItem.Checked = false;
+            }
+
+            paneOffMenuItem.Checked = true;
+            mailMessagesList.PanePosition = ReadingPanePositioning.Off;
+            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
         }
 
         /// <summary>

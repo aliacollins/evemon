@@ -545,24 +545,6 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// The status of a industry job.
-    /// </summary>
-    /// <remarks>The integer value determines the sort order in "Group by...".</remarks>
-    public enum JobState
-    {
-        [Header("Active jobs")]
-        Active = 0,
-        [Header("Delivered jobs")]
-        Delivered = 1,
-        [Header("Canceled jobs")]
-        Canceled = 2,
-        [Header("Paused jobs")]
-        Paused = 3,
-        [Header("Failed jobs")]
-        Failed = 4
-    }
-
-    /// <summary>
     /// The status of a market order.
     /// </summary>
     /// <remarks>The integer value determines the sort order.</remarks>
@@ -581,6 +563,24 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// The status of a industry job.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order in "Group by...".</remarks>
+    public enum JobState
+    {
+        [Header("Active jobs")]
+        Active = 0,
+        [Header("Delivered jobs")]
+        Delivered = 1,
+        [Header("Canceled jobs")]
+        Canceled = 2,
+        [Header("Paused jobs")]
+        Paused = 3,
+        [Header("Failed jobs")]
+        Failed = 4
+    }
+
+    /// <summary>
     /// The status of an active job.
     /// </summary>
     public enum ActiveJobState
@@ -592,6 +592,18 @@ namespace EVEMon.Common
         InProgress,
         [Description("Ready")]
         Ready
+    }
+
+    /// <summary>
+    /// The status of an EVE mail message.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order in "Group by...".</remarks>
+    public enum EVEMailState
+    {
+        [Header("Inbox")]
+        Inbox = 0,
+        [Header("Sent Items")]
+        SentItem = 1,
     }
 
     /// <summary>
@@ -721,6 +733,18 @@ namespace EVEMon.Common
         /// </summary>
         [FullKey]
         ConquerableStationList,
+
+        /// <summary>
+        /// The body text of an EVE mail message. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        MailBodies,
+
+        /// <summary>
+        /// The character name. Used to convert IDs to Names. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        CharacterName,
     }
 
     #endregion

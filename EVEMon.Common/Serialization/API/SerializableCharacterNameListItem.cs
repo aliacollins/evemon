@@ -1,19 +1,18 @@
-﻿using System.Xml;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableMailBodiesListItem
+    public sealed class SerializableCharacterNameListItem
     {
-        [XmlAttribute("messageID")]
-        public long MessageID
+        [XmlAttribute("characterID")]
+        public long ID
         {
             get;
             set;
         }
 
-        [XmlText]
-        public string MessageText
+        [XmlAttribute("name")]
+        public string Name
         {
             get;
             set;

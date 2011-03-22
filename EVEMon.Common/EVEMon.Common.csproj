@@ -75,6 +75,10 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="EveConstants.cs" />
     <Compile Include="EveClient.cs" />
+    <Compile Include="EveIDtoName.cs" />
+    <Compile Include="EveMailBody.cs" />
+    <Compile Include="EveMailMessage.cs" />
+    <Compile Include="EveMailMessagesComparer.cs" />
     <Compile Include="EventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="EventArgs\CharacterIdentityChangedEventArgs.cs" />
     <Compile Include="EventArgs\DataUpdateAvailableEventArgs.cs" />
@@ -85,7 +89,9 @@
     <Compile Include="EventArgs\UpdateAvailableEventArgs.cs" />
     <Compile Include="FontFactory.cs" />
     <Compile Include="ImageService.cs" />
+    <Compile Include="EveMailMessagesCollection.cs" />
     <Compile Include="ListViewExporter.cs" />
+    <Compile Include="Notifications\NewEveMailMessageNotification.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanSorter.cs" />
@@ -98,11 +104,13 @@
     <Compile Include="Serialization\API\SerializableAPIAccountBalance.cs" />
     <Compile Include="Serialization\API\SerializableAccountBalanceListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIAccountStatus.cs" />
+    <Compile Include="Serialization\API\SerializableAPICharacterName.cs" />
     <Compile Include="Serialization\API\SerializableAPIMailBodies.cs" />
     <Compile Include="Serialization\API\SerializableAPIMailingLists.cs" />
     <Compile Include="Serialization\API\SerializableAPIMailMessages.cs" />
     <Compile Include="Serialization\API\SerializableAPINotifications.cs" />
     <Compile Include="Serialization\API\SerializableAPINotificationTexts.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterNameListItem.cs" />
     <Compile Include="Serialization\API\SerializableNotificationsListItem.cs" />
     <Compile Include="Serialization\API\SerializableImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
@@ -125,6 +133,7 @@
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
     <Compile Include="Serialization\Settings\SerializableCCPCharacter.cs" />
     <Compile Include="Serialization\Settings\SerializableImplantSetCollection.cs" />
+    <Compile Include="Serialization\SerializableEveIDToName.cs" />
     <Compile Include="Serialization\Settings\SerializableInvalidPlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializablePlanEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableRemappingPoint.cs" />
@@ -133,6 +142,9 @@
     <Compile Include="Serialization\Settings\SerializableUriCharacter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsObjects\Enumerations.cs" />
+    <Compile Include="SettingsObjects\EveMailMessagesColumn.cs" />
+    <Compile Include="SettingsObjects\EveMailMessagesColumnSettings.cs" />
+    <Compile Include="SettingsObjects\EveMailMessagesSettings.cs" />
     <Compile Include="SettingsObjects\ProxyAuthentication.cs" />
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />
@@ -377,11 +389,11 @@
       <DependentUpon>CharacterPortrait.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ControlExtensions.cs" />
-    <Compile Include="Controls\EVEFolderWindow.cs">
+    <Compile Include="Controls\EveFolderWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\EVEFolderWindow.Designer.cs">
-      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+    <Compile Include="Controls\EveFolderWindow.Designer.cs">
+      <DependentUpon>EveFolderWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DisposableWithCallback.cs" />
     <Compile Include="CCPCharacter.cs" />
@@ -595,8 +607,8 @@
       <DependentUpon>CharacterPortrait.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\EVEFolderWindow.resx">
-      <DependentUpon>EVEFolderWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\EveFolderWindow.resx">
+      <DependentUpon>EveFolderWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MsgBoxCustom.resx">
