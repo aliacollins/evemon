@@ -90,13 +90,13 @@ namespace EVEMon.Common.Properties {
         ///  &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
         ///
         ///  &lt;xsl:template match=&quot;@* | node()&quot;&gt;
-        ///      &lt;xsl:copy&gt;
-        ///          &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
-        ///      &lt;/xsl:copy&gt;
+        ///    &lt;xsl:copy&gt;
+        ///      &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
+        ///    &lt;/xsl:copy&gt;
         ///  &lt;/xsl:template&gt;
         ///
         ///  &lt;!-- Rowsets are transformed into something else--&gt;
-        ///  &lt;xsl:template match [rest of string was truncated]&quot;;.
+        ///  &lt;xsl:template match=&quot;rowset [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RowsetsXSLT {
             get {

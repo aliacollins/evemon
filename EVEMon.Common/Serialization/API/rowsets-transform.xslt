@@ -6,9 +6,9 @@
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:template match="@* | node()">
-      <xsl:copy>
-          <xsl:apply-templates select="@* | node()"/>
-      </xsl:copy>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()"/>
+    </xsl:copy>
   </xsl:template>
 
   <!-- Rowsets are transformed into something else-->
@@ -46,7 +46,7 @@
     <xsl:element name="{$setName}">
       <xsl:for-each select="row">
         <xsl:element name="{$rowName}">
-          <xsl:for-each select="@*">
+          <xsl:for-each select="@* | node()">
             <xsl:copy/>
           </xsl:for-each>
         </xsl:element>
