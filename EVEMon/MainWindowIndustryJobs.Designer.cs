@@ -31,13 +31,13 @@ namespace EVEMon
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowIndustryJobsList));
             this.lvJobs = new System.Windows.Forms.ListView();
+            this.chState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chTTC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chInstalledItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chOutputItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noJobsLabel = new System.Windows.Forms.Label();
             this.industryExpPanelControl = new EVEMon.Controls.ExpandablePanelControl();
-            this.chState = new System.Windows.Forms.ColumnHeader();
-            this.chTTC = new System.Windows.Forms.ColumnHeader();
-            this.chInstalledItem = new System.Windows.Forms.ColumnHeader();
-            this.chOutputItem = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
             // 
             // lvJobs
@@ -50,6 +50,7 @@ namespace EVEMon
             this.chOutputItem});
             this.lvJobs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvJobs.FullRowSelect = true;
+            this.lvJobs.HideSelection = false;
             this.lvJobs.Location = new System.Drawing.Point(0, 0);
             this.lvJobs.Name = "lvJobs";
             this.lvJobs.Size = new System.Drawing.Size(454, 334);
@@ -57,6 +58,22 @@ namespace EVEMon
             this.lvJobs.TabIndex = 0;
             this.lvJobs.UseCompatibleStateImageBehavior = false;
             this.lvJobs.View = System.Windows.Forms.View.Details;
+            // 
+            // chState
+            // 
+            this.chState.Text = "State";
+            // 
+            // chTTC
+            // 
+            this.chTTC.Text = "TTC";
+            // 
+            // chInstalledItem
+            // 
+            this.chInstalledItem.Text = "Installed Item";
+            // 
+            // chOutputItem
+            // 
+            this.chOutputItem.Text = "Output Item";
             // 
             // ilIcons
             // 
@@ -91,22 +108,6 @@ namespace EVEMon
             this.industryExpPanelControl.Name = "industryExpPanelControl";
             this.industryExpPanelControl.Size = new System.Drawing.Size(454, 100);
             this.industryExpPanelControl.TabIndex = 1;
-            // 
-            // chState
-            // 
-            this.chState.Text = "State";
-            // 
-            // chTTC
-            // 
-            this.chTTC.Text = "TTC";
-            // 
-            // chInstalledItem
-            // 
-            this.chInstalledItem.Text = "Installed Item";
-            // 
-            // chOutputItem
-            // 
-            this.chOutputItem.Text = "Output Item";
             // 
             // MainWindowIndustryJobsList
             // 

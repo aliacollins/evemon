@@ -1,16 +1,15 @@
 using System;
-using System.Data;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -49,14 +48,15 @@ namespace EVEMon
             InitializeExpandablePanelControls();
 
             lvJobs.Visible = false;
-            lvJobs.ShowItemToolTips = true;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
-            noJobsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            ListViewHelper.EnableDoubleBuffer(lvJobs);
+            noJobsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             industryExpPanelControl.Font = FontFactory.GetFont("Tahoma", 8.25f);
             industryExpPanelControl.Visible = false;
+
+            DoubleBuffered = true;
+            ListViewHelper.EnableDoubleBuffer(lvJobs);
 
             lvJobs.ColumnClick += lvJobs_ColumnClick;
             lvJobs.KeyDown += lvJobs_KeyDown;
@@ -68,7 +68,7 @@ namespace EVEMon
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterIndustryJobsCompleted += EveClient_IndustryJobsCompleted;
-            this.Disposed += OnDisposed;
+            Disposed += OnDisposed;
         }
                 
         /// <summary>
@@ -215,7 +215,7 @@ namespace EVEMon
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterIndustryJobsCompleted -= EveClient_IndustryJobsCompleted;
-            this.Disposed -= OnDisposed;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -224,25 +224,29 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (this.DesignMode || this.IsDesignModeHosted() || m_character == null)
+            if (DesignMode || this.IsDesignModeHosted() || m_character == null)
                 return;
 
             base.OnVisibleChanged(e);
 
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
             var ccpCharacter = m_character as CCPCharacter;
-            this.Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
-            this.Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            this.Grouping = (m_character == null ? IndustryJobGrouping.State : m_character.UISettings.JobsGroupBy);
+            Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
+            Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
+            Grouping = (m_character == null ? IndustryJobGrouping.State : m_character.UISettings.JobsGroupBy);
 
-            UpdateColumns();
             UpdateExpPanelContent();
+            UpdateColumns();
+
             m_init = true;
+
+            if (Jobs.Count() == 0)
+                MainWindowIndustryJobsList_Resize(null, null);
         }
 
         # endregion
@@ -299,8 +303,12 @@ namespace EVEMon
         public void UpdateContent()
         {
             // Returns if not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
+
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (lvJobs.SelectedItems.Count > 0 ?
+                                lvJobs.SelectedItems[0].Tag.GetHashCode() : 0);
 
             m_hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
 
@@ -377,7 +385,17 @@ namespace EVEMon
                         break;
                 }
 
-                // Display or hide the "no jobs" label.
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in lvJobs.Items)
+                    {
+                        if (lvItem.Tag.GetHashCode() == selectedItem)
+                            lvItem.Selected = true;
+                    }
+                }
+
+                // Display or hide the "no jobs" label
                 if (m_init)
                 {
                     noJobsLabel.Visible = jobs.IsEmpty();
@@ -406,7 +424,7 @@ namespace EVEMon
                 string groupText = String.Empty;
                 if (group.Key is JobState)
                 {
-                    groupText = ((JobState)(Object)group.Key).GetHeader().ToString();
+                    groupText = ((JobState)(Object)group.Key).GetHeader();
                 }
                 else if (group.Key is DateTime)
                 {
@@ -447,10 +465,6 @@ namespace EVEMon
                         var column = (IndustryJobColumn)header.Tag;
                         SetColumn(job, item.SubItems[i], column);
                     }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    item.ToolTipText = builder.ToString();
 
                     lvJobs.Items.Add(item);
                 }
@@ -741,11 +755,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On column reorder we update the settings
+        /// On column reorder we update the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void lvJobs_ColumnReordered(object sender, EventArgs e)
+        void lvJobs_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsChanged = true;
         }
@@ -864,7 +878,7 @@ namespace EVEMon
             if (e.Character != ccpCharacter)
                 return;
             
-            this.Jobs = ccpCharacter.IndustryJobs;
+            Jobs = ccpCharacter.IndustryJobs;
             UpdateColumns();
             UpdateExpPanelContent();
         }
@@ -909,7 +923,10 @@ namespace EVEMon
 
             if (m_columnsChanged)
             {
-                Settings.UI.MainWindow.IndustryJobs.Columns = this.Columns.Select(x => x.Clone()).ToArray();
+                Settings.UI.MainWindow.IndustryJobs.Columns = Columns.Select(x => x.Clone()).ToArray();
+
+                // Recreate the columns
+                Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
                 m_columnsChanged = false;
             }
         }
