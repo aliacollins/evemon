@@ -32,11 +32,11 @@ namespace EVEMon
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindowResearchPointsList));
             this.noResearchLabel = new System.Windows.Forms.Label();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
-            this.chAgentName = new System.Windows.Forms.ColumnHeader();
-            this.chSolarSystem = new System.Windows.Forms.ColumnHeader();
-            this.chSkill = new System.Windows.Forms.ColumnHeader();
-            this.chCurrentRP = new System.Windows.Forms.ColumnHeader();
-            this.chPRPerDay = new System.Windows.Forms.ColumnHeader();
+            this.chAgentName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSolarSystem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSkill = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chCurrentRP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPRPerDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvResearchPoints = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
@@ -89,6 +89,8 @@ namespace EVEMon
             this.chCurrentRP,
             this.chPRPerDay});
             this.lvResearchPoints.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvResearchPoints.FullRowSelect = true;
+            this.lvResearchPoints.HideSelection = false;
             this.lvResearchPoints.Location = new System.Drawing.Point(0, 0);
             this.lvResearchPoints.Name = "lvResearchPoints";
             this.lvResearchPoints.Size = new System.Drawing.Size(454, 434);
@@ -96,6 +98,7 @@ namespace EVEMon
             this.lvResearchPoints.TabIndex = 0;
             this.lvResearchPoints.UseCompatibleStateImageBehavior = false;
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
+            this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
             // 
             // MainWindowResearchPointsList
             // 

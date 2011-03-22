@@ -1,16 +1,14 @@
 using System;
-using System.Data;
-using System.Text;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 using EVEMon.Common;
-using EVEMon.Controls;
-using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon
 {
@@ -25,6 +23,7 @@ namespace EVEMon
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
+        private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
 
@@ -41,16 +40,21 @@ namespace EVEMon
             InitializeComponent();
 
             lvResearchPoints.Visible = false;
-            lvResearchPoints.ShowItemToolTips = true;
             lvResearchPoints.AllowColumnReorder = true;
             lvResearchPoints.Columns.Clear();
+
             noResearchLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            DoubleBuffered = true;
+            ListViewHelper.EnableDoubleBuffer(lvResearchPoints);
 
             lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;
             lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
+            lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
 
             Resize += MainWindowResearchPointsList_Resize;
 
+            EveClient.TimerTick += EveClient_TimerTick;
             EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
             Disposed += OnDisposed;
         }
@@ -163,17 +167,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On load, we hide the list.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            lvResearchPoints.Visible = false;
-        }
-
-        /// <summary>
         /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>
@@ -184,7 +177,7 @@ namespace EVEMon
 
             base.OnVisibleChanged(e);
 
-            if (!this.Visible)
+            if (!Visible)
                 return;
 
             // Prevents the properties to call UpdateColumns() till we set all properties
@@ -195,7 +188,11 @@ namespace EVEMon
             Columns = Settings.UI.MainWindow.Research.Columns;
 
             UpdateColumns();
+
             m_init = true;
+
+            if (ResearchPoints.Count() > 0)
+                UpdateContent();
         }
 
         # endregion
@@ -265,8 +262,12 @@ namespace EVEMon
         public void UpdateContent()
         {
             // Returns if not visible
-            if (!this.Visible)
+            if (!Visible)
                 return;
+
+            // Store the selected item (if any) to restore it after the update
+            int selectedItem = (lvResearchPoints.SelectedItems.Count > 0 ?
+                                lvResearchPoints.SelectedItems[0].Tag.GetHashCode() : 0);
 
             lvResearchPoints.BeginUpdate();
             try
@@ -277,7 +278,7 @@ namespace EVEMon
                 UpdateSort();
 
                 lvResearchPoints.Items.Clear();
-                
+
                 // Add the items in every group
                 foreach (var researchPoint in researhPoints)
                 {
@@ -302,14 +303,20 @@ namespace EVEMon
                         SetColumn(researchPoint, item.SubItems[i], column);
                     }
 
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    item.ToolTipText = builder.ToString();
-
                     lvResearchPoints.Items.Add(item);
                 }
 
-                // Display or hide the "no research points" label.
+                // Restore the selected item (if any)
+                if (selectedItem > 0)
+                {
+                    foreach (ListViewItem lvItem in lvResearchPoints.Items)
+                    {
+                        if (lvItem.Tag.GetHashCode() == selectedItem)
+                            lvItem.Selected = true;
+                    }
+                }
+
+                // Display or hide the "no research points" label
                 if (m_init)
                 {
                     noResearchLabel.Visible = researhPoints.IsEmpty();
@@ -458,6 +465,16 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// On column reorder we update the settings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void lvResearchPoints_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+        {
+            m_columnsChanged = true;
+        }
+
+        /// <summary>
         /// When the user manually resizes a column, we make sure to update the column preferences.
         /// </summary>
         /// <param name="sender"></param>
@@ -497,6 +514,24 @@ namespace EVEMon
         #region Global Events
 
         /// <summary>
+        /// On timer tick, we update the column settings if any changes have been made to them.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EveClient_TimerTick(object sender, EventArgs e)
+        {
+            if (m_columnsChanged)
+            {
+                Settings.UI.MainWindow.Research.Columns = Columns.Select(x => x.Clone()).ToArray();
+
+                // Recreate the columns
+                Columns = Settings.UI.MainWindow.Research.Columns;
+            }
+
+            m_columnsChanged = false;
+        }
+
+        /// <summary>
         /// When the research points change update the list.
         /// </summary>
         /// <param name="sender"></param>
@@ -507,7 +542,7 @@ namespace EVEMon
             if (e.Character != ccpCharacter)
                 return;
 
-            this.ResearchPoints = ccpCharacter.ResearchPoints;
+            ResearchPoints = ccpCharacter.ResearchPoints;
             UpdateColumns();
         }
 
