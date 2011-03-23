@@ -24,7 +24,7 @@ namespace EVEMon.Common
             Title = src.Title;
             ToCorpOrAlliance = GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDToName(src.ToCharacterIDs);
-            ToListID = src.ToListID;
+            ToListID = GetIDToName(src.ToListID);
         }
 
         #endregion
@@ -87,7 +87,10 @@ namespace EVEMon.Common
         private List<string> GetIDToName(List<string> src)
         {
             if (src.Count == 0)
+            {
+                src.Add(String.Empty);
                 return src;
+            }
 
             List<string> listOfNames = new List<string>();
             List<string> listOfIDsToGet = new List<string>();
