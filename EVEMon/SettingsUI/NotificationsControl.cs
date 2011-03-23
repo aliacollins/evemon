@@ -31,8 +31,8 @@ namespace EVEMon.SettingsUI
             // Add the controls for every member of the enumeration
             int height = RowHeight;
             var categories = Enum.GetValues(typeof(NotificationCategory))
-                .Cast<NotificationCategory>()
-                .Where(x=> x.HasHeader());
+                                            .Cast<NotificationCategory>()
+                                            .Where(x=> x.HasHeader());
 
             foreach (var cat in categories)
             {
@@ -44,7 +44,7 @@ namespace EVEMon.SettingsUI
                 label.Location = new Point(labelNotification.Location.X, height);
                 label.Width = labelBehaviour.Location.X - 3;
                 label.Height = RowHeight;
-                this.Controls.Add(label);
+                Controls.Add(label);
 
                 // Add the "system tray tooltip" combo box
                 var combo = new ComboBox();
@@ -59,7 +59,7 @@ namespace EVEMon.SettingsUI
                 combo.DropDownStyle = ComboBoxStyle.DropDownList;
                 combo.Location = new Point(labelBehaviour.Location.X, height + 2);
                 combo.SelectedIndexChanged += combo_SelectedIndexChanged;
-                this.Controls.Add(combo);
+                Controls.Add(combo);
                 m_combos.Add(combo);
 
                 // Add the "main window" checkbox
@@ -71,14 +71,14 @@ namespace EVEMon.SettingsUI
                 checkbox.Width = labelMainWindow.Width;
                 checkbox.Location = new Point(labelMainWindow.Location.X + 15, height + 2);
                 checkbox.CheckedChanged += checkbox_CheckedChanged;
-                this.Controls.Add(checkbox);
+                Controls.Add(checkbox);
                 m_checkboxes.Add(checkbox);
 
                 // Updates the row ordinate
                 height += RowHeight;
             }
 
-            this.Height = height;
+            Height = height;
         }
 
         /// <summary>
@@ -91,13 +91,21 @@ namespace EVEMon.SettingsUI
             set
             {
                 m_settings = value;
-                if (value == null) return;
+                if (value == null)
+                    return;
 
                 foreach (var combo in m_combos)
                 {
                     var cat = (NotificationCategory)combo.Tag;
-                    combo.SelectedIndex = (int)m_settings.Categories[cat].ToolTipBehaviour;
+                    int index = (int)m_settings.Categories[cat].ToolTipBehaviour;
+                    
+                    // TODO: Remove the following code line after deprecating ToolTipNotificationBehaviour.RepeatUntiClicked
+                    if (index > 2)
+                        index = 2;
+                    
+                    combo.SelectedIndex = index;
                 }
+
                 foreach (var checkbox in m_checkboxes)
                 {
                     var cat = (NotificationCategory)checkbox.Tag;
@@ -107,7 +115,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// When the selected indew changes, we update the settings.
+        /// When the selected index changes, we update the settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -118,6 +126,11 @@ namespace EVEMon.SettingsUI
             m_settings.Categories[cat].ToolTipBehaviour = (ToolTipNotificationBehaviour)combo.SelectedIndex;
         }
 
+        /// <summary>
+        /// When the selected checkbox check state changes, we update the settings.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void checkbox_CheckedChanged(object sender, EventArgs e)
         {
             var checkbox = (CheckBox)sender;

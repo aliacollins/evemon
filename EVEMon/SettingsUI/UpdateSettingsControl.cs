@@ -47,7 +47,7 @@ namespace EVEMon.SettingsUI
                 picture.Size = icon.Size;
                 picture.Location = new Point(0, height + (RowHeight - icon.Size.Height) / 2);
                 toolTip.SetToolTip(picture, iconToolTip);
-                this.Controls.Add(picture);
+                Controls.Add(picture);
 
                 // Add the label
                 var label = new Label();
@@ -58,7 +58,7 @@ namespace EVEMon.SettingsUI
                 label.Width = labelMethod.Width;
                 label.Height = RowHeight;
                 toolTip.SetToolTip(label, method.GetDescription());
-                this.Controls.Add(label);
+                Controls.Add(label);
 
                 // Add the "system tray tooltip" combo box
                 var combo = new ComboBox();
@@ -79,8 +79,8 @@ namespace EVEMon.SettingsUI
                 combo.Width = labelPeriod.Width;
                 combo.DropDownStyle = ComboBoxStyle.DropDownList;
                 combo.Location = new Point(labelPeriod.Location.X, height + 2);
-                combo.SelectedIndexChanged += new EventHandler(combo_SelectedIndexChanged);
-                this.Controls.Add(combo);
+                combo.SelectedIndexChanged += combo_SelectedIndexChanged;
+                Controls.Add(combo);
                 m_combos.Add(combo);
 
                 // Updates the row ordinate
