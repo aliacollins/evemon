@@ -37,7 +37,6 @@ namespace EVEMon.SettingsUI
             {
                 runAtStartupComboBox.Enabled = false;
                 treeView.Nodes["trayIconNode"].Remove();
-                treeView.Nodes["generalNode"].Nodes["relocationNode"].Remove();
             }
 
             // Run with Mono ?
@@ -127,26 +126,6 @@ namespace EVEMon.SettingsUI
             for (int i = 1; i < IconSettings.Default.Properties.Count; i++)
             {
                 cbSkillIconSet.Items.Add(IconSettings.Default.Properties["Group" + i].DefaultValue.ToString());
-            }
-
-            // Relocation
-            showRelocationMenuCheckbox.Checked = m_settings.UI.MainWindow.ShowRelocationMenu;
-            enableAutomaticRelocationCheckBox.Checked = m_settings.UI.MainWindow.EnableAutomaticRelocation;
-
-            // Do the bounds checking for the relocation interval
-            var automaticRelocationInterval = m_settings.UI.MainWindow.AutomaticRelocationInterval;
-
-            if (automaticRelocationInterval > relocationSecondsNumericUpDown.Maximum)
-            {
-                relocationSecondsNumericUpDown.Value = relocationSecondsNumericUpDown.Maximum;
-            }
-            else if (automaticRelocationInterval < relocationSecondsNumericUpDown.Minimum)
-            {
-                relocationSecondsNumericUpDown.Value = relocationSecondsNumericUpDown.Minimum;
-            }
-            else
-            {
-                relocationSecondsNumericUpDown.Value = m_settings.UI.MainWindow.AutomaticRelocationInterval;
             }
 
             // Window settings
@@ -399,11 +378,6 @@ namespace EVEMon.SettingsUI
             m_settings.UI.MainWindow.HighlightPartialSkills = cbColorPartialSkills.Checked;
             m_settings.UI.MainWindow.HighlightQueuedSkills = cbColorQueuedSkills.Checked;
             m_settings.UI.MainWindow.AlwaysShowSkillQueueTime = cbAlwaysShowSkillQueueTime.Checked;
-
-            // Relocation
-            m_settings.UI.MainWindow.ShowRelocationMenu = showRelocationMenuCheckbox.Checked;
-            m_settings.UI.MainWindow.EnableAutomaticRelocation = enableAutomaticRelocationCheckBox.Checked;
-            m_settings.UI.MainWindow.AutomaticRelocationInterval = (int)relocationSecondsNumericUpDown.Value;
 
             // G15
             m_settings.G15.Enabled = g15CheckBox.Checked;
@@ -679,11 +653,6 @@ namespace EVEMon.SettingsUI
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
             btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedIndex > 1;
-
-            // Relocator
-            relocationSecondsNumericUpDown.Enabled = enableAutomaticRelocationCheckBox.Checked;
-            relocationCheckEveryLabel.Enabled = enableAutomaticRelocationCheckBox.Checked;
-            relocationSecondsLabel.Enabled = enableAutomaticRelocationCheckBox.Checked;
 
             // Minimize to tray/task bar
             rbMinToTray.Enabled = !rbSystemTrayOptionsNever.Checked;

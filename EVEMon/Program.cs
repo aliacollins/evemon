@@ -51,11 +51,6 @@ namespace EVEMon
             // Initialization
             EveClient.Initialize();
             Settings.InitializeFromFile();
-            
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
-            {
-                Relocator.Initialize();
-            }
 
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested) return;

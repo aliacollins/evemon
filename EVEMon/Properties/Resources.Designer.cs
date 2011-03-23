@@ -515,13 +515,6 @@ namespace EVEMon.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Relocation {
-            get {
-                object obj = ResourceManager.GetObject("Relocation", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap Rename {
             get {
                 object obj = ResourceManager.GetObject("Rename", resourceCulture);

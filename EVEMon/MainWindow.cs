@@ -35,8 +35,6 @@ namespace EVEMon
         private Form m_trayPopup;
         private IgbServer m_igbServer;
 
-        private int m_relocatedMonitor = -1;
-
         private bool m_startMinimized;
 
         private bool m_isUpdating;
@@ -1605,7 +1603,6 @@ namespace EVEMon
         {
             standardToolbar.Visible = !standardToolbar.Visible;
             Settings.UI.MainWindow.ShowToolBar = standardToolbar.Visible;
-            relocatorSettingsToolStripSeparator.Visible = relocatorMenu.Visible;
         }
 
         /// <summary>
@@ -1635,76 +1632,6 @@ namespace EVEMon
         {
             menubarToolStripMenuItem.Enabled = standardToolbar.Visible;
             standardToolStripMenuItem.Enabled = mainMenuBar.Visible;
-        }
-
-        /// <summary>
-        /// Menu bar > Relocator.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void relocationMenu_DropDownOpening(object sender, EventArgs e)
-        {
-            int screenCount = Screen.AllScreens.Length;
-            var rootMenu = (ToolStripDropDownItem)sender;
-            rootMenu.DropDownItems.Clear();
-
-            // Add one menu entry per eve client
-            bool foundAny = false;
-            var eveWindows = Relocator.FindEveWindows();
-            foreach (IntPtr eveInstance in eveWindows)
-            {
-                // Skip if null ptr
-                if (eveInstance == IntPtr.Zero)
-                    continue;
-
-                // Relocator menu disabled when autorelocate is active or client is minimized
-                var instanceMenu = new ToolStripMenuItem(eveInstance.GetWindowDescription())
-                {
-                    Enabled = !eveInstance.IsMinimized() && !Relocator.AutoRelocationEnabled
-                };
-
-                var instanceCopy = eveInstance;
-
-                // Let's add submenus
-                for (int i = 0; i < screenCount; i++)
-                {
-                    var screenCopy = i;
-                    
-                    // Skip if client doesn't fit in screen
-                    if (eveInstance.GetClientRectInScreenCoords().Width > Screen.AllScreens[screenCopy].Bounds.Width)
-                        continue;
-
-                    var screenMenu = new ToolStripMenuItem(screenCopy.GetScreenDescription())
-                    {
-                        // When a client is relocated to a monitor we disable its selection option
-                        Enabled = !(eveInstance.IsRelocated() && m_relocatedMonitor == screenCopy)
-                    };
-
-                    // Handles the selection press
-                    screenMenu.Click += (senders, args) =>
-                    {
-                        Relocator.Relocate(instanceCopy, screenCopy);
-                        m_relocatedMonitor = screenCopy;
-                    };
-
-                    // Adds the submenu
-                    instanceMenu.DropDownItems.Add(screenMenu);
-                }
-
-                // Add to the root menu.
-                rootMenu.DropDownItems.Add(instanceMenu);
-                foundAny = true;
-            }
-
-            // Displays a "no window" message when there were no windows opened
-            if (!foundAny)
-            {
-                var menu = new ToolStripMenuItem("No EVE clients are running.")
-                {
-                    Enabled = false
-                };
-                rootMenu.DropDownItems.Add(menu);
-            }
         }
         #endregion
 
@@ -1806,10 +1733,6 @@ namespace EVEMon
 
                 character.Plans.AddTo(characterItem.DropDownItems, InitializePlanItem);
             }
-
-            // Create the Relocator sub-menu
-            if (Settings.UI.MainWindow.ShowRelocationMenu)
-                relocationMenu_DropDownOpening(relocatorTrayToolStripMenuItem, e);
         }
 
         /// <summary>
@@ -1863,14 +1786,6 @@ namespace EVEMon
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)
                             && (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                             || WindowState == FormWindowState.Minimized);
-
-            // Relocate window
-            relocatorMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-            relocatorTrayToolStripMenuItem.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-            relocatorTbMenu.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-
-            relocatorSettingsToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
-            relocatorTrayToolStripSeparator.Visible = Settings.UI.MainWindow.ShowRelocationMenu;
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;

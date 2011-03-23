@@ -21,41 +21,10 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverviewPortrait = true;
             ShowOverviewWallet = true;
             PutTrainingSkillsFirstOnOverview = true;
-            ShowRelocationMenu = true;
-            EnableAutomaticRelocation = false;
-            AutomaticRelocationInterval = (int)TimeSpan.FromSeconds(10).TotalSeconds;
         }
 
         [XmlElement("showCharacterInfoInTitleBar")]
         public bool ShowCharacterInfoInTitleBar
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("showRelocationMenu")]
-        public bool ShowRelocationMenu
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("enableAutomaticRelocation")]
-        public bool EnableAutomaticRelocation
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("automaticRelocationInterval")]
-        public int AutomaticRelocationInterval
-        {
-            get;
-            set;
-        }
-
-        [XmlElement("autoRelocateDefaultMonitor")]
-        public int AutoRelocateDefaultMonitor
         {
             get;
             set;

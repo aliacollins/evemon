@@ -33,8 +33,6 @@ namespace EVEMon
             this.trayIconToolStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.relocatorTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.relocatorTrayToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.testTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayTestCharacterNotificationTSMI = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +80,6 @@ namespace EVEMon
             this.showOwnedSkillbooksMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsOwnedOptionsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.relocatorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,9 +109,7 @@ namespace EVEMon
             this.toolsPlansToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsbManagePlans = new System.Windows.Forms.ToolStripButton();
             this.plansTbMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.plansRelocationToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.relocatorTbMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.relocatorSettingsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.plansToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.niAlertIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -138,39 +133,25 @@ namespace EVEMon
             this.trayIconToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToolStripMenuItem,
             this.plansStripSeparator,
-            this.relocatorTrayToolStripMenuItem,
-            this.relocatorTrayToolStripSeparator,
             this.testTrayToolStripMenuItem,
             this.testsToolStripSeperator,
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(125, 132);
+            this.trayIconToolStrip.Size = new System.Drawing.Size(114, 104);
             this.trayIconToolStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
             this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
             this.planToolStripMenuItem.Name = "planToolStripMenuItem";
-            this.planToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.planToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.planToolStripMenuItem.Text = "Plans";
             // 
             // plansStripSeparator
             // 
             this.plansStripSeparator.Name = "plansStripSeparator";
-            this.plansStripSeparator.Size = new System.Drawing.Size(121, 6);
-            // 
-            // relocatorTrayToolStripMenuItem
-            // 
-            this.relocatorTrayToolStripMenuItem.Name = "relocatorTrayToolStripMenuItem";
-            this.relocatorTrayToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.relocatorTrayToolStripMenuItem.Tag = "";
-            this.relocatorTrayToolStripMenuItem.Text = "Relocator";
-            // 
-            // relocatorTrayToolStripSeparator
-            // 
-            this.relocatorTrayToolStripSeparator.Name = "relocatorTrayToolStripSeparator";
-            this.relocatorTrayToolStripSeparator.Size = new System.Drawing.Size(121, 6);
+            this.plansStripSeparator.Size = new System.Drawing.Size(110, 6);
             // 
             // testTrayToolStripMenuItem
             // 
@@ -178,7 +159,7 @@ namespace EVEMon
             this.tesToolStripMenuItem,
             this.trayTestCharacterNotificationTSMI});
             this.testTrayToolStripMenuItem.Name = "testTrayToolStripMenuItem";
-            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.testTrayToolStripMenuItem.Text = "Test";
             this.testTrayToolStripMenuItem.Visible = false;
             // 
@@ -199,20 +180,20 @@ namespace EVEMon
             // testsToolStripSeperator
             // 
             this.testsToolStripSeperator.Name = "testsToolStripSeperator";
-            this.testsToolStripSeperator.Size = new System.Drawing.Size(121, 6);
+            this.testsToolStripSeperator.Size = new System.Drawing.Size(110, 6);
             this.testsToolStripSeperator.Visible = false;
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -270,7 +251,6 @@ namespace EVEMon
             this.editToolStripMenuItem,
             this.plansToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.relocatorMenu,
             this.helpToolStripMenuItem,
             this.testToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
@@ -561,13 +541,6 @@ namespace EVEMon
             this.optionsToolStripMenuItem.Text = "&Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // relocatorMenu
-            // 
-            this.relocatorMenu.Name = "relocatorMenu";
-            this.relocatorMenu.Size = new System.Drawing.Size(69, 20);
-            this.relocatorMenu.Text = "Relocator";
-            this.relocatorMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -690,9 +663,7 @@ namespace EVEMon
             this.toolsPlansToolStripSeparator,
             this.tsbManagePlans,
             this.plansTbMenu,
-            this.plansRelocationToolStripSeparator,
-            this.relocatorTbMenu,
-            this.relocatorSettingsToolStripSeparator,
+            this.plansToolStripSeparator,
             this.tsbOptions,
             this.tsbAbout});
             this.standardToolbar.Location = new System.Drawing.Point(0, 24);
@@ -825,25 +796,10 @@ namespace EVEMon
             this.plansTbMenu.Text = "Plans...";
             this.plansTbMenu.DropDownOpening += new System.EventHandler(this.tsdbPlans_DropDownOpening);
             // 
-            // plansRelocationToolStripSeparator
+            // plansToolStripSeparator
             // 
-            this.plansRelocationToolStripSeparator.Name = "plansRelocationToolStripSeparator";
-            this.plansRelocationToolStripSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // relocatorTbMenu
-            // 
-            this.relocatorTbMenu.Image = global::EVEMon.Properties.Resources.Relocation;
-            this.relocatorTbMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.relocatorTbMenu.Name = "relocatorTbMenu";
-            this.relocatorTbMenu.Size = new System.Drawing.Size(86, 22);
-            this.relocatorTbMenu.Text = "Relocator";
-            this.relocatorTbMenu.ToolTipText = "Relocate EVE windows";
-            this.relocatorTbMenu.DropDownOpening += new System.EventHandler(this.relocationMenu_DropDownOpening);
-            // 
-            // relocatorSettingsToolStripSeparator
-            // 
-            this.relocatorSettingsToolStripSeparator.Name = "relocatorSettingsToolStripSeparator";
-            this.relocatorSettingsToolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            this.plansToolStripSeparator.Name = "plansToolStripSeparator";
+            this.plansToolStripSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbOptions
             // 
@@ -1025,7 +981,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton tsbAbout;
         private System.Windows.Forms.ToolStripButton tsbManagePlans;
         private System.Windows.Forms.ToolStripDropDownButton plansTbMenu;
-        private System.Windows.Forms.ToolStripSeparator plansRelocationToolStripSeparator;
+        private System.Windows.Forms.ToolStripSeparator plansToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
         private TrayIcon trayIcon;
@@ -1040,19 +996,14 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem addAccountMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteCharacterMenu;
         private System.Windows.Forms.ToolStripSeparator fileManagerHideToolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem relocatorMenu;
         private System.Windows.Forms.ToolStripMenuItem hideCharacterMenu;
         private System.Windows.Forms.ToolStripButton addAccountTbMenu;
-        private System.Windows.Forms.ToolStripDropDownButton relocatorTbMenu;
-        private System.Windows.Forms.ToolStripSeparator relocatorSettingsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem loadFromFileToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem relocatorTrayToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator relocatorTrayToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem userVoiceMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;

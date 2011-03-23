@@ -210,6 +210,7 @@ namespace EVEMon
         }
         #endregion
 
+
         #region State Management
         /// <summary>
         /// Abstract base class for monitoring mouse state through the derived concrete classes
@@ -531,6 +532,7 @@ namespace EVEMon
         }
         #endregion
 
+
         #region Static Popup management methods
         public static void SetToolTipLocation(Form tooltipForm)
         {
@@ -588,6 +590,9 @@ namespace EVEMon
         }
 
         #endregion
+
+
+        #region Native Methods Class
 
         internal class NativeMethods
         {
@@ -697,6 +702,6 @@ namespace EVEMon
             }
         }
 
-
+        #endregion
     }
 }
