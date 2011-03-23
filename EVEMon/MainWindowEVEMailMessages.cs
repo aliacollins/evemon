@@ -404,7 +404,7 @@ namespace EVEMon
                     if (String.IsNullOrEmpty(eveMailMessage.MessageID.ToString()))
                         continue;
 
-                    var item = new ListViewItem(eveMailMessage.Sender.ToString(), listGroup);
+                    var item = new ListViewItem(eveMailMessage.Sender, listGroup);
                     item.UseItemStyleForSubItems = false;
                     item.Tag = eveMailMessage;
 
@@ -468,7 +468,7 @@ namespace EVEMon
             switch (column)
             {
                 case EveMailMessagesColumn.SenderName:
-                    item.Text = eveMailMessage.Sender.ToString();
+                    item.Text = eveMailMessage.Sender;
                     break;
 
                 case EveMailMessagesColumn.Title:

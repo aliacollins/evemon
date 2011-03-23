@@ -689,7 +689,7 @@ namespace EVEMon.Common
         /// Mail messages for a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        [Header("Mail Messages")]
+        [Header("EVE Mail Messages")]
         [Description("Mail messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         MailMessages,
@@ -698,7 +698,7 @@ namespace EVEMon.Common
         /// Notifications for a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        [Header("Notifications")]
+        [Header("EVE Notifications")]
         [Description("Notifications messages for a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
         Notifications,
