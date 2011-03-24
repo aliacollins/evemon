@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using System.Reflection;
-using System.Diagnostics;
-using System.Globalization;
+
 using EVEMon.Common;
-using EVEMon.Common.Controls;
+using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon

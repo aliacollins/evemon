@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common;
-using System.IO;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Controls;
-using System.Windows.Forms;
-using System.IO.Compression;
 using System.Drawing.Imaging;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Windows.Forms;
 
-namespace EVEMon
+using EVEMon.Common;
+using EVEMon.Common.Controls;
+using EVEMon.Common.SettingsObjects;
+
+namespace EVEMon.Controls
 {
     /// <summary>
     /// Saves a couple of repetitive tasks.

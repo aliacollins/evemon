@@ -9,6 +9,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon.SkillPlanner
 {

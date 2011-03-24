@@ -1,17 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
+
 using EVEMon.Common;
-using System.Globalization;
 
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace EVEMon
+namespace EVEMon.Controls
 {
     public partial class SkillQueueControl : Control
     {

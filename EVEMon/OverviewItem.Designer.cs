@@ -29,12 +29,12 @@ namespace EVEMon
         private void InitializeComponent()
         {
             this.pbCharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
-            this.lblSkillQueueTrainingTime = new EVEMon.OverviewLabel();
-            this.lblCompletionTime = new EVEMon.OverviewLabel();
-            this.lblCharName = new EVEMon.OverviewLabel();
-            this.lblSkillInTraining = new EVEMon.OverviewLabel();
-            this.lblRemainingTime = new EVEMon.OverviewLabel();
-            this.lblBalance = new EVEMon.OverviewLabel();
+            this.lblSkillQueueTrainingTime = new EVEMon.Controls.OverviewLabel();
+            this.lblCompletionTime = new EVEMon.Controls.OverviewLabel();
+            this.lblCharName = new EVEMon.Controls.OverviewLabel();
+            this.lblSkillInTraining = new EVEMon.Controls.OverviewLabel();
+            this.lblRemainingTime = new EVEMon.Controls.OverviewLabel();
+            this.lblBalance = new EVEMon.Controls.OverviewLabel();
             this.SuspendLayout();
             // 
             // pbCharacterPortrait
@@ -140,11 +140,11 @@ namespace EVEMon
         #endregion
 
         private EVEMon.Common.Controls.CharacterPortrait pbCharacterPortrait;
-        private EVEMon.OverviewLabel lblCharName;
-        private EVEMon.OverviewLabel lblSkillInTraining;
-        private EVEMon.OverviewLabel lblRemainingTime;
-        private EVEMon.OverviewLabel lblBalance;
-        private EVEMon.OverviewLabel lblCompletionTime;
-        private OverviewLabel lblSkillQueueTrainingTime;
+        private EVEMon.Controls.OverviewLabel lblCharName;
+        private EVEMon.Controls.OverviewLabel lblSkillInTraining;
+        private EVEMon.Controls.OverviewLabel lblRemainingTime;
+        private EVEMon.Controls.OverviewLabel lblBalance;
+        private EVEMon.Controls.OverviewLabel lblCompletionTime;
+        private EVEMon.Controls.OverviewLabel lblSkillQueueTrainingTime;
     }
 }

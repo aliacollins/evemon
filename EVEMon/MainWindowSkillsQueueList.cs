@@ -3,7 +3,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using EVEMon.Common;
+using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
 namespace EVEMon

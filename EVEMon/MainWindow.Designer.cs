@@ -118,7 +118,7 @@ namespace EVEMon
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Overview();
             this.notificationList = new EVEMon.NotificationList();
-            this.trayIcon = new EVEMon.TrayIcon(this.components);
+            this.trayIcon = new EVEMon.Controls.TrayIcon(this.components);
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -984,7 +984,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripSeparator plansToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
-        private TrayIcon trayIcon;
+        private EVEMon.Controls.TrayIcon trayIcon;
         private System.Windows.Forms.TabPage tpOverview;
         private Overview overview;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;

@@ -1,13 +1,10 @@
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
-namespace EVEMon
+namespace EVEMon.Controls
 {
     /// <summary>
     /// Wrapper class for the NotifyIcon component. Implements the NotifyIcon properties and events

@@ -316,7 +316,7 @@
     <Compile Include="OverviewItem.Designer.cs">
       <DependentUpon>OverviewItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="OverviewLabel.cs">
+    <Compile Include="Controls\OverviewLabel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataUpdateNotifyForm.cs">
@@ -338,7 +338,6 @@
     <Compile Include="ImplantControls\ImplantSetsWindow.Designer.cs">
       <DependentUpon>ImplantSetsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="InstanceManager.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -676,7 +675,6 @@
     <Compile Include="SkillPlanner\SkillExplorerWindow.Designer.cs">
       <DependentUpon>SkillExplorerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillQueueToolTip.cs" />
     <Compile Include="SkillPlanner\SkillSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -689,10 +687,10 @@
     <Compile Include="SkillPlanner\SkillTreeDisplay.Designer.cs">
       <DependentUpon>SkillTreeDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillQueueControl.cs">
+    <Compile Include="Controls\SkillQueueControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SkillQueueControl.designer.cs">
+    <Compile Include="Controls\SkillQueueControl.designer.cs">
       <DependentUpon>SkillQueueControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillsPieChart.cs">
@@ -713,10 +711,10 @@
     <Compile Include="TipWindow.Designer.cs">
       <DependentUpon>TipWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrayIcon.cs">
+    <Compile Include="Controls\TrayIcon.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TrayIcon.Designer.cs">
+    <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
     <Compile Include="TrayPopUpWindow.cs">
@@ -731,7 +729,7 @@
     <Compile Include="TrayTooltipWindow.Designer.cs">
       <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="UIHelper.cs" />
+    <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="UnhandledExceptionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -756,8 +754,6 @@
     <Compile Include="MainWindowSkillsQueueList.Designer.cs">
       <DependentUpon>MainWindowSkillsQueueList.cs</DependentUpon>
     </Compile>
-    <Compile Include="WindowsFactory.cs" />
-    <Compile Include="WinFormsExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="EVEMon.ico" />
@@ -958,7 +954,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>TipWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrayIcon.resx">
+    <EmbeddedResource Include="Controls\TrayIcon.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </EmbeddedResource>

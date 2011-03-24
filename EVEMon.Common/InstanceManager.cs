@@ -1,8 +1,7 @@
 using System;
 using System.Threading;
-using EVEMon.Common;
 
-namespace EVEMon
+namespace EVEMon.Common
 {
     public class InstanceManager
     {

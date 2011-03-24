@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WindowsFactory.cs" />
+    <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="AbbreviationFormat.cs" />
     <Compile Include="Account.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="FontFactory.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="EveMailMessagesCollection.cs" />
+    <Compile Include="InstanceManager.cs" />
     <Compile Include="ListViewExporter.cs" />
     <Compile Include="Notifications\NewEveMailMessageNotification.cs" />
     <Compile Include="Pair.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />
     <Compile Include="SettingsObjects\ResearchSettings.cs" />
+    <Compile Include="SkillQueueToolTip.cs" />
     <Compile Include="Threading\Dispatcher.cs" />
     <Compile Include="Threading\ActorTimer.cs" />
     <Compile Include="Threading\IActor.cs" />

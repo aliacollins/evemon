@@ -1,17 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using EVEMon.Common;
 using System.Drawing;
-using System.Globalization;
+using System.Windows.Forms;
 
-namespace EVEMon
+namespace EVEMon.Common
 {
     /// <summary>
     /// A wrapper around <see cref="ToolTip"/> for usage in skill queue control.
     /// </summary>
-    internal class SkillQueueToolTip
+    public class SkillQueueToolTip
     {
         ToolTip m_toolTip;
         Control m_owner;

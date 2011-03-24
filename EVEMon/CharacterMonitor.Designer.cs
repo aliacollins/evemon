@@ -97,7 +97,7 @@ namespace EVEMon
             this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.NotificationList();
-            this.skillQueueControl = new EVEMon.SkillQueueControl();
+            this.skillQueueControl = new EVEMon.Controls.SkillQueueControl();
             this.Header = new EVEMon.CharacterMonitorHeader();
             tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
@@ -950,7 +950,7 @@ namespace EVEMon
         private System.Windows.Forms.Label lblQueueRemaining;
         private System.Windows.Forms.Label lblQueueCompletionTime;
         private System.Windows.Forms.Panel skillQueueTimePanel;
-        private SkillQueueControl skillQueueControl;
+        private EVEMon.Controls.SkillQueueControl skillQueueControl;
         private System.Windows.Forms.ToolStripDropDownButton featuresMenu; 
         private System.Windows.Forms.ToolStripSeparator tsToggleSeparator; 
         private System.Windows.Forms.ContextMenuStrip toolstripContextMenu; 

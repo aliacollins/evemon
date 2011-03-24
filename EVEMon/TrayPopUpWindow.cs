@@ -1,18 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Drawing;
-using System.Text;
-using System.Globalization;
-using System.Windows.Forms;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
 using EVEMon.Common;
-using System.Text.RegularExpressions;
-using System.Collections;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 
 namespace EVEMon
 {

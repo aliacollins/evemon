@@ -2,10 +2,12 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace EVEMon
+namespace EVEMon.Controls
 {
     /// <summary>
-    /// A panel that does not display a gray text when disabled (and we need to disable them so that the button does not always lose focus and its nice "I'm hovered" color)
+    /// A panel that does not display a gray text when disabled
+    /// (and we need to disable them so that the button
+    /// does not always lose focus and its nice "I'm hovered" color)
     /// </summary>
     public sealed class OverviewLabel : Label
     {

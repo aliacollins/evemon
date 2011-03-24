@@ -1,17 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Collections;
 using System.Windows.Forms;
-using System.IO.Compression;
-using System.Xml.Serialization;
-using System.Collections.Generic;
 
 using EVEMon.Common;
-using EVEMon.Controls;
 using EVEMon.Common.Controls;
-using EVEMon.Common.SettingsObjects;
+using EVEMon.Controls;
 using SortOrder = EVEMon.Common.SortOrder;
 
 namespace EVEMon.SkillPlanner
