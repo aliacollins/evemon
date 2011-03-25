@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon.WindowsApi")]
-[assembly: AssemblyDescription("EVEMon. Revision Number: $WCREV$ Local Changes: $WCMODS?Yes:No$ Repository URL: $WCURL$")] 
+[assembly: AssemblyDescription("EVEMon. Revision Number: $WCREV$ Local Changes: $WCMODS?Yes:No$ Repository URL: $WCURL$/EVEMon.WindowsApi")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon.LogitechG15")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: $WCREV$ Local Changes: $WCMODS?Yes:No$ Repository URL: $WCURL$")] 
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: $WCREV$ Local Changes: $WCMODS?Yes:No$ Repository URL: $WCURL$/EVEMon.LogitechG15")] 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
