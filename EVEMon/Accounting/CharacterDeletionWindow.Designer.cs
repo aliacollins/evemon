@@ -40,7 +40,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::EVEMon.Properties.Resources.Warning32;
+            this.pictureBox1.Image = global::EVEMon.Common.Properties.Resources.Warning32;
             this.pictureBox1.Location = new System.Drawing.Point(13, 13);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);

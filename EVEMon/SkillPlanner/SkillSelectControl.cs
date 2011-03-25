@@ -168,18 +168,18 @@ namespace EVEMon.SkillPlanner
             ImageList def = new ImageList();
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
-            if (index > 0 && index < EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties.Count)
+            if (index > 0 && index < EVEMon.Common.Resources.Skill_Select.IconSettings.Default.Properties.Count)
             {
-                groupname = EVEMon.Resources.icons.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
+                groupname = EVEMon.Common.Resources.Skill_Select.IconSettings.Default.Properties["Group" + index].DefaultValue.ToString();
             }
             if ((groupname != null && !System.IO.File.Exists(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory,
                         index,
                         groupname)) ||
                 !System.IO.File.Exists(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory))))
             {
@@ -188,7 +188,7 @@ namespace EVEMon.SkillPlanner
             if (groupname != null)
             {
                 System.Resources.IResourceReader basic = new System.Resources.ResourceReader(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group0{0}Default.resources",
+                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory));
                 IDictionaryEnumerator basicx = basic.GetEnumerator();
@@ -198,7 +198,7 @@ namespace EVEMon.SkillPlanner
                 }
                 basic.Close();
                 basic = new System.Resources.ResourceReader(String.Format(
-                        "{1}Resources{0}icons{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
                         System.AppDomain.CurrentDomain.BaseDirectory,
                         index,

@@ -53,7 +53,7 @@
             // IconPictureBox
             // 
             this.IconPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IconPictureBox.Image = global::EVEMon.Properties.Resources.Error32;
+            this.IconPictureBox.Image = global::EVEMon.Common.Properties.Resources.Error32;
             this.IconPictureBox.Location = new System.Drawing.Point(13, 13);
             this.IconPictureBox.Name = "IconPictureBox";
             this.IconPictureBox.Size = new System.Drawing.Size(34, 34);

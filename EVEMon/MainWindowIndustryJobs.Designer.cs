@@ -102,8 +102,8 @@ namespace EVEMon
             this.industryExpPanelControl.ExpandDirection = EVEMon.Controls.Direction.Down;
             this.industryExpPanelControl.ExpandedOnStartup = false;
             this.industryExpPanelControl.HeaderHeight = 30;
-            this.industryExpPanelControl.ImageCollapse = global::EVEMon.Properties.Resources.Expand;
-            this.industryExpPanelControl.ImageExpand = global::EVEMon.Properties.Resources.Collapse;
+            this.industryExpPanelControl.ImageCollapse = global::EVEMon.Common.Properties.Resources.Expand;
+            this.industryExpPanelControl.ImageExpand = global::EVEMon.Common.Properties.Resources.Collapse;
             this.industryExpPanelControl.Location = new System.Drawing.Point(0, 334);
             this.industryExpPanelControl.Name = "industryExpPanelControl";
             this.industryExpPanelControl.Size = new System.Drawing.Size(454, 100);

@@ -90,7 +90,7 @@ namespace EVEMon.SkillPlanner
             // 
             // ObsoleteEntriesStatusLabel
             // 
-            this.ObsoleteEntriesStatusLabel.Image = global::EVEMon.Properties.Resources.Warning16;
+            this.ObsoleteEntriesStatusLabel.Image = global::EVEMon.Common.Properties.Resources.Warning16;
             this.ObsoleteEntriesStatusLabel.IsLink = true;
             this.ObsoleteEntriesStatusLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.ObsoleteEntriesStatusLabel.Name = "ObsoleteEntriesStatusLabel";
@@ -102,7 +102,7 @@ namespace EVEMon.SkillPlanner
             // SkillsStatusLabel
             // 
             this.SkillsStatusLabel.AutoToolTip = true;
-            this.SkillsStatusLabel.Image = global::EVEMon.Properties.Resources.Skill16;
+            this.SkillsStatusLabel.Image = global::EVEMon.Common.Properties.Resources.Skill16;
             this.SkillsStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SkillsStatusLabel.Name = "SkillsStatusLabel";
             this.SkillsStatusLabel.Size = new System.Drawing.Size(104, 17);
@@ -111,7 +111,7 @@ namespace EVEMon.SkillPlanner
             // 
             // TimeStatusLabel
             // 
-            this.TimeStatusLabel.Image = global::EVEMon.Properties.Resources.Clock;
+            this.TimeStatusLabel.Image = global::EVEMon.Common.Properties.Resources.Clock;
             this.TimeStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TimeStatusLabel.Name = "TimeStatusLabel";
             this.TimeStatusLabel.Size = new System.Drawing.Size(116, 17);
@@ -120,7 +120,7 @@ namespace EVEMon.SkillPlanner
             // 
             // CostStatusLabel
             // 
-            this.CostStatusLabel.Image = global::EVEMon.Properties.Resources.Money;
+            this.CostStatusLabel.Image = global::EVEMon.Common.Properties.Resources.Money;
             this.CostStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CostStatusLabel.Name = "CostStatusLabel";
             this.CostStatusLabel.Size = new System.Drawing.Size(98, 17);
@@ -149,7 +149,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsddbPlans
             // 
-            this.tsddbPlans.Image = global::EVEMon.Properties.Resources.Plan;
+            this.tsddbPlans.Image = global::EVEMon.Common.Properties.Resources.Plan;
             this.tsddbPlans.ImageTransparentColor = System.Drawing.Color.Black;
             this.tsddbPlans.Name = "tsddbPlans";
             this.tsddbPlans.Size = new System.Drawing.Size(93, 22);
@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
             this.tsddbSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiPlan,
             this.tsmiAfterPlanCharacter});
-            this.tsddbSave.Image = global::EVEMon.Properties.Resources.ExportArrow;
+            this.tsddbSave.Image = global::EVEMon.Common.Properties.Resources.ExportArrow;
             this.tsddbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddbSave.Name = "tsddbSave";
             this.tsddbSave.Size = new System.Drawing.Size(69, 22);
@@ -170,7 +170,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsmiPlan
             // 
-            this.tsmiPlan.Image = global::EVEMon.Properties.Resources.ExportPlan;
+            this.tsmiPlan.Image = global::EVEMon.Common.Properties.Resources.ExportPlan;
             this.tsmiPlan.Name = "tsmiPlan";
             this.tsmiPlan.Size = new System.Drawing.Size(180, 22);
             this.tsmiPlan.Text = "Plan";
@@ -178,7 +178,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsmiAfterPlanCharacter
             // 
-            this.tsmiAfterPlanCharacter.Image = global::EVEMon.Properties.Resources.ExportCharacter;
+            this.tsmiAfterPlanCharacter.Image = global::EVEMon.Common.Properties.Resources.ExportCharacter;
             this.tsmiAfterPlanCharacter.Name = "tsmiAfterPlanCharacter";
             this.tsmiAfterPlanCharacter.Size = new System.Drawing.Size(180, 22);
             this.tsmiAfterPlanCharacter.Text = "After Plan Character";
@@ -186,7 +186,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbDeletePlan
             // 
-            this.tsbDeletePlan.Image = global::EVEMon.Properties.Resources.DeletePlan;
+            this.tsbDeletePlan.Image = global::EVEMon.Common.Properties.Resources.DeletePlan;
             this.tsbDeletePlan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeletePlan.Name = "tsbDeletePlan";
             this.tsbDeletePlan.Size = new System.Drawing.Size(69, 22);
@@ -195,7 +195,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbPrintPlan
             // 
-            this.tsbPrintPlan.Image = global::EVEMon.Properties.Resources.Printer;
+            this.tsbPrintPlan.Image = global::EVEMon.Common.Properties.Resources.Printer;
             this.tsbPrintPlan.ImageTransparentColor = System.Drawing.Color.Black;
             this.tsbPrintPlan.Name = "tsbPrintPlan";
             this.tsbPrintPlan.Size = new System.Drawing.Size(61, 22);
@@ -205,7 +205,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbCopyForum
             // 
-            this.tsbCopyForum.Image = global::EVEMon.Properties.Resources.Copy;
+            this.tsbCopyForum.Image = global::EVEMon.Common.Properties.Resources.Copy;
             this.tsbCopyForum.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopyForum.Name = "tsbCopyForum";
             this.tsbCopyForum.Size = new System.Drawing.Size(124, 22);
@@ -219,7 +219,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbImplantCalculator
             // 
-            this.tsbImplantCalculator.Image = global::EVEMon.Properties.Resources.ImplantCalculator;
+            this.tsbImplantCalculator.Image = global::EVEMon.Common.Properties.Resources.ImplantCalculator;
             this.tsbImplantCalculator.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbImplantCalculator.Name = "tsbImplantCalculator";
             this.tsbImplantCalculator.Size = new System.Drawing.Size(103, 22);
@@ -233,7 +233,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbAttributesOptimization
             // 
-            this.tsbAttributesOptimization.Image = global::EVEMon.Properties.Resources.AttributeOptimize;
+            this.tsbAttributesOptimization.Image = global::EVEMon.Common.Properties.Resources.AttributeOptimize;
             this.tsbAttributesOptimization.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAttributesOptimization.Name = "tsbAttributesOptimization";
             this.tsbAttributesOptimization.Size = new System.Drawing.Size(128, 22);
@@ -242,7 +242,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsbEFTImport
             // 
-            this.tsbEFTImport.Image = global::EVEMon.Properties.Resources.Ship;
+            this.tsbEFTImport.Image = global::EVEMon.Common.Properties.Resources.Ship;
             this.tsbEFTImport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbEFTImport.Name = "tsbEFTImport";
             this.tsbEFTImport.Size = new System.Drawing.Size(85, 22);

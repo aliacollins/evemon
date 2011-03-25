@@ -267,7 +267,7 @@
             // 
             // keyPicture
             // 
-            this.keyPicture.Image = global::EVEMon.Properties.Resources.APIKeyWrong;
+            this.keyPicture.Image = global::EVEMon.Common.Properties.Resources.APIKeyWrong;
             this.keyPicture.Location = new System.Drawing.Point(3, 3);
             this.keyPicture.Name = "keyPicture";
             this.keyPicture.Size = new System.Drawing.Size(32, 32);

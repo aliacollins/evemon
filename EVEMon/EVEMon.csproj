@@ -378,26 +378,11 @@
     <EmbeddedResource Include="MainWindowResearchPoints.resx">
       <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="UpdateNotifyForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>UpdateNotifyForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\AssemblyInfo.template.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Resources\icons\Skill_Select\IconSettings.Designer.cs">
-      <DependentUpon>IconSettings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Schedule\CalendarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -756,9 +741,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="EVEMon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="AboutWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutWindow.cs</DependentUpon>
@@ -787,33 +769,6 @@
       <DependentUpon>PrintOptionsDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\icons\Skill_Select\Group0\Default.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group1\Dice_Spots.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group2\Slashes.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group3\Pie_Slices.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group4\Pentagons.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group5\Pentagrams.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group6\Black_Dice.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group7\Red_Dice.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\icons\Skill_Select\Group8\Bars.resources">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <EmbeddedResource Include="Schedule\CalendarControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CalendarControl.cs</DependentUpon>
@@ -976,99 +931,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\clock_16.png" />
-    <Content Include="Resources\gpl.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Resources\icons\Skill_Select\IconSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="SkillPlanner\BrowserClasses.cd" />
-    <None Include="Resources\icons\text_letter_omega.png" />
-    <None Include="Resources\icons\text_list_numbers.png" />
-    <None Include="Resources\icons\Warning.png" />
-    <None Include="Resources\icons\help.png" />
-    <None Include="Resources\icons\comment.png" />
-    <None Include="Resources\icons\Certificate-32.png" />
-    <None Include="Resources\icons\Certificate-64.png" />
-    <None Include="Resources\icons\Blue_Glass_Arrow.png" />
-    <None Include="Resources\icons\AccountManagement.png" />
-    <None Include="Resources\icons\AddAccount.png" />
-    <None Include="Resources\icons\APIKeyFull.png" />
-    <None Include="Resources\icons\APIKeyFull16.png" />
-    <None Include="Resources\icons\APIKeyLimited.png" />
-    <None Include="Resources\icons\APIKeyLimited16.png" />
-    <None Include="Resources\icons\APIKeyWrong.png" />
-    <None Include="Resources\icons\AttributeOptimize.png" />
-    <None Include="Resources\icons\Blueprint.png" />
-    <None Include="Resources\icons\Calendar.png" />
-    <None Include="Resources\icons\Certificate-24.png" />
-    <None Include="Resources\icons\Copy.png" />
-    <None Include="Resources\icons\cross-black.png" />
-    <None Include="Resources\icons\cross-gray.png" />
-    <None Include="Resources\icons\DeleteCharacter.png" />
-    <None Include="Resources\icons\EditAccount.png" />
-    <None Include="Resources\icons\EditChar.png" />
-    <None Include="Resources\icons\DeletePlan.png" />
-    <None Include="Resources\icons\DeleteAccount.png" />
-    <None Include="Resources\icons\Error16.png" />
-    <None Include="Resources\icons\EVEMon16.png" />
-    <None Include="Resources\icons\Exit.png" />
-    <None Include="Resources\icons\ExportCharacter.png" />
-    <None Include="Resources\icons\Forum.png" />
-    <None Include="Resources\icons\ExportArrow.png" />
-    <None Include="Resources\icons\ExportPlan.png" />
-    <None Include="Resources\icons\Folder.png" />
-    <None Include="Resources\icons\Grouping.png" />
-    <None Include="Resources\icons\HideCharacter.png" />
-    <None Include="Resources\icons\ImplantCalculator.png" />
-    <None Include="Resources\icons\ImportCharacter.png" />
-    <None Include="Resources\icons\Industry.png" />
-    <None Include="Resources\icons\Information16.png" />
-    <None Include="Resources\icons\JumpClone.png" />
-    <None Include="Resources\icons\LeadsTo.png" />
-    <None Include="Resources\icons\LoadPlan.png" />
-    <None Include="Resources\icons\LoadSettings.png" />
-    <None Include="Resources\icons\Magnifier.png" />
-    <None Include="Resources\icons\SchedulerAdd.png" />
-    <None Include="Resources\icons\SchedulerClear.png" />
-    <None Include="Resources\icons\SchedulerDelete.png" />
-    <None Include="Resources\icons\Reset.png" />
-    <None Include="Resources\icons\messagebox.png" />
-    <None Include="Resources\icons\Research.png" />
-    <None Include="Resources\icons\Window.png" />
-    <None Include="Resources\icons\Mineral.png" />
-    <None Include="Resources\icons\Money.png" />
-    <None Include="Resources\icons\Notification.png" />
-    <None Include="Resources\icons\OwnedBook.png" />
-    <None Include="Resources\icons\Online.png" />
-    <None Include="Resources\icons\PieChart.png" />
-    <None Include="Resources\icons\Plan.png" />
-    <None Include="Resources\icons\PlanCharacter.png" />
-    <None Include="Resources\icons\EditPlan.png" />
-    <None Include="Resources\icons\NewPlan.png" />
-    <None Include="Resources\icons\Problem.png" />
-    <None Include="Resources\icons\Printer.png" />
-    <None Include="Resources\icons\SaveSettings.png" />
-    <None Include="Resources\icons\Settings.png" />
-    <None Include="Resources\icons\Ship.png" />
-    <None Include="Resources\icons\Skill16.png" />
-    <None Include="Resources\icons\Skill32.png" />
-    <None Include="Resources\icons\Skills.png" />
-    <None Include="Resources\icons\SkillsQueue.png" />
-    <None Include="Resources\icons\Toggle.png" />
-    <None Include="Resources\icons\Transparent.png" />
-    <None Include="Resources\icons\TrayIcon.png" />
-    <None Include="Resources\icons\Warning-yellow.png" />
-    <None Include="Resources\icons\Warning16.png" />
-    <Content Include="Resources\icons\EVEMail.png" />
-    <Content Include="Resources\SkillTrained.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Accounting\AccountDeletionWindow.resx">
       <DependentUpon>AccountDeletionWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1139,8 +1005,6 @@
       <DependentUpon>NotificationList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\icons\Collapse_large.png" />
-    <None Include="Resources\icons\Expand_large.png" />
     <EmbeddedResource Include="SettingsUI\APISettingsForm.resx">
       <DependentUpon>APISettingsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1232,6 +1096,10 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="EVEMon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

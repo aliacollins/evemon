@@ -10,6 +10,8 @@ using EVEMon.Common.SettingsObjects;
 using EVEMon.Common;
 using EVEMon.Common.Attributes;
 
+using Properties = EVEMon.Common.Properties;
+
 namespace EVEMon.SettingsUI
 {
     public partial class UpdateSettingsControl : UserControl

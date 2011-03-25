@@ -38,7 +38,7 @@ namespace EVEMon.SkillPlanner
             this.buttonWholePlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonWholePlan.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonWholePlan.Image = global::EVEMon.Properties.Resources.BlueGlassArrow;
+            this.buttonWholePlan.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
             this.buttonWholePlan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonWholePlan.Location = new System.Drawing.Point(12, 67);
             this.buttonWholePlan.Name = "buttonWholePlan";
@@ -54,7 +54,7 @@ namespace EVEMon.SkillPlanner
             this.buttonRemappingPoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemappingPoints.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonRemappingPoints.Image = global::EVEMon.Properties.Resources.BlueGlassArrow;
+            this.buttonRemappingPoints.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
             this.buttonRemappingPoints.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonRemappingPoints.Location = new System.Drawing.Point(12, 13);
             this.buttonRemappingPoints.Name = "buttonRemappingPoints";
@@ -70,7 +70,7 @@ namespace EVEMon.SkillPlanner
             this.buttonCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCharacter.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCharacter.Image = global::EVEMon.Properties.Resources.BlueGlassArrow;
+            this.buttonCharacter.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
             this.buttonCharacter.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonCharacter.Location = new System.Drawing.Point(12, 121);
             this.buttonCharacter.Name = "buttonCharacter";

@@ -58,6 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
+      <DependentUpon>IconSettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
@@ -574,7 +579,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\StaticDataErrorForm.resx">
@@ -618,6 +623,33 @@
     <EmbeddedResource Include="Controls\MsgBoxCustom.resx">
       <DependentUpon>MsgBoxCustom.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Resources\Skill_Select\Group0\Default.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group1\Dice_Spots.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group2\Slashes.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group3\Pie_Slices.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group4\Pentagons.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group5\Pentagrams.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group6\Black_Dice.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group7\Red_Dice.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Skill_Select\Group8\Bars.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt" />
     <EmbeddedResource Include="Serialization\Datafiles\DatafileConstants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -646,6 +678,10 @@
     <None Include="Resources\eve-skills-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Skill_Select\IconSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\MD5Sums.txt" />
     <None Include="Resources\Overlay icons\Deadspace.png" />
     <None Include="Resources\Overlay icons\Faction.png" />
@@ -655,6 +691,102 @@
     <None Include="Resources\Overlay icons\T2.png" />
     <None Include="Resources\Overlay icons\T3.png" />
     <None Include="Resources\Overlay icons\T4.png" />
+    <None Include="Resources\Images\AccountManagement.png" />
+    <None Include="Resources\Images\AddAccount.png" />
+    <None Include="Resources\Images\APIKeyFull.png" />
+    <None Include="Resources\Images\APIKeyFull16.png" />
+    <None Include="Resources\Images\APIKeyLimited.png" />
+    <None Include="Resources\Images\APIKeyLimited16.png" />
+    <None Include="Resources\Images\APIKeyWrong.png" />
+    <None Include="Resources\Images\AttributeOptimize.png" />
+    <None Include="Resources\Images\Blue_Glass_Arrow.png" />
+    <None Include="Resources\Images\Blueprint.png" />
+    <None Include="Resources\Images\Calendar.png" />
+    <None Include="Resources\Images\Certificate-24.png" />
+    <None Include="Resources\Images\Certificate-32.png" />
+    <None Include="Resources\Images\Certificate-64.png" />
+    <None Include="Resources\Images\Collapse_large.png" />
+    <None Include="Resources\Images\comment.png" />
+    <None Include="Resources\Images\Copy.png" />
+    <None Include="Resources\Images\cross-black.png" />
+    <None Include="Resources\Images\cross-gray.png" />
+    <None Include="Resources\Images\DeleteAccount.png" />
+    <None Include="Resources\Images\DeleteCharacter.png" />
+    <None Include="Resources\Images\DeletePlan.png" />
+    <None Include="Resources\Images\EditAccount.png" />
+    <None Include="Resources\Images\EditChar.png" />
+    <None Include="Resources\Images\EditPlan.png" />
+    <None Include="Resources\Images\Error16.png" />
+    <None Include="Resources\Images\clock_16.png" />
+    <Content Include="Resources\Files\gpl.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\bee.jpg" />
+    <Content Include="Resources\Images\default_char_pic.png" />
+    <Content Include="Resources\Images\default_char_pic_old.png" />
+    <Content Include="Resources\Images\EVEMail.png" />
+    <None Include="Resources\Images\EVEMon16.png" />
+    <None Include="Resources\Images\Exit.png" />
+    <None Include="Resources\Images\Expand_large.png" />
+    <None Include="Resources\Images\ExportArrow.png" />
+    <None Include="Resources\Images\ExportCharacter.png" />
+    <None Include="Resources\Images\ExportPlan.png" />
+    <None Include="Resources\Images\Folder.png" />
+    <None Include="Resources\Images\Forum.png" />
+    <None Include="Resources\Images\Grouping.png" />
+    <None Include="Resources\Images\help.png" />
+    <None Include="Resources\Images\HideCharacter.png" />
+    <None Include="Resources\Images\ImplantCalculator.png" />
+    <None Include="Resources\Images\ImportCharacter.png" />
+    <None Include="Resources\Images\Industry.png" />
+    <None Include="Resources\Images\Information16.png" />
+    <None Include="Resources\Images\JumpClone.png" />
+    <None Include="Resources\Images\LeadsTo.png" />
+    <None Include="Resources\Images\LoadPlan.png" />
+    <None Include="Resources\Images\LoadSettings.png" />
+    <None Include="Resources\Images\Magnifier.png" />
+    <None Include="Resources\Images\messagebox.png" />
+    <None Include="Resources\Images\Mineral.png" />
+    <None Include="Resources\Images\Money.png" />
+    <None Include="Resources\Images\NewPlan.png" />
+    <None Include="Resources\Images\Notification.png" />
+    <None Include="Resources\Images\Online.png" />
+    <None Include="Resources\Images\OwnedBook.png" />
+    <None Include="Resources\Images\PieChart.png" />
+    <None Include="Resources\Images\Plan.png" />
+    <None Include="Resources\Images\PlanCharacter.png" />
+    <None Include="Resources\Images\Printer.png" />
+    <None Include="Resources\Images\Problem.png" />
+    <None Include="Resources\Images\Research.png" />
+    <None Include="Resources\Images\Reset.png" />
+    <None Include="Resources\Images\SaveSettings.png" />
+    <None Include="Resources\Images\SchedulerAdd.png" />
+    <None Include="Resources\Images\SchedulerClear.png" />
+    <None Include="Resources\Images\SchedulerDelete.png" />
+    <None Include="Resources\Images\Settings.png" />
+    <None Include="Resources\Images\Ship.png" />
+    <None Include="Resources\Images\Skill16.png" />
+    <None Include="Resources\Images\Skill32.png" />
+    <None Include="Resources\Images\Skills.png" />
+    <None Include="Resources\Images\SkillsQueue.png" />
+    <None Include="Resources\Images\text_letter_omega.png" />
+    <None Include="Resources\Images\text_list_numbers.png" />
+    <None Include="Resources\Images\Toggle.png" />
+    <None Include="Resources\Images\Transparent.png" />
+    <None Include="Resources\Images\TrayIcon.png" />
+    <None Include="Resources\Images\Warning-yellow.png" />
+    <None Include="Resources\Images\Warning.png" />
+    <None Include="Resources\Images\Warning16.png" />
+    <None Include="Resources\Images\Window.png" />
+    <Content Include="Resources\Images\EVEMonLogoBlue.png" />
+    <Content Include="Resources\Images\logo-100.png" />
+    <Content Include="Resources\Images\MoveDown.png" />
+    <Content Include="Resources\Images\MoveUp.png" />
+    <Content Include="Resources\Images\Rename.png" />
+    <Content Include="Resources\Images\Throbber.png" />
+    <Content Include="Resources\Audio\SkillTrained.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
   </ItemGroup>

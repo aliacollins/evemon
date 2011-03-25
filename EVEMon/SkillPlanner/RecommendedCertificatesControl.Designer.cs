@@ -164,7 +164,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tsmAddToPlan
             // 
-            this.tsmAddToPlan.Image = global::EVEMon.Properties.Resources.EditPlan;
+            this.tsmAddToPlan.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
             this.tsmAddToPlan.Name = "tsmAddToPlan";
             this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
             this.tsmAddToPlan.Text = "&Plan...";
@@ -172,7 +172,7 @@ namespace EVEMon.SkillPlanner
             // 
             // showInExplorerMenu
             // 
-            this.showInExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
+            this.showInExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
             this.showInExplorerMenu.Name = "showInExplorerMenu";
             this.showInExplorerMenu.Size = new System.Drawing.Size(194, 22);
             this.showInExplorerMenu.Text = "Show in Skill &Explorer...";

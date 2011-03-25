@@ -393,7 +393,7 @@ namespace EVEMon
             this.showOnlyCorpMenuItem,
             this.tsReadingPaneSeparator,
             this.readingPaneMenuItem});
-            this.preferencesMenu.Image = global::EVEMon.Properties.Resources.Settings;
+            this.preferencesMenu.Image = global::EVEMon.Common.Properties.Resources.Settings;
             this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.preferencesMenu.Name = "preferencesMenu";
             this.preferencesMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
@@ -558,7 +558,7 @@ namespace EVEMon
             // 
             this.skillsIcon.Checked = true;
             this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.Image = global::EVEMon.Properties.Resources.Skills;
+            this.skillsIcon.Image = global::EVEMon.Common.Properties.Resources.Skills;
             this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillsIcon.Name = "skillsIcon";
             this.skillsIcon.Size = new System.Drawing.Size(53, 22);
@@ -569,7 +569,7 @@ namespace EVEMon
             // 
             // skillQueueIcon
             // 
-            this.skillQueueIcon.Image = global::EVEMon.Properties.Resources.SkillsQueue;
+            this.skillQueueIcon.Image = global::EVEMon.Common.Properties.Resources.SkillsQueue;
             this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.skillQueueIcon.Name = "skillQueueIcon";
             this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
@@ -580,7 +580,7 @@ namespace EVEMon
             // 
             // ordersIcon
             // 
-            this.ordersIcon.Image = global::EVEMon.Properties.Resources.Money;
+            this.ordersIcon.Image = global::EVEMon.Common.Properties.Resources.Money;
             this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ordersIcon.Name = "ordersIcon";
             this.ordersIcon.Size = new System.Drawing.Size(64, 22);
@@ -591,7 +591,7 @@ namespace EVEMon
             // 
             // jobsIcon
             // 
-            this.jobsIcon.Image = global::EVEMon.Properties.Resources.Industry;
+            this.jobsIcon.Image = global::EVEMon.Common.Properties.Resources.Industry;
             this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.jobsIcon.Name = "jobsIcon";
             this.jobsIcon.Size = new System.Drawing.Size(70, 22);
@@ -602,7 +602,7 @@ namespace EVEMon
             // 
             // researchIcon
             // 
-            this.researchIcon.Image = global::EVEMon.Properties.Resources.Research;
+            this.researchIcon.Image = global::EVEMon.Common.Properties.Resources.Research;
             this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.researchIcon.Name = "researchIcon";
             this.researchIcon.Size = new System.Drawing.Size(74, 22);
@@ -613,7 +613,7 @@ namespace EVEMon
             // 
             // mailMessagesIcon
             // 
-            this.mailMessagesIcon.Image = global::EVEMon.Properties.Resources.EVEMail;
+            this.mailMessagesIcon.Image = global::EVEMon.Common.Properties.Resources.EVEMail;
             this.mailMessagesIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mailMessagesIcon.Name = "mailMessagesIcon";
             this.mailMessagesIcon.Size = new System.Drawing.Size(50, 22);
@@ -645,7 +645,7 @@ namespace EVEMon
             // 
             this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.featuresMenu.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
+            this.featuresMenu.Image = global::EVEMon.Common.Properties.Resources.APIKeyFull16;
             this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.featuresMenu.Name = "featuresMenu";
             this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
@@ -827,7 +827,7 @@ namespace EVEMon
             this.warningLabel.BackColor = System.Drawing.Color.Black;
             this.warningLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.warningLabel.ForeColor = System.Drawing.Color.White;
-            this.warningLabel.Image = global::EVEMon.Properties.Resources.APIKeyFull16;
+            this.warningLabel.Image = global::EVEMon.Common.Properties.Resources.APIKeyFull16;
             this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.warningLabel.Location = new System.Drawing.Point(1, 1);
             this.warningLabel.Name = "warningLabel";

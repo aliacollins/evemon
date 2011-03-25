@@ -4,10 +4,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
+using EVEMon.ApiErrorHandling;
 using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.ApiErrorHandling;
+
+using Properties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {

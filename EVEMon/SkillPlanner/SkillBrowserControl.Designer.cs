@@ -354,7 +354,7 @@ namespace EVEMon.SkillPlanner
             // showSkillExplorerMenu
             // 
             this.showSkillExplorerMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.showSkillExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
+            this.showSkillExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
             this.showSkillExplorerMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showSkillExplorerMenu.Name = "showSkillExplorerMenu";
             this.showSkillExplorerMenu.Size = new System.Drawing.Size(182, 22);
@@ -391,7 +391,7 @@ namespace EVEMon.SkillPlanner
             this.planTo3Menu,
             this.planTo4Menu,
             this.planTo5Menu});
-            this.planToMenu.Image = global::EVEMon.Properties.Resources.EditPlan;
+            this.planToMenu.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
             this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(82, 22);

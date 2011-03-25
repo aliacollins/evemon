@@ -9,6 +9,8 @@ using EVEMon.Common;
 using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
+using Properties = EVEMon.Common.Properties;
+
 namespace EVEMon
 {
     public partial class MainWindowSkillsList : UserControl

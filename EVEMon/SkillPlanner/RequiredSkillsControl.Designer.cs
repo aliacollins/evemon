@@ -133,7 +133,7 @@ namespace EVEMon.SkillPlanner
             this.level3ToolStripMenuItem,
             this.level4ToolStripMenuItem,
             this.level5ToolStripMenuItem});
-            this.planToMenu.Image = global::EVEMon.Properties.Resources.EditPlan;
+            this.planToMenu.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(194, 22);
             this.planToMenu.Text = "&Plan to";
@@ -194,7 +194,7 @@ namespace EVEMon.SkillPlanner
             // 
             // showInSkillExplorerMenu
             // 
-            this.showInSkillExplorerMenu.Image = global::EVEMon.Properties.Resources.LeadsTo;
+            this.showInSkillExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
             this.showInSkillExplorerMenu.Name = "showInSkillExplorerMenu";
             this.showInSkillExplorerMenu.Size = new System.Drawing.Size(194, 22);
             this.showInSkillExplorerMenu.Text = "Show in Skill &Explorer...";

@@ -35,7 +35,7 @@ Var MUI_TEMP
 !define MUI_UNICON "..\..\..\..\..\EVEMon\EVEMon.ico"
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\..\..\..\EVEMon\Resources\gpl.txt"
+!insertmacro MUI_PAGE_LICENSE "..\..\..\..\..\EVEMon.Common\Resources\Files\gpl.txt"
 !insertmacro MUI_PAGE_DIRECTORY
 
 # Start menu folder page configuration

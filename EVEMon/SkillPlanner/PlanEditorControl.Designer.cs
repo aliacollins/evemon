@@ -142,7 +142,7 @@ namespace EVEMon.SkillPlanner
             // 
             // miShowInSkillExplorer
             // 
-            this.miShowInSkillExplorer.Image = global::EVEMon.Properties.Resources.LeadsTo;
+            this.miShowInSkillExplorer.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
             this.miShowInSkillExplorer.Name = "miShowInSkillExplorer";
             this.miShowInSkillExplorer.Size = new System.Drawing.Size(250, 22);
             this.miShowInSkillExplorer.Text = "Show in Skill Explorer";
@@ -181,7 +181,7 @@ namespace EVEMon.SkillPlanner
             this.miChangeTo3,
             this.miChangeTo4,
             this.miChangeTo5});
-            this.miChangeLevel.Image = global::EVEMon.Properties.Resources.EditPlan;
+            this.miChangeLevel.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
             this.miChangeLevel.Name = "miChangeLevel";
             this.miChangeLevel.Size = new System.Drawing.Size(250, 22);
             this.miChangeLevel.Text = "Change Planned Level...";
@@ -336,7 +336,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.tsSortPriorities.CheckOnClick = true;
             this.tsSortPriorities.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsSortPriorities.Image = global::EVEMon.Properties.Resources.List;
+            this.tsSortPriorities.Image = global::EVEMon.Common.Properties.Resources.List;
             this.tsSortPriorities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsSortPriorities.Name = "tsSortPriorities";
             this.tsSortPriorities.Size = new System.Drawing.Size(38, 20);
@@ -377,7 +377,7 @@ namespace EVEMon.SkillPlanner
             // tsbColorKey
             // 
             this.tsbColorKey.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbColorKey.Image = global::EVEMon.Properties.Resources.Information16;
+            this.tsbColorKey.Image = global::EVEMon.Common.Properties.Resources.Information16;
             this.tsbColorKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbColorKey.Name = "tsbColorKey";
             this.tsbColorKey.Size = new System.Drawing.Size(38, 20);
@@ -636,7 +636,7 @@ namespace EVEMon.SkillPlanner
             // tsbSelectColumns
             // 
             this.tsbSelectColumns.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSelectColumns.Image = global::EVEMon.Properties.Resources.Settings;
+            this.tsbSelectColumns.Image = global::EVEMon.Common.Properties.Resources.Settings;
             this.tsbSelectColumns.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSelectColumns.Name = "tsbSelectColumns";
             this.tsbSelectColumns.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;

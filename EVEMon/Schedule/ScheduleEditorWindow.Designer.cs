@@ -78,7 +78,7 @@ namespace EVEMon.Schedule
             // 
             // tsbAddEntry
             // 
-            this.tsbAddEntry.Image = global::EVEMon.Properties.Resources.SchedulerAdd;
+            this.tsbAddEntry.Image = global::EVEMon.Common.Properties.Resources.SchedulerAdd;
             this.tsbAddEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddEntry.Name = "tsbAddEntry";
             this.tsbAddEntry.Size = new System.Drawing.Size(139, 22);
@@ -87,7 +87,7 @@ namespace EVEMon.Schedule
             // 
             // tsbDeleteEntry
             // 
-            this.tsbDeleteEntry.Image = global::EVEMon.Properties.Resources.SchedulerDelete;
+            this.tsbDeleteEntry.Image = global::EVEMon.Common.Properties.Resources.SchedulerDelete;
             this.tsbDeleteEntry.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteEntry.Name = "tsbDeleteEntry";
             this.tsbDeleteEntry.Size = new System.Drawing.Size(90, 22);
@@ -96,7 +96,7 @@ namespace EVEMon.Schedule
             // 
             // tsbClearExpired
             // 
-            this.tsbClearExpired.Image = global::EVEMon.Properties.Resources.SchedulerClear;
+            this.tsbClearExpired.Image = global::EVEMon.Common.Properties.Resources.SchedulerClear;
             this.tsbClearExpired.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClearExpired.Name = "tsbClearExpired";
             this.tsbClearExpired.Size = new System.Drawing.Size(133, 22);

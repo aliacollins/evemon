@@ -278,7 +278,7 @@
             // 
             // importCharacterMenu
             // 
-            this.importCharacterMenu.Image = global::EVEMon.Properties.Resources.ImportCharacter;
+            this.importCharacterMenu.Image = global::EVEMon.Common.Properties.Resources.ImportCharacter;
             this.importCharacterMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.importCharacterMenu.Name = "importCharacterMenu";
             this.importCharacterMenu.Size = new System.Drawing.Size(72, 22);
@@ -288,7 +288,7 @@
             // deleteCharacterMenu
             // 
             this.deleteCharacterMenu.Enabled = false;
-            this.deleteCharacterMenu.Image = global::EVEMon.Properties.Resources.DeleteCharacter;
+            this.deleteCharacterMenu.Image = global::EVEMon.Common.Properties.Resources.DeleteCharacter;
             this.deleteCharacterMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteCharacterMenu.Name = "deleteCharacterMenu";
             this.deleteCharacterMenu.Size = new System.Drawing.Size(69, 22);
@@ -298,7 +298,7 @@
             // editUriMenu
             // 
             this.editUriMenu.Enabled = false;
-            this.editUriMenu.Image = global::EVEMon.Properties.Resources.EditChar;
+            this.editUriMenu.Image = global::EVEMon.Common.Properties.Resources.EditChar;
             this.editUriMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.editUriMenu.Name = "editUriMenu";
             this.editUriMenu.Size = new System.Drawing.Size(74, 22);
@@ -403,7 +403,7 @@
             // 
             // addAccountMenu
             // 
-            this.addAccountMenu.Image = global::EVEMon.Properties.Resources.AddAccount;
+            this.addAccountMenu.Image = global::EVEMon.Common.Properties.Resources.AddAccount;
             this.addAccountMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addAccountMenu.Name = "addAccountMenu";
             this.addAccountMenu.Size = new System.Drawing.Size(58, 22);
@@ -413,7 +413,7 @@
             // deleteAccountMenu
             // 
             this.deleteAccountMenu.Enabled = false;
-            this.deleteAccountMenu.Image = global::EVEMon.Properties.Resources.DeleteAccount;
+            this.deleteAccountMenu.Image = global::EVEMon.Common.Properties.Resources.DeleteAccount;
             this.deleteAccountMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteAccountMenu.Name = "deleteAccountMenu";
             this.deleteAccountMenu.Size = new System.Drawing.Size(69, 22);
@@ -423,7 +423,7 @@
             // editAccountMenu
             // 
             this.editAccountMenu.Enabled = false;
-            this.editAccountMenu.Image = global::EVEMon.Properties.Resources.EditAccount;
+            this.editAccountMenu.Image = global::EVEMon.Common.Properties.Resources.EditAccount;
             this.editAccountMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.editAccountMenu.Name = "editAccountMenu";
             this.editAccountMenu.Size = new System.Drawing.Size(56, 22);

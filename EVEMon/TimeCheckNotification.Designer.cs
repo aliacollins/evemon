@@ -85,7 +85,7 @@ namespace EVEMon
             // 
             // uxWarningIconPictureBox
             // 
-            this.uxWarningIconPictureBox.Image = global::EVEMon.Properties.Resources.Warning32;
+            this.uxWarningIconPictureBox.Image = global::EVEMon.Common.Properties.Resources.Warning32;
             this.uxWarningIconPictureBox.Location = new System.Drawing.Point(12, 12);
             this.uxWarningIconPictureBox.Name = "uxWarningIconPictureBox";
             this.uxWarningIconPictureBox.Size = new System.Drawing.Size(32, 32);

@@ -193,7 +193,7 @@ namespace EVEMon
             // 
             // KnownProblemsPictureBox
             // 
-            this.KnownProblemsPictureBox.Image = global::EVEMon.Properties.Resources.Problem;
+            this.KnownProblemsPictureBox.Image = global::EVEMon.Common.Properties.Resources.Problem;
             this.KnownProblemsPictureBox.Location = new System.Drawing.Point(3, 3);
             this.KnownProblemsPictureBox.Name = "KnownProblemsPictureBox";
             this.KnownProblemsPictureBox.Size = new System.Drawing.Size(24, 28);
@@ -203,7 +203,7 @@ namespace EVEMon
             // 
             // LatestBinariesPictureBox
             // 
-            this.LatestBinariesPictureBox.Image = global::EVEMon.Properties.Resources.Settings;
+            this.LatestBinariesPictureBox.Image = global::EVEMon.Common.Properties.Resources.Settings;
             this.LatestBinariesPictureBox.Location = new System.Drawing.Point(3, 37);
             this.LatestBinariesPictureBox.Name = "LatestBinariesPictureBox";
             this.LatestBinariesPictureBox.Size = new System.Drawing.Size(24, 28);
@@ -213,7 +213,7 @@ namespace EVEMon
             // 
             // ReportPictureBox
             // 
-            this.ReportPictureBox.Image = global::EVEMon.Properties.Resources.Comment;
+            this.ReportPictureBox.Image = global::EVEMon.Common.Properties.Resources.Comment;
             this.ReportPictureBox.Location = new System.Drawing.Point(3, 71);
             this.ReportPictureBox.Name = "ReportPictureBox";
             this.ReportPictureBox.Size = new System.Drawing.Size(24, 30);

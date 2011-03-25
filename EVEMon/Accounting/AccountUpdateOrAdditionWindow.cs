@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Controls;
-using EVEMon.Common;
+
+using Properties = EVEMon.Common.Properties;
 
 namespace EVEMon.Accounting
 {
