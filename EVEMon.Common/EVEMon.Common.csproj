@@ -191,12 +191,6 @@
     </Compile>
     <Compile Include="APIMethod.cs" />
     <Compile Include="AutoShrink.cs" />
-    <Compile Include="Controls\BusyDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\BusyDialog.Designer.cs">
-      <DependentUpon>BusyDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Serialization\API\APICCPError.cs" />
     <Compile Include="Controls\CopySaveOptionsWindow.cs">
       <SubType>Form</SubType>
@@ -250,12 +244,6 @@
     <Compile Include="Controls\SplitContainerMinFixed.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\StaticDataErrorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\StaticDataErrorForm.Designer.cs">
-      <DependentUpon>StaticDataErrorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -266,10 +254,6 @@
     <Compile Include="WeakReferenceOfT.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\BusyDialog.resx">
-      <DependentUpon>BusyDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\EVEMonForm.resx">
       <DependentUpon>EVEMonForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -581,10 +565,6 @@
       <SubType>Designer</SubType>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\StaticDataErrorForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>StaticDataErrorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TreeView.resx">
       <DependentUpon>TreeView.cs</DependentUpon>
