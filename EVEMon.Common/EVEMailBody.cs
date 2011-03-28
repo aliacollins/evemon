@@ -11,8 +11,8 @@ namespace EVEMon.Common
             BodyText = src.MessageText.Normalize();
         }
 
-        public long MessageID { get; set; }
+        private long MessageID { get; set; }
 
-        public string BodyText { get; set; }
+        public string BodyText { get; private set; }
     }
 }

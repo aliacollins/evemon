@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using EVEMon.Common.Serialization.API;
 
@@ -7,24 +8,28 @@ namespace EVEMon.Common
 {
     public sealed class EveMailMessage
     {
+        private CCPCharacter m_ccpCharacter;
+
+
         #region Constructor
 
         /// <summary>
         /// Constructor from the API.
         /// </summary>
         /// <param name="src"></param>
-        internal EveMailMessage(Character character, SerializableMailMessagesListItem src)
+        internal EveMailMessage(CCPCharacter ccpCharacter, SerializableMailMessagesListItem src)
         {
-            Character = character;
-            State = (src.SenderID != character.CharacterID ?
+            m_ccpCharacter = ccpCharacter;
+            State = (src.SenderID != ccpCharacter.CharacterID ?
                         EVEMailState.Inbox : EVEMailState.SentItem);
             MessageID = src.MessageID;
-            Sender = GetIDToName(src.SenderID.ToString());
+            Sender = src.ToListID.Any(x=> x == src.SenderID.ToString()) ?
+                        GetMailingListIDToName(src.SenderID.ToString()) : GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Title = src.Title;
             ToCorpOrAlliance = GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDToName(src.ToCharacterIDs);
-            ToListID = GetIDToName(src.ToListID);
+            ToListID = GetMailingListIDToName(src.ToListID);
         }
 
         #endregion
@@ -32,27 +37,25 @@ namespace EVEMon.Common
 
         #region Properties
 
-        private Character Character { get; set; }
+        public EVEMailState State { get; private set; }
 
-        public EVEMailState State { get; set; }
+        public long MessageID { get; private set; }
 
-        public long MessageID { get; set; }
+        public string Sender { get; private set; }
 
-        public string Sender { get; set; }
+        public DateTime SentDate { get; private set; }
 
-        public DateTime SentDate { get; set; }
+        public string Title { get; private set; }
 
-        public string Title { get; set; }
+        public string ToCorpOrAlliance { get; private set; }
 
-        public string ToCorpOrAlliance { get; set; }
+        public List<string> ToCharacters { get; private set; }
 
-        public List<string> ToCharacters { get; set; }
+        public List<string> ToListID { get; private set; }
 
-        public List<string> ToListID { get; set; }
+        public EveMailBody EVEMailBody { get; private set; }
 
-        public EveMailBody EVEMailBody { get; set; }
-        
-        public bool MailBodyDownloaded { get; set; }
+        public bool MailBodyDownloaded { get; private set; }
 
         #endregion
 
@@ -66,9 +69,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetIDToName(string senderId)
         {
+            // If there is no ID to query return an empty string
             if (String.IsNullOrEmpty(senderId))
                 return String.Empty;
 
+            // If it's a zero ID return "Unknown"
             if (senderId == "0")
                 return "Unknown";
 
@@ -76,7 +81,7 @@ namespace EVEMon.Common
             list.Add(senderId);
 
             List<string> name = GetIDToName(list);
-            return (name.Count == 0 ? "Unknown" : name[0]);
+            return name[0];
         }
 
         /// <summary>
@@ -86,6 +91,7 @@ namespace EVEMon.Common
         /// <returns>A list of character names</returns>
         private List<string> GetIDToName(List<string> src)
         {
+            // If there are no IDs to query return a list with an empty entry
             if (src.Count == 0)
             {
                 src.Add(String.Empty);
@@ -93,53 +99,96 @@ namespace EVEMon.Common
             }
 
             List<string> listOfNames = new List<string>();
-            List<string> listOfIDsToGet = new List<string>();
+            List<string> listOfIDsToQuery = new List<string>();
 
             foreach (var id in src)
             {
-                if (id == Character.CharacterID.ToString())
+                if (id == m_ccpCharacter.CharacterID.ToString())
                 {
-                    listOfNames.Add(Character.Name);
+                    listOfNames.Add(m_ccpCharacter.Name);
                 }
                 else
                 {
-                    listOfIDsToGet.Add(id);
+                    listOfIDsToQuery.Add(id);
                 }
             }
 
-            if (listOfIDsToGet.Count > 0)
-                listOfNames.AddRange(EveIDtoName.GetIDsToNames(listOfIDsToGet));
-            
+            // We have IDs to query
+            if (listOfIDsToQuery.Count > 0)
+                listOfNames.AddRange(EveIDtoName.GetIDsToNames(listOfIDsToQuery));
+
             return listOfNames;
         }
+        
+        private  string GetMailingListIDToName(string mailingListID)
+        {
+            // If there is no ID to query return an empty string
+            if (String.IsNullOrEmpty(mailingListID))
+                return String.Empty;
 
+            // If it's a zero ID return "Unknown"
+            if (mailingListID == "0")
+                return "Unknown";
+
+            List<string> list = new List<string>();
+            list.Add(mailingListID);
+            List<string> name = GetMailingListIDToName(list);
+            return name[0];
+        }
+
+        private List<string> GetMailingListIDToName(List<string> mailingListIDs)
+        {
+            // If there are no IDs to query return a list with an empty entry
+            if (mailingListIDs.Count == 0)
+            {
+                mailingListIDs.Add(String.Empty);
+                return mailingListIDs;
+            }
+
+            List<string> listOfNames = new List<string>();
+
+            foreach (var list in m_ccpCharacter.EVEMailingLists)
+            {
+                var name = mailingListIDs.FirstOrDefault(x => x == list.ID.ToString());
+                if (name != null)
+                {
+                    listOfNames.Add(list.Name);
+                }
+                else
+                {
+                    listOfNames.Add("Unknown");
+                }
+            }
+
+            // In case the list returned from the API is empty, add an "Unknown" entry
+            if (listOfNames.Count == 0)
+                listOfNames.Add("Unknown");
+
+            return listOfNames;
+        }
         /// <summary>
         /// Gets the EVE mail body.
         /// </summary>
         public void GetMailBody()
         {
             var result = EveClient.APIProviders.CurrentProvider.QueryMailBody(
-                                                                    Character.Identity.Account.UserID,
-                                                                    Character.Identity.Account.APIKey,
-                                                                    Character.CharacterID,
+                                                                    m_ccpCharacter.Identity.Account.UserID,
+                                                                    m_ccpCharacter.Identity.Account.APIKey,
+                                                                    m_ccpCharacter.CharacterID,
                                                                     MessageID);
 
             OnEVEMailBodyDownloaded(result);
         }
 
         /// <summary>
-        /// Called when the EVE mail body has been downloaded.
+        /// Processes the queried EVE mail message mail body.
         /// </summary>
         /// <param name="result">The result.</param>
         private void OnEVEMailBodyDownloaded(APIResult<SerializableAPIMailBodies> result)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null)
-                return;
-
             // Notify an error occured
-            if (ccpCharacter.ShouldNotifyError(result, APIMethods.MailBodies))
-                EveClient.Notifications.NotifyEVEMailBodiesError(ccpCharacter, result);
+            if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.MailBodies))
+                EveClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error
             if (result.HasError)
@@ -149,7 +198,7 @@ namespace EVEMon.Common
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
             MailBodyDownloaded = true;
         }
- 
-        #endregion 
+
+        #endregion
     }
 }

@@ -9,12 +9,12 @@ namespace EVEMon.Common.Serialization.Settings
     {
         public SerializableEveIDToName()
         {
-            Entities = new List<SerializableCharacterNameListItem>();
+            Entities = new List<SerializableEveIDToNameListItem>();
         }
 
         [XmlArray("entities")]
         [XmlArrayItem("entity")]
-        public List<SerializableCharacterNameListItem> Entities
+        public List<SerializableEveIDToNameListItem> Entities
         {
             get;
             set;

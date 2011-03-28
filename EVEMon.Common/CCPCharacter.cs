@@ -25,12 +25,14 @@ namespace EVEMon.Common
         private readonly IndustryJobCollection m_industryJobs;
         private readonly ResearchPointCollection m_researchPoints;
         private readonly EveMailMessagesCollection m_eveMailMessages;
+        private readonly EveMailingListsCollection m_eveMailingLists;
         private readonly SkillQueue m_queue;
         private readonly QueryMonitorCollection m_monitors;
 
         private List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
         private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
+        private DateTime m_nextUpdate = DateTime.MinValue;
 
         private bool m_charOrdersUpdated;
         private bool m_corpOrdersUpdated;
@@ -57,6 +59,7 @@ namespace EVEMon.Common
             m_industryJobs = new IndustryJobCollection(this);
             m_researchPoints = new ResearchPointCollection(this);
             m_eveMailMessages = new EveMailMessagesCollection(this);
+            m_eveMailingLists = new EveMailingListsCollection(this);
             m_monitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
@@ -180,6 +183,14 @@ namespace EVEMon.Common
         public EveMailMessagesCollection EVEMailMessages
         {
             get { return m_eveMailMessages; }
+        }
+
+        /// <summary>
+        /// Gets the collection of EVE mail messages.
+        /// </summary>
+        public EveMailingListsCollection EVEMailingLists
+        {
+            get { return m_eveMailingLists; }
         }
 
         /// <summary>
@@ -533,6 +544,12 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // Each time we inport a new batch of EVE mail messages,
+            // query the mailing lists (if it's time to)
+            // so that we are always up to date
+            if (DateTime.UtcNow > m_nextUpdate)
+                QueryAPIMailingList();
+
             // Import the data
             m_eveMailMessages.Import(result.Result.Messages);
 
@@ -542,6 +559,37 @@ namespace EVEMon.Common
 
             // Fires the event regarding EVE mail messages update.
             EveClient.OnCharacterEVEMailMessagesUpdated(this);
+        }
+
+        /// <summary>
+        /// Queries the API mailing list.
+        /// </summary>
+        private void QueryAPIMailingList()
+        {
+            var result = EveClient.APIProviders.CurrentProvider.QueryMailingLists(Identity.Account.UserID,
+                                                                                  Identity.Account.APIKey,
+                                                                                  CharacterID);
+            OnQueryAPIMailingListUpdated(result);
+        }
+
+        /// <summary>
+        /// Processes the queried character's EVE mailing lists.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private void OnQueryAPIMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
+        {
+            m_nextUpdate = result.CachedUntil;
+
+            if (result.HasError)
+            {
+                EveClient.Notifications.NotifyMailingListsError(this, result);
+                return;
+            }
+
+            EveClient.Notifications.InvalidateCharacterAPIError(this);
+
+            // Deserialize the result
+            EVEMailingLists.Import(result.Result.MailingLists);
         }
 
         #endregion

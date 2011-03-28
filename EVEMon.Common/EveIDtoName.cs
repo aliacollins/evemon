@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -22,7 +24,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the owner name from its ID.
         /// </summary>
-        /// <param name="IDs">The I ds.</param>
+        /// <param name="IDs">The IDs.</param>
         /// <returns></returns>
         internal static List<string> GetIDsToNames(List<string> IDs)
         {
@@ -37,11 +39,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Ensures the cache file load.
+        /// Ensures the cache file is loaded.
         /// </summary>
         private static void EnsureCacheFileLoad()
         {
-
             if (!File.Exists(s_file) || s_loaded)
                 return;
 
@@ -58,6 +59,10 @@ namespace EVEMon.Common
 
             // Deserialize the file
             cache = Util.DeserializeXML<SerializableEveIDToName>(s_file);
+
+            // Reset the cache if anything went wrong
+            if (cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x=> x.Name == String.Empty))
+                cache = null;
 
             if (cache == null)
             {
@@ -88,7 +93,7 @@ namespace EVEMon.Common
             }
 
             if (!s_listOfIDsToQuery.IsEmpty())
-                QueryAPI();
+                QueryAPICharacterName();
         }
 
         /// <summary>
@@ -112,20 +117,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Queries the API.
+        /// Queries the API Character Name.
         /// </summary>
-        private static void QueryAPI()
+        private static void QueryAPICharacterName()
         {
             string IDs = string.Join(",", s_listOfIDsToQuery);
             var result = EveClient.APIProviders.CurrentProvider.QueryCharacterName(IDs);
-            OnQueryUpdated(result);
+            OnQueryAPICharacterNameUpdated(result);
         }
 
         /// <summary>
         /// Called when the query updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnQueryUpdated(APIResult<SerializableAPICharacterName> result)
+        private static void OnQueryAPICharacterNameUpdated(APIResult<SerializableAPICharacterName> result)
         {
             if (result.HasError)
             {
@@ -142,17 +147,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports the data from the query result.
         /// </summary>
-        /// <param name="entities">The characters.</param>
+        /// <param name="entities">The entities.</param>
         private static void Import(List<SerializableCharacterNameListItem> entities)
         {
             foreach (var entity in entities)
             {
+                // Add the name to the list of names
                 s_listOfNames.Add(entity.Name);
 
                 // Add the query result to our cache list if it doesn't exist already
                 if (!s_cacheList.ContainsKey(entity.ID.ToString()))
                     s_cacheList.Add(entity.ID.ToString(), entity.Name);
             }
+
+            // In case the list is empty, add an "Unknown" entry
+            if (s_listOfNames.Count == 0)
+                s_listOfNames.Add("Unknown");
         }
 
         /// <summary>
@@ -179,11 +189,11 @@ namespace EVEMon.Common
         private static SerializableEveIDToName Export()
         {
             var serial = new SerializableEveIDToName();
-            var entitiesList = new List<SerializableCharacterNameListItem>();
+            var entitiesList = new List<SerializableEveIDToNameListItem>();
 
             foreach (var item in s_cacheList)
             {
-                entitiesList.Add(new SerializableCharacterNameListItem()
+                entitiesList.Add(new SerializableEveIDToNameListItem()
                                 {
                                     ID = long.Parse(item.Key),
                                     Name = item.Value,

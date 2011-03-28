@@ -641,6 +641,17 @@ namespace EVEMon.Common
         CharacterList,
 
         /// <summary>
+        /// The account status. Used to retreive account create and expiration date.
+        /// Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        [Header("Account Status")]
+        [Description("The status of an Account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        AccountStatus,
+
+        /// <summary>
         /// A character sheet (bio, skills, implants, etc).
         /// </summary>
         [Header("Character Sheet")]
@@ -655,17 +666,6 @@ namespace EVEMon.Common
         [Description("A character's skill queue.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         SkillQueue,
-
-        /// <summary>
-        /// The account status. Used to retreive account create and expiration date.
-        /// Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        [Header("Account Status")]
-        [Description("The status of an Account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        AccountStatus,
 
         /// <summary>
         /// The personal issued market orders of a character. Only downloaded when a full API key is provided.
@@ -724,6 +724,18 @@ namespace EVEMon.Common
         CharacterAccountBalance,
 
         /// <summary>
+        /// The body text of an EVE mail message. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        MailBodies,
+
+        /// <summary>
+        /// The character mailing lists. Used to convert mailing list IDs to Names. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        MailingLists,
+
+        /// <summary>
         /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
@@ -742,12 +754,6 @@ namespace EVEMon.Common
         /// </summary>
         [FullKey]
         ConquerableStationList,
-
-        /// <summary>
-        /// The body text of an EVE mail message. Only downloaded when a full API key is provided.
-        /// </summary>
-        [FullKey]
-        MailBodies,
 
         /// <summary>
         /// The character name. Used to convert IDs to Names. Only downloaded when a full API key is provided.

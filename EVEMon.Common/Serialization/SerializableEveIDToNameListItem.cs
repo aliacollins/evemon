@@ -1,17 +1,17 @@
 ﻿using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization
 {
-    public sealed class SerializableMailingListsListItem
+    public sealed class SerializableEveIDToNameListItem
     {
-        [XmlAttribute("listID")]
+        [XmlAttribute("ID")]
         public long ID
         {
             get;
             set;
         }
 
-        [XmlAttribute("displayName")]
+        [XmlAttribute("name")]
         public string Name
         {
             get;

@@ -395,6 +395,22 @@ namespace EVEMon.Common
             };
             Notify(notification);
         }
+
+        /// <summary>
+        /// Notifies a mailing lists error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyMailingListsError(CCPCharacter character, APIResult<SerializableAPIMailingLists> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the mailing lists.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
         #endregion
 
 
