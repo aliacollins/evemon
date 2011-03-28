@@ -66,7 +66,6 @@
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
-    <Compile Include="AbbreviationFormat.cs" />
     <Compile Include="Account.cs" />
     <Compile Include="BuyOrder.cs" />
     <Compile Include="Datafile.cs" />

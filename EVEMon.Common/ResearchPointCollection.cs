@@ -25,6 +25,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableResearchPoint> src)
         {
             m_items.Clear();
+
             foreach (var srcResearchPoint in src)
             {
                 m_items.Add(new ResearchPoint(srcResearchPoint));

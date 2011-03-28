@@ -519,6 +519,10 @@ namespace EVEMon.Common
             EveClient.OnCharacterResearchPointsChanged(this);
         }
 
+        /// <summary>
+        /// Processes the queried character's EVE mail messages.
+        /// </summary>
+        /// <param name="result"></param>
         private void OnCharacterEVEMailMessagesUpdated(APIResult<SerializableAPIMailMessages> result)
         {
             // Notify an error occured

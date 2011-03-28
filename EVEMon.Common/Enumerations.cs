@@ -495,6 +495,15 @@ namespace EVEMon.Common
         Male =1
     }
 
+    /// <summary>
+    /// The abbreviation format status of a market orders value.
+    /// </summary>
+    public enum AbbreviationFormat
+    {
+        AbbreviationWords,
+        AbbreviationSymbols
+    }
+
     #endregion
 
 

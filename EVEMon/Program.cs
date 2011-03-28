@@ -31,10 +31,10 @@ namespace EVEMon
             if (!s_isDebugBuild && !IsInstanceUnique) return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.ThreadException += Application_ThreadException;
+            Application.ApplicationExit += ApplicationExitCallback;
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-            Application.ApplicationExit += new EventHandler(ApplicationExitCallback);
 
             // Find our files
             EveClient.InitializeFileSystemPaths();
@@ -54,7 +54,8 @@ namespace EVEMon
             Settings.InitializeFromFile();
 
             // Did something requested an exit before we entered Run() ?
-            if (s_exitRequested) return;
+            if (s_exitRequested)
+                return;
 
             // Fires the main window
             try
@@ -63,7 +64,7 @@ namespace EVEMon
                 Application.Run(new MainWindow(startMinimized));
                 EveClient.Trace("Main loop - done");
             }
-            // Save before we quit.
+            // Save before we quit
             finally
             {
                 Settings.SaveImmediate();
@@ -118,9 +119,8 @@ namespace EVEMon
 
                 String appId = "EVEMon";
                 if (s_isDebugBuild)
-                {
                     appId = String.Format(CultureConstants.DefaultCulture, "{0}-DEBUG", appId);
-                }
+
                 Windows7.SetProcessAppID(appId);
             }
             catch (Exception ex)

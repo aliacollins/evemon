@@ -18,11 +18,11 @@ namespace EVEMon.Common
 
         private static void LogException(Exception e, string header)
         {
-            Trace.WriteLine("");
+            Trace.WriteLine(String.Empty);
             EveClient.Trace(header);
             Trace.Indent();
             Trace.WriteLine(e.ToString());
-            Trace.WriteLine("");
+            Trace.WriteLine(String.Empty);
             Trace.Unindent();
         }
     }
