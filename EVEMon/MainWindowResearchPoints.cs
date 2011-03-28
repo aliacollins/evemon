@@ -485,6 +485,7 @@ namespace EVEMon
                 return;
 
             m_columns[e.ColumnIndex].Width = lvResearchPoints.Columns[e.ColumnIndex].Width;
+            m_columnsChanged = true;
         }
 
         /// <summary>
