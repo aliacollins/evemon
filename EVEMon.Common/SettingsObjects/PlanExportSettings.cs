@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.SettingsObjects
@@ -109,7 +108,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns></returns>
         public PlanExportSettings Clone()
         {
-            return (PlanExportSettings)this.MemberwiseClone();
+            return (PlanExportSettings)MemberwiseClone();
         }
     }
 

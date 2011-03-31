@@ -17,13 +17,13 @@ namespace EVEMon.Printing
     {
         PlanExportSettings m_pto;
 
-        public PrintOptionsDialog(PlanExportSettings pto,PrintDocument doc)
+        public PrintOptionsDialog(PlanExportSettings pto, PrintDocument doc)
         {
             InitializeComponent();
 
-            int index ;
+            int index;
             string curPrinter = doc.PrinterSettings.PrinterName;
-            
+
             m_pto = pto;
 
             foreach (String printer in PrinterSettings.InstalledPrinters)
@@ -35,7 +35,7 @@ namespace EVEMon.Printing
                     comboPrinters.SelectedIndex = index;
             }
 
-            // if this dialog is cancelled, we dont want the name of the printer to have changed
+            // If this dialog is cancelled, we dont want the name of the printer to have changed
             doc.PrinterSettings.PrinterName = curPrinter;
 
             EntryFinishDate = pto.EntryFinishDate;
@@ -47,7 +47,6 @@ namespace EVEMon.Printing
             FooterDate = pto.FooterDate;
             FooterTotalTime = pto.FooterTotalTime;
             IncludeHeader = pto.IncludeHeader;
-            
         }
 
         public String PrinterName

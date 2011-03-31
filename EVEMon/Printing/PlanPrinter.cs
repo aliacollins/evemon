@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common;
-using EVEMon.Common.SettingsObjects;
 using System.Drawing;
-using EVEMon.Printing;
 using System.Drawing.Printing;
 using System.Windows.Forms;
+
+using EVEMon.Common;
+using EVEMon.Common.SettingsObjects;
+using EVEMon.Printing;
 
 namespace EVEMon.SkillPlanner
 {
@@ -29,16 +28,6 @@ namespace EVEMon.SkillPlanner
         private TimeSpan m_trainingTime = TimeSpan.Zero;
 
         /// <summary>
-        /// Prints the given plan.
-        /// </summary>
-        /// <param name="plan"></param>
-        public static void Print(Plan plan)
-        {
-            var printer = new PlanPrinter(plan);
-            printer.PrintPlan();
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="plan">The plan.</param>
@@ -56,14 +45,23 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Prints the given plan.
+        /// </summary>
+        /// <param name="plan"></param>
+        public static void Print(Plan plan)
+        {
+            var printer = new PlanPrinter(plan);
+            printer.PrintPlan();
+        }
+
+        /// <summary>
         /// Main method
         /// </summary>
         private void PrintPlan()
         {
-
             PrintDocument doc = new PrintDocument();
             doc.DocumentName = String.Format(CultureConstants.DefaultCulture, "Skill Plan for {0} ({1})", m_character.Name, m_plan.Name);
-            doc.PrintPage += new PrintPageEventHandler(doc_PrintPage);
+            doc.PrintPage += doc_PrintPage;
 
             //Display the options
             using (PrintOptionsDialog prdlg = new PrintOptionsDialog(m_settings, doc))
@@ -109,7 +107,8 @@ namespace EVEMon.SkillPlanner
             }
 
             bool resetTotal = true;
-            if (m_entryToPrint == 0) m_currentDate = m_printStartTime;
+            if (m_entryToPrint == 0) 
+                m_currentDate = m_printStartTime;
 
             // Scroll through entries
             foreach (var pe in m_plan)
@@ -126,6 +125,7 @@ namespace EVEMon.SkillPlanner
                 // Update training time
                 if (resetTotal)
                     m_trainingTime = TimeSpan.Zero;
+
                 m_trainingTime += pe.TrainingTime;
                 resetTotal = false;
 
@@ -147,6 +147,7 @@ namespace EVEMon.SkillPlanner
 
             // Reached the end of the plan
             e.HasMorePages = false;
+            m_entryToPrint = 0;
 
             // Print footer
             PrintPageFooter(g, index);
