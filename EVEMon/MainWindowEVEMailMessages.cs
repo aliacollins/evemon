@@ -66,7 +66,7 @@ namespace EVEMon
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        internal Character Character
+        public Character Character
         {
             get;
             set;
@@ -75,7 +75,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        internal string TextFilter
+        public string TextFilter
         {
             get { return m_textFilter; }
             set
@@ -89,7 +89,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        internal EVEMailMessagesGrouping Grouping
+        public EVEMailMessagesGrouping Grouping
         {
             get { return m_grouping; }
             set
@@ -103,7 +103,7 @@ namespace EVEMon
         /// <summary>
         /// 
         /// </summary>
-        internal ReadingPanePositioning PanePosition
+        public ReadingPanePositioning PanePosition
         {
             get { return m_panePosition; }
             set
