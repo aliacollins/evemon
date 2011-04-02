@@ -41,7 +41,7 @@ namespace EVEMon
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.eveMailReadingPane = new EVEMon.EveMailReadingPane();
+            this.eveMailReadingPane = new EVEMon.ReadingPane();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
             this.splitContainerMailMessages.Panel2.SuspendLayout();
@@ -182,6 +182,6 @@ namespace EVEMon
         private EVEMon.Common.Controls.SplitContainerMinFixed splitContainerMailMessages;
         protected internal System.Windows.Forms.ListView lvMailMessages;
         private System.Windows.Forms.Timer timer;
-        private EveMailReadingPane eveMailReadingPane;
+        private ReadingPane eveMailReadingPane;
     }
 }

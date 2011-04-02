@@ -60,12 +60,21 @@
   <ItemGroup>
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
+    <Compile Include="IEveMessage.cs" />
+    <Compile Include="EveNotification.cs" />
+    <Compile Include="EveNotificationsCollection.cs" />
+    <Compile Include="EveNotificationsComparer.cs" />
+    <Compile Include="EveNotificationText.cs" />
+    <Compile Include="Notifications\NewEveNotificationNotification.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
+    <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
+    <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
+    <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />

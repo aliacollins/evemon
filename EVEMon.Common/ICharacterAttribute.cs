@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-namespace EVEMon.Common
+﻿namespace EVEMon.Common
 {
     public interface ICharacterAttribute
     {
         int Base { get; }
         int ImplantBonus { get; }
         int EffectiveValue { get; }
-
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :

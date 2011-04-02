@@ -1,30 +1,30 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Performs a comparison between two <see cref="EveMailMessage"/> types.
+    /// Performs a comparison between two <see cref="EveNotification"/> types.
     /// </summary>
-    public sealed class EveMailMessagesComparer : Comparer<EveMailMessage>
+    public sealed class EveNotificationsComparer : Comparer<EveNotification>
     {
-        private EveMailMessagesColumn m_column;
+        private EveNotificationsColumn m_column;
         private bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveMailMessagesComparer"/> class.
+        /// Initializes a new instance of the <see cref="EveNotificationsComparer"/> class.
         /// </summary>
         /// <param name="column">The industry job column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public EveMailMessagesComparer(EveMailMessagesColumn column, bool isAscending)
+        public EveNotificationsComparer(EveNotificationsColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="EveMailMessage" /> type and returns a value
+        /// Performs a comparison of two objects of the <see cref="EveNotification" /> type and returns a value
         /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
@@ -37,7 +37,7 @@ namespace EVEMon.Common
         /// Greater than zero
         /// <paramref name="x"/> is greater than <paramref name="y"/>.
         /// </returns>
-        public override int Compare(EveMailMessage x, EveMailMessage y)
+        public override int Compare(EveNotification x, EveNotification y)
         {
             if (m_isAscending)
                 return CompareCore(x, y);
@@ -46,7 +46,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="EveMailMessage" /> type and returns a value
+        /// Performs a comparison of two objects of the <see cref="EveNotification"/> type and returns a value
         /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
@@ -59,28 +59,19 @@ namespace EVEMon.Common
         /// Greater than zero
         /// <paramref name="x"/> is greater than <paramref name="y"/>.
         /// </returns>
-        private int CompareCore(EveMailMessage x, EveMailMessage y)
+        private int CompareCore(EveNotification x, EveNotification y)
         {
             switch (m_column)
             {
-                case EveMailMessagesColumn.SenderName:
+                case EveNotificationsColumn.SenderName:
                     return x.Sender.CompareTo(y.Sender);
 
-                case EveMailMessagesColumn.Title:
-                    return x.Title.CompareTo(y.Title);
+                case EveNotificationsColumn.Type:
+                    return x.Type.CompareTo(y.Type);
 
-                case EveMailMessagesColumn.SentDate:
+                case EveNotificationsColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
 
-                case EveMailMessagesColumn.ToCharacterID:
-                    return x.ToCharacters[0].CompareTo(y.ToCharacters[0]);
-
-                case EveMailMessagesColumn.ToCorpOrAllianceID:
-                    return x.ToCorpOrAlliance.CompareTo(y.ToCorpOrAlliance);
-
-                case EveMailMessagesColumn.ToListID:
-                    return x.ToMailingLists[0].CompareTo(y.ToMailingLists[0]);
-                
                 default:
                     return 0;
             }

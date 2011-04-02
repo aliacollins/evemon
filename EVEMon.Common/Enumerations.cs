@@ -724,16 +724,22 @@ namespace EVEMon.Common
         CharacterAccountBalance,
 
         /// <summary>
+        /// The character mailing lists. Used to convert mailing list IDs to Names. Only downloaded when a full API key is provided.
+        /// </summary>
+        [FullKey]
+        MailingLists,
+
+        /// <summary>
         /// The body text of an EVE mail message. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         MailBodies,
 
         /// <summary>
-        /// The character mailing lists. Used to convert mailing list IDs to Names. Only downloaded when a full API key is provided.
+        /// The body text of an EVE notification. Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
-        MailingLists,
+        NotificationTexts,
 
         /// <summary>
         /// The corporation issued market orders of a character. Only downloaded when a full API key is provided.

@@ -24,7 +24,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="IndustryJob" /> type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+        /// Performs a comparison of two objects of the <see cref="IndustryJob" /> type and returns a value
+        /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
         /// <param name="y">The second object to compare.</param>
@@ -45,7 +46,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="IndustryJob" /> type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+        /// Performs a comparison of two objects of the <see cref="IndustryJob" /> type and returns a value
+        /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
         /// <param name="y">The second object to compare.</param>

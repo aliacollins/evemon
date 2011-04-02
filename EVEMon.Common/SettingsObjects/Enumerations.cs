@@ -145,7 +145,7 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Group by installed location (Desc)")]
         LocationDesc = 11
     }
-    
+
     #endregion
 
 
@@ -162,26 +162,60 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Group by mail state (Desc)")]
         StateDesc = 1,
         [Header("Group by received date")]
-        SendDate = 2,
+        SentDate = 2,
         [Header("Group by received date (Desc)")]
-        SendDateDesc = 3,
+        SentDateDesc = 3,
+        [Header("Group by sender")]
+        Sender = 4,
+        [Header("Group by sender (Desc)")]
+        SenderDesc = 5,
         [Header("Group by subject")]
-        Subject = 4,
+        Subject = 6,
         [Header("Group by subject (Desc)")]
-        SubjectDesc = 5,
+        SubjectDesc = 7,
         [Header("Group by recipient")]
-        Recipient = 6,
+        Recipient = 8,
         [Header("Group by recipient (Desc)")]
-        RecipientDesc = 7,
+        RecipientDesc = 9,
         [Header("Group by Corp or Alliance")]
-        CorpOrAlliance = 8,
+        CorpOrAlliance = 10,
         [Header("Group by Corp or Alliance (Desc)")]
-        CorpOrAllianceDesc = 9,
+        CorpOrAllianceDesc = 11,
         [Header("Group by mailing list")]
-        MailingList = 10,
+        MailingList = 12,
         [Header("Group by mailing list (Desc)")]
-        MailingListDesc = 11
+        MailingListDesc = 13
     }
+
+    #endregion
+
+
+    #region EVENotificationsSettings
+
+    /// <summary>
+    /// Enumeration for the EVE notifications to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum EVENotificationsGrouping
+    {
+        [Header("Group by type")]
+        Type = 0,
+        [Header("Group by type (Desc)")]
+        TypeDesc = 1,
+        [Header("Group by received date")]
+        SentDate = 2,
+        [Header("Group by received date (Desc)")]
+        SentDateDesc = 3,
+        [Header("Group by sender")]
+        Sender = 4,
+        [Header("Group by sender (Desc)")]
+        SenderDesc = 5,
+    }
+
+    #endregion
+
+
+    #region ReadingPanePositioning
 
     /// <summary>
     /// Enumeration for the reading pane position of the EVE mail bodies.
@@ -217,6 +251,8 @@ namespace EVEMon.Common.SettingsObjects
         ResearchPoints,
         [Header("Mail")]
         MailMessages,
+        [Header("Notification")]
+        Notifications,
     }
 
     #endregion

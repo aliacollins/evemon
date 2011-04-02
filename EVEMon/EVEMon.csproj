@@ -193,20 +193,23 @@
     <Compile Include="Controls\NoFlickerPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="EveMailMessagesColumnSelectWindow.cs">
+    <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EveMailReadingPane.cs">
+    <Compile Include="ReadingPane.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EveMailReadingPane.Designer.cs">
-      <DependentUpon>EveMailReadingPane.cs</DependentUpon>
+    <Compile Include="ReadingPane.Designer.cs">
+      <DependentUpon>ReadingPane.cs</DependentUpon>
     </Compile>
     <Compile Include="EveMailWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EveMailWindow.Designer.cs">
       <DependentUpon>EveMailWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EveNotificationsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="IndustryJobsColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -216,6 +219,12 @@
     </Compile>
     <Compile Include="IndustryJobsWindow.Designer.cs">
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindowEveNotifications.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainWindowEveNotifications.Designer.cs">
+      <DependentUpon>MainWindowEveNotifications.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindowIndustryJobs.cs">
       <SubType>UserControl</SubType>
@@ -362,8 +371,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EveMailReadingPane.resx">
-      <DependentUpon>EveMailReadingPane.cs</DependentUpon>
+    <EmbeddedResource Include="ReadingPane.resx">
+      <DependentUpon>ReadingPane.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EveMailWindow.resx">
       <DependentUpon>EveMailWindow.cs</DependentUpon>
@@ -374,6 +384,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindowEveMailMessages.resx">
       <DependentUpon>MainWindowEveMailMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainWindowEveNotifications.resx">
+      <DependentUpon>MainWindowEveNotifications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindowResearchPoints.resx">
       <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>

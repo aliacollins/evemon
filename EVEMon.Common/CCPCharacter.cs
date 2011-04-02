@@ -21,18 +21,20 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly MarketOrderCollection m_marketOrders;
         private readonly IndustryJobCollection m_industryJobs;
         private readonly ResearchPointCollection m_researchPoints;
         private readonly EveMailMessagesCollection m_eveMailMessages;
         private readonly EveMailingListsCollection m_eveMailingLists;
+        private readonly EveNotificationsCollection m_eveNotifications;
         private readonly SkillQueue m_queue;
         private readonly QueryMonitorCollection m_monitors;
 
         private List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
         private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
-        private DateTime m_nextUpdate = DateTime.MinValue;
+        private DateTime m_mailingListsNextUpdate = DateTime.MinValue;
 
         private bool m_charOrdersUpdated;
         private bool m_corpOrdersUpdated;
@@ -60,6 +62,7 @@ namespace EVEMon.Common
             m_researchPoints = new ResearchPointCollection(this);
             m_eveMailMessages = new EveMailMessagesCollection(this);
             m_eveMailingLists = new EveMailingListsCollection(this);
+            m_eveNotifications = new EveNotificationsCollection(this);
             m_monitors = new QueryMonitorCollection();
 
             // Initializes the query monitors 
@@ -94,6 +97,10 @@ namespace EVEMon.Common
             m_charEVEMailMessagesMonitor = new CharacterQueryMonitor<SerializableAPIMailMessages>(this, APIMethods.MailMessages);
             m_charEVEMailMessagesMonitor.Updated += OnCharacterEVEMailMessagesUpdated;
             m_monitors.Add(m_charEVEMailMessagesMonitor);
+
+            m_charEVENotificationsMonitor = new CharacterQueryMonitor<SerializableAPINotifications>(this, APIMethods.Notifications);
+            m_charEVENotificationsMonitor.Updated += OnCharacterEVENotificationsUpdated;
+            m_monitors.Add(m_charEVENotificationsMonitor);
 
             // We enable only the monitors that require a limited api key,
             // full api key required monitors will be enabled individually
@@ -194,7 +201,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when the character is currently actively training, false otherwise
+        /// Gets the collection of EVE notifications.
+        /// </summary>
+        public EveNotificationsCollection EVENotifications
+        {
+            get { return m_eveNotifications; }
+        }
+
+        /// <summary>
+        /// Gets true when the character is currently actively training, false otherwise.
         /// </summary>
         public override bool IsTraining
         {
@@ -547,7 +562,7 @@ namespace EVEMon.Common
             // Each time we inport a new batch of EVE mail messages,
             // query the mailing lists (if it's time to)
             // so that we are always up to date
-            if (DateTime.UtcNow > m_nextUpdate)
+            if (DateTime.UtcNow > m_mailingListsNextUpdate)
                 QueryAPIMailingList();
 
             // Import the data
@@ -555,7 +570,7 @@ namespace EVEMon.Common
 
             // Notify on new messages
             if (m_eveMailMessages.NewMessages != 0)
-                EveClient.Notifications.NotifyNewEveMailMessage(this, m_eveMailMessages.NewMessages);
+                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
 
             // Fires the event regarding EVE mail messages update.
             EveClient.OnCharacterEVEMailMessagesUpdated(this);
@@ -578,7 +593,7 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnQueryAPIMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
         {
-            m_nextUpdate = result.CachedUntil;
+            m_mailingListsNextUpdate = result.CachedUntil;
 
             if (result.HasError)
             {
@@ -592,6 +607,30 @@ namespace EVEMon.Common
             EVEMailingLists.Import(result.Result.MailingLists);
         }
 
+        /// <summary>
+        /// Processes the queried character's EVE notifications.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private void OnCharacterEVENotificationsUpdated(APIResult<SerializableAPINotifications> result)
+        {
+            // Notify an error occured
+            if (ShouldNotifyError(result, APIMethods.Notifications))
+                EveClient.Notifications.NotifyEVENotificationsError(this, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_eveNotifications.Import(result.Result.Notifications);
+
+            // Notify on new messages
+            if (m_eveNotifications.NewNotifications != 0)
+                EveClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
+
+            // Fires the event regarding EVE mail messages update.
+            EveClient.OnCharacterEVENotificationsUpdated(this);
+        }
         #endregion
 
 

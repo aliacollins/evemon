@@ -480,6 +480,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailMessagesUpdated;
 
         /// <summary>
+        /// Occurs when the notifications of a character have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationsUpdated;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -685,6 +690,18 @@ namespace EVEMon.Common
             Settings.Save();
             if (CharacterEVEMailMessagesUpdated != null)
                 CharacterEVEMailMessagesUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="character"></param>
+        internal static void OnCharacterEVENotificationsUpdated(Character character)
+        {
+            Trace("EveClient.OnCharacterEVENotificationsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterEVENotificationsUpdated != null)
+                CharacterEVENotificationsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

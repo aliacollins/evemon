@@ -12,15 +12,8 @@ namespace EVEMon.Common.Serialization.API
             set;
         }
 
-        [XmlElement("messageText")]
-        public XmlCDataSection MessageTextXml
-        {
-            get { return new XmlDocument().CreateCDataSection(MessageText); }
-            set { MessageText = value.Data; }
-        }
-
-        [XmlIgnore]
-        public string MessageText
+        [XmlText]
+        public string NotificationText
         {
             get;
             set;

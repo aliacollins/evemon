@@ -60,20 +60,20 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("eveNotificationsGroupBy")]
+        public EVENotificationsGrouping EVENotificationsGroupBy
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Clones this serialization object.
         /// </summary>
         /// <returns></returns>
         internal CharacterUISettings Clone()
         {
-            var clone = new CharacterUISettings();
-            clone.CollapsedGroups.AddRange(CollapsedGroups);
-            clone.FullAPIKeyEnabledPages.AddRange(FullAPIKeyEnabledPages);
-            clone.SelectedPage = SelectedPage;
-            clone.OrdersGroupBy = OrdersGroupBy;
-            clone.JobsGroupBy = JobsGroupBy;
-            clone.EVEMailMessagesGroupBy = EVEMailMessagesGroupBy;
-            return clone;
+            return (CharacterUISettings)MemberwiseClone();
         }
     }
 }

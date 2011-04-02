@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class EveMailReadingPane
+    partial class ReadingPane
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,20 +30,20 @@ namespace EVEMon
         {
             this.previewPanePanel = new System.Windows.Forms.Panel();
             this.wbMailBody = new System.Windows.Forms.WebBrowser();
-            this.flPanelMailHeader = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblMailHeader = new System.Windows.Forms.Label();
+            this.flPanelHeader = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblMessageHeader = new System.Windows.Forms.Label();
             this.lblSender = new System.Windows.Forms.Label();
             this.lblSendDate = new System.Windows.Forms.Label();
             this.lblRecipient = new System.Windows.Forms.Label();
             this.previewPanePanel.SuspendLayout();
-            this.flPanelMailHeader.SuspendLayout();
+            this.flPanelHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // previewPanePanel
             // 
             this.previewPanePanel.BackColor = System.Drawing.SystemColors.Control;
             this.previewPanePanel.Controls.Add(this.wbMailBody);
-            this.previewPanePanel.Controls.Add(this.flPanelMailHeader);
+            this.previewPanePanel.Controls.Add(this.flPanelHeader);
             this.previewPanePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewPanePanel.Location = new System.Drawing.Point(0, 0);
             this.previewPanePanel.Name = "previewPanePanel";
@@ -55,39 +55,39 @@ namespace EVEMon
             // 
             this.wbMailBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wbMailBody.IsWebBrowserContextMenuEnabled = false;
-            this.wbMailBody.Location = new System.Drawing.Point(5, 80);
+            this.wbMailBody.Location = new System.Drawing.Point(5, 70);
             this.wbMailBody.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbMailBody.Name = "wbMailBody";
-            this.wbMailBody.Size = new System.Drawing.Size(257, 75);
+            this.wbMailBody.Size = new System.Drawing.Size(257, 85);
             this.wbMailBody.TabIndex = 2;
             this.wbMailBody.WebBrowserShortcutsEnabled = false;
             this.wbMailBody.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.wbMailBody_Navigating);
             // 
-            // flPanelMailHeader
+            // flPanelHeader
             // 
-            this.flPanelMailHeader.BackColor = System.Drawing.SystemColors.Window;
-            this.flPanelMailHeader.Controls.Add(this.lblMailHeader);
-            this.flPanelMailHeader.Controls.Add(this.lblSender);
-            this.flPanelMailHeader.Controls.Add(this.lblSendDate);
-            this.flPanelMailHeader.Controls.Add(this.lblRecipient);
-            this.flPanelMailHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flPanelMailHeader.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flPanelMailHeader.Location = new System.Drawing.Point(5, 5);
-            this.flPanelMailHeader.MinimumSize = new System.Drawing.Size(0, 75);
-            this.flPanelMailHeader.Name = "flPanelMailHeader";
-            this.flPanelMailHeader.Size = new System.Drawing.Size(257, 75);
-            this.flPanelMailHeader.TabIndex = 1;
-            this.flPanelMailHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.flPanelMailHeader_Paint);
+            this.flPanelHeader.BackColor = System.Drawing.SystemColors.Window;
+            this.flPanelHeader.Controls.Add(this.lblMessageHeader);
+            this.flPanelHeader.Controls.Add(this.lblSender);
+            this.flPanelHeader.Controls.Add(this.lblSendDate);
+            this.flPanelHeader.Controls.Add(this.lblRecipient);
+            this.flPanelHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flPanelHeader.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flPanelHeader.Location = new System.Drawing.Point(5, 5);
+            this.flPanelHeader.MinimumSize = new System.Drawing.Size(0, 65);
+            this.flPanelHeader.Name = "flPanelHeader";
+            this.flPanelHeader.Size = new System.Drawing.Size(257, 65);
+            this.flPanelHeader.TabIndex = 1;
+            this.flPanelHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.flPanelHeader_Paint);
             // 
-            // lblMailHeader
+            // lblMessageHeader
             // 
-            this.lblMailHeader.AutoSize = true;
-            this.lblMailHeader.Location = new System.Drawing.Point(3, 0);
-            this.lblMailHeader.Name = "lblMailHeader";
-            this.lblMailHeader.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.lblMailHeader.Size = new System.Drawing.Size(64, 19);
-            this.lblMailHeader.TabIndex = 4;
-            this.lblMailHeader.Text = "Mail Header";
+            this.lblMessageHeader.AutoSize = true;
+            this.lblMessageHeader.Location = new System.Drawing.Point(3, 0);
+            this.lblMessageHeader.Name = "lblMessageHeader";
+            this.lblMessageHeader.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.lblMessageHeader.Size = new System.Drawing.Size(88, 19);
+            this.lblMessageHeader.TabIndex = 4;
+            this.lblMessageHeader.Text = "Message Header";
             // 
             // lblSender
             // 
@@ -117,16 +117,16 @@ namespace EVEMon
             this.lblRecipient.TabIndex = 3;
             this.lblRecipient.Text = "To:";
             // 
-            // EveMailReadingPane
+            // ReadingPane
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.previewPanePanel);
-            this.Name = "EveMailReadingPane";
+            this.Name = "ReadingPane";
             this.Size = new System.Drawing.Size(267, 160);
             this.previewPanePanel.ResumeLayout(false);
-            this.flPanelMailHeader.ResumeLayout(false);
-            this.flPanelMailHeader.PerformLayout();
+            this.flPanelHeader.ResumeLayout(false);
+            this.flPanelHeader.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -134,12 +134,12 @@ namespace EVEMon
         #endregion
 
         private System.Windows.Forms.Panel previewPanePanel;
-        private System.Windows.Forms.Label lblMailHeader;
+        private System.Windows.Forms.Label lblMessageHeader;
         private System.Windows.Forms.Label lblSender;
         private System.Windows.Forms.Label lblSendDate;
         private System.Windows.Forms.Label lblRecipient;
         private System.Windows.Forms.WebBrowser wbMailBody;
-        private System.Windows.Forms.FlowLayoutPanel flPanelMailHeader;
+        private System.Windows.Forms.FlowLayoutPanel flPanelHeader;
 
     }
 }

@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EveMailMessage
+    public sealed class EveMailMessage : IEveMessage
     {
         private CCPCharacter m_ccpCharacter;
 
@@ -23,13 +23,14 @@ namespace EVEMon.Common
             State = (src.SenderID != ccpCharacter.CharacterID ?
                         EVEMailState.Inbox : EVEMailState.SentItem);
             MessageID = src.MessageID;
-            Sender = src.ToListID.Any(x=> x == src.SenderID.ToString()) ?
+            Sender = src.ToListID.Any(x => x == src.SenderID.ToString()) ?
                         GetMailingListIDToName(src.SenderID.ToString()) : GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Title = src.Title;
             ToCorpOrAlliance = GetIDToName(src.ToCorpOrAllianceID);
             ToCharacters = GetIDToName(src.ToCharacterIDs);
-            ToListID = GetMailingListIDToName(src.ToListID);
+            ToMailingLists = GetMailingListIDToName(src.ToListID);
+            Recipient = GetRecipient();
         }
 
         #endregion
@@ -51,11 +52,15 @@ namespace EVEMon.Common
 
         public List<string> ToCharacters { get; private set; }
 
-        public List<string> ToListID { get; private set; }
+        public List<string> ToMailingLists { get; private set; }
+
+        public List<string> Recipient { get; private set; }
 
         public EveMailBody EVEMailBody { get; private set; }
 
         public bool MailBodyDownloaded { get; private set; }
+
+        public string Text { get {return EVEMailBody.BodyText; } }
 
         #endregion
 
@@ -119,8 +124,8 @@ namespace EVEMon.Common
 
             return listOfNames;
         }
-        
-        private  string GetMailingListIDToName(string mailingListID)
+
+        private string GetMailingListIDToName(string mailingListID)
         {
             // If there is no ID to query return an empty string
             if (String.IsNullOrEmpty(mailingListID))
@@ -166,6 +171,36 @@ namespace EVEMon.Common
 
             return listOfNames;
         }
+
+        /// <summary>
+        /// Gets the recipient.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetRecipient()
+        {
+            Recipient = new List<string>();
+
+            if (!String.IsNullOrEmpty(ToCharacters[0]))
+            {
+                Recipient.AddRange(ToCharacters);
+                return Recipient;
+            }
+
+            if (!String.IsNullOrEmpty(ToCorpOrAlliance))
+            {
+                Recipient.Add(ToCorpOrAlliance);
+                return Recipient;
+            }
+
+            if (!String.IsNullOrEmpty(ToMailingLists[0]))
+            {
+                Recipient.AddRange(ToMailingLists);
+                return Recipient;
+            }
+
+            return Recipient;
+        }
+
         /// <summary>
         /// Gets the EVE mail body.
         /// </summary>

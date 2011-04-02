@@ -28,7 +28,7 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            this.eveMailReadingPane = new EVEMon.EveMailReadingPane();
+            this.eveMailReadingPane = new EVEMon.ReadingPane();
             this.SuspendLayout();
             // 
             // eveMailReadingPane
@@ -53,6 +53,6 @@ namespace EVEMon
 
         #endregion
 
-        private EveMailReadingPane eveMailReadingPane;
+        private ReadingPane eveMailReadingPane;
     }
 }

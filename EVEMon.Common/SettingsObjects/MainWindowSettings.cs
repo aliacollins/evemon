@@ -15,6 +15,7 @@ namespace EVEMon.Common.SettingsObjects
             IndustryJobs = new IndustryJobSettings();
             Research = new ResearchSettings();
             EVEMailMessages = new EveMailMessagesSettings();
+            EVENotifications = new EveNotificationsSettings();
             OverviewItemSize = PortraitSizes.x96;
             TitleFormat = MainWindowTitleFormat.NextCharToFinish;
             ShowOverviewSkillQueueTrainingTime = true;
@@ -184,6 +185,17 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
+        [XmlElement("eveNotifications")]
+        public EveNotificationsSettings EVENotifications
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Clones this serialization object.
+        /// </summary>
+        /// <returns></returns>
         internal MainWindowSettings Clone()
         {
             return (MainWindowSettings)MemberwiseClone();

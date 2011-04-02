@@ -47,6 +47,5 @@ namespace EVEMon.Common.SettingsObjects
             clone.ReadingPanePosition = ReadingPanePosition;
             return clone;
         }
-
     }
 }

@@ -71,6 +71,11 @@ namespace EVEMon.Common.Notifications
         [Header("New EVE mail message")]
         NewEveMailMessage,
         /// <summary>
+        /// A new EVE notification is available.
+        /// </summary>
+        [Header("New EVE notification")]
+        NewEveNotification,
+        /// <summary>
         /// Testing notification.
         /// </summary>
 #if DEBUG

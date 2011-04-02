@@ -70,7 +70,7 @@ namespace EVEMon.Common
                 var monitors = m_items.ToArray();
                 Array.Sort(times, monitors);
 
-                // Returns the monitors which are planned for an autoupdate.
+                // Returns the monitors which are planned for an autoupdate
                 for (int i = 0; i < monitors.Length; i++)
                 {
                     IQueryMonitorEx monitor = (IQueryMonitorEx)monitors[i];
@@ -80,7 +80,7 @@ namespace EVEMon.Common
                     }
                 }
 
-                // Returns the monitors which won't autoupdate.
+                // Returns the monitors which won't autoupdate
                 for (int i = 0; i < monitors.Length; i++)
                 {
                     IQueryMonitorEx monitor = (IQueryMonitorEx)monitors[i];

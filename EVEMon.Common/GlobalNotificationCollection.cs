@@ -365,7 +365,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a mail messages error.
+        /// Notifies a mail messages query error.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
@@ -381,7 +381,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a mail body error.
+        /// Notifies a mail body query error.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
@@ -397,7 +397,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a mailing lists error.
+        /// Notifies a mailing lists query error.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="result"></param>
@@ -406,6 +406,38 @@ namespace EVEMon.Common
             var notification = new APIErrorNotification(character, result)
             {
                 Description = "An error occured while querying the mailing lists.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a notifications query error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyEVENotificationsError(CCPCharacter character, APIResult<SerializableAPINotifications> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the EVE notifications.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a notification texts query error.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyEVENotificationTextsError(CCPCharacter character, APIResult<SerializableAPINotificationTexts> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occured while querying the EVE notification text.",
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = NotificationPriority.Error
             };
@@ -674,9 +706,27 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character"></param>
         /// <param name="expiredOrders"></param>
-        internal void NotifyNewEveMailMessage(Character character, int newMessage)
+        internal void NotifyNewEVEMailMessages(Character character, int newMessages)
         {
-            var notification = new NewEveMailMessageNotification(character, newMessage)
+            var notification = new NewEveMailMessageNotification(character, newMessages)
+            {
+                Behaviour = NotificationBehaviour.Merge,
+                Priority = NotificationPriority.Information
+            };
+            Notify(notification);
+        }
+        #endregion
+
+
+        #region New EVE notification
+        /// <summary>
+        /// Notify new EVE notification is available.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="expiredOrders"></param>
+        internal void NotifyNewEVENotifications(Character character, int newNotifications)
+        {
+            var notification = new NewEveNotificationNotification(character, newNotifications)
             {
                 Behaviour = NotificationBehaviour.Merge,
                 Priority = NotificationPriority.Information

@@ -5,29 +5,29 @@ using EVEMon.Common;
 
 namespace EVEMon
 {
-    public partial class EveMailReadingPane : UserControl
+    public partial class ReadingPane : UserControl
     {
-        private EveMailMessage m_selectedObject;
+        private IEveMessage m_selectedObject;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveMailReadingPane"/> class.
+        /// Initializes a new instance of the <see cref="ReadingPane"/> class.
         /// </summary>
-        public EveMailReadingPane()
+        public ReadingPane()
         {
             InitializeComponent();
 
             DoubleBuffered = true;
 
-            lblMailHeader.Font = FontFactory.GetDefaultFont(10F, FontStyle.Bold);
+            lblMessageHeader.Font = FontFactory.GetDefaultFont(10F, FontStyle.Bold);
             lblSender.Font = FontFactory.GetDefaultFont(10F);
-            flPanelMailHeader.ForeColor = SystemColors.ControlText;
+            flPanelHeader.ForeColor = SystemColors.ControlText;
         }
 
         /// <summary>
         /// Gets or sets the selected object.
         /// </summary>
         /// <value>The selected object.</value>
-        internal EveMailMessage SelectedObject
+        internal IEveMessage SelectedObject
         {
             get { return m_selectedObject; }
             set
@@ -42,7 +42,7 @@ namespace EVEMon
         /// </summary>
         internal void HidePane()
         {
-            flPanelMailHeader.Visible = false;
+            flPanelHeader.Visible = false;
             wbMailBody.Visible = false;
         }
 
@@ -52,17 +52,17 @@ namespace EVEMon
         private void UpdatePane()
         {
             // Update the text on the header labels
-            lblMailHeader.Text = m_selectedObject.Title;
+            lblMessageHeader.Text = m_selectedObject.Title;
             lblSender.Text = m_selectedObject.Sender;
             lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}", m_selectedObject.SentDate.ToLocalTime());
-            lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}", string.Join(", ", m_selectedObject.ToCharacters));
+            lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}", string.Join(", ", m_selectedObject.Recipient));
 
             // Allows the text in the webbrowser to be displayed
             wbMailBody.AllowNavigation = true;
 
             // Parce the mail body text to the web browser
             // so for the text to be formatted accordingly
-            wbMailBody.DocumentText = m_selectedObject.EVEMailBody.BodyText;
+            wbMailBody.DocumentText = m_selectedObject.Text;
 
             // We need to wait for the Document to be loaded
             do
@@ -71,7 +71,7 @@ namespace EVEMon
             } while (wbMailBody.ReadyState != WebBrowserReadyState.Complete);
 
             // Show the controls
-            flPanelMailHeader.Visible = true;
+            flPanelHeader.Visible = true;
             wbMailBody.Visible = true;       
         }
 
@@ -80,16 +80,16 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
-        private void flPanelMailHeader_Paint(object sender, PaintEventArgs e)
+        private void flPanelHeader_Paint(object sender, PaintEventArgs e)
         {
             // Calculate the height of the panel
-            flPanelMailHeader.Height = lblMailHeader.Height + lblSender.Height + lblSendDate.Height + lblRecipient.Height + 10;
+            flPanelHeader.Height = lblMessageHeader.Height + lblSender.Height + lblSendDate.Height + lblRecipient.Height + 10;
 
             // Draw a line at the bottom of the panel
-            using (Graphics g = flPanelMailHeader.CreateGraphics())
+            using (Graphics g = flPanelHeader.CreateGraphics())
             {
                 Pen blackPen = new Pen(Color.Black);
-                g.DrawLine(blackPen, 5, flPanelMailHeader.Height - 1, flPanelMailHeader.Width - 5, flPanelMailHeader.Height - 1);
+                g.DrawLine(blackPen, 5, flPanelHeader.Height - 1, flPanelHeader.Width - 5, flPanelHeader.Height - 1);
             }
         }
 

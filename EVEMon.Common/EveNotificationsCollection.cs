@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.API;
+
+namespace EVEMon.Common
+{
+    public sealed class EveNotificationsCollection : ReadonlyCollection<EveNotification>
+    {
+        private readonly CCPCharacter m_ccpCharacter;
+
+        #region Constructor
+
+        /// <summary>
+        /// Internal constructor.
+        /// </summary>
+        public EveNotificationsCollection(CCPCharacter ccpCharacter)
+        {
+            m_ccpCharacter = ccpCharacter;
+
+        }
+
+        #endregion
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the number of new notifications.
+        /// </summary>
+        /// <value>The new notifications.</value>
+        public int NewNotifications { get; set; }
+
+        #endregion
+
+
+        #region Importation & Exportation
+
+        /// <summary>
+        /// Imports the eve notifications IDs from a serializable object.
+        /// </summary>
+        /// <param name="eveMailMessagesIDs">The eve mail messages IDs.</param>
+        internal void Import(string eveMailMessagesIDs)
+        {
+            if (String.IsNullOrEmpty(eveMailMessagesIDs))
+                return;
+
+            List<string> ids = eveMailMessagesIDs.Split(',').ToList();
+            foreach (var id in ids)
+            {
+                m_items.Add(new EveNotification(m_ccpCharacter,
+                                                new SerializableNotificationsListItem()
+                                                {
+                                                    NotificationID = long.Parse(id)
+                                                }));
+            }
+        }
+
+        /// <summary>
+        /// Imports an enumeration of API objects.
+        /// </summary>
+        /// <param name="src">The enumeration of serializable mail messages from the API.</param>
+        internal void Import(List<SerializableNotificationsListItem> src)
+        {
+            NewNotifications = 0;
+
+            List<EveNotification> newNotifications = new List<EveNotification>();
+
+            // Import the mail messages from the API
+            foreach (var srcEVENotification in src)
+            {
+                // Is it an Inbox message ?
+                if (m_ccpCharacter.CharacterID != srcEVENotification.SenderID)
+                {
+                    // If it's a new mail message increase the counter
+                    var notification = m_items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
+                    if (notification == null)
+                        NewNotifications++;
+                }
+
+                newNotifications.Add(new EveNotification(m_ccpCharacter, srcEVENotification));
+            }
+
+            m_items.Clear();
+            m_items.AddRange(newNotifications);
+        }
+
+        /// <summary>
+        /// Exports the eve notifications IDs to a serializable object.
+        /// </summary>
+        /// <returns></returns>
+        internal string Export()
+        {
+            List<string> serial = new List<string>();
+
+            foreach (var notification in m_items)
+            {
+                serial.Add(notification.NotificationID.ToString());
+            }
+
+            return string.Join(",", serial);
+        }
+
+        #endregion
+    }
+}

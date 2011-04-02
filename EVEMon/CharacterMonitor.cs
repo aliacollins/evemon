@@ -53,6 +53,7 @@ namespace EVEMon
             jobsList.Character = character;
             researchList.Character = character;
             mailMessagesList.Character = character;
+            eveNotificationsList.Character = character;
             notificationList.Notifications = null;
 
             // Create a list of the full API Key features
@@ -60,6 +61,7 @@ namespace EVEMon
             m_fullAPIKeyFeatures.Add(jobsIcon);
             m_fullAPIKeyFeatures.Add(researchIcon);
             m_fullAPIKeyFeatures.Add(mailMessagesIcon);
+            m_fullAPIKeyFeatures.Add(eveNotificationsIcon);
 
             // Hide all full api key related controls
             m_fullAPIKeyFeatures.ForEach(x => x.Visible = false);
@@ -92,7 +94,8 @@ namespace EVEMon
             EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
-            EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesChanged;
+            EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
+            EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent += EveClient_NotificationSent;
             EveClient.NotificationInvalidated += EveClient_NotificationInvalidated;
             Disposed += OnDisposed;
@@ -112,7 +115,8 @@ namespace EVEMon
             EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
             EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterResearchPointsChanged -= EveClient_CharacterResearchPointsChanged;
-            EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesChanged;
+            EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
+            EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent -= EveClient_NotificationSent;
             EveClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
             Disposed -= OnDisposed;
@@ -378,9 +382,13 @@ namespace EVEMon
                 groupMenu.Visible = false;
             }
 
-            // Enables/Disables the research points page related controls
+            // Enables/Disables the EVE mail messages page related controls
             if (multiPanel.SelectedPage == mailMessagesPage)
                 toolStripContextual.Enabled = !ccpCharacter.EVEMailMessages.IsEmpty();
+
+            // Enables/Disables the EVE notifications page related controls
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+                toolStripContextual.Enabled = !ccpCharacter.EVENotifications.IsEmpty();
 
         }
 
@@ -414,7 +422,8 @@ namespace EVEMon
             if ((multiPanel.SelectedPage == ordersPage && !ordersIcon.Visible)
                 || (multiPanel.SelectedPage == jobsPage && !jobsIcon.Visible)
                 || (multiPanel.SelectedPage == researchPage && !researchIcon.Visible)
-                || (multiPanel.SelectedPage == mailMessagesPage && !mailMessagesIcon.Visible))
+                || (multiPanel.SelectedPage == mailMessagesPage && !mailMessagesIcon.Visible)
+                || (multiPanel.SelectedPage == eveNotificationsPage && !eveNotificationsIcon.Visible))
                 toolbarIcon_Click(skillsIcon, EventArgs.Empty);
 
             var enabledFullAPIKeyPages = new List<string>();
@@ -478,7 +487,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterIndustryJobsChanged event of the EveClient control.
+        /// Updates the page controls on industry jobs change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
@@ -491,7 +500,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterResearchPointsChanged event of the EveClient control.
+        /// Updates the page controls on research points change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
@@ -504,11 +513,24 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterEVEMailMessagesChanged event of the EveClient control.
+        /// Updates the page controls on EVE mail messages change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterEVEMailMessagesChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on EVE notifications change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -816,6 +838,7 @@ namespace EVEMon
             jobsIcon.Visible = (item.Text == jobsIcon.Text ? item.Checked : jobsIcon.Visible);
             researchIcon.Visible = (item.Text == researchIcon.Text ? item.Checked : researchIcon.Visible);
             mailMessagesIcon.Visible = (item.Text == mailMessagesIcon.Text ? item.Checked : mailMessagesIcon.Visible);
+            eveNotificationsIcon.Visible = (item.Text == eveNotificationsIcon.Text ? item.Checked : eveNotificationsIcon.Visible);
 
             UpdateFullAPIKeyPagesSettings();
             ToggleFullAPIKeyFeaturesMonitoring();
@@ -865,6 +888,18 @@ namespace EVEMon
                     groupMenu.DropDownItems.Add(menu);
                 }
             }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                foreach (EVENotificationsGrouping grouping in EnumExtensions.GetValues<EVENotificationsGrouping>())
+                {
+                    var menu = new ToolStripButton(grouping.GetHeader());
+                    menu.Checked = (eveNotificationsList.Grouping == grouping);
+                    menu.Tag = grouping;
+
+                    groupMenu.DropDownItems.Add(menu);
+                }
+            }
         }
 
         /// <summary>
@@ -892,6 +927,12 @@ namespace EVEMon
                 var grouping = (EVEMailMessagesGrouping)item.Tag;
                 m_character.UISettings.EVEMailMessagesGroupBy = mailMessagesList.Grouping = grouping;
             }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                var grouping = (EVENotificationsGrouping)item.Tag;
+                m_character.UISettings.EVENotificationsGroupBy = eveNotificationsList.Grouping = grouping;
+            }
         }
 
         /// <summary>
@@ -912,6 +953,9 @@ namespace EVEMon
 
             if (multiPanel.SelectedPage == mailMessagesPage)
                 mailMessagesList.TextFilter = searchTextBox.Text;
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+                eveNotificationsList.TextFilter = searchTextBox.Text;
         }
 
         /// <summary>
@@ -976,6 +1020,20 @@ namespace EVEMon
                     }
                 }
             }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                using (var f = new EveNotificationsColumnsSelectWindow(eveNotificationsList.Columns.Select(x => x.Clone())))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        eveNotificationsList.Columns = f.Columns.Cast<EveNotificationsColumnSettings>();
+                        Settings.UI.MainWindow.EVENotifications.Columns =
+                            eveNotificationsList.Columns.Select(x => x.Clone()).ToArray();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1018,7 +1076,7 @@ namespace EVEMon
                 preferencesMenu.DropDownItems.Remove(readingPaneMenuItem);
             }
 
-            if (multiPanel.SelectedPage == mailMessagesPage)
+            if (multiPanel.SelectedPage == mailMessagesPage || multiPanel.SelectedPage == eveNotificationsPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
@@ -1113,7 +1171,18 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void readingPaneMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            string paneSetting = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition.ToString();
+            string paneSetting = ReadingPanePositioning.Off.ToString();
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                paneSetting = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition.ToString();
+            }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                paneSetting = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition.ToString();
+            }
+
             foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
             {
                 menuItem.Checked = ((string)menuItem.Tag == paneSetting);
@@ -1133,8 +1202,18 @@ namespace EVEMon
             }
 
             paneRightMenuItem.Checked = true;
-            mailMessagesList.PanePosition = ReadingPanePositioning.Right;
-            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                mailMessagesList.PanePosition = ReadingPanePositioning.Right;
+                Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+            }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                eveNotificationsList.PanePosition = ReadingPanePositioning.Right;
+                Settings.UI.MainWindow.EVENotifications.ReadingPanePosition = eveNotificationsList.PanePosition;
+            }
         }
 
         /// <summary>
@@ -1150,8 +1229,18 @@ namespace EVEMon
             }
 
             paneBottomMenuItem.Checked = true;
-            mailMessagesList.PanePosition = ReadingPanePositioning.Bottom;
-            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                mailMessagesList.PanePosition = ReadingPanePositioning.Bottom;
+                Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+            }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                eveNotificationsList.PanePosition = ReadingPanePositioning.Bottom;
+                Settings.UI.MainWindow.EVENotifications.ReadingPanePosition = eveNotificationsList.PanePosition;
+            }
         }
 
         /// <summary>
@@ -1167,8 +1256,18 @@ namespace EVEMon
             }
 
             paneOffMenuItem.Checked = true;
-            mailMessagesList.PanePosition = ReadingPanePositioning.Off;
-            Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+
+            if (multiPanel.SelectedPage == mailMessagesPage)
+            {
+                mailMessagesList.PanePosition = ReadingPanePositioning.Off;
+                Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition = mailMessagesList.PanePosition;
+            }
+
+            if (multiPanel.SelectedPage == eveNotificationsPage)
+            {
+                eveNotificationsList.PanePosition = ReadingPanePositioning.Off;
+                Settings.UI.MainWindow.EVENotifications.ReadingPanePosition = eveNotificationsList.PanePosition;
+            }
         }
 
         /// <summary>
