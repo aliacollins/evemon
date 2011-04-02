@@ -566,7 +566,7 @@ namespace EVEMon.SettingsUI
             this.cbTitleToTime.Location = new System.Drawing.Point(15, 20);
             this.cbTitleToTime.Margin = new System.Windows.Forms.Padding(12, 3, 3, 3);
             this.cbTitleToTime.Name = "cbTitleToTime";
-            this.cbTitleToTime.Size = new System.Drawing.Size(193, 17);
+            this.cbTitleToTime.Size = new System.Drawing.Size(190, 17);
             this.cbTitleToTime.TabIndex = 6;
             this.cbTitleToTime.Text = "Show character info in window title";
             this.ttToolTipCodes.SetToolTip(this.cbTitleToTime, "When enabled, shows the character\'s info in window title");

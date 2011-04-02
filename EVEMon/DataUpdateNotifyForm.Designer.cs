@@ -82,7 +82,7 @@ namespace EVEMon
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(388, 13);
+            this.label1.Size = new System.Drawing.Size(381, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "A data update for EVEMon is available. The following data files have changed:";
             // 

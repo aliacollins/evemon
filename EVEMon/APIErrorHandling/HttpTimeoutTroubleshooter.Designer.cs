@@ -55,7 +55,7 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(358, 97);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(357, 97);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // ExplanationLabel
@@ -101,7 +101,7 @@
             // SetTimeoutButton
             // 
             this.SetTimeoutButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SetTimeoutButton.Location = new System.Drawing.Point(249, 66);
+            this.SetTimeoutButton.Location = new System.Drawing.Point(248, 66);
             this.SetTimeoutButton.Name = "SetTimeoutButton";
             this.SetTimeoutButton.Size = new System.Drawing.Size(106, 28);
             this.SetTimeoutButton.TabIndex = 3;
@@ -117,7 +117,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "HttpTimeoutTroubleshooter";
-            this.Size = new System.Drawing.Size(359, 100);
+            this.Size = new System.Drawing.Size(358, 100);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
             this.ResumeLayout(false);

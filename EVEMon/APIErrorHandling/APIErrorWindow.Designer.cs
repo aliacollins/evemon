@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(APIErrorWindow));
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.IconPictureBox = new System.Windows.Forms.PictureBox();
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -53,7 +54,7 @@
             // IconPictureBox
             // 
             this.IconPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IconPictureBox.Image = global::EVEMon.Common.Properties.Resources.Error32;
+            this.IconPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("IconPictureBox.Image")));
             this.IconPictureBox.Location = new System.Drawing.Point(13, 13);
             this.IconPictureBox.Name = "IconPictureBox";
             this.IconPictureBox.Size = new System.Drawing.Size(34, 34);

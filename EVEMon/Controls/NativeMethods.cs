@@ -19,6 +19,10 @@ namespace EVEMon.Controls
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        [DllImport("gdi32.dll")]
+        static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
+           int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
+
         /// <summary>
         /// Show the given form on topmost without activating it.
         /// </summary>
@@ -42,9 +46,5 @@ namespace EVEMon.Controls
             return BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
                 src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
-
-        [DllImport("gdi32.dll")]
-        static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
-           int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
     }
 }

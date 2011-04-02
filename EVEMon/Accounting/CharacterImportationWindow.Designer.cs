@@ -66,7 +66,7 @@
             labelErrorHeader.ForeColor = System.Drawing.Color.DarkRed;
             labelErrorHeader.Location = new System.Drawing.Point(3, 0);
             labelErrorHeader.Name = "labelErrorHeader";
-            labelErrorHeader.Size = new System.Drawing.Size(268, 13);
+            labelErrorHeader.Size = new System.Drawing.Size(272, 13);
             labelErrorHeader.TabIndex = 8;
             labelErrorHeader.Text = "An error occurred while trying to import this character :";
             // 

@@ -28,9 +28,9 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkillsPieChart));
             this.skillPieChartControl = new EVEMon.PieChart.PieChartControl();
             this.pieControlPanel = new System.Windows.Forms.Panel();
+            this.mergeMinorCheck = new System.Windows.Forms.CheckBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.pieAngle = new System.Windows.Forms.NumericUpDown();
@@ -42,7 +42,6 @@ namespace EVEMon
             this.savePieDialog = new System.Windows.Forms.SaveFileDialog();
             this.planSelector = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.mergeMinorCheck = new System.Windows.Forms.CheckBox();
             this.pieControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pieAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pieHeight)).BeginInit();
@@ -79,6 +78,16 @@ namespace EVEMon
             this.pieControlPanel.Name = "pieControlPanel";
             this.pieControlPanel.Size = new System.Drawing.Size(642, 26);
             this.pieControlPanel.TabIndex = 1;
+            // 
+            // mergeMinorCheck
+            // 
+            this.mergeMinorCheck.AutoSize = true;
+            this.mergeMinorCheck.Location = new System.Drawing.Point(352, 5);
+            this.mergeMinorCheck.Name = "mergeMinorCheck";
+            this.mergeMinorCheck.Size = new System.Drawing.Size(121, 17);
+            this.mergeMinorCheck.TabIndex = 7;
+            this.mergeMinorCheck.Text = "Merge minor groups";
+            this.mergeMinorCheck.CheckedChanged += new System.EventHandler(this.mergeMinorCheck_CheckedChanged);
             // 
             // saveButton
             // 
@@ -209,16 +218,6 @@ namespace EVEMon
             this.label1.Size = new System.Drawing.Size(157, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Projected Skillpoints using Plan:";
-            // 
-            // mergeMinorCheck
-            // 
-            this.mergeMinorCheck.AutoSize = true;
-            this.mergeMinorCheck.Location = new System.Drawing.Point(352, 5);
-            this.mergeMinorCheck.Name = "mergeMinorCheck";
-            this.mergeMinorCheck.Size = new System.Drawing.Size(121, 17);
-            this.mergeMinorCheck.TabIndex = 7;
-            this.mergeMinorCheck.Text = "Merge minor groups";
-            this.mergeMinorCheck.CheckedChanged += new System.EventHandler(this.mergeMinorCheck_CheckedChanged);
             // 
             // SkillsPieChart
             // 
