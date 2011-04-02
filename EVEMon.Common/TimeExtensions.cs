@@ -60,14 +60,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ToRemainingTimeShortDescription(this DateTime t)
         {
-            // small chance that the function could cross over the
+            // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
-            DateTime now = DateTime.Now;
-
             StringBuilder sb = new StringBuilder();
-            if (t > now)
+            if (t > DateTime.UtcNow)
             {
-                TimeSpan ts = t.ToUniversalTime() - now.ToUniversalTime();
+                TimeSpan ts = t.ToUniversalTime().Subtract(DateTime.UtcNow);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -114,57 +112,45 @@ namespace EVEMon.Common
             StringBuilder sb = new StringBuilder();
             if (t > DateTime.UtcNow)
             {
-                TimeSpan ts = t.ToUniversalTime() - DateTime.Now.ToUniversalTime();
+                TimeSpan ts = t.ToUniversalTime().Subtract(DateTime.UtcNow);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
                     sb.Append(" day");
                     if (ts.Days > 1)
-                    {
                         sb.Append("s");
-                    }
                 }
                 ts -= TimeSpan.FromDays(ts.Days);
                 if (ts.Hours > 0)
                 {
                     if (sb.Length > 0)
-                    {
                         sb.Append(", ");
-                    }
+
                     sb.Append(ts.Hours.ToString());
                     sb.Append(" hour");
                     if (ts.Hours > 1)
-                    {
                         sb.Append("s");
-                    }
                 }
                 ts -= TimeSpan.FromHours(ts.Hours);
                 if (ts.Minutes > 0)
                 {
                     if (sb.Length > 0)
-                    {
                         sb.Append(", ");
-                    }
+
                     sb.Append(ts.Minutes.ToString());
                     sb.Append(" minute");
                     if (ts.Minutes > 1)
-                    {
                         sb.Append("s");
-                    }
                 }
                 ts -= TimeSpan.FromMinutes(ts.Minutes);
                 if (ts.Seconds > 0)
                 {
                     if (sb.Length > 0)
-                    {
                         sb.Append(", ");
-                    }
                     sb.Append(ts.Seconds.ToString());
                     sb.Append(" second");
                     if (ts.Seconds > 1)
-                    {
                         sb.Append("s");
-                    }
                 }
                 return sb.ToString();
             }
@@ -189,22 +175,16 @@ namespace EVEMon.Common
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == DateTime.Now.Date.AddDays(-1))
-            {
                 return String.Format(CultureConstants.DefaultCulture, "{0} Yesterday", shortTime);
-            }
 
             // Today (i.e. before 00:00 tomorrow)
             if (absoluteDateTime.Date == DateTime.Now.Date)
-            {
                 return String.Format(CultureConstants.DefaultCulture, "{0} Today", shortTime);
-            }
 
             // Tomorrow (i.e. after 23:59 today but before 00:00 the day after tomorrow)
             DateTime tomorrow = DateTime.Now.Date.AddDays(1);
             if (absoluteDateTime.Date == tomorrow)
-            {
                 return String.Format(CultureConstants.DefaultCulture, "{0} Tomorrow", shortTime);
-            }
 
             // After tomorrow but within 7 days
             DateTime sevenDays = DateTime.Now.Date.AddDays(7);
@@ -212,13 +192,10 @@ namespace EVEMon.Common
             {
                 string dayOfWeek = absoluteDateTime.DayOfWeek.ToString();
                 if (absoluteDateTime.Date < sevenDays)
-                {
                     return String.Format(CultureConstants.DefaultCulture, "{0} This {1}", shortTime, dayOfWeek);
-                }
+
                 if (absoluteDateTime.Date == sevenDays)
-                {
                     return String.Format(CultureConstants.DefaultCulture, "{0} Next {1}", shortTime, dayOfWeek);
-                }
             }
 
             // More than seven days away or more than one day ago

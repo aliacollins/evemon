@@ -146,7 +146,9 @@ namespace EVEMon.Common.Serialization.API
         {
             get 
             {
-                if (CCPError != null) return CCPError.ErrorMessage;
+                if (CCPError != null)
+                    return CCPError.ErrorMessage;
+
                 return m_errorMessage; 
             }
         }
@@ -166,7 +168,7 @@ namespace EVEMon.Common.Serialization.API
         /// </summary>
         public TimeSpan RemainingTime
         {
-            get { return CachedUntil - DateTime.UtcNow; }
+            get { return CachedUntil.Subtract(DateTime.UtcNow); }
         }
         #endregion
 
@@ -238,12 +240,12 @@ namespace EVEMon.Common.Serialization.API
         #region Time fixing
         /// <summary>
         /// Fixup the currentTime and cachedUntil time to match the user's clock.
-        /// This should ONLY be called when the xml is first recieved from CCP
+        /// This should ONLY be called when the xml is first received from CCP
         /// </summary>
         /// <param name="millisecondsDrift"></param>
         public void SynchronizeWithLocalClock(double millisecondsDrift)
         {
-            // convert the drift between webserver time and local time
+            // Convert the drift between webserver time and local time
             // to a timespan. It is possible for millisecondsDrift to
             // be erroniously outside of the range of an int thus we 
             // need to catch an overflow exception and reset to 0.
@@ -258,8 +260,10 @@ namespace EVEMon.Common.Serialization.API
             }
 
             // Now fix the server time to align with local time
-            CurrentTime -= drift;
-            CachedUntil -= drift;
+            if (CurrentTime != DateTime.MinValue)
+                CurrentTime -= drift;
+            if (CachedUntil != DateTime.MinValue)
+                CachedUntil -= drift;
 
             // Fix the TQ start/end times first
             ISynchronizableWithLocalClock synchronizable = ((Object)Result) as ISynchronizableWithLocalClock;

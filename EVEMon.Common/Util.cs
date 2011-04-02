@@ -237,7 +237,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         internal static APIResult<T> DownloadAPIResult<T>(string url, HttpPostData postData, XslCompiledTransform transform)
         {
-            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http, "Time out on querying " + url);
+            APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http, String.Format("Time out on querying {0}", url));
 
             // Query async and wait.
             using (var wait = new EventWaitHandle(false, EventResetMode.AutoReset))
@@ -321,8 +321,8 @@ namespace EVEMon.Common
                 }
 
                 // Fix times
-                DateTime requestTime = DateTime.Now.ToUniversalTime();
-                double CCPOffset = (result.CurrentTime - requestTime).TotalMilliseconds;
+                DateTime requestTime = DateTime.UtcNow;
+                double CCPOffset = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
                 result.SynchronizeWithLocalClock(CCPOffset);
             }
             // An error occurred during the XSL transform
