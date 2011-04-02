@@ -1,38 +1,39 @@
 using System;
+
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
 namespace EVEMon
 {
-    public partial class EveMailWindow : EVEMonForm
+    public partial class EveMessageWindow : EVEMonForm
     {
-        private EveMailMessage m_message;
+        private IEveMessage m_message;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveMailWindow"/> class.
+        /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
         /// </summary>
-        internal EveMailWindow()
+        internal EveMessageWindow()
         {
             InitializeComponent();
 
-            RememberPositionKey = "EVEMailWindow";
+            RememberPositionKey = "EVEMessageWindow";
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EveMailWindow"/> class.
+        /// Initializes a new instance of the <see cref="EveMessageWindow"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public EveMailWindow(EveMailMessage message)
+        public EveMessageWindow(IEveMessage message)
             : this()
         {
-            MailMessage = message;
+            EVEMessage = message;
         }
 
         /// <summary>
-        /// Gets or sets the mail message.
+        /// Gets or sets the EVE message.
         /// </summary>
-        /// <value>The mail message.</value>
-        internal EveMailMessage MailMessage
+        /// <value>The message.</value>
+        internal IEveMessage EVEMessage
         {
             get { return m_message; }
             set
@@ -43,7 +44,7 @@ namespace EVEMon
                 m_message = value;
                 Tag = value;
 
-                eveMailReadingPane.SelectedObject = m_message;
+                readingPane.SelectedObject = m_message;
                 UpdateWindowHeaderText();
             }
         }
@@ -53,7 +54,7 @@ namespace EVEMon
         /// </summary>
         private void UpdateWindowHeaderText()
         {
-            Text = String.Format("{0} - EVE Mail Message", m_message.Title);
+            Text = String.Format("{0} - EVE Message", m_message.Title);
         }
     }
 }

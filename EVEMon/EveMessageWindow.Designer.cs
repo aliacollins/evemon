@@ -1,6 +1,6 @@
 namespace EVEMon
 {
-    partial class EveMailWindow
+    partial class EveMessageWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -28,23 +28,23 @@ namespace EVEMon
         /// </summary>
         private void InitializeComponent()
         {
-            this.eveMailReadingPane = new EVEMon.ReadingPane();
+            this.readingPane = new EVEMon.ReadingPane();
             this.SuspendLayout();
             // 
             // eveMailReadingPane
             // 
-            this.eveMailReadingPane.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eveMailReadingPane.Location = new System.Drawing.Point(0, 0);
-            this.eveMailReadingPane.Name = "eveMailReadingPane";
-            this.eveMailReadingPane.Size = new System.Drawing.Size(584, 232);
-            this.eveMailReadingPane.TabIndex = 0;
+            this.readingPane.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.readingPane.Location = new System.Drawing.Point(0, 0);
+            this.readingPane.Name = "eveMailReadingPane";
+            this.readingPane.Size = new System.Drawing.Size(584, 232);
+            this.readingPane.TabIndex = 0;
             // 
             // EVEMailWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 232);
-            this.Controls.Add(this.eveMailReadingPane);
+            this.Controls.Add(this.readingPane);
             this.Name = "EVEMailWindow";
             this.Text = "EVE Mail Message";
             this.ResumeLayout(false);
@@ -53,6 +53,6 @@ namespace EVEMon
 
         #endregion
 
-        private ReadingPane eveMailReadingPane;
+        private ReadingPane readingPane;
     }
 }

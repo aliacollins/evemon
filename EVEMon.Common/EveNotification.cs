@@ -9,7 +9,6 @@ namespace EVEMon.Common
     public sealed class EveNotification : IEveMessage
     {
         private CCPCharacter m_ccpCharacter;
-        private List<string> m_recipient = new List<string>();
 
 
         #region Constructor
@@ -25,8 +24,7 @@ namespace EVEMon.Common
             Type = GetType(src.TypeID);
             Sender = GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
-
-            m_recipient.Add(m_ccpCharacter.Name);
+            Recipient = GetRecipient();
         }
 
         #endregion
@@ -52,6 +50,8 @@ namespace EVEMon.Common
 
         public DateTime SentDate { get; private set; }
 
+        public List<string> Recipient { get; private set; }
+
         public EveNotificationText EVENotificationText { get; private set; }
 
         public bool NotificationTextDownloaded { get; private set; }
@@ -60,12 +60,22 @@ namespace EVEMon.Common
 
         public string Text { get { return EVENotificationText.NotificationText; } }
 
-        public List<string> Recipient { get { return m_recipient; } }
-
         #endregion
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Gets the recipient.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetRecipient()
+        {
+            Recipient = new List<string>();
+            Recipient.Add(m_ccpCharacter.Name);
+
+            return Recipient;
+        }
 
         /// <summary>
         /// Gets the EVE notification.

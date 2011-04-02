@@ -587,10 +587,10 @@ namespace EVEMon
         private void lvNotifications_DoubleClick(object sender, EventArgs e)
         {
             var item = (ListViewItem)lvNotifications.SelectedItems[0];
-            var message = (EveMailMessage)item.Tag;
+            var notification = (EveNotification)item.Tag;
 
             // Show or bring to front if a window with the same EVE mail message as tag already exists
-            WindowsFactory<EveMailWindow>.ShowByTag(message);
+            WindowsFactory<EveMessageWindow>.ShowByTag(notification);
         }
 
         /// <summary>
