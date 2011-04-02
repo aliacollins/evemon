@@ -251,8 +251,7 @@ namespace EVEMon
 
             m_init = true;
 
-            if (Orders.Count() == 0)
-                MainWindowMarketOrdersList_Resize(null, null);
+            UpdateContent();
         }
 
         # endregion
@@ -419,6 +418,8 @@ namespace EVEMon
                 {
                     noOrdersLabel.Visible = orders.IsEmpty();
                     lvOrders.Visible = !orders.IsEmpty();
+                    marketExpPanelControl.Visible = true;
+                    marketExpPanelControl.Header.Visible = true;
                 }
             }
             finally
@@ -753,8 +754,8 @@ namespace EVEMon
                 return;
 
             UpdateContent();
-            marketExpPanelControl.Visible = true;
-            marketExpPanelControl.Header.Visible = true;
+            //marketExpPanelControl.Visible = true;
+            //marketExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>

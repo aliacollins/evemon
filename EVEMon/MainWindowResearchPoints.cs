@@ -191,8 +191,7 @@ namespace EVEMon
 
             m_init = true;
 
-            if (ResearchPoints.Count() > 0)
-                UpdateContent();
+            UpdateContent();
         }
 
         # endregion

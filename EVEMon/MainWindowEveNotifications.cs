@@ -219,8 +219,7 @@ namespace EVEMon
             UpdateColumns();
             m_init = true;
 
-            if (EVENotifications.Count() > 0)
-                UpdateContent();
+            UpdateContent();
         }
 
         # endregion

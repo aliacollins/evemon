@@ -245,8 +245,7 @@ namespace EVEMon
 
             m_init = true;
 
-            if (Jobs.Count() == 0)
-                MainWindowIndustryJobsList_Resize(null, null);
+            UpdateContent();
         }
 
         # endregion
@@ -400,6 +399,8 @@ namespace EVEMon
                 {
                     noJobsLabel.Visible = jobs.IsEmpty();
                     lvJobs.Visible = !jobs.IsEmpty();
+                    industryExpPanelControl.Visible = true;
+                    industryExpPanelControl.Header.Visible = true;
                 }
             }
             finally
@@ -750,8 +751,8 @@ namespace EVEMon
                 return;
 
             UpdateContent();
-            industryExpPanelControl.Visible = true;
-            industryExpPanelControl.Header.Visible = true;
+            //industryExpPanelControl.Visible = true;
+            //industryExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
