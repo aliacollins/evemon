@@ -42,12 +42,12 @@ namespace EVEMon.Common
         /// Imports the eve notifications IDs from a serializable object.
         /// </summary>
         /// <param name="eveMailMessagesIDs">The eve mail messages IDs.</param>
-        internal void Import(string eveMailMessagesIDs)
+        internal void Import(string eveNotificationsIDs)
         {
-            if (String.IsNullOrEmpty(eveMailMessagesIDs))
+            if (String.IsNullOrEmpty(eveNotificationsIDs))
                 return;
 
-            List<string> ids = eveMailMessagesIDs.Split(',').ToList();
+            List<string> ids = eveNotificationsIDs.Split(',').ToList();
             foreach (var id in ids)
             {
                 m_items.Add(new EveNotification(m_ccpCharacter,

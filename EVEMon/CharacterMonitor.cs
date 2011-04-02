@@ -411,6 +411,9 @@ namespace EVEMon
 
                 if (monitor.Method == APIMethods.MailMessages && monitor.Enabled)
                     ccpCharacter.ForceUpdate(monitor);
+
+                if (monitor.Method == APIMethods.Notifications && monitor.Enabled)
+                    ccpCharacter.ForceUpdate(monitor);
             }
         }
 

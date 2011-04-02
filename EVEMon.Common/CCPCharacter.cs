@@ -288,6 +288,9 @@ namespace EVEMon.Common
             // Eve mail messages IDs
             serial.EveMailMessagesIDs = m_eveMailMessages.Export();
 
+            // Eve notifications IDs
+            serial.EveNotificationsIDs = m_eveNotifications.Export();
+
             // Last API updates
             foreach (var monitor in m_monitors)
             {
@@ -326,6 +329,9 @@ namespace EVEMon.Common
 
             // EVE mail messages IDs
             m_eveMailMessages.Import(serial.EveMailMessagesIDs);
+
+            // EVE mail messages IDs
+            m_eveNotifications.Import(serial.EveNotificationsIDs);
 
             // Last API updates
             foreach (var lastUpdate in serial.LastUpdates)

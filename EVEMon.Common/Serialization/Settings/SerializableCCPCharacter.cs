@@ -59,6 +59,13 @@ namespace EVEMon.Common.Serialization.Settings
             set;
         }
 
+        [XmlElement("eveNotifications")]
+        public string EveNotificationsIDs
+        {
+            get;
+            set;
+        }
+
         [XmlArray("lastUpdates")]
         [XmlArrayItem("apiUpdate")]
         public List<SerializableAPIUpdate> LastUpdates

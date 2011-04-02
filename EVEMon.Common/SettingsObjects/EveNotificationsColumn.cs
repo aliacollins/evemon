@@ -10,8 +10,8 @@ namespace EVEMon.Common.SettingsObjects
     {
         None = -1,
 
-        [Header("Send at")]
-        [Description("Send Date")]
+        [Header("Received")]
+        [Description("Received Date")]
         SentDate = 0,
 
         [Header("From")]
