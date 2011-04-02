@@ -16,7 +16,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        public EveNotificationsCollection(CCPCharacter ccpCharacter)
+        internal EveNotificationsCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
 
@@ -61,24 +61,20 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src">The enumeration of serializable mail messages from the API.</param>
+        /// <param name="src">The enumeration of serializable notifications from the API.</param>
         internal void Import(List<SerializableNotificationsListItem> src)
         {
             NewNotifications = 0;
 
             List<EveNotification> newNotifications = new List<EveNotification>();
 
-            // Import the mail messages from the API
+            // Import the notifications from the API
             foreach (var srcEVENotification in src)
             {
-                // Is it an Inbox message ?
-                if (m_ccpCharacter.CharacterID != srcEVENotification.SenderID)
-                {
-                    // If it's a new mail message increase the counter
-                    var notification = m_items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
-                    if (notification == null)
-                        NewNotifications++;
-                }
+                // If it's a new notification increase the counter
+                var notification = m_items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
+                if (notification == null)
+                    NewNotifications++;
 
                 newNotifications.Add(new EveNotification(m_ccpCharacter, srcEVENotification));
             }

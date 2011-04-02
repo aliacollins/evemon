@@ -330,7 +330,7 @@ namespace EVEMon.Common
             // EVE mail messages IDs
             m_eveMailMessages.Import(serial.EveMailMessagesIDs);
 
-            // EVE mail messages IDs
+            // EVE notifications IDs
             m_eveNotifications.Import(serial.EveNotificationsIDs);
 
             // Last API updates
