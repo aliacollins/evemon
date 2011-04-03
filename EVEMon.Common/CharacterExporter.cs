@@ -244,11 +244,13 @@ namespace EVEMon.Common
             result.AppendFormat(CultureConstants.DefaultCulture, "[b]{0}[/b]{1}", character.Name, Environment.NewLine);
             result.AppendLine();
             result.AppendLine("[b]Attributes[/b]");
-            result.AppendFormat(CultureConstants.DefaultCulture, "Intelligence: {0}{1}", character.Intelligence.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Perception:   {0}{1}", character.Perception.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Charisma:     {0}{1}", character.Charisma.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Willpower:    {0}{1}", character.Willpower.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Memory:       {0}{1}", character.Memory.EffectiveValue.ToString("#0.00").PadLeft(5), Environment.NewLine);
+            result.AppendLine("[table]");
+            result.AppendFormat(CultureConstants.DefaultCulture, "[tr][td]Intelligence:[/td][td]{0}[/td][/tr]{1}", character.Intelligence.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "[tr][td]Perception:[/td][td]{0}[/td][/tr]{1}", character.Perception.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "[tr][td]Charisma:[/td][td]{0}[/td][/tr]{1}", character.Charisma.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "[tr][td]Willpower:[/td][td]{0}[/td][/tr]{1}", character.Willpower.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "[tr][td]Memory:[/td][td]{0}[/td][/tr]{1}", character.Memory.EffectiveValue.ToString().PadLeft(5), Environment.NewLine);
+            result.AppendLine("[/table]");
 
             foreach (var skillGroup in character.SkillGroups)
             {
@@ -275,13 +277,14 @@ namespace EVEMon.Common
 
             result.AppendLine();
             result.AppendFormat(CultureConstants.DefaultCulture, "Total Skillpoints: {0}{1}", character.SkillPoints.ToString("#,##0"), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Total Number of Skills: {0}{1}", character.KnownSkillCount.ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Total Number of Skills: {0}{1}", character.KnownSkillCount.ToString().PadLeft(5), Environment.NewLine);
             result.AppendLine();
-            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 1: {0}{1}", character.GetSkillCountAtLevel(1).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 2: {0}{1}", character.GetSkillCountAtLevel(2).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 3: {0}{1}", character.GetSkillCountAtLevel(3).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 4: {0}{1}", character.GetSkillCountAtLevel(4).ToString(), Environment.NewLine);
-            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 5: {0}{1}", character.GetSkillCountAtLevel(5).ToString(), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 0: {0}{1}", character.GetSkillCountAtLevel(0).ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 1: {0}{1}", character.GetSkillCountAtLevel(1).ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 2: {0}{1}", character.GetSkillCountAtLevel(2).ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 3: {0}{1}", character.GetSkillCountAtLevel(3).ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 4: {0}{1}", character.GetSkillCountAtLevel(4).ToString().PadLeft(5), Environment.NewLine);
+            result.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level 5: {0}{1}", character.GetSkillCountAtLevel(5).ToString().PadLeft(5), Environment.NewLine);
 
             return result.ToString();
         }

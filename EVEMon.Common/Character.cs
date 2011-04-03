@@ -374,7 +374,7 @@ namespace EVEMon.Common
         public int GetSkillCountAtLevel(int level)
         {
             int count = 0;
-            foreach (var skill in m_skills)
+            foreach (var skill in m_skills.Where(x => x.IsKnown))
             {
                 if (skill.LastConfirmedLvl == level)
                     count++;

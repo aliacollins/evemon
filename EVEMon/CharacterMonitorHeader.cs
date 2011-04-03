@@ -691,14 +691,14 @@ namespace EVEMon
         private void SkillSummaryLabel_MouseHover(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            for (int skillLevel = 1; skillLevel <= 5; skillLevel++)
+            for (int skillLevel = 0; skillLevel <= 5; skillLevel++)
             {
                 int count = m_character.GetSkillCountAtLevel(skillLevel);
 
-                if (skillLevel > 1)
+                if (skillLevel > 0)
                     sb.AppendLine();
 
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} Skills at Level {1}", count, skillLevel);
+                sb.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level {0}: {1}", skillLevel, count.ToString().PadLeft(5));
             }
 
             ToolTip.SetToolTip(sender as Label, sb.ToString());
