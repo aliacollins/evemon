@@ -85,12 +85,14 @@ namespace EVEMon.Common
             get
             {
                 // Is it the default provider ?
-                if (DefaultProvider.Name == name) return DefaultProvider;
+                if (DefaultProvider.Name == name)
+                    return DefaultProvider;
 
                 // Look among custom providers
                 foreach (var provider in m_customProviders)
                 {
-                    if (provider.Name == name) return provider;
+                    if (provider.Name == name)
+                        return provider;
                 }
 
                 // No provider found

@@ -8,7 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
-using EVEMon.XmlGenerator.StaticData;
+
 using EVEMon.Common;
 
 namespace EVEMon.XmlGenerator
@@ -119,7 +119,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename"></param>
         internal static void SerializeXML<T>(T datafile, string filename)
         {
-            string path = Path.Combine(@"..\..\..\..\EVEMon.Common\Resources", filename);
+            string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
 
             using(var stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {
@@ -136,10 +136,10 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine("-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
-            Copy(path, Path.Combine(@"..\..\..\..\EVEMon.Common\bin\x86\Debug\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\EVEMon.Common\bin\x86\Release\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\EVEMon\bin\x86\Debug\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\EVEMon\bin\x86\Release\Resources", filename));
+            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon.Common\bin\x86\Debug\Resources", filename));
+            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon.Common\bin\x86\Release\Resources", filename));
+            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon\bin\x86\Debug\Resources", filename));
+            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon\bin\x86\Release\Resources", filename));
 
             // Update the file in the settings directory
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -156,7 +156,7 @@ namespace EVEMon.XmlGenerator
         internal static void CreateMD5SumsFile(string filename)
         {
             StreamWriter MD5file;
-            string path = @"..\..\..\..\EVEMon.Common\Resources";
+            string path = @"..\..\..\..\..\EVEMon.Common\Resources";
             string file = Path.Combine(path, filename);
 
             MD5file = File.CreateText(file);
@@ -215,7 +215,7 @@ namespace EVEMon.XmlGenerator
                 }
                 else
                 {
-                    Trace.WriteLine("{0} dosn't exist, copy failed", fi.Directory.FullName);
+                    Trace.WriteLine("{0} doesn't exist, copy failed", fi.Directory.FullName);
                 }
             }
             catch(Exception exc)

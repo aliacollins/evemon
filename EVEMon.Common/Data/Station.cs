@@ -16,6 +16,7 @@ namespace EVEMon.Common.Data
         private readonly long m_id;
         private readonly string m_name;
         private readonly int m_corporationID;
+        private readonly string m_corporationName;
         private readonly SolarSystem m_owner;
         private readonly float m_reprocessingTake;
         private readonly float m_reprocessingEfficiency;
@@ -30,6 +31,7 @@ namespace EVEMon.Common.Data
             m_id = src.StationID;
             m_name = src.StationName;
             m_corporationID = src.CorporationID;
+            m_corporationName = src.CorporationName;
             m_owner = StaticGeography.GetSystem(src.SolarSystemID); 
         }
 
@@ -42,6 +44,7 @@ namespace EVEMon.Common.Data
             m_id = src.ID;
             m_name = src.Name;
             m_corporationID = src.CorporationID;
+            m_corporationName = src.CorporationName;
             m_owner = owner;
             m_reprocessingTake = src.ReprocessingStationsTake;
             m_reprocessingEfficiency = src.ReprocessingEfficiency;
@@ -78,6 +81,14 @@ namespace EVEMon.Common.Data
         public int CorporationID
         {
             get { return m_corporationID; }
+        }
+
+        /// <summary>
+        /// Gets this object's corporation name.
+        /// </summary>
+        public string CorporationName
+        {
+            get { return m_corporationName; }
         }
 
         /// <summary>

@@ -161,6 +161,13 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
+        [XmlAttribute("corporationName")]
+        public string CorporationName
+        {
+            get;
+            set;
+        }
+
         [XmlElement("reprocessingEfficiency")]
         public float ReprocessingEfficiency
         {

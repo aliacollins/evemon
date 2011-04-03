@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
 {

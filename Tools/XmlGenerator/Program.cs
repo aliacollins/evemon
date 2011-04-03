@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+
 using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Datafiles;
@@ -1855,6 +1856,7 @@ namespace EVEMon.XmlGenerator
                                                   ID = srcStation.ID,
                                                   Name = srcStation.Name,
                                                   CorporationID = srcStation.CorporationID,
+                                                  CorporationName = s_names.FirstOrDefault(x => x.ID == srcStation.CorporationID).Name,
                                                   ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
                                                   ReprocessingStationsTake = srcStation.ReprocessingStationsTake,
                                                   Agents = stationAgents.ToArray()
