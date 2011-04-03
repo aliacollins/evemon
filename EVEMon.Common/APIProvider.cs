@@ -378,7 +378,7 @@ namespace EVEMon.Common
             get
             {
                 if (s_rowsetsTransform == null)
-                    s_rowsetsTransform = Util.LoadXSLT(EVEMon.Common.Properties.Resources.RowsetsXSLT);
+                    s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
 
                 return s_rowsetsTransform;
             }

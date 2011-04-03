@@ -480,6 +480,22 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
+        ///&lt;NotificationRefTypeIDs xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///	&lt;rowset name=&quot;refTypes&quot; key=&quot;refTypeID&quot; columns=&quot;refTypeID,refTypeName&quot;&gt;
+        ///		&lt;row refTypeID=&quot;2&quot; refTypeName=&quot;Character deleted&quot; /&gt;
+        ///		&lt;row refTypeID=&quot;3&quot; refTypeName=&quot;Give medal to character&quot; /&gt;
+        ///		&lt;row refTypeID=&quot;4&quot; refTypeName=&quot;Alliance maintenance bill&quot; /&gt;
+        ///		&lt;row refTypeID=&quot;5&quot; refTypeName=&quot;Alliance war declared&quot; /&gt;
+        ///		&lt;row refTypeID=&quot;6&quot; refTypeName=&quot;Alliance  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string NotificationRefTypeIDs {
+            get {
+                return ResourceManager.GetString("NotificationRefTypeIDs", resourceCulture);
+            }
+        }
+        
         public static System.Drawing.Bitmap Officer {
             get {
                 object obj = ResourceManager.GetObject("Officer", resourceCulture);

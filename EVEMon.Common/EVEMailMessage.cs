@@ -24,12 +24,12 @@ namespace EVEMon.Common
                         EVEMailState.Inbox : EVEMailState.SentItem);
             MessageID = src.MessageID;
             Sender = src.ToListID.Any(x => x == src.SenderID.ToString()) ?
-                        GetMailingListIDToName(src.SenderID.ToString()) : GetIDToName(src.SenderID.ToString());
+                        GetMailingListIDToName(src.SenderID.ToString()) : EveIDtoName.GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Title = src.Title;
-            ToCorpOrAlliance = GetIDToName(src.ToCorpOrAllianceID);
-            ToCharacters = GetIDToName(src.ToCharacterIDs);
-            ToMailingLists = GetMailingListIDToName(src.ToListID);
+            ToCorpOrAlliance = EveIDtoName.GetIDToName(src.ToCorpOrAllianceID);
+            ToCharacters = GetIDsToNames(src.ToCharacterIDs);
+            ToMailingLists = GetMailingListIDsToNames(src.ToListID);
             Recipient = GetRecipient();
         }
 
@@ -60,7 +60,7 @@ namespace EVEMon.Common
 
         public bool MailBodyDownloaded { get; private set; }
 
-        public string Text { get {return EVEMailBody.BodyText; } }
+        public string Text { get { return EVEMailBody.BodyText; } }
 
         #endregion
 
@@ -68,33 +68,11 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
-        /// Gets the name of the character ID.
-        /// </summary>
-        /// <param name="senderId">The sender id.</param>
-        /// <returns></returns>
-        private string GetIDToName(string senderId)
-        {
-            // If there is no ID to query return an empty string
-            if (String.IsNullOrEmpty(senderId))
-                return String.Empty;
-
-            // If it's a zero ID return "Unknown"
-            if (senderId == "0")
-                return "Unknown";
-
-            List<string> list = new List<string>();
-            list.Add(senderId);
-
-            List<string> name = GetIDToName(list);
-            return name[0];
-        }
-
-        /// <summary>
         /// Gets the names of the character IDs.
         /// </summary>
         /// <param name="src">A list of character IDs.</param>
         /// <returns>A list of character names</returns>
-        private List<string> GetIDToName(List<string> src)
+        private List<string> GetIDsToNames(List<string> src)
         {
             // If there are no IDs to query return a list with an empty entry
             if (src.Count == 0)
@@ -137,11 +115,11 @@ namespace EVEMon.Common
 
             List<string> list = new List<string>();
             list.Add(mailingListID);
-            List<string> name = GetMailingListIDToName(list);
+            List<string> name = GetMailingListIDsToNames(list);
             return name[0];
         }
 
-        private List<string> GetMailingListIDToName(List<string> mailingListIDs)
+        private List<string> GetMailingListIDsToNames(List<string> mailingListIDs)
         {
             // If there are no IDs to query return a list with an empty entry
             if (mailingListIDs.Count == 0)
@@ -200,6 +178,11 @@ namespace EVEMon.Common
 
             return Recipient;
         }
+
+        #endregion
+
+
+        #region Querying
 
         /// <summary>
         /// Gets the EVE mail body.

@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
+    <Compile Include="EveNotificationType.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
     <Compile Include="EveNotificationsCollection.cs" />
@@ -72,6 +73,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
+    <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
+    <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
@@ -648,6 +651,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Serialization\NotificationRefTypeIDs.xml" />
     <None Include="Resources\eve-blueprints-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -21,23 +22,13 @@ namespace EVEMon.Common
         {
             m_ccpCharacter = ccpCharacter;
             NotificationID = src.NotificationID;
-            Type = GetType(src.TypeID);
+            Type = EveNotificationType.GetType(src.TypeID);
             Sender = GetIDToName(src.SenderID.ToString());
             SentDate = src.SentDate;
             Recipient = GetRecipient();
         }
 
         #endregion
-
-        private string GetType(int p)
-        {
-            return p.ToString();
-        }
-
-        private string GetIDToName(string p)
-        {
-            return p;
-        }
 
 
         #region Properties
@@ -66,6 +57,33 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
+        /// Gets the name of the ID.
+        /// </summary>
+        /// <param name="ID">The ID.</param>
+        /// <returns></returns>
+        private string GetIDToName(string ID)
+        {
+            // Look into EVEMon's data file if it's an NPC corporation or agent
+            foreach (var station in StaticGeography.AllStations)
+            {
+                if (station.CorporationID.ToString() == ID)
+                    return station.CorporationName;
+
+                if (station.Agents.Any(x => x.ID.ToString() == ID))
+                    return station.Agents.First(x => x.ID.ToString() == ID).Name;
+            }
+
+            // Lookup if it's a players null sec corporation
+            // (while we have the data we can avoid unnecessary queries to the API)
+            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID.ToString() == ID);
+            if (conqStation != null)
+                return conqStation.CorporationName;
+
+            // Didn't found any ? Query the API
+            return EveIDtoName.GetIDToName(ID);
+        }
+
+        /// <summary>
         /// Gets the recipient.
         /// </summary>
         /// <returns></returns>
@@ -76,6 +94,11 @@ namespace EVEMon.Common
 
             return Recipient;
         }
+
+        #endregion
+
+
+        #region Querying
 
         /// <summary>
         /// Gets the EVE notification.

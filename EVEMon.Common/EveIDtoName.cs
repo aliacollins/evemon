@@ -19,7 +19,30 @@ namespace EVEMon.Common
         private static List<string> s_listOfIDsToQuery = new List<string>();
         private static Dictionary<string, string> s_cacheList = new Dictionary<string, string>();
 
-        private static bool s_loaded;
+        private static bool s_isLoaded;
+
+
+        /// <summary>
+        /// Gets the owner name from its ID.
+        /// </summary>
+        /// <param name="IDs">The ID.</param>
+        /// <returns></returns>
+        internal static string GetIDToName(string ID)
+        {
+            // If there is no ID to query return an empty string
+            if (String.IsNullOrEmpty(ID))
+                return String.Empty;
+
+            // If it's a zero ID return "Unknown"
+            if (ID == "0")
+                return "Unknown";
+
+            List<string> list = new List<string>();
+            list.Add(ID);
+
+            List<string> name = GetIDsToNames(list);
+            return name[0];
+        }
 
         /// <summary>
         /// Gets the owner name from its ID.
@@ -43,11 +66,11 @@ namespace EVEMon.Common
         /// </summary>
         private static void EnsureCacheFileLoad()
         {
-            if (!File.Exists(s_file) || s_loaded)
+            if (!File.Exists(s_file) || s_isLoaded)
                 return;
 
             TryDeserializeCacheFile();
-            s_loaded = true;
+            s_isLoaded = true;
         }
 
         /// <summary>
@@ -94,6 +117,10 @@ namespace EVEMon.Common
 
             if (!s_listOfIDsToQuery.IsEmpty())
                 QueryAPICharacterName();
+
+            // In case the list is empty, add an "Unknown" entry
+            if (s_listOfNames.Count == 0)
+                s_listOfNames.Add("Unknown");
         }
 
         /// <summary>
