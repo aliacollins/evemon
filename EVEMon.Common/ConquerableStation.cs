@@ -28,6 +28,27 @@ namespace EVEMon.Common
             m_corp = src.CorporationName;
         }
 
+
+
+        #region Properties
+
+        /// <summary>
+        /// Gets an enumeration of all the stations in the universe.
+        /// </summary>
+        internal static IEnumerable<ConquerableStation> AllStations
+        {
+            get
+            {
+                // Ensure list importation
+                EnsureImportation();
+
+                foreach (var conquerableStation in s_conqStationsByID.Values)
+                {
+                    yield return conquerableStation;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets something like OwnerName - StationName.
         /// </summary>
@@ -43,6 +64,8 @@ namespace EVEMon.Common
         {
             get { return SolarSystem.FullLocation + " > " + FullName; }
         }
+        
+        #endregion
 
 
         #region File Updating
@@ -52,12 +75,6 @@ namespace EVEMon.Common
         /// </summary>
         private static void UpdateList()
         {
-            var updatePeriods = Settings.Updates.Periods;
-
-            // Exit on market orders "Never" update setting
-            if (updatePeriods.Count != 0 && updatePeriods[APIMethods.MarketOrders] == UpdatePeriod.Never)
-                return;
-
             // Set the update time and period
             DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
             TimeSpan updatePeriod = TimeSpan.FromDays(1);

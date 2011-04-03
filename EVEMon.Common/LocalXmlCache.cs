@@ -117,10 +117,11 @@ namespace EVEMon.Common
                 // (file is updated after the update time
                 // or was updated between the previous day update time
                 // and today's update time and its not time to update yet) ?
-                if ((file.LastWriteTimeUtc > updateTime
-                    || (file.LastWriteTimeUtc > previousUpdateTime && file.LastWriteTimeUtc < updateTime))
-                    && DateTime.UtcNow < updateTime)
-                    return true; 
+                if (file.LastWriteTimeUtc > updateTime
+                    || (file.LastWriteTimeUtc > previousUpdateTime &&
+                        file.LastWriteTimeUtc < updateTime &&
+                        DateTime.UtcNow < updateTime))
+                    return true;
             }
 
             return false;
