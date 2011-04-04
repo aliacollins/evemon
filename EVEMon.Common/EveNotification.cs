@@ -23,7 +23,7 @@ namespace EVEMon.Common
             m_ccpCharacter = ccpCharacter;
             NotificationID = src.NotificationID;
             Type = EveNotificationType.GetType(src.TypeID);
-            Sender = GetIDToName(src.SenderID.ToString());
+            Sender = GetIDToName(src.SenderID);
             SentDate = src.SentDate;
             Recipient = GetRecipient();
         }
@@ -61,26 +61,26 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="ID">The ID.</param>
         /// <returns></returns>
-        private string GetIDToName(string ID)
+        private string GetIDToName(long ID)
         {
             // Look into EVEMon's data file if it's an NPC corporation or agent
             foreach (var station in StaticGeography.AllStations)
             {
-                if (station.CorporationID.ToString() == ID)
+                if (station.CorporationID == ID && station.CorporationName != null)
                     return station.CorporationName;
 
-                if (station.Agents.Any(x => x.ID.ToString() == ID))
-                    return station.Agents.First(x => x.ID.ToString() == ID).Name;
+                if (station.Agents.Any(x => x.ID == ID))
+                    return station.Agents.First(x => x.ID == ID).Name;
             }
 
             // Lookup if it's a players null sec corporation
             // (while we have the data we can avoid unnecessary queries to the API)
-            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID.ToString() == ID);
+            Station conqStation = ConquerableStation.AllStations.FirstOrDefault(x => x.CorporationID == ID);
             if (conqStation != null)
                 return conqStation.CorporationName;
 
             // Didn't found any ? Query the API
-            return EveIDtoName.GetIDToName(ID);
+            return EveIDtoName.GetIDToName(ID.ToString());
         }
 
         /// <summary>

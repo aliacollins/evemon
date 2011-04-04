@@ -14,6 +14,11 @@ namespace EVEMon.Common
         private static bool s_isLoaded;
 
 
+        /// <summary>
+        /// Gets the description of the notification type.
+        /// </summary>
+        /// <param name="typeID">The type ID.</param>
+        /// <returns></returns>
         internal static string GetType(int typeID)
         {
             EnsureInitialized();
@@ -25,6 +30,9 @@ namespace EVEMon.Common
             return "Unknown";
         }
 
+        /// <summary>
+        /// Ensures the notification types data have been intialized.
+        /// </summary>
         private static void EnsureInitialized()
         {
             if (s_isLoaded)
