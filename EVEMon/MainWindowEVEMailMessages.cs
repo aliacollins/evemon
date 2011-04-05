@@ -487,15 +487,15 @@ namespace EVEMon
                                                 "{0:ddd} {0:G}", eveMailMessage.SentDate.ToLocalTime());
                     break;
 
-                case EveMailMessagesColumn.ToCharacterID:
+                case EveMailMessagesColumn.ToCharacters:
                     item.Text = string.Join(", ", eveMailMessage.ToCharacters);
                     break;
 
-                case EveMailMessagesColumn.ToCorpOrAllianceID:
+                case EveMailMessagesColumn.ToCorpOrAlliance:
                     item.Text = eveMailMessage.ToCorpOrAlliance;
                     break;
 
-                case EveMailMessagesColumn.ToListID:
+                case EveMailMessagesColumn.ToMailingList:
                     item.Text = string.Join(", ", eveMailMessage.ToMailingLists);
                     break;
 

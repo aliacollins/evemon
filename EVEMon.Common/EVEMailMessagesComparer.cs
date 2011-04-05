@@ -72,13 +72,13 @@ namespace EVEMon.Common
                 case EveMailMessagesColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
 
-                case EveMailMessagesColumn.ToCharacterID:
+                case EveMailMessagesColumn.ToCharacters:
                     return x.ToCharacters[0].CompareTo(y.ToCharacters[0]);
 
-                case EveMailMessagesColumn.ToCorpOrAllianceID:
+                case EveMailMessagesColumn.ToCorpOrAlliance:
                     return x.ToCorpOrAlliance.CompareTo(y.ToCorpOrAlliance);
 
-                case EveMailMessagesColumn.ToListID:
+                case EveMailMessagesColumn.ToMailingList:
                     return x.ToMailingLists[0].CompareTo(y.ToMailingLists[0]);
                 
                 default:

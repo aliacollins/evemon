@@ -16,7 +16,7 @@ namespace EVEMon.Common.SettingsObjects
                 EveMailMessagesColumn.SenderName,
                 EveMailMessagesColumn.Title,
                 EveMailMessagesColumn.SentDate,
-                EveMailMessagesColumn.ToCharacterID
+                EveMailMessagesColumn.ToCharacters
             };
 
             Columns = EnumExtensions.GetValues<EveMailMessagesColumn>().Where(x => x != EveMailMessagesColumn.None).Select(x =>
