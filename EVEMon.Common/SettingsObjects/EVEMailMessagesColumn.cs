@@ -25,14 +25,14 @@ namespace EVEMon.Common.SettingsObjects
 
         [Header("To")]
         [Description("To ( Recipient(s) )")]
-        ToCharacterID = 3,
+        ToCharacters = 3,
 
         [Header("To Corp Or Alliance")]
         [Description("To Corp Or Alliance")]
-        ToCorpOrAllianceID = 4,
+        ToCorpOrAlliance = 4,
 
         [Header("To Mailing List")]
         [Description("To Mailing List(s)")]
-        ToListID = 5,
+        ToMailingList = 5,
     }
 }
