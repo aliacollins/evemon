@@ -276,6 +276,42 @@ namespace EVEMon.Common.Controls
                 pbImage.Cursor = Cursors.Hand;
             }
 
+            GetImageFromCCP(typeData);
+        }
+
+        /// <summary>
+        /// Gets the image from CCP's image server (http://image.eveonline.com).
+        /// </summary>
+        /// <param name="typeData">The type data.</param>
+        /// <returns></returns>
+        private void GetImageFromCCP(ImageTypeData typeData)
+        {
+            string urlPath = "inventorytype";
+            bool drawOverlayIcon = false;
+
+            if ((int)m_imageSize > 64)
+            {
+                urlPath = "render";
+                drawOverlayIcon = true;
+            }
+
+            string imageURL = String.Format(NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize);
+
+            ImageService.GetImageAsync(imageURL, true, (img) =>
+                                        {
+                                            GotImage(m_item.ID, img, drawOverlayIcon);
+                                            
+                                            if (img == null)
+                                                GetImageFromAlternativeSource(typeData);
+                                        });
+        }
+
+        /// <summary>
+        /// Gets the image from an alternative source [local or (http://eve.no-ip.de)].
+        /// </summary>
+        /// <param name="typeData">The type data.</param>
+        private void GetImageFromAlternativeSource(ImageTypeData typeData)
+        {
             // Set file & pathname variables
             string eveSize = String.Format(CultureConstants.DefaultCulture, "{0}_{0}", (int)m_imageSize);
 
@@ -294,8 +330,7 @@ namespace EVEMon.Common.Controls
             }
 
             // Try and get image from a local optional resources file (probably don't used anymore, not sure)
-            string localResources = String.Format(
-                "{1}Resources{0}Optional{0}{2}{3}.resources",
+            string localResources = String.Format("{1}Resources{0}Optional{0}{2}{3}.resources",
                 Path.DirectorySeparatorChar, AppDomain.CurrentDomain.BaseDirectory, typeData.localComponent, eveSize);
 
             // Try to get image from web (or local cache located in %APPDATA%\EVEMon if not found yet)
@@ -305,8 +340,8 @@ namespace EVEMon.Common.Controls
                 // http://eve.no-ip.de/icons/32_32/icon22_08.png
                 // http://eve.no-ip.de/icons/32_32/7538.png
                 string imageURL = String.Format(NetworkConstants.CCPIcons, typeData.urlPath, eveSize, imageWebName);
- 
-                ImageService.GetImageAsync(imageURL, true, (img) => GotImage(m_item.ID, img));
+
+                ImageService.GetImageAsync(imageURL, true, (img) => GotImage(m_item.ID, img, true));
             }
         }
 
@@ -318,21 +353,19 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         private bool FetchImageResource(string imageResourceName, string localResources)
         {
-            bool foundResource = false;
+            if (!File.Exists(localResources))
+                return false;
+
             try
             {
-                if (File.Exists(localResources))
+                IResourceReader basic = new ResourceReader(localResources);
+                IDictionaryEnumerator basicx = basic.GetEnumerator();
+                while (basicx.MoveNext())
                 {
-                    IResourceReader basic = new System.Resources.ResourceReader(localResources);
-                    System.Collections.IDictionaryEnumerator basicx = basic.GetEnumerator();
-                    while (basicx.MoveNext())
+                    if (basicx.Key.ToString() == imageResourceName)
                     {
-                        if (basicx.Key.ToString() == imageResourceName)
-                        {
-                            pbImage.Image = (Image)basicx.Value;
-                            foundResource = true;
-                            break;
-                        }
+                        pbImage.Image = (Image)basicx.Value;
+                        return true;
                     }
                 }
             }
@@ -340,7 +373,7 @@ namespace EVEMon.Common.Controls
             {
                 ExceptionHandler.LogException(ex, true);
             }
-            return foundResource;
+            return false;
         }
 
         /// <summary>
@@ -348,7 +381,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="id">EveObject id for retrieved image</param>
         /// <param name="image">Image object retrieved</param>
-        private void GotImage(long id, Image image)
+        private void GotImage(long id, Image image, bool drawOverlayIcon)
         {
             // Only display the image if the id matches the current EveObject
             if (image != null && m_item.ID == id)
@@ -356,7 +389,8 @@ namespace EVEMon.Common.Controls
                 pbImage.Image = image;
 
                 // Draw the overlay icon
-                DrawOverlayIcon();
+                if (drawOverlayIcon)
+                    DrawOverlayIcon();
             }
             else 
             {
@@ -411,14 +445,11 @@ namespace EVEMon.Common.Controls
         private void pbImage_DoubleClick(object sender, EventArgs e)
         {
             // Only display the pop up form if pop-ups are enabled and a suitable image can be retrieved
-            if (m_popUpActive)
-            {
-                EveImagePopUp popup = new EveImagePopUp(m_item);
-                popup.FormClosed += delegate { popup.Dispose(); };
-                popup.Show();
-            }
-        }
+            if (!m_popUpActive)
+                return;
 
+            WindowsFactory<EveImagePopUp>.ShowUnique(()=> new EveImagePopUp(m_item));
+        }
         #endregion
 
 

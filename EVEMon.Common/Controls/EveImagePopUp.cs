@@ -23,15 +23,14 @@ namespace EVEMon.Common.Controls
         {
             InitializeComponent();
             m_imageSource = imageSource;
-            if (m_imageSource != null)
-            {
-                // Set window title
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, titleBase);
-                eveImage.EveItem = m_imageSource;
-            }
-            else
-                this.Text = titleBase;
-        }
+            Text = titleBase;
 
+            if (m_imageSource == null)
+                return;
+
+            // Set window title
+            Text = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", m_imageSource.Name, titleBase);
+            eveImage.EveItem = m_imageSource;
+        }
     }
 }

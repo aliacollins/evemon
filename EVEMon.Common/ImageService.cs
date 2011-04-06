@@ -23,9 +23,8 @@ namespace EVEMon.Common
             {
                 string cacheDir = Path.Combine(Path.Combine(EveClient.EVEMonDataDir, "cache"), "images");
                 if (!Directory.Exists(cacheDir))
-                {
                     Directory.CreateDirectory(cacheDir);
-                }
+
                 return cacheDir;
             }
         }
@@ -43,8 +42,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Asynchronously downloads an image from the provided url.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="useCache"></param>
+        /// <param name="url">The URL.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
         public static void GetImageAsync(string url, bool useCache, GetImageCallback callback)
         {
@@ -61,9 +60,8 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    Image img = Image.FromFile(cacheFileName, true); 
+                    Image img = Image.FromFile(cacheFileName, true);
                     callback(img);
-                    return;
                 }
                 catch (Exception e)
                 {
@@ -75,9 +73,8 @@ namespace EVEMon.Common
             EveClient.HttpWebService.DownloadImageAsync(url, GotImage, (GetImageCallback)((img) =>
                 {
                     if (img != null)
-                    {
                         AddImageToCache(url, img);
-                    }
+
                     callback(img);
                 }));
         }
@@ -119,9 +116,8 @@ namespace EVEMon.Common
             Match extensionMatch = Regex.Match(url, @"([^\.]+)$");
             string ext = String.Empty;
             if (extensionMatch.Success)
-            {
                 ext = "." + extensionMatch.Groups[1];
-            }
+
             byte[] hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(url));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < hash.Length; i++)

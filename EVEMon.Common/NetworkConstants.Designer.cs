@@ -313,11 +313,11 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://eve.no-ip.de/icons/256_256/{0}.png.
+        ///   Looks up a localized string similar to http://image.eveonline.com/{0}/{1}_{2}.png.
         /// </summary>
-        public static string CCPIconsBig {
+        public static string CCPIconsFromImageServer {
             get {
-                return ResourceManager.GetString("CCPIconsBig", resourceCulture);
+                return ResourceManager.GetString("CCPIconsFromImageServer", resourceCulture);
             }
         }
         
