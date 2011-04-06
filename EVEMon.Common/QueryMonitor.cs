@@ -115,11 +115,11 @@ namespace EVEMon.Common
                     return m_lastResult.CachedUntil;
 
                 // No error ? Then we compute the next update according to the settings.
-                var period = Settings.Updates.Periods[m_method];
+                UpdatePeriod period = Settings.Updates.Periods[m_method];
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
-                var nextUpdate = m_lastUpdate + period.ToDuration();
+                DateTime nextUpdate = m_lastUpdate.Add(period.ToDuration());
 
                 // If CCP "cached until" is greater than what we computed, return CCP cached time.
                 if (m_lastResult != null && m_lastResult.CachedUntil > nextUpdate)
