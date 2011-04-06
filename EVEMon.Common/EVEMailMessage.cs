@@ -38,28 +38,76 @@ namespace EVEMon.Common
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the EVE mail state.
+        /// </summary>
+        /// <value>The state.</value>
         public EVEMailState State { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail message ID.
+        /// </summary>
+        /// <value>The message ID.</value>
         public long MessageID { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail sender name.
+        /// </summary>
+        /// <value>The sender.</value>
         public string Sender { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the sent date of the EVE mail.
+        /// </summary>
+        /// <value>The sent date.</value>
         public DateTime SentDate { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail title.
+        /// </summary>
+        /// <value>The title.</value>
         public string Title { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail recipient (corp or alliance).
+        /// </summary>
+        /// <value>To corp or alliance.</value>
         public string ToCorpOrAlliance { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail recipient(s) (characters).
+        /// </summary>
+        /// <value>To characters.</value>
         public List<string> ToCharacters { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail recipient (mailing lists).
+        /// </summary>
+        /// <value>To mailing lists.</value>
         public List<string> ToMailingLists { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the recipients.
+        /// </summary>
+        /// <value>The recipient.</value>
         public List<string> Recipient { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE mail body.
+        /// </summary>
+        /// <value>The EVE mail body.</value>
         public EveMailBody EVEMailBody { get; private set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the EVE mail body was downloaded.
+        /// </summary>
+        /// <value><c>true</c> if mail body downloaded; otherwise, <c>false</c>.</value>
         public bool MailBodyDownloaded { get; private set; }
 
+        /// <summary>
+        /// Gets the EVE mail body text.
+        /// </summary>
+        /// <value>The text.</value>
         public string Text { get { return EVEMailBody.BodyText; } }
 
         #endregion
@@ -103,6 +151,11 @@ namespace EVEMon.Common
             return listOfNames;
         }
 
+        /// <summary>
+        /// Gets the name of the mailing list ID.
+        /// </summary>
+        /// <param name="mailingListID">The mailing list ID.</param>
+        /// <returns></returns>
         private string GetMailingListIDToName(string mailingListID)
         {
             // If there is no ID to query return an empty string
@@ -119,6 +172,11 @@ namespace EVEMon.Common
             return name[0];
         }
 
+        /// <summary>
+        /// Gets the mailing list IDs to names.
+        /// </summary>
+        /// <param name="mailingListIDs">The mailing list IDs.</param>
+        /// <returns></returns>
         private List<string> GetMailingListIDsToNames(List<string> mailingListIDs)
         {
             // If there are no IDs to query return a list with an empty entry

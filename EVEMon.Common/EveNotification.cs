@@ -33,22 +33,60 @@ namespace EVEMon.Common
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the EVE notification ID.
+        /// </summary>
+        /// <value>The notification ID.</value>
         public long NotificationID { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE notification type.
+        /// </summary>
+        /// <value>The type.</value>
         public string Type { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE notification sender name.
+        /// </summary>
+        /// <value>The sender.</value>
         public string Sender { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the sent date of the EVE notification.
+        /// </summary>
+        /// <value>The sent date.</value>
         public DateTime SentDate { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE notification recipient.
+        /// </summary>
+        /// <value>The recipient.</value>
         public List<string> Recipient { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the EVE notification text.
+        /// </summary>
+        /// <value>The EVE notification text.</value>
         public EveNotificationText EVENotificationText { get; private set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the EVE notification text was downloaded.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if notification text downloaded; otherwise, <c>false</c>.
+        /// </value>
         public bool NotificationTextDownloaded { get; private set; }
 
+        /// <summary>
+        /// Gets the EVE notification title.
+        /// </summary>
+        /// <value>The title.</value>
         public string Title { get { return Type; } }
 
+        /// <summary>
+        /// Gets the EVE notification text.
+        /// </summary>
+        /// <value>The text.</value>
         public string Text { get { return EVENotificationText.NotificationText; } }
 
         #endregion
