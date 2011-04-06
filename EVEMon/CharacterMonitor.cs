@@ -25,6 +25,7 @@ namespace EVEMon
         private CredentialsLevel m_keyLevel;
         private bool m_pendingUpdate;
 
+
         #region Constructor
 
         /// <summary>
@@ -409,10 +410,10 @@ namespace EVEMon
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
 
-                if (monitor.Method == APIMethods.MailMessages && monitor.Enabled)
+                if (monitor.Method == APIMethods.MailMessages && monitor.Enabled && monitor.LastResult == null)
                     ccpCharacter.ForceUpdate(monitor);
 
-                if (monitor.Method == APIMethods.Notifications && monitor.Enabled)
+                if (monitor.Method == APIMethods.Notifications && monitor.Enabled && monitor.LastResult == null)
                     ccpCharacter.ForceUpdate(monitor);
             }
         }
