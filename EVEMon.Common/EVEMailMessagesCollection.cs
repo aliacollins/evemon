@@ -10,6 +10,8 @@ namespace EVEMon.Common
     public sealed class EveMailMessagesCollection : ReadonlyCollection<EveMailMessage>
     {
         private readonly CCPCharacter m_ccpCharacter;
+        private long m_highestID;
+
 
         #region Constructor
 
@@ -46,14 +48,20 @@ namespace EVEMon.Common
             if (String.IsNullOrEmpty(eveMailMessagesIDs))
                 return;
 
+
             List<string> ids = eveMailMessagesIDs.Split(',').ToList();
-            foreach (var id in ids)
+            foreach (string id in ids)
             {
+                long ID = long.Parse(id);
                 m_items.Add(new EveMailMessage(m_ccpCharacter,
                                                 new SerializableMailMessagesListItem()
                                                 {
-                                                    MessageID = long.Parse(id)
+                                                    MessageID = ID
                                                 }));
+                
+                // Find the last received ID 
+                if (ID > m_highestID)
+                    m_highestID = ID;
             }
         }
 
@@ -68,15 +76,20 @@ namespace EVEMon.Common
             List<EveMailMessage> newMessages = new List<EveMailMessage>();
 
             // Import the mail messages from the API
-            foreach (var srcEVEMailMessage in src)
+            // To distinguish new EVE mails from old EVE mails that have been added to the API list
+            // due to deletion of some EVE mails in-game, we need to sort the received data 
+            foreach (var srcEVEMailMessage in src.OrderBy(x=> x.MessageID))
             {
                 // Is it an Inbox message ?
                 if (m_ccpCharacter.CharacterID != srcEVEMailMessage.SenderID)
                 {
-                    // If it's a new mail message increase the counter
+                    // If it's a newly mail message and not an old mail message added to the API list, increase the counter
                     var message = m_items.FirstOrDefault(x => x.MessageID == srcEVEMailMessage.MessageID);
-                    if (message == null)
+                    if (message == null && srcEVEMailMessage.MessageID > m_highestID)
+                    {
                         NewMessages++;
+                        m_highestID = srcEVEMailMessage.MessageID;
+                    }
                 }
 
                 newMessages.Add(new EveMailMessage(m_ccpCharacter, srcEVEMailMessage));
@@ -94,7 +107,10 @@ namespace EVEMon.Common
         {
             List<string> serial = new List<string>();
 
-            foreach (var message in m_items.Where(x => x.Sender != m_ccpCharacter.Name))
+            // Store only the mail messages IDs from the inbox in a descending order
+            foreach (var message in m_items
+                                    .Where(x => x.Sender != m_ccpCharacter.Name)
+                                    .OrderByDescending(x=> x.MessageID))
             {
                 serial.Add(message.MessageID.ToString());
             }
