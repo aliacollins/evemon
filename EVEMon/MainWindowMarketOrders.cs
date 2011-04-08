@@ -754,8 +754,6 @@ namespace EVEMon
                 return;
 
             UpdateContent();
-            //marketExpPanelControl.Visible = true;
-            //marketExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>

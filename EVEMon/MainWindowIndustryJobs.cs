@@ -751,8 +751,6 @@ namespace EVEMon
                 return;
 
             UpdateContent();
-            //industryExpPanelControl.Visible = true;
-            //industryExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
