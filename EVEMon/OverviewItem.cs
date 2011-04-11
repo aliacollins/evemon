@@ -303,7 +303,7 @@ namespace EVEMon
                 {
                     lblSkillQueueTrainingTime.ForeColor = lblRemainingTime.ForeColor;
                     lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                        "Queue finishes in: {0}", skillQueueEndTime.ToRemainingTimeShortDescription());
+                        "Queue finishes in: {0}", skillQueueEndTime.ToLocalTime().ToRemainingTimeShortDescription());
                     return;
                 }
 

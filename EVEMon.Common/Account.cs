@@ -28,7 +28,7 @@ namespace EVEMon.Common
         private string m_apiKey;
         private CredentialsLevel m_keyLevel;
         private DateTime m_lastKeyLevelUpdate = DateTime.MinValue;
-        private DateTime m_accountExpiration;
+        private DateTime m_accountExpirationDate;
         private DateTime m_accountCreated;
         private bool m_updatePending;
         private bool m_characterListUpdated;
@@ -59,7 +59,7 @@ namespace EVEMon.Common
             m_userId = serial.ID;
             m_apiKey = serial.Key;
             m_keyLevel = serial.KeyLevel;
-            m_accountExpiration = serial.PaidUntil;
+            m_accountExpirationDate = serial.PaidUntil;
             m_accountCreated = serial.CreateDate;
             m_ignoreList.Import(serial.IgnoreList);
         }
@@ -116,7 +116,7 @@ namespace EVEMon.Common
         /// </summary>
         public DateTime AccountExpiration
         {
-            get { return m_accountExpiration.ToLocalTime(); }
+            get { return m_accountExpirationDate.ToLocalTime(); }
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace EVEMon.Common
                            ID = m_userId,
                            Key = m_apiKey,
                            KeyLevel = m_keyLevel,
-                           PaidUntil = m_accountExpiration,
+                           PaidUntil = m_accountExpirationDate,
                            CreateDate = m_accountCreated,
                            LastAccountStatusUpdate = m_accountStatusMonitor.LastUpdate,
                            LastCharacterListUpdate = m_charactersListMonitor.LastUpdate,
@@ -422,7 +422,7 @@ namespace EVEMon.Common
             EveClient.Notifications.InvalidateAccountError(this);
 
             m_accountCreated = result.Result.CreateDate;
-            m_accountExpiration = result.Result.PaidUntil;
+            m_accountExpirationDate = result.Result.PaidUntil;
 
             // Notifies for the account expiration
             NotifyAccountExpiration();
@@ -484,18 +484,18 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyAccountExpiration()
         {
-            // Is it to expire within 7 days? Sent am informative notification
-            TimeSpan daysToExpire = m_accountExpiration.Subtract(DateTime.UtcNow);
+            // Is it to expire within 7 days? Send an informative notification
+            TimeSpan daysToExpire = m_accountExpirationDate.Subtract(DateTime.UtcNow);
             if (daysToExpire < TimeSpan.FromDays(7) && daysToExpire > TimeSpan.FromDays(1))
             {
-                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpiration, NotificationPriority.Information);
+                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Information);
                 return;
             }
 
-            // Is it to expire within the day? Sent a warning notification
+            // Is it to expire within the day? Send a warning notification
             if (daysToExpire <= TimeSpan.FromDays(1) && daysToExpire > TimeSpan.Zero)
             {
-                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpiration, NotificationPriority.Warning);
+                EveClient.Notifications.NotifyAccountExpiration(this, m_accountExpirationDate, NotificationPriority.Warning);
                 return;
             }
 
