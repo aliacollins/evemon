@@ -76,7 +76,7 @@ namespace EVEMon.Common
             // Look in the %APPDATA% folder
             string filepath = String.Format(
                 "{0}{1}{2}",
-                EveClient.EVEMonDataDir,
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon"),
                 Path.DirectorySeparatorChar,
                 filename);
 
@@ -92,9 +92,7 @@ namespace EVEMon.Common
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
-            {
                 throw new ApplicationException(baseFile + " not found!");
-            }
 
             // The file was in the installation directory, let's copy it to %APPDATA%
             FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);
