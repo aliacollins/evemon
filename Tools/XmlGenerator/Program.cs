@@ -19,14 +19,14 @@ namespace EVEMon.XmlGenerator
         private static double s_totalTablesCount = 25;
 
         private static int s_percentOld;
-        private static int s_propGenTotal = 1476;
+        private static int s_propGenTotal = 1547;
         private static int s_itemGenTotal = 8717;
         private static int s_skillGenTotal = 458;
         private static int s_certGenTotal = 4272;
-        private static int s_blueprintGenTotal = 3947;
+        private static int s_blueprintGenTotal = 3945;
         private static int s_geoGen = 5219;
         private static int s_geoGenTotal = 19501;
-        private static int s_reprocessGenTotal = 10037;
+        private static int s_reprocessGenTotal = 10036;
 
         private static DateTime s_startTime;
         private static DateTime s_endTime;

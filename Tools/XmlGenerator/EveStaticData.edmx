@@ -6,8 +6,8 @@
     <edmx:StorageModels>
     <Schema Namespace="EveStaticDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="EveStaticDataModelStoreContainer">
-          <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtAgentTypes" EntityType="EveStaticDataModel.Store.agtAgentTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="agtAgents" EntityType="EveStaticDataModel.Store.agtAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtConfig" EntityType="EveStaticDataModel.Store.agtConfig" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="agtResearchAgents" EntityType="EveStaticDataModel.Store.agtResearchAgents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="chrAncestries" EntityType="EveStaticDataModel.Store.chrAncestries" store:Type="Tables" Schema="dbo" />
@@ -18,8 +18,8 @@
           <EntitySet Name="crpActivities" EntityType="EveStaticDataModel.Store.crpActivities" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crpNPCCorporationDivisions" EntityType="EveStaticDataModel.Store.crpNPCCorporationDivisions" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crpNPCCorporationResearchFields" EntityType="EveStaticDataModel.Store.crpNPCCorporationResearchFields" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crpNPCCorporationTrades" EntityType="EveStaticDataModel.Store.crpNPCCorporationTrades" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="crpNPCCorporations" EntityType="EveStaticDataModel.Store.crpNPCCorporations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crpNPCDivisions" EntityType="EveStaticDataModel.Store.crpNPCDivisions" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crtCategories" EntityType="EveStaticDataModel.Store.crtCategories" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="crtCertificates" EntityType="EveStaticDataModel.Store.crtCertificates" store:Type="Tables" Schema="dbo" />
@@ -65,21 +65,28 @@
           <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.Store.planetSchematicsPinMap" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.Store.planetSchematicsTypeMap" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramActivities" EntityType="EveStaticDataModel.Store.ramActivities" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramAssemblyLineStations" EntityType="EveStaticDataModel.Store.ramAssemblyLineStations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerCategory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypeDetailPerGroup" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramAssemblyLineTypes" EntityType="EveStaticDataModel.Store.ramAssemblyLineTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ramAssemblyLines" EntityType="EveStaticDataModel.Store.ramAssemblyLines" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramInstallationTypeContents" EntityType="EveStaticDataModel.Store.ramInstallationTypeContents" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ramTypeRequirements" EntityType="EveStaticDataModel.Store.ramTypeRequirements" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="staOperationServices" EntityType="EveStaticDataModel.Store.staOperationServices" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staOperations" EntityType="EveStaticDataModel.Store.staOperations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="staServices" EntityType="EveStaticDataModel.Store.staServices" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="staStationTypes" EntityType="EveStaticDataModel.Store.staStationTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="staStations" EntityType="EveStaticDataModel.Store.staStations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="trnTranslationColumns" EntityType="EveStaticDataModel.Store.trnTranslationColumns" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.Store.trnTranslations" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
+        <EntityType Name="agtAgentTypes">
+          <Key>
+            <PropertyRef Name="agentTypeID" />
+          </Key>
+          <Property Name="agentTypeID" Type="int" Nullable="false" />
+          <Property Name="agentType" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="agtAgents">
           <Key>
             <PropertyRef Name="agentID" />
@@ -91,13 +98,6 @@
           <Property Name="level" Type="tinyint" />
           <Property Name="quality" Type="smallint" />
           <Property Name="agentTypeID" Type="int" />
-        </EntityType>
-        <EntityType Name="agtAgentTypes">
-          <Key>
-            <PropertyRef Name="agentTypeID" />
-          </Key>
-          <Property Name="agentTypeID" Type="int" Nullable="false" />
-          <Property Name="agentType" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="agtConfig">
           <Key>
@@ -216,6 +216,14 @@
           <Property Name="skillID" Type="int" Nullable="false" />
           <Property Name="corporationID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="crpNPCCorporationTrades">
+          <Key>
+            <PropertyRef Name="corporationID" />
+            <PropertyRef Name="typeID" />
+          </Key>
+          <Property Name="corporationID" Type="int" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="crpNPCCorporations">
           <Key>
             <PropertyRef Name="corporationID" />
@@ -248,14 +256,6 @@
           <Property Name="stationSystemCount" Type="smallint" />
           <Property Name="description" Type="nvarchar" />
           <Property Name="iconID" Type="int" />
-        </EntityType>
-        <EntityType Name="crpNPCCorporationTrades">
-          <Key>
-            <PropertyRef Name="corporationID" />
-            <PropertyRef Name="typeID" />
-          </Key>
-          <Property Name="corporationID" Type="int" Nullable="false" />
-          <Property Name="typeID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="crpNPCDivisions">
           <Key>
@@ -815,28 +815,6 @@
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
           <Property Name="published" Type="bit" />
         </EntityType>
-        <EntityType Name="ramAssemblyLines">
-          <Key>
-            <PropertyRef Name="assemblyLineID" />
-          </Key>
-          <Property Name="assemblyLineID" Type="int" Nullable="false" />
-          <Property Name="assemblyLineTypeID" Type="tinyint" />
-          <Property Name="containerID" Type="int" />
-          <Property Name="nextFreeTime" Type="smalldatetime" />
-          <Property Name="UIGroupingID" Type="tinyint" />
-          <Property Name="costInstall" Type="float" />
-          <Property Name="costPerHour" Type="float" />
-          <Property Name="restrictionMask" Type="tinyint" />
-          <Property Name="discountPerGoodStandingPoint" Type="float" />
-          <Property Name="surchargePerBadStandingPoint" Type="float" />
-          <Property Name="minimumStanding" Type="float" />
-          <Property Name="minimumCharSecurity" Type="float" />
-          <Property Name="minimumCorpSecurity" Type="float" />
-          <Property Name="maximumCharSecurity" Type="float" />
-          <Property Name="maximumCorpSecurity" Type="float" />
-          <Property Name="ownerID" Type="int" />
-          <Property Name="activityID" Type="tinyint" />
-        </EntityType>
         <EntityType Name="ramAssemblyLineStations">
           <Key>
             <PropertyRef Name="stationID" />
@@ -883,6 +861,28 @@
           <Property Name="activityID" Type="tinyint" />
           <Property Name="minCostPerHour" Type="float" />
         </EntityType>
+        <EntityType Name="ramAssemblyLines">
+          <Key>
+            <PropertyRef Name="assemblyLineID" />
+          </Key>
+          <Property Name="assemblyLineID" Type="int" Nullable="false" />
+          <Property Name="assemblyLineTypeID" Type="tinyint" />
+          <Property Name="containerID" Type="int" />
+          <Property Name="nextFreeTime" Type="smalldatetime" />
+          <Property Name="UIGroupingID" Type="tinyint" />
+          <Property Name="costInstall" Type="float" />
+          <Property Name="costPerHour" Type="float" />
+          <Property Name="restrictionMask" Type="tinyint" />
+          <Property Name="discountPerGoodStandingPoint" Type="float" />
+          <Property Name="surchargePerBadStandingPoint" Type="float" />
+          <Property Name="minimumStanding" Type="float" />
+          <Property Name="minimumCharSecurity" Type="float" />
+          <Property Name="minimumCorpSecurity" Type="float" />
+          <Property Name="maximumCharSecurity" Type="float" />
+          <Property Name="maximumCorpSecurity" Type="float" />
+          <Property Name="ownerID" Type="int" />
+          <Property Name="activityID" Type="tinyint" />
+        </EntityType>
         <EntityType Name="ramInstallationTypeContents">
           <Key>
             <PropertyRef Name="installationTypeID" />
@@ -905,6 +905,14 @@
           <Property Name="damagePerJob" Type="float" />
           <Property Name="recycle" Type="bit" />
         </EntityType>
+        <EntityType Name="staOperationServices">
+          <Key>
+            <PropertyRef Name="operationID" />
+            <PropertyRef Name="serviceID" />
+          </Key>
+          <Property Name="operationID" Type="tinyint" Nullable="false" />
+          <Property Name="serviceID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="staOperations">
           <Key>
             <PropertyRef Name="operationID" />
@@ -924,14 +932,6 @@
           <Property Name="gallenteStationTypeID" Type="int" />
           <Property Name="joveStationTypeID" Type="int" />
         </EntityType>
-        <EntityType Name="staOperationServices">
-          <Key>
-            <PropertyRef Name="operationID" />
-            <PropertyRef Name="serviceID" />
-          </Key>
-          <Property Name="operationID" Type="tinyint" Nullable="false" />
-          <Property Name="serviceID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="staServices">
           <Key>
             <PropertyRef Name="serviceID" />
@@ -939,6 +939,22 @@
           <Property Name="serviceID" Type="int" Nullable="false" />
           <Property Name="serviceName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="staStationTypes">
+          <Key>
+            <PropertyRef Name="stationTypeID" />
+          </Key>
+          <Property Name="stationTypeID" Type="int" Nullable="false" />
+          <Property Name="dockEntryX" Type="float" />
+          <Property Name="dockEntryY" Type="float" />
+          <Property Name="dockEntryZ" Type="float" />
+          <Property Name="dockOrientationX" Type="float" />
+          <Property Name="dockOrientationY" Type="float" />
+          <Property Name="dockOrientationZ" Type="float" />
+          <Property Name="operationID" Type="tinyint" />
+          <Property Name="officeSlots" Type="tinyint" />
+          <Property Name="reprocessingEfficiency" Type="float" />
+          <Property Name="conquerable" Type="bit" />
         </EntityType>
         <EntityType Name="staStations">
           <Key>
@@ -962,22 +978,6 @@
           <Property Name="reprocessingEfficiency" Type="float" />
           <Property Name="reprocessingStationsTake" Type="float" />
           <Property Name="reprocessingHangarFlag" Type="tinyint" />
-        </EntityType>
-        <EntityType Name="staStationTypes">
-          <Key>
-            <PropertyRef Name="stationTypeID" />
-          </Key>
-          <Property Name="stationTypeID" Type="int" Nullable="false" />
-          <Property Name="dockEntryX" Type="float" />
-          <Property Name="dockEntryY" Type="float" />
-          <Property Name="dockEntryZ" Type="float" />
-          <Property Name="dockOrientationX" Type="float" />
-          <Property Name="dockOrientationY" Type="float" />
-          <Property Name="dockOrientationZ" Type="float" />
-          <Property Name="operationID" Type="tinyint" />
-          <Property Name="officeSlots" Type="tinyint" />
-          <Property Name="reprocessingEfficiency" Type="float" />
-          <Property Name="conquerable" Type="bit" />
         </EntityType>
         <EntityType Name="trnTranslationColumns">
           <Key>
