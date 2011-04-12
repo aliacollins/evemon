@@ -59,7 +59,7 @@
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
       <date>12 April 2011</date>
-      <md5>4c97954c8b3a0cf448785624c82b4344</md5>
+      <md5>197b86c16ab1b49090eb351c843d4a40</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
       <message><![CDATA[Incursion 1.4.2 (247655) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
@@ -73,21 +73,21 @@
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
       <date>12 April 2011</date>
-      <md5>5256bb3516f2b76425f638b30b9ee172</md5>
+      <md5>46b0fd455cbfe8dad16c01940d997bfc</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
       <message><![CDATA[Incursion 1.4.2 (247655) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
       <date>12 April 2011</date>
-      <md5>7b9867e9d3e9828dd4fec6f244dc2fca</md5>
+      <md5>31ac0cdbd581978a03286efece0a9018</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
       <message><![CDATA[Incursion 1.4.2 (247655) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
       <date>12 April 2011</date>
-      <md5>89f576720412523e81351cb113a8bae5</md5>
+      <md5>80121984cefa9534752e1f5638f763d5</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
       <message><![CDATA[Incursion 1.4.2 (247655) properties data file by the EVEMon Development Team]]></message>
     </datafile>
@@ -101,7 +101,7 @@
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
       <date>12 April 2011</date>
-      <md5>2fa813b6ee92ffde809346abf32dda68</md5>
+      <md5>28c1df3a293f907a34e9ecf42ffc1f2b</md5>
       <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
       <message><![CDATA[Incursion 1.4.2 (247655) skills data file by the EVEMon Development Team]]></message>
     </datafile>
