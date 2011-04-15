@@ -64,6 +64,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -158,7 +159,7 @@ namespace EVEMon.Common.Controls
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		/// <summary>
 		/// Used to make sure that SelectedNode can only be used from within this class.
@@ -166,9 +167,9 @@ namespace EVEMon.Common.Controls
 		private bool blnInternalCall = false;
 
 		/// <summary>
-		/// Hashtable that contains all selected nodes.
+		/// List that contains all selected nodes.
 		/// </summary>
-		private Hashtable htblSelectedNodes = new Hashtable();
+        private List<object> listSelectedNodes = new List<object>();
 
 		/// <summary>
 		/// Track whether the total SelectedNodes changed across multiple operations
@@ -180,7 +181,7 @@ namespace EVEMon.Common.Controls
 		/// Hashtable to preserve Node's original colors (colors can be set on the TreeView, or individual nodes)
 		/// (GKM)
 		/// </summary>
-		private Hashtable htblSelectedNodesOrigColors = new Hashtable();
+        private Hashtable htblSelectedNodesOrigColors = new Hashtable();
 
 		/// <summary>
 		/// Keeps track of node that has to be pu in edit mode.
@@ -216,7 +217,7 @@ namespace EVEMon.Common.Controls
 		/// <summary>
 		/// Backcolor for selected nodes.
 		/// </summary>
-		private Color selectionBackColor = System.Drawing.SystemColors.Highlight;
+		private Color selectionBackColor = SystemColors.Highlight;
 
 		/// <summary>
 		/// Keeps track whether a node click has been handled by the mouse down event. This is almost always the
@@ -306,7 +307,7 @@ namespace EVEMon.Common.Controls
 			{
 				// Create a SelectedNodesCollection to return, and add event handlers to catch actions on it
 				NodesCollection selectedNodesCollection = new NodesCollection();
-				foreach (TreeNode tn in htblSelectedNodes.Values)
+				foreach (TreeNode tn in listSelectedNodes)
 				{
 					selectedNodesCollection.Add(tn);
 				}
@@ -337,7 +338,6 @@ namespace EVEMon.Common.Controls
 			blnSelectionChanged = false;
 
 			SelectNode(tn, true, TreeViewAction.Unknown);
-			//ProcessNodeRange(null, tn, new MouseEventArgs(MouseButtons.Left, 1, Cursor.Position.X,  Cursor.Position.Y, 0), Keys.None, TreeViewAction.ByKeyboard, false); 
 
 			OnSelectionsChanged();
 		}
@@ -404,7 +404,7 @@ namespace EVEMon.Common.Controls
 		{
 			// First, build list of nodes that need to be unselected
 			ArrayList arrNodesToDeselect = new ArrayList();
-			foreach (TreeNode selectedTreeNode in htblSelectedNodes.Values)
+			foreach (TreeNode selectedTreeNode in listSelectedNodes)
 			{
 				if (GetNodeLevel(selectedTreeNode) != level)
 				{
@@ -428,7 +428,7 @@ namespace EVEMon.Common.Controls
 		{
 			// First, build list of nodes that need to be unselected
 			ArrayList arrNodesToDeselect = new ArrayList();
-			foreach (TreeNode selectedTreeNode in htblSelectedNodes.Values)
+			foreach (TreeNode selectedTreeNode in listSelectedNodes)
 			{
 				if (selectedTreeNode.Parent != parent)
 				{
@@ -452,7 +452,7 @@ namespace EVEMon.Common.Controls
 		{
 			// First, build list of nodes that need to be unselected
 			ArrayList arrNodesToDeselect = new ArrayList();
-			foreach (TreeNode selectedTreeNode in htblSelectedNodes.Values)
+			foreach (TreeNode selectedTreeNode in listSelectedNodes)
 			{
 				if (!IsChildOf(selectedTreeNode, parent))
 				{
@@ -476,7 +476,7 @@ namespace EVEMon.Common.Controls
 		{
 			// First, build list of nodes that need to be unselected
 			ArrayList arrNodesToDeselect = new ArrayList();
-			foreach (TreeNode selectedTreeNode in htblSelectedNodes.Values)
+			foreach (TreeNode selectedTreeNode in listSelectedNodes)
 			{
 				if (nodeKeepSelected == null)
 				{
@@ -514,9 +514,7 @@ namespace EVEMon.Common.Controls
 		/// <returns>True if specified node is selected, false if not.</returns>
 		private bool IsNodeSelected(TreeNode tn)
 		{
-			if (tn != null)
-				return htblSelectedNodes.ContainsKey(tn.GetHashCode());
-			return false;
+			return (tn != null ? listSelectedNodes.Contains(tn) : false);
 		}
 
         /// <summary>
@@ -567,7 +565,7 @@ namespace EVEMon.Common.Controls
 					tn.BackColor = SelectionBackColor; // GKM moved from above
 					tn.ForeColor = BackColor; // GKM moved from above									
 
-					htblSelectedNodes.Add(tn.GetHashCode(), tn);
+					listSelectedNodes.Add(tn);
 					blnSelected = true;
 					blnSelectionChanged = true;
 
@@ -586,7 +584,7 @@ namespace EVEMon.Common.Controls
 					Color[] originalColors = (Color[])this.htblSelectedNodesOrigColors[tn.GetHashCode()];
 					if (originalColors != null)
 					{
-						htblSelectedNodes.Remove(tn.GetHashCode());
+						listSelectedNodes.Remove(tn);
 						blnSelectionChanged = true;
 						htblSelectedNodesOrigColors.Remove(tn.GetHashCode());
 
@@ -906,7 +904,7 @@ namespace EVEMon.Common.Controls
 		/// </summary>
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
+			components = new Container();
 		}
 
 		#endregion
