@@ -36,6 +36,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public float GetBaseSPPerHour(StaticSkill skill)
         {
+            if (skill.PrimaryAttribute == EveAttribute.None || skill.SecondaryAttribute == EveAttribute.None)
+                return 0.0f;
+
             float primAttr = GetAttribute(skill.PrimaryAttribute).EffectiveValue;
             float secondaryAttr = GetAttribute(skill.SecondaryAttribute).EffectiveValue;
             return primAttr * 60.0f + secondaryAttr * 30.0f;

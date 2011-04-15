@@ -510,7 +510,8 @@ namespace EVEMon.Common
     #region Enumerations with attributes
 
     /// <summary>
-    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4, matching the attributes order on the ingame character sheets.
+    /// Enumeration of the attributes in Eve. None is -1, other range from 0 to 4,
+    /// matching the attributes order on the ingame character sheets.
     /// </summary>
     public enum EveAttribute
     {
