@@ -59,7 +59,7 @@ namespace EVEMon.Watchdog
             {
                 m_executableLaunched = true;
                 StartEvemonProcess();
-                StatusLabel.Text = "Restarting EVEMon";
+                StatusLabel.Text = "Restarting EVEMon.";
                 return;
             }
 

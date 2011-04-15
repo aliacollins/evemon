@@ -44,10 +44,11 @@ namespace EVEMon.Common.IgbService
                         m_listener.Start();
                         BeginAcceptTcpClient(false);
                     }
-                    catch (SocketException)
+                    catch (SocketException ex)
                     {
-                        // null out the listener then notify the user
+                        // Null out the listener then notify the trace file and the user
                         m_listener = null;
+                        EveClient.Trace(ex.SocketErrorCode + " - " + ex.Message + " - " + ex.ErrorCode);
                         EveClient.Notifications.NotifyIgbServiceException(m_listenEndpoint.Port);
                     }
                 }
@@ -85,9 +86,8 @@ namespace EVEMon.Common.IgbService
         private void BeginAcceptTcpClient(bool acquireLock)
         {
             if (acquireLock)
-            {
                 Monitor.Enter(m_syncLock);
-            }
+
             try
             {
                 IAsyncResult ar;
@@ -95,17 +95,14 @@ namespace EVEMon.Common.IgbService
                 {
                     ar = null;
                     if (m_running)
-                    {
                         ar = m_listener.BeginAcceptTcpClient(new AsyncCallback(EndAcceptTcpClient), null);
-                    }
+
                 } while (ar != null && ar.CompletedSynchronously);
             }
             finally
             {
                 if (acquireLock)
-                {
                     Monitor.Exit(m_syncLock);
-                }
             }
         }
 
@@ -118,7 +115,8 @@ namespace EVEMon.Common.IgbService
             lock (m_syncLock)
             {
                 // Has the client been stopped ?
-                if (m_listener == null) return;
+                if (m_listener == null)
+                    return;
 
                 try
                 {
@@ -127,9 +125,7 @@ namespace EVEMon.Common.IgbService
                     TcpClient newClient = m_listener.EndAcceptTcpClient(ar);
                     OnClientConnected(newClient, !inLock);
                     if (!ar.CompletedSynchronously)
-                    {
                         BeginAcceptTcpClient(true);
-                    }
                 }
                 catch (Exception e)
                 {
@@ -146,9 +142,7 @@ namespace EVEMon.Common.IgbService
         private void OnClientConnected(TcpClient client, bool acquireLock)
         {
             if (acquireLock)
-            {
                 Monitor.Enter(m_syncLock);
-            }
 
             try
             {
@@ -171,9 +165,7 @@ namespace EVEMon.Common.IgbService
             finally
             {
                 if (acquireLock)
-                {
                     Monitor.Exit(m_syncLock);
-                }
             }
         }
 

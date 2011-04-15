@@ -245,7 +245,7 @@ namespace EVEMon
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
 
-            // Stops the one-second timer right now.
+            // Stops the one-second timer right now
             EveClient.Shutdown();
         }
 
@@ -971,7 +971,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
-            // Ensure it is invoked on the proper thread.
+            // Ensure it is invoked on the proper thread
             if (InvokeRequired)
             {
                 Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
@@ -1004,12 +1004,42 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Occurs when new datafiles versions are available. Display the information form to the user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
+        {
+            // Ensure it is invoked on the proper thread
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
+                return;
+            }
+
+            if (m_isShowingDataUpdateWindow)
+                return;
+
+            m_isShowingDataUpdateWindow = true;
+            using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
+            {
+                if (f.ShowDialog() == DialogResult.OK)
+                    RestartApplication();
+            }
+            m_isShowingDataUpdateWindow = false;
+        }
+
+        /// <summary>
         /// Triggers a restart of EVEMon.
         /// </summary>
         private void RestartApplication()
         {
             // Save the settings to make sure we don't loose anything
             Settings.SaveImmediate();
+
+            // Stop IGB
+            if (m_igbServer != null)
+                m_igbServer.Stop();
 
             // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
@@ -1047,34 +1077,6 @@ namespace EVEMon
             {
                 evemonProc.Start();
             }
-        }
-
-        /// <summary>
-        /// Occurs when new datafiles versions are available. Display the information form to the user.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
-        {
-            // Ensure it is invoked on the proper thread.
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
-                return;
-            }
-
-            if (m_isShowingDataUpdateWindow)
-                return;
-
-            m_isShowingDataUpdateWindow = true;
-            using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
-            {
-                if (f.ShowDialog() == DialogResult.OK)
-                {
-                    RestartApplication();
-                }
-            }
-            m_isShowingDataUpdateWindow = false;
         }
         #endregion
 
@@ -1832,7 +1834,7 @@ namespace EVEMon
         /// </summary>
         private void ConfigureIgbServer()
         {
-            // not using the IGB server? stop it if it is running.
+            // Not using the IGB server? stop it if it is running
             if (!Settings.IGB.IGBServerEnabled)
             {
                 if (m_igbServer != null)
@@ -1844,19 +1846,18 @@ namespace EVEMon
                 return;
             }
 
-            // we are using the IGB server create one if we don't already have one
+            // We are using the IGB server create one if we don't already have one
             if (m_igbServer == null)
             {
                 m_igbServer = new IgbServer(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
             }
             else if (Settings.IGB.IGBServerPort != m_igbServer.IgbServerPort)
             {
-                // the port has changed reset the IGB server
-                m_igbServer.Stop();
+                // The port has changed reset the IGB server
                 m_igbServer.Reset(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
             }
 
-            // finally start the service
+            // Finally start the service
             m_igbServer.Start();
         }
         #endregion
