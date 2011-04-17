@@ -770,7 +770,7 @@
     <None Include="Resources\Images\Transparent.png" />
     <None Include="Resources\Images\TrayIcon.png" />
     <None Include="Resources\Images\Warning-yellow.png" />
-    <None Include="Resources\Images\Warning.png" />
+    <None Include="Resources\Images\Error32.png" />
     <None Include="Resources\Images\Warning16.png" />
     <None Include="Resources\Images\Window.png" />
     <Content Include="Resources\Images\EVEMonLogoBlue.png" />
