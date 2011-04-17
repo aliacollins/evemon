@@ -762,8 +762,7 @@ namespace EVEMon
                 return;
 
             // Play the sound
-            string skilltrained = Path.Combine(Application.ExecutablePath, "..\\Resources\\SkillTrained.wav");
-            using (SoundPlayer sp = new SoundPlayer(skilltrained))
+            using (SoundPlayer sp = new SoundPlayer(EVEMon.Common.Properties.Resources.SkillTrained))
             {
                 sp.Play();
             }
