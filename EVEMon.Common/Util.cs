@@ -1,20 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.IO;
-using System.Xml.Xsl;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
-using EVEMon.Common.Serialization;
-using EVEMon.Common.Net;
 using System.IO.Compression;
-using System.Net;
-using EVEMon.Common.Threading;
-using EVEMon.Common.Serialization.API;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.Xsl;
+
+using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
