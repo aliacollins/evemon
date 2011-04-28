@@ -195,7 +195,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         static void Lcdisplay_CurrentCharacterChanged(Character character)
         {
-            UpdateOnTimerTick();
+            Dispatcher.Invoke(() => UpdateOnTimerTick());
         }
 
         /// <summary>
@@ -203,9 +203,12 @@ namespace EVEMon.LogitechG15
         /// </summary>
         static void Lcdisplay_APIUpdateRequested(Character character)
         {
-            var ccpCharacter = character as CCPCharacter;
-            if (ccpCharacter != null)
-                ccpCharacter.QueryMonitors.QueryEverything();
+            Dispatcher.Invoke(() =>
+                {
+                    var ccpCharacter = character as CCPCharacter;
+                    if (ccpCharacter != null)
+                        ccpCharacter.QueryMonitors.QueryEverything();
+                });
         }
 
         /// <summary>
