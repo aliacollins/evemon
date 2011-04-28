@@ -57,7 +57,7 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertDateTimeToCCPDateTime()
         {
-            string result = PointInTime.ToCCPTimeString();
+            string result = PointInTime.ToTimeString();
             Assert.AreEqual(ValidCcpDateTime, result);
         }
 
@@ -67,7 +67,7 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertValidCCPDateTimeToDateTime()
         {
-            DateTime result = ValidCcpDateTime.CCPTimeStringToDateTime();
+            DateTime result = ValidCcpDateTime.TimeStringToDateTime();
             Assert.AreEqual(PointInTime, result);
         }
 
@@ -83,7 +83,7 @@ namespace Tests.EVEMon.Common
             Assert.Throws<FormatException>
                 (delegate()
                 {
-                    InvalidCcpDateTime.CCPTimeStringToDateTime();
+                    InvalidCcpDateTime.TimeStringToDateTime();
                 }
             );
         }
@@ -94,7 +94,7 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertEmptyCCPDateTimeToDateTime()
         {
-            DateTime result = String.Empty.CCPTimeStringToDateTime();
+            DateTime result = String.Empty.TimeStringToDateTime();
             Assert.AreEqual(DateTime.MinValue, result);
         }
 

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
     [XmlRoot("loadouts")]
-    public class SerializableLoadoutFeed
+    public sealed class SerializableLoadoutFeed
     {
         [XmlElement("race")]
         public SerializableLoadoutRace Race
@@ -17,7 +16,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
     }
 
-    public class SerializableLoadoutRace
+    public sealed class SerializableLoadoutRace
     {
         [XmlArray("ship")]
         [XmlArrayItem("loadout")]
@@ -28,7 +27,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
     }
 
-    public class SerializableLoadout
+    public sealed class SerializableLoadout
     {
         public SerializableLoadout()
         {
@@ -81,9 +80,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
             {
                 DateTime parsedDate;
                 if (DateTime.TryParse(SubmissionDateString, out parsedDate))
-                {
                     return parsedDate;
-                }
+
                 return DateTime.MinValue;
             }
         }
@@ -103,7 +101,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         }
     }
 
-    public class SerializableLoadoutSlot
+    public sealed class SerializableLoadoutSlot
     {
         [XmlAttribute("type")]
         public string SlotType

@@ -184,26 +184,26 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("currentTime")]
         public string CurrentTimeXml
         {
-            get { return CurrentTime.ToCCPTimeString(); }
+            get { return CurrentTime.ToTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))
                     return;
 
-                CurrentTime = value.CCPTimeStringToDateTime(); 
+                CurrentTime = value.TimeStringToDateTime(); 
             }
         }
 
         [XmlElement("cachedUntil")]
         public string CachedUntilXml
         {
-            get { return CachedUntil.ToCCPTimeString(); }
+            get { return CachedUntil.ToTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))
                     return;
 
-                CachedUntil = value.CCPTimeStringToDateTime();
+                CachedUntil = value.TimeStringToDateTime();
             }
         }
 

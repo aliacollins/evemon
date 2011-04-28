@@ -29,11 +29,11 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("sentDate")]
         public string SentDateXml
         {
-            get { return SentDate.ToCCPTimeString(); }
+            get { return SentDate.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    SentDate = value.CCPTimeStringToDateTime();
+                    SentDate = value.TimeStringToDateTime();
             }
         }
 

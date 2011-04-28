@@ -22,11 +22,11 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("researchStartDate")]
         public string ResearchStartDateXml
         {
-            get { return ResearchStartDate.ToCCPTimeString(); }
+            get { return ResearchStartDate.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    ResearchStartDate = value.CCPTimeStringToDateTime();
+                    ResearchStartDate = value.TimeStringToDateTime();
             }
         }
 

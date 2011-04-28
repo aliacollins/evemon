@@ -106,44 +106,44 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("installTime")]
         public string InstallTimeXml
         {
-            get { return InstallTime.ToCCPTimeString(); }
+            get { return InstallTime.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    InstallTime = value.CCPTimeStringToDateTime();
+                    InstallTime = value.TimeStringToDateTime();
             }
         }
 
         [XmlAttribute("beginProductionTime")]
         public string BeginProductionTimeXml
         {
-            get { return BeginProductionTime.ToCCPTimeString(); }
+            get { return BeginProductionTime.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    BeginProductionTime = value.CCPTimeStringToDateTime();
+                    BeginProductionTime = value.TimeStringToDateTime();
             }
         }
 
         [XmlAttribute("endProductionTime")]
         public string EndProductionTimeXml
         {
-            get { return EndProductionTime.ToCCPTimeString(); }
+            get { return EndProductionTime.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    EndProductionTime = value.CCPTimeStringToDateTime();
+                    EndProductionTime = value.TimeStringToDateTime();
             }
         }
 
         [XmlAttribute("pauseProductionTime")]
         public string PauseProductionTimeXml
         {
-            get { return PauseProductionTime.ToCCPTimeString(); }
+            get { return PauseProductionTime.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    PauseProductionTime = value.CCPTimeStringToDateTime();
+                    PauseProductionTime = value.TimeStringToDateTime();
             }
         }
 

@@ -29,7 +29,7 @@ namespace EVEMon.Common
     public static class Util
     {
         /// <summary>
-        /// Opens the provided url in a new process
+        /// Opens the provided url in a new process.
         /// </summary>
         /// <param name="url"></param>
         public static void OpenURL(string url)

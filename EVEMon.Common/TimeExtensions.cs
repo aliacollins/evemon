@@ -12,7 +12,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
-        public static string ToCCPTimeString(this DateTime timeUTC)
+        public static string ToTimeString(this DateTime timeUTC)
         {
             // timeUTC  = yyyy-MM-dd HH:mm:ss
             string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
@@ -30,7 +30,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
-        public static DateTime CCPTimeStringToDateTime(this String timeUTC)
+        public static DateTime TimeStringToDateTime(this String timeUTC)
         {
             // timeUTC  = yyyy-MM-dd HH:mm:ss
             if (String.IsNullOrEmpty(timeUTC))

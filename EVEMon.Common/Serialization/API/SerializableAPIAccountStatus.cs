@@ -19,22 +19,22 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("paidUntil")]
         public string paidUntilXml
         {
-            get { return PaidUntil.ToCCPTimeString(); }
+            get { return PaidUntil.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    PaidUntil = value.CCPTimeStringToDateTime();
+                    PaidUntil = value.TimeStringToDateTime();
             }
         }
 
         [XmlElement("createDate")]
         public string createDateXml
         {
-            get { return CreateDate.ToCCPTimeString(); }
+            get { return CreateDate.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    CreateDate = value.CCPTimeStringToDateTime();
+                    CreateDate = value.TimeStringToDateTime();
             }
         }
 

@@ -50,15 +50,15 @@ namespace EVEMon.Common.Serialization.API
         [XmlIgnore]
         public DateTime StartTime
         {
-            get { return CCPStartTime.CCPTimeStringToDateTime(); }
-            set { CCPStartTime = value.ToCCPTimeString(); }
+            get { return CCPStartTime.TimeStringToDateTime(); }
+            set { CCPStartTime = value.ToTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime EndTime
         {
-            get { return CCPEndTime.CCPTimeStringToDateTime(); }
-            set { CCPEndTime = value.ToCCPTimeString(); }
+            get { return CCPEndTime.TimeStringToDateTime(); }
+            set { CCPEndTime = value.ToTimeString(); }
         }
 
         #region ISynchronizableWithLocalClock Members

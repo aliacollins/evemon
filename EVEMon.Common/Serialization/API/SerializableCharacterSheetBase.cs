@@ -33,11 +33,11 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("DoB")]
         public string BirthdayXml
         {
-            get { return Birthday.ToCCPTimeString(); }
+            get { return Birthday.ToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    Birthday = value.CCPTimeStringToDateTime();
+                    Birthday = value.TimeStringToDateTime();
             }
         }
 
