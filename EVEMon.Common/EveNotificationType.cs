@@ -39,28 +39,28 @@ namespace EVEMon.Common
                 return;
 
             // Read the resource file
-            using (StringReader stringReader = new StringReader(Properties.Resources.NotificationRefTypeIDs))
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(Properties.Resources.NotificationRefTypeIDs);
+            
+            // Format it as xml
+            using (XmlNodeReader reader = new XmlNodeReader(xmlDoc))
             {
-                // Format it as xml
-                using (XmlTextReader reader = new XmlTextReader(stringReader))
+                // Create a memory stream to transform the xml 
+                using (MemoryStream stream = new MemoryStream())
                 {
-                    // Create a memory stream to write to 
-                    using (MemoryStream stream = new MemoryStream())
+                    // Write the xml output to the stream
+                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                     {
-                        // Write the xml output to the stream
-                        using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                        {
-                            // Apply the XSL transform
-                            XslCompiledTransform transform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
-                            writer.Formatting = Formatting.Indented;
-                            transform.Transform(reader, writer);
-                            writer.Flush();
+                        // Apply the XSL transform
+                        XslCompiledTransform transform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
+                        writer.Formatting = Formatting.Indented;
+                        transform.Transform(reader, writer);
+                        writer.Flush();
 
-                            // Deserialize from the given stream
-                            stream.Seek(0, SeekOrigin.Begin);
-                            XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
-                            s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
-                        }
+                        // Deserialize from the given stream
+                        stream.Seek(0, SeekOrigin.Begin);
+                        XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
+                        s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
                     }
                 }
             }
