@@ -55,6 +55,7 @@ namespace EVEMon
 
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
+            EveClient.CharacterEVENotificationTextDownloaded += EveClient_CharacterEVENotificationTextDownloaded;
             Disposed += OnDisposed;
         }
 
@@ -190,6 +191,7 @@ namespace EVEMon
         {
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
+            EveClient.CharacterEVENotificationTextDownloaded -= EveClient_CharacterEVENotificationTextDownloaded;
             Disposed -= OnDisposed;
         }
 
@@ -522,9 +524,10 @@ namespace EVEMon
             EveNotification selectedObject = lvNotifications.SelectedItems[0].Tag as EveNotification;
 
             // If we haven't done it yet, download the mail body
-            if (!selectedObject.NotificationTextDownloaded)
+            if (selectedObject.EVENotificationText == null)
                 selectedObject.GetNotificationText();
 
+            // In case there was an error, hide the pane and quit
             if (selectedObject.EVENotificationText == null)
             {
                 eveNotificationReadingPane.HidePane();
@@ -579,7 +582,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Opens a window form to display the EVE mail body.
+        /// Opens a window form to display the EVE notification.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -588,7 +591,11 @@ namespace EVEMon
             var item = (ListViewItem)lvNotifications.SelectedItems[0];
             var notification = (EveNotification)item.Tag;
 
-            // Show or bring to front if a window with the same EVE mail message as tag already exists
+            // Quit if we haven't downloaded the notification text yet
+            if (notification.EVENotificationText == null)
+                return;
+
+            // Show or bring to front if a window with the same EVE notification already exists
             WindowsFactory<EveMessageWindow>.ShowByTag(notification);
         }
 
@@ -675,6 +682,19 @@ namespace EVEMon
             UpdateColumns();
         }
 
+        /// <summary>
+        /// When the notification text gets downloaded update the reading pane.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterEVENotificationTextDownloaded(object sender, CharacterChangedEventArgs e)
+        {
+            var ccpCharacter = Character as CCPCharacter;
+            if (e.Character != ccpCharacter)
+                return;
+
+            OnSelectionChanged();
+        }
         # endregion
     }
 }

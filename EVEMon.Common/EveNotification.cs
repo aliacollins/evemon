@@ -10,6 +10,7 @@ namespace EVEMon.Common
     public sealed class EveNotification : IEveMessage
     {
         private CCPCharacter m_ccpCharacter;
+        private bool m_queryPending;
 
 
         #region Constructor
@@ -68,14 +69,6 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>The EVE notification text.</value>
         public EveNotificationText EVENotificationText { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the EVE notification text was downloaded.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if notification text downloaded; otherwise, <c>false</c>.
-        /// </value>
-        public bool NotificationTextDownloaded { get; private set; }
 
         /// <summary>
         /// Gets the EVE notification title.
@@ -143,17 +136,23 @@ namespace EVEMon.Common
         /// </summary>
         public void GetNotificationText()
         {
-            var result = EveClient.APIProviders.CurrentProvider.QueryNotificationText(
+            // Exit if we are already trying to download the mail message body text
+            if (m_queryPending)
+                return;
+
+            m_queryPending = true;
+
+            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPINotificationTexts>(
+                                                                    APIMethods.NotificationTexts,
                                                                     m_ccpCharacter.Identity.Account.UserID,
                                                                     m_ccpCharacter.Identity.Account.APIKey,
                                                                     m_ccpCharacter.CharacterID,
-                                                                    NotificationID);
-
-            OnEVENotificationTextDownloaded(result);
+                                                                    NotificationID,
+                                                                    OnEVENotificationTextDownloaded);
         }
 
         /// <summary>
-        /// Processes the queried EVE mail message mail body.
+        /// Processes the queried EVE notification text.
         /// </summary>
         /// <param name="result">The result.</param>
         private void OnEVENotificationTextDownloaded(APIResult<SerializableAPINotificationTexts> result)
@@ -168,7 +167,9 @@ namespace EVEMon.Common
 
             // Import the data
             EVENotificationText = new EveNotificationText(result.Result.Texts[0]);
-            NotificationTextDownloaded = true;
+            m_queryPending = false;
+
+            EveClient.OnCharacterEVENotificationTextDownloaded(m_ccpCharacter);
         }
 
         #endregion

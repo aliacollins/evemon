@@ -480,9 +480,19 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailMessagesUpdated;
 
         /// <summary>
+        /// Occurs when the body of a character EVE mail message has been downloaded.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterEVEMailBodyDownloaded;
+
+        /// <summary>
         /// Occurs when the notifications of a character have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationsUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character EVE notification has been downloaded.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationTextDownloaded;
 
         /// <summary>
         /// Occurs when a plan's name changed.
@@ -693,15 +703,37 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character EVE mail message body downloaded.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterEVEMailBodyDownloaded(Character character)
+        {
+            Trace("EveClient.OnCharacterEVEMailBodyDownloaded - {0}", character.Name);
+            if (CharacterEVEMailBodyDownloaded != null)
+                CharacterEVEMailBodyDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character EVE notifications updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterEVENotificationsUpdated(Character character)
         {
             Trace("EveClient.OnCharacterEVENotificationsUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterEVENotificationsUpdated != null)
                 CharacterEVENotificationsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character EVE notification text downloaded.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterEVENotificationTextDownloaded(Character character)
+        {
+            Trace("EveClient.OnCharacterEVENotificationTextDownloaded - {0}", character.Name);
+            if (CharacterEVENotificationTextDownloaded != null)
+                CharacterEVENotificationTextDownloaded(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

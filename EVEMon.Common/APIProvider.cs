@@ -154,19 +154,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query the characters skill in training.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        /// <param name="charID">The character's ID</param>
-        /// <returns></returns>
-        public APIResult<SerializableAPISkillInTraining> QuerySkillInTraining(long userID, string apiKey, long charID)
-        {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
-            return QueryMethod<SerializableAPISkillInTraining>(APIMethods.CharacterSkillInTraining, postData, RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query the status for the provided account. Requires full api key.
         /// </summary>
         /// <param name="userID">The account's ID</param>
@@ -219,34 +206,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query the body text for the provided EVE mail message.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        /// <param name="messageID">The message ID.</param>
-        /// <returns></returns>
-        public APIResult<SerializableAPIMailBodies> QueryMailBody(long userID, string apiKey, long characterID, long messageID)
-        {
-            HttpPostData postData = new HttpPostData(String.Format(
-                    "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
-            return QueryMethod<SerializableAPIMailBodies>(APIMethods.MailBodies, postData, RowsetsTransform);
-        }
-
-        /// <summary>
-        /// Query the body text for the provided EVE mail message.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        /// <param name="notificationID">The notification ID.</param>
-        /// <returns></returns>
-        public APIResult<SerializableAPINotificationTexts> QueryNotificationText(long userID, string apiKey, long characterID, long notificationID)
-        {
-            HttpPostData postData = new HttpPostData(String.Format(
-                    "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, notificationID));
-            return QueryMethod<SerializableAPINotificationTexts>(APIMethods.NotificationTexts, postData, RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
@@ -284,6 +243,20 @@ namespace EVEMon.Common
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
             QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
+        }
+
+        /// <summary>
+        /// Query a method with the provided arguments for a character messages.
+        /// </summary>
+        /// <param name="userID">The account's ID</param>
+        /// <param name="apiKey">The account's API key</param>
+        /// <param name="messageID">The message ID.</param>
+        /// <returns></returns>
+        public void QueryMethodAsync<T>(APIMethods method, long userID, string apiKey, long characterID, long messageID, QueryCallback<T> callback)
+        {
+            HttpPostData postData = new HttpPostData(String.Format(
+                    "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
+            QueryMethodAsync<T>(APIMethods.MailBodies, postData, RowsetsTransform, callback);
         }
         #endregion
 

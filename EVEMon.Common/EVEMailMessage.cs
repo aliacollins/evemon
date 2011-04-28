@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
     public sealed class EveMailMessage : IEveMessage
     {
         private CCPCharacter m_ccpCharacter;
+        private bool m_queryPending;
 
 
         #region Constructor
@@ -97,12 +99,6 @@ namespace EVEMon.Common
         /// </summary>
         /// <value>The EVE mail body.</value>
         public EveMailBody EVEMailBody { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the EVE mail body was downloaded.
-        /// </summary>
-        /// <value><c>true</c> if mail body downloaded; otherwise, <c>false</c>.</value>
-        public bool MailBodyDownloaded { get; private set; }
 
         /// <summary>
         /// Gets the EVE mail body text.
@@ -247,13 +243,19 @@ namespace EVEMon.Common
         /// </summary>
         public void GetMailBody()
         {
-            var result = EveClient.APIProviders.CurrentProvider.QueryMailBody(
+            // Exit if we are already trying to download the mail message body text
+            if (m_queryPending)
+                return;
+
+            m_queryPending = true;
+
+            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
+                                                                    APIMethods.MailBodies,
                                                                     m_ccpCharacter.Identity.Account.UserID,
                                                                     m_ccpCharacter.Identity.Account.APIKey,
                                                                     m_ccpCharacter.CharacterID,
-                                                                    MessageID);
-
-            OnEVEMailBodyDownloaded(result);
+                                                                    MessageID,
+                                                                    OnEVEMailBodyDownloaded);
         }
 
         /// <summary>
@@ -272,7 +274,9 @@ namespace EVEMon.Common
 
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
-            MailBodyDownloaded = true;
+            m_queryPending = false;
+
+            EveClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
         }
 
         #endregion

@@ -55,6 +55,7 @@ namespace EVEMon
 
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
+            EveClient.CharacterEVEMailBodyDownloaded += EveClient_CharacterEVEMailBodyDownloaded;
             Disposed += OnDisposed;
         }
 
@@ -190,6 +191,7 @@ namespace EVEMon
         {
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
+            EveClient.CharacterEVEMailBodyDownloaded -= EveClient_CharacterEVEMailBodyDownloaded;
             Disposed -= OnDisposed;
         }
 
@@ -568,9 +570,10 @@ namespace EVEMon
             EveMailMessage selectedObject = lvMailMessages.SelectedItems[0].Tag as EveMailMessage;
 
             // If we haven't done it yet, download the mail body
-            if (!selectedObject.MailBodyDownloaded)
+            if (selectedObject.EVEMailBody == null)
                 selectedObject.GetMailBody();
 
+            // In case there was an error, hide the pane and quit
             if (selectedObject.EVEMailBody == null)
             {
                 eveMailReadingPane.HidePane();
@@ -634,7 +637,11 @@ namespace EVEMon
             var item = (ListViewItem)lvMailMessages.SelectedItems[0];
             var message = (EveMailMessage)item.Tag;
 
-            // Show or bring to front if a window with the same EVE mail message as tag already exists
+            // Quit if we haven't downloaded the mail message body yet
+            if (message.EVEMailBody == null)
+                return;
+
+            // Show or bring to front if a window with the same EVE mail message already exists
             WindowsFactory<EveMessageWindow>.ShowByTag(message);
         }
 
@@ -721,6 +728,19 @@ namespace EVEMon
             UpdateColumns();
         }
 
+        /// <summary>
+        /// When the mail message body gets downloaded update the reading pane.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
+        {
+            var ccpCharacter = Character as CCPCharacter;
+            if (e.Character != ccpCharacter)
+                return;
+
+            OnSelectionChanged();
+        }
         # endregion
     }
 }
