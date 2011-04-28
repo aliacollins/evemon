@@ -1,10 +1,10 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 using EVEMon.Common.Data;
-using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -27,7 +27,6 @@ namespace EVEMon.Common
         {
             m_corp = src.CorporationName;
         }
-
 
 
         #region Properties
@@ -85,9 +84,15 @@ namespace EVEMon.Common
             // Not up to date ?
             if (!fileUpToDate)
             {
-                // Update the file
-                var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
-                OnUpdated(result);
+                // Invokes on the thread pool
+                Dispatcher.BackgroundInvoke(() =>
+                {
+                    // Update the file
+                    var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+
+                    // Invokes the callback on the UI thread
+                    Dispatcher.Invoke(() => OnUpdated(result));
+                });
             }
         }
 
@@ -166,6 +171,7 @@ namespace EVEMon.Common
             }
         }
         #endregion
+
 
         /// <summary>
         /// Ensures the list has been imported.
