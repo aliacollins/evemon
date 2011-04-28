@@ -98,19 +98,11 @@ namespace EVEMon.Common
 
             EveClient.Trace("UpdateManager.BeginCheck()");
 
-            // Otherwise, query Batlleclinic.
-            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            var url = String.Format("{0}?ver={1}", Settings.Updates.UpdatesUrl, currentVersion);
-            EveClient.HttpWebService.DownloadXmlAsync(url, null, OnCheckCompleted, null);
+            // Otherwise, query Batlleclinic
+            Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, null, OnCheckCompleted);
         }
 
-        /// <summary>
-        /// When BC returned us results, we parse them.
-        /// </summary>
-        /// <remarks>Invoked on some background thread.</remarks>
-        /// <param name="e"></param>
-        /// <param name="userState"></param>
-        private static void OnCheckCompleted(DownloadXmlAsyncResult e, object userState)
+        private static void OnCheckCompleted(SerializablePatch result, string errorMessage)
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -120,19 +112,19 @@ namespace EVEMon.Common
                 return;
             }
 
-            // Was there an HTTP error ??
-            if (e.Error != null)
+            // Was there an error ?
+            if (!String.IsNullOrEmpty(errorMessage))
             {
                 // Logs the error and reschedule
-                EveClient.Trace("UpdateManager: {0}", e.Error.Message);
+                EveClient.Trace("UpdateManager: {0}", errorMessage);
                 ScheduleCheck(s_frequency);
                 return;
             }
 
-            // No http error, let's try to deserialize
+            // No error, let's try to deserialize
             try
             {
-                ScanUpdateFeed(e.Result);
+                ScanUpdateFeed(result);
             }
             // An error occurred during the deserialization
             catch (InvalidOperationException exc)
@@ -147,46 +139,23 @@ namespace EVEMon.Common
 
             EveClient.Trace("UpdateManager.OnCheckCompleted()");
         }
-        
-        /// <summary>
-        /// Scans the feed returned by BattleClinic.
-        /// </summary>
-        /// <remarks>Invoked on some background thread.</remarks>
-        /// <param name="xdoc"></param>
-        private static void ScanUpdateFeed(XmlDocument xdoc)
+
+        private static void ScanUpdateFeed(SerializablePatch result)
         {
-            if (xdoc.DocumentElement.Name != "evemon")
-                return;
-
-            XmlElement newestEl = xdoc.DocumentElement.SelectSingleNode("newest") as XmlElement;
-            if (newestEl == null)
-                return;
-
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            Version newestVersion = new Version(newestEl.SelectSingleNode("version").InnerText);
-            string forumUrl = newestEl.SelectSingleNode("url").InnerText;
-            string updateMessage = newestEl.SelectSingleNode("message").InnerText;
+            Version newestVersion = new Version(result.Release.Version);
+            string forumUrl = result.Release.TopicUrl;
+            string updateMessage = result.Release.Message;
+            string installArgs = result.Release.InstallerArgs;
+            string installerUrl = result.Release.Url;
+            string additionalArgs = result.Release.AdditionalArgs;
+            bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl) && !String.IsNullOrEmpty(installArgs));
 
-            bool canAutoInstall = false;
-            string installArgs = String.Empty;
-            string installerUrl = String.Empty;
-            string additionalArgs = String.Empty;
-            XmlElement argEl = newestEl.SelectSingleNode("autopatchargs") as XmlElement;
-            XmlElement iUrlEl = newestEl.SelectSingleNode("autopatchurl") as XmlElement;
-            XmlElement argAdd = newestEl.SelectSingleNode("additionalargs") as XmlElement;
-            if (iUrlEl != null && argEl != null)
+            if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
             {
-                canAutoInstall = true;
-                installerUrl = iUrlEl.InnerText;
-                installArgs = argEl.InnerText;
-                additionalArgs = argAdd.InnerText;
-
-                if (additionalArgs != null && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
-                {
-                    string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-                    installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
-                    installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
-                }
+                string appPath = Path.GetDirectoryName(Application.ExecutablePath);
+                installArgs = String.Format(CultureConstants.DefaultCulture, "{0} {1}", installArgs, additionalArgs);
+                installArgs = installArgs.Replace("%EVEMON_EXECUTABLE_PATH%", appPath);
             }
 
             // Is the program out of date ?
@@ -198,19 +167,10 @@ namespace EVEMon.Common
                 return;
             }
 
-            // Code is up to date. Lets try the data.
-            XmlElement datafilesEl = xdoc.DocumentElement as XmlElement;
-            XmlSerializer xs = new XmlSerializer(typeof(SerializablePatch));
-            SerializablePatch dfv = null;
-            using (XmlNodeReader xnr = new XmlNodeReader(datafilesEl))
+            if (result.FilesHaveChanged)
             {
-                dfv = (SerializablePatch)xs.Deserialize(xnr);
-            }
-
-            if (dfv.FilesHaveChanged)
-            {
-                // Requests a notification to subscribers and quit.
-                EveClient.OnDataUpdateAvailable(forumUrl, dfv.ChangedDataFiles);
+                // Requests a notification to subscribers and quit
+                EveClient.OnDataUpdateAvailable(forumUrl, result.ChangedDataFiles);
                 return;
             }
         }
