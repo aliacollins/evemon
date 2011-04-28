@@ -24,7 +24,7 @@ namespace EVEMon.Common
     public delegate void DownloadCallback<T>(T result, string errorMessage);
 
     /// <summary>
-    /// A collection of helper methods for downloads and deserialization
+    /// A collection of helper methods for downloads and deserialization.
     /// </summary>
     public static class Util
     {
@@ -45,7 +45,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Loads an XSL transform with the provided name from the resources
+        /// Loads an XSL transform with the provided name from the resources.
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur
+        /// Deserializes an XML, returning null when exceptions occur.
         /// </summary>
         /// <typeparam name="T">The type to deserialize</typeparam>
         /// <param name="filename">The file to deserialize from</param>
@@ -76,7 +76,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Process XML document
+        /// Process XML document.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="filename">The XML document to deserialize from.</param>
@@ -135,7 +135,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserializes a datafile
+        /// Deserializes a datafile.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the datafile</typeparam>
         /// <param name="filename">The datafile name</param>
@@ -174,7 +174,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserialize an XML from a file
+        /// Deserialize an XML from a file.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
@@ -195,7 +195,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Asynchronously download an XML and deserializes it into the specified type
+        /// Asynchronously download an XML and deserializes it into the specified type.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
@@ -226,7 +226,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Synchronously download an XML and deserializes it into the specified type
+        /// Synchronously download an XML and deserializes it into the specified type.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
@@ -243,7 +243,7 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        // Was there an HTTP error ??
+                        // Was there an HTTP error ?
                         if (asyncResult.Error != null)
                         {
                             result = new APIResult<T>(asyncResult.Error);
@@ -267,7 +267,7 @@ namespace EVEMon.Common
                 },
                     null);
 
-                // Wait for the completion of the background thread.
+                // Wait for the completion of the background thread
                 wait.WaitOne();
             }
 
@@ -276,7 +276,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Process XML document
+        /// Process XML document.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
@@ -469,7 +469,8 @@ namespace EVEMon.Common
         /// Opens a file and look for a "revision" attribute and return its value.
         /// </summary>
         /// <param name="filename"></param>
-        /// <returns>The revision number of the assembly which generated this file, or <c>0</c> if no such file was found (old format, before the introduction of the revision numbers).</returns>
+        /// <returns>The revision number of the assembly which generated this file,
+        /// or <c>0</c> if no such file was found (old format, before the introduction of the revision numbers).</returns>
         public static int GetRevisionNumber(string filename)
         {
             // Uses a regex to retrieve the revision number.
@@ -505,8 +506,8 @@ namespace EVEMon.Common
                     {
                         byte[] bytes = new byte[4096];
 
-                        // Since we're reading a compressed stream, the total number of bytes to decompress cannot be foreseen.
-                        // So we just continue reading until there were bytes to decompress.
+                        // Since we're reading a compressed stream, the total number of bytes to decompress cannot be foreseen
+                        // So we just continue reading until there were bytes to decompress
                         while (true)
                         {
                             int count = gzipStream.Read(bytes, 0, bytes.Length);
@@ -525,7 +526,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the XML Root Element for the specified XML File
+        /// Gets the XML Root Element for the specified XML File.
         /// </summary>
         /// <remarks>
         /// After doing some testing, this is the fastest robust
