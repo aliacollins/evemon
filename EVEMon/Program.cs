@@ -28,7 +28,8 @@ namespace EVEMon
             CheckIsDebug();
 
             // Quits non-debug builds if another instance already exists
-            if (!s_isDebugBuild && !IsInstanceUnique) return;
+            if (!s_isDebugBuild && !IsInstanceUnique)
+                return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

@@ -39,12 +39,12 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void Initialize()
         {
-            if (m_provider != null)
-            {
-                txtConfigurationName.Text = m_provider.Name;
-                txtAPIHost.Text = m_provider.Url;
-                InitializeDataGrid();
-            }
+            if (m_provider == null)
+                return;
+
+            txtConfigurationName.Text = m_provider.Name;
+            txtAPIHost.Text = m_provider.Url;
+            InitializeDataGrid();
         }
 
         /// <summary>
@@ -92,20 +92,20 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (ValidateChildren())
+            if (!ValidateChildren())
+                return;
+
+            m_provider.Name = txtConfigurationName.Text;
+            m_provider.Url = txtAPIHost.Text;
+
+            foreach (DataGridViewRow row in dgMethods.Rows)
             {
-                m_provider.Name = txtConfigurationName.Text;
-                m_provider.Url = txtAPIHost.Text;
-
-                foreach (DataGridViewRow row in dgMethods.Rows)
-                {
-                    var method = (SerializableAPIMethod)row.Tag;
-                    method.Path = (string)row.Cells[1].Value;
-                }
-
-                DialogResult = DialogResult.OK;
-                Close();
+                var method = (SerializableAPIMethod)row.Tag;
+                method.Path = (string)row.Cells[1].Value;
             }
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace EVEMon.SettingsUI
             string configName = txtConfigurationName.Text.Trim();
 
             // Checks it is not a empty name
-            if (configName == String.Empty)
+            if (String.IsNullOrEmpty(configName))
             {
                 ShowValidationError(txtConfigurationName, "Configuration Name cannot be blank.");
                 e.Cancel = true;
@@ -132,13 +132,12 @@ namespace EVEMon.SettingsUI
                 exist |= (configName == provider.Name && provider != m_provider);
             }
 
-            if (exist)
-            {
-                ShowValidationError(txtConfigurationName,
-                    String.Format("There is already a provider named {0}.", configName));
-                e.Cancel = true;
+            if (!exist)
                 return;
-            }
+
+            ShowValidationError(txtConfigurationName,
+                String.Format("There is already a provider named {0}.", configName));
+            e.Cancel = true;
         }
 
         /// <summary>
@@ -159,11 +158,11 @@ namespace EVEMon.SettingsUI
         private void txtAPIHost_Validating(object sender, CancelEventArgs e)
         {
             string apiHost = txtAPIHost.Text.Trim();
-            if (apiHost == String.Empty)
-            {
-                ShowValidationError(txtAPIHost, "API Host Name cannot be blank.");
-                e.Cancel = true;
-            }
+            if (!String.IsNullOrEmpty(apiHost))
+                return;
+
+            ShowValidationError(txtAPIHost, "API Host Name cannot be blank.");
+            e.Cancel = true;
         }
 
         /// <summary>
@@ -183,12 +182,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void dgMethods_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if ((string)e.FormattedValue == String.Empty)
-            {
-                ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture,
+            if (!String.IsNullOrEmpty((string)e.FormattedValue))
+                return;
+
+            ShowValidationError(dgMethods, String.Format(CultureConstants.DefaultCulture,
                     "Path for method {0} cannot be blank", dgMethods.Rows[e.RowIndex].Cells[0].Value));
-                e.Cancel = true;
-            }
+            e.Cancel = true;
         }
 
         /// <summary>

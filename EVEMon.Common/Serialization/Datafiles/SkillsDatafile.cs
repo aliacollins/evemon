@@ -128,7 +128,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// <summary>
     /// Represents a skill prerequisite for a skill
     /// </summary>
-    public struct SerializableSkillPrerequisite
+    public sealed class SerializableSkillPrerequisite
     {
         [XmlAttribute("id")]
         public int ID

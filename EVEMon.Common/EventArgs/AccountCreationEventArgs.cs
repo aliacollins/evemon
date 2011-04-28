@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Event arguments for the cration of a new account.
+    /// Event arguments for the creation of a new account.
     /// </summary>
     public sealed class AccountCreationEventArgs : EventArgs
     {

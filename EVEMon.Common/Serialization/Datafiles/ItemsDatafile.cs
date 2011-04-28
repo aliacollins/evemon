@@ -55,7 +55,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// <summary>
     /// Base serializable class for items, ships and implants.
     /// </summary>
-    public class SerializableItem
+    public sealed class SerializableItem
     {
         [XmlAttribute("id")]
         public int ID

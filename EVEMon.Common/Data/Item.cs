@@ -51,8 +51,8 @@ namespace EVEMon.Common.Data
         /// <param name="id"></param>
         /// <param name="name"></param>
         internal Item(BlueprintMarketGroup group, SerializableBlueprint src)
-            :this(src.ID, src.Name)
-        {           
+            : this(src.ID, src.Name)
+        {
             m_icon = src.Icon;
             m_metaGroup = src.MetaGroup;
             m_marketGroup = group;
@@ -267,17 +267,14 @@ namespace EVEMon.Common.Data
         /// item lie between 0.0d and the given bounds.</returns>
         public bool CanActivate(double? cpuAvailable, double? gridAvailable)
         {
+            // There are no limits, so anything fits
             if (cpuAvailable == null && gridAvailable == null)
-            {
-                //Shortcut. There are no limits, so anything fits.
                 return true;
-            }
 
-            if (this.FittingSlot != ItemSlot.Empty)
+            if (FittingSlot != ItemSlot.Empty)
             {
-                // If we have a slot index, we're a fittable item. Now see if we can find
-                // our usage numbers.
-
+                // If we have a slot index, we're a fittable item
+                // Now see if we can find our usage numbers
                 String cpuUsage = FindProperty(EveProperty.CPU, null);
                 String gridUsage = FindProperty(EveProperty.Powergrid, null);
 
@@ -297,8 +294,9 @@ namespace EVEMon.Common.Data
                     return fits;
                 }
             }
-            //We lack information about this item, or this item isn't fittable. 
-            //Return false as specced in the method docs.
+
+            // We lack information about this item, or this item isn't fittable
+            // Return false as specced in the method docs
             return false;
         }
 

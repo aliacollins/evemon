@@ -16,7 +16,6 @@ namespace EVEMon.SkillPlanner
         private readonly List<ItemMetaGroup> m_metaGroups = new List<ItemMetaGroup>();
 
         private Func<Item, Boolean> m_slotPredicate = (x) => true;
-        private Func<Item, Boolean> m_techPredicate = (x) => true;
         private Func<Item, Boolean> m_metaGroupPredicate = (x) => true;
         private Func<Item, Boolean> m_fittingPredicate = (x) => true;
         private bool m_isLoaded;

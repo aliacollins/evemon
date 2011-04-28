@@ -27,9 +27,7 @@ namespace EVEMon.Common
                 {
                     // Does it already exist ?
                     if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
-                    {
                         m_uniqueWindow.Close();
-                    }
                 }
                 // Catch exception when the window is being disposed
                 catch (ObjectDisposedException ex)
@@ -53,8 +51,14 @@ namespace EVEMon.Common
                     if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
                     {
                         // Bring to front or show
-                        if (m_uniqueWindow.Visible) m_uniqueWindow.BringToFront();
-                        else m_uniqueWindow.Show();
+                        if (m_uniqueWindow.Visible)
+                        {
+                            m_uniqueWindow.BringToFront();
+                        }
+                        else
+                        {
+                            m_uniqueWindow.Show();
+                        }
 
                         // Give focus and return
                         m_uniqueWindow.Activate();
@@ -66,7 +70,6 @@ namespace EVEMon.Common
                 {
                     ExceptionHandler.LogException(ex, true);
                 }
-
 
                 return null;
             }
@@ -101,8 +104,14 @@ namespace EVEMon.Common
                     if (m_uniqueWindow != null && !m_uniqueWindow.IsDisposed)
                     {
                         // Bring to front or show
-                        if (m_uniqueWindow.Visible) m_uniqueWindow.BringToFront();
-                        else m_uniqueWindow.Show();
+                        if (m_uniqueWindow.Visible)
+                        {
+                            m_uniqueWindow.BringToFront();
+                        }
+                        else
+                        {
+                            m_uniqueWindow.Show();
+                        }
 
                         // Give focus and return
                         m_uniqueWindow.Activate();
@@ -114,7 +123,6 @@ namespace EVEMon.Common
                 {
                     ExceptionHandler.LogException(ex, true);
                 }
-
 
                 // Create the window and subscribe to its closing for cleanup
                 m_uniqueWindow = creation();
@@ -148,7 +156,8 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        if (existingWindow.Tag == otag) return existingWindow;
+                        if (existingWindow.Tag == otag)
+                            return existingWindow;
                     }
                     // Catch exception when the window was disposed
                     catch (ObjectDisposedException ex)
@@ -196,11 +205,18 @@ namespace EVEMon.Common
                 {
                     try
                     {
-                        if (existingWindow.Tag != otag) continue;
+                        if (existingWindow.Tag != otag)
+                            continue;
 
                         // Bring to front or show
-                        if (existingWindow.Visible) existingWindow.BringToFront();
-                        else existingWindow.Show();
+                        if (existingWindow.Visible)
+                        {
+                            existingWindow.BringToFront();
+                        }
+                        else
+                        {
+                            existingWindow.Show();
+                        }
 
                         // Give focus and return
                         existingWindow.Activate();
@@ -248,7 +264,8 @@ namespace EVEMon.Common
         {
             // Search a public instance constructor with a single argument of type TArg
             var ctor = typeof(TForm).GetConstructor(new Type[] { typeof(TArg) });
-            if (ctor != null) return (TForm)(ctor.Invoke(new Object[] { (object)data }));
+            if (ctor != null) 
+                return (TForm)(ctor.Invoke(new Object[] { (object)data }));
 
             // Failed, use the default constructor
             return Create();
@@ -291,9 +308,17 @@ namespace EVEMon.Common
                     }
 
                     // Returns if nothing found on this cycle
-                    if (formToRemove == null) return;
-                    if (isDisposed) m_taggedWindows.Remove(formToRemove);
-                    else formToRemove.Close();
+                    if (formToRemove == null)
+                        return;
+
+                    if (isDisposed)
+                    {
+                        m_taggedWindows.Remove(formToRemove);
+                    }
+                    else
+                    {
+                        formToRemove.Close();
+                    }
                 }
 
             }

@@ -50,10 +50,11 @@ namespace EVEMon.Common
             List<string> ids = eveNotificationsIDs.Split(',').ToList();
             foreach (var id in ids)
             {
+                long ID = long.Parse(id);
                 m_items.Add(new EveNotification(m_ccpCharacter,
                                                 new SerializableNotificationsListItem()
                                                 {
-                                                    NotificationID = long.Parse(id)
+                                                    NotificationID = ID
                                                 }));
             }
         }

@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Query the lodouts feed for the current ship.
+        /// Query the loadouts feed for the current ship.
         /// </summary>
         private void QueryLoadoutsFeed()
         {

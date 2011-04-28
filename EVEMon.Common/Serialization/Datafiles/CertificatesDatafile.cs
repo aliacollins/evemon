@@ -163,7 +163,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// <summary>
     /// Represents a recommendation for a ship
     /// </summary>
-    public struct SerializableCertificateRecommendation
+    public sealed class SerializableCertificateRecommendation
     {
         [XmlAttribute("id")]
         public int ID

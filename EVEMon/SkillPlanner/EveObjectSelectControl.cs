@@ -130,9 +130,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void BuildListView()
         {
-            
+
             string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
-           
+
             if (String.IsNullOrEmpty(searchText))
             {
                 tvItems.Visible = true;
@@ -156,7 +156,7 @@ namespace EVEMon.SkillPlanner
                 if (filteredItems.Count > 0)
                 {
                     foreach (Item eo in filteredItems)
-                    {   
+                    {
                         lbSearchList.Items.Add(eo);
                     }
                 }
@@ -193,7 +193,7 @@ namespace EVEMon.SkillPlanner
                 filteredItems.Add(itm);
             }
         }
-        
+
         /// <summary>
         /// Occurs when pressing a key while inside the search text control.
         /// </summary>
@@ -207,7 +207,7 @@ namespace EVEMon.SkillPlanner
                 e.Handled = true;
             }
         }
-        #endregion 
+        #endregion
 
 
         #region Selected Objects
@@ -404,7 +404,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="eo"></param>
         /// <returns></returns>
         protected bool SelectAll(Item eo)
-        { 
+        {
             return true;
         }
 
@@ -415,7 +415,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         protected bool CanUse(Item eo)
         {
-            var prerequisites = eo.Prerequisites.Where(x=> !x.Activity.Equals(BlueprintActivity.ReverseEngineering));
+            var prerequisites = eo.Prerequisites.Where(x => !x.Activity.Equals(BlueprintActivity.ReverseEngineering));
             bool hasSelectedActivity = true;
             bool bpBrowserControl = this is BlueprintSelectControl;
 
@@ -442,7 +442,7 @@ namespace EVEMon.SkillPlanner
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
             List<Boolean> prereqTrained = new List<Boolean>();
             if (bpBrowserControl && m_activityFilter.Equals(ObjectActivityFilter.Any))
-            {               
+            {
                 List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
 
                 // Create a list with the activities this item supports
@@ -480,7 +480,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Has the character trained all prereq skills ?
-            return (prereqTrained.All(x=> x.Equals(true)));
+            return (prereqTrained.All(x => x == true));
         }
 
         /// <summary>

@@ -136,7 +136,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports the serialized accounts
+        /// Imports the serialized accounts.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableAccount> serial)

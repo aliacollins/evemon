@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
