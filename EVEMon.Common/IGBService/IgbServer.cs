@@ -7,9 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-using EVEMon.Common;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.IgbService
 {
@@ -552,15 +550,8 @@ namespace EVEMon.Common.IgbService
                     if (skill != null)
                     {
                         sw.WriteLine("<h2>Skillbook shopping result</h2>");
-                        Dispatcher.Invoke(() => skill.IsOwned = setAsOwned);
-                        if (skill.IsOwned)
-                        {
-                            sw.WriteLine("Congratulations, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name));
-                        }
-                        else
-                        {
-                            sw.WriteLine("Sorry, <a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is marked as not owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name));
-                        }
+                        skill.IsOwned = setAsOwned;
+                        sw.WriteLine("<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is now marked as {2} owned.", skill.ID, HttpUtility.HtmlEncode(skill.Name), skill.IsOwned ? String.Empty : "not");
                     }
                     else
                     {
