@@ -25,12 +25,15 @@ namespace EVEMon.Common
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
         private static readonly DateTime s_startTime = DateTime.UtcNow;
+        private static GlobalDatafileCollection s_datafiles;
 
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
         private static bool s_initialized;
         private static bool s_running;
-        private static GlobalDatafileCollection s_datafiles;
+        private static string s_settingsFile;
+        private static string s_traceFile;
+
 
         #region Initialization and threading
 
@@ -113,8 +116,42 @@ namespace EVEMon.Common
 
 
         #region File paths
-        private static string s_settingsFile;
-        private static string s_traceFile;
+
+        /// <summary>
+        /// Gets or sets the EVE Online installation's default portrait cache folder.
+        /// </summary>
+        public static string[] DefaultEvePortraitCacheFolders { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the portrait cache folder defined by the user.
+        /// </summary>
+        public static string[] EvePortraitCacheFolders { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the EVE Online application data folder.
+        /// </summary>
+        public static string EVEApplicationDataDir { get; private set; }
+        
+        /// <summary>
+        /// Returns the current data storage directory and initializes SettingsFile.
+        /// </summary>
+        public static string EVEMonDataDir { get; private set; }
+
+        /// <summary>
+        /// Gets the fully qualified path to the current settings file
+        /// </summary>
+        public static string SettingsFileName
+        {
+            get { return Path.Combine(EVEMonDataDir, s_settingsFile); }
+        }
+
+        /// <summary>
+        /// Gets the fully qualified path to the trace file
+        /// </summary>
+        public static string TraceFileName
+        {
+            get { return Path.Combine(EVEMonDataDir, s_traceFile); }
+        }
 
         /// <summary>
         /// Creates the file system paths (settings file name, appdata directory, etc)
@@ -227,48 +264,12 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets the EVE Online installation's default portrait cache folder.
-        /// </summary>
-        public static string[] DefaultEvePortraitCacheFolders { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the portrait cache folder defined by the user.
-        /// </summary>
-        public static string[] EvePortraitCacheFolders { get; private set; }
-
-        /// <summary>
         /// Set the EVE Online installation's portrait cache folder.
         /// </summary>
         /// <param name="path">location of the folder</param>
         internal static void SetEvePortraitCacheFolder(string[] path)
         {
             EvePortraitCacheFolders = path;
-        }
-
-        /// <summary>
-        /// Gets or sets the EVE Online application data folder.
-        /// </summary>
-        public static string EVEApplicationDataDir { get; private set; }
-        
-        /// <summary>
-        /// Returns the current data storage directory and initializes SettingsFile.
-        /// </summary>
-        public static string EVEMonDataDir { get; private set; }
-
-        /// <summary>
-        /// Gets the fully qualified path to the current settings file
-        /// </summary>
-        public static string SettingsFileName
-        {
-            get { return Path.Combine(EVEMonDataDir, s_settingsFile); }
-        }
-
-        /// <summary>
-        /// Gets the fully qualified path to the trace file
-        /// </summary>
-        public static string TraceFileName
-        {
-            get { return Path.Combine(EVEMonDataDir, s_traceFile); }
         }
 
         #endregion
@@ -530,7 +531,7 @@ namespace EVEMon.Common
         public static event EventHandler<DataUpdateAvailableEventArgs> DataUpdateAvailable;
 
         /// <summary>
-        /// 
+        /// Called when settings changed.
         /// </summary>
         public static void OnSettingsChanged()
         {
@@ -542,7 +543,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the scheduler changed.
         /// </summary>
         public static void OnSchedulerChanged()
         {
@@ -553,7 +554,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the account collection changed.
         /// </summary>
         internal static void OnAccountCollectionChanged()
         {
@@ -564,7 +565,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the monitored characters changed.
         /// </summary>
         internal static void OnMonitoredCharactersChanged()
         {
@@ -575,7 +576,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character collection changed.
         /// </summary>
         internal static void OnCharacterCollectionChanged()
         {
@@ -596,9 +597,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character list changed.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="account">The account.</param>
         internal static void OnCharacterListChanged(Account account)
         {
             Trace("EveClient.OnCharacterListChanged - {0}", account);
@@ -608,9 +609,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterChanged(Character character)
         {
             Trace("EveClient.OnCharacterChanged - {0}", character.Name);
@@ -620,9 +621,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character skill queue changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterSkillQueueChanged(Character character)
         {
             Trace("EveClient.OnSkillQueueChanged - {0}", character.Name);
@@ -632,10 +633,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character queued skills completed.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="skillsCompleted"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="skillsCompleted">The skills completed.</param>
         internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
         {
             Trace("EveClient.OnCharacterQueuedSkillsCompleted - {0}", character.Name);
@@ -643,9 +644,9 @@ namespace EVEMon.Common
                 QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
         /// <summary>
-        /// 
+        /// Called when the character market orders changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterMarketOrdersChanged(Character character)
         {
             Trace("EveClient.OnCharacterMarketOrdersChanged - {0}", character.Name);
@@ -655,9 +656,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character industry jobs changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterIndustryJobsChanged(Character character)
         {
             Trace("EveClient.OnCharacterIndustryJobsChanged - {0}", character.Name);
@@ -667,10 +668,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character industry jobs completed.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="jobsCompleted"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="jobsCompleted">The jobs completed.</param>
         internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
             Trace("EveClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
@@ -679,9 +680,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character research points changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterResearchPointsChanged(Character character)
         {
             Trace("EveClient.OnCharacterResearchPointsChanged - {0}", character.Name);
@@ -691,9 +692,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character EVE mail messages updated.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailMessagesUpdated(Character character)
         {
             Trace("EveClient.OnCharacterEVEMailMessagesUpdated - {0}", character.Name);
@@ -737,9 +738,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character portrait changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterPortraitChanged(Character character)
         {
             Trace("EveClient.OnCharacterPortraitChanged - {0}", character.Name);
@@ -749,9 +750,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the character plan collection changed.
         /// </summary>
-        /// <param name="character"></param>
+        /// <param name="character">The character.</param>
         internal static void OnCharacterPlanCollectionChanged(Character character)
         {
             Trace("EveClient.OnCharacterPlanCollectionChanged - {0}", character.Name);
@@ -762,9 +763,9 @@ namespace EVEMon.Common
 
 
         /// <summary>
-        /// 
+        /// Called when a plan changed.
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
         internal static void OnPlanChanged(Plan plan)
         {
             Trace("EveClient.OnPlanChanged - {0}", plan.Name);
@@ -774,9 +775,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when a plan name changed.
         /// </summary>
-        /// <param name="plan"></param>
+        /// <param name="plan">The plan.</param>
         internal static void OnPlanNameChanged(Plan plan)
         {
             Trace("EveClient.OnPlanNameChanged - {0}", plan.Name);
@@ -786,11 +787,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when the server status updated.
         /// </summary>
-        /// <param name="server"></param>
-        /// <param name="previousStatus"></param>
-        /// <param name="status"></param>
+        /// <param name="server">The server.</param>
+        /// <param name="previousStatus">The previous status.</param>
+        /// <param name="status">The status.</param>
         internal static void OnServerStatusUpdated(EveServer server, ServerStatus previousStatus, ServerStatus status)
         {
             Trace("EveClient.OnServerStatusUpdated");
@@ -822,9 +823,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when a notification is sent.
         /// </summary>
-        /// <param name="notification"></param>
+        /// <param name="notification">The notification.</param>
         internal static void OnNotificationSent(Notification notification)
         {
             Trace("EveClient.OnNotificationSent - {0}", notification);
@@ -833,9 +834,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when a notification gets invalidated.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">The <see cref="EVEMon.Common.Notifications.NotificationInvalidationEventArgs"/> instance containing the event data.</param>
         internal static void OnNotificationInvalidated(NotificationInvalidationEventArgs args)
         {
             Trace("EveClient.OnNotificationInvalidated");
@@ -844,27 +845,34 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// 
+        /// Called when an update is available.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="forumUrl">The forum URL.</param>
+        /// <param name="installerUrl">The installer URL.</param>
+        /// <param name="updateMessage">The update message.</param>
+        /// <param name="currentVersion">The current version.</param>
+        /// <param name="newestVersion">The newest version.</param>
+        /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
+        /// <param name="installArgs">The install args.</param>
         internal static void OnUpdateAvailable(string forumUrl, string installerUrl, string updateMessage,
                                                 Version currentVersion, Version newestVersion,
                                                 bool canAutoInstall, string installArgs)
         {
-            Trace("UpdateManager.OnUpdateAvailable({0} -> {1}, {2}, {3})",
-                currentVersion, newestVersion, canAutoInstall, installArgs);
+            Trace("EveClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
+                                        currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
                 UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
                                         currentVersion, newestVersion, canAutoInstall, installArgs));
         }
 
         /// <summary>
-        /// 
+        /// Called when data update is available.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="updateUrl">The update URL.</param>
+        /// <param name="changedFiles">The changed files.</param>
         internal static void OnDataUpdateAvailable(string updateUrl, List<SerializableDatafile> changedFiles)
         {
-            Trace("UpdateManager.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
+            Trace("EveClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
                 DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(updateUrl, changedFiles));
         }
