@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Controls;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.Accounting
 {
@@ -121,13 +121,13 @@ namespace EVEMon.Accounting
             switch (account.KeyLevel)
             {
                 default:
-                    icon = Properties.Resources.APIKeyWrong;
+                    icon = CommonProperties.Resources.APIKeyWrong;
                     break;
                 case CredentialsLevel.Limited:
-                    icon = Properties.Resources.APIKeyLimited;
+                    icon = CommonProperties.Resources.APIKeyLimited;
                     break;
                 case CredentialsLevel.Full:
-                    icon = Properties.Resources.APIKeyFull;
+                    icon = CommonProperties.Resources.APIKeyFull;
                     break;
             }
 

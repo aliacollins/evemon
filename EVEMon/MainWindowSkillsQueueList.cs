@@ -8,7 +8,7 @@ using EVEMon.Common;
 using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
@@ -479,7 +479,7 @@ namespace EVEMon
                 if (e.Button == MouseButtons.Right)
                 {
                     // "Show in Skill Explorer" menu item
-                    var tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", Properties.Resources.LeadsTo);
+                    var tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
                     tmSkillExplorer.Click += tmSkillExplorer_Click;
                     tmSkillExplorer.Tag = skill;
 

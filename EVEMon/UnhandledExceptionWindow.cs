@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
@@ -40,7 +40,7 @@ namespace EVEMon
         {
             try
             {
-                var i = Properties.Resources.Bug;
+                var i = CommonProperties.Resources.Bug;
 
                 int oHeight = i.Height;
                 int oWidth = i.Width;

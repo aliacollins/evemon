@@ -9,7 +9,7 @@ using EVEMon.Common;
 using EVEMon.Controls;
 using EVEMon.SkillPlanner;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
@@ -438,7 +438,7 @@ namespace EVEMon
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
-            Image i = (isCollapsed ? Properties.Resources.Expand : Properties.Resources.Collapse);
+            Image i = (isCollapsed ? CommonProperties.Resources.Expand : CommonProperties.Resources.Collapse);
 
             g.DrawImageUnscaled(i, new Point(e.Bounds.Right - i.Width - CollapserPadRight,
                                              (SkillHeaderHeight / 2) - (i.Height / 2) + e.Bounds.Top));
@@ -630,7 +630,7 @@ namespace EVEMon
             if (e.Button == MouseButtons.Right)
             {
                 // "Show in Skill Explorer" menu item
-                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", Properties.Resources.LeadsTo);
+                ToolStripMenuItem tmSkillExplorer = new ToolStripMenuItem("Show In Skill Explorer", CommonProperties.Resources.LeadsTo);
                 tmSkillExplorer.Click += new EventHandler(tmSkillExplorer_Click);
                 tmSkillExplorer.Tag = skill;
 
@@ -857,7 +857,7 @@ namespace EVEMon
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? btnImage = Properties.Resources.Expand : btnImage = Properties.Resources.Collapse);
+            Image btnImage = (isCollapsed ? btnImage = CommonProperties.Resources.Expand : btnImage = CommonProperties.Resources.Collapse);
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,

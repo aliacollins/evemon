@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.Controls
 {
@@ -189,7 +189,7 @@ namespace EVEMon.Controls
         {
             int width = 24;
             int height = 24;
-            Image b = Properties.Resources.Throbber;
+            Image b = CommonProperties.Resources.Throbber;
 
             //Make the stopped Image
             m_strobeFrame = new Bitmap(width, height);

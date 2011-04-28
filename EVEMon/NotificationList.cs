@@ -10,7 +10,7 @@ using EVEMon.Common;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon
 {
@@ -228,15 +228,15 @@ namespace EVEMon
             switch (notification.Priority)
             {
                 case NotificationPriority.Error:
-                    icon = Properties.Resources.Error16;
+                    icon = CommonProperties.Resources.Error16;
                     color = ErrorColor;
                     break;
                 case NotificationPriority.Warning:
-                    icon = Properties.Resources.Warning16;
+                    icon = CommonProperties.Resources.Warning16;
                     color = WarningColor;
                     break;
                 case NotificationPriority.Information:
-                    icon = Properties.Resources.Information16;
+                    icon = CommonProperties.Resources.Information16;
                     color = InfoColor;
                     break;
                 default:
@@ -253,13 +253,13 @@ namespace EVEMon
             g.DrawImageUnscaled(icon, new Point(e.Bounds.Left + LeftPadding, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Delete icon
-            icon = (m_hoveredIndex == e.Index ? Properties.Resources.CrossBlack : Properties.Resources.CrossGray);
+            icon = (m_hoveredIndex == e.Index ? CommonProperties.Resources.CrossBlack : CommonProperties.Resources.CrossGray);
             g.DrawImageUnscaled(icon, new Point(e.Bounds.Right - IconDeletePositionFromRight, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Magnifier icon
             if (notification.HasDetails)
             {
-                icon = Properties.Resources.Magnifier;
+                icon = CommonProperties.Resources.Magnifier;
                 g.DrawImageUnscaled(icon, new Point(e.Bounds.Right - IconMagnifierPositionFromRight, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
             }
 
@@ -506,7 +506,7 @@ namespace EVEMon
         private Rectangle GetMagnifierIconRect(int index)
         {
             var rect = listBox.GetItemRectangle(index);
-            var icon = Properties.Resources.Magnifier;
+            var icon = CommonProperties.Resources.Magnifier;
             var yOffset = (rect.Height - icon.Height) / 2;
             var magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
             magnifierIconRect.Inflate(2, 8);
@@ -521,7 +521,7 @@ namespace EVEMon
         private Rectangle GetDeleteIconRect(int index)
         {
             var rect = listBox.GetItemRectangle(index);
-            var icon = Properties.Resources.CrossBlack;
+            var icon = CommonProperties.Resources.CrossBlack;
             var yOffset = (rect.Height - icon.Height) / 2;
             var deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width, icon.Height);
             deleteIconRect.Inflate(2, 8);

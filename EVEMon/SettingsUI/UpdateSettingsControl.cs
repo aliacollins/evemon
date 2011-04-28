@@ -10,7 +10,7 @@ using EVEMon.Common.SettingsObjects;
 using EVEMon.Common;
 using EVEMon.Common.Attributes;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.SettingsUI
 {
@@ -36,11 +36,11 @@ namespace EVEMon.SettingsUI
                     continue;
 
                 // Add the icon
-                var icon = Properties.Resources.APIKeyLimited16;
+                var icon = CommonProperties.Resources.APIKeyLimited16;
                 var iconToolTip = "This query requires a limited API key.";
                 if (method.HasAttribute<FullKeyAttribute>())
                 {
-                    icon = Properties.Resources.APIKeyFull16;
+                    icon = CommonProperties.Resources.APIKeyFull16;
                     iconToolTip = "This query requires a full API key.";
                 }
 

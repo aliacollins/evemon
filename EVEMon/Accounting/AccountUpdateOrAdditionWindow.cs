@@ -5,7 +5,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Controls;
 
-using Properties = EVEMon.Common.Properties;
+using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.Accounting
 {
@@ -155,18 +155,18 @@ namespace EVEMon.Accounting
             switch (args.KeyLevel)
             {
                 default:
-                    keyPicture.Image = Properties.Resources.APIKeyWrong;
+                    keyPicture.Image = CommonProperties.Resources.APIKeyWrong;
                     keyLabel.Text = m_creationArgs.Result.ErrorMessage;
                     errorGuideLabel.Visible = true;
                     errorGuideLabel.BringToFront();
                     break;
                 case CredentialsLevel.Limited:
-                    keyPicture.Image = Properties.Resources.APIKeyLimited;
+                    keyPicture.Image = CommonProperties.Resources.APIKeyLimited;
                     keyLabel.Text = "This is a limited API key.";
                     errorGuideLabel.Visible = false;
                     break;
                 case CredentialsLevel.Full:
-                    keyPicture.Image = Properties.Resources.APIKeyFull;
+                    keyPicture.Image = CommonProperties.Resources.APIKeyFull;
                     keyLabel.Text = "This is a full API key.";
                     errorGuideLabel.Visible = false;
                     break;
