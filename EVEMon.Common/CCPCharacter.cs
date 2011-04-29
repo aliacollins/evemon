@@ -446,6 +446,10 @@ namespace EVEMon.Common
             // Add orders to list
             m_charOrdersAdded = AddOrders(result, m_corpOrdersAdded, IssuedFor.Character);
 
+            // If character is in NPC corporation we switch the corp orders updated flag
+            // to assure the character issued orders gets imported
+            m_corpOrdersUpdated |= !m_corpMarketOrdersMonitor.Enabled;
+
             // Import the data if all queried and there are orders to import 
             if (m_corpOrdersUpdated && m_orders.Count != 0)
                 Import(m_orders);
@@ -495,6 +499,10 @@ namespace EVEMon.Common
 
             // Add jobs to list
             m_charJobsAdded = AddJobs(result, m_corpJobsAdded, IssuedFor.Character);
+
+            // If character is in NPC corporation we switch the corp jobs updated flag
+            // to assure the character issued jobs gets imported
+            m_corpJobsUpdated |= !m_corpIndustryJobsMonitor.Enabled;
 
             // Import the data if all queried and there are jobs to import 
             if (m_corpJobsUpdated && m_jobs.Count != 0)
