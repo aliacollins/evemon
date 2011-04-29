@@ -11,7 +11,7 @@ namespace EVEMon.Common.Threading
     /// <summary>
     /// This class provides the tools we need to apply the threading model in use in this assembly.
     /// It relies on an internal actor, which should be the UI actor. Most objects will have affinity with this thread and most actions will occur on this actor.
-    /// <para>Besides, should the actor be null (for testing purposes), then a single-threaded mode will be enforced, all asynchrnous calls being replaced by synchroneous ones.</para>
+    /// <para>Besides, should the actor be null (for testing purposes), then a single-threaded mode will be enforced, all asynchronous calls being replaced by synchroneous ones.</para>
     /// <para>Finally, note that, in normal mode (actor not null), very few operations are performed on other threads. They are mainly network operations.</para>
     /// </summary>
     public static class Dispatcher
@@ -31,6 +31,22 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
+        /// Gets true if the calling thread is the underlying thread; false otherwise.
+        /// When false, operations on the underlying actor have to be done through <see cref="Invoke"/> or <see cref="BeginInvoke"/>.
+        /// </summary>
+        public static bool HasAccess
+        {
+            get 
+            {
+                var actor = m_actor;
+                if (actor == null)
+                    return true;
+
+                return actor.HasAccess;
+            }
+        }
+
+        /// <summary>
         /// Gets the underlying actor of the dispatcher.
         /// When null, the dispatcher will run in single-threaded mode.
         /// </summary>
@@ -42,7 +58,7 @@ namespace EVEMon.Common.Threading
         /// <summary>
         /// Starts the dispatcher with the given actor.
         /// </summary>
-        /// <remarks>If the method has already been called previously, this new call will siltenly fail.</remarks>
+        /// <remarks>If the method has already been called previously, this new call will silently fail.</remarks>
         /// <param name="actor">The actor to run on.</param>
         /// <exception cref="ArgumentException">The specified actor is null.</exception>
         internal static void Run(IActor actor)
@@ -50,11 +66,14 @@ namespace EVEMon.Common.Threading
             Enforce.ArgumentNotNull(actor, "actor");
 
             // Double-check pattern (1)
-            if (m_actor != null) return;
+            if (m_actor != null)
+                return;
+
             lock (m_syncLock)
             {
                 // Double-check pattern (2)
-                if (m_actor != null) return;
+                if (m_actor != null)
+                    return;
 
                 m_actor = actor;
                 m_oneSecondTimer = actor.GetTimer(OnOneSecondTimerTick, 1000, true);
@@ -106,7 +125,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The callback to execute.</param>
         public static void Schedule(TimeSpan delay, Action action)
         {
-            var dateTime = DateTime.UtcNow + delay;
+            var dateTime = DateTime.UtcNow.Add(delay);
             Schedule(dateTime, action);
         }
 
@@ -150,8 +169,14 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void BackgroundInvoke(Action action)
         {
-            if (IsMultiThreaded) action.BeginInvoke(null, null);
-            else action.Invoke();
+            if (IsMultiThreaded)
+            {
+                action.BeginInvoke(null, null);
+            }
+            else
+            {
+                action.Invoke();
+            }
         }
 
         /// <summary>
@@ -163,31 +188,24 @@ namespace EVEMon.Common.Threading
         /// <param name="object"></param>
         public static void BackgroundInvoke(Action action, AsyncCallback callback, object @object)
         {
-            if (IsMultiThreaded) action.BeginInvoke(callback, @object);
-            else action.Invoke();
+            if (IsMultiThreaded)
+            {
+                action.BeginInvoke(callback, @object);
+            }
+            else
+            {
+                action.Invoke();
+            }
         }
 
         /// <summary>
-        /// Asserts the calling thread is this actor's underlying thread or throws an exception
+        /// Asserts the calling thread is this actor's underlying thread or throws an exception.
         /// </summary>
         public static void AssertAccess()
         {
             var actor = m_actor;
-            if (actor != null) actor.AssertAccess();
-        }
-
-        /// <summary>
-        /// Gets true if the calling thread is the underlying thread; false otherwise.
-        /// When false, operations on the underlying actor have to be done through <see cref="Invoke"/> or <see cref="BeginInvoke"/>.
-        /// </summary>
-        public static bool HasAccess
-        {
-            get 
-            {
-                var actor = m_actor;
-                if (actor == null) return true;
-                return actor.HasAccess;
-            }
+            if (actor != null)
+                actor.AssertAccess();
         }
 
         /// <summary>
@@ -206,7 +224,9 @@ namespace EVEMon.Common.Threading
                 var now = DateTime.UtcNow;
                 foreach(var pair in m_delayedOperations)
                 {
-                    if (pair.Key > now) break;
+                    if (pair.Key > now)
+                        break;
+
                     actionsToInvoke.Add(pair.Value);
                 }
 
@@ -225,15 +245,16 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Shutdowns the dispatcher
+        /// Shutdowns the dispatcher.
         /// </summary>
         internal static void Shutdown()
         {
-            if (m_oneSecondTimer != null)
-            {
-                m_oneSecondTimer.Stop();
-                m_oneSecondTimer = null;
-            }
+
+            if (m_oneSecondTimer == null)
+                return;
+
+            m_oneSecondTimer.Stop();
+            m_oneSecondTimer = null;
         }
     }
 }
