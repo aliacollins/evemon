@@ -391,6 +391,9 @@ namespace EVEMon
                 foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures
                                                         .Where(x => monitor.Method.ToString().Contains(x.Text)))
                 {
+                    if (monitor.Method.ToString().Contains("Corporation") && ccpCharacter.IsInNPCCorporation)
+                        continue;
+
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
 
@@ -535,6 +538,7 @@ namespace EVEMon
                 return;
 
             UpdateContent();
+            ToggleFullAPIKeyFeaturesMonitoring();
         }
 
         /// <summary>
