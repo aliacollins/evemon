@@ -81,19 +81,13 @@ namespace EVEMon.Common
             // Check to see if file is up to date
             bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(s_filename, updateTime, updatePeriod);
 
-            // Not up to date ?
-            if (!fileUpToDate)
-            {
-                // Invokes on the thread pool
-                Dispatcher.BackgroundInvoke(() =>
-                {
-                    // Update the file
-                    var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+            // Up to date ? Quit
+            if (fileUpToDate)
+                return;
 
-                    // Invokes the callback on the UI thread
-                    Dispatcher.Invoke(() => OnUpdated(result));
-                });
-            }
+            // Query the API
+            var result = EveClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+            OnUpdated(result);
         }
 
         /// <summary>
