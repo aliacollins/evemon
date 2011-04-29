@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security;
 using System.Windows.Forms;
 
@@ -24,7 +26,7 @@ namespace EVEMon.SettingsUI
         private bool m_isLoading;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public SettingsForm()
         {
@@ -78,7 +80,7 @@ namespace EVEMon.SettingsUI
 
         /// <summary>
         /// Occurs when the user click "OK".
-        /// We set up the new settings
+        /// We set up the new settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -96,7 +98,7 @@ namespace EVEMon.SettingsUI
 
         /// <summary>
         /// Occurs when the user click "Apply".
-        /// We set up the new settings
+        /// We set up the new settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -109,7 +111,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Occurs on form load, we update the controls values with the settings we retrieved
+        /// Occurs on form load, we update the controls values with the settings we retrieved.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -484,6 +486,10 @@ namespace EVEMon.SettingsUI
             return true;
         }
 
+        /// <summary>
+        /// Populates the notifications from controls.
+        /// </summary>
+        /// <param name="notificationSettings">The notification settings.</param>
         private void PopulateNotificationsFromControls(out NotificationSettings notificationSettings)
         {
             notificationSettings = notificationsControl.Settings;
@@ -514,7 +520,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Populates the combobox for API providers
+        /// Populates the combobox for API providers.
         /// </summary>
         private void InitialiseAPIProvidersDropDown()
         {
@@ -525,9 +531,7 @@ namespace EVEMon.SettingsUI
             {
                 cbAPIServer.Items.Add(provider.Name);
                 if (provider.Name == m_settings.APIProviders.CurrentProviderName)
-                {
                     cbAPIServer.SelectedIndex = cbAPIServer.Items.Count - 1;
-                }
             }
 
             if (m_settings.APIProviders.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
@@ -544,7 +548,13 @@ namespace EVEMon.SettingsUI
 
 
         #region Validation
-        void tbReminder_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+
+        /// <summary>
+        /// Reminder value validation.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        void tbReminder_Validating(object sender, CancelEventArgs e)
         {
             int value;
             if (!Int32.TryParse(tbReminder.Text, out value) || value <= 0)
@@ -560,7 +570,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void proxyPortTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        void proxyPortTextBox_Validating(object sender, CancelEventArgs e)
         {
             var text = ((TextBox)sender).Text;
             e.Cancel = !IsValidPort(text, "Proxy port");
@@ -572,7 +582,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void igbPortTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        void igbPortTextBox_Validating(object sender, CancelEventArgs e)
         {
             var text = ((TextBox)sender).Text;
             e.Cancel = !IsValidPort(text, "IGB port");
@@ -600,10 +610,10 @@ namespace EVEMon.SettingsUI
             int port = -1;
             Int32.TryParse(str, out port);
 
-            if ((port < System.Net.IPEndPoint.MinPort) || (port > System.Net.IPEndPoint.MaxPort))
+            if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
             {
                 ShowErrorMessage("Invalid port",
-                    String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName, System.Net.IPEndPoint.MinPort, System.Net.IPEndPoint.MaxPort));
+                    String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}", portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
                 return false;
             }
@@ -611,7 +621,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Displays an error message
+        /// Displays an error message.
         /// </summary>
         /// <param name="caption"></param>
         /// <param name="message"></param>
@@ -637,7 +647,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Enable or disable controls in reaction to other controls states
+        /// Enable or disable controls in reaction to other controls states.
         /// </summary>
         private void UpdateDisables()
         {
@@ -726,8 +736,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Look'n feel > Tray icon popup > Configure.
-        /// Display either a <see cref="TrayPopupConfigForm"/> or a <see cref="TrayTooltipConfigForm"/> depending on the combo box value.
+        /// Tray icon tooltip > Configure.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -748,10 +757,10 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// 
+        /// Tray icon popup > Configure.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void trayPopupButton_Click(object sender, EventArgs e)
         {
             var popupSettings = m_settings.UI.SystemTrayPopup.Clone();
@@ -789,7 +798,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// general > API Providers > Edit
+        /// General > Network > API Providers > Edit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -812,7 +821,7 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// General > API Providers > Delete
+        /// General > Network > API Providers > Delete.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -874,7 +883,7 @@ namespace EVEMon.SettingsUI
         #region Other handlers
         /// <summary>
         /// Skill Planner > Skill browser icon set > Icons set combo.
-        /// Updates the sample below the combo box
+        /// Updates the sample below the combo box.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -884,9 +893,8 @@ namespace EVEMon.SettingsUI
             def.ColorDepth = ColorDepth.Depth32Bit;
             string groupname = null;
             if (cbSkillIconSet.SelectedIndex >= 0 && cbSkillIconSet.SelectedIndex < IconSettings.Default.Properties.Count - 1)
-            {
                 groupname = IconSettings.Default.Properties["Group" + (cbSkillIconSet.SelectedIndex + 1)].DefaultValue.ToString();
-            }
+
             if ((groupname != null
                 && !System.IO.File.Exists(
                     String.Format(
@@ -927,9 +935,8 @@ namespace EVEMon.SettingsUI
                 while (basicx.MoveNext())
                 {
                     if (def.Images.ContainsKey(basicx.Key.ToString()))
-                    {
                         def.Images.RemoveByKey(basicx.Key.ToString());
-                    }
+
                     def.Images.Add(basicx.Key.ToString(), (System.Drawing.Icon)basicx.Value);
                 }
                 basic.Close();
@@ -959,9 +966,7 @@ namespace EVEMon.SettingsUI
             Panel color = (Panel)sender;
             colorDialog.Color = color.BackColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
                 color.BackColor = colorDialog.Color;
-            }
         }
 
         /// <summary>
@@ -982,6 +987,10 @@ namespace EVEMon.SettingsUI
             }
         }
 
+        /// <summary>
+        /// When the size changes, stores the window rect.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);

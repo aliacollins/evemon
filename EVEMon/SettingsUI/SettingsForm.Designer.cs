@@ -1736,6 +1736,7 @@ namespace EVEMon.SettingsUI
             // 
             this.proxyPortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.proxyPortTextBox.Location = new System.Drawing.Point(222, 24);
+            this.proxyPortTextBox.MaxLength = 5;
             this.proxyPortTextBox.Name = "proxyPortTextBox";
             this.proxyPortTextBox.Size = new System.Drawing.Size(38, 21);
             this.proxyPortTextBox.TabIndex = 2;
@@ -2673,11 +2674,13 @@ namespace EVEMon.SettingsUI
             // igbPortTextBox
             // 
             this.igbPortTextBox.Location = new System.Drawing.Point(59, 3);
+            this.igbPortTextBox.MaxLength = 5;
             this.igbPortTextBox.Name = "igbPortTextBox";
             this.igbPortTextBox.Size = new System.Drawing.Size(35, 21);
             this.igbPortTextBox.TabIndex = 8;
             this.igbPortTextBox.Text = "80";
             this.igbPortTextBox.TextChanged += new System.EventHandler(this.igbPortTextBox_TextChanged);
+            this.igbPortTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.igbPortTextBox_Validating);
             // 
             // cbIGBPublic
             // 
