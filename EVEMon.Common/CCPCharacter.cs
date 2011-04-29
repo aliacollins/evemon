@@ -358,6 +358,14 @@ namespace EVEMon.Common
             if (!Monitored)
                 return;
 
+            // Disable corp related market orders monitoring if character is in NPC corporation
+            if (m_corpMarketOrdersMonitor.Enabled)
+                m_corpMarketOrdersMonitor.Enabled = !IsInNPCCorporation;
+
+            // Disable corp related industry jobs monitoring if character is in NPC corporation
+            if (m_corpIndustryJobsMonitor.Enabled)
+                m_corpIndustryJobsMonitor.Enabled = !IsInNPCCorporation;
+
             m_monitors.UpdateOnOneSecondTick();
             m_queue.UpdateOnTimerTick();
 

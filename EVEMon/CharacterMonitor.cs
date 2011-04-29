@@ -204,10 +204,6 @@ namespace EVEMon
             SuspendLayout();
             try
             {
-                // Update the other controls
-                UpdateErrorInfo();
-
-                // Update the rest of the controls
                 EveClient_TimerTick(null, EventArgs.Empty);
             }
             finally
@@ -289,19 +285,6 @@ namespace EVEMon
             skillQueuePanel.Visible = false;
             pnlTraining.Visible = false;
             lblPaused.Visible = false;
-        }
-
-        /// <summary>
-        /// Updates the errors feedback
-        /// </summary>
-        private void UpdateErrorInfo()
-        {
-            var ccpCharacter = m_character as CCPCharacter;
-
-            if (ccpCharacter == null)
-                return;
-
-            // TODO : Errors
         }
 
         /// <summary>
@@ -405,7 +388,8 @@ namespace EVEMon
 
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.Where(x => x.IsFullKeyNeeded))
             {
-                foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures.Where(x => monitor.Method.ToString().Contains(x.Text)))
+                foreach (ToolStripButton fullAPIKeyFeature in m_fullAPIKeyFeatures
+                                                        .Where(x => monitor.Method.ToString().Contains(x.Text)))
                 {
                     monitor.Enabled = CheckEnabledFeatures(fullAPIKeyFeature.Text);
                 }
@@ -448,9 +432,7 @@ namespace EVEMon
         /// <returns></returns>
         private bool CheckEnabledFeatures(string page)
         {
-            
-            bool enabled = m_character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
-            return enabled;
+            return m_character.UISettings.FullAPIKeyEnabledPages.Any(x => x == page);
         }
 
         /// <summary>
@@ -620,22 +602,23 @@ namespace EVEMon
 
             // Update the full api key enabled pages
             UpdateFeaturesMenu();
-            
+
             var ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter == null)
                 return;
 
-            // Is the character in training ?
-            if (ccpCharacter.IsTraining)
-            {
-                // Remaining training time label
-                QueuedSkill training = m_character.CurrentlyTrainingSkill;
-                lblTrainingRemain.Text = training.EndTime.ToLocalTime().ToRemainingTimeDescription();
+            // Exit if the character is not in training
+            if (!ccpCharacter.IsTraining)
+                return;
 
-                // Remaining queue time label
-                DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
-                lblQueueRemaining.Text = queueEndTime.ToLocalTime().ToRemainingTimeDescription();
-            }
+            // Remaining training time label
+            QueuedSkill training = m_character.CurrentlyTrainingSkill;
+            lblTrainingRemain.Text = training.EndTime.ToLocalTime().ToRemainingTimeDescription();
+
+            // Remaining queue time label
+            DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
+            lblQueueRemaining.Text = queueEndTime.ToLocalTime().ToRemainingTimeDescription();
+
         }
 
         /// <summary>
@@ -1178,14 +1161,10 @@ namespace EVEMon
             string paneSetting = ReadingPanePositioning.Off.ToString();
 
             if (multiPanel.SelectedPage == mailMessagesPage)
-            {
                 paneSetting = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition.ToString();
-            }
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
-            {
                 paneSetting = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition.ToString();
-            }
 
             foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
             {
