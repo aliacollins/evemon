@@ -273,6 +273,15 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // If there is an error response on missing IDs inform the user
+            if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
+                result.Result.Bodies.Add(
+                                    new SerializableMailBodiesListItem
+                                    {
+                                        MessageID = long.Parse(result.Result.MissingMessageIDs),
+                                        MessageText = "The text for this message was reported missing."
+                                    });
+
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
 
