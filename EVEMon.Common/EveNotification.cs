@@ -157,6 +157,8 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnEVENotificationTextDownloaded(APIResult<SerializableAPINotificationTexts> result)
         {
+            m_queryPending = false;
+
             // Notify an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.NotificationTexts))
                 EveClient.Notifications.NotifyEVENotificationTextsError(m_ccpCharacter, result);
@@ -165,9 +167,17 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // If there is an error response on missing IDs inform the user
+            if (!String.IsNullOrEmpty(result.Result.MissingMessageIDs))
+                result.Result.Texts.Add(
+                                    new SerializableNotificationTextsListItem
+                                    {
+                                        NotificationID = long.Parse(result.Result.MissingMessageIDs),
+                                        NotificationText = "The text for this notification was reported missing." 
+                                    });
+
             // Import the data
             EVENotificationText = new EveNotificationText(result.Result.Texts[0]);
-            m_queryPending = false;
 
             EveClient.OnCharacterEVENotificationTextDownloaded(m_ccpCharacter);
         }

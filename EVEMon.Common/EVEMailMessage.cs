@@ -263,6 +263,8 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnEVEMailBodyDownloaded(APIResult<SerializableAPIMailBodies> result)
         {
+            m_queryPending = false;
+
             // Notify an error occured
             if (m_ccpCharacter.ShouldNotifyError(result, APIMethods.MailBodies))
                 EveClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
@@ -273,7 +275,6 @@ namespace EVEMon.Common
 
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
-            m_queryPending = false;
 
             EveClient.OnCharacterEVEMailBodyDownloaded(m_ccpCharacter);
         }
