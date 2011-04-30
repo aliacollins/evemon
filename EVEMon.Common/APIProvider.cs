@@ -256,7 +256,7 @@ namespace EVEMon.Common
         {
             HttpPostData postData = new HttpPostData(String.Format(
                     "userID={0}&apiKey={1}&characterID={2}&ids={3}", userID, apiKey, characterID, messageID));
-            QueryMethodAsync<T>(APIMethods.MailBodies, postData, RowsetsTransform, callback);
+            QueryMethodAsync<T>(method, postData, RowsetsTransform, callback);
         }
         #endregion
 
