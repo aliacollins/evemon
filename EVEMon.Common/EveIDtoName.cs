@@ -7,17 +7,18 @@ using System.Xml.Serialization;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
     public static class EveIDtoName
     {
-        private readonly static string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
+        private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
 
         private static List<string> s_listOfIDs = new List<string>();
         private static List<string> s_listOfNames = new List<string>();
         private static List<string> s_listOfIDsToQuery = new List<string>();
-        private static Dictionary<string, string> s_cacheList = new Dictionary<string, string>();
+        private static Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
 
         private static bool s_isLoaded;
 
@@ -97,7 +98,7 @@ namespace EVEMon.Common
             // Add the data to the dictionary
             foreach (var entity in cache.Entities)
             {
-                s_cacheList.Add(entity.ID.ToString(), entity.Name);
+                s_cacheList.Add(entity.ID, entity.Name);
             }
         }
 
@@ -130,7 +131,7 @@ namespace EVEMon.Common
         {
             foreach (string id in s_listOfIDs)
             {
-                string name = s_cacheList.FirstOrDefault(x => x.Key == id).Value;
+                string name = s_cacheList.FirstOrDefault(x => x.Key.ToString() == id).Value;
 
                 if (name == null)
                 {
@@ -183,8 +184,8 @@ namespace EVEMon.Common
                 s_listOfNames.Add(entity.Name);
 
                 // Add the query result to our cache list if it doesn't exist already
-                if (!s_cacheList.ContainsKey(entity.ID.ToString()))
-                    s_cacheList.Add(entity.ID.ToString(), entity.Name);
+                if (!s_cacheList.ContainsKey(entity.ID))
+                    s_cacheList.Add(entity.ID, entity.Name);
             }
 
             // In case the list is empty, add an "Unknown" entry
@@ -222,7 +223,7 @@ namespace EVEMon.Common
             {
                 entitiesList.Add(new SerializableEveIDToNameListItem()
                                 {
-                                    ID = long.Parse(item.Key),
+                                    ID = item.Key,
                                     Name = item.Value,
                                 });
             }
