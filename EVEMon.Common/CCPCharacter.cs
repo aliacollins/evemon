@@ -35,6 +35,7 @@ namespace EVEMon.Common
         private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
         private DateTime m_mailingListsNextUpdate = DateTime.MinValue;
+        private SerializableAPIMailMessages m_cachedAPIMailMessagesResult;
 
         private bool m_charOrdersUpdated;
         private bool m_corpOrdersUpdated;
@@ -374,6 +375,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Queries the character's mailing list.
+        /// </summary>
+        private void QueryCharacterMailingList()
+        {
+            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
+                                                                        APIMethods.MailingLists,
+                                                                        Identity.Account.UserID,
+                                                                        Identity.Account.APIKey,
+                                                                        CharacterID,
+                                                                        OnCharacterMailingListUpdated);
+        }
+
+        /// <summary>
         /// Processed the queried skill queue information.
         /// </summary>
         /// <param name="result"></param>
@@ -573,52 +587,45 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            // Each time we inport a new batch of EVE mail messages,
-            // query the mailing lists (if it's time to)
-            // so that we are always up to date
+            m_cachedAPIMailMessagesResult = result.Result;
+
+            // Each time we import a new batch of EVE mail messages,
+            // query the mailing lists (if it's time to) so that we are always up to date
+            // and import the mail messages after we received the mailing lists
             if (DateTime.UtcNow > m_mailingListsNextUpdate)
-                QueryAPIMailingList();
+            {
+                QueryCharacterMailingList();
+                return;
+            }
 
-            // Import the data
-            m_eveMailMessages.Import(result.Result.Messages);
-
-            // Notify on new messages
-            if (m_eveMailMessages.NewMessages != 0)
-                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
-
-            // Fires the event regarding EVE mail messages update.
-            EveClient.OnCharacterEVEMailMessagesUpdated(this);
-        }
-
-        /// <summary>
-        /// Queries the API mailing list.
-        /// </summary>
-        private void QueryAPIMailingList()
-        {
-            var result = EveClient.APIProviders.CurrentProvider.QueryMailingLists(Identity.Account.UserID,
-                                                                                  Identity.Account.APIKey,
-                                                                                  CharacterID);
-            OnQueryAPIMailingListUpdated(result);
+            // Import the EVE mail messages
+            ImportEVEMailMessages();
         }
 
         /// <summary>
         /// Processes the queried character's EVE mailing lists.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnQueryAPIMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
+        private void OnCharacterMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
         {
             m_mailingListsNextUpdate = result.CachedUntil;
 
+            // If there is an error notify the user
             if (result.HasError)
             {
                 EveClient.Notifications.NotifyMailingListsError(this, result);
-                return;
+            }
+            else
+            {
+                EveClient.Notifications.InvalidateCharacterAPIError(this);
+
+                // Deserialize the result
+                EVEMailingLists.Import(result.Result.MailingLists);
             }
 
-            EveClient.Notifications.InvalidateCharacterAPIError(this);
-
-            // Deserialize the result
-            EVEMailingLists.Import(result.Result.MailingLists);
+            // Whether we have the mailing list info or not
+            // import the EVE mail messages
+            ImportEVEMailMessages();
         }
 
         /// <summary>
@@ -802,7 +809,23 @@ namespace EVEMon.Common
             m_charJobsAdded = false;
             m_corpJobsAdded = false;
         }
-        
+
+        /// <summary>
+        /// Imports the EVE mail messages.
+        /// </summary>
+        private void ImportEVEMailMessages()
+        {
+            // Import the data
+            m_eveMailMessages.Import(m_cachedAPIMailMessagesResult.Messages);
+
+            // Notify on new messages
+            if (m_eveMailMessages.NewMessages != 0)
+                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
+
+            // Fires the event regarding EVE mail messages update
+            EveClient.OnCharacterEVEMailMessagesUpdated(this);
+        }
+
         #endregion
     }
 }
