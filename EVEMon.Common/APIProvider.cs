@@ -193,19 +193,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Query the characters mailing lists.
-        /// </summary>
-        /// <param name="userID">The account's ID</param>
-        /// <param name="apiKey">The account's API key</param>
-        /// <param name="charID">The character's ID</param>
-        /// <returns></returns>
-        public APIResult<SerializableAPIMailingLists> QueryMailingLists(long userID, string apiKey, long charID)
-        {
-            HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&characterID={2}", userID, apiKey, charID));
-            return QueryMethod<SerializableAPIMailingLists>(APIMethods.MailingLists, postData, RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
@@ -340,7 +327,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
+            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIErrors.CCP);
         }
 
         /// <summary>
