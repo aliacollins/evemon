@@ -327,7 +327,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIErrors.CCP);
+            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError && result.ErrorType != APIEnumerations.APIErrors.CCP);
         }
 
         /// <summary>
