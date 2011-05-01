@@ -8,13 +8,13 @@ namespace EVEMon.Common
     public static class TimeExtensions
     {
         /// <summary>
-        /// Converts a UTC DateTime to the CCP API date/time string
+        /// Converts a UTC DateTime to the API date/time string
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
         public static string ToTimeString(this DateTime timeUTC)
         {
-            // timeUTC  = yyyy-MM-dd HH:mm:ss
+            // timeUTC = yyyy-MM-dd HH:mm:ss
             string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
                                           timeUTC.Year,
                                           timeUTC.Month,
@@ -26,13 +26,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Converts a CCP API date/time string to a UTC DateTime
+        /// Converts an API date/time string to a UTC DateTime
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
         public static DateTime TimeStringToDateTime(this String timeUTC)
         {
-            // timeUTC  = yyyy-MM-dd HH:mm:ss
+            // timeUTC = yyyy-MM-dd HH:mm:ss
             if (String.IsNullOrEmpty(timeUTC))
                 return DateTime.MinValue;
 
