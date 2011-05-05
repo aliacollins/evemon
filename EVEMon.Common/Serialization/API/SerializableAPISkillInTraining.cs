@@ -68,21 +68,21 @@ namespace EVEMon.Common.Serialization.API
         public DateTime CurrentServerTime
         {
             get { return CurrentTQTime.TimeStringToDateTime(); }
-            set { CurrentTQTime = value.ToTimeString(); }
+            set { CurrentTQTime = value.DateTimeToTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime StartTime
         {
             get { return TrainingStartTime.TimeStringToDateTime(); }
-            set { TrainingStartTime = value.ToTimeString(); }
+            set { TrainingStartTime = value.DateTimeToTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime EndTime
         {
             get { return TrainingEndTime.TimeStringToDateTime(); }
-            set { TrainingEndTime = value.ToTimeString(); }
+            set { TrainingEndTime = value.DateTimeToTimeString(); }
         }
 
         #region ISynchronizableWithLocalClock Members

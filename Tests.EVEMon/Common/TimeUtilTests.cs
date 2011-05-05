@@ -57,7 +57,7 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ConvertDateTimeToCCPDateTime()
         {
-            string result = PointInTime.ToTimeString();
+            string result = PointInTime.DateTimeToTimeString();
             Assert.AreEqual(ValidCcpDateTime, result);
         }
 

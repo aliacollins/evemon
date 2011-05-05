@@ -51,14 +51,14 @@ namespace EVEMon.Common.Serialization.API
         public DateTime StartTime
         {
             get { return CCPStartTime.TimeStringToDateTime(); }
-            set { CCPStartTime = value.ToTimeString(); }
+            set { CCPStartTime = value.DateTimeToTimeString(); }
         }
 
         [XmlIgnore]
         public DateTime EndTime
         {
             get { return CCPEndTime.TimeStringToDateTime(); }
-            set { CCPEndTime = value.ToTimeString(); }
+            set { CCPEndTime = value.DateTimeToTimeString(); }
         }
 
         #region ISynchronizableWithLocalClock Members

@@ -162,7 +162,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("issued")]
         public string IssuedXml
         {
-            get { return Issued.ToTimeString(); }
+            get { return Issued.DateTimeToTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))

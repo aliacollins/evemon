@@ -106,7 +106,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("installTime")]
         public string InstallTimeXml
         {
-            get { return InstallTime.ToTimeString(); }
+            get { return InstallTime.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -117,7 +117,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("beginProductionTime")]
         public string BeginProductionTimeXml
         {
-            get { return BeginProductionTime.ToTimeString(); }
+            get { return BeginProductionTime.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -128,7 +128,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("endProductionTime")]
         public string EndProductionTimeXml
         {
-            get { return EndProductionTime.ToTimeString(); }
+            get { return EndProductionTime.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -139,7 +139,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("pauseProductionTime")]
         public string PauseProductionTimeXml
         {
-            get { return PauseProductionTime.ToTimeString(); }
+            get { return PauseProductionTime.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))

@@ -29,7 +29,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("sentDate")]
         public string SentDateXml
         {
-            get { return SentDate.ToTimeString(); }
+            get { return SentDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))

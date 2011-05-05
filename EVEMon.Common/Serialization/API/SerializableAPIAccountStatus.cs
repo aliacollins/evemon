@@ -19,7 +19,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("paidUntil")]
         public string paidUntilXml
         {
-            get { return PaidUntil.ToTimeString(); }
+            get { return PaidUntil.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("createDate")]
         public string createDateXml
         {
-            get { return CreateDate.ToTimeString(); }
+            get { return CreateDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))

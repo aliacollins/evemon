@@ -184,7 +184,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("currentTime")]
         public string CurrentTimeXml
         {
-            get { return CurrentTime.ToTimeString(); }
+            get { return CurrentTime.DateTimeToTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))
@@ -197,7 +197,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("cachedUntil")]
         public string CachedUntilXml
         {
-            get { return CachedUntil.ToTimeString(); }
+            get { return CachedUntil.DateTimeToTimeString(); }
             set
             {
                 if (String.IsNullOrEmpty(value))

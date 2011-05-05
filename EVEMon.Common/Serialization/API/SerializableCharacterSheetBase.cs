@@ -33,7 +33,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("DoB")]
         public string BirthdayXml
         {
-            get { return Birthday.ToTimeString(); }
+            get { return Birthday.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))

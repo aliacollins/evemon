@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("researchStartDate")]
         public string ResearchStartDateXml
         {
-            get { return ResearchStartDate.ToTimeString(); }
+            get { return ResearchStartDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))

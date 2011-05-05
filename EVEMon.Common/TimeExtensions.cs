@@ -8,11 +8,11 @@ namespace EVEMon.Common
     public static class TimeExtensions
     {
         /// <summary>
-        /// Converts a UTC DateTime to the API date/time string
+        /// Converts a UTC DateTime to the API date/time string.
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
-        public static string ToTimeString(this DateTime timeUTC)
+        public static string DateTimeToTimeString(this DateTime timeUTC)
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
@@ -26,18 +26,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Converts an API date/time string to a UTC DateTime
+        /// Converts an API date/time string to a UTC DateTime.
         /// </summary>
         /// <param name="timeUTC"></param>
         /// <returns></returns>
         public static DateTime TimeStringToDateTime(this String timeUTC)
         {
+            DateTime dt = DateTime.MinValue;
+
             // timeUTC = yyyy-MM-dd HH:mm:ss
             if (String.IsNullOrEmpty(timeUTC))
-                return DateTime.MinValue;
+                return dt;
 
-            DateTime dt = DateTime.ParseExact(timeUTC, "yyyy-MM-dd HH:mm:ss",
-                                                CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal);
+            DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal, out dt);
 
             return dt;
         }
@@ -155,7 +156,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Generates an absoloute string based upon the following format
+        /// Generates an absoloute string based upon the following format :
         /// <list type="bullet">
         /// <item>17:27 Tomorrow</item>
         /// <item>07:43 Wednesday</item>
@@ -198,7 +199,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Formats a DateTime object as a short string (HH:mm or hh:mm tt)
+        /// Formats a DateTime object as a short string (HH:mm or hh:mm tt).
         /// </summary>
         /// <remarks>
         /// Due to a reason that escapes me, the ShortTimePattern
@@ -253,7 +254,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Builds the string representation for this string, just for one part of the time (may be the days, the hours, the mins, etc)
+        /// Builds the string representation for this string, just for one part of the time
+        /// (may be the days, the hours, the mins, etc).
         /// </summary>
         /// <param name="sb"></param>
         /// <param name="p"></param>
