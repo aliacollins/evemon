@@ -271,6 +271,8 @@ namespace EVEMon.Common
             // Check that a settings file or backup exists
             if (File.Exists(settingsFile))
             {
+                EveClient.Trace("Settings.TryDeserializeSettings() - begin");
+
                 // Check settings file length
                 FileInfo settingsInfo = new FileInfo(settingsFile);
                 if (settingsInfo.Length > 0)
@@ -295,6 +297,7 @@ namespace EVEMon.Common
                     {
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
+                        EveClient.Trace("Settings.TryDeserializeSettings() - done");
                         return settings;
                     }
                 }
@@ -316,6 +319,8 @@ namespace EVEMon.Common
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
+                EveClient.Trace("Settings.TryDeserializeBackup() - begin");
+
                 FileInfo backupInfo = new FileInfo(backupFile);
                 if (backupInfo.Length > 0)
                 {
@@ -358,6 +363,7 @@ namespace EVEMon.Common
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
+                        EveClient.Trace("Settings.TryDeserializeBackup() - done");
                         return settings;
                     }
 
@@ -434,14 +440,14 @@ namespace EVEMon.Common
                     using (SaveFileDialog fileDialog = new SaveFileDialog())
                     {
                         fileDialog.Title = "Settings file backup";
-                        fileDialog.Filter = "Settings Backup Files (*.bak) | *.bak";
+                        fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
                         fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "EVEMon_Settings_{0}.xml.bak", revision.ToString());
                         fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                         DialogResult saveFile = fileDialog.ShowDialog();
-                        if (saveFile == DialogResult.OK)
-                        {
-                            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, fileDialog.FileName);
-                        }
+                        if (saveFile != DialogResult.OK)
+                            return;
+
+                        FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, fileDialog.FileName);
                     }
                 }
             }
