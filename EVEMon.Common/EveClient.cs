@@ -138,23 +138,31 @@ namespace EVEMon.Common
         public static string EVEMonDataDir { get; private set; }
 
         /// <summary>
-        /// Gets the fully qualified path to the current settings file
+        /// Gets the name of the current settings file.
         /// </summary>
         public static string SettingsFileName
+        {
+            get { return s_settingsFile; }
+        }
+
+        /// <summary>
+        /// Gets the fully qualified path to the current settings file.
+        /// </summary>
+        public static string SettingsFileNameFullPath
         {
             get { return Path.Combine(EVEMonDataDir, s_settingsFile); }
         }
 
         /// <summary>
-        /// Gets the fully qualified path to the trace file
+        /// Gets the fully qualified path to the trace file.
         /// </summary>
-        public static string TraceFileName
+        public static string TraceFileNameFullPath
         {
             get { return Path.Combine(EVEMonDataDir, s_traceFile); }
         }
 
         /// <summary>
-        /// Creates the file system paths (settings file name, appdata directory, etc)
+        /// Creates the file system paths (settings file name, appdata directory, etc).
         /// </summary>
         /// <remarks>Already called by <see cref="Initialize"/>.</remarks>
         public static void InitializeFileSystemPaths()
@@ -204,7 +212,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Retrieves the settings file path
+        /// Retrieves the settings file path.
         /// </summary>
         private static void InitializeEVEMonPaths()
         {
@@ -300,12 +308,12 @@ namespace EVEMon.Common
         public static GlobalAPIProviderCollection APIProviders { get; private set; }
 
         /// <summary>
-        /// Gets the EVE server's informations
+        /// Gets the EVE server's informations.
         /// </summary>
         public static EveServer EVEServer { get; private set; }
         
         /// <summary>
-        /// Apply some settings changes
+        /// Apply some settings changes.
         /// </summary>
         private static void UpdateSettings()
         {
@@ -323,17 +331,17 @@ namespace EVEMon.Common
         public static GlobalAccountCollection Accounts { get; private set; }
 
         /// <summary>
-        /// Gets the collection of all characters
+        /// Gets the collection of all characters.
         /// </summary>
         public static GlobalCharacterCollection Characters { get; private set; }
 
         /// <summary>
-        /// Gets the collection of all known character identities. For monitored character sources, see <see cref="MonitoredCharacterSources"/>
+        /// Gets the collection of all known character identities. For monitored character sources, see <see cref="MonitoredCharacterSources"/>.
         /// </summary>
         public static GlobalCharacterIdentityCollection CharacterIdentities { get; private set; }
 
         /// <summary>
-        /// Gets the collection of all monitored characters
+        /// Gets the collection of all monitored characters.
         /// </summary>
         public static GlobalMonitoredCharacterCollection MonitoredCharacters { get; private set; }
 
@@ -343,7 +351,7 @@ namespace EVEMon.Common
         public static GlobalNotificationCollection Notifications { get; private set; }
 
         /// <summary>
-        /// Everytime the API timer is clicked, we fire this to check whether we need to update the queries
+        /// Everytime the API timer is clicked, we fire this to check whether we need to update the queries.
         /// </summary>
         internal static void UpdateOnOneSecondTick()
         {
@@ -883,8 +891,7 @@ namespace EVEMon.Common
         #region Diagnostics
 
         /// <summary>
-        /// Sends a message to the trace with the prepended time since
-        /// startup.
+        /// Sends a message to the trace with the prepended time since startup.
         /// </summary>
         /// <param name="message">message to trace</param>
         public static void Trace(string message)
@@ -942,18 +949,18 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Starts the logging of trace messages to a file
+        /// Starts the logging of trace messages to a file.
         /// </summary>
         public static void StartTraceLogging()
         {
             System.Diagnostics.Trace.AutoFlush = true;
-            s_traceStream = File.CreateText(EveClient.TraceFileName);
+            s_traceStream = File.CreateText(EveClient.TraceFileNameFullPath);
             s_traceListener = new TextWriterTraceListener(s_traceStream);
             System.Diagnostics.Trace.Listeners.Add(s_traceListener);
         }
 
         /// <summary>
-        /// Stops the logging of trace messages to a file
+        /// Stops the logging of trace messages to a file.
         /// </summary>
         public static void StopTraceLogging()
         {

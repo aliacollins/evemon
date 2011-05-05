@@ -244,7 +244,7 @@ namespace EVEMon.Common
         public static void Restore(string filename)
         {
             // Try deserialize
-            string settingsFile = EveClient.SettingsFileName;
+            string settingsFile = EveClient.SettingsFileNameFullPath;
             SerializableSettings settings = TryDeserializeBackup(filename, settingsFile, false);
 
             // Loading from file failed, we abort and keep our current settings
@@ -265,7 +265,7 @@ namespace EVEMon.Common
         private static SerializableSettings TryDeserializeSettings()
         {
             SerializableSettings settings = null;
-            string settingsFile = EveClient.SettingsFileName;
+            string settingsFile = EveClient.SettingsFileNameFullPath;
             string backupFile = settingsFile + ".bak";
 
             // Check that a settings file or backup exists
@@ -485,7 +485,7 @@ namespace EVEMon.Common
             XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
 
             // Save in settings file
-            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, fs =>
+            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, fs =>
             {
                 xs.Serialize(fs, settings);
                 fs.Flush();
@@ -505,7 +505,7 @@ namespace EVEMon.Common
         {
             // Ensure we have the latest settings saved
             SaveImmediate();
-            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileName, copyFileName);
+            FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, copyFileName);
         }
 
         /// <summary>

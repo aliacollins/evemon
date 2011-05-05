@@ -66,7 +66,7 @@ namespace EVEMon
             
             try
             {
-                using (FileStream traceStream = new FileStream(EveClient.TraceFileName, FileMode.Open, FileAccess.Read))
+                using (FileStream traceStream = new FileStream(EveClient.TraceFileNameFullPath, FileMode.Open, FileAccess.Read))
                 {
                     using (StreamReader traceReader = new StreamReader(traceStream))
                     {
