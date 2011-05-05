@@ -137,7 +137,8 @@ namespace EVEMon.Common
                     }
 
                     // The loop will begin again if the users asked to retry
-                    if (result == DialogResult.Ignore) return false;
+                    if (result == DialogResult.Ignore)
+                        return false;
                 }
             }
         }

@@ -13,17 +13,17 @@ namespace EVEMon.Common.Serialization.Settings
     {
         public SerializableSettingsImplantSet()
         {
-            this.Name = "Custom";
-            this.Intelligence = Implant.None.Name;
-            this.Perception = Implant.None.Name;
-            this.Willpower = Implant.None.Name;
-            this.Charisma = Implant.None.Name;
-            this.Memory = Implant.None.Name;
-            this.Slot6 = Implant.None.Name;
-            this.Slot7 = Implant.None.Name;
-            this.Slot8 = Implant.None.Name;
-            this.Slot9 = Implant.None.Name;
-            this.Slot10 = Implant.None.Name;
+            Name = "Custom";
+            Intelligence = Implant.None.Name;
+            Perception = Implant.None.Name;
+            Willpower = Implant.None.Name;
+            Charisma = Implant.None.Name;
+            Memory = Implant.None.Name;
+            Slot6 = Implant.None.Name;
+            Slot7 = Implant.None.Name;
+            Slot8 = Implant.None.Name;
+            Slot9 = Implant.None.Name;
+            Slot10 = Implant.None.Name;
         }
 
         [XmlAttribute("name")]

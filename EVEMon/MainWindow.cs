@@ -1942,6 +1942,5 @@ namespace EVEMon
 
         #endregion
 
-
     }
 }

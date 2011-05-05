@@ -30,7 +30,6 @@ namespace EVEMon.Common.Serialization.Settings
             UI = new UISettings();
         }
 
-
         [XmlAttribute("revision")]
         public int Revision
         {

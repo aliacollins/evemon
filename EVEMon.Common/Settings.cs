@@ -322,12 +322,18 @@ namespace EVEMon.Common
                     if (recover)
                     {
                         // Prompts the user to use the backup
-                        String fileDate = backupInfo.LastWriteTime.ToLocalTime().ToShortDateString() + " at " + backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString();
-                        DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate), "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        String fileDate = String.Format("{0} at {1}",
+                                                    backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
+                                                    backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
+                        DialogResult dr = MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                            "Your settings file is missing or corrupt. There is a backup available from {0}. Do you want to use the backup file?", fileDate),
+                            "Corrupt Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                         if (dr == DialogResult.No)
                         {
-                            MessageBox.Show("Your settings file is corrupt, and no backup is available. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file.", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Your settings file is corrupt, and no backup is available. A new settings file will be created."
+                                            + " You may wish to close down EVEMon and restore a saved copy of your file.", "Corrupt Settings",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             return null;
                         }
                     }
@@ -356,7 +362,9 @@ namespace EVEMon.Common
                     }
 
                     // Backup failed too, notify the user we have a problem
-                    MessageBox.Show("Load from backup failed. A new settings file will be created. You may wish to close down EVEMon and restore a saved copy of your file", "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Load from backup failed. A new settings file will be created."
+                                    + " You may wish to close down EVEMon and restore a saved copy of your file.",
+                                    "Corrupt Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return null;
                 }
             }

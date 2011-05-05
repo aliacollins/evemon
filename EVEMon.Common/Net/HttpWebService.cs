@@ -34,7 +34,7 @@ namespace EVEMon.Common.Net
         {
             if (string.IsNullOrEmpty(url))
             {
-                errorMsg = "url may not be null or an empty string";
+                errorMsg = "Url may not be null or an empty string.";
                 return false;
             }
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))

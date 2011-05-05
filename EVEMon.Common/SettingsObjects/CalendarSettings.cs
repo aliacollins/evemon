@@ -70,7 +70,6 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-
         [XmlElement("googleEmail")]
         public string GoogleEmail
         {
