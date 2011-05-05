@@ -52,10 +52,6 @@ namespace EVEMon.Common
 
                 Trace("EveClient.Initialize() - begin");
 
-                // File system paths
-                InitializeFileSystemPaths();
-                LocalXmlCache.Initialize();
-
                 // Members instantiations
                 HttpWebService = new HttpWebService();
                 APIProviders = new GlobalAPIProviderCollection();
@@ -164,7 +160,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Creates the file system paths (settings file name, appdata directory, etc).
         /// </summary>
-        /// <remarks>Already called by <see cref="Initialize"/>.</remarks>
         public static void InitializeFileSystemPaths()
         {
             lock (s_pathsInitializationLock)
@@ -187,6 +182,7 @@ namespace EVEMon.Common
                     {
                         InitializeEVEMonPaths();
                         InitializeDefaultEvePortraitCachePath();
+                        LocalXmlCache.Initialize();
                         return;
                     }
                     catch (UnauthorizedAccessException exc)
