@@ -10,7 +10,7 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents one of the implant sets this character have (one per clone)
+    /// Represents one of the implant sets this character have (one per clone).
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class ImplantSet : ReadonlyVirtualCollection<Implant>
@@ -20,7 +20,7 @@ namespace EVEMon.Common
         private readonly Implant[] m_values;
 
         /// <summary>
-        /// Default constructor
+        /// Default constructor.
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="set"></param>
@@ -30,7 +30,10 @@ namespace EVEMon.Common
             m_owner = owner;
 
             m_values = new Implant[10];
-            for (int i = 0; i < 10; i++) m_values[i] = Implant.None;
+            for (int i = 0; i < 10; i++)
+            {
+                m_values[i] = Implant.None;
+            }
         }
 
         /// <summary>
@@ -41,14 +44,17 @@ namespace EVEMon.Common
             get { return m_name; }
             set 
             {
-                if (m_name == value) return;
+                if (m_name == value)
+                    return;
+
                 m_name = value;
+
                 EveClient.OnCharacterChanged(m_owner);
             }
         }
 
         /// <summary>
-        /// Gets or sets the implant for the given slot
+        /// Gets or sets the implant for the given slot.
         /// </summary>
         /// <param name="slot">The slot for the implant to retrieve</param>
         /// <returns>The requested implant when found; null otherwise.</returns>
@@ -61,18 +67,27 @@ namespace EVEMon.Common
             }
             set 
             { 
-                if (slot == ImplantSlots.None) throw new InvalidOperationException("Cannot assign 'none' slot");
-                if (value != null && value.Slot != slot) throw new InvalidOperationException("Slot mismatch");
+                if (slot == ImplantSlots.None)
+                    throw new InvalidOperationException("Cannot assign 'none' slot");
 
-                if (value == null) value = Implant.None;
-                else m_values[(int)slot] = value;
+                if (value != null && value.Slot != slot)
+                    throw new InvalidOperationException("Slot mismatch");
+
+                if (value == null)
+                {
+                    value = Implant.None;
+                }
+                else
+                {
+                    m_values[(int)slot] = value;
+                }
 
                 EveClient.OnCharacterChanged(m_owner);
             }
         }
 
         /// <summary>
-        /// Gets / sets the implant for the given slot
+        /// Gets / sets the implant for the given slot.
         /// </summary>
         /// <param name="attrib">The attribute for the implant to retrieve</param>
         /// <returns>The requested implant when found; null otherwise.</returns>
@@ -101,7 +116,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Generates a serialization object
+        /// Generates a serialization object.
         /// </summary>
         /// <returns></returns>
         internal SerializableSettingsImplantSet Export()
@@ -122,7 +137,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Exports an implant as a serialization object
+        /// Exports an implant as a serialization object.
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
@@ -132,7 +147,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a settings serialization object
+        /// Imports data from a settings serialization object.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(SerializableSettingsImplantSet serial, bool importName)
@@ -147,21 +162,26 @@ namespace EVEMon.Common
             Import(ImplantSlots.Slot8, serial.Slot8);
             Import(ImplantSlots.Slot9, serial.Slot9);
             Import(ImplantSlots.Slot10, serial.Slot10);
-            if (importName) m_name = serial.Name;
+
+            if (importName)
+                m_name = serial.Name;
         }
 
         /// <summary>
-        /// Updates the given slot with the provided serialization object
+        /// Updates the given slot with the provided serialization object.
         /// </summary>
         /// <param name="slot"></param>
         /// <param name="serial"></param>
         private void Import(ImplantSlots slot, string name)
         {
+            // Backwards compatibility for older versions
+            name = name.Replace("<", String.Empty).Replace(">", String.Empty);
+            
             m_values[(int)slot] = StaticItems.GetImplants(slot)[name];
         }
 
         /// <summary>
-        /// Imports data from an API serialization object
+        /// Imports data from an API serialization object.
         /// </summary>
         /// <param name="serial"></param>
         /// <param name="overrideManual"></param>
@@ -175,7 +195,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the given slot with the provided implant's name
+        /// Updates the given slot with the provided implant's name.
         /// </summary>
         /// <param name="slot"></param>
         /// <param name="src"></param>

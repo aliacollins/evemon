@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Threading;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
     #region Implant
     /// <summary>
-    /// Represents an implant
+    /// Represents an implant.
     /// </summary>
     public sealed class Implant : Item
     {
@@ -22,13 +18,13 @@ namespace EVEMon.Common.Data
         /// Private constructor for the default.
         /// </summary>
         internal Implant()
-            : base (-1, "<None>")
+            : base(-1, ImplantSlots.None.ToString())
         {
             m_implantSlot = ImplantSlots.None;
         }
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="group"></param>
         /// <param name="src"></param>
@@ -66,7 +62,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets or sets the slot
+        /// Gets the slot.
         /// </summary>
         public ImplantSlots Slot
         {
@@ -74,7 +70,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// For attributes implants, gets or sets the amount of bonus points it grants
+        /// For attributes implants, gets the amount of bonus points it grants.
         /// </summary>
         public int Bonus
         {
@@ -130,67 +126,11 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets an implant for an empty set
+        /// Gets an implant for an empty set.
         /// </summary>
         public static Implant None
         {
             get { return m_none; }
-        }
-    }
-    #endregion
-
-
-    #region ImplantSlot
-    /// <summary>
-    /// Represents a collection of all the implants bound to a given group.
-    /// </summary>
-    public sealed class ImplantSlot : ReadonlyCollection<Implant>
-    {
-        private readonly ImplantSlots m_slot;
-
-        /// <summary>
-        /// Deserialization constructor
-        /// </summary>
-        /// <param name="src"></param>
-        internal ImplantSlot(ImplantSlots slot)
-            : base()
-        {
-            m_slot = slot;
-        }
-
-        /// <summary>
-        /// Gets the slot represented by this group
-        /// </summary>
-        public ImplantSlots Slot
-        {
-            get { return m_slot; }
-        }
-
-
-        /// <summary>
-        /// Gets an implant by its name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public Implant this[string name]
-        {
-            get
-            {
-                foreach (var implant in m_items)
-                {
-                    if (implant.Name == name) return implant;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Add an implant to this slot.
-        /// </summary>
-        /// <param name="implant"></param>
-        internal void Add(Implant implant)
-        {
-            m_items.Add(implant);
         }
     }
     #endregion

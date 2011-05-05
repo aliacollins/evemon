@@ -12,7 +12,7 @@ namespace EVEMon.Common.Data
     {
         private static readonly Dictionary<long, MarketGroup> s_groupsByID = new Dictionary<long, MarketGroup>();
         private static readonly Dictionary<long, Item> s_itemsByID = new Dictionary<long, Item>();
-        private static readonly ImplantSlot[] s_implantSlots = new ImplantSlot[10];
+        private static readonly ImplantCollection[] s_implantSlots = new ImplantCollection[10];
 
         private static MarketGroupCollection s_roots;
         private static MarketGroup s_shipsGroup;
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public static ImplantSlot GetImplants(ImplantSlots slot)
+        public static ImplantCollection GetImplants(ImplantSlots slot)
         {
             return s_implantSlots[(int)slot];
         }
@@ -125,7 +125,7 @@ namespace EVEMon.Common.Data
             // Create the implants slots
             for (int i = 0; i < s_implantSlots.Length; i++)
             {
-                s_implantSlots[i] = new ImplantSlot((ImplantSlots)i);
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i);
                 s_implantSlots[i].Add(new Implant());
             }
 

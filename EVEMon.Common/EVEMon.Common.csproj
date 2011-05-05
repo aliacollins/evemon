@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
