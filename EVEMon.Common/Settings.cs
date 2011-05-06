@@ -130,9 +130,7 @@ namespace EVEMon.Common
             foreach (NotificationCategory cat in Enum.GetValues(typeof(NotificationCategory)))
             {
                 if (!Settings.Notifications.Categories.ContainsKey(cat))
-                {
                     Settings.Notifications.Categories[cat] = new NotificationCategorySettings();
-                }
             }
 
             // Add missing API methods update periods
@@ -166,10 +164,31 @@ namespace EVEMon.Common
                 Where(x => x != IndustryJobColumn.None && jobsColumns.All(y => y.Column != x)).
                 Select(x => new IndustryJobColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
             UI.MainWindow.IndustryJobs.Columns = jobsColumns.ToArray();
+
+            // Add missing research points columns
+            var researchColumns = UI.MainWindow.Research.Columns.ToList();
+            researchColumns.AddRange(EnumExtensions.GetValues<ResearchColumn>().
+                Where(x => x != ResearchColumn.None && researchColumns.All(y => y.Column != x)).
+                Select(x => new ResearchColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+            UI.MainWindow.Research.Columns = researchColumns.ToArray();
+
+            // Add missing EVE mail messages columns
+            var eveMailMessagesColumns = UI.MainWindow.EVEMailMessages.Columns.ToList();
+            eveMailMessagesColumns.AddRange(EnumExtensions.GetValues<EveMailMessagesColumn>().
+                Where(x => x != EveMailMessagesColumn.None && eveMailMessagesColumns.All(y => y.Column != x)).
+                Select(x => new EveMailMessagesColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+            UI.MainWindow.EVEMailMessages.Columns = eveMailMessagesColumns.ToArray();
+
+            // Add missing EVE notifications columns
+            var eveNotificationsColumns = UI.MainWindow.EVENotifications.Columns.ToList();
+            eveNotificationsColumns.AddRange(EnumExtensions.GetValues<EveNotificationsColumn>().
+                Where(x => x != EveNotificationsColumn.None && eveNotificationsColumns.All(y => y.Column != x)).
+                Select(x => new EveNotificationsColumnSettings { Column = x, Visible = false, Width = -1 }).ToArray());
+            UI.MainWindow.EVENotifications.Columns = eveNotificationsColumns.ToArray();
         }
 
         /// <summary>
-        /// Creates a seriablizable version of the settings
+        /// Creates a seriablizable version of the settings.
         /// </summary>
         /// <returns></returns>
         public static SerializableSettings Export()
@@ -208,7 +227,7 @@ namespace EVEMon.Common
 
         #region Initialization and loading
         /// <summary>
-        /// Gets the current assembly's revision, which is also used for files versioning
+        /// Gets the current assembly's revision, which is also used for files versioning.
         /// </summary>
         internal static int Revision
         {
@@ -216,7 +235,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Initialization for the EVEMon client. Will automatically load the settings file
+        /// Initialization for the EVEMon client. Will automatically load the settings file.
         /// </summary>
         /// <param name="applicationForm">The main application form</param>
         /// <exception cref="InvalidOperationException">The instance has been initialized already</exception>
@@ -237,7 +256,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Loads a settings file from a specified filepath and sets m_instance
+        /// Loads a settings file from a specified filepath and sets m_instance.
         /// </summary>
         /// <param name="filename">The fully qualified filename of the settings file to load</param>
         /// <returns>The Settings object loaded</returns>
@@ -422,7 +441,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Compare the settings version with this version and, when different, update and prompt the user for a backup
+        /// Compare the settings version with this version and, when different, update and prompt the user for a backup.
         /// </summary>
         /// <param name="notifyUser"></param>
         private static void CheckSettingsVersion(SerializableSettings settings)
@@ -459,7 +478,7 @@ namespace EVEMon.Common
         #region Save
 
         /// <summary>
-        /// Flag to indicate if a save is pending but not comitted
+        /// Flag to indicate if a save is pending but not committed.
         /// </summary>
         private static bool m_savePending = false;
 
@@ -469,7 +488,7 @@ namespace EVEMon.Common
         private static DateTime m_lastSaveTime = DateTime.MinValue;
 
         /// <summary>
-        /// Every 10s, the timer ticks and check whether we should save the settings
+        /// Every 10s, the timer ticks and check whether we should save the settings.
         /// </summary>
         internal static void UpdateOnOneSecondTick()
         {
@@ -479,7 +498,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Saves settings to disk
+        /// Saves settings to disk.
         /// </summary>
         /// <remarks>
         /// Saves will be cached for 10 seconds to avoid thrashing the disk when this method is called very rapidly
@@ -491,7 +510,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Saves settings immediately
+        /// Saves settings immediately.
         /// </summary>
         public static void SaveImmediate()
         {
@@ -512,7 +531,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Copies the current Settings file to the specified location
+        /// Copies the current Settings file to the specified location.
         /// </summary>
         /// <param name="copyFileName">The fully qualified filename of the destination file</param>
         public static void CopySettings(string copyFileName)
@@ -523,7 +542,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if we're currently restoring the settings
+        /// Gets true if we're currently restoring the settings.
         /// </summary>
         public static bool IsRestoringSettings
         {
@@ -590,7 +609,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the calendar settings
+        /// Gets the calendar settings.
         /// </summary>
         public static CalendarSettings Calendar
         {
@@ -599,7 +618,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets the exportation settings
+        /// Gets or sets the exportation settings.
         /// </summary>
         public static ExportationSettings Exportation
         {
