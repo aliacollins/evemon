@@ -7,7 +7,7 @@ using EVEMon.Common.Data;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// This classes holds the responsibility to sort enumerations of plan entries
+    /// This class holds the responsibility to sort enumerations of plan entries.
     /// </summary>
     internal sealed class PlanSorter
     {
@@ -18,7 +18,7 @@ namespace EVEMon.Common
         private BaseCharacter m_character;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="entries"></param>
@@ -35,7 +35,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs the sort
+        /// Performs the sort.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<PlanEntry> Sort()
@@ -60,7 +60,7 @@ namespace EVEMon.Common
             }
 
             // Apply second pass (sorts)
-            // We sort every group, and merge them once they're sorted.
+            // We sort every group, and merge them once they're sorted
             List<PlanEntry> list = new List<PlanEntry>();
 
             foreach (var group in groupedPlan)
@@ -82,7 +82,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Ensures the prerequisites order is correct
+        /// Ensures the prerequisites order is correct.
         /// </summary>
         /// <param name="list"></param>
         private static void FixPrerequisitesOrder(List<PlanEntry> list)
@@ -210,7 +210,10 @@ namespace EVEMon.Common
             if (!skillGroupsDurations.ContainsKey(group))
             {
                 TimeSpan time = TimeSpan.Zero;
-                foreach (var entry in entries) time += entry.TrainingTime;
+                foreach (var entry in entries.Where(x => x.Skill.Group == group))
+                {
+                    time += entry.TrainingTime;
+                }
                 skillGroupsDurations[group] = time;
             }
             
