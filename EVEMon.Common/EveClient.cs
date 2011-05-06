@@ -535,9 +535,14 @@ namespace EVEMon.Common
         public static event EventHandler<DataUpdateAvailableEventArgs> DataUpdateAvailable;
 
         /// <summary>
+        /// Occurs when  the BattleClinic API credentials is updated.
+        /// </summary>
+        public static event EventHandler<BCAPIEventArgs> BCAPICredentialsUpdated;
+
+        /// <summary>
         /// Called when settings changed.
         /// </summary>
-        public static void OnSettingsChanged()
+        internal static void OnSettingsChanged()
         {
             Trace("EveClient.OnSettingsChanged");
             Settings.Save();
@@ -549,7 +554,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the scheduler changed.
         /// </summary>
-        public static void OnSchedulerChanged()
+        internal static void OnSchedulerChanged()
         {
             Trace("EveClient.OnSchedulerChanged");
             Settings.Save();
@@ -879,6 +884,17 @@ namespace EVEMon.Common
             Trace("EveClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
                 DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(updateUrl, changedFiles));
+        }
+
+        /// <summary>
+        /// Called when the BattleClinic API credentials is updated.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        internal static void OnBCAPICredentialsUpdated(string errorMessage)
+        {
+            Trace("EveClient.OnBCAPICredentialsUpdated");
+            if (BCAPICredentialsUpdated != null)
+                BCAPICredentialsUpdated(null, new BCAPIEventArgs(errorMessage));
         }
 
         #endregion 

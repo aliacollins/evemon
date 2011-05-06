@@ -62,6 +62,7 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
+    <Compile Include="EventArgs\BCAPIEventArgs.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
     <Compile Include="EveNotificationsCollection.cs" />
@@ -73,6 +74,24 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
+    <Compile Include="Serialization\BattleClinic\BCAPICredentials.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>BCAPICredentials.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
+    <Compile Include="Serialization\BattleClinic\BCAPIError.cs" />
+    <Compile Include="Serialization\BattleClinic\BCAPIMethod.cs" />
+    <Compile Include="Serialization\BattleClinic\BCAPIResult.cs" />
+    <Compile Include="Serialization\BattleClinic\BCStorageService.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>BCStorageService.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
@@ -267,6 +286,14 @@
     <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
+    <None Include="Serialization\BattleClinic\BCAPICredentials.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>BCAPICredentials.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Serialization\BattleClinic\BCStorageService.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>BCStorageService.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\EVEMonForm.resx">
@@ -717,6 +744,7 @@
     <Content Include="Resources\Files\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Images\BattleClinic.png" />
     <Content Include="Resources\Images\bee.jpg" />
     <Content Include="Resources\Images\default_char_pic.png" />
     <Content Include="Resources\Images\default_char_pic_old.png" />

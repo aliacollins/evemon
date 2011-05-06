@@ -1015,6 +1015,12 @@ namespace EVEMon.SettingsUI
             }
         }
 
+        private void BattleClinicLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Util.OpenURL(NetworkConstants.BattleClinicBase);
+        }
+
         #endregion
+
     }
 }

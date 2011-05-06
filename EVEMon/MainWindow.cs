@@ -28,6 +28,7 @@ using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowsApi;
+using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon
 {
@@ -130,6 +131,9 @@ namespace EVEMon
             // Initialize all of our business objects
             EveClient.Run(this);
 
+            // BattleClinic storage service
+            BCAPI.DownloadSettingsFile();
+
             // Update the content
             UpdateTabs();
 
@@ -140,7 +144,7 @@ namespace EVEMon
             // Ensures the installation files downloaded through the autoupdate are correctly deleted
             UpdateManager.DeleteInstallationFiles();
 
-            // Check with BattleClinic the local clock is synchronized.
+            // Check with BattleClinic the local clock is synchronized
             if (Settings.Updates.CheckTimeOnStartup)
                 CheckTimeSynchronization();
 
@@ -1048,11 +1052,11 @@ namespace EVEMon
             string path = Path.GetDirectoryName(assembly.Location);
             string executable = Path.Combine(path, "EVEMon.Watchdog.exe");
 
-            // If the watchdog dosn't exist just quit.
+            // If the watchdog doesn't exist just quit
             if (!File.Exists(executable))
                 Application.Exit();
 
-            // Start the watchdog process.
+            // Start the watchdog process
             StartProcess(executable, Environment.GetCommandLineArgs());
 
             Application.Exit();

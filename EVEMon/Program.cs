@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.WindowsApi;
 
 namespace EVEMon
@@ -70,6 +71,7 @@ namespace EVEMon
             {
                 Settings.SaveImmediate();
                 EveIDtoName.Save();
+                BCAPI.UploadSettingsFile();
                 EveClient.Trace("Closed");
                 EveClient.StopTraceLogging();
             }

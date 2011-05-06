@@ -237,4 +237,25 @@
     <value>http://image.eveonline.com/{0}/{1}_{2}.png</value>
     <comment>Icons from CCP's image server</comment>
   </data>
+  <data name="BattleClinicBase" xml:space="preserve">
+    <value>http://www.battleclinic.com</value>
+  </data>
+  <data name="BCAPIAccountCredentials" xml:space="preserve">
+    <value>http://api.battleclinic.com/api_key.php</value>
+  </data>
+  <data name="BCAPIBase" xml:space="preserve">
+    <value>http://api.battleclinic.com</value>
+  </data>
+  <data name="BCAPICheckCredentials" xml:space="preserve">
+    <value>/account/checkAPICredentials.php</value>
+  </data>
+  <data name="BCAPIFileGet" xml:space="preserve">
+    <value>/files/fileGet.php</value>
+  </data>
+  <data name="BCAPIFileSave" xml:space="preserve">
+    <value>/files/fileSave.php</value>
+  </data>
+  <data name="BCAPIFileGetByName" xml:space="preserve">
+    <value>/files/fileGetByName.php</value>
+  </data>
 </root>

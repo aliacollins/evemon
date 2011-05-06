@@ -247,6 +247,18 @@
     <Compile Include="ResearchColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SettingsUI\BattleClinicAPIControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\BattleClinicAPIControl.Designer.cs">
+      <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\SettingsFileStorageControl.Designer.cs">
+      <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SkillCompletionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +403,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindowResearchPoints.resx">
       <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\BattleClinicAPIControl.resx">
+      <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
+      <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateNotifyForm.resx">
       <SubType>Designer</SubType>
