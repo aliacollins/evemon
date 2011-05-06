@@ -14,7 +14,7 @@ namespace EVEMon.Common
         private QueryMonitor<SerializableAPIServerStatus> m_monitor;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         internal EveServer()
         {
@@ -25,7 +25,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the number of users online at the last update
+        /// Gets the number of users online at the last update.
         /// </summary>
         public int Users 
         { 
@@ -33,7 +33,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the server's status
+        /// Gets the server's status.
         /// </summary>
         public ServerStatus Status
         {
@@ -41,7 +41,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the server's name
+        /// Gets the server's name.
         /// </summary>
         public string Name
         {
@@ -53,7 +53,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the server status message
+        /// Gets the server status message.
         /// </summary>
         public string StatusText
         {
@@ -75,7 +75,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Update on a time tick
+        /// Update on a time tick.
         /// </summary>
         public void UpdateOnOneSecondTick()
         {
@@ -83,7 +83,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Forces an update of the server status
+        /// Forces an update of the server status.
         /// </summary>
         public void ForceUpdate()
         {
@@ -91,7 +91,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Occurs when CCP returns new data
+        /// Occurs when CCP returns new data.
         /// </summary>
         /// <param name="result"></param>
         private void OnMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
@@ -102,6 +102,10 @@ namespace EVEMon.Common
             {
                 m_status = ServerStatus.Unknown;
                 EveClient.Notifications.NotifyServerStatusError(result);
+
+                // Notify subscribers about update
+                EveClient.OnServerStatusUpdated(this, lastStatus, m_status);
+
                 return;
             }
 

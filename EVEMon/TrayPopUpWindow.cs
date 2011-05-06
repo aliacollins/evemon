@@ -54,7 +54,7 @@ namespace EVEMon
             // Client events
             EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(ServerStatusUpdated);
+            EveClient.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(EveClient_ServerStatusUpdated);
             EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
             EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
 
@@ -71,7 +71,7 @@ namespace EVEMon
             base.OnClosing(e);
             EveClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
             EveClient.QueuedSkillsCompleted -= new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.ServerStatusUpdated -= new EventHandler<EveServerEventArgs>(ServerStatusUpdated);
+            EveClient.ServerStatusUpdated -= new EventHandler<EveServerEventArgs>(EveClient_ServerStatusUpdated);
             EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
             EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
         }
@@ -164,7 +164,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ServerStatusUpdated(object sender, EveServerEventArgs e)
+        private void EveClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             UpdateServerStatusLabel();
         }

@@ -38,7 +38,7 @@ namespace EVEMon.Common.Net
             m_webServiceState = webServiceState;
             m_redirectsRemaining = m_webServiceState.MaxRedirects;
 
-            // pull the timeout from the settings
+            // Pull the timeout from the settings
             TimeSpan timeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
 
             if (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5))
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// The original url for the request
+        /// The original url for the request.
         /// </summary>
         public string BaseUrl
         {
@@ -85,7 +85,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Retrieve the response from the requested URL to the specified response stream as a GET request
+        /// Retrieve the response from the requested URL to the specified response stream as a GET request.
         /// </summary>
         internal void GetResponse(string url, Stream responseStream, string accept)
         {
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Delegate for asynchronous invocation of GetResponse
+        /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
         private delegate void GetResponseDelegate(string url, Stream responseStream, string accept, HttpPostData postData);
 
@@ -160,7 +160,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Asynchronously retrieve the response from the requested url to the specified response stream
+        /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
         public void GetResponseAsync(string url, Stream responseStream, string accept, HttpPostData postData, WebRequestAsyncState state)
         {
@@ -178,7 +178,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Callback method for asynchronous requests
+        /// Callback method for asynchronous requests.
         /// </summary>
         private void GetResponseAsyncCompleted(IAsyncResult ar)
         {
@@ -187,7 +187,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Callback method for asynchronous requests
+        /// Callback method for asynchronous requests.
         /// </summary>
         private void GetResponseAsyncCompletedCore(Action completion)
         {
@@ -200,7 +200,7 @@ namespace EVEMon.Common.Net
                 m_asyncState.Error = ex;
             }
 
-            // Prevents invoking the callback on the UI thread when the application has been closed.
+            // Prevents invoking the callback on the UI thread when the application has been closed
             if (EveClient.Closed)
                 return;
             m_asyncState.Callback(m_asyncState);
@@ -208,13 +208,13 @@ namespace EVEMon.Common.Net
 
 
         /// <summary>
-        /// Get the HttpWebResponse for the specified URL
+        /// Get the HttpWebResponse for the specified URL.
         /// </summary>
         private HttpWebResponse GetHttpResponse()
         {
             HttpWebRequest request = GetHttpWebRequest(m_url, m_referer);
 
-            // Prepare the POST request we're going to send.
+            // Prepare the POST request we're going to send
             if (request.Method == "POST")
             {
                 Stream requestStream = request.GetRequestStream();
@@ -222,10 +222,10 @@ namespace EVEMon.Common.Net
                 requestStream.Close();
             }
 
-            // Query the web site.
+            // Query the web site
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            // When the address has been redirected, connects to the redirection.
+            // When the address has been redirected, connects to the redirection
             if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.MovedPermanently)
             {
                 string target = response.GetResponseHeader("Location");
@@ -238,7 +238,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Gets a redirected HttpWebResponse
+        /// Gets a redirected HttpWebResponse.
         /// </summary>
         private HttpWebResponse GetRedirectedHttpResponse(string target)
         {
@@ -256,7 +256,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Constructs an HttpWebRequest for the specified url and referer
+        /// Constructs an HttpWebRequest for the specified url and referer.
         /// </summary>
         public HttpWebRequest GetHttpWebRequest(string url, string referer)
         {

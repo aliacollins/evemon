@@ -18,6 +18,7 @@ using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.Controls;
@@ -28,7 +29,6 @@ using EVEMon.Schedule;
 using EVEMon.SettingsUI;
 using EVEMon.SkillPlanner;
 using EVEMon.WindowsApi;
-using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon
 {
@@ -63,6 +63,7 @@ namespace EVEMon
             tcCharacterTabs.SelectedIndexChanged += tcCharacterTabs_SelectedIndexChanged;
             overview.CharacterClicked += overview_CharacterClicked;
             tcCharacterTabs.TabPages.Remove(tpOverview);
+            lblServerStatus.Text = String.Format("// {0}", EveClient.EVEServer.StatusText);
 
             DisplayTestMenu();
         }
@@ -158,14 +159,14 @@ namespace EVEMon
         /// <param name="um"></param>
         private static void CheckTimeSynchronization()
         {
-            // Do it now if network available.
+            // Do it now if network available
             if (NetworkMonitor.IsNetworkAvailable)
             {
                 TimeCheck.CheckIsSynchronised(TimeCheckCallback);
                 return;
             }
 
-            // Reschedule later otherwise.
+            // Reschedule later otherwise
             Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => CheckTimeSynchronization());
         }
 

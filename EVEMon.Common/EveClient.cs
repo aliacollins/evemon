@@ -59,7 +59,7 @@ namespace EVEMon.Common
                 CharacterIdentities = new GlobalCharacterIdentityCollection();
                 Notifications = new GlobalNotificationCollection();
                 Characters = new GlobalCharacterCollection();
-                s_datafiles = new GlobalDatafileCollection();
+                Datafiles = new GlobalDatafileCollection();
                 Accounts = new GlobalAccountCollection();
                 EVEServer = new EveServer();
 
@@ -291,6 +291,7 @@ namespace EVEMon.Common
                 s_datafiles.Refresh();
                 return s_datafiles; 
             }
+            private set { s_datafiles = value; }
         }
 
         /// <summary>
