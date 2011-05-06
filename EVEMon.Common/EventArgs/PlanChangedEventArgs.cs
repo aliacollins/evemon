@@ -14,7 +14,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the plan related to this event.
+        /// Gets or sets the plan related to this event.
         /// </summary>
         public Plan Plan { get; private set; }
     }

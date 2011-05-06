@@ -14,7 +14,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character identity related to this event.
+        /// Gets or sets the character identity related to this event.
         /// </summary>
         public CharacterIdentity CharacterIdentity { get; private set; }
     }

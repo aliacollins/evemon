@@ -14,7 +14,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character related to this event.
+        /// Gets or sets the character related to this event.
         /// </summary>
         public Character Character { get; private set; }
     }

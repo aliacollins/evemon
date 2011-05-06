@@ -15,7 +15,7 @@ namespace EVEMon.Common
         private SerializableCharacterSheetBase m_result;
 
         /// <summary>
-        /// Constructor for API Characters
+        /// Constructor for API Characters.
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">API Result</param>
@@ -29,7 +29,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Constructor for CCP Characters
+        /// Constructor for CCP Characters.
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">Serialized Result</param>
@@ -42,7 +42,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Constructor for characters that throw errors
+        /// Constructor for characters that throw errors.
         /// </summary>
         /// <param name="uri">URI of the chracter</param>
         /// <param name="error"></param>
@@ -54,7 +54,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the created Uri character
+        /// Gets the created Uri character.
         /// </summary>
         public Uri Uri
         {
@@ -62,7 +62,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if there was an error.
+        /// Gets or sets a value indicating if there was an error.
         /// </summary>
         public bool HasError
         {
@@ -71,7 +71,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the error which occurred
+        /// Gets or sets the error which occurred.
         /// </summary>
         public string Error
         {
@@ -88,7 +88,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Creates the character
+        /// Creates the character.
         /// </summary>
         public UriCharacter CreateCharacter()
         {
@@ -130,6 +130,11 @@ namespace EVEMon.Common
             }
         }
 
+        /// <summary>
+        /// Gets the character identity.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
         private CharacterIdentity GetIdentity(SerializableCharacterSheetBase character)
         {
             // Retrieve the identity and create one if needed

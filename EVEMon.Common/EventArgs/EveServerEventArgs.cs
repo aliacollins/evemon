@@ -21,17 +21,17 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the updated server
+        /// Gets or sets the updated server
         /// </summary>
         public EveServer Server { get; private set; }
 
         /// <summary>
-        /// Gets the current status
+        /// Gets or sets the current status
         /// </summary>
         public ServerStatus Status { get; private set; }
 
         /// <summary>
-        /// Gets the previous status
+        /// Gets or sets the previous status
         /// </summary>
         public ServerStatus PreviousStatus { get; private set; }
     }

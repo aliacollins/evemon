@@ -17,12 +17,12 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character related to this event.
+        /// Gets or sets the character related to this event.
         /// </summary>
         public Character Character { get; private set; }
 
         /// <summary>
-        /// Gets the industry jobs related to this event.
+        /// Gets or sets the industry jobs related to this event.
         /// </summary>
         public ReadOnlyCollection<IndustryJob> CompletedJobs { get; private set; }
     }
