@@ -148,9 +148,9 @@
     <Compile Include="Serialization\API\SerializableQueuedSkill.cs" />
     <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
     <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
-    <Compile Include="Serialization\Battleclinic\SerializableDatafile.cs" />
-    <Compile Include="Serialization\Battleclinic\SerializablePatch.cs" />
-    <Compile Include="Serialization\Battleclinic\SerializableRelease.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableDatafile.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializablePatch.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableRelease.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
@@ -476,7 +476,7 @@
     <Compile Include="Scheduling\ScheduleEntryTitleComparer.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
-    <Compile Include="Serialization\Battleclinic\SerializableLoadoutFeed.cs" />
+    <Compile Include="Serialization\BattleClinic\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
