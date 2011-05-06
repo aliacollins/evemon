@@ -236,7 +236,7 @@ namespace EVEMon.Common
         {
             APIResult<T> result = new APIResult<T>(APIEnumerations.APIErrors.Http, String.Format("Time out on querying {0}", url));
 
-            // Query async and wait.
+            // Query async and wait
             using (var wait = new EventWaitHandle(false, EventResetMode.AutoReset))
             {
                 EveClient.HttpWebService.DownloadXmlAsync(url, postData, (asyncResult, userState) =>

@@ -49,7 +49,8 @@ namespace EVEMon.Common.Net
             }
             finally
             {
-                if (request.ResponseStream != null) request.ResponseStream.Close();
+                if (request.ResponseStream != null)
+                    request.ResponseStream.Close();
             }
         }
 

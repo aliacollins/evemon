@@ -182,9 +182,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         private static Item GetItem(SerializableOrderBase src)
         {
-            Item item = StaticItems.GetItemByID(src.ItemID);
-
             // Try get item by its ID
+            Item item = StaticItems.GetItemByID(src.ItemID);
 
             // We failed? Try get item by its name
             if (item == null)

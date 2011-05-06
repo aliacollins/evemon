@@ -54,7 +54,7 @@ namespace EVEMon.Watchdog
         /// <param name="e"></param>
         private void WaitTimer_Tick(object sender, EventArgs e)
         {
-            // first time through after EVEMon has closed.
+            // First time through after EVEMon has closed
             if (!m_executableLaunched && !IsEvemonRunning)
             {
                 m_executableLaunched = true;
@@ -65,9 +65,7 @@ namespace EVEMon.Watchdog
 
             // EVEMon has been restarted and is running
             if (m_executableLaunched && IsEvemonRunning)
-            {
                 Application.Exit();
-            }
         }
 
         /// <summary>
@@ -75,12 +73,12 @@ namespace EVEMon.Watchdog
         /// </summary>
         private void StartEvemonProcess()
         {
-            // find the expected path for EVEMon.exe.
+            // Find the expected path for EVEMon.exe
             Assembly assembly = Assembly.GetEntryAssembly();
             string path = Path.GetDirectoryName(assembly.Location);
             string executable = Path.Combine(path, "EVEMon.exe");
 
-            // if EVEMon.exe dosn't exist we don't have anything to do.
+            // If EVEMon.exe doesn't exist we don't have anything to do
             if (!File.Exists(executable))
                 Application.Exit();
 

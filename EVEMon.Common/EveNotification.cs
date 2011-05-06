@@ -94,6 +94,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetIDToName(long ID)
         {
+            if (ID == 0)
+                return "Unknown";
+
             // Look into EVEMon's data file if it's an NPC corporation or agent
             foreach (var station in StaticGeography.AllStations)
             {

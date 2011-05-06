@@ -1,10 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization;
-using System.Text;
 using System.Xml.Xsl;
+
+using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common
 {
