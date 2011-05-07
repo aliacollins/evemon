@@ -11,6 +11,8 @@ namespace EVEMon.SkillPlanner
 {
     public partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
+        private string[] m_laboratories = new string[] { "Mobile Laboratory", "Advance Mobile Laboratory", "Any Other Laboratory" };
+
         private double m_timeMultiplier;
         private double m_materialMultiplier;
         private double m_waste;
@@ -165,6 +167,9 @@ namespace EVEMon.SkillPlanner
 
                 if (hasResearchingTimeProductivity)
                     tabControl.TabPages.Add(tpResearchPE);
+
+                if (!hasCopying && !hasResearchingMaterialProductivity && !hasResearchingTimeProductivity)
+                    tabControl.TabPages.Add(tpResearching);
 
                 if (m_hasInvention)
                     tabControl.TabPages.Add(tpInvention);
@@ -424,9 +429,7 @@ namespace EVEMon.SkillPlanner
 
                         break;
                     default:
-                        cbFacility.Items.Add("Mobile Laboratory");
-                        cbFacility.Items.Add("Advance Mobile Laboratory");
-                        cbFacility.Items.Add("Any Other Laboratory");
+                        cbFacility.Items.AddRange(m_laboratories);
                         break;
                 }
             }
