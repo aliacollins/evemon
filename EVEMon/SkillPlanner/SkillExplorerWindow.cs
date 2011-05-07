@@ -311,7 +311,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Set up the items/ships tree.
+        /// Set up the items/ships/blueprints tree.
         /// </summary>
         private void UpdateItemsTree()
         {
@@ -359,7 +359,12 @@ namespace EVEMon.SkillPlanner
 
                         foreach (var blueprint in enabledObjects.Where(x => x is Blueprint).ToArray().OrderBy(x => x.Name))
                         {
-                            levelNode.Nodes.Add(CreateNode(blueprint, blueprint.Prerequisites.ToCharacter(m_character)));
+                            TreeNode node = CreateNode(blueprint, blueprint.Prerequisites.ToCharacter(m_character));
+                            List<string> listOfActivities = blueprint.Prerequisites.Where(x => x.Skill == m_skill.StaticData && x.Level == i)
+                                                                                .Select(x => x.Activity.GetDescription()).ToList();
+                            string activity = string.Join(", ", listOfActivities);
+                            node.Text = String.Format("{0} ({1})", node.Text, activity);
+                            levelNode.Nodes.Add(node);
                             m_hasBlueprints = true;
                         }
 
@@ -478,7 +483,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Adds a skill to the tree, and colors it appropriately, and set the tooltip.
+        /// Adds a node to the tree, and colors it appropriately, and set the tooltip.
         /// Also sets the tag of the node to the Skill object.
         /// </summary>
         /// <param name="name"> The skill we're adding</param>
@@ -486,19 +491,19 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode CreateNode(Object obj, IEnumerable<SkillLevel> prerequisites)
         {
-            TreeNode skillNode = new TreeNode(obj.ToString());
-            skillNode.ToolTipText = String.Empty;
-            skillNode.Tag = obj;
+            TreeNode node = new TreeNode(obj.ToString());
+            node.ToolTipText = String.Empty;
+            node.Tag = obj;
 
             // When all prereqs satisifed, keep the default color
             if (prerequisites.All(x => x.IsKnown))
-                return skillNode;
+                return node;
 
             // Are all other prerequisites known ?
             if (prerequisites.All(x => x.IsKnown || x.Skill == m_skill))
             {
-                skillNode.ForeColor = Color.Gray;
-                return skillNode;
+                node.ForeColor = Color.Gray;
+                return node;
             }
 
             List<SkillLevel> prereqList = new List<SkillLevel>();
@@ -518,9 +523,9 @@ namespace EVEMon.SkillPlanner
                 sb.AppendLine().Append(prereq.ToString());
             }
 
-            skillNode.ToolTipText = sb.ToString();
-            skillNode.ForeColor = Color.Red;
-            return skillNode;
+            node.ToolTipText = sb.ToString();
+            node.ForeColor = Color.Red;
+            return node;
         }
 
         /// <summary>
@@ -731,7 +736,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Items and ships context menu
+        #region Items Ships and Blueprints context menu
         /// <summary>
         /// Returns the currently selected item or null if non is selected.
         /// </summary>
