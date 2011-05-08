@@ -172,7 +172,7 @@ namespace EVEMon
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, "1.3.5 RC1");
+            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion.ToString());
 
             AddDevelopersToListView();
             AddDebugTag();
