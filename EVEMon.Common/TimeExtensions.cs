@@ -58,9 +58,9 @@ namespace EVEMon.Common
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
-            if (t > DateTime.UtcNow)
+            if (t > DateTime.Now)
             {
-                TimeSpan ts = t.ToUniversalTime().Subtract(DateTime.UtcNow);
+                TimeSpan ts = t.Subtract(DateTime.Now);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -105,9 +105,9 @@ namespace EVEMon.Common
         public static string ToRemainingTimeDescription(this DateTime t)
         {
             StringBuilder sb = new StringBuilder();
-            if (t > DateTime.UtcNow)
+            if (t > DateTime.Now)
             {
-                TimeSpan ts = t.ToUniversalTime().Subtract(DateTime.UtcNow);
+                TimeSpan ts = t.Subtract(DateTime.Now);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());

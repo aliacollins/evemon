@@ -36,13 +36,13 @@ namespace EVEMon.Common
 
             if (!isPaused)
             {
-                // Not paused, we should trust CCP.
+                // Not paused, we should trust CCP
                 m_startTime = serial.StartTime;
                 m_endTime = serial.EndTime;
             }
             else
             {
-                // StartTime and EndTime were empty on the serialization object if the skill was paused.
+                // StartTime and EndTime were empty on the serialization object if the skill was paused
                 // So we compute a "what if we start now" scenario
                 m_startTime = startTimeWhenPaused;
                 if (m_skill != null)
@@ -133,7 +133,7 @@ namespace EVEMon.Common
         {
             get
             {
-                // Computes the total SP after this training.
+                // Computes the total SP after this training
                 int totalSP = 0;
                 foreach (var skill in StaticSkills.AllSkills)
                 {
@@ -196,7 +196,7 @@ namespace EVEMon.Common
             };
 
             // CCP's API indicates paused training with missing skill
-            // start and end times. Mimicing them is ugly but necessary.
+            // start and end times. Mimicing them is ugly but necessary
             if (m_owner.IsTraining)
             {
                 skill.StartTime = m_startTime;
@@ -212,7 +212,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return SkillName + " " + Skill.GetRomanForInt(m_level);
+            return String.Format("{0} {1}", SkillName, Skill.GetRomanForInt(m_level));
         }
     }
 }

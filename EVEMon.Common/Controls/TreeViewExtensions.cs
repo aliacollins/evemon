@@ -42,7 +42,8 @@ namespace EVEMon.Common.Controls
                     {
                         // Clean up
                         IDisposable disposable = currentEnumerator as IDisposable;
-                        if (disposable != null) disposable.Dispose();
+                        if (disposable != null)
+                            disposable.Dispose();
 
                         // Previous level
                         currentEnumerator = enumerators.Pop();
@@ -60,7 +61,8 @@ namespace EVEMon.Common.Controls
                 foreach(var e in enumerators) 
                 {
                     IDisposable disposable = e as IDisposable;
-                    if (disposable != null) disposable.Dispose();
+                    if (disposable != null)
+                        disposable.Dispose();
                 }
             }
         }
@@ -106,9 +108,7 @@ namespace EVEMon.Common.Controls
         {
             // Is it already selected ?
             if (treeView.SelectedNode != null && treeView.SelectedNode.Tag == tag)
-            {
                 return treeView.SelectedNode;
-            }
 
             foreach (var node in GetAllNodes(treeView))
             {
