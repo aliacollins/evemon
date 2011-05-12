@@ -464,7 +464,8 @@ namespace EVEMon.Common
         {
             var notification = new Notification(NotificationCategory.AccountExpiration, account)
             {
-                Description = String.Format("This account expires in {0}: {1}.", expireDate.ToRemainingTimeShortDescription(), account),
+                Description = String.Format("This account expires in {0}: {1}.",
+                                            expireDate.ToLocalTime().ToRemainingTimeShortDescription(), account),
                 Behaviour = NotificationBehaviour.Overwrite,
                 Priority = priority
             };
