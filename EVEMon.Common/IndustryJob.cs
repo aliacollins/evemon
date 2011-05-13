@@ -327,7 +327,7 @@ namespace EVEMon.Common
                             DescriptiveTextOptions.SpaceBetween);
 
                 if (m_state == JobState.Active && m_endProductionTime > DateTime.UtcNow)
-                    return m_endProductionTime.ToLocalTime().ToRemainingTimeShortDescription();
+                    return m_endProductionTime.ToRemainingTimeShortDescription(DateTimeKind.Utc);
 
                 return String.Empty;
             }

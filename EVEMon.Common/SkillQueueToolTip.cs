@@ -57,8 +57,8 @@ namespace EVEMon.Common
             string format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
             string skillName = skill.SkillName;
             string skillLevel = Skill.GetRomanForInt(skill.Level);
-            string skillStart = (skill.Owner.IsTraining ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription() : "Paused");
-            string skillEnd = (skill.Owner.IsTraining ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription() : "Paused");
+            string skillStart = (skill.Owner.IsTraining ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local) : "Paused");
+            string skillEnd = (skill.Owner.IsTraining ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local) : "Paused");
             string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
             string text = String.Format(CultureConstants.DefaultCulture, format, skillName, skillLevel, startText, skillStart, skillEnd);
             Display(text, pt);

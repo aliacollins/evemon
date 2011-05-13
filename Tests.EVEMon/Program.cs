@@ -26,12 +26,12 @@ namespace Tests.EVEMon
             {
                 // Could not any version of nUnit
                 Console.WriteLine("****");
-                Console.WriteLine("Did not find {0}, check it is installed", m_executableName);
+                Console.WriteLine("Did not find {0}, check it is installed.", m_executableName);
                 Console.ReadKey();
                 return;
             }
 
-            // Great we found nUnit now lets start it.
+            // Great we found nUnit now lets start it
             ProcessStartInfo psi = new ProcessStartInfo(executable);
             psi.Arguments = String.Format(m_arguments, Assembly.GetEntryAssembly().Location);
             Process proc = new Process();
@@ -40,7 +40,7 @@ namespace Tests.EVEMon
         }
 
         /// <summary>
-        /// Gets the full path of the NUnit executable
+        /// Gets the full path of the NUnit executable.
         /// </summary>
         /// <returns></returns>
         private static string GetNUnitExecutable()
@@ -48,6 +48,9 @@ namespace Tests.EVEMon
             string executable;
 
             List<PathVersion> versions = GetAllNUnitInstalls();
+
+            if (versions.IsEmpty())
+                return String.Empty;
 
             Version verMax = versions.Select(x => x.Version).Max();
 
@@ -59,7 +62,7 @@ namespace Tests.EVEMon
         }
 
         /// <summary>
-        /// Gets a list of all installs of NUnit
+        /// Gets a list of all installs of NUnit.
         /// </summary>
         /// <returns></returns>
         private static List<PathVersion> GetAllNUnitInstalls()
@@ -95,19 +98,19 @@ namespace Tests.EVEMon
     /// </summary>
     internal class PathVersion
     {
-        public PathVersion(String path, Version version)
+        internal PathVersion(String path, Version version)
         {
             Path = path;
             Version = version;
         }
-        
-        public String Path
+
+        internal String Path
         {
             get;
             private set;
         }
 
-        public Version Version
+        internal Version Version
         {
             get;
             private set;

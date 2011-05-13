@@ -715,7 +715,7 @@ namespace EVEMon
             var format = new CellFormat()
             {
                 TextColor = Color.Black,
-                Text = order.Expiration.ToLocalTime().ToRemainingTimeShortDescription().ToUpper(CultureConstants.DefaultCulture)
+                Text = order.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc).ToUpper(CultureConstants.DefaultCulture)
             };
 
             // Order is expiring soon

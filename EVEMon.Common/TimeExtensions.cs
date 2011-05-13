@@ -53,14 +53,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="t">The time (in the future) for which you want a span.</param>
         /// <returns></returns>
-        public static string ToRemainingTimeShortDescription(this DateTime t)
+        public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
+            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
-            if (t > DateTime.Now)
+            if (t > now)
             {
-                TimeSpan ts = t.Subtract(DateTime.Now);
+                TimeSpan ts = t.Subtract(now);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -93,21 +95,25 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Returns a string representation for the time left to the given date, using the following formats : 
+        /// Returns a string representation for the time left to the given date, using the following formats :
         /// <list type="bullet">
-        /// <item>2 days, 3 hours, 1 minute, 5seconds</item>
-        /// <item>3 hours, 1 minute</item>
-        /// <item>Completed</item>
-        /// </list>
+        /// 		<item>2 days, 3 hours, 1 minute, 5seconds</item>
+        /// 		<item>3 hours, 1 minute</item>
+        /// 		<item>Completed</item>
+        /// 	</list>
         /// </summary>
         /// <param name="t">The time (in the future) for which you want a span.</param>
+        /// <param name="dateTimeKind">The kind of the dateTime (UTC or Local) being converted.</param>
+        /// <remarks>DateTimeKind.Unspecified will be treated as UTC</remarks>
         /// <returns></returns>
-        public static string ToRemainingTimeDescription(this DateTime t)
+        public static string ToRemainingTimeDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
+            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            
             StringBuilder sb = new StringBuilder();
-            if (t > DateTime.Now)
+            if (t > now)
             {
-                TimeSpan ts = t.Subtract(DateTime.Now);
+                TimeSpan ts = t.Subtract(now);
                 if (ts.Days > 0)
                 {
                     sb.Append(ts.Days.ToString());
@@ -156,33 +162,37 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Generates an absoloute string based upon the following format :
+        /// Generates an absolute string based upon the following format :
         /// <list type="bullet">
-        /// <item>17:27 Tomorrow</item>
-        /// <item>07:43 Wednesday</item>
-        /// <item>03:12 23/04/2009</item>
-        /// </list>
-        /// <param name="absolouteDateTime">A DateTime to get a string representation for</param>
-        /// <returns>String representation of the time and relative date</returns>
-        public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime)
+        /// 		<item>17:27 Tomorrow</item>
+        /// 		<item>07:43 Wednesday</item>
+        /// 		<item>03:12 23/04/2009</item>
+        /// 	</list>
+        /// </summary>
+        /// <param name="absoluteDateTime">The absolute date time.</param>
+        /// <param name="dateTimeKind">The kind of the dateTime (UTC or Local) being converted.</param>
+        /// <remarks>DateTimeKind.Unspecified will be treated as UTC</remarks>
+        /// <returns>String representation of the time and relative date.</returns>
+        public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime, DateTimeKind dateTimeKind)
         {
+            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
             string shortTime = absoluteDateTime.ToCustomShortTimeString();
 
             // Yesterday (i.e. before 00:00 today)
-            if (absoluteDateTime.Date == DateTime.Now.Date.AddDays(-1))
+            if (absoluteDateTime.Date == now.Date.AddDays(-1))
                 return String.Format(CultureConstants.DefaultCulture, "{0} Yesterday", shortTime);
 
             // Today (i.e. before 00:00 tomorrow)
-            if (absoluteDateTime.Date == DateTime.Now.Date)
+            if (absoluteDateTime.Date == now.Date)
                 return String.Format(CultureConstants.DefaultCulture, "{0} Today", shortTime);
 
             // Tomorrow (i.e. after 23:59 today but before 00:00 the day after tomorrow)
-            DateTime tomorrow = DateTime.Now.Date.AddDays(1);
+            DateTime tomorrow = now.Date.AddDays(1);
             if (absoluteDateTime.Date == tomorrow)
                 return String.Format(CultureConstants.DefaultCulture, "{0} Tomorrow", shortTime);
 
             // After tomorrow but within 7 days
-            DateTime sevenDays = DateTime.Now.Date.AddDays(7);
+            DateTime sevenDays = now.Date.AddDays(7);
             if (absoluteDateTime.Date > tomorrow)
             {
                 string dayOfWeek = absoluteDateTime.DayOfWeek.ToString();

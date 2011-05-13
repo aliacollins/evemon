@@ -617,11 +617,11 @@ namespace EVEMon
 
             // Remaining training time label
             QueuedSkill training = m_character.CurrentlyTrainingSkill;
-            lblTrainingRemain.Text = training.EndTime.ToLocalTime().ToRemainingTimeDescription();
+            lblTrainingRemain.Text = training.EndTime.ToRemainingTimeDescription(DateTimeKind.Unspecified);
 
             // Remaining queue time label
             DateTime queueEndTime = ccpCharacter.SkillQueue.EndTime;
-            lblQueueRemaining.Text = queueEndTime.ToLocalTime().ToRemainingTimeDescription();
+            lblQueueRemaining.Text = queueEndTime.ToRemainingTimeDescription(DateTimeKind.Utc);
 
         }
 

@@ -104,7 +104,7 @@ namespace Tests.EVEMon.Common
         [Test]
         public void ToRemainingTimeShortDescriptionReturnsDone()
         {
-            string result = DateTime.Now.AddHours(-1).ToRemainingTimeShortDescription();
+            string result = DateTime.Now.AddHours(-1).ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("Done", result);
         }
 
@@ -115,7 +115,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsSecond()
         {
             DateTime future = DateTime.Now.AddSeconds(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1s", result);
         }
         
@@ -126,7 +126,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsMinute()
         {
             DateTime future = DateTime.Now.AddMinutes(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1m ", result);
         }
 
@@ -137,7 +137,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsHour()
         {
             DateTime future = DateTime.Now.AddHours(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1h ", result);
         }
 
@@ -148,7 +148,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsDay()
         {
             DateTime future = DateTime.Now.AddDays(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d ", result);
         }
         
@@ -159,7 +159,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsMinuteSecond()
         {
             DateTime future = DateTime.Now.AddMinutes(1).AddSeconds(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1m 1s", result);
         }
 
@@ -170,7 +170,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsHourMinuteSecond()
         {
             DateTime future = DateTime.Now.AddHours(1).AddMinutes(1).AddSeconds(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1h 1m 1s", result);
         }
 
@@ -181,7 +181,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsDayHourMinuteSecond()
         {
             DateTime future = DateTime.Now.AddDays(1).AddHours(1).AddMinutes(1).AddSeconds(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d 1h 1m 1s", result);
         }
         
@@ -192,7 +192,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsDayMinuteSecond()
         {
             DateTime future = DateTime.Now.AddDays(1).AddMinutes(1).AddSeconds(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d 1m 1s", result);
         }
 
@@ -203,7 +203,7 @@ namespace Tests.EVEMon.Common
         public void ToRemainingTimeShortDescriptionReturnsDayMinute()
         {
             DateTime future = DateTime.Now.AddDays(1).AddMinutes(1);
-            string result = future.ToRemainingTimeShortDescription();
+            string result = future.ToRemainingTimeShortDescription(DateTimeKind.Local);
             Assert.AreEqual("1d 1m ", result);
         }
 
