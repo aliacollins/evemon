@@ -18,6 +18,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.EVEMon", "Tests.EVEMon\Tests.EVEMon.csproj", "{C61CB94F-31DF-48BE-8053-FCE7DC6ECD7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallBuilder", "Tools\InstallBuilder\InstallBuilder.csproj", "{5CE8E302-3577-41BC-A35F-C88AC625F7A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A2E5EFE0-614A-4567-95E5-92A4D94169AC} = {A2E5EFE0-614A-4567-95E5-92A4D94169AC}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlGenerator", "Tools\XmlGenerator\XmlGenerator.csproj", "{9366D54A-B516-4A1D-987B-B1BCE31D2A72}"
 EndProject
@@ -191,8 +194,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_Active = 0
 		CodeStyleEnforcer_RulesLocation = 
+		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
