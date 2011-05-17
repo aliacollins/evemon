@@ -16,7 +16,7 @@ namespace EVEMon.Common.Serialization.API
             set;
         }
 
-        [XmlElement("missingIDs")]
+        [XmlElement("missingMessageIDs")]
         public string MissingMessageIDs
         {
             get;
