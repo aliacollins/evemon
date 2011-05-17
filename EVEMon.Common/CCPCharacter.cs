@@ -569,7 +569,7 @@ namespace EVEMon.Common
             // Import the data
             m_researchPoints.Import(result.Result.ResearchPoints);
 
-            // Fires the event regarding research points update.
+            // Fires the event regarding research points update
             EveClient.OnCharacterResearchPointsChanged(this);
         }
 
@@ -649,7 +649,7 @@ namespace EVEMon.Common
             if (m_eveNotifications.NewNotifications != 0)
                 EveClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
 
-            // Fires the event regarding EVE mail messages update.
+            // Fires the event regarding EVE mail messages update
             EveClient.OnCharacterEVENotificationsUpdated(this);
         }
         #endregion
@@ -685,7 +685,7 @@ namespace EVEMon.Common
                 return true;
             }
 
-            // Removes the previous error notification.
+            // Removes the previous error notification
             if (m_errorNotifiedMethod == method)
             {
                 EveClient.Notifications.InvalidateCharacterAPIError(this);
@@ -760,7 +760,7 @@ namespace EVEMon.Common
             if (endedOrders.Count != 0)
                 EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
 
-            // Fires the event regarding market orders update.
+            // Fires the event regarding market orders update
             EveClient.OnCharacterMarketOrdersChanged(this);
         }
 
@@ -800,7 +800,7 @@ namespace EVEMon.Common
 
             m_industryJobs.Import(characterJobs);
             
-            // Fires the event regarding industry jobs update.
+            // Fires the event regarding industry jobs update
             EveClient.OnCharacterIndustryJobsChanged(this);
 
             // Reset flags
