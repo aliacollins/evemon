@@ -55,7 +55,7 @@ namespace EVEMon.SkillPlanner
             this.lblLevel3Time = new System.Windows.Forms.Label();
             this.lblLevel2Time = new System.Windows.Forms.Label();
             this.lblLevel1Time = new System.Windows.Forms.Label();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.showSkillExplorerMenu = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ownsBookMenu = new System.Windows.Forms.ToolStripButton();
@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
             this.headerPanel.SuspendLayout();
             this.pnlPlanControl.SuspendLayout();
             this.flpSkillNameCost.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmsSkillContext
@@ -199,8 +199,8 @@ namespace EVEMon.SkillPlanner
             // 
             // headerPanel
             // 
+            this.headerPanel.Controls.Add(this.toolStrip);
             this.headerPanel.Controls.Add(this.pnlPlanControl);
-            this.headerPanel.Controls.Add(this.toolStrip1);
             this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.headerPanel.Location = new System.Drawing.Point(0, 0);
             this.headerPanel.Name = "headerPanel";
@@ -218,7 +218,7 @@ namespace EVEMon.SkillPlanner
             this.pnlPlanControl.Controls.Add(this.lblLevel3Time);
             this.pnlPlanControl.Controls.Add(this.lblLevel2Time);
             this.pnlPlanControl.Controls.Add(this.lblLevel1Time);
-            this.pnlPlanControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlPlanControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlPlanControl.Location = new System.Drawing.Point(0, 0);
             this.pnlPlanControl.Name = "pnlPlanControl";
             this.pnlPlanControl.Size = new System.Drawing.Size(637, 106);
@@ -336,25 +336,25 @@ namespace EVEMon.SkillPlanner
             this.lblLevel1Time.TabIndex = 1;
             this.lblLevel1Time.Text = "Level I: 1h, 48m, 55s (plus 140d, 10h, 15m, 30s)";
             // 
-            // toolStrip1
+            // toolStrip
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showSkillExplorerMenu,
             this.toolStripSeparator1,
             this.ownsBookMenu,
             this.planToMenu});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 106);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(637, 25);
-            this.toolStrip1.TabIndex = 20;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip.Location = new System.Drawing.Point(0, 106);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(637, 25);
+            this.toolStrip.TabIndex = 20;
+            this.toolStrip.Text = "toolStrip";
             // 
             // showSkillExplorerMenu
             // 
             this.showSkillExplorerMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.showSkillExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
+            this.showSkillExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showSkillExplorerMenu.Image")));
             this.showSkillExplorerMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showSkillExplorerMenu.Name = "showSkillExplorerMenu";
             this.showSkillExplorerMenu.Size = new System.Drawing.Size(182, 22);
@@ -391,7 +391,7 @@ namespace EVEMon.SkillPlanner
             this.planTo3Menu,
             this.planTo4Menu,
             this.planTo5Menu});
-            this.planToMenu.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
+            this.planToMenu.Image = ((System.Drawing.Image)(resources.GetObject("planToMenu.Image")));
             this.planToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.planToMenu.Name = "planToMenu";
             this.planToMenu.Size = new System.Drawing.Size(82, 22);
@@ -468,8 +468,8 @@ namespace EVEMon.SkillPlanner
             this.pnlPlanControl.PerformLayout();
             this.flpSkillNameCost.ResumeLayout(false);
             this.flpSkillNameCost.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -496,7 +496,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblSkillName;
         private SkillTreeDisplay skillTreeDisplay;
         private System.Windows.Forms.ToolStripMenuItem miPlanTo0;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.Panel rightPanel;
         private System.Windows.Forms.Panel headerPanel;
         private System.Windows.Forms.ToolStripButton showSkillExplorerMenu;
