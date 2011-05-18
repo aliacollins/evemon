@@ -43,7 +43,7 @@ namespace EVEMon.Common
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(Properties.Resources.NotificationRefTypeIDs);
             
-            // Format it as xml
+            // Read the nodes
             using (XmlNodeReader reader = new XmlNodeReader(xmlDoc))
             {
                 // Create a memory stream to transform the xml 

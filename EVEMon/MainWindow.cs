@@ -37,8 +37,6 @@ namespace EVEMon
         private Form m_trayPopup;
         private IgbServer m_igbServer;
 
-        private bool m_startMinimized;
-
         private bool m_isUpdating;
         private bool m_isUpdatingData;
         private bool m_isShowingUpdateWindow;
@@ -74,11 +72,10 @@ namespace EVEMon
         public MainWindow(bool startMinimized)
             : this()
         {
-            m_startMinimized = startMinimized;
             m_isUpdating = false;
 
             // Start minimized ?
-            if (m_startMinimized)
+            if (startMinimized)
             {
                 WindowState = FormWindowState.Minimized;
                 ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
@@ -1669,14 +1666,10 @@ namespace EVEMon
                 return;
 
             // Update the tray icon's visibility
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
             HidePopup();
 
             // Restore the main window
-            Visible = true;
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
-            Activate();
+            RestoreMainWindow();
         }
 
         /// <summary>
@@ -1750,11 +1743,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Visible = true;
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
-            Activate();
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
+            RestoreMainWindow();
         }
 
         /// <summary>
@@ -1777,6 +1766,18 @@ namespace EVEMon
         {
             // Clear the existing items
             planToolStripMenuItem.DropDownItems.Clear();
+        }
+
+        /// <summary>
+        /// Restores the main window.
+        /// </summary>
+        private void RestoreMainWindow()
+        {
+            Visible = true;
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = Visible;
+            Activate();
+            trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled);
         }
         #endregion
 
