@@ -194,7 +194,10 @@ namespace EVEMon.XmlGenerator
 
                 return fileline;
             }
-            else throw new ApplicationException(datafile + " not found!");
+            else
+            {
+                throw new ApplicationException(datafile + " not found!");
+            }
         }
 
         /// <summary>

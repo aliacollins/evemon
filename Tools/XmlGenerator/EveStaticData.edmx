@@ -33,7 +33,9 @@
           <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.Store.dgmTypeEffects" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.Store.eveGraphics" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.Store.eveIcons" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.Store.eveLocations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveNames" EntityType="EveStaticDataModel.Store.eveNames" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="eveOwners" EntityType="EveStaticDataModel.Store.eveOwners" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.Store.eveUnits" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.Store.invBlueprintTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invCategories" EntityType="EveStaticDataModel.Store.invCategories" store:Type="Tables" Schema="dbo" />
@@ -42,6 +44,7 @@
           <EntitySet Name="invControlTowerResources" EntityType="EveStaticDataModel.Store.invControlTowerResources" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invFlags" EntityType="EveStaticDataModel.Store.invFlags" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invGroups" EntityType="EveStaticDataModel.Store.invGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="invItems" EntityType="EveStaticDataModel.Store.invItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invMarketGroups" EntityType="EveStaticDataModel.Store.invMarketGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invMetaGroups" EntityType="EveStaticDataModel.Store.invMetaGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="invMetaTypes" EntityType="EveStaticDataModel.Store.invMetaTypes" store:Type="Tables" Schema="dbo" />
@@ -410,6 +413,16 @@
           <Property Name="iconFile" Type="varchar" Nullable="false" MaxLength="500" />
           <Property Name="description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <EntityType Name="eveLocations">
+          <Key>
+            <PropertyRef Name="locationID" />
+          </Key>
+          <Property Name="locationID" Type="bigint" Nullable="false" />
+          <Property Name="locationName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="x" Type="float" Nullable="false" />
+          <Property Name="y" Type="float" Nullable="false" />
+          <Property Name="z" Type="float" Nullable="false" />
+        </EntityType>
         <EntityType Name="eveNames">
           <Key>
             <PropertyRef Name="itemID" />
@@ -420,13 +433,23 @@
           <Property Name="groupID" Type="smallint" />
           <Property Name="typeID" Type="int" />
         </EntityType>
+        <EntityType Name="eveOwners">
+          <Key>
+            <PropertyRef Name="ownerID" />
+          </Key>
+          <Property Name="ownerID" Type="int" Nullable="false" />
+          <Property Name="ownerName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+          <Property Name="typeID" Type="smallint" Nullable="false" />
+          <Property Name="rowDate" Type="smalldatetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="eveUnits">
           <Key>
             <PropertyRef Name="unitID" />
           </Key>
           <Property Name="unitID" Type="tinyint" Nullable="false" />
           <Property Name="unitName" Type="varchar" MaxLength="100" />
-          <Property Name="displayName" Type="varchar" MaxLength="20" />
+          <Property Name="displayName" Type="varchar" MaxLength="50" />
           <Property Name="description" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="invBlueprintTypes">
@@ -513,6 +536,17 @@
           <Property Name="anchorable" Type="bit" />
           <Property Name="fittableNonSingleton" Type="bit" />
           <Property Name="published" Type="bit" />
+        </EntityType>
+        <EntityType Name="invItems">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="bigint" Nullable="false" />
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="ownerID" Type="int" Nullable="false" />
+          <Property Name="locationID" Type="bigint" Nullable="false" />
+          <Property Name="flagID" Type="smallint" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="invMarketGroups">
           <Key>
@@ -1078,6 +1112,9 @@
           <EntitySet Name="planetSchematicsPinMap" EntityType="EveStaticDataModel.planetSchematicsPinMap" />
           <EntitySet Name="planetSchematicsTypeMap" EntityType="EveStaticDataModel.planetSchematicsTypeMap" />
           <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
+          <EntitySet Name="eveLocations" EntityType="EveStaticDataModel.eveLocations" />
+          <EntitySet Name="eveOwners" EntityType="EveStaticDataModel.eveOwners" />
+          <EntitySet Name="invItems" EntityType="EveStaticDataModel.invItems" />
         </EntityContainer>
         <EntityType Name="agtAgentTypes">
           <Key>
@@ -1998,6 +2035,37 @@
           <Property Type="Int32" Name="explosionID" />
           <Property Type="Int32" Name="directoryID" />
           <Property Type="String" Name="graphicName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="eveLocations">
+          <Key>
+            <PropertyRef Name="locationID" />
+          </Key>
+          <Property Type="Int64" Name="locationID" Nullable="false" />
+          <Property Type="String" Name="locationName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="x" Nullable="false" />
+          <Property Type="Double" Name="y" Nullable="false" />
+          <Property Type="Double" Name="z" Nullable="false" />
+        </EntityType>
+        <EntityType Name="eveOwners">
+          <Key>
+            <PropertyRef Name="ownerID" />
+          </Key>
+          <Property Type="Int32" Name="ownerID" Nullable="false" />
+          <Property Type="String" Name="ownerName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="deleted" Nullable="false" />
+          <Property Type="Int16" Name="typeID" Nullable="false" />
+          <Property Type="DateTime" Name="rowDate" Nullable="false" />
+        </EntityType>
+        <EntityType Name="invItems">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Type="Int64" Name="itemID" Nullable="false" />
+          <Property Type="Int32" Name="typeID" Nullable="false" />
+          <Property Type="Int32" Name="ownerID" Nullable="false" />
+          <Property Type="Int64" Name="locationID" Nullable="false" />
+          <Property Type="Int16" Name="flagID" Nullable="false" />
+          <Property Type="Int32" Name="quantity" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2972,6 +3040,40 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="eveLocations">
+            <EntityTypeMapping TypeName="EveStaticDataModel.eveLocations">
+              <MappingFragment StoreEntitySet="eveLocations">
+                <ScalarProperty Name="z" ColumnName="z" />
+                <ScalarProperty Name="y" ColumnName="y" />
+                <ScalarProperty Name="x" ColumnName="x" />
+                <ScalarProperty Name="locationName" ColumnName="locationName" />
+                <ScalarProperty Name="locationID" ColumnName="locationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="eveOwners">
+            <EntityTypeMapping TypeName="EveStaticDataModel.eveOwners">
+              <MappingFragment StoreEntitySet="eveOwners">
+                <ScalarProperty Name="rowDate" ColumnName="rowDate" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="ownerName" ColumnName="ownerName" />
+                <ScalarProperty Name="ownerID" ColumnName="ownerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="invItems">
+            <EntityTypeMapping TypeName="EveStaticDataModel.invItems">
+              <MappingFragment StoreEntitySet="invItems">
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="flagID" ColumnName="flagID" />
+                <ScalarProperty Name="locationID" ColumnName="locationID" />
+                <ScalarProperty Name="ownerID" ColumnName="ownerID" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3065,6 +3167,9 @@
         <EntityTypeShape EntityType="EveStaticDataModel.planetSchematics" Width="1.5" PointX="8.625" PointY="20" Height="1.5956835937499818" />
         <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="8.625" PointY="21.875" Height="1.4033821614583246" />
         <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.625" PointY="20" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125" Height="2.7494921874999818" /></Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="0.625" PointY="14.125" Height="2.7494921874999818" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveLocations" Width="1.5" PointX="23.375" PointY="16.75" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveOwners" Width="1.5" PointX="23.375" PointY="19.75" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invItems" Width="1.5" PointX="19.375" PointY="23.75" Height="2.1725878906249818" /></Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
