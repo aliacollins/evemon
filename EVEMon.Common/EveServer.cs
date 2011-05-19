@@ -100,12 +100,15 @@ namespace EVEMon.Common
             var lastStatus = m_status;
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return;
+
                 m_status = ServerStatus.Unknown;
                 EveClient.Notifications.NotifyServerStatusError(result);
 
                 // Notify subscribers about update
                 EveClient.OnServerStatusUpdated(this, lastStatus, m_status);
-
                 return;
             }
 

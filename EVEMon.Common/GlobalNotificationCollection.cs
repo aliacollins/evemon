@@ -137,6 +137,22 @@ namespace EVEMon.Common
             };
             Notify(notification);
         }
+
+        /// <summary>
+        /// Notifies EVE Backend Database is temporarily disabled.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="result"></param>
+        internal void NotifyEVEBackendDatabaseDisabled(IAPIResult result)
+        {
+            var notification = new APIErrorNotification(null, result)
+            {
+                Description = result.ErrorMessage,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
         #endregion
 
 
@@ -735,5 +751,6 @@ namespace EVEMon.Common
             Notify(notification);
         }
         #endregion
+
     }
 }

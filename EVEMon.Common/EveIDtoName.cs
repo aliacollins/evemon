@@ -162,6 +162,10 @@ namespace EVEMon.Common
         {
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return;
+                
                 EveClient.Notifications.NotifyCharacterNameError(result);
                 return;
             }

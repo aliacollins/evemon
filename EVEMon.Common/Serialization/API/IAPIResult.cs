@@ -15,6 +15,12 @@ namespace EVEMon.Common.Serialization.API
         bool HasError { get; }
 
         /// <summary>
+        /// Gets true if EVE Backend Database is temporarily disabled.
+        /// </summary>
+        /// <value><c>true</c> if EVE Backend Database is temporarily disabled; otherwise, <c>false</c>.</value>
+        bool EVEBackendDatabaseDisabled { get; }
+
+        /// <summary>
         /// Gets the type of the error or <see cref="APIErrors.None"/> when there was no error.
         /// </summary>
         /// <value>The type of the error.</value>

@@ -44,7 +44,8 @@ namespace EVEMon.Common
                 m_fullKeyError = serialAccountStatus.ErrorMessage;
 
             // Retrieves the characters list
-            if (m_serialCharacterList.HasError) return;
+            if (m_serialCharacterList.HasError)
+                return;
 
             foreach (var serialID in m_serialCharacterList.Result.Characters)
             {

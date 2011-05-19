@@ -91,8 +91,24 @@ namespace EVEMon.Common.Serialization.API
 
 
         #region Errors handling
+
+        public bool EVEBackendDatabaseDisabled
+        {
+            get
+            {
+                if (CCPError != null && CCPError.IsEVEBackendDatabaseDisabled)
+                {
+                    EveClient.Notifications.NotifyEVEBackendDatabaseDisabled(this);
+                    return true;
+                }
+
+                EveClient.Notifications.InvalidateAPIError();
+                return false;
+            }
+        }
+
         /// <summary>
-        /// Gets true if the information is outdated
+        /// Gets true if the information is outdated.
         /// </summary>
         public bool IsOutdated
         {
@@ -103,7 +119,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
-        /// Gets true if there is an error
+        /// Gets true if there is an error.
         /// </summary>
         public bool HasError
         {
@@ -140,7 +156,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
-        /// Gets the error message without bothering about its nature
+        /// Gets the error message without bothering about its nature.
         /// </summary>
         public string ErrorMessage
         {
@@ -154,7 +170,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         /// <summary>
-        /// Gets / sets the XML document when there's no HTTP error
+        /// Gets / sets the XML document when there's no HTTP error.
         /// </summary>
         [XmlIgnore]
         public XmlDocument XmlDocument

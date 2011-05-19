@@ -610,18 +610,13 @@ namespace EVEMon.Common
         {
             m_mailingListsNextUpdate = result.CachedUntil;
 
-            // If there is an error notify the user
-            if (result.HasError)
-            {
+            // Notify an error occured
+            if (ShouldNotifyError(result, APIMethods.MailingLists))
                 EveClient.Notifications.NotifyMailingListsError(this, result);
-            }
-            else
-            {
-                EveClient.Notifications.InvalidateCharacterAPIError(this);
 
-                // Deserialize the result
+            // If there is no error deserialize the result
+            if (!result.HasError)
                 EVEMailingLists.Import(result.Result.MailingLists);
-            }
 
             // Whether we have the mailing list info or not
             // import the EVE mail messages
@@ -678,6 +673,10 @@ namespace EVEMon.Common
             // Notify an error occurred
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return false;
+
                 if (m_errorNotifiedMethod != APIMethods.None)
                     return false;
 

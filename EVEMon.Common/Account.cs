@@ -315,6 +315,10 @@ namespace EVEMon.Common
             // Notify on error
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return;
+
                 EveClient.Notifications.NotifyCharacterListError(this, result);
                 return;
             }
@@ -363,6 +367,10 @@ namespace EVEMon.Common
             // Return on error
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return;
+                
                 if (ccpCharacter != null)
                     EveClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
                 
@@ -415,6 +423,10 @@ namespace EVEMon.Common
             // Return on error
             if (result.HasError)
             {
+                // Checks if EVE Backend Database is temporarily disabled
+                if (result.EVEBackendDatabaseDisabled)
+                    return;
+                
                 EveClient.Notifications.NotifyAccountStatusError(this, result);
                 return;
             }

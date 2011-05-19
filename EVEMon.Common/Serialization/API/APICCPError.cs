@@ -64,5 +64,14 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return (ErrorCode == 213); }
         }
+
+        /// <summary>
+        /// Gets true when EVE backend database is temporarily disabled.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsEVEBackendDatabaseDisabled
+        {
+            get { return (ErrorCode == 902); }
+        }
     }
 }

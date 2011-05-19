@@ -131,6 +131,10 @@ namespace EVEMon.Common
 
             var result = Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(file, APIProvider.RowsetsTransform);
 
+            // Checks if EVE Backend Database is temporarily disabled
+            if (result.EVEBackendDatabaseDisabled)
+                return;
+
             // In case the file has an error we prevent the deserialization
             if (result.HasError)
                 return;
