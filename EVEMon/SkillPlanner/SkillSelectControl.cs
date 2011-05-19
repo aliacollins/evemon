@@ -830,7 +830,7 @@ namespace EVEMon.SkillPlanner
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = skill != null;
+            cmiPlanTo.Enabled = (skill != null && skill.Level < 5);
             if (skill != null)
             {
                 for (int i = 0; i <= 5; i++)
