@@ -58,52 +58,52 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>12 April 2011</date>
+      <date>19 May 2011</date>
       <md5>197b86c16ab1b49090eb351c843d4a40</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) blueprints data file by the EVEMon Development Team]]></message>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>12 April 2011</date>
+      <date>19 May 2011</date>
       <md5>0e0beef2a7d3d8196d42b587babb3e35</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) certificates data file by the EVEMon Development Team]]></message>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>12 April 2011</date>
-      <md5>46b0fd455cbfe8dad16c01940d997bfc</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) geography data file by the EVEMon Development Team]]></message>
+      <date>19 May 2011</date>
+      <md5>f4c478a217db35209cfe3c3ed79990b7</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>12 April 2011</date>
-      <md5>31ac0cdbd581978a03286efece0a9018</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) items data file by the EVEMon Development Team]]></message>
+      <date>19 May 2011</date>
+      <md5>5360dba7008511c0530c9d5d11db8cfb</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>12 April 2011</date>
-      <md5>80121984cefa9534752e1f5638f763d5</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) properties data file by the EVEMon Development Team]]></message>
+      <date>19 May 2011</date>
+      <md5>dd93ef5db2cb1d112c9fd471ff47fe5d</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>12 April 2011</date>
+      <date>19 May 2011</date>
       <md5>322a64607ae565e7d0af03ea9bfc9783</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) reprocessing data file by the EVEMon Development Team]]></message>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>12 April 2011</date>
-      <md5>28c1df3a293f907a34e9ecf42ffc1f2b</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/247655</url>
-      <message><![CDATA[Incursion 1.4.2 (247655) skills data file by the EVEMon Development Team]]></message>
+      <date>19 May 2011</date>
+      <md5>5873fe248ac8e3f4436cf789ccdb7773</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
+      <message><![CDATA[Incursion 1.5.0 (259851) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
