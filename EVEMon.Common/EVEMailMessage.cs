@@ -282,6 +282,10 @@ namespace EVEMon.Common
                                         MessageText = "The text for this message was reported missing."
                                     });
 
+            // Quit if for any reason there is no text
+            if (result.Result.Bodies.Count == 0)
+                return;            
+
             // Import the data
             EVEMailBody = new EveMailBody(result.Result.Bodies[0]);
 

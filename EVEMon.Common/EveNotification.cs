@@ -179,6 +179,10 @@ namespace EVEMon.Common
                                         NotificationText = "The text for this notification was reported missing." 
                                     });
 
+            // Quit if for any reason there is no text
+            if (result.Result.Texts.Count == 0)
+                return;            
+
             // Import the data
             EVENotificationText = new EveNotificationText(result.Result.Texts[0]);
 
