@@ -183,12 +183,12 @@ namespace EVEMon.Common
 
             List<string> listOfNames = new List<string>();
 
-            foreach (var list in m_ccpCharacter.EVEMailingLists)
+            foreach (var listID in mailingListIDs)
             {
-                var name = mailingListIDs.FirstOrDefault(x => x == list.ID.ToString());
-                if (name != null)
+                var mailingList = m_ccpCharacter.EVEMailingLists.FirstOrDefault(x => x.ID.ToString() == listID);
+                if (mailingList != null)
                 {
-                    listOfNames.Add(list.Name);
+                    listOfNames.Add(mailingList.Name);
                 }
                 else
                 {
