@@ -164,7 +164,7 @@ namespace EVEMon
             this.HomePageLinkLabel.Size = new System.Drawing.Size(158, 13);
             this.HomePageLinkLabel.TabIndex = 0;
             this.HomePageLinkLabel.TabStop = true;
-            this.HomePageLinkLabel.Text = "http://EVEMon.battleclinic.com/";
+            this.HomePageLinkLabel.Text = "http://evemon.battleclinic.com/";
             this.HomePageLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llHomePage_LinkClicked);
             // 
             // BodyLayoutPanel

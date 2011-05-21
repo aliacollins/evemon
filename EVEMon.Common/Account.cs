@@ -65,7 +65,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Constructor from the provided informations
+        /// Constructor from the provided informations.
         /// </summary>
         /// <param name="userID"></param>
         internal Account(long userID)
@@ -88,7 +88,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets / sets the user's id
+        /// Gets / sets the user's id.
         /// </summary>
         public long UserID
         {
@@ -96,7 +96,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets / sets the API key
+        /// Gets / sets the API key.
         /// </summary>
         public string APIKey
         {
@@ -128,7 +128,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this account has a character in training
+        /// Gets true if this account has a character in training.
         /// </summary>
         public bool HasCharacterInTraining
         {
@@ -136,7 +136,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the character identities for this account
+        /// Gets the character identities for this account.
         /// </summary>
         public IEnumerable<CharacterIdentity> CharacterIdentities
         {
@@ -222,7 +222,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the characters list on a timer tick
+        /// Updates the characters list on a timer tick.
         /// </summary>
         internal void UpdateOnOneSecondTick()
         {
@@ -233,7 +233,7 @@ namespace EVEMon.Common
             if (m_characterListUpdated)
                 m_accountStatusMonitor.UpdateOnOneSecondTick();
 
-            // While the key status is unknown, every five minutes, we try to update it.
+            // While the key status is unknown, every five minutes, we try to update it
             if (m_keyLevel == CredentialsLevel.Unknown && DateTime.UtcNow >= m_lastKeyLevelUpdate.AddMinutes(5))
             {
                 // Quits if no network
@@ -265,7 +265,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Updates the characters list with the given CCP data
+        /// Updates the characters list with the given CCP data.
         /// </summary>
         /// <param name="result"></param>
         internal void Import(APIResult<SerializableAPICharacters> result)
@@ -279,7 +279,7 @@ namespace EVEMon.Common
                 ImportIdentities(result.Result.Characters);
             }
 
-            // Fires the event regarding the account character list update.
+            // Fires the event regarding the account character list update
             EveClient.OnCharacterListChanged(this);
         }
 
@@ -387,7 +387,7 @@ namespace EVEMon.Common
 
             // In the event this becomes a very long running process because of latency
             // and characters have been removed from the account since they were queried
-            // remove those characters from the cache.
+            // remove those characters from the cache
             IEnumerable<KeyValuePair<string, SkillInTrainingResponse>> toRemove =
                 m_skillInTrainingCache.Where(x => !CharacterIdentities.Any(y => y.Name == x.Key));
 
@@ -398,7 +398,7 @@ namespace EVEMon.Common
 
             // If we did not get response from a character in account yet
             // or there was an error in any responce,
-            // we are not sure so wait until next time.
+            // we are not sure so wait until next time
             if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Unknown
                                              || x.Value.State == ResponseState.InError))
                 return;
@@ -448,7 +448,7 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
-        /// Updates the characters list with the given CCP data
+        /// Updates the characters list with the given CCP data.
         /// </summary>
         /// <param name="identities"></param>
         private void ImportIdentities(IEnumerable<ISerializableCharacterIdentity> identities)
@@ -480,7 +480,7 @@ namespace EVEMon.Common
         /// </summary>
         private void NotifyAccountNotInTraining()
         {
-            // One of the remaining characters was training; account is training.
+            // One of the remaining characters was training; account is training
             if (m_skillInTrainingCache.Any(x => x.Value.State == ResponseState.Training))
             {
                 EveClient.Notifications.InvalidateAccountNotInTraining(this);
@@ -560,7 +560,7 @@ namespace EVEMon.Common
                 if (m_ignoreList.Contains(id))
                     continue;
 
-                // Retrieves the ccp character and create one if none.
+                // Retrieves the ccp character and create one if none
                 CCPCharacter ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter == null)
                 {
@@ -585,7 +585,7 @@ namespace EVEMon.Common
             if (CharacterIdentities.Count() == 0)
                 return String.Format("{0} (no characters)", m_userId);
 
-            // Otherwise, return the chars' names into parenthesis.
+            // Otherwise, return the chars' names into parenthesis
             string names = String.Empty;
             foreach (CharacterIdentity id in CharacterIdentities)
             {
