@@ -29,6 +29,6 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.3.4.$WCREV$")]
+[assembly: AssemblyVersion("1.4.0.$WCREV$")]
 
 
