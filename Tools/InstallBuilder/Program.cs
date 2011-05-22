@@ -10,12 +10,13 @@ namespace InstallBuilder
 {
     public class Program
     {
-        private static string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installer");
+        private static string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
+        private static string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
         private static string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         private static string s_projectDir;
         private static string s_version;
-        private static string s_binariesDir;
+        private static string s_sourceFilesDir;
         private static string s_nsisExe;
 
         public static int Main(string[] args)
@@ -30,6 +31,10 @@ namespace InstallBuilder
             // Create the installer folder if it doesn't exist
             if (!Directory.Exists(s_installerDir))
                 Directory.CreateDirectory(s_installerDir);
+
+            // Create the binaries folder if it doesn't exist
+            if (!Directory.Exists(s_binariesDir))
+                Directory.CreateDirectory(s_binariesDir);
 
             try
             {
@@ -111,9 +116,10 @@ namespace InstallBuilder
 
             Console.WriteLine("Project directory : {0}", s_projectDir);
 
-            s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
-            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+            s_sourceFilesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
+            Console.WriteLine("Source directory : {0}", s_sourceFilesDir);
             Console.WriteLine("Installer directory : {0}", s_installerDir);
+            Console.WriteLine("Binaries directory : {0}", s_binariesDir);
             Console.WriteLine();
 
             s_nsisExe = FindMakeNsisExe();
@@ -128,9 +134,9 @@ namespace InstallBuilder
             string formattedDate = DateTime.Now.ToString("yyyy-MM-dd");
             string svnRevision = s_version.Substring(s_version.LastIndexOf('.') + 1, s_version.Length - (s_version.LastIndexOf('.') + 1));
             string zipFileName = String.Format("EVEMon-binaries-{0}.zip", s_version);
-            zipFileName = Path.Combine(s_installerDir, zipFileName);
+            zipFileName = Path.Combine(s_binariesDir, zipFileName);
 
-            string[] filenames = Directory.GetFiles(s_binariesDir, "*", SearchOption.AllDirectories);
+            string[] filenames = Directory.GetFiles(s_sourceFilesDir, "*", SearchOption.AllDirectories);
 
             FileInfo zipFile = new FileInfo(zipFileName);
             if (zipFile.Exists)
@@ -148,7 +154,7 @@ namespace InstallBuilder
                     if (file.Contains("vshost") || file.Contains(".config"))
                         continue;
 
-                    string entryName = String.Format("EVEMon{0}", file.Remove(0, s_binariesDir.Length));
+                    string entryName = String.Format("EVEMon{0}", file.Remove(0, s_sourceFilesDir.Length));
                     Console.WriteLine("Zipping {0}", entryName);
                     ZipEntry entry = new ZipEntry(entryName);
 
