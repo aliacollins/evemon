@@ -1,59 +1,76 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>12 February 2011</date>
-    <version>1.3.4.2523</version>
-    <url>http://forum.battleclinic.com/index.php/topic,108969</url>
-    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.3.4.2523.exe</autopatchurl>
+    <date>22 May 2011</date>
+    <version>1.4.0.2761</version>
+    <url>http://forum.battleclinic.com/index.php/topic,144054.0.html</url>
+    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.4.0.2761.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Breaking Changes ==
 
- * EVEMon now runs under .NET Framework version 4.0
- * Grouping selection in item browser may need reselection.
+* EVEMon Relocator has been deprecated (removed).
+* Non-Public skills will not show correct info as CCP removed the related info from their database.
+
 
 == Contributors for this version ==
 
- * Jimi
- * Richard Slater
- * Robert Winkler
- * Tonto Auri
- * Optica
- * Vehlin
+* Jimi
+* Richard Slater
+* ykoehler
+
 
 == New Features ==
 
- * EVEMon will now search multiple instances of EVE folders for portraits.
- * Refactored Planner Window Status Bar.
- * Updated EVEMon to the changes made to database ID's (see CCP's blog for Tyrannis 1.2 API changes)
- * Added support for Test API server.
- * EVEMon will now show which character you are to delete in Account manager. Also "Downtime" indicator is now in sync with EVE.  
- * EVEMon now has a Research Points monitor.
- * Removal of the learning skills.
- * Updated EVEMon to download portraits from CCP's Image server.
- * EVEMon will now query the API server from a secure connection.
- * Character portrait updating now supports all image files.
- * All API calls can now be done via API proxy services.
+* EVEMon now shows the status of an account and notifies the user when subscription is close to expiration.
+* EVEMon now has a Blank Character Creator.
+* EVEMon now has an EVE Mail Messages monitor.
+* EVEMon now has an EVE Notifications monitor.
+* EVEMon has now the ability to store the settings file to the BattleClinic server via the BattleClinic API service.
+
 
 == Bugfixes ==
 
- * Possibly fixed the "account not in training" issue.
- * Resolved EVEMon crashing when a character in accounts is not a CCP character.
- * EVEMon will no longer try and recenter a window.
- * Fixes EVEMon crashing in certificate manager.
- * Fix for hidden exception when dragging to end of plan.
- * Fixes EVEMon crashing on multiselect of ship types.
- * Fulfilled market orders will no longer appear as Expired.
- * Fixes a visual bug (paint bar positioning not updating for more than one skill level in queue) in characters skill queue.
- * Fixes a bug when trying to add an increased skill level, via priorities window, from skill browser to plan, it doesn't get added. 
- * Fixes EVEMon crashing when an unknown skill is in skill queue.
- * Permafix the "account not in training" issue.
- * Fixes the BP browser filtering logic. Resets the info part of a browser when filtering changes. Adds help label in skill and certificate browser.
- * Fixes a visual bug in skill browser when selecting the Tyccon skill. Also disables the multi-selection from account manager.
- * Fixes some issues in browsers when combining various filtering and sorting.
- * EVEMon will now notify on fulfilled market orders.
- * EVEMon will no longer crash when the EFT Loadout text box is edited. Resolved faulty "Add to plan" logic.
- * Portraits downloaded image size is now 128px to avoid pixelation.]]></message>
+* EVEMon will no longer crash when right clicking on an unknown skill in queue.
+* EVEMon will not send any notifications for non monitored characters or non monitored full api key features.
+* EVEMon can now query both EVE Servers (Tranquility and Sinqularity) (use with caution and at your own risk as switching to Sinqularity and opening the Skill Planner will affect your plans).
+* EVEMon now sees the correct path of the default cached EVE portrait folder.
+* EVEMon will no longer crash on Implant Calc when any non in-game implant is selected in an implant set.
+* Fixes a minor visual bug in Research monitor.
+* Fixes a minor visual bug in Industry jobs monitor.
+* Fixes a minor visual bug in Market orders monitor.
+* Reordered columns in research points monitor will now be remembered.
+* Fixes a bug when plan ends exactly at the end of the page, only the next page gets printed.
+* Fixes a bug where the IGB connection was left open (if in use) when EVEMon restarts after a data file update.
+* Fixes an issue where the port of the IGB server was not validated.
+* Fixes the sorting issue for the plan column "Group". Notice that the sorting criterion is the duration of each group and not the name. 
+* Fixes a visual bug for the dropdown menu of "Plan To..." in Skill browser.
+* Fixes a visual bug in Skill browser where upon right clicking a fully level trained skill, "Plan To..." is enabled.
+
+
+== Enhancements ==
+
+* New enhanced installer.
+* Overview now shows the total training time of the skill queue.
+* Default character picture (no avatar) has been updated to the post Incursion one.
+* EVEMon planner now has another column showing the skill points required for each skill level.
+* Character info now shows birthday, ancestry and upon hovering over the corporation name, the alliance the corp is a member of.
+* EVE icons now have the Tech or Metagroup overlay icon.
+* All monitored characters query timers can now be updated manually (via Tools>Options>General>Updates).
+* EVEMon windows will no longer open on top of each other.
+* Improved visualization of each monitor.
+* Level 0 known skills added in tooltip info of a character's known skills.
+* CCP icons will now be fetched from CCP's Image Server.
+* Order of compared items in browser will now be by selection.
+* Corp related monitoring get disabled if character is in NPC corporation.
+* Activity description has been added next to the blueprint enabled by each skill level in Skill Explorer.
+* A "Research" tab has been added to the Blueprint browser for those blueprints that don't have any research prerequisites (invention excluded) in order to be able to switch between research facilities (laboratories).
+* EVEMon now handles more gracefully CCP error notifications when EVE Backend Database is temporarily disabled (no more endless notifications list, only one notification is now shown).
+
+
+== Misc ==
+
+* "<None>" implant indicator renamed to "None".]]></message>
   </newest>
   <datafiles>
     <datafile>
