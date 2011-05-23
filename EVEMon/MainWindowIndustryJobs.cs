@@ -305,6 +305,7 @@ namespace EVEMon
             if (!Visible)
                 return;
 
+
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvJobs.SelectedItems.Count > 0 ?
                                 lvJobs.SelectedItems[0].Tag.GetHashCode() : 0);
@@ -320,15 +321,8 @@ namespace EVEMon
                 if (m_character != null && m_hideInactive)
                     jobs = jobs.Where(x => x.IsActive);
 
-                switch (m_showIssuedFor)
-                {
-                    case IssuedFor.Character:
-                        jobs = jobs.Where(x => x.IssuedFor == IssuedFor.Character);
-                        break;
-                    case IssuedFor.Corporation:
-                        jobs = jobs.Where(x => x.IssuedFor == IssuedFor.Corporation);
-                        break;
-                }
+                if (m_showIssuedFor != IssuedFor.All)
+                    jobs = jobs.Where(x => x.IssuedFor == m_showIssuedFor);
 
                 UpdateSort();
 
@@ -773,10 +767,13 @@ namespace EVEMon
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
+            // Don't update the columns if the TTC column width changes
+            if (e.ColumnIndex == m_displayIndexTTC)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvJobs.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
-
         /// <summary>
         /// When the user clicks a column header, we update the sorting.
         /// </summary>
@@ -894,7 +891,7 @@ namespace EVEMon
 
             for (int i = 0; i < lvJobs.Items.Count; i++)
             {
-                IndustryJob job = ((IndustryJob)lvJobs.Items[i].Tag);
+                IndustryJob job = (IndustryJob)lvJobs.Items[i].Tag;
                 if (!job.IsActive || job.ActiveJobState == ActiveJobState.Ready)
                     continue;
 
@@ -905,7 +902,24 @@ namespace EVEMon
                         m_displayIndexTTC = lvJobs.Columns[IndustryJobColumn.TTC.GetHeader()].DisplayIndex;
 
                     lvJobs.Items[i].SubItems[m_displayIndexTTC].Text = job.TTC;
-                    lvJobs.AutoResizeColumn(m_displayIndexTTC, ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                    // Using AutoResizeColumn when TTC is the first column
+                    // results to a nasty visual bug due to ListViewItem.ImageIndex placeholder
+                    if (m_displayIndexTTC == 0)
+                    {
+                        int columnWidth = 0;
+                        foreach (ListViewItem item in lvJobs.Items)
+                        {
+                            int textWidth = TextRenderer.MeasureText(item.SubItems[m_displayIndexTTC].Text, Font).Width;
+                            if (textWidth > columnWidth)
+                                columnWidth = textWidth;
+                        }
+                        lvJobs.Columns[m_displayIndexTTC].Width = columnWidth + 22;
+                    }
+                    else
+                    {
+                        lvJobs.AutoResizeColumn(m_displayIndexTTC, ColumnHeaderAutoResizeStyle.ColumnContent);
+                    }
                 }
 
                 // Job was pending and its time to start
