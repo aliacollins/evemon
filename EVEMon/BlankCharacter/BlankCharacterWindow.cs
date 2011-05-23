@@ -46,7 +46,7 @@ namespace EVEMon.BlankCharacter
         private void EveClient_TimerTick(object sender, EventArgs e)
         {
             buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.tbCharacterName.Text);
-            buttonOK.Text = (!buttonOK.Enabled || m_fileSaved ? "Add" : "Save");
+            buttonOK.Text = (!buttonOK.Enabled || m_fileSaved ? "Import" : "Save");
         }
 
         /// <summary>
