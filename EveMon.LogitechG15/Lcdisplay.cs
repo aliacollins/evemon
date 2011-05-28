@@ -339,7 +339,7 @@ namespace EVEMon.LogitechG15
                     m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                 }
 
-                m_lcdLines.Add(new LineProcess(skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
+                m_lcdLines.Add(new LineProcess(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                     DescriptiveTextOptions.SpaceBetween, true).TrimStart(' '), m_defaultFont));
             }
             else
@@ -424,7 +424,7 @@ namespace EVEMon.LogitechG15
         {
             if (CurrentCharacter.IsTraining)
             {
-                DateTime completionDateTime = CurrentCharacter.SkillQueue.EndTime.ToLocalTime();
+                DateTime completionDateTime = CurrentCharacter.CurrentlyTrainingSkill.EndTime.ToLocalTime();
                 string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
                 completionDateTime.ToShortDateString(), completionDateTime.ToCustomShortTimeString());
                 SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
