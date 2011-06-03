@@ -326,16 +326,23 @@ namespace EVEMon.LogitechG15
                         // Place holder for skill queue free room rendering
                         m_lcdLines.Add(new LineProcess(" ", m_defaultFont));
                     }
-                    else
+                    else if (CurrentCharacter.SkillQueue.Count > 1)
                     {
+                        // If more then one skill is in queue, show queue finish time
                         var time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween, true);
                         m_lcdLines.Add(new LineProcess(
-                            String.Format(CultureConstants.DefaultCulture, "Queue populated for: {0}", time), m_defaultFont));
+                            String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time), m_defaultFont));
+                    }
+                    else
+                    {
+                        // Show the skill in training
+                        m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                     }
                 }
                 else
                 {
+                    // Show the skill in training
                     m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
                 }
 
