@@ -89,8 +89,8 @@ namespace EVEMon.SettingsUI
             if (!BCAPI.HasCredentialsStored)
                 return;
 
-            bcUserIDTextBox.Text = BCAPICredentials.Default.BCUserID.ToString();
-            bcAPIKeyTextBox.Text = BCAPICredentials.Default.BCAPIKey;
+            bcUserIDTextBox.Text = BCAPISettings.Default.BCUserID.ToString();
+            bcAPIKeyTextBox.Text = BCAPISettings.Default.BCAPIKey;
 
             CheckAPICredentials();
         }
@@ -128,7 +128,7 @@ namespace EVEMon.SettingsUI
 
             bcUserIDTextBox.ResetText();
             bcAPIKeyTextBox.ResetText();
-            BCAPICredentials.Default.Reset();
+            BCAPISettings.Default.Reset();
 
             // Disables the settingsFileStorageControl
             Control battleClinicServicePage = Parent.Parent;

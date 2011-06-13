@@ -129,6 +129,9 @@ namespace EVEMon
             // Initialize all of our business objects
             EveClient.Run(this);
 
+            // Upgrades the BattleClinic API settings
+            BCAPI.UpgradeSettings();
+            
             // BattleClinic storage service
             BCAPI.DownloadSettingsFile();
 

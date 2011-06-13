@@ -129,7 +129,7 @@ namespace EVEMon
 
             m_ccpCharacter = Character as CCPCharacter;
 
-            // If the character is not a CCPCharacter it does not have a skill queue.
+            // If the character is not a CCPCharacter it does not have a skill queue
             if (m_ccpCharacter == null)
                 return;
 
@@ -734,12 +734,12 @@ namespace EVEMon
             if (Character.IsTraining && Visible)
             {
                 // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)
-                QueuedSkill training = Character.CurrentlyTrainingSkill;
-                if (training == null)
+                QueuedSkill trainingSkill = Character.CurrentlyTrainingSkill;
+                if (trainingSkill == null)
                     return;
 
                 // Invalidate the currently training skill level row
-                int index = lbSkillsQueue.Items.IndexOf(training);
+                int index = lbSkillsQueue.Items.IndexOf(trainingSkill);
                 if (index == 0)
                     lbSkillsQueue.Invalidate(lbSkillsQueue.GetItemRectangle(index));
 

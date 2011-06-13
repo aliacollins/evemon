@@ -13,11 +13,11 @@ namespace EVEMon.Common.Serialization.BattleClinic {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
-    public sealed partial class BCAPICredentials : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class BCAPISettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static BCAPICredentials defaultInstance = ((BCAPICredentials)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new BCAPICredentials())));
+        private static BCAPISettings defaultInstance = ((BCAPISettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new BCAPISettings())));
         
-        public static BCAPICredentials Default {
+        public static BCAPISettings Default {
             get {
                 return defaultInstance;
             }
@@ -47,15 +47,36 @@ namespace EVEMon.Common.Serialization.BattleClinic {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3C3490E986D448B1E5379147115E887E4E045554")]
         public string BCApplicationKey {
             get {
                 return ((string)(this["BCApplicationKey"]));
             }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UploadAlways {
+            get {
+                return ((bool)(this["UploadAlways"]));
+            }
             set {
-                this["BCApplicationKey"] = value;
+                this["UploadAlways"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DownloadAlways {
+            get {
+                return ((bool)(this["DownloadAlways"]));
+            }
+            set {
+                this["DownloadAlways"] = value;
             }
         }
     }

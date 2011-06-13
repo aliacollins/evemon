@@ -57,8 +57,8 @@ namespace EVEMon.SettingsUI
             EveClient.BCAPICredentialsUpdated += EveClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;
 
-            alwaysUploadCheckBox.Checked = BCStorageService.Default.UploadAlways;
-            alwaysDownloadcheckBox.Checked = BCStorageService.Default.DownloadAlways;
+            alwaysUploadCheckBox.Checked = BCAPISettings.Default.UploadAlways;
+            alwaysDownloadcheckBox.Checked = BCAPISettings.Default.DownloadAlways;
             Enabled = false;
         }
 
@@ -80,8 +80,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void alwaysUploadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            BCStorageService.Default.UploadAlways = alwaysUploadCheckBox.Checked;
-            BCStorageService.Default.Save();
+            BCAPISettings.Default.UploadAlways = alwaysUploadCheckBox.Checked;
+            BCAPISettings.Default.Save();
         }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void alwaysDownloadcheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            BCStorageService.Default.DownloadAlways = alwaysDownloadcheckBox.Checked;
-            BCStorageService.Default.Save();
+            BCAPISettings.Default.DownloadAlways = alwaysDownloadcheckBox.Checked;
+            BCAPISettings.Default.Save();
         }
 
         /// <summary>

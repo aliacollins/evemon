@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Web;
 using System.Windows.Forms;
@@ -35,8 +36,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             get
             {
-                return BCAPICredentials.Default.BCUserID != 0
-                    && !String.IsNullOrEmpty(BCAPICredentials.Default.BCAPIKey);
+                return BCAPISettings.Default.BCUserID != 0
+                    && !String.IsNullOrEmpty(BCAPISettings.Default.BCAPIKey);
             }
         }
 
@@ -57,6 +58,37 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Upgrades the settings.
+        /// </summary>
+        public static void UpgradeSettings()
+        {
+            // Find the settings file
+            Configuration settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+
+            // Quit if the settings file is of the current version
+            if (settings.HasFile)
+                return;
+
+            // Upgrade the settings file to the current version
+            BCAPISettings.Default.Upgrade();
+
+            // Find the parent directories of the settings file
+            string configFileParentDir = Directory.GetParent(settings.FilePath).FullName;
+            string configFileParentParentDir = Directory.GetParent(configFileParentDir).FullName;
+
+            // Delete all old settings files
+            foreach (string directory in Directory.GetDirectories(configFileParentParentDir))
+            {
+                if (directory == configFileParentDir)
+                    continue;
+
+                // Delete the folder recursively
+                Directory.Delete(directory, true);                        
+            }
+        }
+        
 
         /// <summary>
         /// Returns the request method.
@@ -113,7 +145,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         public static void UploadSettingsFile()
         {
-            if (!BCStorageService.Default.UploadAlways || !HasCredentialsStored)
+            if (!BCAPISettings.Default.UploadAlways || !HasCredentialsStored)
                 return;
 
             FileSave();
@@ -125,7 +157,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         public static void DownloadSettingsFile()
         {
-            if (!BCStorageService.Default.DownloadAlways || !HasCredentialsStored)
+            if (!BCAPISettings.Default.DownloadAlways || !HasCredentialsStored)
                 return;
 
             EveClient.Trace("BCAPI.DownloadSettingsFile() - Initiated");
@@ -144,7 +176,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSave()
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
-               BCAPICredentials.Default.BCUserID, BCAPICredentials.Default.BCAPIKey, BCAPICredentials.Default.BCApplicationKey,
+               BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey, BCAPISettings.Default.BCApplicationKey,
                EveClient.SettingsFileName, SettingsFileContent));
 
             QueryMethod(BCAPIMethods.FileSave, postData);
@@ -156,8 +188,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileGetByName()
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
-                BCAPICredentials.Default.BCUserID, BCAPICredentials.Default.BCAPIKey,
-                BCAPICredentials.Default.BCApplicationKey, EveClient.SettingsFileName));
+                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                BCAPISettings.Default.BCApplicationKey, EveClient.SettingsFileName));
 
             QueryMethod(BCAPIMethods.FileGetByName, postData);
         }
@@ -171,7 +203,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void CheckAPICredentialsAsync(uint userID, string apiKey, DownloadCallback<BCAPIResult<SerializableBCAPICredentials>> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}",
-                userID, apiKey, BCAPICredentials.Default.BCApplicationKey));
+                userID, apiKey, BCAPISettings.Default.BCApplicationKey));
 
             QueryMethodAsync<SerializableBCAPICredentials>(BCAPIMethods.CheckCredentials, postData, callback);
         }
@@ -183,7 +215,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileSaveAsync(DownloadCallback<BCAPIResult<SerializableBCAPIFiles>> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
-                BCAPICredentials.Default.BCUserID, BCAPICredentials.Default.BCAPIKey, BCAPICredentials.Default.BCApplicationKey,
+                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey, BCAPISettings.Default.BCApplicationKey,
                 EveClient.SettingsFileName, SettingsFileContent));
 
             QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData, callback);
@@ -196,8 +228,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         public static void FileGetByNameAsync(DownloadCallback<BCAPIResult<SerializableBCAPIFiles>> callback)
         {
             HttpPostData postData = new HttpPostData(String.Format("userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
-                BCAPICredentials.Default.BCUserID, BCAPICredentials.Default.BCAPIKey,
-                BCAPICredentials.Default.BCApplicationKey, EveClient.SettingsFileName));
+                BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                BCAPISettings.Default.BCApplicationKey, EveClient.SettingsFileName));
 
             QueryMethodAsync<SerializableBCAPIFiles>(BCAPIMethods.FileGetByName, postData, callback);
         }
@@ -258,9 +290,9 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
             IsAuthenticated = true;
 
-            BCAPICredentials.Default.BCUserID = Convert.ToUInt32(result.Result.UserID);
-            BCAPICredentials.Default.BCAPIKey = s_apiKey;
-            BCAPICredentials.Default.Save();
+            BCAPISettings.Default.BCUserID = Convert.ToUInt32(result.Result.UserID);
+            BCAPISettings.Default.BCAPIKey = s_apiKey;
+            BCAPISettings.Default.Save();
 
             EveClient.OnBCAPICredentialsUpdated(String.Empty);
         }

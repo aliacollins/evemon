@@ -51,6 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -75,19 +76,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPICredentials.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>BCAPICredentials.settings</DependentUpon>
-    </Compile>
     <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIError.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIMethod.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIResult.cs" />
-    <Compile Include="Serialization\BattleClinic\BCStorageService.Designer.cs">
+    <Compile Include="Serialization\BattleClinic\BCAPISettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>BCStorageService.settings</DependentUpon>
+      <DependentUpon>BCAPISettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
@@ -286,13 +282,9 @@
     <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WeakReferenceOfT.cs" />
-    <None Include="Serialization\BattleClinic\BCAPICredentials.settings">
+    <None Include="Serialization\BattleClinic\BCAPISettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>BCAPICredentials.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Serialization\BattleClinic\BCStorageService.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>BCStorageService.Designer.cs</LastGenOutput>
+      <LastGenOutput>BCAPISettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
