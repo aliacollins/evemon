@@ -71,12 +71,16 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (settings.HasFile)
                 return;
 
-            // Upgrade the settings file to the current version
-            BCAPISettings.Default.Upgrade();
-
             // Find the parent directories of the settings file
             string configFileParentDir = Directory.GetParent(settings.FilePath).FullName;
             string configFileParentParentDir = Directory.GetParent(configFileParentDir).FullName;
+
+            // Quits if the parent directory doesn't exist
+            if (!Directory.Exists(configFileParentParentDir))
+                return;
+
+            // Upgrade the settings file to the current version
+            BCAPISettings.Default.Upgrade();
 
             // Delete all old settings files
             foreach (string directory in Directory.GetDirectories(configFileParentParentDir))
