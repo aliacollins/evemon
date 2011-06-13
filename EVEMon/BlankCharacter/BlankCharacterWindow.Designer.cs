@@ -30,9 +30,9 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.bottomPanel = new System.Windows.Forms.Panel();
             this.blankCharacterControl = new EVEMon.BlankCharacter.BlankCharacterControl();
-            this.panel1.SuspendLayout();
+            this.bottomPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -57,16 +57,16 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // panel1
+            // bottomPanel
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.panel1.Controls.Add(this.buttonCancel);
-            this.panel1.Controls.Add(this.buttonOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 425);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(497, 57);
-            this.panel1.TabIndex = 2;
+            this.bottomPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.bottomPanel.Controls.Add(this.buttonCancel);
+            this.bottomPanel.Controls.Add(this.buttonOK);
+            this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bottomPanel.Location = new System.Drawing.Point(0, 425);
+            this.bottomPanel.Name = "bottomPanel";
+            this.bottomPanel.Size = new System.Drawing.Size(497, 57);
+            this.bottomPanel.TabIndex = 2;
             // 
             // blankCharacterControl
             // 
@@ -85,11 +85,12 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(497, 482);
             this.Controls.Add(this.blankCharacterControl);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.bottomPanel);
             this.Name = "BlankCharacterWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Blank Character Creator";
             this.Load += new System.EventHandler(this.BlankCharacterWindow_Load);
-            this.panel1.ResumeLayout(false);
+            this.bottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -98,7 +99,7 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Panel bottomPanel;
         private BlankCharacterControl blankCharacterControl;
-        private System.Windows.Forms.Panel panel1;
     }
 }

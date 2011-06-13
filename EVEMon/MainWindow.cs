@@ -1459,11 +1459,7 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void blankCharacterMenu_Click(object sender, EventArgs e)
         {
-            using (var window = new BlankCharacterWindow())
-            {
-                window.ShowDialog(this);
-            }
-
+            WindowsFactory<BlankCharacterWindow>.ShowUnique();
         }
 
         /// <summary>
