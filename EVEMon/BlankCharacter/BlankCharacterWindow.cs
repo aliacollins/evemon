@@ -89,7 +89,17 @@ namespace EVEMon.BlankCharacter
 
             buttonOK.DialogResult = (m_fileSaved ? DialogResult.OK : DialogResult.None);
         }
-        
+
+        /// <summary>
+        /// Handles the Click event of the buttonCancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
         #endregion
 
 
