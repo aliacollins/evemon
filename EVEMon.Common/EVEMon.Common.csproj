@@ -94,6 +94,7 @@
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
+    <Compile Include="SettingsObjects\UpdatePeriodExtensions.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />

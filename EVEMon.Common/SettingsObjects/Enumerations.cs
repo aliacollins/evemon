@@ -257,4 +257,56 @@ namespace EVEMon.Common.SettingsObjects
 
     #endregion
 
+
+    #region EVE API Update Period
+
+    public enum UpdatePeriod
+    {
+        [Header("Never")]
+        Never,
+        [Header("5 Minutes")]
+        Minutes5,
+        [Header("15 Minutes")]
+        Minutes15,
+        [Header("30 Minutes")]
+        Minutes30,
+        [Header("1 Hour")]
+        Hours1,
+        [Header("2 Hours")]
+        Hours2,
+        [Header("3 Hours")]
+        Hours3,
+        [Header("6 Hours")]
+        Hours6,
+        [Header("12 Hours")]
+        Hours12,
+        [Header("Day")]
+        Day,
+        [Header("Week")]
+        Week
+    }
+    
+    #endregion
+
+
+    #region EVE API Cache Style
+
+    public enum CacheStyle
+    {
+        /// <summary>
+        /// Short cache style, data will always be returned from CCP,
+        /// however it will only be updated once the cache timer
+        /// expires.
+        /// </summary>
+        [Header("Short")]
+        Short,
+        /// <summary>
+        /// Long cache style, data will only be returned from CCP after
+        /// the cahce timer has expired.
+        /// </summary>
+        [Header("Long")]
+        Long
+    }
+    
+    #endregion
 }

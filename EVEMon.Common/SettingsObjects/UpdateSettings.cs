@@ -10,6 +10,9 @@ namespace EVEMon.Common.SettingsObjects
     [EnforceUIThreadAffinity]
     public sealed class UpdateSettings
     {
+        private string m_updatesUrl;
+        private int m_updateFrequency;
+
         public UpdateSettings()
         {
             CheckTimeOnStartup = true;
@@ -17,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
             HttpTimeout = 20;
             Periods = new SerializableDictionary<APIMethods, UpdatePeriod>();
             IgnoreNetworkStatus = false;
-            UpdateFrequency = 120;
+            UpdateFrequency = 240;
             UseCustomUpdatesUrl = false;
             UpdatesUrl = NetworkConstants.BattleclinicUpdates;
         }
@@ -52,21 +55,19 @@ namespace EVEMon.Common.SettingsObjects
             set;
         }
 
-        private int m_updateFrequency;
-
         /// <summary>
         /// Gets or sets the length of time between updates in minutes.
         /// </summary>
         /// <remarks>
-        /// Hidden Setting. The value of this setting must be equal to or higher than 10 minutes, the default is 120 minutes (2 hours).
+        /// Hidden Setting. The value of this setting must be equal to or higher than 360 minutes, the default is 240 minutes (4 hours).
         /// </remarks>
         [XmlElement("updateFrequency")]
         public int UpdateFrequency
         {
             get
             {
-                if (m_updateFrequency < 10)
-                    return 120;
+                if (m_updateFrequency < 240)
+                    return 240;
 
                 return m_updateFrequency;
             }
@@ -75,8 +76,6 @@ namespace EVEMon.Common.SettingsObjects
                 m_updateFrequency = value;
             }
         }
-
-        private string m_updatesUrl;
 
         [XmlElement("useCustomUpdatesUrl")]
         public bool UseCustomUpdatesUrl { get; set; }
@@ -155,86 +154,6 @@ namespace EVEMon.Common.SettingsObjects
                 clone.Periods.Add(pair.Key, pair.Value);
             }
             return clone;
-        }
-    }
-
-    public enum UpdatePeriod
-    {
-        [Header("Never")]
-        Never,
-        [Header("5 Minutes")]
-        Minutes5,
-        [Header("15 Minutes")]
-        Minutes15,
-        [Header("30 Minutes")]
-        Minutes30,
-        [Header("1 Hour")]
-        Hours1,
-        [Header("2 Hours")]
-        Hours2,
-        [Header("3 Hours")]
-        Hours3,
-        [Header("6 Hours")]
-        Hours6,
-        [Header("12 Hours")]
-        Hours12,
-        [Header("Day")]
-        Day,
-        [Header("Week")]
-        Week
-    }
-
-    public enum CacheStyle
-    {
-        /// <summary>
-        /// Short cache style, data will always be returned from CCP,
-        /// however it will only be updated once the cache timer
-        /// expires.
-        /// </summary>
-        [Header("Short")]
-        Short,
-        /// <summary>
-        /// Long cache style, data will only be returned from CCP after
-        /// the cahce timer has expired.
-        /// </summary>
-        [Header("Long")]
-        Long
-    }
-
-    /// <summary>
-    /// Provides conversions to durations.
-    /// </summary>
-    public static class UpdatePeriodExtensions
-    {
-        public static TimeSpan ToDuration(this UpdatePeriod period)
-        {
-            switch (period)
-            {
-                case UpdatePeriod.Never:
-                    return TimeSpan.MaxValue;
-                case UpdatePeriod.Minutes5:
-                    return TimeSpan.FromMinutes(5);
-                case UpdatePeriod.Minutes15:
-                    return TimeSpan.FromMinutes(15);
-                case UpdatePeriod.Minutes30:
-                    return TimeSpan.FromMinutes(30);
-                case UpdatePeriod.Hours1:
-                    return TimeSpan.FromHours(1);
-                case UpdatePeriod.Hours2:
-                    return TimeSpan.FromHours(2);
-                case UpdatePeriod.Hours3:
-                    return TimeSpan.FromHours(3);
-                case UpdatePeriod.Hours6:
-                    return TimeSpan.FromHours(6);
-                case UpdatePeriod.Hours12:
-                    return TimeSpan.FromHours(12);
-                case UpdatePeriod.Day:
-                    return TimeSpan.FromDays(1);
-                case UpdatePeriod.Week:
-                    return TimeSpan.FromDays(7);
-                default:
-                    throw new NotImplementedException();
-            }
         }
     }
 }
