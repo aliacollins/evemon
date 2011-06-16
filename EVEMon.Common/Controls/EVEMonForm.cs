@@ -1,8 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 using EVEMon.Common.SettingsObjects;
-using System.ComponentModel;
 
 namespace EVEMon.Common.Controls
 {
@@ -102,14 +103,17 @@ namespace EVEMon.Common.Controls
             if (String.IsNullOrEmpty(RememberPositionKey))
                 return;
 
+            int similarOpenFormCount = 0;
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form.GetType() == this.GetType())
+                    similarOpenFormCount++;
+            }
+
             if (Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
             {
                 Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
-                
-                // Moves the location of the form (excluding the Main Window)
-                // so the next window won't open exactly
-                // on the same location as the previous
-                if (RememberPositionKey != "MainWindow")
+                if (similarOpenFormCount > 1)
                     r.Location = new Point(r.X + 20, r.Y + 20);
 
                 r = VerifyValidWindowLocation(r);
@@ -118,7 +122,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Verify the window location is validation and resets it when necessary.
+        /// Verify the window location is valid and resets it when necessary.
         /// </summary>
         /// <param name="inRect">The proposed rectangle.</param>
         /// <returns>The corrected rectangle.</returns>

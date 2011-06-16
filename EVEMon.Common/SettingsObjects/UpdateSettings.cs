@@ -59,7 +59,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets or sets the length of time between updates in minutes.
         /// </summary>
         /// <remarks>
-        /// Hidden Setting. The value of this setting must be equal to or higher than 360 minutes, the default is 240 minutes (4 hours).
+        /// Hidden Setting. The value of this setting must be equal to or higher than 240 minutes, the default is 240 minutes (4 hours).
         /// </remarks>
         [XmlElement("updateFrequency")]
         public int UpdateFrequency

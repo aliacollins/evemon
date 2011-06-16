@@ -166,6 +166,7 @@ namespace EVEMon.SkillPlanner
             {
                 if (m_plan == value)
                     return;
+
                 m_plan = value;
 
                 // The tag is used by WindowsFactory.ShowByTag
@@ -185,9 +186,7 @@ namespace EVEMon.SkillPlanner
                 var loadoutSelect = WindowsFactory<ShipLoadoutSelectWindow>.GetUnique();
 
                 if (loadoutSelect != null)
-                {
                     loadoutSelect.Plan = m_plan;
-                }
 
                 // Jump to the appropriate tab depending on whether
                 // or not the plan is empty
