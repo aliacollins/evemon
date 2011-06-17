@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using EVEMon.Common.SettingsObjects;
+using System.Collections.Generic;
 
 namespace EVEMon.Common.Controls
 {
@@ -103,18 +104,21 @@ namespace EVEMon.Common.Controls
             if (String.IsNullOrEmpty(RememberPositionKey))
                 return;
 
-            int similarOpenFormCount = 0;
+            List<Form> formList = new List<Form>();
             foreach (Form form in Application.OpenForms)
             {
                 if (form.GetType() == this.GetType())
-                    similarOpenFormCount++;
+                    formList.Add(form);
             }
 
             if (Settings.UI.WindowLocations.ContainsKey(RememberPositionKey))
             {
                 Rectangle r = (Rectangle)Settings.UI.WindowLocations[RememberPositionKey];
-                if (similarOpenFormCount > 1)
-                    r.Location = new Point(r.X + 20, r.Y + 20);
+                if (formList.Count > 1)
+                {
+                    Point pfl = formList[formList.Count - 2].Location;
+                    r.Location = new Point(pfl.X + 20, pfl.Y + 20);
+                }
 
                 r = VerifyValidWindowLocation(r);
                 SetBounds(r.X, r.Y, r.Width, r.Height);
