@@ -23,7 +23,7 @@ namespace EVEMon.Common.Serialization.Settings
         /// But they are unique for the purpose of one data pull. 
         /// </summary>
         [XmlAttribute("orderID")]
-        public int OrderID
+        public long OrderID
         {
             get;
             set;

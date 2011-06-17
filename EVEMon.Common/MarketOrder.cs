@@ -22,7 +22,7 @@ namespace EVEMon.Common
         protected OrderState m_state;
         protected DateTime m_issued;
 
-        protected readonly int m_orderID;
+        protected readonly long m_orderID;
         protected readonly long m_itemID;
         protected readonly Item m_item;
         protected readonly Station m_station;
@@ -275,7 +275,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the order ID.
         /// </summary>
-        public int ID
+        public long ID
         {
             get { return m_orderID; }
         }
