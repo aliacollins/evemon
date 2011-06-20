@@ -27,7 +27,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public MarketOrderGrouping Grouping
+        public Enum Grouping
         {
             get { return ordersList.Grouping; }
             set

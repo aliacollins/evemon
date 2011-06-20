@@ -27,7 +27,7 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public IndustryJobGrouping Grouping
+        public Enum Grouping
         {
             get { return jobsList.Grouping; }
             set 

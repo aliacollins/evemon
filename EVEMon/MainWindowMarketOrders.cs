@@ -16,7 +16,7 @@ namespace EVEMon
     /// <summary>
     /// Displays a list of market orders.
     /// </summary>
-    public partial class MainWindowMarketOrdersList : UserControl
+    public partial class MainWindowMarketOrdersList : UserControl, IGroupingListView
     {
         private List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
@@ -108,12 +108,12 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public MarketOrderGrouping Grouping
+        public Enum Grouping
         {
             get { return m_grouping; }
             set
             {
-                m_grouping = value;
+                m_grouping = (MarketOrderGrouping)value;
                 if (m_init)
                     UpdateColumns();
             }

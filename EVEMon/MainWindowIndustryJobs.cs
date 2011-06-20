@@ -13,7 +13,7 @@ using EVEMon.Controls;
 
 namespace EVEMon
 {
-    public partial class MainWindowIndustryJobsList : UserControl
+    public partial class MainWindowIndustryJobsList : UserControl, IGroupingListView
     {
         private List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
@@ -97,12 +97,12 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public IndustryJobGrouping Grouping
+        public Enum Grouping
         {
             get { return m_grouping; }
             set
             {
-                m_grouping = value;
+                m_grouping = (IndustryJobGrouping)value;
                 if (m_init)
                     UpdateColumns();
             }

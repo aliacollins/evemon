@@ -845,52 +845,16 @@ namespace EVEMon
             groupMenu.DropDownItems.Clear();
 
             if (multiPanel.SelectedPage == ordersPage)
-            {
-                foreach (MarketOrderGrouping grouping in EnumExtensions.GetValues<MarketOrderGrouping>())
-                {
-                    var menu = new ToolStripButton(grouping.GetHeader());
-                    menu.Checked = (ordersList.Grouping == grouping);
-                    menu.Tag = grouping;
-
-                    groupMenu.DropDownItems.Add(menu);
-                }
-            }
+                CreateGroupMenuList<MarketOrderGrouping, Enum>(ordersList);
             
             if (multiPanel.SelectedPage == jobsPage)
-            {
-                foreach (IndustryJobGrouping grouping in EnumExtensions.GetValues<IndustryJobGrouping>())
-                {
-                    var menu = new ToolStripButton(grouping.GetHeader());
-                    menu.Checked = (jobsList.Grouping == grouping);
-                    menu.Tag = grouping;
-
-                    groupMenu.DropDownItems.Add(menu);
-                }
-            }
+                CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
-            {
-                foreach (EVEMailMessagesGrouping grouping in EnumExtensions.GetValues<EVEMailMessagesGrouping>())
-                {
-                    var menu = new ToolStripButton(grouping.GetHeader());
-                    menu.Checked = (mailMessagesList.Grouping == grouping);
-                    menu.Tag = grouping;
-
-                    groupMenu.DropDownItems.Add(menu);
-                }
-            }
+                CreateGroupMenuList<EVEMailMessagesGrouping, Enum>(mailMessagesList);
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
-            {
-                foreach (EVENotificationsGrouping grouping in EnumExtensions.GetValues<EVENotificationsGrouping>())
-                {
-                    var menu = new ToolStripButton(grouping.GetHeader());
-                    menu.Checked = (eveNotificationsList.Grouping == grouping);
-                    menu.Tag = grouping;
-
-                    groupMenu.DropDownItems.Add(menu);
-                }
-            }
+                CreateGroupMenuList<EVENotificationsGrouping, Enum>(eveNotificationsList);
         }
 
         /// <summary>
@@ -902,28 +866,16 @@ namespace EVEMon
         {
             ToolStripItem item = e.ClickedItem;
             if (multiPanel.SelectedPage == ordersPage)
-            {
-                var grouping = (MarketOrderGrouping) item.Tag;
-                m_character.UISettings.OrdersGroupBy = ordersList.Grouping = grouping;
-            }
+                GroupMenuSetting<MarketOrderGrouping, Enum>(item, ordersList);
             
             if (multiPanel.SelectedPage == jobsPage)
-            {
-                var grouping = (IndustryJobGrouping) item.Tag;
-                m_character.UISettings.JobsGroupBy = jobsList.Grouping = grouping;
-            }
+                GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
-            {
-                var grouping = (EVEMailMessagesGrouping)item.Tag;
-                m_character.UISettings.EVEMailMessagesGroupBy = mailMessagesList.Grouping = grouping;
-            }
+                GroupMenuSetting<EVEMailMessagesGrouping, Enum>(item, mailMessagesList);
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
-            {
-                var grouping = (EVENotificationsGrouping)item.Tag;
-                m_character.UISettings.EVENotificationsGroupBy = eveNotificationsList.Grouping = grouping;
-            }
+                GroupMenuSetting<EVENotificationsGrouping, Enum>(item, eveNotificationsList);
         }
 
         /// <summary>
@@ -1281,6 +1233,64 @@ namespace EVEMon
         # endregion
 
 
+        #region Generic Helper Methods
+
+        /// <summary>
+        /// Creates the group menu list.
+        /// </summary>
+        /// <typeparam name="T">The grouping type.</typeparam>
+        /// <typeparam name="V">The grouping base type.</typeparam>
+        /// <param name="list">The list.</param>
+        private void CreateGroupMenuList<T, V>(IGroupingListView list)
+            where T : V
+        {
+            foreach (T grouping in EnumExtensions.GetValues<T>())
+            {
+                Enum group = grouping as Enum;
+                if (group == null)
+                    continue;
+
+                var menu = new ToolStripButton(group.GetHeader());
+                menu.Checked = (list.Grouping.CompareTo(group) == 0);
+                menu.Tag = (T)grouping;
+
+                groupMenu.DropDownItems.Add(menu);
+            }
+        }
+
+        /// <summary>
+        /// Sets and stores in settings the GroupBy selection.
+        /// </summary>
+        /// <typeparam name="T">The grouping type.</typeparam>
+        /// <typeparam name="V">The grouping base type.</typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="list">The list.</param>
+        private void GroupMenuSetting<T, V>(ToolStripItem item, IGroupingListView list)
+            where T : V
+        {
+            Enum grouping = item.Tag as Enum;
+            if (grouping == null)
+                return;
+
+            list.Grouping = grouping;
+            T obj = default(T);
+
+            if (obj is MarketOrderGrouping)
+                m_character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
+
+            if (obj is IndustryJobGrouping)
+                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
+
+            if (obj is EVEMailMessagesGrouping)
+                m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
+
+            if (obj is EVENotificationsGrouping)
+                m_character.UISettings.EVENotificationsGroupBy = (EVENotificationsGrouping)grouping;
+        }
+        
+        #endregion
+        
+        
         #region Testing Function
 
         /// <summary>

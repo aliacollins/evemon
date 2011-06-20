@@ -69,6 +69,7 @@
     <Compile Include="EveNotificationsCollection.cs" />
     <Compile Include="EveNotificationsComparer.cs" />
     <Compile Include="EveNotificationText.cs" />
+    <Compile Include="IGroupingListView.cs" />
     <Compile Include="Notifications\NewEveNotificationNotification.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">
       <DependentUpon>IconSettings.settings</DependentUpon>

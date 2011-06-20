@@ -14,7 +14,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon
 {
-    public partial class MainWindowEveNotificationsList : UserControl
+    public partial class MainWindowEveNotificationsList : UserControl, IGroupingListView
     {
         #region Fields
 
@@ -90,12 +90,12 @@ namespace EVEMon
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        public EVENotificationsGrouping Grouping
+        public Enum Grouping
         {
             get { return m_grouping; }
             set
             {
-                m_grouping = value;
+                m_grouping = (EVENotificationsGrouping)value;
                 if (m_init)
                     UpdateColumns();
             }
