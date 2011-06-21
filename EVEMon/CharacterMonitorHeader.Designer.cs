@@ -73,7 +73,7 @@
             this.MainTableLayoutPanel.ColumnCount = 3;
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 109F));
+            this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.MainTableLayoutPanel.Controls.Add(this.CharacterPortrait, 0, 0);
             this.MainTableLayoutPanel.Controls.Add(this.ThrobberFlowLayoutPanel, 2, 0);
             this.MainTableLayoutPanel.Controls.Add(this.BioFlowLayoutPanel, 1, 0);
@@ -186,7 +186,7 @@
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(189, 65);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 65);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
