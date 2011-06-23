@@ -126,7 +126,7 @@ namespace EVEMon.Common
             // or by the user [modify order] so we update the orders info that are changeable)
             if (IsModified(src))
             {
-                // If its a buying order, escrow may have changed
+                // If it's a buying order, escrow may have changed
                 if (src.IsBuyOrder != 0)
                     ((BuyOrder)this).Escrow = src.Escrow;
 

@@ -465,7 +465,7 @@ namespace EVEMon.Common
             m_corpOrdersUpdated |= !m_corpMarketOrdersMonitor.Enabled;
 
             // Import the data if all queried and there are orders to import 
-            if (m_corpOrdersUpdated && m_orders.Count != 0)
+            if (m_corpOrdersUpdated)
                 Import(m_orders);
         }
 
@@ -494,7 +494,7 @@ namespace EVEMon.Common
             }
 
             // Import the data if all queried and there are orders to import
-            if (m_charOrdersUpdated && m_orders.Count != 0)
+            if (m_charOrdersUpdated)
                 Import(m_orders);
         }
 

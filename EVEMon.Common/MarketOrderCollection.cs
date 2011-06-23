@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using EVEMon.Common.Collections;
-using EVEMon.Common.Serialization.Settings;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization;
+using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -31,7 +31,7 @@ namespace EVEMon.Common
         internal void Import(IEnumerable<SerializableOrderBase> src)
         {
             m_items.Clear();
-            foreach (var srcOrder in src)
+            foreach (SerializableOrderBase srcOrder in src)
             {
                 if (srcOrder is SerializableBuyOrder)
                 {
@@ -54,7 +54,7 @@ namespace EVEMon.Common
             // Mark all orders for deletion 
             // If they are found again on the API feed, they won't be deleted
             // and those set as ignored will be left as ignored
-            foreach (var order in m_items)
+            foreach (MarketOrder order in m_items)
             {
                 order.MarkedForDeletion = true;
             }
@@ -76,13 +76,13 @@ namespace EVEMon.Common
                 // It's a new order, let's add it
                 if (srcOrder.IsBuyOrder != 0)
                 {
-                    var order = new BuyOrder(srcOrder);
+                    BuyOrder order = new BuyOrder(srcOrder);
                     if (order.Item != null)
                         newOrders.Add(order);
                 }
                 else
                 {
-                    var order = new SellOrder(srcOrder);
+                    SellOrder order = new SellOrder(srcOrder);
                     if (order.Item != null)
                         newOrders.Add(order);
                 }
@@ -104,7 +104,7 @@ namespace EVEMon.Common
         {
             List<SerializableOrderBase> serial = new List<SerializableOrderBase>(m_items.Count);
 
-            foreach (var order in m_items)
+            foreach (MarketOrder order in m_items)
             {
                 serial.Add(order.Export());
             }
