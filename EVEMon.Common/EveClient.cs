@@ -966,10 +966,21 @@ namespace EVEMon.Common
         /// </summary>
         public static void StartTraceLogging()
         {
-            System.Diagnostics.Trace.AutoFlush = true;
-            s_traceStream = File.CreateText(EveClient.TraceFileNameFullPath);
-            s_traceListener = new TextWriterTraceListener(s_traceStream);
-            System.Diagnostics.Trace.Listeners.Add(s_traceListener);
+            try
+            {
+                System.Diagnostics.Trace.AutoFlush = true;
+                s_traceStream = File.CreateText(EveClient.TraceFileNameFullPath);
+                s_traceListener = new TextWriterTraceListener(s_traceStream);
+                System.Diagnostics.Trace.Listeners.Add(s_traceListener);
+            }
+            catch (IOException e)
+            {
+                string text = String.Format("EVEMon has encountered an error and needs to terminate.{0}" +
+                    "The error message is:{0}{0}\"{1}\"",
+                    Environment.NewLine, e.Message);
+                MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
         }
 
         /// <summary>
