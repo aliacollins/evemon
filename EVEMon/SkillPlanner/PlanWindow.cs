@@ -272,7 +272,6 @@ namespace EVEMon.SkillPlanner
             certBrowser.SelectedCertificate = c;
         }
 
-
         /// <summary>
         /// Identifies if there are obsolete entries in the skill plan,
         /// displays message if required.
@@ -292,7 +291,7 @@ namespace EVEMon.SkillPlanner
                     ObsoleteEntriesStatusLabel.Visible = m_plan.ContainsObsoleteEntries;
                     break;
                 default:
-                    break;
+                    throw new NotImplementedException();
             }
         }
 

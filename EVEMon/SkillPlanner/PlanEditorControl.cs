@@ -782,6 +782,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             UpdateListViewItems();
+            window.CheckObsoleteEntries();
         }
 
         /// <summary>
