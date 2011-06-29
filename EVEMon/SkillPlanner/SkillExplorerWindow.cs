@@ -174,7 +174,7 @@ namespace EVEMon.SkillPlanner
             }
             sb.Append(")");
 
-            lblSkill.Text = sb.ToString();
+            lblSkillInfo.Text = sb.ToString();
             tmrAutoUpdate.Enabled = m_skill.IsTraining;
         }
 
@@ -201,45 +201,45 @@ namespace EVEMon.SkillPlanner
         {
             if (m_hasBlueprints && m_hasItems)
             {
-                lblShips.BackColor = Color.Thistle;
-                pnlShipHeader.BackColor = Color.Thistle;
-                lblShips.Text = "Enabled Blueprints and Items";
+                lblItems.BackColor = Color.Thistle;
+                pnlItemHeader.BackColor = Color.Thistle;
+                lblItems.Text = "Enabled Blueprints and Items";
             }
             else if (m_hasShips && m_hasBlueprints)
             {
-                lblShips.BackColor = Color.Lavender;
-                pnlShipHeader.BackColor = Color.Lavender;
-                lblShips.Text = "Enabled Ships and Blueprints";
+                lblItems.BackColor = Color.Lavender;
+                pnlItemHeader.BackColor = Color.Lavender;
+                lblItems.Text = "Enabled Ships and Blueprints";
             }
             else if (m_hasShips && m_hasItems)
             {
-                lblShips.BackColor = Color.Honeydew;
-                pnlShipHeader.BackColor = Color.Honeydew;
-                lblShips.Text = "Enabled Ships and Items";
+                lblItems.BackColor = Color.Honeydew;
+                pnlItemHeader.BackColor = Color.Honeydew;
+                lblItems.Text = "Enabled Ships and Items";
             }
             else if (m_hasBlueprints)
             {
-                lblShips.BackColor = Color.LightBlue;
-                pnlShipHeader.BackColor = Color.LightBlue;
-                lblShips.Text = "Enabled Blueprints";
+                lblItems.BackColor = Color.LightBlue;
+                pnlItemHeader.BackColor = Color.LightBlue;
+                lblItems.Text = "Enabled Blueprints";
             }
             else if (m_hasShips)
             {
-                lblShips.BackColor = Color.LightCyan;
-                pnlShipHeader.BackColor = Color.LightCyan;
-                lblShips.Text = "Enabled Ships";
+                lblItems.BackColor = Color.LightCyan;
+                pnlItemHeader.BackColor = Color.LightCyan;
+                lblItems.Text = "Enabled Ships";
             }
             else if (m_hasItems)
             {
-                lblShips.BackColor = Color.MistyRose;
-                pnlShipHeader.BackColor = Color.MistyRose;
-                lblShips.Text = "Enabled Items";
+                lblItems.BackColor = Color.MistyRose;
+                pnlItemHeader.BackColor = Color.MistyRose;
+                lblItems.Text = "Enabled Items";
             }
             else
             {
-                lblShips.BackColor = Color.WhiteSmoke;
-                pnlShipHeader.BackColor = Color.WhiteSmoke;
-                lblShips.Text = "Enabled Ships, Blueprints or Items";
+                lblItems.BackColor = Color.WhiteSmoke;
+                pnlItemHeader.BackColor = Color.WhiteSmoke;
+                lblItems.Text = "Enabled Ships, Blueprints or Items";
             }
         }
 
@@ -606,12 +606,12 @@ namespace EVEMon.SkillPlanner
             if (e.Button != MouseButtons.Right)
                 return;
 
+            // Updates selection
+            tvSkills.SelectedNode = e.Node;
+
             // Display menu only when we access the skill explorer through a plan
             if (m_planWindow == null)
                 return;
-
-            // Updates selection
-            tvSkills.SelectedNode = e.Node;
            
             // Do not display menu for non-skill nodes
             Skill skill = GetSelectedSkill();
@@ -765,13 +765,13 @@ namespace EVEMon.SkillPlanner
         {
             if (e.Button != MouseButtons.Right)
                 return;
+
+            // Updates selection
+            tvEntity.SelectedNode = e.Node;
             
             // Display menu only when we access the skill explorer through a plan
             if (m_planWindow == null)
                 return;
-
-            // Updates selection
-            tvEntity.SelectedNode = e.Node;
 
             // Display menu only for items, ships or blueprint nodes (not market groups and level nodes)
             Item entity = GetSelectedItem();

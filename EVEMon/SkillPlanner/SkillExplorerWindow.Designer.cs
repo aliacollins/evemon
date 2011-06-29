@@ -32,7 +32,7 @@ namespace EVEMon.SkillPlanner
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Node0");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Node0");
             this.grpPlanName = new System.Windows.Forms.GroupBox();
-            this.lblSkill = new System.Windows.Forms.Label();
+            this.lblSkillInfo = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -45,8 +45,8 @@ namespace EVEMon.SkillPlanner
             this.panel3 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.tvSkills = new System.Windows.Forms.TreeView();
-            this.pnlShipHeader = new System.Windows.Forms.Panel();
-            this.lblShips = new System.Windows.Forms.Label();
+            this.pnlItemHeader = new System.Windows.Forms.Panel();
+            this.lblItems = new System.Windows.Forms.Label();
             this.tvEntity = new System.Windows.Forms.TreeView();
             this.cmSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsAddPlan = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,11 +72,12 @@ namespace EVEMon.SkillPlanner
             this.grpPlanName.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.pnlShipHeader.SuspendLayout();
+            this.pnlItemHeader.SuspendLayout();
             this.cmSkills.SuspendLayout();
             this.cmEntity.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -86,7 +87,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.grpPlanName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpPlanName.Controls.Add(this.lblSkill);
+            this.grpPlanName.Controls.Add(this.lblSkillInfo);
             this.grpPlanName.Location = new System.Drawing.Point(12, 12);
             this.grpPlanName.Name = "grpPlanName";
             this.grpPlanName.Size = new System.Drawing.Size(553, 40);
@@ -94,14 +95,14 @@ namespace EVEMon.SkillPlanner
             this.grpPlanName.TabStop = false;
             this.grpPlanName.Text = "Selected Skill Details";
             // 
-            // lblSkill
+            // lblSkillInfo
             // 
-            this.lblSkill.AutoSize = true;
-            this.lblSkill.Location = new System.Drawing.Point(12, 16);
-            this.lblSkill.Name = "lblSkill";
-            this.lblSkill.Size = new System.Drawing.Size(35, 13);
-            this.lblSkill.TabIndex = 0;
-            this.lblSkill.Text = "label1";
+            this.lblSkillInfo.AutoSize = true;
+            this.lblSkillInfo.Location = new System.Drawing.Point(12, 16);
+            this.lblSkillInfo.Name = "lblSkillInfo";
+            this.lblSkillInfo.Size = new System.Drawing.Size(47, 13);
+            this.lblSkillInfo.TabIndex = 0;
+            this.lblSkillInfo.Text = "Skill Info";
             // 
             // btnClose
             // 
@@ -203,7 +204,7 @@ namespace EVEMon.SkillPlanner
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.pnlShipHeader);
+            this.splitContainer1.Panel2.Controls.Add(this.pnlItemHeader);
             this.splitContainer1.Panel2.Controls.Add(this.tvEntity);
             this.splitContainer1.RememberDistanceKey = null;
             this.splitContainer1.Size = new System.Drawing.Size(553, 302);
@@ -246,28 +247,28 @@ namespace EVEMon.SkillPlanner
             this.tvSkills.ShowNodeToolTips = true;
             this.tvSkills.Size = new System.Drawing.Size(206, 283);
             this.tvSkills.TabIndex = 0;
-            this.tvSkills.DoubleClick += new System.EventHandler(this.tvSkills_DoubleClick);
             this.tvSkills.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvSkills_NodeMouseClick);
+            this.tvSkills.DoubleClick += new System.EventHandler(this.tvSkills_DoubleClick);
             // 
-            // pnlShipHeader
+            // pnlItemHeader
             // 
-            this.pnlShipHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlItemHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlShipHeader.BackColor = System.Drawing.Color.LightCyan;
-            this.pnlShipHeader.Controls.Add(this.lblShips);
-            this.pnlShipHeader.Location = new System.Drawing.Point(-1, -1);
-            this.pnlShipHeader.Name = "pnlShipHeader";
-            this.pnlShipHeader.Size = new System.Drawing.Size(341, 18);
-            this.pnlShipHeader.TabIndex = 0;
+            this.pnlItemHeader.BackColor = System.Drawing.Color.LightCyan;
+            this.pnlItemHeader.Controls.Add(this.lblItems);
+            this.pnlItemHeader.Location = new System.Drawing.Point(-1, -1);
+            this.pnlItemHeader.Name = "pnlItemHeader";
+            this.pnlItemHeader.Size = new System.Drawing.Size(341, 18);
+            this.pnlItemHeader.TabIndex = 0;
             // 
-            // lblShips
+            // lblItems
             // 
-            this.lblShips.AutoSize = true;
-            this.lblShips.Location = new System.Drawing.Point(1, 2);
-            this.lblShips.Name = "lblShips";
-            this.lblShips.Size = new System.Drawing.Size(73, 13);
-            this.lblShips.TabIndex = 0;
-            this.lblShips.Text = "Enabled Ships";
+            this.lblItems.AutoSize = true;
+            this.lblItems.Location = new System.Drawing.Point(1, 2);
+            this.lblItems.Name = "lblItems";
+            this.lblItems.Size = new System.Drawing.Size(75, 13);
+            this.lblItems.TabIndex = 0;
+            this.lblItems.Text = "Enabled Items";
             // 
             // tvEntity
             // 
@@ -283,8 +284,8 @@ namespace EVEMon.SkillPlanner
             this.tvEntity.ShowNodeToolTips = true;
             this.tvEntity.Size = new System.Drawing.Size(342, 282);
             this.tvEntity.TabIndex = 0;
-            this.tvEntity.DoubleClick += new System.EventHandler(this.tvEntity_DoubleClick);
             this.tvEntity.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvEntity_NodeMouseClick);
+            this.tvEntity.DoubleClick += new System.EventHandler(this.tvEntity_DoubleClick);
             // 
             // cmSkills
             // 
@@ -424,7 +425,7 @@ namespace EVEMon.SkillPlanner
             this.cbShowBaseOnly.AutoSize = true;
             this.cbShowBaseOnly.Location = new System.Drawing.Point(411, 21);
             this.cbShowBaseOnly.Name = "cbShowBaseOnly";
-            this.cbShowBaseOnly.Size = new System.Drawing.Size(107, 17);
+            this.cbShowBaseOnly.Size = new System.Drawing.Size(109, 17);
             this.cbShowBaseOnly.TabIndex = 2;
             this.cbShowBaseOnly.Text = "Only show T1/T2";
             this.cbShowBaseOnly.UseVisualStyleBackColor = true;
@@ -436,7 +437,7 @@ namespace EVEMon.SkillPlanner
             this.rbShowAlpha.Checked = true;
             this.rbShowAlpha.Location = new System.Drawing.Point(148, 20);
             this.rbShowAlpha.Name = "rbShowAlpha";
-            this.rbShowAlpha.Size = new System.Drawing.Size(123, 17);
+            this.rbShowAlpha.Size = new System.Drawing.Size(124, 17);
             this.rbShowAlpha.TabIndex = 1;
             this.rbShowAlpha.TabStop = true;
             this.rbShowAlpha.Text = "Show Alphabetic List";
@@ -448,7 +449,7 @@ namespace EVEMon.SkillPlanner
             this.rbShowTree.AutoSize = true;
             this.rbShowTree.Location = new System.Drawing.Point(278, 20);
             this.rbShowTree.Name = "rbShowTree";
-            this.rbShowTree.Size = new System.Drawing.Size(129, 17);
+            this.rbShowTree.Size = new System.Drawing.Size(127, 17);
             this.rbShowTree.TabIndex = 0;
             this.rbShowTree.Text = "Show Category Trees";
             this.rbShowTree.UseVisualStyleBackColor = true;
@@ -484,11 +485,12 @@ namespace EVEMon.SkillPlanner
             this.panel2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.pnlShipHeader.ResumeLayout(false);
-            this.pnlShipHeader.PerformLayout();
+            this.pnlItemHeader.ResumeLayout(false);
+            this.pnlItemHeader.PerformLayout();
             this.cmSkills.ResumeLayout(false);
             this.cmEntity.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -507,7 +509,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.CheckBox cbShowBaseOnly;
         private System.Windows.Forms.RadioButton rbShowAlpha;
         private System.Windows.Forms.RadioButton rbShowTree;
-        private System.Windows.Forms.Label lblSkill;
+        private System.Windows.Forms.Label lblSkillInfo;
         private System.Windows.Forms.TreeView tvSkills;
         private System.Windows.Forms.ContextMenuStrip cmSkills;
         private System.Windows.Forms.ToolStripMenuItem tsAddPlan;
@@ -522,8 +524,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TreeView tvEntity;
-        private System.Windows.Forms.Panel pnlShipHeader;
-        private System.Windows.Forms.Label lblShips;
+        private System.Windows.Forms.Panel pnlItemHeader;
+        private System.Windows.Forms.Label lblItems;
         private System.Windows.Forms.ContextMenuStrip cmEntity;
         private System.Windows.Forms.ToolStripMenuItem tsAddObjectToPlan;
         private System.Windows.Forms.ToolStripMenuItem tsShowObjectPrereqs;
