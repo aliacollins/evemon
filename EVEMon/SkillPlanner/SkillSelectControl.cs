@@ -124,9 +124,7 @@ namespace EVEMon.SkillPlanner
 
                 // Notify subscribers
                 if (SelectedSkillChanged != null)
-                {
                     SelectedSkillChanged(this, new EventArgs());
-                }
             }
         }
 
@@ -808,30 +806,33 @@ namespace EVEMon.SkillPlanner
         private void cmSkills_Opening(object sender, CancelEventArgs e)
         {
             Skill skill = null;
-            var node = tvItems.SelectedNode;
+            TreeNode node = tvItems.SelectedNode;
             if (node != null)
                 skill = tvItems.SelectedNode.Tag as Skill;
+
+            if (SelectedSkill == null && skill != null)
+                node = null;
 
             tsSeparatorBrowser.Visible = (node != null);
 
             // "Show in skill browser/explorer"
-            showInSkillExplorerMenu.Visible = (skill != null);
-            showInSkillBrowserMenu.Visible = (skill != null && !m_hostedInSkillBrowser);
+            showInSkillExplorerMenu.Visible = (SelectedSkill != null);
+            showInSkillBrowserMenu.Visible = (SelectedSkill != null && !m_hostedInSkillBrowser);
 
             // "Collapse" and "Expand" menus
-            cmiCollapseSelected.Visible = (skill == null && node != null && node.IsExpanded);
-            cmiExpandSelected.Visible = (skill == null && node != null && !node.IsExpanded);
+            cmiCollapseSelected.Visible = (SelectedSkill == null && node != null && node.IsExpanded);
+            cmiExpandSelected.Visible = (SelectedSkill == null && node != null && !node.IsExpanded);
 
-            cmiExpandSelected.Text = (skill == null && node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
-            cmiCollapseSelected.Text = (skill == null && node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
+            cmiExpandSelected.Text = (SelectedSkill == null && node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
+            cmiCollapseSelected.Text = (SelectedSkill == null && node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = (skill != null && skill.Level < 5);
-            if (skill != null)
+            cmiPlanTo.Enabled = (SelectedSkill != null && SelectedSkill.Level < 5);
+            if (SelectedSkill != null)
             {
                 for (int i = 0; i <= 5; i++)
                 {
