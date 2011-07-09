@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.EntityClient;
+using System.Data.SqlClient;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
@@ -17,8 +19,36 @@ namespace EVEMon.XmlGenerator
             get
             {
                 if (s_entities == null)
-                    s_entities = new EveStaticDataEntities();
+                {
+                    // Initialize the connection string builder for the underlying provider
+                    SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder()
+                    {
+                        // Set the properties for the data source
+                        DataSource = @".\SQLEXPRESS",
+                        InitialCatalog = "EveStaticData",
+                        IntegratedSecurity = true,
+                        MultipleActiveResultSets = true,
+                        ApplicationName = "EntityFramework",
+                    };
 
+                    // Initialize the EntityConnectionStringBuilder
+                    EntityConnectionStringBuilder entityBuilder = new EntityConnectionStringBuilder()
+                        {
+                            // Set the Metadata location
+                            Metadata = @"res://*/EveStaticData.csdl|res://*/EveStaticData.ssdl|res://*/EveStaticData.msl",
+
+                            //Set the provider name
+                            Provider = "System.Data.SqlClient",
+
+                            // Set the provider-specific connection string
+                            ProviderConnectionString = sqlBuilder.ToString(),
+                        };
+
+                    // Initialize the EntityConnection
+                    EntityConnection connection = new EntityConnection(entityBuilder.ToString());
+
+                    s_entities = new EveStaticDataEntities(connection);
+                }
                 return s_entities;
             }
         }
