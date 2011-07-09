@@ -292,12 +292,12 @@ namespace EVEMon
             this.addAccountMenu,
             this.manageAccountsMenuItem,
             this.fileManagerHideToolStripSeparator,
-            this.hideCharacterMenu,
             this.deleteCharacterMenu,
             this.exportCharacterMenu,
+            this.hideCharacterMenu,
             this.fileExportSaveToolStripSeparator,
-            this.saveSettingsToolStripMenuItem,
             this.loadSettingsToolStripMenuItem,
+            this.saveSettingsToolStripMenuItem,
             this.fileRestoreResetToolStripSeparator,
             this.resetSettingsToolStripMenuItem,
             this.fileResetExitToolStripSeparator,
@@ -459,10 +459,10 @@ namespace EVEMon
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mineralWorksheetToolStripMenuItem,
-            this.skillsPieChartMenu,
-            this.schedulerToolStripMenuItem,
             this.addBlankCharacterMenu,
+            this.mineralWorksheetToolStripMenuItem,
+            this.schedulerToolStripMenuItem,
+            this.skillsPieChartMenu,
             this.toolsSchedulerImplantGroupsToolStripSeparator,
             this.implantsMenu,
             this.showOwnedSkillbooksMenu,
@@ -544,10 +544,10 @@ namespace EVEMon
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.knownProblemsMenuItem,
-            this.userVoiceMenuItem,
             this.stackExchangeMenu,
             this.forumsMenuItem,
+            this.knownProblemsMenuItem,
+            this.userVoiceMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
             this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
