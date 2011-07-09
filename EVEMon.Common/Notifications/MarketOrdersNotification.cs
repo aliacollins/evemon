@@ -57,7 +57,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            m_description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} expired or fulfilled.", m_orders.Count, (m_orders.Count > 1 ? "s" : String.Empty));
+            m_description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} canceled, expired or fulfilled.", m_orders.Count, (m_orders.Count > 1 ? "s" : String.Empty));
         }
     }
 }

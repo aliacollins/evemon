@@ -61,7 +61,7 @@ namespace EVEMon.Common
 
             // Import the orders from the API
             List<MarketOrder> newOrders = new List<MarketOrder>();
-            foreach (var srcOrder in src)
+            foreach (SerializableOrderListItem srcOrder in src)
             {
                 // Skip long expired orders
                 var limit = srcOrder.Issued.AddDays(srcOrder.Duration + MarketOrder.MaxExpirationDays);
@@ -90,6 +90,10 @@ namespace EVEMon.Common
 
             // Add the items that are no longer marked for deletion
             newOrders.AddRange(m_items.Where(x => !x.MarkedForDeletion));
+
+            // Add the items that are no longer present in the API
+            // (a.k.a. Canceled, Expired, Fulfilled)
+            endedOrders.AddRange(m_items.Except(newOrders)); // This code line is to remain till CCP fixes the market orders API
 
             // Replace the old list with the new one
             m_items.Clear();
