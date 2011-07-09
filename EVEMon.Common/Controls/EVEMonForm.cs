@@ -107,7 +107,7 @@ namespace EVEMon.Common.Controls
             List<Form> formList = new List<Form>();
             foreach (Form form in Application.OpenForms)
             {
-                if (form.GetType() == this.GetType())
+                if (form.GetType() == GetType())
                     formList.Add(form);
             }
 
