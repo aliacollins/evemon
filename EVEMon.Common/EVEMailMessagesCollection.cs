@@ -60,8 +60,7 @@ namespace EVEMon.Common
                                                 }));
                 
                 // Find the last received ID 
-                if (ID > m_highestID)
-                    m_highestID = ID;
+                m_highestID = Math.Max(m_highestID, ID);
             }
         }
 
@@ -84,7 +83,7 @@ namespace EVEMon.Common
                 if (m_ccpCharacter.CharacterID != srcEVEMailMessage.SenderID)
                 {
                     // If it's a newly mail message and not an old mail message added to the API list, increase the counter
-                    var message = m_items.FirstOrDefault(x => x.MessageID == srcEVEMailMessage.MessageID);
+                    EveMailMessage message = m_items.FirstOrDefault(x => x.MessageID == srcEVEMailMessage.MessageID);
                     if (message == null && srcEVEMailMessage.MessageID > m_highestID)
                     {
                         NewMessages++;
