@@ -19,14 +19,14 @@ namespace EVEMon.XmlGenerator
         private static double s_totalTablesCount = 25;
 
         private static int s_percentOld;
-        private static int s_propGenTotal = 1547;
-        private static int s_itemGenTotal = 8713;
+        private static int s_propGenTotal = 1550;
+        private static int s_itemGenTotal = 8751;
         private static int s_skillGenTotal = 454;
         private static int s_certGenTotal = 4272;
-        private static int s_blueprintGenTotal = 3945;
-        private static int s_geoGen = 5219;
+        private static int s_blueprintGenTotal = 3953;
+        private static int s_geoGen = 5167;
         private static int s_geoGenTotal = 19501;
-        private static int s_reprocessGenTotal = 10032;
+        private static int s_reprocessGenTotal = 10074;
 
         private static DateTime s_startTime;
         private static DateTime s_endTime;
@@ -1070,6 +1070,9 @@ namespace EVEMon.XmlGenerator
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
 
+        /// <summary>
+        /// Gets the Eve attribute.
+        /// </summary>        
         private static EveAttribute IntToEveAttribute(int attributeValue)
         {
             switch (attributeValue)
@@ -1333,7 +1336,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// 
+        /// Configures the null market blueprint.
         /// </summary>
         private static void ConfigureNullMarketBlueprint()
         {
