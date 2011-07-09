@@ -35,7 +35,6 @@ namespace EVEMon.Common
         private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
         private DateTime m_mailingListsNextUpdate = DateTime.MinValue;
-        private SerializableAPIMailMessages m_cachedAPIMailMessagesResult;
 
         private bool m_charOrdersUpdated;
         private bool m_corpOrdersUpdated;
@@ -461,10 +460,10 @@ namespace EVEMon.Common
             m_charOrdersAdded = AddOrders(result, m_corpOrdersAdded, IssuedFor.Character);
 
             // If character is in NPC corporation we switch the corp orders updated flag
-            // to assure the character issued orders gets imported
+            // to assure that the character issued orders gets imported
             m_corpOrdersUpdated |= !m_corpMarketOrdersMonitor.Enabled;
 
-            // Import the data if all queried and there are orders to import 
+            // Import the data if all queried
             if (m_corpOrdersUpdated)
                 Import(m_orders);
         }
@@ -493,7 +492,7 @@ namespace EVEMon.Common
                 m_corpOrdersAdded = AddOrders(result, m_charOrdersAdded, IssuedFor.Corporation);
             }
 
-            // Import the data if all queried and there are orders to import
+            // Import the data if all queried
             if (m_charOrdersUpdated)
                 Import(m_orders);
         }
@@ -515,11 +514,11 @@ namespace EVEMon.Common
             m_charJobsAdded = AddJobs(result, m_corpJobsAdded, IssuedFor.Character);
 
             // If character is in NPC corporation we switch the corp jobs updated flag
-            // to assure the character issued jobs gets imported
+            // to assure that the character issued jobs gets imported
             m_corpJobsUpdated |= !m_corpIndustryJobsMonitor.Enabled;
 
-            // Import the data if all queried and there are jobs to import 
-            if (m_corpJobsUpdated && m_jobs.Count != 0)
+            // Import the data if all queried
+            if (m_corpJobsUpdated)
                 Import(m_jobs);
         }
 
@@ -547,8 +546,8 @@ namespace EVEMon.Common
                 m_corpJobsAdded = AddJobs(result, m_charJobsAdded, IssuedFor.Corporation);
             }
 
-            // Import the data if all queried and there are jobs to import
-            if (m_charJobsUpdated && m_jobs.Count != 0)
+            // Import the data if all queried
+            if (m_charJobsUpdated) 
                 Import(m_jobs);
         }
 
@@ -587,19 +586,20 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
-            m_cachedAPIMailMessagesResult = result.Result;
-
             // Each time we import a new batch of EVE mail messages,
             // query the mailing lists (if it's time to) so that we are always up to date
-            // and import the mail messages after we received the mailing lists
             if (DateTime.UtcNow > m_mailingListsNextUpdate)
-            {
                 QueryCharacterMailingList();
-                return;
-            }
 
             // Import the EVE mail messages
-            ImportEVEMailMessages();
+            m_eveMailMessages.Import(result.Result.Messages);
+
+            // Notify on new messages
+            if (m_eveMailMessages.NewMessages != 0)
+                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
+
+            // Fires the event regarding EVE mail messages update
+            EveClient.OnCharacterEVEMailMessagesUpdated(this);
         }
 
         /// <summary>
@@ -617,10 +617,6 @@ namespace EVEMon.Common
             // If there is no error deserialize the result
             if (!result.HasError)
                 EVEMailingLists.Import(result.Result.MailingLists);
-
-            // Whether we have the mailing list info or not
-            // import the EVE mail messages
-            ImportEVEMailMessages();
         }
 
         /// <summary>
@@ -807,22 +803,6 @@ namespace EVEMon.Common
             m_corpJobsUpdated = false;
             m_charJobsAdded = false;
             m_corpJobsAdded = false;
-        }
-
-        /// <summary>
-        /// Imports the EVE mail messages.
-        /// </summary>
-        private void ImportEVEMailMessages()
-        {
-            // Import the data
-            m_eveMailMessages.Import(m_cachedAPIMailMessagesResult.Messages);
-
-            // Notify on new messages
-            if (m_eveMailMessages.NewMessages != 0)
-                EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
-
-            // Fires the event regarding EVE mail messages update
-            EveClient.OnCharacterEVEMailMessagesUpdated(this);
         }
 
         #endregion
