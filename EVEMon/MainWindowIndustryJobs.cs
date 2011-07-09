@@ -827,26 +827,6 @@ namespace EVEMon
             }
         }
 
-        /// <summary>
-        /// Occurs on a mouse click in the expandable panel.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void jobExpPanelControl_MouseClick(object sender, MouseEventArgs e)
-        {
-            // We do this to avoid drawing border traces on the background
-            // when there are no industry jobs present
-            if (industryExpPanelControl.IsExpanded && noJobsLabel.Visible)
-                noJobsLabel.BringToFront();
-
-            // Reduce the label's mouse coordinate to panel's
-            int positionX = (sender is Label ? ((Label)sender).Location.X + e.X : e.X);
-            int positionY = (sender is Label ? ((Label)sender).Location.Y + e.Y : e.Y);
-            var arg = new MouseEventArgs(e.Button, 1, positionX, positionY, 3);
-
-            industryExpPanelControl.expandablePanelControl_MouseClick(sender, arg);
-            noJobsLabel.SendToBack();
-        }
         # endregion
 
 
@@ -1167,17 +1147,10 @@ namespace EVEMon
             lblRemoteResearchingRange.Location = new Point(170, 0);
 
             // Subscribe events
-            industryExpPanelControl.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            industryExpPanelControl.Header.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblActiveManufacturingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblActiveResearchingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblRemoteManufacturingRange.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblRemoteResearchingRange.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            
-            lblActiveCharManufacturingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblActiveCorpManufacturingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblActiveCharResearchingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
-            lblActiveCorpResearchingJobs.MouseClick += new MouseEventHandler(jobExpPanelControl_MouseClick);
+            foreach (Control control in industryExpPanelControl.Controls.OfType<Label>())
+            {
+                control.MouseClick += new MouseEventHandler(industryExpPanelControl.expandablePanelControl_MouseClick);
+            }
         }
 
         #endregion

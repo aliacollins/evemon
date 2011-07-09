@@ -834,27 +834,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occurs on a mouse click in the expandable panel.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void marketExpPanelControl_MouseClick(object sender, MouseEventArgs e)
-        {
-            // We do this to avoid drawing border traces on the background
-            // when there are no market orders present
-            if (marketExpPanelControl.IsExpanded && noOrdersLabel.Visible)
-                noOrdersLabel.BringToFront();
-
-            // Reduce the label's mouse coordinate to panel's
-            int positionX = (sender is Label ? ((Label)sender).Location.X + e.X : e.X);
-            int positionY = (sender is Label ? ((Label)sender).Location.Y + e.Y : e.Y);
-            var arg = new MouseEventArgs(e.Button, 1, positionX, positionY, 3);
-
-            marketExpPanelControl.expandablePanelControl_MouseClick(sender, arg);
-            noOrdersLabel.SendToBack();
-        }
-
-        /// <summary>
         /// On timer tick, we update the column settings if any changes have been made to them.
         /// </summary>
         /// <param name="sender"></param>
@@ -1211,27 +1190,10 @@ namespace EVEMon
             lblRemoteBidRange.Location = new Point(220, 0);
 
             // Subscribe events
-            marketExpPanelControl.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            marketExpPanelControl.Header.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblBaseBrokerFee.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblTransactionTax.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblAskRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblBidRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblModificationRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblRemoteBidRange.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblCharTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblCorpTotalEscrow.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCharSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCorpSellOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCharBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCorpBuyOrdersCount.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCharSellOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCorpSellOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCharBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
-            lblActiveCorpBuyOrdersTotal.MouseClick += new MouseEventHandler(marketExpPanelControl_MouseClick);
+            foreach (Control control in marketExpPanelControl.Controls.OfType<Label>())
+            {
+                control.MouseClick += new MouseEventHandler(marketExpPanelControl.expandablePanelControl_MouseClick);
+            }
         }
 
         #endregion

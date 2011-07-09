@@ -7,9 +7,10 @@ namespace EVEMon.Controls
         public NoFlickerPanel()
         {
             DoubleBuffered = true;
-            SetStyle(ControlStyles.DoubleBuffer, true);
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.DoubleBuffer |
+                     ControlStyles.UserPaint |
+                     ControlStyles.AllPaintingInWmPaint, true);
             UpdateStyles();
         }
     }

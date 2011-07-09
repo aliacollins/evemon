@@ -115,8 +115,8 @@
             this.marketExpPanelControl.ExpandDirection = EVEMon.Controls.Direction.Down;
             this.marketExpPanelControl.ExpandedOnStartup = false;
             this.marketExpPanelControl.HeaderHeight = 30;
-            this.marketExpPanelControl.ImageCollapse = global::EVEMon.Common.Properties.Resources.Expand;
-            this.marketExpPanelControl.ImageExpand = global::EVEMon.Common.Properties.Resources.Collapse;
+            this.marketExpPanelControl.ImageCollapse = ((System.Drawing.Bitmap)(resources.GetObject("marketExpPanelControl.ImageCollapse")));
+            this.marketExpPanelControl.ImageExpand = ((System.Drawing.Bitmap)(resources.GetObject("marketExpPanelControl.ImageExpand")));
             this.marketExpPanelControl.Location = new System.Drawing.Point(0, 334);
             this.marketExpPanelControl.Name = "marketExpPanelControl";
             this.marketExpPanelControl.Size = new System.Drawing.Size(454, 100);
