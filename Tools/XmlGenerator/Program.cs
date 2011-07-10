@@ -24,7 +24,7 @@ namespace EVEMon.XmlGenerator
         private static int s_skillGenTotal = 454;
         private static int s_certGenTotal = 4272;
         private static int s_blueprintGenTotal = 3953;
-        private static int s_geoGen = 5167;
+        private static int s_geoGen = 5219;
         private static int s_geoGenTotal = 19501;
         private static int s_reprocessGenTotal = 10074;
 
@@ -133,13 +133,13 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(@"Datafile Generating In Progress");
             Console.WriteLine();
 
-            GenerateProperties();
-            GenerateItems(); // Requires GenerateProperties()
-            GenerateSkills();
-            GenerateCertificates();
-            GenerateBlueprints();
+            //GenerateProperties();
+            //GenerateItems(); // Requires GenerateProperties()
+            //GenerateSkills();
+            //GenerateCertificates();
+            //GenerateBlueprints();
             GenerateGeography();
-            GenerateReprocessing(); // Requires GenerateItems()
+            //GenerateReprocessing(); // Requires GenerateItems()
 
             GenerateMD5Sums();
 
