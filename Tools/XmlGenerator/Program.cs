@@ -133,13 +133,13 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(@"Datafile Generating In Progress");
             Console.WriteLine();
 
-            //GenerateProperties();
-            //GenerateItems(); // Requires GenerateProperties()
-            //GenerateSkills();
-            //GenerateCertificates();
-            //GenerateBlueprints();
+            GenerateProperties();
+            GenerateItems(); // Requires GenerateProperties()
+            GenerateSkills();
+            GenerateCertificates();
+            GenerateBlueprints();
             GenerateGeography();
-            //GenerateReprocessing(); // Requires GenerateItems()
+            GenerateReprocessing(); // Requires GenerateItems()
 
             GenerateMD5Sums();
 
