@@ -1,126 +1,96 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>22 May 2011</date>
-    <version>1.4.0.2761</version>
-    <url>http://forum.battleclinic.com/index.php/topic,144054.0.html</url>
-    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.4.0.2761.exe</autopatchurl>
+    <date>10 July 2011</date>
+    <version>1.4.1.2798</version>
+    <url>http://forum.battleclinic.com/index.php/topic,147155.0.html</url>
+    <autopatchurl>http://evemon.static.battleclinic.com/builds/installers/EVEMon-install-1.4.1.2798.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Breaking Changes ==
 
-* EVEMon Relocator has been deprecated (removed).
-* Non-Public skills will not show correct info as CCP removed the related info from their database.
-
+* Due to merging of the BattleClininc API settings files, user will have to re-enter BattleClinic API credentials and setting for this feature.
 
 == Contributors for this version ==
 
 * Jimi
-* Richard Slater
-* ykoehler
+* evilek
 
+== Bug Fixes ==
 
-== New Features ==
-
-* EVEMon now shows the status of an account and notifies the user when subscription is close to expiration.
-* EVEMon now has a Blank Character Creator.
-* EVEMon now has an EVE Mail Messages monitor.
-* EVEMon now has an EVE Notifications monitor.
-* EVEMon has now the ability to store the settings file to the BattleClinic server via the BattleClinic API service.
-
-
-== Bugfixes ==
-
-* EVEMon will no longer crash when right clicking on an unknown skill in queue.
-* EVEMon will not send any notifications for non monitored characters or non monitored full api key features.
-* EVEMon can now query both EVE Servers (Tranquility and Sinqularity) (use with caution and at your own risk as switching to Sinqularity and opening the Skill Planner will affect your plans).
-* EVEMon now sees the correct path of the default cached EVE portrait folder.
-* EVEMon will no longer crash on Implant Calc when any non in-game implant is selected in an implant set.
-* Fixes a minor visual bug in Research monitor.
-* Fixes a minor visual bug in Industry jobs monitor.
-* Fixes a minor visual bug in Market orders monitor.
-* Reordered columns in research points monitor will now be remembered.
-* Fixes a bug when plan ends exactly at the end of the page, only the next page gets printed.
-* Fixes a bug where the IGB connection was left open (if in use) when EVEMon restarts after a data file update.
-* Fixes an issue where the port of the IGB server was not validated.
-* Fixes the sorting issue for the plan column "Group". Notice that the sorting criterion is the duration of each group and not the name. 
-* Fixes a visual bug for the dropdown menu of "Plan To..." in Skill browser.
-* Fixes a visual bug in Skill browser where upon right clicking a fully level trained skill, "Plan To..." is enabled.
-
+* Fixed a visual bug in Industry monitor where scroll bar position isn't persistent.
+* Fixed an issue where the whole skill queue remaining time is shown in G15 (third line) instead of the skill's.
+* Fixed an issue when clicking the Cancel button of Blank Character Creator window, it doesn't close the window.
+* EVEMon will now handle better similar opened window, remembering the position of the last closed one.
+* EVEMon will again display all market orders.
+* Fixed a visual bug where a long Bio info gets wrapped to a second line.
+* Fixed an issue where an order gets not removed from the list (if it's the only one) due to change made by CCP to the Market Orders API call.
+* Fixed an issue in Skill Explorer where the prerequisites of a blueprint wasn't corresponding to its activity.
+* Fixed a crash bug in Skill Browser when skill tree is reset and user right clicks on a blank spot.
 
 == Enhancements ==
 
-* New enhanced installer.
-* Overview now shows the total training time of the skill queue.
-* Default character picture (no avatar) has been updated to the post Incursion one.
-* EVEMon planner now has another column showing the skill points required for each skill level.
-* Character info now shows birthday, ancestry and upon hovering over the corporation name, the alliance the corp is a member of.
-* EVE icons now have the Tech or Metagroup overlay icon.
-* All monitored characters query timers can now be updated manually (via Tools>Options>General>Updates).
-* EVEMon windows will no longer open on top of each other.
-* Improved visualization of each monitor.
-* Level 0 known skills added in tooltip info of a character's known skills.
-* CCP icons will now be fetched from CCP's Image Server.
-* Order of compared items in browser will now be by selection.
-* Corp related monitoring get disabled if character is in NPC corporation.
-* Activity description has been added next to the blueprint enabled by each skill level in Skill Explorer.
-* A "Research" tab has been added to the Blueprint browser for those blueprints that don't have any research prerequisites (invention excluded) in order to be able to switch between research facilities (laboratories).
-* EVEMon now handles more gracefully CCP error notifications when EVE Backend Database is temporarily disabled (no more endless notifications list, only one notification is now shown).
-
+* In case only one skill level is in training and info cycling is enabled, G15 LCD will display the skill in training instead of the queue finish time.
+* Blank Character Creator window will now have the same behavior as other EVEMon windows.
+* An opened plan will now notify if it contains obsolete entries upon entries completing training.
 
 == Misc ==
 
-* "<None>" implant indicator renamed to "None".]]></message>
+* Renamed "Add" button to "Import" in Blank Character Creator.
+* Feature info in Feature window have been updated.
+* Switched OrderID to 64bit (see related devblog -  http://www.eveonline.com/devblog.asp?a=blog&bid=924).
+* EVEMon will temporarily display again market orders notifications in a not so accurate way, till CCP fixes the Market Orders API.
+* Some menu items in main EVEMon window have been re-arranged in alphabetical order.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>19 May 2011</date>
-      <md5>197b86c16ab1b49090eb351c843d4a40</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) blueprints data file by the EVEMon Development Team]]></message>
+      <date>10 July 2011</date>
+      <md5>8a967aa7b3f1e4881a4998d3ebe128e4</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) blueprints data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>19 May 2011</date>
-      <md5>0e0beef2a7d3d8196d42b587babb3e35</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) certificates data file by the EVEMon Development Team]]></message>
+      <date>10 July 2011</date>
+      <md5>f995acff5a87c9bb7cdf2376938469cc</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) certificates data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>19 May 2011</date>
+      <date>10 July 2011</date>
       <md5>f4c478a217db35209cfe3c3ed79990b7</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) geography data file by the EVEMon Development Team]]></message>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) geography data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>19 May 2011</date>
-      <md5>5360dba7008511c0530c9d5d11db8cfb</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) items data file by the EVEMon Development Team]]></message>
+      <date>10 July 2011</date>
+      <md5>6e80bd4159d2b4d3eb36c428dc795bad</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) items data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>19 May 2011</date>
-      <md5>dd93ef5db2cb1d112c9fd471ff47fe5d</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) properties data file by the EVEMon Development Team]]></message>
+      <date>10 July 2011</date>
+      <md5>7c125469a74baa9d78535bc2a5266bd4</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) properties data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>19 May 2011</date>
+      <date>10 July 2011</date>
       <md5>322a64607ae565e7d0af03ea9bfc9783</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) reprocessing data file by the EVEMon Development Team]]></message>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) reprocessing data file by the EVEMon Development Team]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>19 May 2011</date>
-      <md5>5873fe248ac8e3f4436cf789ccdb7773</md5>
-      <url>http://evemon.static.battleclinic.com/builds/updates/Incursion/259851</url>
-      <message><![CDATA[Incursion 1.5.0 (259851) skills data file by the EVEMon Development Team]]></message>
+      <date>10 July 2011</date>
+      <md5>73ecf3d1f20e9acfe5cfeae221f89fd0</md5>
+      <url>http://evemon.static.battleclinic.com/builds/updates/Incarna/273475</url>
+      <message><![CDATA[Incarna 1.0.1 (273475) skills data file by the EVEMon Development Team]]></message>
     </datafile>
   </datafiles>
 </evemon>
