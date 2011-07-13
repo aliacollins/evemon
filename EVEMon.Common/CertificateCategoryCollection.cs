@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
+﻿using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 
@@ -23,9 +20,9 @@ namespace EVEMon.Common
         {
             m_character = character;
 
-            foreach (var srcCategory in StaticCertificates.Categories)
+            foreach (StaticCertificateCategory srcCategory in StaticCertificates.Categories)
             {
-                var category = new CertificateCategory(character, srcCategory);
+                CertificateCategory category = new CertificateCategory(character, srcCategory);
                 m_items[category.Name] = category;
             }
         }

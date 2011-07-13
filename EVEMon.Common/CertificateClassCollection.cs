@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Collections;
+﻿using EVEMon.Common.Collections;
 
 namespace EVEMon.Common
 {
@@ -19,9 +16,9 @@ namespace EVEMon.Common
         {
             m_character = character;
 
-            foreach(var category in character.CertificateCategories)
+            foreach (CertificateCategory category in character.CertificateCategories)
             {
-                foreach(var certClass in category)
+                foreach (CertificateClass certClass in category)
                 {
                     m_items[certClass.Name] = certClass;
                 }

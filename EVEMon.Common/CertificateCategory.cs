@@ -26,9 +26,9 @@ namespace EVEMon.Common
             m_character = character;
             m_staticData = src;
 
-            foreach (var srcClass in src)
+            foreach (StaticCertificateClass srcClass in src)
             {
-                var certClass = new CertificateClass(character, srcClass, this);
+                CertificateClass certClass = new CertificateClass(character, srcClass, this);
                 m_items[certClass.Name] = certClass;
             }
         }

@@ -140,7 +140,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            var certClass = certSelectCtl.SelectedCertificateClass;
+            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
             certDisplayCtl.CertificateClass = certClass;
 
             // When no certificate class is selected, we just hide the right panel.
@@ -159,7 +159,7 @@ namespace EVEMon.SkillPlanner
             // Updates controls visibility
             panelRight.Visible = true;
 
-            var firstCert = certClass.LowestGradeCertificate;
+            Certificate firstCert = certClass.LowestGradeCertificate;
             lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}",
                 certClass.Name, (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
             lblCategory.Text = certClass.Category.Name;
@@ -168,11 +168,11 @@ namespace EVEMon.SkillPlanner
             List<Control> newItems = new List<Control>();
             Label[] labels = new Label[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
             int lbIndex = 0;
-            var rSplCont = rightSplitContainer;
-            foreach (var cert in certClass)
+            PersistentSplitContainer rSplCont = rightSplitContainer;
+            foreach (Certificate cert in certClass)
             {
-                var label = labels[lbIndex];
-                var time = cert.GetTrainingTime();
+                Label label = labels[lbIndex];
+                TimeSpan time = cert.GetTrainingTime();
                 label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
                     cert.Grade, time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
                 label.Visible = true;
@@ -263,12 +263,12 @@ namespace EVEMon.SkillPlanner
         private void UpdateEligibility()
         {
             Certificate lastEligibleCert = null;
-            var certClass = certSelectCtl.SelectedCertificateClass;
+            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass != null)
             {
                 // First we search the highest eligible certificate after this plan
-                foreach (var cert in certClass)
+                foreach (Certificate cert in certClass)
                 {
                     if (!m_plan.WillGrantEligibilityFor(cert))
                         break;
@@ -284,7 +284,7 @@ namespace EVEMon.SkillPlanner
                 {
                     tslbEligible.Text = lastEligibleCert.Grade.ToString();
 
-                    var highestClaimedCertificate = certClass.HighestClaimedGrade;
+                    Certificate highestClaimedCertificate = certClass.HighestClaimedGrade;
                     if (highestClaimedCertificate == null)
                     {
                         tslbEligible.Text += " (improved from \"none\")";
@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
         private void UpdatePlanningMenuStatus(ToolStripMenuItem menu, CertificateClass certClass,
                                               CertificateGrade grade, Certificate lastEligibleCert)
         {
-            var cert = certClass[grade];
+            Certificate cert = certClass[grade];
             if (cert == null)
             {
                 menu.Visible = false;
@@ -325,8 +325,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 menu.Visible = true;
-                if (lastEligibleCert == null) menu.Enabled = true;
-                else menu.Enabled = ((int)cert.Grade > (int)lastEligibleCert.Grade);
+                menu.Enabled = (lastEligibleCert == null ? true : ((int)cert.Grade > (int)lastEligibleCert.Grade));
             }
 
         }
@@ -354,12 +353,11 @@ namespace EVEMon.SkillPlanner
             Control tsi = sender as Control;
             if (tsi == null)
                 return;
+
             Item ship = tsi.Tag as Item;
             PlanWindow window = WindowsFactory<PlanWindow>.GetByTag(m_plan);
             if (ship != null && window != null && !window.IsDisposed)
-            {
                 window.ShowShipInBrowser(ship);
-            }
         }
 
         /// <summary>
@@ -369,13 +367,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
-            var cert = certDisplayCtl.SelectedCertificateLevel;
-            var certClass = certSelectCtl.SelectedCertificateClass;
+            Certificate cert = certDisplayCtl.SelectedCertificateLevel;
+            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
             if (cert == null || cert.Class != certClass)
             {
-                var firstCert = certClass.LowestGradeCertificate;
+                Certificate firstCert = certClass.LowestGradeCertificate;
                 textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
                 lblName.Text = String.Format("{0} {1}", certClass.Name,
                     (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
@@ -436,7 +434,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToBasic_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -447,7 +445,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToStandard_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -458,7 +456,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToImproved_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -469,7 +467,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void tsPlanToElite_Click(object sender, EventArgs e)
         {
-            var operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
             PlanHelper.SelectPerform(operation);
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -18,7 +17,7 @@ namespace EVEMon.Common
         private readonly CertificateCategory m_category;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="src"></param>
@@ -30,7 +29,7 @@ namespace EVEMon.Common
 
             foreach (var srcCert in src)
             {
-                var cert = new Certificate(character, srcCert, this);
+                Certificate cert = new Certificate(character, srcCert, this);
                 m_items[(int)cert.Grade] = cert;
             }
         }
@@ -41,9 +40,10 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override IEnumerable<Certificate> Enumerate()
         {
- 	        foreach(var cert in m_items)
+            foreach (Certificate cert in m_items)
             {
-                if (cert != null) yield return cert;
+                if (cert != null) 
+                    yield return cert;
             }
         }
 
@@ -56,7 +56,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the category for this certificate class
+        /// Gets the category for this certificate class.
         /// </summary>
         public CertificateCategory Category
         {
@@ -64,7 +64,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's id
+        /// Gets this skill's id.
         /// </summary>
         public long ID
         {
@@ -72,7 +72,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's name
+        /// Gets this skill's name.
         /// </summary>
         public string Name
         {
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's description
+        /// Gets this skill's description.
         /// </summary>
         public string Description
         {
@@ -88,7 +88,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a certificate from this class by its grade. May be null if there is no such grade for this class.
+        /// Gets a certificate from this class by its grade.
+        /// May be null if there is no such grade for this class.
         /// </summary>
         /// <param name="grade"></param>
         /// <returns></returns>
@@ -104,7 +105,7 @@ namespace EVEMon.Common
         {
             get
             {
-                var scert = m_staticData.LowestGradeCertificate;
+                StaticCertificate scert = m_staticData.LowestGradeCertificate;
                 return m_items[(int)scert.Grade];
             }
         }
@@ -117,13 +118,14 @@ namespace EVEMon.Common
         {
             get
             {
-                var scert = m_staticData.HighestGradeCertificate;
+                StaticCertificate scert = m_staticData.HighestGradeCertificate;
                 return m_items[(int)scert.Grade];
             }
         }
 
         /// <summary>
-        /// Gets the lowest untrained (neither granted nor claimable). Null if all certificates have been granted or are claimable.
+        /// Gets the lowest untrained (neither granted nor claimable).
+        /// Null if all certificates have been granted or are claimable.
         /// </summary>
         public Certificate LowestUntrainedGrade
         {
@@ -133,7 +135,8 @@ namespace EVEMon.Common
                 {
                     if (cert != null)
                     {
-                        if (cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted) return cert;
+                        if (cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted)
+                            return cert;
                     }
                 }
                 return null;
@@ -141,18 +144,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the highest claimed grade. May be null if no grade has been granted.
+        /// Gets the highest claimed grade.
+        /// May be null if no grade has been granted.
         /// </summary>
         public Certificate HighestClaimedGrade
         {
             get
             {
                 Certificate lastCert = null;
-                foreach (var cert in m_items)
+                foreach (Certificate cert in m_items)
                 {
                     if (cert != null)
                     {
-                        if (cert.Status != CertificateStatus.Granted) return lastCert;
+                        if (cert.Status != CertificateStatus.Granted) 
+                            return lastCert;
                         lastCert = cert;
                     }
                 }
@@ -161,7 +166,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if the provided character has completed this class
+        /// Gets true if the provided character has completed this class.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
@@ -169,16 +174,18 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var cert in m_items)
+                foreach (Certificate cert in m_items)
                 {
-                    if (cert != null && cert.Status != CertificateStatus.Granted) return false;
+                    if (cert != null && cert.Status != CertificateStatus.Granted) 
+                        return false;
                 }
                 return true;
             }
         }
 
         /// <summary>
-        /// Gets true if the provided character can train to the next grade, false if the class has already been completed or if the next grade is untrainable.
+        /// Gets true if the provided character can train to the next grade,
+        /// false if the class has already been completed or if the next grade is untrainable.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
@@ -186,12 +193,18 @@ namespace EVEMon.Common
         {
             get
             {
-                foreach (var cert in m_items)
+                foreach (Certificate cert in m_items)
                 {
                     if (cert != null)
                     {
-                        if (cert.Status == CertificateStatus.PartiallyTrained) return true;
-                        else if (cert.Status == CertificateStatus.Untrained) return false;
+                        if (cert.Status == CertificateStatus.PartiallyTrained)
+                        {
+                            return true;
+                        }
+                        else if (cert.Status == CertificateStatus.Untrained)
+                        {
+                            return false;
+                        }
                     }
                 }
                 return false;

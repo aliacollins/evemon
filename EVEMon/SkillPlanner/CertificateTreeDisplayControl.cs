@@ -37,8 +37,8 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public CertificateTreeDisplayControl()
         {
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             InitializeComponent();
 
@@ -46,12 +46,12 @@ namespace EVEMon.SkillPlanner
             treeView.MouseDown += new MouseEventHandler(treeView_MouseDown);
 
             cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
-            m_boldFont = FontFactory.GetFont(this.Font, FontStyle.Bold);
-            this.treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            this.treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
+            m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+            treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
             EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            this.Disposed += new EventHandler(OnDisposed);
+            Disposed += new EventHandler(OnDisposed);
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            this.Disposed -= new EventHandler(OnDisposed);
+            Disposed -= new EventHandler(OnDisposed);
         }
 
         /// <summary>
@@ -82,12 +82,13 @@ namespace EVEMon.SkillPlanner
                 if (m_plan == null)
                     return;
 
-                var character = (Character)m_plan.Character;
+                Character character = (Character)m_plan.Character;
                 if (m_character == character)
                     return;
+
                 m_character = character;
 
-                this.treeView.Nodes.Clear();
+                treeView.Nodes.Clear();
                 UpdateTree();
 
             }
@@ -103,12 +104,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         public CertificateClass CertificateClass
         {
-            get { return this.m_class; }
+            get { return m_class; }
             set 
             {
                 if (value != m_class)
                 {
-                    this.m_class = value;
+                    m_class = value;
                     UpdateTree();
                 }
             }
@@ -123,10 +124,10 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                if (this.treeView.SelectedNode == null)
+                if (treeView.SelectedNode == null)
                     return null;
 
-                return this.treeView.SelectedNode.Tag as Certificate;
+                return treeView.SelectedNode.Tag as Certificate;
             }
         }
 
@@ -141,10 +142,9 @@ namespace EVEMon.SkillPlanner
                 while (curr != null)
                 {
                     Certificate c = curr.Tag as Certificate;
-                    if (c != null && c.Class.Equals(this.CertificateClass))
-                    {
+                    if (c != null && c.Class == CertificateClass)
                         return c;
-                    }
+
                     curr = curr.Parent;
                 }
                 return null;
@@ -157,16 +157,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="cert"></param>
         public void ExpandCert(Certificate cert)
         {
-            foreach (TreeNode n in this.treeView.Nodes)
+            foreach (TreeNode n in treeView.Nodes)
             {
-                if (n.Tag.Equals(cert))
+                if (n.Tag == cert)
                 {
-                    this.treeView.SelectedNode = n;
+                    treeView.SelectedNode = n;
                     n.Expand();
-                    if (this.SelectionChanged != null)
-                    {
-                        this.SelectionChanged(this, new EventArgs());
-                    }
+                    if (SelectionChanged != null)
+                        SelectionChanged(this, new EventArgs());
                     break;
                 }
             }
@@ -212,10 +210,8 @@ namespace EVEMon.SkillPlanner
             if (selection != treeView.SelectedNode)
             {
                 treeView.SelectedNode = selection;
-                if (this.SelectionChanged != null)
-                {
-                    this.SelectionChanged(this, new EventArgs());
-                }
+                if (SelectionChanged != null)
+                    SelectionChanged(this, new EventArgs());
             }
         }
 
@@ -248,26 +244,26 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateTree()
         {
-            Certificate oldSelection = this.SelectedCertificate;
+            Certificate oldSelection = SelectedCertificate;
             TreeNode newSelection = null;
 
-            this.treeView.BeginUpdate();
+            treeView.BeginUpdate();
             try
             {
                 // Clear the old items
-                this.treeView.Nodes.Clear();
+                treeView.Nodes.Clear();
 
                 // No update when not fully initialized
                 if (m_character == null || m_class == null)
                     return;
 
                 // Create the nodes when not done, yet
-                if (this.treeView.Nodes.Count == 0)
+                if (treeView.Nodes.Count == 0)
                 {
-                    foreach (var cert in this.m_class) 
+                    foreach (Certificate cert in m_class) 
                     {
-                        var node = CreateNode(cert);
-                        this.treeView.Nodes.Add(node);
+                        TreeNode node = CreateNode(cert);
+                        treeView.Nodes.Add(node);
 
                         // Does the old selection still exists ?
                         if (cert == oldSelection)
@@ -277,29 +273,25 @@ namespace EVEMon.SkillPlanner
                 }
                 
                 // Update the nodes
-                foreach (TreeNode node in this.treeView.Nodes)
+                foreach (TreeNode node in treeView.Nodes)
                 {
                     UpdateNode(node);
                 }
 
                 // Is the old selection kept ? Then we select the matching node
                 if (newSelection != null)
-                {
-                    this.treeView.SelectedNode = newSelection;
-                }
+                    treeView.SelectedNode = newSelection;
             }
             finally
             {
-                this.treeView.EndUpdate();
+                treeView.EndUpdate();
             }
 
             // Fire the SelectionChanged event if the old selection doesn't exist anymore
             if (newSelection == null)
             {
-                if (this.SelectionChanged != null)
-                {
-                    this.SelectionChanged(this, new EventArgs());
-                }
+                if (SelectionChanged != null)
+                    SelectionChanged(this, new EventArgs());
             }
         }
 
@@ -314,12 +306,12 @@ namespace EVEMon.SkillPlanner
             node.Text = cert.ToString();
             node.Tag = cert;
 
-            foreach (var prereqCert in cert.PrerequisiteCertificates)
+            foreach (Certificate prereqCert in cert.PrerequisiteCertificates)
             {
                 node.Nodes.Add(CreateNode(prereqCert));
             }
 
-            foreach (var prereqSkill in cert.PrerequisiteSkills)
+            foreach (SkillLevel prereqSkill in cert.PrerequisiteSkills)
             {
                 node.Nodes.Add(CreateNode(prereqSkill));
             }
@@ -339,12 +331,10 @@ namespace EVEMon.SkillPlanner
             node.Tag = skillPrereq;
 
             // Add this skill's prerequisites
-            foreach (var prereqSkill in skillPrereq.Skill.Prerequisites)
+            foreach (SkillLevel prereqSkill in skillPrereq.Skill.Prerequisites)
             {
                 if (prereqSkill.Skill != skillPrereq.Skill)
-                {
                     node.Nodes.Add(CreateNode(prereqSkill));
-                }
             }
 
             return node;
@@ -384,7 +374,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 SkillLevel skillPrereq = (SkillLevel)node.Tag;
-                var skill = m_character.Skills[skillPrereq.Skill];
+                Skill skill = m_character.Skills[skillPrereq.Skill];
 
                 if (skillPrereq.IsKnown)
                 {
@@ -435,12 +425,12 @@ namespace EVEMon.SkillPlanner
                 line1 = cert.ToString();
                 if (!Settings.UI.SafeForWork)
                     supIcon = CertificateIcon;
-                var status = cert.Status;
+                CertificateStatus status = cert.Status;
 
                 // When not granted or claimable, let's display the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
                 {
-                    var time = cert.GetTrainingTime();
+                    TimeSpan time = cert.GetTrainingTime();
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
@@ -450,50 +440,50 @@ namespace EVEMon.SkillPlanner
                 if (!Settings.UI.SafeForWork)
                     supIcon = SkillIcon;
 
-                var skillPrereq = (SkillLevel)e.Node.Tag;
+                SkillLevel skillPrereq = (SkillLevel)e.Node.Tag;
                 line1 = skillPrereq.ToString();
 
                 // When not known to the require level, let's display the training time
-                var skill = skillPrereq.Skill;
+                Skill skill = skillPrereq.Skill;
                 if (!skillPrereq.IsKnown)
                 {
-                    var time = skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
+                    TimeSpan time = skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
 
             // Choose colors according to selection
             bool isSelected = ((e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected);
-            var backColor = (isSelected ? SystemColors.Highlight : this.treeView.BackColor);
-            var foreColor = (isSelected ? SystemColors.HighlightText : this.treeView.ForeColor);
-            var lightForeColor = (isSelected ? SystemColors.HighlightText : SystemColors.GrayText);
+            Color backColor = (isSelected ? SystemColors.Highlight : treeView.BackColor);
+            Color foreColor = (isSelected ? SystemColors.HighlightText : treeView.ForeColor);
+            Color lightForeColor = (isSelected ? SystemColors.HighlightText : SystemColors.GrayText);
 
             // Draws the background
-            using (var background = new SolidBrush(backColor))
+            using (SolidBrush background = new SolidBrush(backColor))
             {
-                var width = this.treeView.ClientSize.Width - e.Bounds.Left;
+                int width = treeView.ClientSize.Width - e.Bounds.Left;
                 e.Graphics.FillRectangle(background, new Rectangle(e.Bounds.Left, e.Bounds.Top, width, e.Bounds.Height));
             }
 
             // Performs the drawing
-            using (var foreground = new SolidBrush(foreColor))
+            using (SolidBrush foreground = new SolidBrush(foreColor))
             {
-                var left = e.Bounds.Left + this.imageList.ImageSize.Width + 2;
+                int left = e.Bounds.Left + imageList.ImageSize.Width + 2;
                 Size line1Size = TextRenderer.MeasureText(line1, m_boldFont);
 
                 if (!String.IsNullOrEmpty(line2))
                 {
                     e.Graphics.DrawString(line1, m_boldFont, foreground, new PointF(left, e.Bounds.Top));
 
-                    using (var lightForeground = new SolidBrush(lightForeColor))
+                    using (SolidBrush lightForeground = new SolidBrush(lightForeColor))
                     {
-                        e.Graphics.DrawString(line2, this.Font, lightForeground, new PointF(left, e.Bounds.Top + line1Size.Height));
+                        e.Graphics.DrawString(line2, Font, lightForeground, new PointF(left, e.Bounds.Top + line1Size.Height));
                     }
                 }
                 else
                 {
-                    var height = e.Graphics.MeasureString(line1, m_boldFont).Height;
-                    var yOffset = 0;
+                    float height = e.Graphics.MeasureString(line1, m_boldFont).Height;
+                    int yOffset = 0;
                     e.Graphics.DrawString(line1, m_boldFont, foreground, new PointF(left, e.Bounds.Top + yOffset));
                 }
             }
@@ -501,8 +491,8 @@ namespace EVEMon.SkillPlanner
             // Draws the icon for skill/cert on the far right
             if (supIcon != -1)
             {
-                var imgOfssetX = e.Bounds.Left;
-                var imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height) * 0.5f);
+                int imgOfssetX = e.Bounds.Left;
+                float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - imageList.ImageSize.Height) * 0.5f);
                 e.Graphics.DrawImageUnscaled(imageList.Images[supIcon], 
                     (int)(imgOfssetX), 
                     (int)(e.Bounds.Top + imgOffsetY));
@@ -519,7 +509,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void cmListSkills_Opening(object sender, CancelEventArgs e)
         {
-            var node = this.treeView.SelectedNode;
+            TreeNode node = treeView.SelectedNode;
 
             if (node == null)
             {
@@ -534,7 +524,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                var cert = node.Tag as Certificate;
+                Certificate cert = node.Tag as Certificate;
                 showInMenuSeparator.Visible = true;
                 showInBrowserMenu.Visible = true;
 
@@ -556,8 +546,8 @@ namespace EVEMon.SkillPlanner
                 else
                 {
                     // Update "add to" menu
-                    var prereq = (SkillLevel)node.Tag;
-                    var skill = prereq.Skill;
+                    SkillLevel prereq = (SkillLevel)node.Tag;
+                    Skill skill = prereq.Skill;
                     tsmAddToPlan.Enabled = skill.Level < prereq.Level && !m_plan.IsPlanned(skill, prereq.Level);
                     tsmAddToPlan.Text = "Plan \"" + skill.ToString() + " " + Skill.GetRomanForInt(prereq.Level) + "\"";
 
@@ -594,16 +584,16 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
-            var cert = this.treeView.SelectedNode.Tag as Certificate;
+            Certificate cert = treeView.SelectedNode.Tag as Certificate;
             if (cert != null)
             {
-                var operation = m_plan.TryPlanTo(cert);
+                IPlanOperation operation = m_plan.TryPlanTo(cert);
                 PlanHelper.SelectPerform(operation);
             }
             else
             {
-                var prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
-                var operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
+                SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
+                IPlanOperation operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
                 PlanHelper.SelectPerform(operation);
             }
         }
@@ -635,7 +625,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmExpandAll_Click(object sender, EventArgs e)
         {
-            this.treeView.ExpandAll();
+            treeView.ExpandAll();
             m_allExpanded = true;
         }
 
@@ -646,7 +636,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmCollapseAll_Click(object sender, EventArgs e)
         {
-            this.treeView.CollapseAll();
+            treeView.CollapseAll();
             m_allExpanded = false;
         }
 
@@ -663,10 +653,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Return when nothing is selected
-            if (this.treeView.SelectedNode == null)
+            if (treeView.SelectedNode == null)
                 return;
 
-            Certificate cert = this.treeView.SelectedNode.Tag as Certificate;
+            Certificate cert = treeView.SelectedNode.Tag as Certificate;
             // When a certificate is selected, we select its class in the left tree
             if (cert != null)
             {
@@ -675,7 +665,7 @@ namespace EVEMon.SkillPlanner
             // When a skill is selected, we select it in the skill browser
             else
             {
-                SkillLevel prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
+                SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
                 npw.ShowSkillInBrowser(prereq.Skill);
             }
         }
@@ -693,11 +683,11 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Return when nothing is selected
-            if (this.treeView.SelectedNode == null)
+            if (treeView.SelectedNode == null)
                 return;
 
             // Open the skill explorer
-            SkillLevel prereq = (SkillLevel)this.treeView.SelectedNode.Tag;
+            SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
             npw.ShowSkillInExplorer(prereq.Skill);
         }
         #endregion

@@ -25,7 +25,7 @@ namespace EVEMon.Common
 
         #region Initialization, importation, exportation and update
         /// <summary>
-        /// Constructor at character's initialization time
+        /// Constructor at character's initialization time.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="src"></param>
@@ -58,7 +58,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Marks the certificate as granted
+        /// Marks the certificate as granted.
         /// </summary>
         internal void MarkAsGranted()
         {
@@ -67,7 +67,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Restes the data before we import a deserialization object
+        /// Resets the data before we import a deserialization object.
         /// </summary>
         /// <param name="fromCCP"></param>
         internal void Reset()
@@ -82,16 +82,18 @@ namespace EVEMon.Common
         /// <returns>True if the status was updated, false otherwise.</returns>
         internal bool TryUpdateCertificateStatus()
         {
-            if (m_initialized) return false;
+            if (m_initialized)
+                return false;
 
             bool claimable = true;
             bool noPrereq = true;
 
-            // Scan prerequisite certfiicates
-            foreach (var cert in m_prereqCertificates)
+            // Scan prerequisite certificates
+            foreach (Certificate cert in m_prereqCertificates)
             {
                 // Status not defined yet ? Then, we quit
-                if (!cert.m_initialized) return false;
+                if (!cert.m_initialized)
+                    return false;
 
                 // Claimable only if every prereq certificate has been granted
                 claimable &= (cert.Status == CertificateStatus.Granted);
@@ -101,11 +103,11 @@ namespace EVEMon.Common
             }
 
             // Scan prerequisite skills
-            foreach (var prereqSkill in m_prereqSkills)
+            foreach (SkillLevel prereqSkill in m_prereqSkills)
             {
-                var skill = prereqSkill.Skill;
+                Skill skill = prereqSkill.Skill;
 
-                // Claimable only if the skill's level is grater or equal than the minium level
+                // Claimable only if the skill's level is grater or equal than the minimum level
                 claimable &= (skill.Level >= prereqSkill.Level);
 
                 // Untrainable if no prereq is satisfied
@@ -113,10 +115,18 @@ namespace EVEMon.Common
             }
 
             // Updates status
-            if (claimable) m_status = CertificateStatus.Claimable;
-            else if (noPrereq) m_status = CertificateStatus.Untrained;
-            else m_status = CertificateStatus.PartiallyTrained;
-
+            if (claimable)
+            {
+                m_status = CertificateStatus.Claimable;
+            }
+            else if (noPrereq)
+            {
+                m_status = CertificateStatus.Untrained;
+            }
+            else
+            {
+                m_status = CertificateStatus.PartiallyTrained;
+            }
             m_initialized = true;
             return true;
         }
@@ -125,7 +135,7 @@ namespace EVEMon.Common
 
         #region Core properties
         /// <summary>
-        /// Gets this certificate's id
+        /// Gets this certificate's id.
         /// </summary>
         public long ID
         {
@@ -133,7 +143,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this certificate's name
+        /// Gets this certificate's name.
         /// </summary>
         public string Name
         {
@@ -141,7 +151,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this certificate's description
+        /// Gets this certificate's description.
         /// </summary>
         public string Description
         {
@@ -149,7 +159,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this certificate's grade
+        /// Gets this certificate's grade.
         /// </summary>
         public CertificateGrade Grade
         {
@@ -165,7 +175,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the ships this certificate is recommended for
+        /// Gets the ships this certificate is recommended for.
         /// </summary>
         public StaticRecommendations<Item> Recommendations
         {
@@ -173,7 +183,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the current certificate status this character has
+        /// Gets the current certificate status this character has.
         /// </summary>
         public CertificateStatus Status
         {
@@ -181,13 +191,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the immediate prerequisite skills
+        /// Gets the immediate prerequisite skills.
         /// </summary>
         public IEnumerable<SkillLevel> PrerequisiteSkills
         {
             get 
             {
-                foreach (var item in m_prereqSkills)
+                foreach (SkillLevel item in m_prereqSkills)
                 {
                     yield return item;
                 }
@@ -195,7 +205,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the immediate prerequisite certificates
+        /// Gets the immediate prerequisite certificates.
         /// </summary>
         public IEnumerable<Certificate> PrerequisiteCertificates
         {
@@ -206,7 +216,7 @@ namespace EVEMon.Common
 
         #region Helper methods and properties
         /// <summary>
-        /// Gets true whether the certificate is granted
+        /// Gets true whether the certificate is granted.
         /// </summary>
         public bool IsGranted
         {
@@ -225,17 +235,30 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the required training time for the provided character to train this certificate
+        /// Gets true when the certificate can be claimed.
+        /// </summary>
+        public bool CanBeClaimed
+        {
+            get
+            {
+                return m_status == CertificateStatus.Claimable |
+                        (m_status == CertificateStatus.PartiallyTrained &&
+                        AllTopPrerequisiteSkills.All(x => x.Skill.Level >= x.Level));
+            }
+        }
+
+        /// <summary>
+        /// Gets the required training time for the provided character to train this certificate.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>
         public TimeSpan GetTrainingTime()
         {
-            return m_character.GetTrainingTimeToMultipleSkills(this.AllTopPrerequisiteSkills);
+            return m_character.GetTrainingTimeToMultipleSkills(AllTopPrerequisiteSkills);
         }
 
         /// <summary>
-        /// Checks whether the provided skill is an immediate prerequisite
+        /// Checks whether the provided skill is an immediate prerequisite.
         /// </summary>
         /// <param name="skill">The skill to test</param>
         /// <param name="neededLevel">When this skill is an immediate prerequisite, this parameter will held the required level</param>
@@ -246,7 +269,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Checks whether the provided certificate is an immediate prerequisite
+        /// Checks whether the provided certificate is an immediate prerequisite.
         /// </summary>
         /// <param name="certificate">The certificate to test</param>
         /// <returns></returns>
@@ -254,6 +277,7 @@ namespace EVEMon.Common
         {
             return m_prereqCertificates.Contains(certificate);
         }
+
         #endregion
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace EVEMon.Common.Data
 			{
 				foreach (var recommendation in src.Recommendations)
 				{
-					var ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == recommendation.Ship) as Ship;
+                    Ship ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == recommendation.Ship) as Ship;
 					if (ship != null)
 					{
 						ship.Recommendations.Add(this);
@@ -67,14 +67,14 @@ namespace EVEMon.Common.Data
 				// Certificates
 				else
 				{
-					var grade = StaticCertificate.GetGrade(prereq.Level);
+					CertificateGrade grade = StaticCertificate.GetGrade(prereq.Level);
 					m_prerequisiteCertificates.Add(StaticCertificates.GetCertificateClass(prereq.Name)[grade]);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets this certificate's ID
+		/// Gets this certificate's ID.
 		/// </summary>
 		public long ID
 		{
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets this certificate's name
+		/// Gets this certificate's name.
 		/// </summary>
 		public string Name
 		{
@@ -98,7 +98,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets this certificate's description
+		/// Gets this certificate's description.
 		/// </summary>
 		public string Description
 		{
@@ -106,7 +106,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets this certificate's grade
+		/// Gets this certificate's grade.
 		/// </summary>
 		public CertificateGrade Grade
 		{
@@ -114,7 +114,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets the ships this certificate is recommended for
+		/// Gets the ships this certificate is recommended for.
 		/// </summary>
 		public StaticRecommendations<Item> Recommendations
 		{
@@ -122,7 +122,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets the grade from the provided grade key. No need to previously interns the key, it will be itnerned in this method
+		/// Gets the grade from the provided grade key. No need to previously interns the key, it will be itnerned in this method.
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -144,7 +144,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets the prerequisite skills
+		/// Gets the prerequisite skills.
 		/// </summary>
 		public IEnumerable<StaticSkillLevel> PrerequisiteSkills
 		{
@@ -152,7 +152,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Gets the prerequisite certificates
+		/// Gets the prerequisite certificates.
 		/// </summary>
 		public IEnumerable<StaticCertificate> PrerequisiteCertificates
 		{
@@ -210,7 +210,7 @@ namespace EVEMon.Common.Data
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return this.m_class.Name + " " + this.m_grade.ToString();
+			return m_class.Name + " " + m_grade.ToString();
 		}
 
 		/// <summary>
@@ -220,7 +220,7 @@ namespace EVEMon.Common.Data
 		/// <returns></returns>
 		public Certificate ToCharacter(Character character)
 		{
-			return character.Certificates[this.ID];
+			return character.Certificates[ID];
 		}
 	}
 }
