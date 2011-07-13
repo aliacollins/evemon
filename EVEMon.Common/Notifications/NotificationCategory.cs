@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Attributes;
+﻿using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.Notifications
 {
