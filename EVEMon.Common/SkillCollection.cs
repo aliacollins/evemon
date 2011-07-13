@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
@@ -82,6 +84,37 @@ namespace EVEMon.Common
         public Skill GetByArrayIndex(int index)
         {
             return m_itemsArray[index];
+        }
+
+        /// <summary>
+        /// Exports this collection to a serialization object.
+        /// </summary>
+        /// <returns></returns>
+        internal List<SerializableCharacterSkill> Export()
+        {
+            List<SerializableCharacterSkill> skills = new List<SerializableCharacterSkill>();
+            foreach (Skill skill in m_items.Values.Where(x => x.IsKnown || x.IsOwned))
+            {
+                skills.Add(skill.Export());
+            }
+
+            return skills;
+        }
+
+        /// Imports data from a serialization object.
+        internal void Import(List<SerializableCharacterSkill> skills, bool fromCCP)
+        {
+            // Skills : reset all > update all
+            foreach (Skill skill in m_items.Values)
+            {
+                skill.Reset(fromCCP);
+            }
+
+            foreach (SerializableCharacterSkill serialSkill in skills.Where(x => m_itemsByID[x.ID] != null))
+            {
+                // Take care of the new skills not in our datafiles yet. Update if it exists.
+                m_itemsByID[serialSkill.ID].Import(serialSkill, fromCCP);
+            }
         }
     }
 }

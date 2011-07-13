@@ -1,12 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-
-using EVEMon.Common.Data;
+using System.Linq;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -509,19 +508,11 @@ namespace EVEMon.Common
             // Implants sets
             serial.ImplantSets = ImplantSets.Export();
 
-            // Certificates
-            serial.Certificates = new List<SerializableCharacterCertificate>();
-            foreach(var cert in Certificates.Where(x => x.IsGranted))
-            {
-                serial.Certificates.Add(new SerializableCharacterCertificate{ CertificateID = cert.ID });
-            }
-
             // Skills
-            serial.Skills = new List<SerializableCharacterSkill>();
-            foreach(var skill in Skills.Where(x => x.IsKnown || x.IsOwned))
-            {
-                serial.Skills.Add(skill.Export());
-            }
+            serial.Skills = Skills.Export();
+
+            // Certificates
+            serial.Certificates = Certificates.Export();
         }
 
         /// <summary>
@@ -567,8 +558,6 @@ namespace EVEMon.Common
         /// <param name="serial">The serialized character sheet</param>
         protected void Import(SerializableCharacterSheetBase serial)
         {
-            bool fromCCP = (serial is SerializableAPICharacterSheet);
-
             // Bio
             m_name = serial.Name;
             m_birthday = serial.Birthday;
@@ -591,40 +580,11 @@ namespace EVEMon.Common
             m_attributes[(int)EveAttribute.Charisma].Base = serial.Attributes.Charisma;
             m_attributes[(int)EveAttribute.Memory].Base = serial.Attributes.Memory;
 
-            // Skills : reset all > update all
-            foreach (var skill in m_skills)
-            {
-                skill.Reset(fromCCP);
-            }
-            
-            foreach (var serialSkill in serial.Skills.Where(x => m_skills[x.ID] != null))
-            {
-                // Take care of the new skills not in our datafiles yet. Update if it exists.
-                m_skills[serialSkill.ID].Import(serialSkill, fromCCP);
-            }
+            // Skills
+            m_skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
 
-            // Certificates : reset > mark the granted ones > update the other ones
-            foreach (var cert in m_certificates)
-            {
-                cert.Reset();
-            }
-
-            foreach (var serialCert in serial.Certificates.Where(x => m_certificates[x.CertificateID] != null))
-            {
-                // Take care of the new certs not in our datafiles yet. Mark as granted if it exists.
-                m_certificates[serialCert.CertificateID].MarkAsGranted();
-            }
-
-            while (true)
-            {
-                bool updatedAnything = false;
-                foreach (var cert in m_certificates)
-                {
-                    updatedAnything |= cert.TryUpdateCertificateStatus();
-                }
-                if (!updatedAnything)
-                    break;
-            }
+            // Certificates
+            m_certificates.Import(serial.Certificates);
         }
 
         /// <summary>
