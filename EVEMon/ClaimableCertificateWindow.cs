@@ -8,31 +8,31 @@ using EVEMon.Common.Notifications;
 
 namespace EVEMon
 {
-    public partial class SkillCompletionWindow : EVEMonForm
+    public partial class ClaimableCertificateWindow : EVEMonForm
     {
-        private SkillCompletionNotification m_notification;
+        private ClaimableCertificateNotification m_notification;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public SkillCompletionWindow()
+        public ClaimableCertificateWindow()
         {
             InitializeComponent();
-            RememberPositionKey = "SkillCompletionWindow";
+            RememberPositionKey = "ClaimableCertificateWindow";
         }
 
         /// <summary>
         /// Gets or sets the list of completed skills.
         /// </summary> 
         [Browsable(false)]
-        public SkillCompletionNotification Notification
+        public ClaimableCertificateNotification Notification
         {
             get { return m_notification; }
-            set 
-            { 
+            set
+            {
                 m_notification = value;
                 StringBuilder text = new StringBuilder();
-                foreach (var skill in m_notification.Skills.Reverse())
+                foreach (var skill in m_notification.Certificates)
                 {
                     text.AppendLine(skill.ToString());
                 }

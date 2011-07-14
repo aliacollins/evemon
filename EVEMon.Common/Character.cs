@@ -623,10 +623,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Updates the character on a timer tick
         /// </summary>
-        internal virtual void UpdateOnOneSecondTick()
-        {
-
-        }
+        internal virtual void UpdateOnOneSecondTick() { }
 
         /// <summary>
         /// Clean the obsolete entries in the plan.

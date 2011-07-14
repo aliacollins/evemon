@@ -664,7 +664,6 @@ namespace EVEMon
                     }
                     builder.AppendLine(tooltipText);
                 }
-                
                 // When the text gets too long we add an informative text once
                 else if (count == 0)
                 {

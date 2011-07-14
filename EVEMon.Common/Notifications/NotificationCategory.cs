@@ -28,6 +28,11 @@ namespace EVEMon.Common.Notifications
         [Header("Skill queue room availability")]
         SkillQueueRoomAvailable,
         /// <summary>
+        /// A certificate is claimable.
+        /// </summary>
+        [Header("Claimable certificate")]
+        ClaimableCertificate,
+        /// <summary>
         /// A character has not enough balance to fulfill its buy orders.
         /// </summary>
         [Header("Insufficient balance")]

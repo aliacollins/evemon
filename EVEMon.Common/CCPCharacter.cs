@@ -404,13 +404,26 @@ namespace EVEMon.Common
             Import(result);
 
             // Check the character has a sufficient clone or send a notification
-            if (Monitored && (m_cloneSkillPoints < SkillPoints))
+            if (Monitored && (CloneSkillPoints < SkillPoints))
             {
                 EveClient.Notifications.NotifyInsufficientClone(this);
-                return;
+            }
+            else
+            {
+                EveClient.Notifications.InvalidateInsufficientClone(this);
             }
 
-            EveClient.Notifications.InvalidateInsufficientClone(this);
+            // Check for claimable certificates
+            List<Certificate> claimableCertifitates = new List<Certificate>();
+            claimableCertifitates.AddRange(Certificates.Where(x => x.CanBeClaimed));
+            if (Monitored && claimableCertifitates.Count > 0)
+            {
+                EveClient.Notifications.NotifyClaimableCertificate(this, claimableCertifitates);
+            }
+            else
+            {
+                EveClient.Notifications.InvalidateClaimableCertificate(this);
+            }
         }
 
         /// <summary>

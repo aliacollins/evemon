@@ -1299,11 +1299,11 @@ namespace EVEMon
         internal void TestCharacterNotification()
         {
             var notification = new Notification(NotificationCategory.TestNofitication, m_character)
-                                   {
-                                       Priority = NotificationPriority.Warning,
-                                       Behaviour = NotificationBehaviour.Overwrite,
-                                       Description = "Test Character Notification."
-                                   };
+            {
+                Priority = NotificationPriority.Warning,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Description = "Test Character Notification."
+            };
             EveClient.Notifications.Notify(notification);
         }
 

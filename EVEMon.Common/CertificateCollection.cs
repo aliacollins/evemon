@@ -33,7 +33,7 @@ namespace EVEMon.Common
                 }
             }
 
-            // Builds the prerequisites certificates list.
+            // Builds the prerequisites certificates list
             foreach (Certificate cert in m_items.Values)
             {
                 cert.CompleteInitialization(m_items);
@@ -103,7 +103,8 @@ namespace EVEMon.Common
 
             foreach (SerializableCharacterCertificate serialCert in certificates.Where(x => m_items[x.CertificateID] != null))
             {
-                // Take care of the new certs not in our datafiles yet. Mark as granted if it exists.
+                // Take care of the new certs not in our datafiles yet
+                // Mark as granted if it exists
                 m_items[serialCert.CertificateID].MarkAsGranted();
             }
 

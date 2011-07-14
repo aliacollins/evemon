@@ -109,8 +109,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a conquerable station list querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="result">The result.</param>
         internal void NotifyConquerableStationListError(APIResult<SerializableAPIConquerableStationList> result)
         {
             var notification = new APIErrorNotification(null, result)
@@ -125,8 +124,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a character Id to name querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="result">The result.</param>
         internal void NotifyCharacterNameError(APIResult<SerializableAPICharacterName> result)
         {
             var notification = new APIErrorNotification(null, result)
@@ -141,8 +139,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies EVE Backend Database is temporarily disabled.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="result">The result.</param>
         internal void NotifyEVEBackendDatabaseDisabled(IAPIResult result)
         {
             var notification = new APIErrorNotification(null, result)
@@ -168,8 +165,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a server status querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="result">The result.</param>
         internal void NotifyServerStatusError(APIResult<SerializableAPIServerStatus> result)
         {
             var notification = new APIErrorNotification(null, result)
@@ -187,7 +183,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an account's error.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="account">The account.</param>
         internal void InvalidateAccountError(Account account)
         {
             Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.QueryingError));
@@ -196,8 +192,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account's characters list querying error.
         /// </summary>
-        /// <param name="account"></param>
-        /// <param name="result"></param>
+        /// <param name="account">The account.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyCharacterListError(Account account, APIResult<SerializableAPICharacters> result)
         {
             var notification = new APIErrorNotification(account, result)
@@ -212,8 +208,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account's status querying error.
         /// </summary>
-        /// <param name="account"></param>
-        /// <param name="result"></param>
+        /// <param name="account">The account.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyAccountStatusError(Account account, APIResult<SerializableAPIAccountStatus> result)
         {
             var notification = new APIErrorNotification(account, result)
@@ -228,8 +224,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an API key level querying error.
         /// </summary>
-        /// <param name="account"></param>
-        /// <param name="result"></param>
+        /// <param name="account">The account.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyKeyLevelError(Account account, APIResult<SerializableAPIAccountStatus> result)
         {
             var notification = new APIErrorNotification(account, result)
@@ -247,6 +243,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for a character's API error.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal void InvalidateCharacterAPIError(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.QueryingError));
@@ -255,8 +252,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a character skill in training querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifySkillInTrainingError(CCPCharacter character, APIResult<SerializableAPISkillInTraining> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -271,8 +268,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a character sheet querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacterSheet> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -287,8 +284,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a skill queue querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableAPISkillQueue> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -303,8 +300,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a market orders querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -335,8 +332,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an industry jobs querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -351,8 +348,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an industry jobs querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -367,8 +364,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a research querying error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearch> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -383,8 +380,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a mail messages query error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyEVEMailMessagesError(CCPCharacter character, APIResult<SerializableAPIMailMessages> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -399,8 +396,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a mail body query error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyEVEMailBodiesError(CCPCharacter character, APIResult<SerializableAPIMailBodies> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -415,8 +412,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a mailing lists query error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyMailingListsError(CCPCharacter character, APIResult<SerializableAPIMailingLists> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -431,8 +428,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a notifications query error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyEVENotificationsError(CCPCharacter character, APIResult<SerializableAPINotifications> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -447,8 +444,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a notification texts query error.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
         internal void NotifyEVENotificationTextsError(CCPCharacter character, APIResult<SerializableAPINotificationTexts> result)
         {
             var notification = new APIErrorNotification(character, result)
@@ -466,6 +463,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an account expiration.
         /// </summary>
+        /// <param name="account">The account.</param>
         internal void InvalidateAccountExpiration(Account account)
         {
             Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountExpiration));
@@ -474,8 +472,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account is to expire within a week.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="result"></param>
+        /// <param name="account">The account.</param>
+        /// <param name="expireDate">The expire date.</param>
+        /// <param name="priority">The priority.</param>
         internal void NotifyAccountExpiration(Account account, DateTime expireDate, NotificationPriority priority)
         {
             var notification = new Notification(NotificationCategory.AccountExpiration, account)
@@ -495,6 +494,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an account's characters list querying error.
         /// </summary>
+        /// <param name="account">The account.</param>
         internal void InvalidateAccountNotInTraining(Account account)
         {
             Invalidate(new NotificationInvalidationEventArgs(account, NotificationCategory.AccountNotInTraining));
@@ -503,7 +503,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account has no character training.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="account">The account.</param>
         internal void NotifyAccountNotInTraining(Account account)
         {
             var notification = new Notification(NotificationCategory.AccountNotInTraining, account)
@@ -521,6 +521,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an insufficient balance.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal void InvalidateInsufficientBalance(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.InsufficientBalance));
@@ -529,7 +530,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account has an insufficient balance.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="character">The character.</param>
         internal void NotifyInsufficientBalance(CCPCharacter character)
         {
             var notification = new Notification(NotificationCategory.InsufficientBalance, character)
@@ -547,6 +548,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for an insufficient clone.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal void InvalidateInsufficientClone(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.InsufficientClone));
@@ -555,7 +557,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies an account has an insufficient clone.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="character">The character.</param>
         internal void NotifyInsufficientClone(CCPCharacter character)
         {
             var notification = new Notification(NotificationCategory.InsufficientClone, character)
@@ -573,8 +575,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies a character finished training a skill.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="skillsCompleted"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="skillsCompleted">The completed skills.</param>
         internal void NotifySkillCompletion(CCPCharacter character, List<QueuedSkill> skillsCompleted)
         {
             var notification = new SkillCompletionNotification(character, skillsCompleted)
@@ -591,6 +593,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Invalidates the notification for skill queue availability.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal void InvalidateSkillQueueRoomAvailability(CCPCharacter character)
         {
             Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable));
@@ -599,8 +602,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify when we have room to queue more skills.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="expiredOrders"></param>
+        /// <param name="character">The character.</param>
         internal void NotifySkillQueueRoomAvailable(CCPCharacter character)
         {
             var notification = new Notification(NotificationCategory.SkillQueueRoomAvailable, character)
@@ -614,9 +616,36 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Claimable certificate
+        /// <summary>
+        /// Invalidates the notification for claimable certificates.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal void InvalidateClaimableCertificate(CCPCharacter character)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.ClaimableCertificate));
+        }
+        
+        /// <summary>
+        /// Notifies a character has a claimable certificate.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="claimableCertificates">The claimable certificates.</param>
+        internal void NotifyClaimableCertificate(CCPCharacter character, List<Certificate> claimableCertificates)
+        {
+            var notification = new ClaimableCertificateNotification(character, claimableCertificates)
+            {
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Information
+            };
+            Notify(notification);
+        }
+        #endregion
+
+
         #region Server status
         /// <summary>
-        /// Invalidates the notification for an skill completion.
+        /// Invalidates the notification for the server status.
         /// </summary>
         internal void InvalidateServerStatusChange()
         {
@@ -624,9 +653,10 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a character finished training a skill.
+        /// Notifies about the server status.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="serverName">Name of the server.</param>
+        /// <param name="status">The status.</param>
         internal void NotifyServerStatusChanged(string serverName, ServerStatus status)
         {
             string text = String.Empty;
@@ -657,7 +687,7 @@ namespace EVEMon.Common
 
         #region IGB Service Initilization Exception
         /// <summary>
-        /// Invalidates the notification for an socket error on starting IGB service
+        /// Invalidates the notification for an socket error on starting IGB service.
         /// </summary>
         internal void InvalidateIgbServiceException()
         {
@@ -665,9 +695,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notification for a socket error on starting IGB service
+        /// Notifies for a socket error on starting IGB service.
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="port">The port.</param>
         internal void NotifyIgbServiceException(int port)
         {
             var notification = new Notification(NotificationCategory.IgbServiceException, null)
@@ -685,8 +715,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify some market orders expired or have been fulfilled.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="expiredOrders"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="expiredOrders">The expired orders.</param>
         internal void NotifyMarkerOrdersEnding(Character character, List<MarketOrder> expiredOrders)
         {
             var notification = new MarketOrdersNotification(character, expiredOrders)
@@ -703,8 +733,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify some industry jobs have ended.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="expiredOrders"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="jobsCompleted">The completed jobs.</param>
         internal void NotifyIndustryJobCompletion(Character character, List<IndustryJob> jobsCompleted)
         {
             var notification = new IndustryJobsNotification(character, jobsCompleted)
@@ -721,8 +751,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify new EVE mail message is available.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="expiredOrders"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="newMessages">The new messages.</param>
         internal void NotifyNewEVEMailMessages(Character character, int newMessages)
         {
             var notification = new NewEveMailMessageNotification(character, newMessages)
@@ -739,8 +769,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Notify new EVE notification is available.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="expiredOrders"></param>
+        /// <param name="character">The character.</param>
+        /// <param name="newNotifications">The new notifications.</param>
         internal void NotifyNewEVENotifications(Character character, int newNotifications)
         {
             var notification = new NewEveNotificationNotification(character, newNotifications)

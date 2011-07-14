@@ -369,6 +369,14 @@ namespace EVEMon
                 return;
             }
 
+            // Claimable certificate ?
+            if (notification is ClaimableCertificateNotification)
+            {
+                var window = WindowsFactory<ClaimableCertificateWindow>.ShowUnique();
+                window.Notification = (ClaimableCertificateNotification)notification;
+                return;
+            }
+
             // Market orders ?
             if (notification is MarketOrdersNotification)
             {
@@ -424,6 +432,21 @@ namespace EVEMon
                 {
                     builder.AppendFormat(CultureConstants.DefaultCulture,
                         "{0} {1} completed.", skill.SkillName, Skill.GetRomanForInt(skill.Level)).AppendLine();
+                }
+                toolTip.SetToolTip(listBox, builder.ToString());
+                toolTip.Active = true;
+                return;
+            }
+
+            // Claimable certificate ?
+            if (notification is ClaimableCertificateNotification)
+            {
+                ClaimableCertificateNotification certNotifications = (ClaimableCertificateNotification)notification;
+                StringBuilder builder = new StringBuilder();
+                foreach (Certificate cert in certNotifications.Certificates)
+                {
+                    builder.AppendFormat(CultureConstants.DefaultCulture,
+                        "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
                 }
                 toolTip.SetToolTip(listBox, builder.ToString());    
                 toolTip.Active = true;

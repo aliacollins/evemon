@@ -10,12 +10,12 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a character's skills queue
+    /// Represents a character's skills queue.
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class SkillQueue : ReadonlyCollection<QueuedSkill>
     {
-        public CCPCharacter m_character;
+        private CCPCharacter m_character;
         private QueuedSkill m_lastCompleted;
         private DateTime startTime = DateTime.UtcNow;
         private bool m_isPaused;
@@ -30,7 +30,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise
+        /// Gets true when the character is currently training (non-empty and non-paused skill queue), false otherwise.
         /// </summary>
         public bool IsTraining
         {
@@ -44,7 +44,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the last completed skill
+        /// Gets the last completed skill.
         /// </summary>
         public QueuedSkill LastCompleted
         {
@@ -66,7 +66,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill currently in training
+        /// Gets the skill currently in training.
         /// </summary>
         public QueuedSkill CurrentlyTraining
         {
@@ -88,7 +88,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// When the timer ticks, on every second, we update the skill
+        /// When the timer ticks, on every second, we update the skill.
         /// </summary>
         internal void UpdateOnTimerTick()
         {
@@ -128,7 +128,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Generates a deserialization object
+        /// Generates a deserialization object.
         /// </summary>
         /// <returns></returns>
         internal List<SerializableQueuedSkill> Export()
@@ -142,7 +142,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a serialization object
+        /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
         internal void Import(IEnumerable<SerializableQueuedSkill> serial)

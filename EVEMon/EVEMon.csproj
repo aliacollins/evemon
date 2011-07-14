@@ -165,6 +165,12 @@
     <Compile Include="CharacterMonitorHeader.Designer.cs">
       <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClaimableCertificateWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClaimableCertificateWindow.Designer.cs">
+      <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -384,6 +390,9 @@
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="ClaimableCertificateWindow.resx">
+      <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReadingPane.resx">
       <DependentUpon>ReadingPane.cs</DependentUpon>
       <SubType>Designer</SubType>
