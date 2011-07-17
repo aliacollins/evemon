@@ -10,6 +10,8 @@ using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
+    public delegate void GetImageCallback(Image i);
+
     public class ImageService
     {
         private static readonly Object s_syncLock = new object();
@@ -36,7 +38,7 @@ namespace EVEMon.Common
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
         public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
-            GetImageAsync(String.Format(NetworkConstants.CCPPortraits, charId.ToString()), false, callback);
+            GetImageAsync(String.Format(NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128), false, callback);
         }
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            // First check whether the image exists in cache.
+            // First check whether the image exists in cache
             string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
             if (File.Exists(cacheFileName))
             {
@@ -62,6 +64,7 @@ namespace EVEMon.Common
                 {
                     Image img = Image.FromFile(cacheFileName, true);
                     callback(img);
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -69,7 +72,7 @@ namespace EVEMon.Common
                 }
             }
 
-            // In last resort, downloads it.
+            // Downloads the image and adds it to cache
             EveClient.HttpWebService.DownloadImageAsync(url, GotImage, (GetImageCallback)((img) =>
                 {
                     if (img != null)
@@ -148,6 +151,4 @@ namespace EVEMon.Common
             }
         }
     }
-
-    public delegate void GetImageCallback(Image i);
 }

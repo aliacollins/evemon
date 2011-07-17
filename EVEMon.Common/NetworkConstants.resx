@@ -151,7 +151,7 @@
     <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>
   </data>
   <data name="CCPPortraits" xml:space="preserve">
-    <value>http://image.eveonline.com/character/{0}_128.jpg</value>
+    <value>http://image.eveonline.com/character/{0}_{1}.jpg</value>
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="GoogleCalendarURL" xml:space="preserve">
