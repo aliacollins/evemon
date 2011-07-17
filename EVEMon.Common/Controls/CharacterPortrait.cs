@@ -90,7 +90,7 @@ namespace EVEMon.Common.Controls
         /// Gets the local portraits cache path for our character's GUID.
         /// </summary>
         /// <remarks>
-        /// We're talking about the cache in %APPDATA%\cache. 
+        /// We're talking about the cache in %APPDATA%\cache\portraits. 
         /// This is different from the ImageService's hit cache (%APPDATA%\cache\image) or the game's portrait cache (in EVE Online folder)
         /// </remarks>
         public string EVEMonCachePortraitsPath
