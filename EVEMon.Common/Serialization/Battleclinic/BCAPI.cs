@@ -153,7 +153,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 return;
 
             FileSave();
-            EveClient.Trace("BCAPI.UploadSettingsFile() - Done");
+            EveClient.Trace("BCAPI.UploadSettingsFile - Done");
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             if (!BCAPISettings.Default.DownloadAlways || !HasCredentialsStored)
                 return;
 
-            EveClient.Trace("BCAPI.DownloadSettingsFile() - Initiated");
+            EveClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
 
             FileGetByNameAsync(OnFileGetByName);
         }
@@ -320,7 +320,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 return;
             }
 
-            EveClient.Trace("BCAPI.DownloadSettingsFile() - Completed");
+            EveClient.Trace("BCAPI.DownloadSettingsFile - Completed");
 
             SaveSettingsFile(result.Result.Files[0]);
         }

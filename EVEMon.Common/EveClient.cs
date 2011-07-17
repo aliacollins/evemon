@@ -50,7 +50,7 @@ namespace EVEMon.Common
 
                 s_initialized = true;
 
-                Trace("EveClient.Initialize() - begin");
+                Trace("EveClient.Initialize - begin");
 
                 // Members instantiations
                 HttpWebService = new HttpWebService();
@@ -75,7 +75,7 @@ namespace EVEMon.Common
                 // Network monitoring (connection availability changes)
                 NetworkMonitor.Initialize();
 
-                Trace("EveClient.Initialize() - done");
+                Trace("EveClient.Initialize - done");
             }
         }
 
@@ -86,7 +86,7 @@ namespace EVEMon.Common
         /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
         public static void Run(Form mainForm)
         {
-            Trace("EveClient.Run()");
+            Trace("EveClient.Run");
 
             s_running = true;
             Dispatcher.Run(new UIActor(mainForm));

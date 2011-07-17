@@ -71,7 +71,7 @@ namespace EVEMon.Common
         {
             s_checkScheduled = true;
             Dispatcher.Schedule(time, () => BeginCheck());
-            EveClient.Trace("UpdateManager.ScheduleCheck() in {0}", time);
+            EveClient.Trace("UpdateManager.ScheduleCheck in {0}", time);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            EveClient.Trace("UpdateManager.BeginCheck()");
+            EveClient.Trace("UpdateManager.BeginCheck");
 
             // Otherwise, query Batlleclinic
             Util.DownloadXMLAsync<SerializablePatch>(Settings.Updates.UpdatesUrl, null, OnCheckCompleted);
@@ -137,7 +137,7 @@ namespace EVEMon.Common
                 ScheduleCheck(s_frequency);
             }
 
-            EveClient.Trace("UpdateManager.OnCheckCompleted()");
+            EveClient.Trace("UpdateManager.OnCheckCompleted");
         }
 
         private static void ScanUpdateFeed(SerializablePatch result)

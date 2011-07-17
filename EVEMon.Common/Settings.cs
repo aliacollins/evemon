@@ -71,7 +71,7 @@ namespace EVEMon.Common
             IsRestoringSettings = true;
             try
             {
-                EveClient.Trace("Settings.Import() - begin");
+                EveClient.Trace("Settings.Import - begin");
 
                 // Import the characters, accounts and plans
                 if (!preferencesOnly)
@@ -113,7 +113,7 @@ namespace EVEMon.Common
                 EveClient.UpdateOnOneSecondTick();
                 EveClient.OnSettingsChanged();
 
-                EveClient.Trace("Settings.Import() - done");
+                EveClient.Trace("Settings.Import - done");
             }
             finally
             {
@@ -290,7 +290,7 @@ namespace EVEMon.Common
             // Check that a settings file or backup exists
             if (File.Exists(settingsFile))
             {
-                EveClient.Trace("Settings.TryDeserializeSettings() - begin");
+                EveClient.Trace("Settings.TryDeserializeSettings - begin");
 
                 // Check settings file length
                 FileInfo settingsInfo = new FileInfo(settingsFile);
@@ -316,7 +316,7 @@ namespace EVEMon.Common
                     {
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveClient.Trace("Settings.TryDeserializeSettings() - done");
+                        EveClient.Trace("Settings.TryDeserializeSettings - done");
                         return settings;
                     }
                 }
@@ -338,7 +338,7 @@ namespace EVEMon.Common
             // Load failed, so check for backup
             if (File.Exists(backupFile))
             {
-                EveClient.Trace("Settings.TryDeserializeBackup() - begin");
+                EveClient.Trace("Settings.TryDeserializeBackup - begin");
 
                 FileInfo backupInfo = new FileInfo(backupFile);
                 if (backupInfo.Length > 0)
@@ -382,7 +382,7 @@ namespace EVEMon.Common
                         CheckSettingsVersion(settings);
                         FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                         FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                        EveClient.Trace("Settings.TryDeserializeBackup() - done");
+                        EveClient.Trace("Settings.TryDeserializeBackup - done");
                         return settings;
                     }
 

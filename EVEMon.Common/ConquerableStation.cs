@@ -148,7 +148,7 @@ namespace EVEMon.Common
         /// </summary>
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
-            EveClient.Trace("ConquerableStationList.Import() - begin");
+            EveClient.Trace("ConquerableStationList.Import - begin");
             s_conqStationsByID.Clear();
 
             try
@@ -165,7 +165,7 @@ namespace EVEMon.Common
             finally
             {
                 s_loaded = true;
-                EveClient.Trace("ConquerableStationList.Import() - done");
+                EveClient.Trace("ConquerableStationList.Import - done");
             }
         }
         #endregion
