@@ -11,7 +11,7 @@ using EVEMon.Common.Data;
 namespace EVEMon.Common.Controls
 {
     /// <summary>
-    /// Displays an image for a given EveObject
+    /// Displays an image for a given EveObject.
     /// </summary>
     /// <remarks>
     /// Setting the PopUpEnabled property to true enables a pop-up
@@ -24,7 +24,7 @@ namespace EVEMon.Common.Controls
     {
 
         /// <summary>
-        /// Holds configuration data for different image types
+        /// Holds configuration data for different image types.
         /// </summary>
         private Dictionary<ImageType, ImageTypeData> m_ImageTypeAttributes;
 
@@ -38,7 +38,7 @@ namespace EVEMon.Common.Controls
         #region Constructor
 
         /// <summary>
-        /// Initialize the control
+        /// Initialize the control.
         /// </summary>
         /// <remarks>
         /// The default image size is 64 x 64, with the image pop-up enabled.
@@ -163,7 +163,7 @@ namespace EVEMon.Common.Controls
         #region Private Methods
 
         /// <summary>
-        /// Builds the m_ImageTypeAttributes dictionary
+        /// Builds the m_ImageTypeAttributes dictionary.
         /// </summary>
         private void SetImageTypeAttributes()
         {
@@ -236,7 +236,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Renders a BackColor square as a placeholder for the image
+        /// Renders a BackColor square as a placeholder for the image.
         /// </summary>
         private void ShowBlankImage()
         {
@@ -249,7 +249,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Retrieves image for the given EveObject
+        /// Retrieves image for the given EveObject.
         /// </summary>
         private void GetImage()
         {
@@ -286,7 +286,7 @@ namespace EVEMon.Common.Controls
         /// <returns></returns>
         private void GetImageFromCCP(ImageTypeData typeData)
         {
-            string urlPath = "inventorytype";
+            string urlPath = "type";
             bool drawOverlayIcon = false;
 
             if ((int)m_imageSize > 64)
@@ -346,7 +346,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Find an image resource from local resource files
+        /// Find an image resource from local resource files.
         /// </summary>
         /// <param name="imageResourceName">Resource name for the image</param>
         /// <param name="localResources">Local resource</param>
@@ -377,7 +377,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Callback method for asynchronous web requests
+        /// Callback method for asynchronous web requests.
         /// </summary>
         /// <param name="id">EveObject id for retrieved image</param>
         /// <param name="image">Image object retrieved</param>
@@ -438,7 +438,7 @@ namespace EVEMon.Common.Controls
         #region Public Event Handlers
 
         /// <summary>
-        /// Event handler for image double click
+        /// Event handler for image double click.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -458,17 +458,17 @@ namespace EVEMon.Common.Controls
         public enum EveImageSizeMode { Normal, AutoSize, StretchImage };
 
         /// <summary>
-        /// Identifies the image type being handled
+        /// Identifies the image type being handled.
         /// </summary>
         private enum ImageType { Ship, Drone, Structure, Item, Blueprint, None }
 
         /// <summary>
-        /// Indicates the source of the .png image name
+        /// Indicates the source of the .png image name.
         /// </summary>
         private enum ImageNameFrom { TypeID, Icon };
 
         /// <summary>
-        /// Defines configuration data for a specific ImageType
+        /// Defines configuration data for a specific ImageType.
         /// </summary>
         private struct ImageTypeData
         {
