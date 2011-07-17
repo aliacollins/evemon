@@ -202,6 +202,11 @@
     <Compile Include="EveMailMessagesColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ReadingPane.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -226,29 +231,29 @@
     <Compile Include="IndustryJobsWindow.Designer.cs">
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowEveNotifications.cs">
+    <Compile Include="MainWindowEveNotificationsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowEveNotifications.Designer.cs">
-      <DependentUpon>MainWindowEveNotifications.cs</DependentUpon>
+    <Compile Include="MainWindowEveNotificationsList.Designer.cs">
+      <DependentUpon>MainWindowEveNotificationsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowIndustryJobs.cs">
+    <Compile Include="MainWindowIndustryJobsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowIndustryJobs.Designer.cs">
-      <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
+    <Compile Include="MainWindowIndustryJobsList.Designer.cs">
+      <DependentUpon>MainWindowIndustryJobsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowEveMailMessages.cs">
+    <Compile Include="MainWindowEveMailMessagesList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowEveMailMessages.designer.cs">
-      <DependentUpon>MainWindowEveMailMessages.cs</DependentUpon>
+    <Compile Include="MainWindowEveMailMessagesList.designer.cs">
+      <DependentUpon>MainWindowEveMailMessagesList.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowResearchPoints.cs">
+    <Compile Include="MainWindowResearchPointsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowResearchPoints.Designer.cs">
-      <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
+    <Compile Include="MainWindowResearchPointsList.Designer.cs">
+      <DependentUpon>MainWindowResearchPointsList.cs</DependentUpon>
     </Compile>
     <Compile Include="ResearchColumnsSelectWindow.cs">
       <SubType>Form</SubType>
@@ -304,11 +309,11 @@
     <Compile Include="Controls\DropDownMouseMoveComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MainWindowMarketOrders.cs">
+    <Compile Include="MainWindowMarketOrdersList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MainWindowMarketOrders.Designer.cs">
-      <DependentUpon>MainWindowMarketOrders.cs</DependentUpon>
+    <Compile Include="MainWindowMarketOrdersList.Designer.cs">
+      <DependentUpon>MainWindowMarketOrdersList.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindowSkillsList.cs">
       <SubType>UserControl</SubType>
@@ -389,9 +394,12 @@
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Properties\Resources.resx" />
     <EmbeddedResource Include="ClaimableCertificateWindow.resx">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="ReadingPane.resx">
       <DependentUpon>ReadingPane.cs</DependentUpon>
@@ -404,14 +412,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowEveMailMessages.resx">
-      <DependentUpon>MainWindowEveMailMessages.cs</DependentUpon>
+    <EmbeddedResource Include="MainWindowEveMailMessagesList.resx">
+      <DependentUpon>MainWindowEveMailMessagesList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowEveNotifications.resx">
-      <DependentUpon>MainWindowEveNotifications.cs</DependentUpon>
+    <EmbeddedResource Include="MainWindowEveNotificationsList.resx">
+      <DependentUpon>MainWindowEveNotificationsList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowResearchPoints.resx">
-      <DependentUpon>MainWindowResearchPoints.cs</DependentUpon>
+    <EmbeddedResource Include="MainWindowResearchPointsList.resx">
+      <DependentUpon>MainWindowResearchPointsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\BattleClinicAPIControl.resx">
       <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
@@ -1017,8 +1025,8 @@
       <DependentUpon>IndustryJobsWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowIndustryJobs.resx">
-      <DependentUpon>MainWindowIndustryJobs.cs</DependentUpon>
+    <EmbeddedResource Include="MainWindowIndustryJobsList.resx">
+      <DependentUpon>MainWindowIndustryJobsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillCompletionWindow.resx">
       <DependentUpon>SkillCompletionWindow.cs</DependentUpon>
@@ -1031,8 +1039,8 @@
       <DependentUpon>ImplantTooltip.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindowMarketOrders.resx">
-      <DependentUpon>MainWindowMarketOrders.cs</DependentUpon>
+    <EmbeddedResource Include="MainWindowMarketOrdersList.resx">
+      <DependentUpon>MainWindowMarketOrdersList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindowSkillsQueueList.resx">
@@ -1141,6 +1149,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="EVEMon.ico" />
+    <None Include="Resources\Image1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
