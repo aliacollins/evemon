@@ -14,6 +14,7 @@ RequestExecutionLevel admin
 !include "FileFunc.nsh"
 !include "LogicLib.nsh"
 !include "MUI.nsh"
+!include "NETFrameworkCheck.nsh"
 
 Name "EVEMon"
 OutFile "${OUTDIR}\EVEMon-install-${VERSION}.exe"
@@ -56,10 +57,7 @@ Var MUI_TEMP
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
-
 !insertmacro MUI_LANGUAGE "English"
-
-!include "NETFrameworkCheck.nsh"
 
 Function .onInit
 	!insertmacro UAC_RunElevated 
