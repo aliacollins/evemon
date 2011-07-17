@@ -167,7 +167,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding the character skill queue update.
-            EveClient.OnCharacterSkillQueueChanged(m_character);
+            EveClient.OnCharacterSkillQueueUpdated(m_character);
         }
     }
 }

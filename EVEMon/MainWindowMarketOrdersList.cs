@@ -78,7 +78,7 @@ namespace EVEMon
             Resize += MainWindowMarketOrdersList_Resize;
 
             EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
             Disposed += OnDisposed;
         }
 
@@ -220,7 +220,7 @@ namespace EVEMon
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -857,7 +857,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterMarketOrdersChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
             if (e.Character != ccpCharacter)

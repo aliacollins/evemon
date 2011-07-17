@@ -92,9 +92,9 @@ namespace EVEMon
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.SchedulerChanged += EveClient_SchedulerChanged;
             EveClient.CharacterChanged += EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersChanged;
-            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsChanged;
-            EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
+            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
+            EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
             EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
             EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent += EveClient_NotificationSent;
@@ -113,9 +113,9 @@ namespace EVEMon
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
             EveClient.CharacterChanged -= EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersChanged;
-            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsChanged;
-            EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
+            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
+            EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
             EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
             EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent -= EveClient_NotificationSent;
@@ -467,7 +467,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterMarketOrdersChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -480,7 +480,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterIndustryJobsChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -493,7 +493,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterResearchPointsChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;

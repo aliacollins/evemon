@@ -37,7 +37,7 @@ namespace EVEMon
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.CharacterChanged += EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
         }
         #endregion
@@ -504,7 +504,7 @@ namespace EVEMon
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.CharacterChanged -= EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -555,7 +555,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_MarketOrdersChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)

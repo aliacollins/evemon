@@ -66,7 +66,7 @@ namespace EVEMon
             Resize += MainWindowIndustryJobsList_Resize;
 
             EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
             EveClient.CharacterIndustryJobsCompleted += EveClient_IndustryJobsCompleted;
             Disposed += OnDisposed;
         }
@@ -213,7 +213,7 @@ namespace EVEMon
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
             EveClient.CharacterIndustryJobsCompleted -= EveClient_IndustryJobsCompleted;
             Disposed -= OnDisposed;
         }
@@ -848,7 +848,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterIndustryJobsChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
             if (e.Character != ccpCharacter)

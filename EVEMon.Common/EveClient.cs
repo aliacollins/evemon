@@ -411,7 +411,7 @@ namespace EVEMon.Common
         public static event EventHandler CharacterCollectionChanged;
 
         /// <summary>
-        /// Occurs when the list of characters in an account have been updated.
+        /// Occurs when the list of characters in an account has been updated.
         /// </summary>
         public static event EventHandler CharacterListUpdated;
 
@@ -421,7 +421,7 @@ namespace EVEMon.Common
         public static event EventHandler MonitoredCharacterCollectionChanged;
 
         /// <summary>
-        /// Occurs when a character training check on an account have been updated.
+        /// Occurs when a character training check on an account has been updated.
         /// </summary>
         public static event EventHandler AccountCharactersSkillInTrainingUpdated;
 
@@ -451,14 +451,14 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterChanged;
 
         /// <summary>
-        /// Occurs when a character skill queue changed.
+        /// Occurs when a character skill queue has been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterSkillQueueChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterSkillQueueUpdated;
 
         /// <summary>
-        /// Occurs when a character's potrait changed.
+        /// Occurs when a character's potrait has been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
 
         /// <summary>
         /// Occurs when the market orders of a character have been updated.
@@ -631,15 +631,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character skill queue changed.
+        /// Called when the character skill queue updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterSkillQueueChanged(Character character)
+        internal static void OnCharacterSkillQueueUpdated(Character character)
         {
-            Trace("EveClient.OnSkillQueueChanged - {0}", character.Name);
+            Trace("EveClient.OnSkillQueueUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterSkillQueueChanged != null)
-                CharacterSkillQueueChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterSkillQueueUpdated != null)
+                CharacterSkillQueueUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -748,15 +748,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character portrait changed.
+        /// Called when the character portrait updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterPortraitChanged(Character character)
+        internal static void OnCharacterPortraitUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterPortraitChanged - {0}", character.Name);
+            Trace("EveClient.OnCharacterPortraitUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterPortraitChanged != null)
-                CharacterPortraitChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterPortraitUpdated != null)
+                CharacterPortraitUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

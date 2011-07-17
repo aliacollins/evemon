@@ -52,11 +52,11 @@ namespace EVEMon
             mainPanel.BackColor = SystemColors.ControlLightLight;
 
             // Client events
-            EveClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
-            EveClient.QueuedSkillsCompleted += new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.ServerStatusUpdated += new EventHandler<EveServerEventArgs>(EveClient_ServerStatusUpdated);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
+            EveClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
+            EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.TimerTick += EveClient_TimerTick;
 
             // Character Details
             UpdateContent();
@@ -69,11 +69,11 @@ namespace EVEMon
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            EveClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
-            EveClient.QueuedSkillsCompleted -= new EventHandler<QueuedSkillsEventArgs>(EveClient_QueuedSkillsCompleted);
-            EveClient.ServerStatusUpdated -= new EventHandler<EveServerEventArgs>(EveClient_ServerStatusUpdated);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
+            EveClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
+            EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
+            EveClient.ServerStatusUpdated -= EveClient_ServerStatusUpdated;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.TimerTick -= EveClient_TimerTick;
         }
 
         /// <summary>
