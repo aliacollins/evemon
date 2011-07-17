@@ -67,6 +67,7 @@
             this.lvOrders.TabIndex = 0;
             this.lvOrders.UseCompatibleStateImageBehavior = false;
             this.lvOrders.View = System.Windows.Forms.View.Details;
+            this.lvOrders.MouseHover += new System.EventHandler(this.lvOrders_MouseHover);
             // 
             // itemColumn
             // 

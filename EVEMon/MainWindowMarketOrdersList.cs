@@ -744,6 +744,16 @@ namespace EVEMon
         #region Event Handlers
 
         /// <summary>
+        /// Handles the MouseHover event of the lvOrders control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvOrders_MouseHover(object sender, EventArgs e)
+        {
+            Focus();
+        }
+
+        /// <summary>
         /// On resize, updates the controls visibility.
         /// </summary>
         /// <param name="sender"></param>
@@ -910,8 +920,7 @@ namespace EVEMon
             UpdatePanelControlPosition();
 
             // Force to redraw
-            marketExpPanelControl.Invalidate();
-            marketExpPanelControl.Update();
+            marketExpPanelControl.Refresh();
         }
 
         /// <summary>

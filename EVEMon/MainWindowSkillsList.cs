@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -19,7 +20,6 @@ namespace EVEMon
         private const int PadTop = 2;
         private const int PadLeft = 6;
         private const int PadRight = 7;
-        private const int LineVPad = 0;
 
         // Skills drawing - Boxes
         private const int BoxWidth = 57;
@@ -38,7 +38,7 @@ namespace EVEMon
         private readonly Font m_boldSkillsFont;
         private Object m_lastTooltipItem;
         private bool m_requireRefresh;
-        private int m_count = 0;
+        private int m_count;
 
         /// <summary>
         /// Constructor
@@ -58,7 +58,7 @@ namespace EVEMon
             EveClient.CharacterChanged +=EveClient_CharacterChanged;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.TimerTick += EveClient_TimerTick;
-            this.Disposed +=OnDisposed;
+            Disposed += OnDisposed;
         }
         
         /// <summary>
@@ -221,7 +221,7 @@ namespace EVEMon
             if (item is SkillGroup)
                 return SkillHeaderHeight;
 
-            return Math.Max(m_skillsFont.Height * 2 + PadTop + LineVPad + PadTop, SkillDetailHeight);
+            return Math.Max(m_skillsFont.Height * 2 + PadTop * 2, SkillDetailHeight);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace EVEMon
             TextRenderer.DrawText(g, spText, m_skillsFont,
                                                             new Rectangle(
                                                                 e.Bounds.Left + PadLeft,
-                                                                e.Bounds.Top + PadTop + skillNameSize.Height + LineVPad,
+                                                                e.Bounds.Top + PadTop + skillNameSize.Height,
                                                                 spTextSize.Width + PadLeft,
                                                                 spTextSize.Height), highlightColor);
 
@@ -376,7 +376,7 @@ namespace EVEMon
             TextRenderer.DrawText(g, pctText, m_skillsFont,
                                                         new Rectangle(
                                                             e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
-                                                            e.Bounds.Top + PadTop + levelTextSize.Height + LineVPad,
+                                                            e.Bounds.Top + PadTop + levelTextSize.Height,
                                                             pctTextSize.Width + PadRight, pctTextSize.Height), Color.Black);
         }
 
@@ -390,9 +390,10 @@ namespace EVEMon
             Graphics g = e.Graphics;
 
             // Draws the background
-            using (Brush b = new SolidBrush(Color.FromArgb(75, 75, 75)))
+            using (LinearGradientBrush lgb = new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F),
+                                                    Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
-                g.FillRectangle(b, e.Bounds);
+                g.FillRectangle(lgb, e.Bounds);
             }
 
             using (Pen p = new Pen(Color.FromArgb(100, 100, 100)))
@@ -400,27 +401,17 @@ namespace EVEMon
                 g.DrawLine(p, e.Bounds.Left, e.Bounds.Top, e.Bounds.Right + 1, e.Bounds.Top);
             }
 
-            // Draw the header
-            Size titleSizeInt = TextRenderer.MeasureText(
-                                            g, group.Name, m_boldSkillsFont,
-                                            Size.Empty,
-                                            TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-            Rectangle titleTopLeftInt = new Rectangle(
-                                            e.Bounds.Left + 3,
-                                            e.Bounds.Top + ((e.Bounds.Height / 2) - (titleSizeInt.Height / 2)),
-                                            titleSizeInt.Width + PadRight,
-                                            titleSizeInt.Height);
-
+            // Measure Texts
             string skillInTrainingSuffix = String.Empty;
+            string skillsInQueueSuffix = String.Empty;
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
             bool hasQueuedSkill = group.Any(x=> x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill)
-                skillInTrainingSuffix = ", ( 1 in training )";
+                skillInTrainingSuffix = " ( 1 in training )";
             if (hasQueuedSkill)
-                skillInTrainingSuffix += String.Format(CultureConstants.DefaultCulture,
-                    ", ( {0} in queue )", group.Count(x=> x.IsQueued && !x.IsTraining));
+                skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture,
+                    " ( {0} in queue )", group.Count(x=> x.IsQueued && !x.IsTraining));
 
-            // Draws the rest of the text header
             string detailText = String.Format(CultureConstants.DefaultCulture,
                                               ", {0} of {1} skills, {2:#,##0} Points{3}",
                                               group.Count(x => x.IsKnown),
@@ -428,13 +419,27 @@ namespace EVEMon
                                               group.TotalSP,
                                               skillInTrainingSuffix);
 
-            Size detailSizeInt = TextRenderer.MeasureText(
-                g, detailText, m_skillsFont, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-            Rectangle detailTopLeftInt = new Rectangle(
-                titleTopLeftInt.X + titleSizeInt.Width + 4, titleTopLeftInt.Y, detailSizeInt.Width, detailSizeInt.Height);
+            TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, titleTopLeftInt, Color.White);
-            TextRenderer.DrawText(g, detailText, m_skillsFont, detailTopLeftInt, Color.White);
+            Size titleTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
+            Rectangle titleRect = new Rectangle(e.Bounds.Left + 3,
+                                            e.Bounds.Top + ((e.Bounds.Height / 2) - (titleTextSize.Height / 2)),
+                                            titleTextSize.Width + PadRight,
+                                            titleTextSize.Height);
+
+            Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, format);
+            Rectangle detailRect = new Rectangle(
+                titleRect.X + titleRect.Width + 4, titleRect.Y, detailTextSize.Width, detailTextSize.Height);
+
+            Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, format);
+            Rectangle skillQueueRect = new Rectangle(
+                detailRect.X + detailRect.Width + 4, detailRect.Y, skillQueueTextSize.Width, skillQueueTextSize.Height);
+
+            // Draw the header
+            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, titleRect, Color.White);
+            TextRenderer.DrawText(g, detailText, m_skillsFont, detailRect, Color.White);
+            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect,
+                                 (Settings.UI.SafeForWork ? Color.White : Color.Yellow));
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
@@ -521,6 +526,16 @@ namespace EVEMon
         #region Local events
 
         /// <summary>
+        /// Handles the MouseHover event of the lbSkills control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lbSkills_MouseHover(object sender, EventArgs e)
+        {
+            Focus();
+        }
+
+        /// <summary>
         /// Handles the MouseWheel event of the lbSkills control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -579,10 +594,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On a mouse down event
+        /// Handles the MouseDown event of the lbSkills control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
@@ -625,7 +640,7 @@ namespace EVEMon
                 return;
             }
 
-            // Right click for skills below lv5 : we display a context menu to plan higher levels.
+            // Right click for skills below lv5 : we display a context menu to plan higher levels
             Skill skill = (Skill)item;
             if (e.Button == MouseButtons.Right)
             {
@@ -673,7 +688,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On mouse move, we hide the tooltip.
+        /// On mouse move, we show the tooltip.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -692,7 +707,7 @@ namespace EVEMon
                 return;
             }
 
-            // If we went so far, we're not over anything.
+            // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
         }
@@ -857,7 +872,7 @@ namespace EVEMon
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? btnImage = CommonProperties.Resources.Expand : btnImage = CommonProperties.Resources.Collapse);
+            Image btnImage = (isCollapsed ? CommonProperties.Resources.Expand : CommonProperties.Resources.Collapse);
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
@@ -954,6 +969,5 @@ namespace EVEMon
             UpdateContent();
         }
         #endregion
-
     }
 }

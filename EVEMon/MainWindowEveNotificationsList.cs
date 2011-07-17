@@ -543,6 +543,16 @@ namespace EVEMon
         #region Local Event Handlers
 
         /// <summary>
+        /// Handles the MouseHover event of the lvNotifications control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvNotifications_MouseHover(object sender, EventArgs e)
+        {
+            Focus();
+        }
+
+        /// <summary>
         /// On resize, updates the controls visibility.
         /// </summary>
         /// <param name="sender"></param>

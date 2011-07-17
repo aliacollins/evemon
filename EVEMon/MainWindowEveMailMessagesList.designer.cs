@@ -40,8 +40,8 @@ namespace EVEMon
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.eveMailReadingPane = new EVEMon.ReadingPane();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
             this.splitContainerMailMessages.Panel2.SuspendLayout();
@@ -113,6 +113,7 @@ namespace EVEMon
             this.lvMailMessages.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.lvMailMessages_ColumnWidthChanged);
             this.lvMailMessages.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvMailMessages_ItemSelectionChanged);
             this.lvMailMessages.DoubleClick += new System.EventHandler(this.lvMailMessages_DoubleClick);
+            this.lvMailMessages.MouseHover += new System.EventHandler(this.lvMailMessages_MouseHover);
             // 
             // chSenderName
             // 
@@ -140,10 +141,6 @@ namespace EVEMon
             // 
             this.chToListID.Text = "To Mailing List";
             // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // eveMailReadingPane
             // 
             this.eveMailReadingPane.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -152,13 +149,17 @@ namespace EVEMon
             this.eveMailReadingPane.Size = new System.Drawing.Size(454, 140);
             this.eveMailReadingPane.TabIndex = 0;
             // 
-            // MainWindowEVEMailMessagesList
+            // timer
+            // 
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // MainWindowEveMailMessagesList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainerMailMessages);
             this.Controls.Add(this.noEVEMailMessagesLabel);
-            this.Name = "MainWindowEVEMailMessagesList";
+            this.Name = "MainWindowEveMailMessagesList";
             this.Size = new System.Drawing.Size(454, 434);
             this.Resize += new System.EventHandler(this.MainWindowEVEMailMessagesList_Resize);
             this.splitContainerMailMessages.Panel1.ResumeLayout(false);

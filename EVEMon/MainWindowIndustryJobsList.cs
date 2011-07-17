@@ -735,6 +735,16 @@ namespace EVEMon
         #region Event Handlers
 
         /// <summary>
+        /// Handles the MouseHover event of the lvJobs control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvJobs_MouseHover(object sender, EventArgs e)
+        {
+            Focus();
+        }
+
+        /// <summary>
         /// On resize, updates the controls visibility.
         /// </summary>
         /// <param name="sender"></param>
@@ -968,8 +978,7 @@ namespace EVEMon
             UpdatePanelControlPosition();
 
             // Force to redraw
-            industryExpPanelControl.Invalidate();
-            industryExpPanelControl.Update();
+            industryExpPanelControl.Refresh();
         }
 
         /// <summary>

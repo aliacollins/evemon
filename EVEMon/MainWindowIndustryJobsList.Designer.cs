@@ -58,6 +58,7 @@ namespace EVEMon
             this.lvJobs.TabIndex = 0;
             this.lvJobs.UseCompatibleStateImageBehavior = false;
             this.lvJobs.View = System.Windows.Forms.View.Details;
+            this.lvJobs.MouseHover += new System.EventHandler(this.lvJobs_MouseHover);
             // 
             // chState
             // 

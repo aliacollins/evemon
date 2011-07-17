@@ -18,7 +18,6 @@ namespace EVEMon
         private const int PadTop = 2;
         private const int PadLeft = 6;
         private const int PadRight = 7;
-        private const int LineVPad = 0;
 
         // Skills drawing - Boxes
         private const int BoxWidth = 57;
@@ -72,8 +71,7 @@ namespace EVEMon
         {
             get
             {
-                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop + LineVPad + PadTop + LowerBoxHeight,
-                                MinimumHeight);
+                return Math.Max((m_skillsQueueFont.Height * 2) + PadTop * 2 + LowerBoxHeight, MinimumHeight);
             }
         }
 
@@ -277,7 +275,7 @@ namespace EVEMon
                                                 rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, spText, m_skillsQueueFont,
                                   new Rectangle(e.Bounds.Left + PadLeft,
-                                                e.Bounds.Top + PadTop + skillNameSize.Height + LineVPad,
+                                                e.Bounds.Top + PadTop + skillNameSize.Height,
                                                 spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
 
 
@@ -360,8 +358,8 @@ namespace EVEMon
             TextRenderer.DrawText(g, pctText, m_skillsQueueFont, new Rectangle(
                                                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
                                                                      pctTextSize.Width,
-                                                                     e.Bounds.Top + PadTop + levelTextSize.Height +
-                                                                     LineVPad, pctTextSize.Width + PadRight,
+                                                                     e.Bounds.Top + PadTop + levelTextSize.Height,
+                                                                     pctTextSize.Width + PadRight,
                                                                      pctTextSize.Height), Color.Black);
 
             // Draw the queue color bar
@@ -391,6 +389,16 @@ namespace EVEMon
         #endregion
 
         #region Local events
+
+        /// <summary>
+        /// Handles the MouseHover event of the noSkillsQueueLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void noSkillsQueueLabel_MouseHover(object sender, EventArgs e)
+        {
+            Focus();
+        }
 
         /// <summary>
         /// Handles the MouseWheel event of the lbSkillsQueue control.
@@ -451,10 +459,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// On a mouse down event
+        /// Handles the MouseDown event of the lbSkills control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void lbSkills_MouseDown(object sender, MouseEventArgs e)
         {
             // Retrieve the item at the given point and quit if none
@@ -471,7 +479,7 @@ namespace EVEMon
                     return;
             }
 
-            // Right click for skills below lv5 : we display a context menu to plan higher levels.
+            // Right click for skills below lv5 : we display a context menu to plan higher levels
             m_item = lbSkillsQueue.Items[index] as QueuedSkill;
             var skill = m_item.Skill;
             if (skill != null)
@@ -492,7 +500,7 @@ namespace EVEMon
                         // Reset the menu.
                         var tm = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
 
-                        // Build the level options.
+                        // Build the level options
                         int nextLevel = Math.Min(5, skill.Level + 1);
                         for (var level = nextLevel; level < 6; level++)
                         {
@@ -544,7 +552,7 @@ namespace EVEMon
                 return;
             }
 
-            // If we went so far, we're not over anything.
+            // If we went so far, we're not over anything
             m_lastTooltipItem = null;
             ttToolTip.Active = false;
         }

@@ -47,6 +47,7 @@
             this.noSkillsQueueLabel.TabIndex = 0;
             this.noSkillsQueueLabel.Text = "Skills Queue information not available.";
             this.noSkillsQueueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.noSkillsQueueLabel.MouseHover += new System.EventHandler(this.noSkillsQueueLabel_MouseHover);
             // 
             // ttToolTip
             // 
@@ -75,8 +76,8 @@
             this.lbSkillsQueue.TabIndex = 0;
             this.lbSkillsQueue.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkillsQueue_DrawItem);
             this.lbSkillsQueue.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkillsQueue_MeasureItem);
-            this.lbSkillsQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkillsQueue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
+            this.lbSkillsQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkillsQueue.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkillsQueue_MouseWheel);
             // 
             // MainWindowSkillsQueueList
