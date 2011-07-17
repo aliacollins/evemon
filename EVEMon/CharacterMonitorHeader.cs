@@ -37,7 +37,7 @@ namespace EVEMon
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.CharacterChanged += EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersChanged += EveClient_MarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersChanged;
             Disposed += OnDisposed;
         }
         #endregion
@@ -504,7 +504,7 @@ namespace EVEMon
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.CharacterChanged -= EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersChanged -= EveClient_MarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersChanged;
             Disposed -= OnDisposed;
         }
 

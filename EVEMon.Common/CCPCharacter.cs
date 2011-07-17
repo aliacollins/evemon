@@ -307,7 +307,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports data from a serialization object
+        /// Imports data from a serialization object.
         /// </summary>
         /// <param name="serial"></param>
         public void Import(SerializableCCPCharacter serial)
@@ -366,11 +366,10 @@ namespace EVEMon.Common
             if (account == null || account.KeyLevel != CredentialsLevel.Full)
                 return;
 
-            // Exit if industry jobs monitoring is disabled
-            if (!m_charIndustryJobsMonitor.Enabled)
-                return;
+            // If industry jobs monitoring is enabled, update job timers
+            if (m_charIndustryJobsMonitor.Enabled)
+                m_industryJobs.UpdateOnTimerTick();
 
-            m_industryJobs.UpdateOnTimerTick();
         }
 
         /// <summary>
@@ -580,9 +579,6 @@ namespace EVEMon.Common
 
             // Import the data
             m_researchPoints.Import(result.Result.ResearchPoints);
-
-            // Fires the event regarding research points update
-            EveClient.OnCharacterResearchPointsChanged(this);
         }
 
         /// <summary>
@@ -610,9 +606,6 @@ namespace EVEMon.Common
             // Notify on new messages
             if (m_eveMailMessages.NewMessages != 0)
                 EveClient.Notifications.NotifyNewEVEMailMessages(this, m_eveMailMessages.NewMessages);
-
-            // Fires the event regarding EVE mail messages update
-            EveClient.OnCharacterEVEMailMessagesUpdated(this);
         }
 
         /// <summary>
@@ -652,9 +645,6 @@ namespace EVEMon.Common
             // Notify on new messages
             if (m_eveNotifications.NewNotifications != 0)
                 EveClient.Notifications.NotifyNewEVENotifications(this, m_eveNotifications.NewNotifications);
-
-            // Fires the event regarding EVE mail messages update
-            EveClient.OnCharacterEVENotificationsUpdated(this);
         }
         #endregion
 
@@ -667,7 +657,7 @@ namespace EVEMon.Common
         /// <param name="queryMonitor">The query monitor.</param>
         public void ForceUpdate(IQueryMonitor queryMonitor)
         {
-            var monitor = m_monitors[queryMonitor.Method] as IQueryMonitorEx;
+            IQueryMonitorEx monitor = m_monitors[queryMonitor.Method] as IQueryMonitorEx;
             monitor.ForceUpdate(false);
         }
 
@@ -734,12 +724,14 @@ namespace EVEMon.Common
         private void Import(List<SerializableOrderListItem> orders)
         {
             // Exclude orders that wheren't issued by this character
-            var characterOrders = orders.Where(x => x.OwnerID == m_characterID);
+            IEnumerable<SerializableOrderListItem> characterOrders = orders.Where(x => x.OwnerID == m_characterID);
 
-            var endedOrders = new List<MarketOrder>();
+            List<MarketOrder> endedOrders = new List<MarketOrder>();
             m_marketOrders.Import(characterOrders, endedOrders);
 
-            NotifyOnEndedOrders(endedOrders);
+            // Sends a notification
+            if (endedOrders.Count != 0)
+                EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
 
             // Reset flags
             m_charOrdersUpdated = false;
@@ -756,20 +748,6 @@ namespace EVEMon.Common
             }
 
             EveClient.Notifications.InvalidateInsufficientBalance(this);
-        }
-
-        /// <summary>
-        /// Notify the user which orders has ended.
-        /// </summary>
-        /// <param name="endedOrders"></param>
-        private void NotifyOnEndedOrders(List<MarketOrder> endedOrders)
-        {
-            // Sends a notification
-            if (endedOrders.Count != 0)
-                EveClient.Notifications.NotifyMarkerOrdersEnding(this, endedOrders);
-
-            // Fires the event regarding market orders update
-            EveClient.OnCharacterMarketOrdersChanged(this);
         }
 
         /// <summary>
@@ -804,12 +782,9 @@ namespace EVEMon.Common
         private void Import(List<SerializableJobListItem> jobs)
         {
             // Exclude jobs that wheren't issued by this character
-            var characterJobs = jobs.Where(x => x.InstallerID == m_characterID);
+            IEnumerable<SerializableJobListItem> characterJobs = jobs.Where(x => x.InstallerID == m_characterID);
 
             m_industryJobs.Import(characterJobs);
-            
-            // Fires the event regarding industry jobs update
-            EveClient.OnCharacterIndustryJobsChanged(this);
 
             // Reset flags
             m_charJobsUpdated = false;

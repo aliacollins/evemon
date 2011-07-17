@@ -13,12 +13,12 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class IndustryJobCollection : ReadonlyCollection<IndustryJob>
     {
-        private readonly Character m_character;
+        private readonly CCPCharacter m_character;
 
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal IndustryJobCollection(Character character)
+        internal IndustryJobCollection(CCPCharacter character)
         {
             m_character = character;
         }
@@ -75,6 +75,9 @@ namespace EVEMon.Common
             // Replace the old list with the new one
             m_items.Clear();
             m_items.AddRange(newJobs);
+
+            // Fires the event regarding industry jobs update
+            EveClient.OnCharacterIndustryJobsUpdated(m_character);
         }
 
         /// <summary>

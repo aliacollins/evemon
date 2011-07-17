@@ -78,7 +78,7 @@ namespace EVEMon
             Resize += MainWindowMarketOrdersList_Resize;
 
             EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersChanged;
             Disposed += OnDisposed;
         }
 
@@ -220,7 +220,7 @@ namespace EVEMon
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersChanged;
             Disposed -= OnDisposed;
         }
 

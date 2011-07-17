@@ -7,13 +7,13 @@ using EVEMon.Common.Serialization.Settings;
 namespace EVEMon.Common
 {
     public sealed class ResearchPointCollection : ReadonlyCollection<ResearchPoint>
-    {    
-        private readonly Character m_character;
+    {
+        private readonly CCPCharacter m_character;
 
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal ResearchPointCollection(Character character)
+        internal ResearchPointCollection(CCPCharacter character)
         {
             m_character = character;
         }
@@ -45,6 +45,9 @@ namespace EVEMon.Common
             {
                 m_items.Add(new ResearchPoint(srcResearchPoint));
             }
+
+            // Fires the event regarding research points update
+            EveClient.OnCharacterResearchPointsUpdated(m_character);
         }
 
         /// <summary>

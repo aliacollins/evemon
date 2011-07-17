@@ -66,7 +66,7 @@ namespace EVEMon
             Resize += MainWindowIndustryJobsList_Resize;
 
             EveClient.TimerTick += EveClient_TimerTick;
-            EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterIndustryJobsCompleted += EveClient_IndustryJobsCompleted;
             Disposed += OnDisposed;
         }
@@ -213,7 +213,7 @@ namespace EVEMon
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.TimerTick -= EveClient_TimerTick;
-            EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsChanged;
             EveClient.CharacterIndustryJobsCompleted -= EveClient_IndustryJobsCompleted;
             Disposed -= OnDisposed;
         }

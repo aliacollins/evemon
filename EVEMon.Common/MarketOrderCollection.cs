@@ -14,12 +14,12 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class MarketOrderCollection : ReadonlyCollection<MarketOrder>
     {
-        private readonly Character m_character;
+        private readonly CCPCharacter m_character;
 
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        internal MarketOrderCollection(Character character)
+        internal MarketOrderCollection(CCPCharacter character)
         {
             m_character = character;
         }
@@ -98,6 +98,9 @@ namespace EVEMon.Common
             // Replace the old list with the new one
             m_items.Clear();
             m_items.AddRange(newOrders);
+
+            // Fires the event regarding market orders update
+            EveClient.OnCharacterMarketOrdersUpdated(m_character);
         }
 
         /// <summary>

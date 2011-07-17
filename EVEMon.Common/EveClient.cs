@@ -411,9 +411,9 @@ namespace EVEMon.Common
         public static event EventHandler CharacterCollectionChanged;
 
         /// <summary>
-        /// Occurs when the list of characters in an account changed.
+        /// Occurs when the list of characters in an account have been updated.
         /// </summary>
-        public static event EventHandler CharacterListChanged;
+        public static event EventHandler CharacterListUpdated;
 
         /// <summary>
         /// Occurs when the collection of monitored characters changed.
@@ -463,12 +463,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when the market orders of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterMarketOrdersUpdated;
 
         /// <summary>
         /// Occurs when the industry jobs of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterIndustryJobsChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterIndustryJobsUpdated;
 
         /// <summary>
         /// Occurs when the industry jobs of a character have been completed.
@@ -478,7 +478,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Occurs when the research points of a character have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterResearchPointsChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterResearchPointsUpdated;
 
         /// <summary>
         /// Occurs when the mail messages of a character have been updated.
@@ -607,15 +607,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character list changed.
+        /// Called when the character list updated.
         /// </summary>
         /// <param name="account">The account.</param>
-        internal static void OnCharacterListChanged(Account account)
+        internal static void OnCharacterListUpdated(Account account)
         {
-            Trace("EveClient.OnCharacterListChanged - {0}", account);
+            Trace("EveClient.OnCharacterListUpdated - {0}", account);
             Settings.Save();
-            if (CharacterListChanged != null)
-                CharacterListChanged(null, EventArgs.Empty);
+            if (CharacterListUpdated != null)
+                CharacterListUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -654,27 +654,27 @@ namespace EVEMon.Common
                 QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
         /// <summary>
-        /// Called when the character market orders changed.
+        /// Called when the character market orders updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterMarketOrdersChanged(Character character)
+        internal static void OnCharacterMarketOrdersUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterMarketOrdersChanged - {0}", character.Name);
+            Trace("EveClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterMarketOrdersChanged != null)
-                CharacterMarketOrdersChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterMarketOrdersUpdated != null)
+                CharacterMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
-        /// Called when the character industry jobs changed.
+        /// Called when the character industry jobs updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterIndustryJobsChanged(Character character)
+        internal static void OnCharacterIndustryJobsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterIndustryJobsChanged - {0}", character.Name);
+            Trace("EveClient.OnCharacterIndustryJobsUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterIndustryJobsChanged != null)
-                CharacterIndustryJobsChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterIndustryJobsUpdated != null)
+                CharacterIndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -690,15 +690,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character research points changed.
+        /// Called when the character research points updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterResearchPointsChanged(Character character)
+        internal static void OnCharacterResearchPointsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterResearchPointsChanged - {0}", character.Name);
+            Trace("EveClient.OnCharacterResearchPointsUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterResearchPointsChanged != null)
-                CharacterResearchPointsChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterResearchPointsUpdated != null)
+                CharacterResearchPointsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -917,7 +917,7 @@ namespace EVEMon.Common
 
         /// <summary>
         /// Sends a message to the trace with the prepended time since
-        /// startup, in addition to argument insertind into the format.
+        /// startup, in addition to argument inserting into the format.
         /// </summary>
         /// <param name="format"></param>
         /// <param name="arg0"></param>

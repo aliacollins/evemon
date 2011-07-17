@@ -96,6 +96,9 @@ namespace EVEMon.Common
 
             m_items.Clear();
             m_items.AddRange(newMessages);
+
+            // Fires the event regarding EVE mail messages update
+            EveClient.OnCharacterEVEMailMessagesUpdated(m_ccpCharacter);
         }
 
         /// <summary>

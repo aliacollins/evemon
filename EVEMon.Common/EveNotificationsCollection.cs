@@ -19,7 +19,6 @@ namespace EVEMon.Common
         internal EveNotificationsCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
-
         }
 
         #endregion
@@ -82,6 +81,9 @@ namespace EVEMon.Common
 
             m_items.Clear();
             m_items.AddRange(newNotifications);
+
+            // Fires the event regarding EVE mail messages update
+            EveClient.OnCharacterEVENotificationsUpdated(m_ccpCharacter);
         }
 
         /// <summary>

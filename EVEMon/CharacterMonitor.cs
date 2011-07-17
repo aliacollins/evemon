@@ -92,9 +92,9 @@ namespace EVEMon
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.SchedulerChanged += EveClient_SchedulerChanged;
             EveClient.CharacterChanged += EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersChanged += EveClient_CharacterMarketOrdersChanged;
-            EveClient.CharacterIndustryJobsChanged += EveClient_CharacterIndustryJobsChanged;
-            EveClient.CharacterResearchPointsChanged += EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsChanged;
             EveClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
             EveClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent += EveClient_NotificationSent;
@@ -113,9 +113,9 @@ namespace EVEMon
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
             EveClient.CharacterChanged -= EveClient_CharacterChanged;
-            EveClient.CharacterMarketOrdersChanged -= EveClient_CharacterMarketOrdersChanged;
-            EveClient.CharacterIndustryJobsChanged -= EveClient_CharacterIndustryJobsChanged;
-            EveClient.CharacterResearchPointsChanged -= EveClient_CharacterResearchPointsChanged;
+            EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersChanged;
+            EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsChanged;
+            EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsChanged;
             EveClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
             EveClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
             EveClient.NotificationSent -= EveClient_NotificationSent;

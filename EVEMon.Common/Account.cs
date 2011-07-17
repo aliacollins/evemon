@@ -280,7 +280,7 @@ namespace EVEMon.Common
             }
 
             // Fires the event regarding the account character list update
-            EveClient.OnCharacterListChanged(this);
+            EveClient.OnCharacterListUpdated(this);
         }
 
         /// <summary>
