@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterMonitorHeader));
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.CharacterPortrait = new EVEMon.Common.Controls.CharacterPortrait();
             this.ThrobberFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -40,10 +41,16 @@
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.BioFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.CharacterNameLabel = new System.Windows.Forms.Label();
+            this.BalanceLabel = new System.Windows.Forms.Label();
             this.BioInfoLabel = new System.Windows.Forms.Label();
             this.BirthdayLabel = new System.Windows.Forms.Label();
+            this.CorporationInfoFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.CorporationNameLabel = new System.Windows.Forms.Label();
-            this.BalanceLabel = new System.Windows.Forms.Label();
+            this.AllianceInfoIndicationPictureBox = new System.Windows.Forms.PictureBox();
+            this.SecurityStatusLabel = new System.Windows.Forms.Label();
+            this.ActiveShipFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.ActiveShipLabel = new System.Windows.Forms.Label();
+            this.LocationInfoIndicationPictureBox = new System.Windows.Forms.PictureBox();
             this.SkillSummaryPanel = new System.Windows.Forms.Panel();
             this.tlpAttributes = new System.Windows.Forms.TableLayoutPanel();
             this.lblMEMAttribute = new System.Windows.Forms.Label();
@@ -63,6 +70,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpdateThrobber)).BeginInit();
             this.ThrobberContextMenu.SuspendLayout();
             this.BioFlowLayoutPanel.SuspendLayout();
+            this.CorporationInfoFlowLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AllianceInfoIndicationPictureBox)).BeginInit();
+            this.ActiveShipFlowLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LocationInfoIndicationPictureBox)).BeginInit();
             this.SkillSummaryPanel.SuspendLayout();
             this.tlpAttributes.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +89,7 @@
             this.MainTableLayoutPanel.Controls.Add(this.ThrobberFlowLayoutPanel, 2, 0);
             this.MainTableLayoutPanel.Controls.Add(this.BioFlowLayoutPanel, 1, 0);
             this.MainTableLayoutPanel.Controls.Add(this.SkillSummaryPanel, 1, 1);
-            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
@@ -86,11 +97,12 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 144);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 166);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
             // 
+            this.CharacterPortrait.AutoSize = true;
             this.CharacterPortrait.Character = null;
             this.CharacterPortrait.CharacterID = ((long)(-1));
             this.CharacterPortrait.Location = new System.Drawing.Point(0, 7);
@@ -104,14 +116,15 @@
             // 
             // ThrobberFlowLayoutPanel
             // 
-            this.ThrobberFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ThrobberFlowLayoutPanel.AutoSize = true;
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateThrobber);
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateLabel);
+            this.ThrobberFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.ThrobberFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(369, 0);
             this.ThrobberFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ThrobberFlowLayoutPanel.Name = "ThrobberFlowLayoutPanel";
-            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(60, 52);
+            this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(60, 43);
             this.ThrobberFlowLayoutPanel.TabIndex = 10;
             // 
             // UpdateThrobber
@@ -177,16 +190,18 @@
             this.BioFlowLayoutPanel.AutoSize = true;
             this.BioFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BioFlowLayoutPanel.Controls.Add(this.CharacterNameLabel);
+            this.BioFlowLayoutPanel.Controls.Add(this.BalanceLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BioInfoLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BirthdayLabel);
-            this.BioFlowLayoutPanel.Controls.Add(this.CorporationNameLabel);
-            this.BioFlowLayoutPanel.Controls.Add(this.BalanceLabel);
+            this.BioFlowLayoutPanel.Controls.Add(this.CorporationInfoFlowLayoutPanel);
+            this.BioFlowLayoutPanel.Controls.Add(this.SecurityStatusLabel);
+            this.BioFlowLayoutPanel.Controls.Add(this.ActiveShipFlowLayoutPanel);
             this.BioFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BioFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 65);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(238, 91);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
@@ -199,10 +214,20 @@
             this.CharacterNameLabel.TabIndex = 4;
             this.CharacterNameLabel.Text = "Character Name";
             // 
+            // BalanceLabel
+            // 
+            this.BalanceLabel.AutoSize = true;
+            this.BalanceLabel.Location = new System.Drawing.Point(0, 13);
+            this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.BalanceLabel.Name = "BalanceLabel";
+            this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
+            this.BalanceLabel.TabIndex = 7;
+            this.BalanceLabel.Text = "Balance: 0.00 ISK";
+            // 
             // BioInfoLabel
             // 
             this.BioInfoLabel.AutoSize = true;
-            this.BioInfoLabel.Location = new System.Drawing.Point(0, 13);
+            this.BioInfoLabel.Location = new System.Drawing.Point(0, 26);
             this.BioInfoLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BioInfoLabel.Name = "BioInfoLabel";
             this.BioInfoLabel.Size = new System.Drawing.Size(43, 13);
@@ -212,44 +237,102 @@
             // BirthdayLabel
             // 
             this.BirthdayLabel.AutoSize = true;
-            this.BirthdayLabel.Location = new System.Drawing.Point(0, 26);
+            this.BirthdayLabel.Location = new System.Drawing.Point(0, 39);
             this.BirthdayLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BirthdayLabel.Name = "BirthdayLabel";
-            this.BirthdayLabel.Size = new System.Drawing.Size(45, 13);
+            this.BirthdayLabel.Size = new System.Drawing.Size(66, 13);
             this.BirthdayLabel.TabIndex = 8;
-            this.BirthdayLabel.Text = "Birthday";
+            this.BirthdayLabel.Text = "Birthday Info";
+            // 
+            // CorporationInfoFlowLayoutPanel
+            // 
+            this.CorporationInfoFlowLayoutPanel.AutoSize = true;
+            this.CorporationInfoFlowLayoutPanel.Controls.Add(this.CorporationNameLabel);
+            this.CorporationInfoFlowLayoutPanel.Controls.Add(this.AllianceInfoIndicationPictureBox);
+            this.CorporationInfoFlowLayoutPanel.Location = new System.Drawing.Point(0, 52);
+            this.CorporationInfoFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.CorporationInfoFlowLayoutPanel.Name = "CorporationInfoFlowLayoutPanel";
+            this.CorporationInfoFlowLayoutPanel.Size = new System.Drawing.Size(98, 13);
+            this.CorporationInfoFlowLayoutPanel.TabIndex = 14;
             // 
             // CorporationNameLabel
             // 
             this.CorporationNameLabel.AutoSize = true;
-            this.CorporationNameLabel.Location = new System.Drawing.Point(0, 39);
-            this.CorporationNameLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.CorporationNameLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.CorporationNameLabel.Location = new System.Drawing.Point(0, 0);
+            this.CorporationNameLabel.Margin = new System.Windows.Forms.Padding(0);
             this.CorporationNameLabel.Name = "CorporationNameLabel";
             this.CorporationNameLabel.Size = new System.Drawing.Size(82, 13);
             this.CorporationNameLabel.TabIndex = 6;
             this.CorporationNameLabel.Text = "Corporation Info";
             this.CorporationNameLabel.MouseHover += new System.EventHandler(this.CorporationNameLabel_MouseHover);
             // 
-            // BalanceLabel
+            // AllianceInfoIndicationPictureBox
             // 
-            this.BalanceLabel.AutoSize = true;
-            this.BalanceLabel.Location = new System.Drawing.Point(0, 52);
-            this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.BalanceLabel.Name = "BalanceLabel";
-            this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
-            this.BalanceLabel.TabIndex = 7;
-            this.BalanceLabel.Text = "Balance: 0.00 ISK";
+            this.AllianceInfoIndicationPictureBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this.AllianceInfoIndicationPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("AllianceInfoIndicationPictureBox.Image")));
+            this.AllianceInfoIndicationPictureBox.Location = new System.Drawing.Point(82, 0);
+            this.AllianceInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AllianceInfoIndicationPictureBox.Name = "AllianceInfoIndicationPictureBox";
+            this.AllianceInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
+            this.AllianceInfoIndicationPictureBox.TabIndex = 11;
+            this.AllianceInfoIndicationPictureBox.TabStop = false;
+            // 
+            // SecurityStatusLabel
+            // 
+            this.SecurityStatusLabel.AutoSize = true;
+            this.SecurityStatusLabel.Location = new System.Drawing.Point(0, 65);
+            this.SecurityStatusLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.SecurityStatusLabel.Name = "SecurityStatusLabel";
+            this.SecurityStatusLabel.Size = new System.Drawing.Size(99, 13);
+            this.SecurityStatusLabel.TabIndex = 9;
+            this.SecurityStatusLabel.Text = "Security Status Info";
+            // 
+            // ActiveShipFlowLayoutPanel
+            // 
+            this.ActiveShipFlowLayoutPanel.AutoSize = true;
+            this.ActiveShipFlowLayoutPanel.Controls.Add(this.ActiveShipLabel);
+            this.ActiveShipFlowLayoutPanel.Controls.Add(this.LocationInfoIndicationPictureBox);
+            this.ActiveShipFlowLayoutPanel.Location = new System.Drawing.Point(0, 78);
+            this.ActiveShipFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ActiveShipFlowLayoutPanel.Name = "ActiveShipFlowLayoutPanel";
+            this.ActiveShipFlowLayoutPanel.Size = new System.Drawing.Size(98, 13);
+            this.ActiveShipFlowLayoutPanel.TabIndex = 15;
+            // 
+            // ActiveShipLabel
+            // 
+            this.ActiveShipLabel.AutoSize = true;
+            this.ActiveShipLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ActiveShipLabel.Location = new System.Drawing.Point(0, 0);
+            this.ActiveShipLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.ActiveShipLabel.Name = "ActiveShipLabel";
+            this.ActiveShipLabel.Size = new System.Drawing.Size(82, 13);
+            this.ActiveShipLabel.TabIndex = 10;
+            this.ActiveShipLabel.Text = "Active Ship Info";
+            this.ActiveShipLabel.MouseHover += new System.EventHandler(this.ActiveShipLabel_MouseHover);
+            // 
+            // LocationInfoIndicationPictureBox
+            // 
+            this.LocationInfoIndicationPictureBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this.LocationInfoIndicationPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("LocationInfoIndicationPictureBox.Image")));
+            this.LocationInfoIndicationPictureBox.Location = new System.Drawing.Point(82, 0);
+            this.LocationInfoIndicationPictureBox.Margin = new System.Windows.Forms.Padding(0);
+            this.LocationInfoIndicationPictureBox.Name = "LocationInfoIndicationPictureBox";
+            this.LocationInfoIndicationPictureBox.Size = new System.Drawing.Size(16, 13);
+            this.LocationInfoIndicationPictureBox.TabIndex = 11;
+            this.LocationInfoIndicationPictureBox.TabStop = false;
             // 
             // SkillSummaryPanel
             // 
+            this.SkillSummaryPanel.AutoSize = true;
             this.MainTableLayoutPanel.SetColumnSpan(this.SkillSummaryPanel, 2);
             this.SkillSummaryPanel.Controls.Add(this.tlpAttributes);
             this.SkillSummaryPanel.Controls.Add(this.SkillSummaryLabel);
             this.SkillSummaryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 65);
+            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 91);
             this.SkillSummaryPanel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
-            this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 79);
+            this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 75);
             this.SkillSummaryPanel.TabIndex = 4;
             // 
             // tlpAttributes
@@ -278,7 +361,7 @@
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(89, 79);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 75);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
@@ -410,7 +493,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(429, 144);
+            this.Size = new System.Drawing.Size(429, 166);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
@@ -420,6 +503,12 @@
             this.ThrobberContextMenu.ResumeLayout(false);
             this.BioFlowLayoutPanel.ResumeLayout(false);
             this.BioFlowLayoutPanel.PerformLayout();
+            this.CorporationInfoFlowLayoutPanel.ResumeLayout(false);
+            this.CorporationInfoFlowLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AllianceInfoIndicationPictureBox)).EndInit();
+            this.ActiveShipFlowLayoutPanel.ResumeLayout(false);
+            this.ActiveShipFlowLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LocationInfoIndicationPictureBox)).EndInit();
             this.SkillSummaryPanel.ResumeLayout(false);
             this.SkillSummaryPanel.PerformLayout();
             this.tlpAttributes.ResumeLayout(false);
@@ -460,5 +549,11 @@
         private System.Windows.Forms.Label lblPERAttribute;
         private System.Windows.Forms.Label lblINTAttribute;
         private System.Windows.Forms.Label BirthdayLabel;
+        private System.Windows.Forms.Label SecurityStatusLabel;
+        private System.Windows.Forms.Label ActiveShipLabel;
+        private System.Windows.Forms.PictureBox AllianceInfoIndicationPictureBox;
+        private System.Windows.Forms.PictureBox LocationInfoIndicationPictureBox;
+        private System.Windows.Forms.FlowLayoutPanel CorporationInfoFlowLayoutPanel;
+        private System.Windows.Forms.FlowLayoutPanel ActiveShipFlowLayoutPanel;
     }
 }

@@ -120,6 +120,31 @@
   <metadata name="ThrobberContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="AllianceInfoIndicationPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFHSURBVDhPpVO7SgNREE0lCFZ+gIX4DYLf4A/4AZY2
+        1pJaLCwtLAQRLLQTRIKVVmohJCRRTNZEzbp5aRLfinvv8czVXZa4Vwk7cIrLzDlzdmY2BSCVBInI0jgU
+        mFnMjBKbxAeBP7DP3ETgOiqws3VYwqevmLPH7klVxMvEUOiAjxHCV1qj96rRfNTwHjTcrsZ1R6Nyp1Fu
+        KTiExML6kYhMRgXG5lYOTLJBotfTqJF8da9x+UM+bygUvW+Bpe1TEZiOFbgl+YZdDbmtUWoqCLlAcs61
+        C4SfIPar7Oq0FS5IPqsr5EnOkpxzfeMgvXEsDqb6t2CGKHOIhrjJ1pSZi0RkiMO2NfrBCtcyxVCr+/QO
+        eTOXj11j3DWy0Kl3XgLiG9/p/jrrJbJ4eXWvIB2fiXnbuccKkDBOVIhZG/HXJf5XOJCDQcQS/41f94sP
+        IoD+c4YAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="LocationInfoIndicationPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
+        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFHSURBVDhPpVO7SgNREE0lCFZ+gIX4DYLf4A/4AZY2
+        1pJaLCwtLAQRLLQTRIKVVmohJCRRTNZEzbp5aRLfinvv8czVXZa4Vwk7cIrLzDlzdmY2BSCVBInI0jgU
+        mFnMjBKbxAeBP7DP3ETgOiqws3VYwqevmLPH7klVxMvEUOiAjxHCV1qj96rRfNTwHjTcrsZ1R6Nyp1Fu
+        KTiExML6kYhMRgXG5lYOTLJBotfTqJF8da9x+UM+bygUvW+Bpe1TEZiOFbgl+YZdDbmtUWoqCLlAcs61
+        C4SfIPar7Oq0FS5IPqsr5EnOkpxzfeMgvXEsDqb6t2CGKHOIhrjJ1pSZi0RkiMO2NfrBCtcyxVCr+/QO
+        eTOXj11j3DWy0Kl3XgLiG9/p/jrrJbJ4eXWvIB2fiXnbuccKkDBOVIhZG/HXJf5XOJCDQcQS/41f94sP
+        IoD+c4YAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="ToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>193, 17</value>
   </metadata>

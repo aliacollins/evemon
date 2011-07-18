@@ -34,7 +34,6 @@ namespace EVEMon.Common
         private List<SerializableOrderListItem> m_orders = new List<SerializableOrderListItem>();
         private List<SerializableJobListItem> m_jobs = new List<SerializableJobListItem>();
         private APIMethods m_errorNotifiedMethod;
-        private DateTime m_mailingListsNextUpdate = DateTime.MinValue;
 
         private bool m_charOrdersUpdated;
         private bool m_corpOrdersUpdated;
@@ -342,7 +341,7 @@ namespace EVEMon.Common
             }
 
             // Fire the global event
-            EveClient.OnCharacterChanged(this);
+            EveClient.OnCharacterUpdated(this);
         }
         
         #endregion
@@ -386,6 +385,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Queries the character's info.
+        /// </summary>
+        private void QueryCharacterInfo()
+        {
+            EveClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
+                                                                        APIMethods.CharacterInfo,
+                                                                        Identity.Account.UserID,
+                                                                        Identity.Account.APIKey,
+                                                                        CharacterID,
+                                                                        OnCharacterInfoUpdated);
+        }
+
+        /// <summary>
         /// Processed the queried skill queue information.
         /// </summary>
         /// <param name="result"></param>
@@ -398,6 +410,8 @@ namespace EVEMon.Common
             // Quits if there is an error
             if (result.HasError)
                 return;
+
+            QueryCharacterInfo();
 
             // Imports the data
             Import(result);
@@ -423,6 +437,24 @@ namespace EVEMon.Common
             {
                 EveClient.Notifications.InvalidateClaimableCertificate(this);
             }
+        }
+
+        /// <summary>
+        /// Processes the queried character's info.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private void OnCharacterInfoUpdated(APIResult<SerializableAPICharacterInfo> result)
+        {
+            // Notify an error occured
+            //if (ShouldNotifyError(result, APIMethods.CharacterInfo))
+                EveClient.Notifications.NotifyCharacterInfoError(this, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            Import(result.Result);
         }
 
         /// <summary>
@@ -596,11 +628,10 @@ namespace EVEMon.Common
                 return;
 
             // Each time we import a new batch of EVE mail messages,
-            // query the mailing lists (if it's time to) so that we are always up to date
-            if (DateTime.UtcNow > m_mailingListsNextUpdate)
-                QueryCharacterMailingList();
+            // query the mailing lists so that we are always up to date
+            QueryCharacterMailingList();
 
-            // Import the EVE mail messages
+            // Import the data
             m_eveMailMessages.Import(result.Result.Messages);
 
             // Notify on new messages
@@ -614,15 +645,16 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private void OnCharacterMailingListUpdated(APIResult<SerializableAPIMailingLists> result)
         {
-            m_mailingListsNextUpdate = result.CachedUntil;
-
             // Notify an error occured
             if (ShouldNotifyError(result, APIMethods.MailingLists))
                 EveClient.Notifications.NotifyMailingListsError(this, result);
 
-            // If there is no error deserialize the result
-            if (!result.HasError)
-                EVEMailingLists.Import(result.Result.MailingLists);
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_eveMailingLists.Import(result.Result.MailingLists);
         }
 
         /// <summary>

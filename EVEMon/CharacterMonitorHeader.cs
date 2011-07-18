@@ -9,6 +9,7 @@ using EVEMon.Accounting;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.Controls;
+using EVEMon.Common.Data;
 
 namespace EVEMon
 {
@@ -36,7 +37,8 @@ namespace EVEMon
             // Subscribe to events
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveClient.CharacterInfoUpdated += EveClient_CharacterInfoUpdated;
             EveClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
         }
@@ -61,13 +63,14 @@ namespace EVEMon
 
                 UpdateFrequentControls();
                 UpdateInfrequentControls();
+                UpdateInfoControls();
             }
         }
 
         #endregion
 
 
-        #region Helper Functions
+        #region Updating Methods
 
         /// <summary>
         /// Updates the controls whos content changes frequently.
@@ -84,7 +87,7 @@ namespace EVEMon
 
                 // Only update the skill summary when the skill points change
                 if (m_spAtLastRedraw != m_character.SkillPoints)
-                    SkillSummaryLabel.Text = FormatSkillSummary(m_character);
+                    SkillSummaryLabel.Text = FormatSkillSummary();
 
                 m_spAtLastRedraw = m_character.SkillPoints;
             }
@@ -120,6 +123,8 @@ namespace EVEMon
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
                     "Corporation: {0}", m_character.CorporationName);
 
+                AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
+
                 FormatBalance();
 
                 FormatAttributes();
@@ -129,6 +134,38 @@ namespace EVEMon
                 ResumeLayout();
             }
         }
+
+        /// <summary>
+        /// Updates the info controls.
+        /// </summary>
+        private void UpdateInfoControls()
+        {
+            if (m_character == null)
+                return;
+
+            try
+            {
+                SuspendLayout();
+
+                SecurityStatusLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                    "Security Status: {0:N2}", m_character.SecurityStatus);
+                ActiveShipLabel.Text = GetActiveShipText();
+
+                Account account = m_character.Identity.Account;
+                LocationInfoIndicationPictureBox.Visible = account != null &&
+                                                            account.KeyLevel == CredentialsLevel.Full &&
+                                                            !String.IsNullOrEmpty(m_character.LastKnownLocation);
+            }
+            finally
+            {
+                ResumeLayout();
+            }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Formats the balance.
@@ -191,8 +228,12 @@ namespace EVEMon
         /// </summary>
         private void UpdateCountdown()
         {
-            var ccpCharacter = m_character as CCPCharacter;
-            var nextMonitor = ccpCharacter.QueryMonitors.NextUpdate;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+
+            if (ccpCharacter == null)
+                return;
+
+            IQueryMonitor nextMonitor = ccpCharacter.QueryMonitors.NextUpdate;
 
             if (nextMonitor == null)
             {
@@ -219,11 +260,11 @@ namespace EVEMon
         /// <param name="timeLeft">The time left.</param>
         /// <returns>String formatted as a countdown timer.</returns>
         /// <remarks>Hours are formatted accumulatively when "Week" is selected</remarks>
-        private static string GetCountdownFormat(TimeSpan timeLeft)
+        private string GetCountdownFormat(TimeSpan timeLeft)
         {
-            var hours = Math.Floor(timeLeft.TotalHours);
-            var minutes = timeLeft.Minutes;
-            var seconds = timeLeft.Seconds;
+            double hours = Math.Floor(timeLeft.TotalHours);
+            int minutes = timeLeft.Minutes;
+            int seconds = timeLeft.Seconds;
             return String.Format(CultureConstants.DefaultCulture, "{0:#00}:{1:d2}:{2:d2}", hours, minutes, seconds);
         }
 
@@ -234,7 +275,7 @@ namespace EVEMon
         {
             UpdateThrobber.State = ThrobberState.Stopped;
 
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
                 return;
@@ -286,11 +327,11 @@ namespace EVEMon
         /// </summary>
         private void FormatAttributes()
         {
-            SetAttributeLabel(lblINTAttribute, m_character, EveAttribute.Intelligence);
-            SetAttributeLabel(lblPERAttribute, m_character, EveAttribute.Perception);
-            SetAttributeLabel(lblCHAAttribute, m_character, EveAttribute.Charisma);
-            SetAttributeLabel(lblWILAttribute, m_character, EveAttribute.Willpower);
-            SetAttributeLabel(lblMEMAttribute, m_character, EveAttribute.Memory);
+            SetAttributeLabel(lblINTAttribute, EveAttribute.Intelligence);
+            SetAttributeLabel(lblPERAttribute, EveAttribute.Perception);
+            SetAttributeLabel(lblCHAAttribute, EveAttribute.Charisma);
+            SetAttributeLabel(lblWILAttribute, EveAttribute.Willpower);
+            SetAttributeLabel(lblMEMAttribute, EveAttribute.Memory);
         }
 
         /// <summary>
@@ -299,14 +340,14 @@ namespace EVEMon
         /// <returns>Status text to display in the tool tip.</returns>
         private string GetUpdateStatus()
         {
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
 
             if (ccpCharacter == null)
                 return String.Empty;
 
-            var output = new StringBuilder();
+            StringBuilder output = new StringBuilder();
 
-            foreach (var monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
+            foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime)
             {
                 // Skip character's corporation market orders and
                 // industry jobs monitor, cause there is no need to
@@ -350,17 +391,12 @@ namespace EVEMon
             }
         }
 
-        #endregion
-
-
-        #region Static Helper Functions
-
         /// <summary>
         /// Generates text representing the time to next update.
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>String describing the time until the next update.</returns>
-        private static string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
+        private string GenerateTimeToNextUpdateText(IQueryMonitor monitor)
         {
             TimeSpan timeToNextUpdate = monitor.NextUpdate.Subtract(DateTime.UtcNow);
 
@@ -382,9 +418,9 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>Status text for the monitor.</returns>
-        private static string GetStatusForMonitor(IQueryMonitor monitor)
+        private string GetStatusForMonitor(IQueryMonitor monitor)
         {
-            var output = new StringBuilder();
+            StringBuilder output = new StringBuilder();
 
             output.AppendFormat(CultureConstants.DefaultCulture, "{0}: ", monitor);
 
@@ -403,12 +439,12 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>Detailed status text for the monitor.</returns>
-        private static string GetDetailedStatusForMonitor(IQueryMonitor monitor)
+        private string GetDetailedStatusForMonitor(IQueryMonitor monitor)
         {
             if (monitor.NextUpdate == DateTime.MaxValue)
                 return "Never";
 
-            var remainingTime = monitor.NextUpdate.Subtract(DateTime.UtcNow);
+            TimeSpan remainingTime = monitor.NextUpdate.Subtract(DateTime.UtcNow);
             if (remainingTime.Minutes > 0)
             {
                 return remainingTime.ToDescriptiveText(
@@ -427,12 +463,12 @@ namespace EVEMon
         /// </summary>
         /// <param name="monitor">The monitor.</param>
         /// <returns>New menu item for a monitor.</returns>
-        private static ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
+        private ToolStripMenuItem CreateNewMonitorToolStripMenuItem(IQueryMonitor monitor)
         {
             string menuText = String.Format(CultureConstants.DefaultCulture,
                 "Update {0} {1}", monitor.ToString(), GenerateTimeToNextUpdateText(monitor));
 
-            var menu = new ToolStripMenuItem(menuText)
+            ToolStripMenuItem menu = new ToolStripMenuItem(menuText)
             {
                 Tag = (object)monitor.Method,
                 Enabled = !monitor.ForceUpdateWillCauseError
@@ -447,9 +483,9 @@ namespace EVEMon
         /// <param name="character">The character.</param>
         /// <param name="eveAttribute">The eve attribute.</param>
         /// <returns>Formatted string describing the attribute and its value.</returns>
-        private static void SetAttributeLabel(Label label, Character character, EveAttribute eveAttribute)
+        private void SetAttributeLabel(Label label, EveAttribute eveAttribute)
         {
-            label.Text = character[eveAttribute].EffectiveValue.ToString(CultureConstants.DefaultCulture);
+            label.Text = m_character[eveAttribute].EffectiveValue.ToString(CultureConstants.DefaultCulture);
 
             label.Tag = eveAttribute;
         }
@@ -459,20 +495,31 @@ namespace EVEMon
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns>Formatted list of information about a characters skills.</returns>
-        private static string FormatSkillSummary(Character character)
+        private string FormatSkillSummary()
         {
             StringBuilder output = new StringBuilder();
 
             // Using the .AppendLine() method of creating a multi line
             // string in this case as it is an interface requirement,
             // rather than a cultural preference.
-            output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", character.GetSkillCountAtLevel(5)).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}", character.SkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", character.CloneSkillPoints).AppendLine();
-            output.Append(character.CloneName);
+            output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:#,##0}", m_character.SkillPoints).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:#,##0}", m_character.CloneSkillPoints).AppendLine();
+            output.Append(m_character.CloneName);
 
             return output.ToString();
+        }
+
+        /// <summary>
+        /// Gets the active ship desciption.
+        /// </summary>
+        /// <returns></returns>
+        private string GetActiveShipText()
+        {
+            return String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
+                (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName) ?
+                String.Format("{0} [{1}]", m_character.ShipTypeName, m_character.ShipName) : "Unknown"));
         }
 
         #endregion
@@ -503,7 +550,7 @@ namespace EVEMon
         {
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
@@ -537,17 +584,31 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterChanged event of the EveClient control.
+        /// Handles the CharacterUpdated event of the EveClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
                 return;
 
             UpdateInfrequentControls();
+        }
+
+        /// <summary>
+        /// Handles the CharacterInfoUpdated event of the EveClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            // No need to do this if control is not visible
+            if (!Visible)
+                return;
+
+            UpdateInfoControls();
         }
 
         /// <summary>
@@ -733,6 +794,39 @@ namespace EVEMon
                 return;
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Alliance member of: {0}", m_character.AllianceName);
+            ToolTip.SetToolTip(sender as Label, tooltipText);
+        }
+
+        /// <summary>
+        /// Handles the MouseHover event of the ActiveShipLabel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void ActiveShipLabel_MouseHover(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(m_character.LastKnownLocation))
+                return;
+
+            // Show the tooltip on when the user provides a Full api key
+            Account account = m_character.Identity.Account;
+            if (account == null || account.KeyLevel != CredentialsLevel.Full)
+                return;
+
+            string location = "Lost in a space";
+            Station station = StaticGeography.GetStationByName(m_character.LastKnownLocation);
+
+            if (station == null)
+            {
+                SolarSystem system = StaticGeography.GetSystemByName(m_character.LastKnownLocation);
+                if (system != null)
+                    location = String.Format("{0} ({1:N1})", system.FullLocation, system.SecurityLevel);
+            }
+            else
+            {
+                location = String.Format("{0} ({1:N1})\nDocked in {2}", station.SolarSystem.FullLocation, station.SolarSystem.SecurityLevel, station.Name);
+            }
+
+            string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);
             ToolTip.SetToolTip(sender as Label, tooltipText);
         }
 

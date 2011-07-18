@@ -78,7 +78,7 @@ namespace EVEMon.Common
                 if (m_current == value)
                     return;
                 m_current = value;
-                EveClient.OnCharacterChanged(m_owner);
+                EveClient.OnCharacterUpdated(m_owner);
             }
         }
 
@@ -91,7 +91,7 @@ namespace EVEMon.Common
         {
             var set = new ImplantSet(m_owner, name);
             m_customSets.Add(set);
-            EveClient.OnCharacterChanged(m_owner);
+            EveClient.OnCharacterUpdated(m_owner);
             return set;
         }
 
@@ -102,7 +102,7 @@ namespace EVEMon.Common
         public void Remove(ImplantSet set)
         {
             m_customSets.Remove(set);
-            EveClient.OnCharacterChanged(m_owner);
+            EveClient.OnCharacterUpdated(m_owner);
         }
 
         /// <summary>

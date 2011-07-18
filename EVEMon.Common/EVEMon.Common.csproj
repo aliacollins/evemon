@@ -77,6 +77,7 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIError.cs" />
@@ -806,6 +807,7 @@
     <Content Include="Resources\Audio\SkillTrained.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\info_balloon.png" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
   </ItemGroup>

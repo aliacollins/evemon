@@ -75,7 +75,7 @@ namespace EVEMon
 
             // Global events
             EveClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.SchedulerChanged += EveClient_SchedulerChanged;
             EveClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
@@ -155,7 +155,7 @@ namespace EVEMon
         void OnDisposed(object sender, EventArgs e)
         {
             EveClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
             EveClient.TimerTick -= EveClient_TimerTick;
             Disposed -= OnDisposed;
@@ -385,7 +385,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;

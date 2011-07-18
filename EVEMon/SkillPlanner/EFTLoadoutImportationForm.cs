@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             m_plan = plan;
             m_character = m_plan.Character;
 
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.PlanChanged += EveClient_PlanChanged;
         }
 
@@ -81,7 +81,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.PlanChanged -= EveClient_PlanChanged;
             base.OnClosing(e);
         }
@@ -128,7 +128,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character) return;
             UpdatePlanStatus();

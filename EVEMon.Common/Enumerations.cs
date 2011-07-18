@@ -767,6 +767,11 @@ namespace EVEMon.Common
         /// </summary>
         [FullKey]
         CharacterName,
+
+        /// <summary>
+        /// The character info. Used to fetch sctive ship, security status and last known location. 
+        /// </summary>
+        CharacterInfo,
     }
 
     #endregion

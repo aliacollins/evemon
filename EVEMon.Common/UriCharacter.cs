@@ -73,7 +73,7 @@ namespace EVEMon.Common
                 if (m_uri != value)
                 {
                     m_uri = value;
-                    EveClient.OnCharacterChanged(this);
+                    EveClient.OnCharacterUpdated(this);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace EVEMon.Common
 
             m_uri = new Uri(serial.Uri);
 
-            EveClient.OnCharacterChanged(this);
+            EveClient.OnCharacterUpdated(this);
         }
 
         /// <summary>

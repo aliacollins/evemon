@@ -137,7 +137,7 @@ namespace EVEMon.Common
         /// </summary>
         public Station Station
         {
-            get { return StaticGeography.GetStation(m_stationID); }
+            get { return StaticGeography.GetStationByID(m_stationID); }
         }
 
         #endregion

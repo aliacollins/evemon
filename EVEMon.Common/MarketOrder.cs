@@ -200,7 +200,7 @@ namespace EVEMon.Common
         private static Station GetStationByID(long id)
         {
             // Look for the station in datafile
-            Station station = StaticGeography.GetStation(id);
+            Station station = StaticGeography.GetStationByID(id);
 
             // We failed ? Then it's a conquerable outpost station
             if (station == null)
@@ -210,7 +210,7 @@ namespace EVEMon.Common
             // We set it to a fixed one and notify about it in the trace file
             if (station == null)
             {
-                station = StaticGeography.GetStation(60013747);
+                station = StaticGeography.GetStationByID(60013747);
                 EveClient.Trace("Could not find station id {0}", id);
                 EveClient.Trace("Setting to {0}", station.Name);
             }

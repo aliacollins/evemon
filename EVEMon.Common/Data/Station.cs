@@ -32,7 +32,7 @@ namespace EVEMon.Common.Data
             m_name = src.StationName;
             m_corporationID = src.CorporationID;
             m_corporationName = src.CorporationName;
-            m_owner = StaticGeography.GetSystem(src.SolarSystemID); 
+            m_owner = StaticGeography.GetSystemByID(src.SolarSystemID); 
         }
 
         /// <summary>

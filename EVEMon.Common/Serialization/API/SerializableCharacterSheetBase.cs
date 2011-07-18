@@ -11,6 +11,7 @@ namespace EVEMon.Common.Serialization.API
     {
         public SerializableCharacterSheetBase()
         {
+            Info = new SerializableAPICharacterInfo();
             Attributes = new SerializableCharacterAttributes();
             Skills = new List<SerializableCharacterSkill>();
             Certificates = new List<SerializableCharacterCertificate>();
@@ -113,6 +114,13 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlElement("balance")]
         public Decimal Balance
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("info")]
+        public SerializableAPICharacterInfo Info
         {
             get;
             set;

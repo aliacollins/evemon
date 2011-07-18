@@ -34,14 +34,29 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the system with the provided ID.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static SolarSystem GetSystem(long id)
+        public static SolarSystem GetSystemByID(long id)
         {
             EnsureInitialized();
             SolarSystem result = null;
             s_solarSystemsByID.TryGetValue(id, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Gets the system with the provided name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static SolarSystem GetSystemByName(string name)
+        {
+            foreach (SolarSystem system in s_solarSystemsByID.Values)
+            {
+                if (system.Name == name)
+                    return system;
+            }
+            return null;
         }
 
         /// <summary>
@@ -62,14 +77,29 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the station with the provided ID.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static Station GetStation(long id)
+        public static Station GetStationByID(long id)
         {
             EnsureInitialized();
             Station result = null;
             s_stationsByID.TryGetValue(id, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Gets the station with the provided name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public static Station GetStationByName(string name)
+        {
+            foreach (Station station in s_stationsByID.Values)
+            {
+                if (station.Name == name)
+                    return station;
+            }
+            return null;
         }
 
         /// <summary>

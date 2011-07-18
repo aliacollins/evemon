@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
             tsSortPriorities.Click += tsSortPriorities_Clicked;
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.PlanChanged += EveClient_PlanChanged;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.TimerTick += EveClient_TimerTick;
@@ -91,7 +91,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.PlanChanged -= EveClient_PlanChanged;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.TimerTick -= EveClient_TimerTick;
@@ -210,7 +210,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible || e.Character != m_character)
                 return;

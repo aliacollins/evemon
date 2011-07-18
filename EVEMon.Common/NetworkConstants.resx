@@ -258,4 +258,7 @@
   <data name="BCAPIFileGetByName" xml:space="preserve">
     <value>/files/fileGetByName.php</value>
   </data>
+  <data name="APICharacterInfo" xml:space="preserve">
+    <value>/eve/CharacterInfo.xml.aspx</value>
+  </data>
 </root>

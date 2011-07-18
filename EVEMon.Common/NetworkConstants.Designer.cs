@@ -97,6 +97,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /eve/CharacterInfo.xml.aspx.
+        /// </summary>
+        public static string APICharacterInfo {
+            get {
+                return ResourceManager.GetString("APICharacterInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /account/Characters.xml.aspx.
         /// </summary>
         public static string APICharacterList {

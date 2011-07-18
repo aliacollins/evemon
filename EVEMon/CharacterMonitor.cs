@@ -91,7 +91,7 @@ namespace EVEMon
             EveClient.TimerTick += EveClient_TimerTick;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.SchedulerChanged += EveClient_SchedulerChanged;
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
             EveClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
             EveClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
@@ -112,7 +112,7 @@ namespace EVEMon
             EveClient.TimerTick -= EveClient_TimerTick;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.SchedulerChanged -= EveClient_SchedulerChanged;
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
             EveClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
             EveClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
@@ -532,7 +532,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;

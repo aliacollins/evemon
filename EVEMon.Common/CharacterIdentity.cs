@@ -51,7 +51,10 @@ namespace EVEMon.Common
                 // Notify subscribers
                 CCPCharacter ccpCharacter = CCPCharacter;
                 if (ccpCharacter != null)
-                    EveClient.OnCharacterChanged(ccpCharacter);
+                {
+                    EveClient.OnCharacterUpdated(ccpCharacter);
+                    EveClient.OnCharacterInfoUpdated(ccpCharacter);
+                }
             }
         }
 

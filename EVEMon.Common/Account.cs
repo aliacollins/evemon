@@ -351,7 +351,7 @@ namespace EVEMon.Common
             {
                 CCPCharacter ccpCharacter = id.CCPCharacter;
                 if (ccpCharacter != null)
-                    EveClient.OnCharacterChanged(ccpCharacter);
+                    EveClient.OnCharacterUpdated(ccpCharacter);
             }
         }
 

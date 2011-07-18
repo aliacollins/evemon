@@ -42,16 +42,16 @@ namespace EVEMon.SkillPlanner
 
             InitializeComponent();
 
-            treeView.DrawNode += new DrawTreeNodeEventHandler(treeView_DrawNode);
-            treeView.MouseDown += new MouseEventHandler(treeView_MouseDown);
+            treeView.DrawNode += (treeView_DrawNode);
+            treeView.MouseDown += treeView_MouseDown;
 
-            cmListSkills.Opening += new CancelEventHandler(cmListSkills_Opening);
+            cmListSkills.Opening += cmListSkills_Opening;
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            Disposed += new EventHandler(OnDisposed);
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
+            Disposed += OnDisposed;
         }
 
         #endregion
@@ -66,8 +66,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
-            Disposed -= new EventHandler(OnDisposed);
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            Disposed -= OnDisposed;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateTree();
         }

@@ -48,7 +48,7 @@ namespace EVEMon.Accounting
 
             EveClient.AccountCollectionChanged += EveClient_AccountCollectionChanged;
             EveClient.CharacterCollectionChanged += EveClient_CharacterCollectionChanged;
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
 
             EveClient_AccountCollectionChanged(null, null);
             EveClient_CharacterCollectionChanged(null, null);
@@ -66,7 +66,7 @@ namespace EVEMon.Accounting
         {
             EveClient.AccountCollectionChanged -= EveClient_AccountCollectionChanged;
             EveClient.CharacterCollectionChanged -= EveClient_CharacterCollectionChanged;
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             base.OnClosing(e);
         }
 
@@ -233,7 +233,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             m_refreshingCharactersCounter++;
             UpdateCharactersListContent();

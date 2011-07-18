@@ -446,9 +446,14 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanCollectionChanged;
 
         /// <summary>
-        /// Occurs when a character changed.
+        /// Occurs when a character sheet has been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterChanged;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterUpdated;
+
+        /// <summary>
+        /// Occurs when a character info has been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterInfoUpdated;
 
         /// <summary>
         /// Occurs when a character skill queue has been updated.
@@ -619,15 +624,27 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the character changed.
+        /// Called when the character sheet updated.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal static void OnCharacterChanged(Character character)
+        internal static void OnCharacterUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterChanged - {0}", character.Name);
+            Trace("EveClient.OnCharacterUpdated - {0}", character.Name);
             Settings.Save();
-            if (CharacterChanged != null)
-                CharacterChanged(null, new CharacterChangedEventArgs(character));
+            if (CharacterUpdated != null)
+                CharacterUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character info updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterInfoUpdated(Character character)
+        {
+            Trace("EveClient.OnCharacterInfoUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterInfoUpdated != null)
+                CharacterInfoUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -754,7 +771,6 @@ namespace EVEMon.Common
         internal static void OnCharacterPortraitUpdated(Character character)
         {
             Trace("EveClient.OnCharacterPortraitUpdated - {0}", character.Name);
-            Settings.Save();
             if (CharacterPortraitUpdated != null)
                 CharacterPortraitUpdated(null, new CharacterChangedEventArgs(character));
         }

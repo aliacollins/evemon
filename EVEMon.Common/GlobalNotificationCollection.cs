@@ -282,6 +282,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies a character info querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterInfoError(CCPCharacter character, APIResult<SerializableAPICharacterInfo> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occurred while querying the character info.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a skill queue querying error.
         /// </summary>
         /// <param name="character">The character.</param>

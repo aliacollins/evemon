@@ -57,7 +57,7 @@ namespace EVEMon.Common
             m_activity = (BlueprintActivity) Enum.ToObject(typeof (BlueprintActivity), src.ActivityID);
             m_blueprintType = (BlueprintType) Enum.ToObject(typeof (BlueprintType), src.InstalledItemCopy);
             m_installation = GetInstallation(src.OutputLocationID);
-            m_solarSystem = StaticGeography.GetSystem(src.SolarSystemID);
+            m_solarSystem = StaticGeography.GetSystemByID(src.SolarSystemID);
             m_installedTime = src.InstallTime;
             m_installedItemME = src.InstalledItemMaterialLevel;
             m_installedItemPE = src.InstalledItemProductivityLevel;
@@ -86,7 +86,7 @@ namespace EVEMon.Common
             m_activity = src.Activity;
             m_blueprintType = src.BlueprintType;
             m_installation = src.ItemLocation;
-            m_solarSystem = StaticGeography.GetSystem(src.SolarSystemID);
+            m_solarSystem = StaticGeography.GetSystemByID(src.SolarSystemID);
             m_installedTime = src.InstalledTime;
             m_installedItemME = src.InstalledItemME;
             m_installedItemPE = src.InstalledItemPE;
@@ -193,7 +193,7 @@ namespace EVEMon.Common
         internal string GetInstallation(long id)
         {
             // Look for the station in datafile
-            Station station = StaticGeography.GetStation(id);
+            Station station = StaticGeography.GetStationByID(id);
 
             // Is it a conquerable outpost station ?
             if (station == null)

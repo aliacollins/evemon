@@ -26,10 +26,10 @@ namespace EVEMon.Controls
 
             m_toolTip = new SkillQueueToolTip(this);
 
-            this.Disposed += new EventHandler(OnDisposed);
-            EveClient.TimerTick += new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            this.Disposed += OnDisposed;
+            EveClient.TimerTick += EveClient_TimerTick;
+            EveClient.SettingsChanged += EveClient_SettingsChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
         }
 
         /// <summary>
@@ -39,10 +39,10 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            this.Disposed -= new EventHandler(OnDisposed);
-            EveClient.TimerTick -= new EventHandler(EveClient_TimerTick);
-            EveClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveClient.CharacterChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterChanged);
+            this.Disposed -= OnDisposed;
+            EveClient.TimerTick -= EveClient_TimerTick;
+            EveClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             m_toolTip.Dispose();
         }
 
@@ -72,7 +72,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = e.Character as CCPCharacter;
 

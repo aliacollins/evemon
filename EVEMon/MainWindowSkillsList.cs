@@ -55,7 +55,7 @@ namespace EVEMon
 
             m_requireRefresh = true;
 
-            EveClient.CharacterChanged +=EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.SettingsChanged += EveClient_SettingsChanged;
             EveClient.TimerTick += EveClient_TimerTick;
             Disposed += OnDisposed;
@@ -75,7 +75,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
             EveClient.TimerTick -= EveClient_TimerTick;
             this.Disposed -= OnDisposed;
@@ -422,7 +422,7 @@ namespace EVEMon
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
-            Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft / 2,
+            Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft,
                                             e.Bounds.Top + ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
                                             skillGroupNameTextSize.Width, skillGroupNameTextSize.Height);
 
@@ -950,7 +950,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;

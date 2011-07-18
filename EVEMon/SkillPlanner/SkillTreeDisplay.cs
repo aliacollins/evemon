@@ -304,7 +304,7 @@ namespace EVEMon.SkillPlanner
             SetStyle(ControlStyles.ResizeRedraw, true);
 
             EveClient.SettingsChanged += EveClient_SettingsChanged;
-            EveClient.CharacterChanged += EveClient_CharacterChanged;
+            EveClient.CharacterUpdated += EveClient_CharacterUpdated;
             EveClient.PlanChanged += EveClient_PlanChanged;
             Disposed += OnDisposed;
         }
@@ -317,7 +317,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             EveClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveClient.CharacterChanged -= EveClient_CharacterChanged;
+            EveClient.CharacterUpdated -= EveClient_CharacterUpdated;
             EveClient.PlanChanged -= EveClient_PlanChanged;
             Disposed -= OnDisposed;
         }
@@ -745,7 +745,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterChanged(object sender, CharacterChangedEventArgs e)
+        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (m_plan == null) 
                 return;
