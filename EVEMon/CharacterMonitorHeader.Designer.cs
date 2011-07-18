@@ -190,8 +190,8 @@
             this.BioFlowLayoutPanel.AutoSize = true;
             this.BioFlowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BioFlowLayoutPanel.Controls.Add(this.CharacterNameLabel);
-            this.BioFlowLayoutPanel.Controls.Add(this.BalanceLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BioInfoLabel);
+            this.BioFlowLayoutPanel.Controls.Add(this.BalanceLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.BirthdayLabel);
             this.BioFlowLayoutPanel.Controls.Add(this.CorporationInfoFlowLayoutPanel);
             this.BioFlowLayoutPanel.Controls.Add(this.SecurityStatusLabel);
@@ -217,7 +217,7 @@
             // BalanceLabel
             // 
             this.BalanceLabel.AutoSize = true;
-            this.BalanceLabel.Location = new System.Drawing.Point(0, 13);
+            this.BalanceLabel.Location = new System.Drawing.Point(0, 26);
             this.BalanceLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BalanceLabel.Name = "BalanceLabel";
             this.BalanceLabel.Size = new System.Drawing.Size(93, 13);
@@ -227,7 +227,7 @@
             // BioInfoLabel
             // 
             this.BioInfoLabel.AutoSize = true;
-            this.BioInfoLabel.Location = new System.Drawing.Point(0, 26);
+            this.BioInfoLabel.Location = new System.Drawing.Point(0, 13);
             this.BioInfoLabel.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.BioInfoLabel.Name = "BioInfoLabel";
             this.BioInfoLabel.Size = new System.Drawing.Size(43, 13);
