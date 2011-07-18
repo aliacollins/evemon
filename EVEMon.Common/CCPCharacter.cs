@@ -446,7 +446,7 @@ namespace EVEMon.Common
         private void OnCharacterInfoUpdated(APIResult<SerializableAPICharacterInfo> result)
         {
             // Notify an error occured
-            //if (ShouldNotifyError(result, APIMethods.CharacterInfo))
+            if (ShouldNotifyError(result, APIMethods.CharacterInfo))
                 EveClient.Notifications.NotifyCharacterInfoError(this, result);
 
             // Quits if there is an error
