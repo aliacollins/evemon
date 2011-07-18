@@ -215,7 +215,7 @@ namespace EVEMon
 
             lblCharName.Text = m_character.Name;
             pbCharacterPortrait.Character = m_character;
-            var ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
             if (ccpCharacter != null)
                 lblBalance.ForeColor = (!ccpCharacter.HasSufficientBalance ? Color.Orange : lblBalance.ForeColor);
             
@@ -225,7 +225,7 @@ namespace EVEMon
             if (m_character.IsTraining)
             {
                 // Update the skill in training label
-                var trainingSkill = m_character.CurrentlyTrainingSkill;
+                QueuedSkill trainingSkill = m_character.CurrentlyTrainingSkill;
                 lblSkillInTraining.Text = trainingSkill.ToString();
                 DateTime endTime = trainingSkill.EndTime.ToLocalTime();
 
@@ -234,12 +234,11 @@ namespace EVEMon
                     String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime) :
                     endTime.ToString(CultureConstants.DefaultCulture));
 
-                // Changes the completion time color on scheduling block.
+                // Changes the completion time color on scheduling block
                 string blockingEntry;
                 lblCompletionTime.ForeColor = (
-                    m_showConflicts && Scheduler.SkillIsBlockedAt(trainingSkill.EndTime, out blockingEntry) ?
-                    Color.Red :
-                    m_lightForeColor);
+                    m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry) ?
+                                        Color.Red : m_lightForeColor);
 
                 // Updates the time remaining label
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
@@ -291,7 +290,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            var skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
+            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
             string timeLeftText;
 
@@ -341,7 +340,7 @@ namespace EVEMon
 
             if (m_character.IsTraining)
             {
-                var remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
+                TimeSpan remainingTime = m_character.CurrentlyTrainingSkill.RemainingTime;
                 lblRemainingTime.Text = remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
 
                 UpdateSkillQueueTrainingTime();
@@ -632,7 +631,7 @@ namespace EVEMon
                 labelWidth = 215;
             
             // Big font size
-            var bigFontSize = 11.25f;
+            float bigFontSize = 11.25f;
             if (portraitSize <= 48)
             {
                 bigFontSize = 8.25f;
@@ -643,7 +642,7 @@ namespace EVEMon
             }
 
             // Medium font size
-            var mediumFontSize = 9.75f;
+            float mediumFontSize = 9.75f;
             if (portraitSize <= 64)
                 mediumFontSize = 8.25f;
 
