@@ -405,12 +405,12 @@ namespace EVEMon
             string skillInTrainingSuffix = String.Empty;
             string skillsInQueueSuffix = String.Empty;
             bool hasTrainingSkill = group.Any(x => x.IsTraining);
-            bool hasQueuedSkill = group.Any(x=> x.IsQueued && !x.IsTraining);
+            bool hasQueuedSkill = group.Any(x => x.IsQueued && !x.IsTraining);
             if (hasTrainingSkill)
-                skillInTrainingSuffix = " ( 1 in training )";
+                skillInTrainingSuffix = "  ( 1 in training )";
             if (hasQueuedSkill)
                 skillsInQueueSuffix = String.Format(CultureConstants.DefaultCulture,
-                    " ( {0} in queue )", group.Count(x=> x.IsQueued && !x.IsTraining));
+                    "  ( {0} in queue )", group.Count(x => x.IsQueued && !x.IsTraining));
 
             string detailText = String.Format(CultureConstants.DefaultCulture,
                                               ", {0} of {1} skills, {2:#,##0} Points{3}",
@@ -421,22 +421,21 @@ namespace EVEMon
 
             TextFormatFlags format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Size titleTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
-            Rectangle titleRect = new Rectangle(e.Bounds.Left + 3,
-                                            e.Bounds.Top + ((e.Bounds.Height / 2) - (titleTextSize.Height / 2)),
-                                            titleTextSize.Width + PadRight,
-                                            titleTextSize.Height);
+            Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
+            Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft / 2,
+                                            e.Bounds.Top + ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
+                                            skillGroupNameTextSize.Width, skillGroupNameTextSize.Height);
 
             Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, format);
             Rectangle detailRect = new Rectangle(
-                titleRect.X + titleRect.Width + 4, titleRect.Y, detailTextSize.Width, detailTextSize.Height);
+                skillGroupNameRect.X + skillGroupNameRect.Width, skillGroupNameRect.Y, detailTextSize.Width, detailTextSize.Height);
 
             Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty, format);
             Rectangle skillQueueRect = new Rectangle(
-                detailRect.X + detailRect.Width + 4, detailRect.Y, skillQueueTextSize.Width, skillQueueTextSize.Height);
+                detailRect.X + detailRect.Width, detailRect.Y, skillQueueTextSize.Width, skillQueueTextSize.Height);
 
             // Draw the header
-            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, titleRect, Color.White);
+            TextRenderer.DrawText(g, group.Name, m_boldSkillsFont, skillGroupNameRect, Color.White);
             TextRenderer.DrawText(g, detailText, m_skillsFont, detailRect, Color.White);
             TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect,
                                  (Settings.UI.SafeForWork ? Color.White : Color.Yellow));
