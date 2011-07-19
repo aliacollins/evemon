@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using EVEMon.Common;
-using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.SettingsUI
 {
@@ -49,7 +49,8 @@ namespace EVEMon.SettingsUI
 
         /// <summary>
         /// Populates the DataGridView control with APIMethod details from the specified APIConfiguration instance.
-        /// The APIMethod is stored in the DataGridViewRow.Tag property for reference.
+        /// The APIMethod is stored in the DataGridViewRow.
+        /// <remarks>Tag property for reference.</remarks>
         /// </summary>
         private void InitializeDataGrid()
         {
@@ -59,6 +60,10 @@ namespace EVEMon.SettingsUI
                 // Skip "none"
                 if (method.Method == APIMethods.None)
                     continue;
+
+                // Fills empty path with the default one
+                if (String.IsNullOrEmpty(method.Path))
+                    method.Path = APIProvider.DefaultProvider.Methods.FirstOrDefault(x => x.Method == method.Method).Path;
 
                 // Add row
                 int rowIndex = dgMethods.Rows.Add(method.Method, method.Path);
