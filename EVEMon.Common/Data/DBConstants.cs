@@ -55,26 +55,108 @@ namespace EVEMon.Common.Data
         public const int MassPropertyID = 4;
         public const int TechLevelPropertyID = 422;
         public const int MetaGroupPropertyID = 1692;
-
+        public const int CapacitorCapacityPropertyID = 482;
         public const int ImplantSlotPropertyID = 331;
         public const int CharismaModifierPropertyID = 175;
         public const int IntelligenceModifierPropertyID = 176;
         public const int MemoryModifierPropertyID = 177;
         public const int PerceptionModifierPropertyID = 178;
         public const int WillpowerModifierPropertyID = 179;
-
         public const int ReprocessingSkillPropertyID = 790;
-
         public const int ShipBonusPirateFactionPropertyID = 793;
-
         public const int WarpSpeedMultiplierPropertyID = 600;
         public const int ShipWarpSpeedPropertyID = 1281;
-
         public const int CPUOutputPropertyID = 48;
         public const int PGOutputPropertyID = 11;
-
         public const int CPUNeedPropertyID = 50;
         public const int PGNeedPropertyID = 30;
+        public const int StructureHitpointsPropertyID = 9;
+        public const int ShieldHitpointsPropertyID = 263;
+        public const int ArmorHitpointsPropertyID = 265;
+        public const int ShieldEMResistancePropertyID = 271;
+        public const int ShieldExplosiveResistancePropertyID = 272;
+        public const int ShieldKineticResistancePropertyID = 273;
+        public const int ShieldThermalResistancePropertyID = 274;
+        public const int ArmorEMResistancePropertyID = 267;
+        public const int ArmorExplosiveResistancePropertyID = 268;
+        public const int ArmorKineticResistancePropertyID = 269;
+        public const int ArmorThermalResistancePropertyID = 270;
+        public const int HullEMResistancePropertyID = 974;
+        public const int HullExplosiveResistancePropertyID = 975;
+        public const int HullKineticResistancePropertyID = 976;
+        public const int HullThermalResistancePropertyID = 977;
+        public const int CapacitorNeedPropertyID = 6;
+        public const int AgilityPropertyID = 70;
+        public const int CapacitorRechargeRatePropertyID = 55;
+        public const int CapacitorRechargeRateMultiplierPropertyID = 144;
+        public const int ShieldBonusPropertyID = 68;
+        public const int ShieldTransferRangePropertyID = 87;
+        public const int ExplosiveDamagePropertyID = 116;
+        public const int CPUOutputBonusPropertyID = 424;
+        public const int CPUPenaltyPercentPropertyID = 1082;
+        public const int ShipMaintenanceBayCapacityPropertyID = 908;
+        public const int UpgradeCapacityPropertyID = 1132;
+        public const int RigSizePropertyID = 1547;
+        public const int MetaGroupIDPropertyID = 1692;
+        public const int ShieldRechargeRatePropertyID = 479;
+        public const int SignatureRadiusPropertyID = 552;
+        public const int CloakingTargetingDelayPropertyID = 560;
+        public const int AnchoringDelayPropertyID = 556;
+        public const int UnanchoringDelayPropertyID = 676;
+        public const int OnliningDelayPropertyID = 677;
+        public const int ModuleReactivationDelayPropertyID = 669;
+        public const int IceHarvestCycleBonusPropertyID = 780;
+        public const int DurationPropertyID = 73;
+        public const int UpgradeCostPropertyID = 1153;
+        public const int DroneBandwidthUsedPropertyID = 1272;
+        public const int AITargetSwitchTimerPropertyID = 1416;
+        public const int ScanResolutionPropertyID = 564;
+        public const int RigSlotsPropertyID = 1137;
+        public const int MaxVelocityPropertyID = 37;
+        public const int PrimaryAttributePropertyID = 180;
+        public const int SecondaryAttributePropertyID = 180;
+        public const int SkillTimeConstantPropertyID = 275;
+        public const int CanNotBeTrainedOnTrialPropertyID = 1047;
+        public const int CharismaPropertyID = 164;
+        public const int IntelligencePropertyID = 165;
+        public const int MemoryPropertyID = 166;
+        public const int PerceptionPropertyID = 167;
+        public const int WillpowerPropertyID = 168;
+
+
+        #endregion
+
+
+        #region EVE Unit IDs (Properties UnitID's)
+
+        public const int MassUnitID = 2;
+        public const int MillsecondsUnitID = 101;
+        public const int AbsolutePercentUnitID = 127;
+        public const int InverseAbsolutePercentUnitID = 108;
+        public const int ModifierPercentUnitID = 109;
+        public const int InversedModifierPercentUnitID = 111;
+        public const int GroupIDUnitID = 115;
+        public const int TypeUnitID = 116;
+        public const int SizeclassUnitID = 117;
+
+        #endregion
+
+
+        #region Certificate Classes IDs
+
+        public const int IndustrialHarvestingID = 104;
+        public const int AutomatedMiningID = 106;
+        public const int ProductionInternID = 111;
+
+        #endregion
+
+
+        #region Certificate Grade IDs
+
+        public const int BasicID = 1;
+        public const int StandardID = 2;
+        public const int ImprovedID = 3;
+        public const int EliteID = 5;
 
         #endregion
 
@@ -96,6 +178,7 @@ namespace EVEMon.Common.Data
         public const int TradeSkillsGroupID = 274;
         public const int SubsystemsGroupID = 989;
         public const int CyberLearningImplantsGroupID = 745;
+        public const int FakeSkillsGroupID = 505;
 
         #endregion
 
@@ -152,10 +235,39 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region MetaGroup IDs
+
+        public const int TechIMetaGroupID = 1;
+        public const int TechIIMetaGroupID = 2;
+        public const int StorylineMetaGroupID = 3;
+        public const int FactionMetaGroupID = 4;
+        public const int OfficerMetaGroupID = 5;
+        public const int DeadspaceMetaGroupID = 6;
+        public const int TechIIIMetaGroupID = 14;
+
+        #endregion
+
+
+        #region TechLevels
+
+        public const int TechLevelI = 1;
+        public const int TechLevelII = 2;
+        public const int TechLevelIII = 3;
+
+        #endregion
+
+
+        #region Icon IDs
+
+        public const int UnknownBlueprintBackdropIconID = 2703;
+        public const int UnknownShipIconID = 1443;
+
+        #endregion
+
+
         #region Types IDs
 
         public const int ScrapMetalProcessingSkillID = 12196;
-
         public const int TradeSkillID = 3443;
         public const int RetailSkillID = 3444;
         public const int BrokerRelationsSkillID = 3446;
@@ -166,27 +278,118 @@ namespace EVEMon.Common.Data
         public const int ProcurementSkillID = 16594;
         public const int DaytradingSkillID = 16595;
         public const int VisibilitySkillID = 3447;
-
         public const int ScienceSkillID = 3402;
         public const int IndustrySkillID = 3380;
         public const int ResearchSkillID = 3403;
         public const int MetallurgySkillID = 3409;
         public const int ProductionEfficiencySkillID = 3388;
-
         public const int MassProductionSkillID = 3387;
         public const int AdvancedMassProductionSkillID = 24625;
         public const int SupplyChainManagementSkillID = 24268;
-
         public const int LaboratoryOperationSkillID = 3406;
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int ScientificNetworkingSkillID = 24270;
-
         public const int DiplomacySkillID = 3357;
         public const int ConnectionsSkillID = 3359;
 
         public const int WarpDisruptProbeBlueprintID = 22779;
+        public const int WildMinerIBlueprintID = 22924;
+        public const int AdrestiaBlueprintID = 2837;
+        public const int EchelonBlueprintID = 3533;
+        public const int ImperialNavySlicerBlueprintID = 17704;
+        public const int CaldariNavyHookbillBlueprintID = 17620;
+        public const int FederationNavyCometBlueprintID = 17842;
+        public const int RepublicFleetFiretailBlueprintID = 17813;
+        public const int NightmareBlueprintID = 17737;
+        public const int MacharielBlueprintID = 17739;
+        public const int DramielBlueprintID = 17933;
+        public const int CruorBlueprintID = 17927;
+        public const int SuccubusBlueprintID = 17925;
+        public const int DaredevilBlueprintID = 17929;
+        public const int CynabalBlueprintID = 17721;
+        public const int AshimmuBlueprintID = 17923;
+        public const int PhantasmBlueprintID = 17719;
+        public const int GorusShuttleBlueprintID = 21098;
+        public const int GuristasShuttleBlueprintID = 21629;
+        public const int InterbusShuttleBlueprintID = 30843;
+        public const int FrekiBlueprintID = 32208;
+        public const int MimirBlueprintID = 32210;
+        public const int GallenteMiningLaserBlueprintID = 21842;
+        public const int SmallEWDroneRangeAugmentorIIBlueprintID = 32078;
+        public const int LegionBlueprintID = 29987;
+        public const int LegionDefensiveAdaptiveAugmenterBlueprintID = 30227;
+        public const int LegionElectronicsEnergyParasiticComplexBlueprintID = 30037;
+        public const int LegionEngineeringPowerCoreMultiplierBlueprintID = 30170;
+        public const int LegionOffensiveDroneSynthesisProjectorBlueprintID = 30392;
+        public const int LegionPropulsionChassisOptimizationBlueprintID = 30077;
+        public const int LokiBlueprintID = 29991;
+        public const int LokiDefensiveAdaptiveShieldingBlueprintID = 30242;
+        public const int LokiElectronicsImmobilityDriversBlueprintID = 30067;
+        public const int LokiEngineeringPowerCoreMultiplierBlueprintID = 30160;
+        public const int LokiOffensiveTurretConcurrenceRegistryBlueprintID = 30407;
+        public const int LokiPropulsionChassisOptimizationBlueprintID = 30107;
+        public const int ProteusBlueprintID = 29989;
+        public const int ProteusDefensiveAdaptiveAugmenterBlueprintID = 30237;
+        public const int ProteusElectronicsFrictionExtensionProcessorBlueprintID = 30057;
+        public const int ProteusEngineeringPowerCoreMultiplierBlueprintID = 30150;
+        public const int ProteusOffensiveDissonicEncodingPlatformBlueprintID = 30402;
+        public const int ProteusPropulsionWakeLimiterBlueprintID = 30097;
+        public const int TenguBlueprintID = 29985;
+        public const int TenguDefensiveAdaptiveShieldingBlueprintID = 30232;
+        public const int TenguElectronicsObfuscationManifoldBlueprintID = 30047;
+        public const int TenguEngineeringPowerCoreMultiplierBlueprintID = 30140;
+        public const int TenguOffensiveAcceleratedEjectionBayBlueprintID = 30397;
+        public const int TenguPropulsionIntercalatedNanofibersBlueprintID = 30087;
+        public const int SynthSoothSayerBoosterBlueprintID = 28685;
+        public const int SmallEWDroneRangeAugmentorIIID = 32077;
+        public const int MegathronFederateIssueID = 13202;
+        public const int RavenStateIssueID = 26840;
+        public const int TempestTribalIssueID = 26842;
+        public const int GorusShuttleID = 21097;
+        public const int GuristasShuttleID = 21628;
+        public const int InterbusShuttleID = 30842;
+        public const int AmberMykoserocinID = 28694;
+        public const int GoldSculptureID = 17761;
+        public const int GallenteAdministrativeOutpostPlatformID = 10257;
+        public const int MinmatarServiceOutpostPlatformID = 10258;
+        public const int AmarrFactoryOutpostPlatformID = 10260;
+        public const int CaldariResearchOutpostPlatformID = 19758;
+        public const int CrudeSculptureID = 21054;
+        public const int ProcessInterruptiveWarpDisruptorID = 21510;
+        public const int EliteDroneAIID = 21815;
+        public const int AlphaCodebreakerIID = 22329;
+        public const int CodexCodebreakerIID = 22327;
+        public const int DaemonCodebreakerIID = 22325;
+        public const int LibramCodebreakerIID = 22331;
+        public const int SleeperDataAnalyzerIID = 22335;
+        public const int TalocanDataAnalyzerIID = 22333;
+        public const int TerranDataAnalyzerIID = 22337;
+        public const int TetrimonDataAnalyzerIID = 22339;
+        public const int StandardDecodingDeviceID = 23882;
+        public const int MethrosEnhancedDecodingDeviceID = 23883;
+        public const int WildMinerIID = 22923;
+        public const int EncodingMatrixComponentID = 24289;
+        public const int ClayPigeonID = 27038;
+        public const int MinmatarDNAID = 29203;
+        public const int BasicRoboticsID = 29226;
+        public const int ModifiedAugumeneAntidoteID = 29202;
+        public const int CivilianBallisticDeflectionFieldID = 30424;
+        public const int CivilianExplosionDampeningFieldID = 30422;
+        public const int CivilianPhotonScatteringFieldID = 30420;
+        public const int CivilianHeatDissipationFieldID = 30342;
+        public const int CivilianStasisWebifierID = 30328;
+        public const int CivilianDamageControlID = 30839;
+        public const int ChalcopyriteID = 27029;
+        public const int TemperatePlanetID = 11;
+        public const int IcePlanetID = 12;
+        public const int GasPlanetID = 13;
+        public const int OceanicPlanetID = 2014;
+        public const int LavaPlanetID = 2015;
+        public const int BarrenPlanetID = 2016;
+        public const int StormPlanetID = 2017;
+        public const int PlasmaPlanetID = 2063;
+        public const int ShatteredPlanetID = 30889;
 
         #endregion
-
     }
 }

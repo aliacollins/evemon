@@ -180,21 +180,21 @@ namespace EVEMon.Common.Data
                 try
                 {
                     // Format a value of Structure Volume
-                    if (m_id == 161)
+                    if (m_id == DBConstants.VolumePropertyID)
                         return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", m_value, m_unit);
 
                     // Format a value of Capacitor Capacity
-                    if (m_id == 482)
+                    if (m_id == DBConstants.CapacitorCapacityPropertyID)
                         return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", Math.Floor(m_value), m_unit);
 
                     // Format a value of Ships Warp Speed
-                    if (m_id == 1281)
+                    if (m_id == DBConstants.ShipWarpSpeedPropertyID)
                         return String.Format(CultureConstants.DefaultCulture, "{0:0.0#} {1}", m_value, m_unit);
 
                     switch (m_unitID)
                     {
                         // Format a value of Mass
-                        case 2:
+                        case DBConstants.MassUnitID:
                             if (m_value <= 1000)
                             {
                                 return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0#} {1}", m_value, m_unit);
@@ -205,36 +205,36 @@ namespace EVEMon.Common.Data
                             }
 
                         // Format a value of Millseconds
-                        case 101:
+                        case DBConstants.MillsecondsUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", m_value / 1000, m_unit);
 
                         // Format a value of Absolute Percentage
-                        case 127:
+                        case DBConstants.AbsolutePercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (m_value) * 100, m_unit);
 
                         // Format a value of Inverse Absolute Percentage
-                        case 108:
+                        case DBConstants.InverseAbsolutePercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - m_value) * 100, m_unit);
 
                         // Format a value of Modifier Percentage
-                        case 109:
+                        case DBConstants.ModifierPercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (m_value - 1) * 100, m_unit);
 
                         // Format a value of Inverse Modifier Percentage
-                        case 111:
+                        case DBConstants.InversedModifierPercentUnitID:
                             return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - m_value) * 100, m_unit);
 
-                        // A reference to a group, it has been pre-transformed on XmlGenerator.
-                        case 115: // "groupID"
+                        // A reference to a group (groupID), it has been pre-transformed on XmlGenerator.
+                        case DBConstants.GroupIDUnitID:
                             return value;
 
-                        // A reference to an item or a skill.
-                        case 116: // "typeID"
+                        // A reference to an item or a skill (typeID)
+                        case DBConstants.TypeUnitID:
                             int id = Int32.Parse(value);
                             return StaticItems.GetItemByID(id).Name;
 
-                        // Format a Sizeclass
-                        case 117: // "1=small 2=medium 3=l"
+                        // Format a Sizeclass ("1=small 2=medium 3=l")
+                        case DBConstants.SizeclassUnitID:
                             int size = Int32.Parse(value);
                             switch (size)
                             {

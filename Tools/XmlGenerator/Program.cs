@@ -167,70 +167,69 @@ namespace EVEMon.XmlGenerator
             int newID = 0;
 
             // Change some display names and default values
-            s_attributeTypes[9].DisplayName = "Structure HP";
-            s_attributeTypes[263].DisplayName = "Shield HP";
-            s_attributeTypes[265].DisplayName = "Armor HP";
+            s_attributeTypes[DBConstants.StructureHitpointsPropertyID].DisplayName = "Structure HP";
+            s_attributeTypes[DBConstants.ShieldHitpointsPropertyID].DisplayName = "Shield HP";
+            s_attributeTypes[DBConstants.ArmorHitpointsPropertyID].DisplayName = "Armor HP";
 
-            s_attributeTypes[38].DisplayName = "Cargo Capacity";
-            s_attributeTypes[48].DisplayName = "CPU";
-            s_attributeTypes[11].DisplayName = "Powergrid";
+            s_attributeTypes[DBConstants.CargoCapacityPropertyID].DisplayName = "Cargo Capacity";
+            s_attributeTypes[DBConstants.CPUOutputPropertyID].DisplayName = "CPU";
+            s_attributeTypes[DBConstants.PGOutputPropertyID].DisplayName = "Powergrid";
 
             // Shield
-            s_attributeTypes[271].DisplayName = "EM Resistance";
-            s_attributeTypes[272].DisplayName = "Explosive Resistance";
-            s_attributeTypes[273].DisplayName = "Kinetic Resistance";
-            s_attributeTypes[274].DisplayName = "Thermal Resistance";
+            s_attributeTypes[DBConstants.ShieldEMResistancePropertyID].DisplayName = "EM Resistance";
+            s_attributeTypes[DBConstants.ShieldExplosiveResistancePropertyID].DisplayName = "Explosive Resistance";
+            s_attributeTypes[DBConstants.ShieldKineticResistancePropertyID].DisplayName = "Kinetic Resistance";
+            s_attributeTypes[DBConstants.ShieldThermalResistancePropertyID].DisplayName = "Thermal Resistance";
 
             // Armor
-            s_attributeTypes[267].DisplayName = "EM Resistance";
-            s_attributeTypes[268].DisplayName = "Explosive Resistance";
-            s_attributeTypes[269].DisplayName = "Kinetic Resistance";
-            s_attributeTypes[270].DisplayName = "Thermal Resistance";
+            s_attributeTypes[DBConstants.ArmorEMResistancePropertyID].DisplayName = "EM Resistance";
+            s_attributeTypes[DBConstants.ArmorExplosiveResistancePropertyID].DisplayName = "Explosive Resistance";
+            s_attributeTypes[DBConstants.ArmorKineticResistancePropertyID].DisplayName = "Kinetic Resistance";
+            s_attributeTypes[DBConstants.ArmorThermalResistancePropertyID].DisplayName = "Thermal Resistance";
 
             // Hull
-            s_attributeTypes[974].DisplayName = "EM Resistance";
-            s_attributeTypes[975].DisplayName = "Explosive Resistance";
-            s_attributeTypes[976].DisplayName = "Kinetic Resistance";
-            s_attributeTypes[977].DisplayName = "Thermal Resistance";
+            s_attributeTypes[DBConstants.HullEMResistancePropertyID].DisplayName = "EM Resistance";
+            s_attributeTypes[DBConstants.HullExplosiveResistancePropertyID].DisplayName = "Explosive Resistance";
+            s_attributeTypes[DBConstants.HullKineticResistancePropertyID].DisplayName = "Kinetic Resistance";
+            s_attributeTypes[DBConstants.HullThermalResistancePropertyID].DisplayName = "Thermal Resistance";
 
             // Items attribute
-            s_attributeTypes[6].DisplayName = "Activation cost";
-            s_attributeTypes[30].DisplayName = "Powergrid usage";
-            s_attributeTypes[68].DisplayName = "Shield Bonus";
-            s_attributeTypes[87].DisplayName = "Shield Transfer Range";
-            s_attributeTypes[116].DisplayName = "Explosive damage";
-            s_attributeTypes[424].DisplayName = "CPU Output Bonus";
-            s_attributeTypes[1082].DisplayName = "CPU Penalty";
+            s_attributeTypes[DBConstants.CapacitorNeedPropertyID].DisplayName = "Activation cost";
+            s_attributeTypes[DBConstants.PGNeedPropertyID].DisplayName = "Powergrid usage";
+            s_attributeTypes[DBConstants.ShieldBonusPropertyID].DisplayName = "Shield Bonus";
+            s_attributeTypes[DBConstants.ShieldTransferRangePropertyID].DisplayName = "Shield Transfer Range";
+            s_attributeTypes[DBConstants.ExplosiveDamagePropertyID].DisplayName = "Explosive damage";
+            s_attributeTypes[DBConstants.CPUOutputBonusPropertyID].DisplayName = "CPU Output Bonus";
+            s_attributeTypes[DBConstants.CPUPenaltyPercentPropertyID].DisplayName = "CPU Penalty";
 
             // Changing the categoryID for some attributes 
-            s_attributeTypes[1132].CategoryID = 1; // Calibration
-            s_attributeTypes[1547].CategoryID = 1; // Rig Size
-            s_attributeTypes[908].CategoryID = 4; // Ship Maintenance Bay Capacity
-            s_attributeTypes[1692].CategoryID = 9; // MetaGroup of type
+            s_attributeTypes[DBConstants.UpgradeCapacityPropertyID].CategoryID = 1;
+            s_attributeTypes[DBConstants.RigSizePropertyID].CategoryID = 1;
+            s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID = 4;
+            s_attributeTypes[DBConstants.MetaGroupIDPropertyID].CategoryID = 9;
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
-            s_attributeTypes[30].HigherIsBetter = false; // CPU usage
-            s_attributeTypes[50].HigherIsBetter = false; // PG usage
-            s_attributeTypes[161].HigherIsBetter = false; // Volume
-            s_attributeTypes[70].HigherIsBetter = false; // Inertia Modifier
-            s_attributeTypes[4].HigherIsBetter = false; // Mass
-            s_attributeTypes[6].HigherIsBetter = false; // Activation Cost
-            s_attributeTypes[55].HigherIsBetter = false; // Capacitor recharge time
-            s_attributeTypes[144].HigherIsBetter = false;
-                // Capacitor recharge rate bonus (reversed due to values deriving from substraction)
-            s_attributeTypes[479].HigherIsBetter = false; // Shield recharge time
-            s_attributeTypes[552].HigherIsBetter = false; // Signature radius
-            s_attributeTypes[560].HigherIsBetter = false; // Sensor Recalibration Time
-            s_attributeTypes[1082].HigherIsBetter = false; // CPU Penalty
-            s_attributeTypes[1153].HigherIsBetter = false; // Calibration cost
-            s_attributeTypes[1272].HigherIsBetter = false; // Bandwidth Needed
-            s_attributeTypes[1416].HigherIsBetter = false; // Target Switch Timer
-            s_attributeTypes[73].HigherIsBetter = false; // Activation time / duration
-            s_attributeTypes[556].HigherIsBetter = false; // Anchoring Delay
-            s_attributeTypes[676].HigherIsBetter = false; // Unanchoring Delay
-            s_attributeTypes[677].HigherIsBetter = false; // Onlining Delay
-            s_attributeTypes[780].HigherIsBetter = false; // Cycle Time bonus
-            s_attributeTypes[669].HigherIsBetter = false; // Reactivation Delay
+            s_attributeTypes[DBConstants.PGNeedPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CPUNeedPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.VolumePropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.AgilityPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.MassPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CapacitorNeedPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CapacitorRechargeRatePropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CapacitorRechargeRateMultiplierPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.ShieldRechargeRatePropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.SignatureRadiusPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CloakingTargetingDelayPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.CPUPenaltyPercentPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.UpgradeCostPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.DroneBandwidthUsedPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.AITargetSwitchTimerPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.DurationPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.AnchoringDelayPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.UnanchoringDelayPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.OnliningDelayPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.IceHarvestCycleBonusPropertyID].HigherIsBetter = false;
+            s_attributeTypes[DBConstants.ModuleReactivationDelayPropertyID].HigherIsBetter = false;
 
 
             // Export attribute categories
@@ -298,79 +297,79 @@ namespace EVEMon.XmlGenerator
                     int index = properties.IndexOf(prop);
                     switch (srcProp.ID)
                     {
-                        case 9:
+                        case DBConstants.StructureHitpointsPropertyID:
                             properties.Insert(0, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 37:
+                        case DBConstants.MaxVelocityPropertyID:
                             pProperties.Insert(0, prop);
                             properties.RemoveAt(index);
                             break;
-                        case 38:
+                        case DBConstants.CargoCapacityPropertyID:
                             properties.Insert(1, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 48:
+                        case DBConstants.CPUOutputPropertyID:
                             properties.Insert(0, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 70:
+                        case DBConstants.AgilityPropertyID:
                             properties.Insert(3, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 161:
+                        case DBConstants.VolumePropertyID:
                             properties.Insert(3, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 422:
+                        case DBConstants.TechLevelPropertyID:
                             gProperties.Insert(0, prop);
                             properties.RemoveAt(index);
                             break;
-                        case 479:
+                        case DBConstants.ShieldRechargeRatePropertyID:
                             properties.Insert(6, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 482:
+                        case DBConstants.CapacitorCapacityPropertyID:
                             properties.Insert(0, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 564:
+                        case DBConstants.ScanResolutionPropertyID:
                             properties.Insert(4, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 633:
+                        case DBConstants.MetaLevelPropertyID:
                             gProperties.Insert(1, prop);
                             properties.RemoveAt(index);
                             break;
-                        case 974:
+                        case DBConstants.HullEMResistancePropertyID:
                             properties.Insert(5, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 975:
+                        case DBConstants.HullExplosiveResistancePropertyID:
                             properties.Insert(6, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 976:
+                        case DBConstants.HullKineticResistancePropertyID:
                             properties.Insert(7, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 977:
+                        case DBConstants.HullThermalResistancePropertyID:
                             properties.Insert(8, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 1132:
+                        case DBConstants.UpgradeCapacityPropertyID:
                             properties.Insert(2, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 1137:
+                        case DBConstants.RigSlotsPropertyID:
                             properties.Insert(10, prop);
                             properties.RemoveAt(index + 1);
                             break;
-                        case 1281:
+                        case DBConstants.ShipWarpSpeedPropertyID:
                             pProperties.Insert(1, prop);
                             properties.RemoveAt(index);
                             break;
-                        case 1547:
+                        case DBConstants.RigSizePropertyID:
                             properties.Insert(11, prop);
                             properties.RemoveAt(index + 1);
                             break;
@@ -446,7 +445,7 @@ namespace EVEMon.XmlGenerator
                                                      Description = "Ships of a unique design",
                                                      ID = DBConstants.RootUniqueDesignsGroupID,
                                                      ParentID = DBConstants.ShipsGroupID,
-                                                     IconID = 1443
+                                                     IconID = DBConstants.UnknownShipIconID
                                                  },
                                              new InvMarketGroup
                                                  {
@@ -467,17 +466,17 @@ namespace EVEMon.XmlGenerator
                                          };
 
             // Manually set some items attributes
-            s_types[11].Published = true;
-            s_types[12].Published = true;
-            s_types[13].Published = true;
-            s_types[2014].Published = true;
-            s_types[2015].Published = true;
-            s_types[2016].Published = true;
-            s_types[2017].Published = true;
-            s_types[2063].Published = true;
-            s_types[30889].Published = true;
-            s_types[27029].Published = true;
-            s_types[32077].Published = true;
+            s_types[DBConstants.TemperatePlanetID].Published = true;
+            s_types[DBConstants.IcePlanetID].Published = true;
+            s_types[DBConstants.GasPlanetID].Published = true;
+            s_types[DBConstants.OceanicPlanetID].Published = true;
+            s_types[DBConstants.LavaPlanetID].Published = true;
+            s_types[DBConstants.BarrenPlanetID].Published = true;
+            s_types[DBConstants.StormPlanetID].Published = true;
+            s_types[DBConstants.PlasmaPlanetID].Published = true;
+            s_types[DBConstants.ShatteredPlanetID].Published = true;
+            s_types[DBConstants.ChalcopyriteID].Published = true;
+            s_types[DBConstants.SmallEWDroneRangeAugmentorIIID].Published = true;
             
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvType srcItem in s_types.Where(x => x.Published && x.MarketGroupID == null))
@@ -485,58 +484,59 @@ namespace EVEMon.XmlGenerator
                 // Set some ships market group and race
                 switch (srcItem.ID)
                 {
-                    case 13202: // Megathron Federate Issue
-                    case 26840: // Raven State Issue
-                    case 26842: // Tempest Tribal Issue
+                    case DBConstants.MegathronFederateIssueID:
+                    case DBConstants.RavenStateIssueID:
+                    case DBConstants.TempestTribalIssueID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignBattleshipsGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
-                    case 21097: // Goru's Shuttle
-                    case 21628: // Guristas Shuttle
-                    case 30842: // Interbus Shuttle
+                    case DBConstants.GorusShuttleID:
+                    case DBConstants.GuristasShuttleID:
+                    case DBConstants.InterbusShuttleID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
 
                         // Set some items market group to support blueprints
-                    case 21815:
-                    case 23882:
-                    case 24289:
-                    case 27029:
-                    case 27038:
-                    case 29203:
-                    case 29226:
-                    case 10260:
-                    case 19758:
-                    case 10257:
-                    case 10258:
-                    case 32077:
-                    case 30424:
-                    case 30839:
-                    case 30422:
-                    case 30342:
-                    case 30420:
-                    case 30328:
-                    case 21054:
-                    case 17761:
-                    case 23883:
-                    case 29202:
-                    case 21510:
-                    case 22335:
-                    case 22333:
-                    case 22337:
-                    case 22339:
-                    case 22923:
-                    case 22329:
-                    case 22327:
-                    case 22325:
-                    case 22331:
+                    case DBConstants.EliteDroneAIID:
+                    case DBConstants.StandardDecodingDeviceID:
+                    case DBConstants.EncodingMatrixComponentID:
+                    case DBConstants.ChalcopyriteID:
+                    case DBConstants.ClayPigeonID:
+                    case DBConstants.MinmatarDNAID:
+                    case DBConstants.BasicRoboticsID:
+                    case DBConstants.AmarrFactoryOutpostPlatformID:
+                    case DBConstants.CaldariResearchOutpostPlatformID:
+                    case DBConstants.GallenteAdministrativeOutpostPlatformID:
+                    case DBConstants.MinmatarServiceOutpostPlatformID:
+                    case DBConstants.SmallEWDroneRangeAugmentorIIID:
+                    case DBConstants.CivilianBallisticDeflectionFieldID:
+                    case DBConstants.CivilianDamageControlID:
+                    case DBConstants.CivilianExplosionDampeningFieldID:
+                    case DBConstants.CivilianHeatDissipationFieldID:
+                    case DBConstants.CivilianPhotonScatteringFieldID:
+                    case DBConstants.CivilianStasisWebifierID:
+                    case DBConstants.CrudeSculptureID:
+                    case DBConstants.GoldSculptureID:
+                    case DBConstants.MethrosEnhancedDecodingDeviceID:
+                    case DBConstants.ModifiedAugumeneAntidoteID:
+                    case DBConstants.ProcessInterruptiveWarpDisruptorID:
+                    case DBConstants.SleeperDataAnalyzerIID:
+                    case DBConstants.TalocanDataAnalyzerIID:
+                    case DBConstants.TerranDataAnalyzerIID:
+                    case DBConstants.TetrimonDataAnalyzerIID:
+                    case DBConstants.WildMinerIID:
+                    case DBConstants.AlphaCodebreakerIID:
+                    case DBConstants.CodexCodebreakerIID:
+                    case DBConstants.DaemonCodebreakerIID:
+                    case DBConstants.LibramCodebreakerIID:
                         srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
                         break;
                 }
 
                 // Set some items market group to support blueprints
-                if (srcItem.ID > 28685 && srcItem.ID < 28694)
+                if (srcItem.ID > DBConstants.SynthSoothSayerBoosterBlueprintID &&
+                    srcItem.ID < DBConstants.AmberMykoserocinID)
                     srcItem.MarketGroupID = DBConstants.RootNonMarketGroupID;
 
                 // Adding planets to support attribute browsing for command centers
@@ -774,13 +774,13 @@ namespace EVEMon.XmlGenerator
                     switch (propIntValue)
                     {
                         default:
-                        case 1:
+                        case DBConstants.TechLevelI:
                             item.MetaGroup = ItemMetaGroup.T1;
                             break;
-                        case 2:
+                        case DBConstants.TechLevelII:
                             item.MetaGroup = ItemMetaGroup.T2;
                             break;
-                        case 3:
+                        case DBConstants.TechLevelIII:
                             item.MetaGroup = ItemMetaGroup.T3;
                             break;
                     }
@@ -791,16 +791,16 @@ namespace EVEMon.XmlGenerator
                 {
                     switch (propIntValue)
                     {
-                        case 3:
+                        case DBConstants.StorylineMetaGroupID:
                             item.MetaGroup = ItemMetaGroup.Storyline;
                             break;
-                        case 4:
+                        case DBConstants.FactionMetaGroupID:
                             item.MetaGroup = ItemMetaGroup.Faction;
                             break;
-                        case 5:
+                        case DBConstants.OfficerMetaGroupID:
                             item.MetaGroup = ItemMetaGroup.Officer;
                             break;
-                        case 6:
+                        case DBConstants.DeadspaceMetaGroupID:
                             item.MetaGroup = ItemMetaGroup.Deadspace;
                             break;
                         default:
@@ -849,25 +849,25 @@ namespace EVEMon.XmlGenerator
             {
                 switch (relation.MetaGroupID)
                 {
-                    case 1:
+                    case DBConstants.TechIMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.T1;
                         break;
-                    case 2:
+                    case DBConstants.TechIIMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.T2;
                         break;
-                    case 3:
+                    case DBConstants.StorylineMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.Storyline;
                         break;
-                    case 4:
+                    case DBConstants.FactionMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.Faction;
                         break;
-                    case 5:
+                    case DBConstants.OfficerMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.Officer;
                         break;
-                    case 6:
+                    case DBConstants.DeadspaceMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.Deadspace;
                         break;
-                    case 14:
+                    case DBConstants.TechIIIMetaGroupID:
                         item.MetaGroup = ItemMetaGroup.T3;
                         break;
                     default:
@@ -976,7 +976,9 @@ namespace EVEMon.XmlGenerator
             // Export skill groups
             List<SerializableSkillGroup> listOfSkillGroups = new List<SerializableSkillGroup>();
 
-            foreach (InvGroup group in s_groups.Where(x => x.CategoryID == 16 && x.ID != 505).OrderBy(x => x.Name))
+            foreach (InvGroup group in s_groups
+                    .Where(x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID)
+                    .OrderBy(x => x.Name))
             {
                 SerializableSkillGroup skillGroup = new SerializableSkillGroup
                                                          {
@@ -1008,24 +1010,24 @@ namespace EVEMon.XmlGenerator
                         skillAttributes.Add(attribute.AttributeID, attribute.GetIntValue());
                     }
 
-                    if (skillAttributes.ContainsKey(275) && skillAttributes[275] > 0)
+                    if (skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
+                        skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0)
                     {
-                        singleSkill.Rank = skillAttributes[275];
+                        singleSkill.Rank = skillAttributes[DBConstants.SkillTimeConstantPropertyID];
                     }
                     else
                     {
                         singleSkill.Rank = 1;
                     }
 
-                    singleSkill.PrimaryAttribute = skillAttributes.ContainsKey(180)
-                                                       ? IntToEveAttribute(skillAttributes[180])
+                    singleSkill.PrimaryAttribute = skillAttributes.ContainsKey(DBConstants.PrimaryAttributePropertyID)
+                                                       ? IntToEveAttribute(skillAttributes[DBConstants.PrimaryAttributePropertyID])
                                                        : EveAttribute.None;
-                    singleSkill.SecondaryAttribute = skillAttributes.ContainsKey(181)
-                                                         ? IntToEveAttribute(skillAttributes[181])
+                    singleSkill.SecondaryAttribute = skillAttributes.ContainsKey(DBConstants.SecondaryAttributePropertyID)
+                                                         ? IntToEveAttribute(skillAttributes[DBConstants.SecondaryAttributePropertyID])
                                                          : EveAttribute.None;
-                    singleSkill.CanTrainOnTrial = skillAttributes.ContainsKey(1047) && skillAttributes[1047] == 0
-                                                      ? true
-                                                      : false;
+                    singleSkill.CanTrainOnTrial = skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) &&
+                                                    skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0 ? true : false;
 
                     // Export prerequesities
                     List<SerializableSkillPrerequisite> listOfPrerequisites = new List<SerializableSkillPrerequisite>();
@@ -1083,15 +1085,15 @@ namespace EVEMon.XmlGenerator
         {
             switch (attributeValue)
             {
-                case 164:
+                case DBConstants.CharismaPropertyID:
                     return EveAttribute.Charisma;
-                case 165:
+                case DBConstants.IntelligencePropertyID:
                     return EveAttribute.Intelligence;
-                case 166:
+                case DBConstants.MemoryPropertyID:
                     return EveAttribute.Memory;
-                case 167:
+                case DBConstants.PerceptionPropertyID:
                     return EveAttribute.Perception;
-                case 168:
+                case DBConstants.WillpowerPropertyID:
                     return EveAttribute.Willpower;
                 default:
                     return EveAttribute.None;
@@ -1135,7 +1137,9 @@ namespace EVEMon.XmlGenerator
                 {
                     // Exclude unused classes
                     int id = certClass.ID;
-                    if (id == 104 || id == 106 || id == 111)
+                    if (id == DBConstants.IndustrialHarvestingID ||
+                        id == DBConstants.AutomatedMiningID ||
+                        id == DBConstants.ProductionInternID)
                         continue;
 
                     SerializableCertificateClass crtClasses = new SerializableCertificateClass
@@ -1259,13 +1263,13 @@ namespace EVEMon.XmlGenerator
         {
             switch (gradeValue)
             {
-                case 1:
+                case DBConstants.BasicID:
                     return CertificateGrade.Basic;
-                case 2:
+                case DBConstants.StandardID:
                     return CertificateGrade.Standard;
-                case 3:
+                case DBConstants.ImprovedID:
                     return CertificateGrade.Improved;
-                case 5:
+                case DBConstants.EliteID:
                     return CertificateGrade.Elite;
                 default:
                     throw new NotImplementedException();
@@ -1355,7 +1359,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Various blueprints not in EVE market",
                                                ID = DBConstants.BlueprintRootNonMarketGroupID,
                                                ParentID = DBConstants.BlueprintsGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1364,7 +1368,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Tech I blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketTechIGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1373,7 +1377,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Tech II blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketTechIIGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1382,7 +1386,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Storyline blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketStorylineGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1391,7 +1395,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Faction blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketFactionGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1400,7 +1404,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Officer blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketOfficerGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             s_injectedMarketGroups.Add(new InvMarketGroup
@@ -1409,7 +1413,7 @@ namespace EVEMon.XmlGenerator
                                                Description = "Tech III blueprints not in EVE market",
                                                ID = DBConstants.BlueprintNonMarketTechIIIGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               IconID = 2703
+                                               IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
             // Set some blueprints to market groups manually
@@ -1417,59 +1421,59 @@ namespace EVEMon.XmlGenerator
             {
                 switch (item.ID)
                 {
-                    case 22924: // 'Wild' Miner I Blueprint
+                    case DBConstants.WildMinerIBlueprintID:
                         item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
                         break;
-                    case 2837: // Adrestia Blueprint
-                    case 3533: // Echelon Blueprint
-                    case 17704: // Imperial Navy Slicer Blueprint
-                    case 17620: // Caldari Navy Hookbill Blueprint
-                    case 17842: // Federation Navy Comet Blueprint
-                    case 17813: // Republic Fleet Firetail Blueprint
-                    case 17737: // Nightmare Blueprint
-                    case 17739: // Machariel Blueprint
-                    case 17933: // Dramiel Blueprint
-                    case 17927: // Cruor Blueprint
-                    case 17925: // Succubus Blueprint
-                    case 17929: // Daredevil Blueprint
-                    case 17721: // Cynabal Blueprint
-                    case 17923: // Ashimmu Blueprint
-                    case 17719: // Phantasm Blueprint
-                    case 21098: // Goru's Shuttle Blueprint
-                    case 21629: // Guristas Shuttle Blueprint
-                    case 21842: // Gallente Mining Laser Blueprint
-                    case 30843: // Interbus Shuttle Blueprint
-                    case 32208: // Freki Blueprint
-                    case 32210: // Mimir Blueprint
+                    case DBConstants.AdrestiaBlueprintID:
+                    case DBConstants.EchelonBlueprintID:
+                    case DBConstants.ImperialNavySlicerBlueprintID:
+                    case DBConstants.CaldariNavyHookbillBlueprintID:
+                    case DBConstants.FederationNavyCometBlueprintID:
+                    case DBConstants.RepublicFleetFiretailBlueprintID:
+                    case DBConstants.NightmareBlueprintID: 
+                    case DBConstants.MacharielBlueprintID:
+                    case DBConstants.DramielBlueprintID:
+                    case DBConstants.CruorBlueprintID:
+                    case DBConstants.SuccubusBlueprintID:
+                    case DBConstants.DaredevilBlueprintID:
+                    case DBConstants.CynabalBlueprintID:
+                    case DBConstants.AshimmuBlueprintID:
+                    case DBConstants.PhantasmBlueprintID:
+                    case DBConstants.GorusShuttleBlueprintID:
+                    case DBConstants.GuristasShuttleBlueprintID:
+                    case DBConstants.GallenteMiningLaserBlueprintID:
+                    case DBConstants.InterbusShuttleBlueprintID:
+                    case DBConstants.FrekiBlueprintID:
+                    case DBConstants.MimirBlueprintID:
                         item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
                         break;
-                    case 29987: // Legion Blueprint
-                    case 30227: // Legion Defensive - Adaptive Augmenter Blueprint
-                    case 30037: // Legion Electronics - Energy Parasitic Complex Blueprint
-                    case 30170: // Legion Engineering - Power Core Multiplier Blueprint
-                    case 30392: // Legion Offensive - Drone Synthesis Projector Blueprint
-                    case 30077: // Legion Propulsion - Chassis Optimization Blueprint
-                    case 29991: // Loki Blueprint
-                    case 30242: // Loki Defensive - Adaptive Shielding Blueprint
-                    case 30067: // Loki Electronics - Immobility Drivers Blueprint
-                    case 30160: // Loki Engineering - Power Core Multiplier Blueprint
-                    case 30407: // Loki Offensive - Turret Concurrence Registry Blueprint
-                    case 30107: // Loki Propulsion - Chassis Optimization Blueprint
-                    case 29989: // Proteus Blueprint
-                    case 30237: // Proteus Defensive - Adaptive Augmenter Blueprint
-                    case 30057: // Proteus Electronics - Friction Extension Processor Blueprint
-                    case 30150: // Proteus Engineering - Power Core Multiplier Blueprint
-                    case 30402: // Proteus Offensive - Dissonic Encoding Platform Blueprint
-                    case 30097: // Proteus Propulsion - Wake Limiter Blueprint
-                    case 29985: // Tengu Blueprint
-                    case 30232: // Tengu Defensive - Adaptive Shielding Blueprint
-                    case 30047: // Tengu Electronics - Obfuscation Manifold Blueprint
-                    case 30140: // Tengu Engineering - Power Core Multiplier Blueprint
-                    case 30397: // Tengu Offensive - Accelerated Ejection Bay Blueprint
-                    case 30087: // Tengu Propulsion - Intercalated Nanofibers Blueprint
+                    case DBConstants.LegionBlueprintID:
+                    case DBConstants.LegionDefensiveAdaptiveAugmenterBlueprintID:
+                    case DBConstants.LegionElectronicsEnergyParasiticComplexBlueprintID:
+                    case DBConstants.LegionEngineeringPowerCoreMultiplierBlueprintID:
+                    case DBConstants.LegionOffensiveDroneSynthesisProjectorBlueprintID:
+                    case DBConstants.LegionPropulsionChassisOptimizationBlueprintID:
+                    case DBConstants.LokiBlueprintID:
+                    case DBConstants.LokiDefensiveAdaptiveShieldingBlueprintID:
+                    case DBConstants.LokiElectronicsImmobilityDriversBlueprintID:
+                    case DBConstants.LokiEngineeringPowerCoreMultiplierBlueprintID:
+                    case DBConstants.LokiOffensiveTurretConcurrenceRegistryBlueprintID:
+                    case DBConstants.LokiPropulsionChassisOptimizationBlueprintID:
+                    case DBConstants.ProteusBlueprintID:
+                    case DBConstants.ProteusDefensiveAdaptiveAugmenterBlueprintID:
+                    case DBConstants.ProteusElectronicsFrictionExtensionProcessorBlueprintID:
+                    case DBConstants.ProteusEngineeringPowerCoreMultiplierBlueprintID:
+                    case DBConstants.ProteusOffensiveDissonicEncodingPlatformBlueprintID:
+                    case DBConstants.ProteusPropulsionWakeLimiterBlueprintID:
+                    case DBConstants.TenguBlueprintID:
+                    case DBConstants.TenguDefensiveAdaptiveShieldingBlueprintID:
+                    case DBConstants.TenguElectronicsObfuscationManifoldBlueprintID:
+                    case DBConstants.TenguEngineeringPowerCoreMultiplierBlueprintID:
+                    case DBConstants.TenguOffensiveAcceleratedEjectionBayBlueprintID:
+                    case DBConstants.TenguPropulsionIntercalatedNanofibersBlueprintID:
                         item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
                         break;
-                    case 32078: // Small EW Drone Range Augmentor II Blueprint
+                    case DBConstants.SmallEWDroneRangeAugmentorIIBlueprintID:
                         item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
                         break;
                 }
@@ -1488,19 +1492,19 @@ namespace EVEMon.XmlGenerator
                 {
                     switch (relation.MetaGroupID)
                     {
-                        case 2:
+                        case DBConstants.TechIIMetaGroupID:
                             item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
                             break;
-                        case 3:
+                        case DBConstants.StorylineMetaGroupID:
                             item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
                             break;
-                        case 4:
+                        case DBConstants.FactionMetaGroupID:
                             item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
                             break;
-                        case 5:
+                        case DBConstants.OfficerMetaGroupID:
                             item.MarketGroupID = DBConstants.BlueprintNonMarketOfficerGroupID;
                             break;
-                        case 14:
+                        case DBConstants.TechIIIMetaGroupID:
                             item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
                             break;
                     }
@@ -1555,25 +1559,25 @@ namespace EVEMon.XmlGenerator
                 switch (relation.MetaGroupID)
                 {
                     default:
-                    case 1:
+                    case DBConstants.TechIMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.T1;
                         break;
-                    case 2:
+                    case DBConstants.TechIIMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.T2;
                         break;
-                    case 3:
+                    case DBConstants.StorylineMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.Storyline;
                         break;
-                    case 4:
+                    case DBConstants.FactionMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.Faction;
                         break;
-                    case 5:
+                    case DBConstants.OfficerMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.Officer;
                         break;
-                    case 6:
+                    case DBConstants.DeadspaceMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.Deadspace;
                         break;
-                    case 14:
+                    case DBConstants.TechIIIMetaGroupID:
                         blueprint.MetaGroup = ItemMetaGroup.T3;
                         break;
                 }
@@ -1605,7 +1609,7 @@ namespace EVEMon.XmlGenerator
             // Look for the tech 2 variations that this blueprint invents
             List<int> inventionBlueprint = new List<int>();
             foreach (int relationItemID in s_metaTypes
-                .Where(x => x.ParentItemID == blueprint.ProduceItemID && x.MetaGroupID == 2)
+                .Where(x => x.ParentItemID == blueprint.ProduceItemID && x.MetaGroupID == DBConstants.TechIIMetaGroupID)
                 .Select(x => x.ItemID))
             {
                 // Look for a blueprint that produces the related item
