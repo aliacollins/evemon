@@ -19,7 +19,7 @@
 		<row refTypeID="17" refTypeName="Corp application rejected" />
 		<row refTypeID="18" refTypeName="Corp application accepted" />
 		<row refTypeID="19" refTypeName="Corp tax rate changed" />
-		<row refTypeID="20" refTypeName="orp news report, typically for shareholders" />
+		<row refTypeID="20" refTypeName="Corp news report, typically for shareholders" />
 		<row refTypeID="21" refTypeName="Player leaves corp" />
 		<row refTypeID="22" refTypeName="Corp news, new CEO" />
 		<row refTypeID="23" refTypeName="Corp dividend/liquidation, sent to shareholders" />
