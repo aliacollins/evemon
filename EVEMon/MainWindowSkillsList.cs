@@ -424,7 +424,7 @@ namespace EVEMon
             Size skillGroupNameTextSize = TextRenderer.MeasureText(g, group.Name, m_boldSkillsFont, Size.Empty, format);
             Rectangle skillGroupNameRect = new Rectangle(e.Bounds.Left + PadLeft,
                                             e.Bounds.Top + ((e.Bounds.Height / 2) - (skillGroupNameTextSize.Height / 2)),
-                                            skillGroupNameTextSize.Width, skillGroupNameTextSize.Height);
+                                            skillGroupNameTextSize.Width + (PadLeft / 2), skillGroupNameTextSize.Height);
 
             Size detailTextSize = TextRenderer.MeasureText(g, detailText, m_skillsFont, Size.Empty, format);
             Rectangle detailRect = new Rectangle(
