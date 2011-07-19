@@ -504,6 +504,18 @@ namespace EVEMon.Common
         AbbreviationSymbols
     }
 
+    /// <summary>
+    /// Enumeration of a standing status
+    /// </summary>
+    public enum StandingStatus
+    {
+        Excellent,
+        Good,
+        Neutral,
+        Bad,
+        Terrible
+    }
+
     #endregion
 
 
@@ -627,8 +639,8 @@ namespace EVEMon.Common
         /// <summary>
         /// The Tranquility server status
         /// </summary>
-        [Header("Tranquility Status")]
-        [Description("The status of the Tranquility server.")]
+        [Header("EVE Server Status")]
+        [Description("The status of the EVE server.")]
         [Update(UpdatePeriod.Minutes5, UpdatePeriod.Never, UpdatePeriod.Hours1, CacheStyle.Short)]
         ServerStatus,
 
@@ -658,12 +670,20 @@ namespace EVEMon.Common
         SkillQueue,
 
         /// <summary>
+        /// A character's standings towards NPC's.
+        /// </summary>
+        [Header("NPC Standings")]
+        [Description("A character's NPC standings.")]
+        [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
+        Standings,
+
+        /// <summary>
         /// The account status. Used to retreive account create and expiration date.
         /// Only downloaded when a full API key is provided.
         /// </summary>
         [FullKey]
         [Header("Account Status")]
-        [Description("The status of an Account.")]
+        [Description("The status of an account.")]
         [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
         [ForcedOnStartup]
         AccountStatus,

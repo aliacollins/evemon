@@ -314,6 +314,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies a standings querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterStandingsError(CCPCharacter character, APIResult<SerializableAPIStandings> result)
+        {
+            var notification = new APIErrorNotification(character, result)
+            {
+                Description = "An error occurred while querying the personal standings.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a market orders querying error.
         /// </summary>
         /// <param name="character">The character.</param>

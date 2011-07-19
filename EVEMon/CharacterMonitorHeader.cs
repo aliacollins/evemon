@@ -407,7 +407,7 @@ namespace EVEMon
                 return "(Never)";
 
             if (timeToNextUpdate.TotalMinutes >= 60)
-                return String.Format(CultureConstants.DefaultCulture, "({0}h)", Math.Floor(timeToNextUpdate.TotalHours));
+                return String.Format(CultureConstants.DefaultCulture, "(~{0}h)", Math.Floor(timeToNextUpdate.TotalHours));
 
             return String.Format(CultureConstants.DefaultCulture, "({0}m)", Math.Floor(timeToNextUpdate.TotalMinutes));
         }

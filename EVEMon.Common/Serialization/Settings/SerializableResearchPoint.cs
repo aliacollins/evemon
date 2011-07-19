@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
 {
-    public class SerializableResearchPoint
+    public sealed class SerializableResearchPoint
     {
         [XmlAttribute("agentID")]
         public int AgentID

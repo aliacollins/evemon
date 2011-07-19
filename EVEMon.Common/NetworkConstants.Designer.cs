@@ -259,6 +259,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/Standings.xml.aspx.
+        /// </summary>
+        public static string APIStandings {
+            get {
+                return ResourceManager.GetString("APIStandings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://apitest.eveonline.com.
         /// </summary>
         public static string APITestBase {

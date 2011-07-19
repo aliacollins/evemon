@@ -14,6 +14,7 @@ namespace EVEMon.Common.Serialization.Settings
         {
             SkillQueue = new List<SerializableQueuedSkill>();
             LastUpdates = new List<SerializableAPIUpdate>();
+            Standings = new List<SerializableStanding>();
             MarketOrders = new List<SerializableOrderBase>();
             IndustryJobs = new List<SerializableJob>();
             ResearchPoints = new List<SerializableResearchPoint>();
@@ -22,6 +23,14 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlArray("queue")]
         [XmlArrayItem("skill")]
         public List<SerializableQueuedSkill> SkillQueue
+        {
+            get;
+            set;
+        }
+
+        [XmlArray("standings")]
+        [XmlArrayItem("standing")]
+        public List<SerializableStanding> Standings
         {
             get;
             set;

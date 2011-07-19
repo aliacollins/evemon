@@ -233,6 +233,12 @@
   <data name="APICharacterName" xml:space="preserve">
     <value>/eve/CharacterName.xml.aspx</value>
   </data>
+  <data name="APICharacterInfo" xml:space="preserve">
+    <value>/eve/CharacterInfo.xml.aspx</value>
+  </data>
+  <data name="APIStandings" xml:space="preserve">
+    <value>/char/Standings.xml.aspx</value>
+  </data>
   <data name="CCPIconsFromImageServer" xml:space="preserve">
     <value>http://image.eveonline.com/{0}/{1}_{2}.png</value>
     <comment>Icons from CCP's image server</comment>
@@ -257,8 +263,5 @@
   </data>
   <data name="BCAPIFileGetByName" xml:space="preserve">
     <value>/files/fileGetByName.php</value>
-  </data>
-  <data name="APICharacterInfo" xml:space="preserve">
-    <value>/eve/CharacterInfo.xml.aspx</value>
   </data>
 </root>

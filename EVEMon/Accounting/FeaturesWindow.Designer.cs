@@ -34,12 +34,13 @@
             this.SkillQueueLabel = new System.Windows.Forms.Label();
             this.FullApiLabel = new System.Windows.Forms.Label();
             this.fullAPIFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.MarketOrdersLabel = new System.Windows.Forms.Label();
-            this.IndustryJobsLabel = new System.Windows.Forms.Label();
-            this.ResearchPointsLabel = new System.Windows.Forms.Label();
+            this.AccountStatusLabel = new System.Windows.Forms.Label();
             this.EVEMailMessagesLabel = new System.Windows.Forms.Label();
             this.EVENotificationsLabel = new System.Windows.Forms.Label();
-            this.AccountStatusLabel = new System.Windows.Forms.Label();
+            this.IndustryJobsLabel = new System.Windows.Forms.Label();
+            this.MarketOrdersLabel = new System.Windows.Forms.Label();
+            this.ResearchPointsLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.MainFlowLayoutPanel.SuspendLayout();
             this.fullAPIFlowLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -63,12 +64,13 @@
             this.MainFlowLayoutPanel.Controls.Add(this.LimitedApiLabel);
             this.MainFlowLayoutPanel.Controls.Add(this.CharacterLabel);
             this.MainFlowLayoutPanel.Controls.Add(this.SkillQueueLabel);
+            this.MainFlowLayoutPanel.Controls.Add(this.label1);
             this.MainFlowLayoutPanel.Controls.Add(this.FullApiLabel);
             this.MainFlowLayoutPanel.Controls.Add(this.fullAPIFlowLayoutPanel);
             this.MainFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.MainFlowLayoutPanel.Location = new System.Drawing.Point(12, 12);
             this.MainFlowLayoutPanel.Name = "MainFlowLayoutPanel";
-            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(342, 144);
+            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(342, 162);
             this.MainFlowLayoutPanel.TabIndex = 1;
             // 
             // CharacterLabel
@@ -96,7 +98,7 @@
             this.FullApiLabel.AutoSize = true;
             this.FullApiLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FullApiLabel.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.FullApiLabel.Location = new System.Drawing.Point(3, 52);
+            this.FullApiLabel.Location = new System.Drawing.Point(3, 70);
             this.FullApiLabel.Name = "FullApiLabel";
             this.FullApiLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.FullApiLabel.Size = new System.Drawing.Size(75, 26);
@@ -112,40 +114,20 @@
             this.fullAPIFlowLayoutPanel.Controls.Add(this.MarketOrdersLabel);
             this.fullAPIFlowLayoutPanel.Controls.Add(this.ResearchPointsLabel);
             this.fullAPIFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.fullAPIFlowLayoutPanel.Location = new System.Drawing.Point(3, 81);
+            this.fullAPIFlowLayoutPanel.Location = new System.Drawing.Point(3, 99);
             this.fullAPIFlowLayoutPanel.Name = "fullAPIFlowLayoutPanel";
             this.fullAPIFlowLayoutPanel.Size = new System.Drawing.Size(339, 60);
             this.fullAPIFlowLayoutPanel.TabIndex = 10;
             // 
-            // MarketOrdersLabel
+            // AccountStatusLabel
             // 
-            this.MarketOrdersLabel.AutoSize = true;
-            this.MarketOrdersLabel.Location = new System.Drawing.Point(167, 18);
-            this.MarketOrdersLabel.Name = "MarketOrdersLabel";
-            this.MarketOrdersLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.MarketOrdersLabel.Size = new System.Drawing.Size(136, 18);
-            this.MarketOrdersLabel.TabIndex = 3;
-            this.MarketOrdersLabel.Text = "Market orders monitoring.";
-            // 
-            // IndustryJobsLabel
-            // 
-            this.IndustryJobsLabel.AutoSize = true;
-            this.IndustryJobsLabel.Location = new System.Drawing.Point(167, 0);
-            this.IndustryJobsLabel.Name = "IndustryJobsLabel";
-            this.IndustryJobsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.IndustryJobsLabel.Size = new System.Drawing.Size(133, 18);
-            this.IndustryJobsLabel.TabIndex = 5;
-            this.IndustryJobsLabel.Text = "Industry jobs monitoring.";
-            // 
-            // ResearchPointsLabel
-            // 
-            this.ResearchPointsLabel.AutoSize = true;
-            this.ResearchPointsLabel.Location = new System.Drawing.Point(167, 36);
-            this.ResearchPointsLabel.Name = "ResearchPointsLabel";
-            this.ResearchPointsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.ResearchPointsLabel.Size = new System.Drawing.Size(146, 18);
-            this.ResearchPointsLabel.TabIndex = 6;
-            this.ResearchPointsLabel.Text = "Research points monitoring.";
+            this.AccountStatusLabel.AutoSize = true;
+            this.AccountStatusLabel.Location = new System.Drawing.Point(3, 0);
+            this.AccountStatusLabel.Name = "AccountStatusLabel";
+            this.AccountStatusLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.AccountStatusLabel.Size = new System.Drawing.Size(142, 18);
+            this.AccountStatusLabel.TabIndex = 9;
+            this.AccountStatusLabel.Text = "Account Status monitoring.";
             // 
             // EVEMailMessagesLabel
             // 
@@ -167,15 +149,45 @@
             this.EVENotificationsLabel.TabIndex = 8;
             this.EVENotificationsLabel.Text = "EVE Notifications monitoring.";
             // 
-            // AccountStatusLabel
+            // IndustryJobsLabel
             // 
-            this.AccountStatusLabel.AutoSize = true;
-            this.AccountStatusLabel.Location = new System.Drawing.Point(3, 0);
-            this.AccountStatusLabel.Name = "AccountStatusLabel";
-            this.AccountStatusLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.AccountStatusLabel.Size = new System.Drawing.Size(142, 18);
-            this.AccountStatusLabel.TabIndex = 9;
-            this.AccountStatusLabel.Text = "Account Status monitoring.";
+            this.IndustryJobsLabel.AutoSize = true;
+            this.IndustryJobsLabel.Location = new System.Drawing.Point(167, 0);
+            this.IndustryJobsLabel.Name = "IndustryJobsLabel";
+            this.IndustryJobsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.IndustryJobsLabel.Size = new System.Drawing.Size(133, 18);
+            this.IndustryJobsLabel.TabIndex = 5;
+            this.IndustryJobsLabel.Text = "Industry jobs monitoring.";
+            // 
+            // MarketOrdersLabel
+            // 
+            this.MarketOrdersLabel.AutoSize = true;
+            this.MarketOrdersLabel.Location = new System.Drawing.Point(167, 18);
+            this.MarketOrdersLabel.Name = "MarketOrdersLabel";
+            this.MarketOrdersLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.MarketOrdersLabel.Size = new System.Drawing.Size(136, 18);
+            this.MarketOrdersLabel.TabIndex = 3;
+            this.MarketOrdersLabel.Text = "Market orders monitoring.";
+            // 
+            // ResearchPointsLabel
+            // 
+            this.ResearchPointsLabel.AutoSize = true;
+            this.ResearchPointsLabel.Location = new System.Drawing.Point(167, 36);
+            this.ResearchPointsLabel.Name = "ResearchPointsLabel";
+            this.ResearchPointsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.ResearchPointsLabel.Size = new System.Drawing.Size(146, 18);
+            this.ResearchPointsLabel.TabIndex = 6;
+            this.ResearchPointsLabel.Text = "Research points monitoring.";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 52);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.label1.Size = new System.Drawing.Size(116, 18);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Standings monitoring.";
             // 
             // FeaturesWindow
             // 
@@ -184,7 +196,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(366, 168);
+            this.ClientSize = new System.Drawing.Size(366, 186);
             this.Controls.Add(this.MainFlowLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -215,5 +227,6 @@
         private System.Windows.Forms.Label EVENotificationsLabel;
         private System.Windows.Forms.FlowLayoutPanel fullAPIFlowLayoutPanel;
         private System.Windows.Forms.Label AccountStatusLabel;
+        private System.Windows.Forms.Label label1;
     }
 }

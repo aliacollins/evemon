@@ -193,7 +193,7 @@ namespace EVEMon.Common
 
                         var result = MessageBox.Show(
                             msg,
-                            "Couldn't read the data directory",
+                            "EVEMon Error",
                             MessageBoxButtons.RetryCancel,
                             MessageBoxIcon.Error);
 
@@ -461,6 +461,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterSkillQueueUpdated;
 
         /// <summary>
+        /// Occurs when a character standings have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterStandingsUpdated;
+
+        /// <summary>
         /// Occurs when a character's potrait has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
@@ -670,6 +675,19 @@ namespace EVEMon.Common
             if (QueuedSkillsCompleted != null)
                 QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
+
+        /// <summary>
+        /// Called when the character standings updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterStandingsUpdated(Character character)
+        {
+            Trace("EveClient.OnCharacterStandingsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterStandingsUpdated != null)
+                CharacterStandingsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
         /// <summary>
         /// Called when the character market orders updated.
         /// </summary>

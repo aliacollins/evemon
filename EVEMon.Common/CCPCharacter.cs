@@ -15,6 +15,7 @@ namespace EVEMon.Common
     {
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
@@ -22,6 +23,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
+        private readonly StandingCollection m_standings;
         private readonly MarketOrderCollection m_marketOrders;
         private readonly IndustryJobCollection m_industryJobs;
         private readonly ResearchPointCollection m_researchPoints;
@@ -56,6 +58,7 @@ namespace EVEMon.Common
             : base(identity, guid)
         {
             m_queue = new SkillQueue(this);
+            m_standings = new StandingCollection(this);
             m_marketOrders = new MarketOrderCollection(this);
             m_industryJobs = new IndustryJobCollection(this);
             m_researchPoints = new ResearchPointCollection(this);
@@ -72,6 +75,10 @@ namespace EVEMon.Common
             m_skillQueueMonitor = new CharacterQueryMonitor<SerializableAPISkillQueue>(this, APIMethods.SkillQueue);
             m_skillQueueMonitor.Updated += OnSkillQueueUpdated;
             m_monitors.Add(m_skillQueueMonitor);
+
+            m_charStandingsMonitor = new CharacterQueryMonitor<SerializableAPIStandings>(this, APIMethods.Standings);
+            m_charStandingsMonitor.Updated += OnStandingsUpdated;
+            m_monitors.Add(m_charStandingsMonitor);
 
             m_charMarketOrdersMonitor = new CharacterQueryMonitor<SerializableAPIMarketOrders>(this, APIMethods.MarketOrders);
             m_charMarketOrdersMonitor.Updated += OnCharacterMarketOrdersUpdated;
@@ -130,6 +137,7 @@ namespace EVEMon.Common
         {
             m_charSheetMonitor.ForceUpdate(true);
             m_skillQueueMonitor.ForceUpdate(true);
+            m_charStandingsMonitor.ForceUpdate(true);
         }
         
         #endregion
@@ -157,6 +165,14 @@ namespace EVEMon.Common
         public SkillQueue SkillQueue
         {
             get { return m_queue; }
+        }
+
+        /// <summary>
+        /// Gets the standings for this character.
+        /// </summary>
+        public StandingCollection Standings
+        {
+            get { return m_standings; }
         }
 
         /// <summary>
@@ -275,6 +291,9 @@ namespace EVEMon.Common
             // Skill queue
             serial.SkillQueue = m_queue.Export();
 
+            // Standings
+            serial.Standings = m_standings.Export();
+
             // Market orders
             serial.MarketOrders = m_marketOrders.Export();
 
@@ -316,6 +335,9 @@ namespace EVEMon.Common
             // Skill queue
             m_queue.Import(serial.SkillQueue);
             m_queue.UpdateOnTimerTick();
+
+            // Standings
+            m_standings.Import(serial.Standings);
 
             // Market orders
             m_marketOrders.Import(serial.MarketOrders);
@@ -485,6 +507,24 @@ namespace EVEMon.Common
             }
 
             EveClient.Notifications.InvalidateSkillQueueRoomAvailability(this);
+        }
+
+        /// <summary>
+        /// Processes the queried skill queue information.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnStandingsUpdated(APIResult<SerializableAPIStandings> result)
+        {
+            // Notify an error occurred
+            if (ShouldNotifyError(result, APIMethods.Standings))
+                EveClient.Notifications.NotifyCharacterStandingsError(this, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_standings.Import(result.Result.CharacterNPCStandings.All);
         }
 
         /// <summary>

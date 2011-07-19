@@ -181,6 +181,9 @@ namespace EVEMon.Common.Data
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int ScientificNetworkingSkillID = 24270;
 
+        public const int DiplomacySkillID = 3357;
+        public const int ConnectionsSkillID = 3359;
+
         public const int WarpDisruptProbeBlueprintID = 22779;
 
         #endregion

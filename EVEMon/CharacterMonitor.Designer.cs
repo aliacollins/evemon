@@ -43,6 +43,7 @@ namespace EVEMon
             this.lblTrainingEst = new System.Windows.Forms.Label();
             this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.upperPanel = new System.Windows.Forms.Panel();
+            this.Header = new EVEMon.CharacterMonitorHeader();
             this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.skillQueuePanel = new System.Windows.Forms.Panel();
@@ -50,7 +51,29 @@ namespace EVEMon
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
+            this.skillQueueControl = new EVEMon.Controls.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
+            this.skillsPanel = new EVEMon.Controls.BorderPanel();
+            this.corePanel = new System.Windows.Forms.Panel();
+            this.multiPanel = new EVEMon.Controls.MultiPanel();
+            this.standingsPage = new EVEMon.Controls.MultiPanelPage();
+            this.standingsList = new EVEMon.MainWindowStandingsList();
+            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
+            this.skillsList = new EVEMon.MainWindowSkillsList();
+            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
+            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
+            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
+            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
+            this.jobsPage = new EVEMon.Controls.MultiPanelPage();
+            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
+            this.researchPage = new EVEMon.Controls.MultiPanelPage();
+            this.researchList = new EVEMon.MainWindowResearchPointsList();
+            this.mailMessagesPage = new EVEMon.Controls.MultiPanelPage();
+            this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
+            this.eveNotificationsPage = new EVEMon.Controls.MultiPanelPage();
+            this.eveNotificationsList = new EVEMon.MainWindowEveNotificationsList();
+            this.warningLabel = new System.Windows.Forms.Label();
+            this.notificationList = new EVEMon.NotificationList();
             this.toolstripPanel = new System.Windows.Forms.Panel();
             this.toolStripContextual = new System.Windows.Forms.ToolStrip();
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
@@ -73,6 +96,7 @@ namespace EVEMon
             this.showTextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
+            this.standingsIcon = new System.Windows.Forms.ToolStripButton();
             this.ordersIcon = new System.Windows.Forms.ToolStripButton();
             this.jobsIcon = new System.Windows.Forms.ToolStripButton();
             this.researchIcon = new System.Windows.Forms.ToolStripButton();
@@ -81,27 +105,6 @@ namespace EVEMon
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.skillsPanel = new EVEMon.Controls.BorderPanel();
-            this.corePanel = new System.Windows.Forms.Panel();
-            this.multiPanel = new EVEMon.Controls.MultiPanel();
-            this.skillsPage = new EVEMon.Controls.MultiPanelPage();
-            this.skillsList = new EVEMon.MainWindowSkillsList();
-            this.ordersPage = new EVEMon.Controls.MultiPanelPage();
-            this.ordersList = new EVEMon.MainWindowMarketOrdersList();
-            this.skillQueuePage = new EVEMon.Controls.MultiPanelPage();
-            this.skillQueueList = new EVEMon.MainWindowSkillsQueueList();
-            this.jobsPage = new EVEMon.Controls.MultiPanelPage();
-            this.jobsList = new EVEMon.MainWindowIndustryJobsList();
-            this.researchPage = new EVEMon.Controls.MultiPanelPage();
-            this.researchList = new EVEMon.MainWindowResearchPointsList();
-            this.mailMessagesPage = new EVEMon.Controls.MultiPanelPage();
-            this.mailMessagesList = new EVEMon.MainWindowEveMailMessagesList();
-            this.eveNotificationsPage = new EVEMon.Controls.MultiPanelPage();
-            this.eveNotificationsList = new EVEMon.MainWindowEveNotificationsList();
-            this.warningLabel = new System.Windows.Forms.Label();
-            this.notificationList = new EVEMon.NotificationList();
-            this.skillQueueControl = new EVEMon.Controls.SkillQueueControl();
-            this.Header = new EVEMon.CharacterMonitorHeader();
             tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -111,13 +114,10 @@ namespace EVEMon
             this.skillQueuePanel.SuspendLayout();
             this.skillQueueTimePanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
-            this.toolstripPanel.SuspendLayout();
-            this.toolStripContextual.SuspendLayout();
-            this.toolStripFeatures.SuspendLayout();
-            this.toolstripContextMenu.SuspendLayout();
             this.skillsPanel.SuspendLayout();
             this.corePanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
+            this.standingsPage.SuspendLayout();
             this.skillsPage.SuspendLayout();
             this.ordersPage.SuspendLayout();
             this.skillQueuePage.SuspendLayout();
@@ -125,6 +125,10 @@ namespace EVEMon
             this.researchPage.SuspendLayout();
             this.mailMessagesPage.SuspendLayout();
             this.eveNotificationsPage.SuspendLayout();
+            this.toolstripPanel.SuspendLayout();
+            this.toolStripContextual.SuspendLayout();
+            this.toolStripFeatures.SuspendLayout();
+            this.toolstripContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tsPagesSeparator
@@ -284,6 +288,16 @@ namespace EVEMon
             this.upperPanel.Size = new System.Drawing.Size(574, 183);
             this.upperPanel.TabIndex = 14;
             // 
+            // Header
+            // 
+            this.Header.Character = null;
+            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Header.Location = new System.Drawing.Point(0, 0);
+            this.Header.Name = "Header";
+            this.Header.Size = new System.Drawing.Size(574, 183);
+            this.Header.TabIndex = 15;
+            // 
             // ttToolTip
             // 
             this.ttToolTip.AutoPopDelay = 5000000;
@@ -347,6 +361,20 @@ namespace EVEMon
             this.lblQueueRemaining.TabIndex = 16;
             this.lblQueueRemaining.Text = "Nothing";
             // 
+            // skillQueueControl
+            // 
+            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
+            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
+            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
+            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.Name = "skillQueueControl";
+            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
+            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.SkillQueue = null;
+            this.skillQueueControl.TabIndex = 13;
+            // 
             // lowerPanel
             // 
             this.lowerPanel.Controls.Add(this.skillsPanel);
@@ -358,318 +386,6 @@ namespace EVEMon
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(574, 316);
             this.lowerPanel.TabIndex = 3;
-            // 
-            // toolstripPanel
-            // 
-            this.toolstripPanel.AutoSize = true;
-            this.toolstripPanel.Controls.Add(this.toolStripContextual);
-            this.toolstripPanel.Controls.Add(this.toolStripFeatures);
-            this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
-            this.toolstripPanel.Name = "toolstripPanel";
-            this.toolstripPanel.Size = new System.Drawing.Size(574, 50);
-            this.toolstripPanel.TabIndex = 16;
-            // 
-            // toolStripContextual
-            // 
-            this.toolStripContextual.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferencesMenu,
-            this.searchTextBox,
-            this.groupMenu});
-            this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripContextual.Location = new System.Drawing.Point(0, 25);
-            this.toolStripContextual.Name = "toolStripContextual";
-            this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
-            this.toolStripContextual.TabIndex = 15;
-            // 
-            // preferencesMenu
-            // 
-            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.columnSettingsMenuItem,
-            this.tsColumnSettingsSeparator,
-            this.hideInactiveMenuItem,
-            this.numberAbsFormatMenuItem,
-            this.tsOptionsSeparator,
-            this.showOnlyCharMenuItem,
-            this.showOnlyCorpMenuItem,
-            this.tsReadingPaneSeparator,
-            this.readingPaneMenuItem});
-            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
-            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.preferencesMenu.Name = "preferencesMenu";
-            this.preferencesMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.preferencesMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
-            this.preferencesMenu.Text = "Preferences";
-            this.preferencesMenu.ToolTipText = "Preferences";
-            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
-            // 
-            // columnSettingsMenuItem
-            // 
-            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
-            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.columnSettingsMenuItem.Text = "Column Settings";
-            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
-            // 
-            // tsColumnSettingsSeparator
-            // 
-            this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
-            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // hideInactiveMenuItem
-            // 
-            this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
-            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
-            this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
-            // 
-            // numberAbsFormatMenuItem
-            // 
-            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
-            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
-            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
-            // 
-            // tsOptionsSeparator
-            // 
-            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
-            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // showOnlyCharMenuItem
-            // 
-            this.showOnlyCharMenuItem.CheckOnClick = true;
-            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
-            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
-            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
-            // 
-            // showOnlyCorpMenuItem
-            // 
-            this.showOnlyCorpMenuItem.CheckOnClick = true;
-            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
-            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
-            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
-            // 
-            // tsReadingPaneSeparator
-            // 
-            this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
-            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // readingPaneMenuItem
-            // 
-            this.readingPaneMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.paneRightMenuItem,
-            this.paneBottomMenuItem,
-            this.paneOffMenuItem});
-            this.readingPaneMenuItem.Name = "readingPaneMenuItem";
-            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.readingPaneMenuItem.Text = "Reading Pane";
-            this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
-            // 
-            // paneRightMenuItem
-            // 
-            this.paneRightMenuItem.CheckOnClick = true;
-            this.paneRightMenuItem.Name = "paneRightMenuItem";
-            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneRightMenuItem.Tag = "Right";
-            this.paneRightMenuItem.Text = "Right";
-            this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
-            // 
-            // paneBottomMenuItem
-            // 
-            this.paneBottomMenuItem.CheckOnClick = true;
-            this.paneBottomMenuItem.Name = "paneBottomMenuItem";
-            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneBottomMenuItem.Tag = "Bottom";
-            this.paneBottomMenuItem.Text = "Bottom";
-            this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
-            // 
-            // paneOffMenuItem
-            // 
-            this.paneOffMenuItem.CheckOnClick = true;
-            this.paneOffMenuItem.Name = "paneOffMenuItem";
-            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneOffMenuItem.Tag = "Off";
-            this.paneOffMenuItem.Text = "Off";
-            this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
-            // 
-            // searchTextBox
-            // 
-            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
-            this.searchTextBox.AutoSize = false;
-            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
-            this.searchTextBox.ToolTipText = "Search";
-            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
-            // 
-            // groupMenu
-            // 
-            this.groupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.groupMenu.Image = ((System.Drawing.Image)(resources.GetObject("groupMenu.Image")));
-            this.groupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.groupMenu.Name = "groupMenu";
-            this.groupMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.groupMenu.Size = new System.Drawing.Size(94, 22);
-            this.groupMenu.Text = "Group By...";
-            this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
-            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
-            // 
-            // toolStripFeatures
-            // 
-            this.toolStripFeatures.ContextMenuStrip = this.toolstripContextMenu;
-            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skillsIcon,
-            this.skillQueueIcon,
-            this.ordersIcon,
-            this.jobsIcon,
-            this.researchIcon,
-            this.mailMessagesIcon,
-            this.eveNotificationsIcon,
-            tsPagesSeparator,
-            this.toggleSkillsIcon,
-            this.tsToggleSeparator,
-            this.featuresMenu});
-            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
-            this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(574, 25);
-            this.toolStripFeatures.TabIndex = 13;
-            // 
-            // toolstripContextMenu
-            // 
-            this.toolstripContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showTextMenuItem});
-            this.toolstripContextMenu.Name = "toolstripContextMenu";
-            this.toolstripContextMenu.Size = new System.Drawing.Size(129, 26);
-            this.toolstripContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toolstripContextMenu_Opening);
-            // 
-            // showTextMenuItem
-            // 
-            this.showTextMenuItem.Name = "showTextMenuItem";
-            this.showTextMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.showTextMenuItem.Text = "Show Text";
-            this.showTextMenuItem.Click += new System.EventHandler(this.showTextMenuItem_Click);
-            // 
-            // skillsIcon
-            // 
-            this.skillsIcon.Checked = true;
-            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsIcon.Image")));
-            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillsIcon.Name = "skillsIcon";
-            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
-            this.skillsIcon.Tag = "skillsPage";
-            this.skillsIcon.Text = "Skills";
-            this.skillsIcon.ToolTipText = "Display skills list";
-            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // skillQueueIcon
-            // 
-            this.skillQueueIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillQueueIcon.Image")));
-            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillQueueIcon.Name = "skillQueueIcon";
-            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
-            this.skillQueueIcon.Tag = "skillQueuePage";
-            this.skillQueueIcon.Text = "Queue";
-            this.skillQueueIcon.ToolTipText = "Display skills in queue";
-            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // ordersIcon
-            // 
-            this.ordersIcon.Image = ((System.Drawing.Image)(resources.GetObject("ordersIcon.Image")));
-            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ordersIcon.Name = "ordersIcon";
-            this.ordersIcon.Size = new System.Drawing.Size(64, 22);
-            this.ordersIcon.Tag = "ordersPage";
-            this.ordersIcon.Text = "Market";
-            this.ordersIcon.ToolTipText = "Display market orders";
-            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // jobsIcon
-            // 
-            this.jobsIcon.Image = ((System.Drawing.Image)(resources.GetObject("jobsIcon.Image")));
-            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.jobsIcon.Name = "jobsIcon";
-            this.jobsIcon.Size = new System.Drawing.Size(70, 22);
-            this.jobsIcon.Tag = "jobsPage";
-            this.jobsIcon.Text = "Industry";
-            this.jobsIcon.ToolTipText = "Display industry jobs";
-            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // researchIcon
-            // 
-            this.researchIcon.Image = ((System.Drawing.Image)(resources.GetObject("researchIcon.Image")));
-            this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.researchIcon.Name = "researchIcon";
-            this.researchIcon.Size = new System.Drawing.Size(74, 22);
-            this.researchIcon.Tag = "researchPage";
-            this.researchIcon.Text = "Research";
-            this.researchIcon.ToolTipText = "Display research points";
-            this.researchIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // mailMessagesIcon
-            // 
-            this.mailMessagesIcon.Image = ((System.Drawing.Image)(resources.GetObject("mailMessagesIcon.Image")));
-            this.mailMessagesIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mailMessagesIcon.Name = "mailMessagesIcon";
-            this.mailMessagesIcon.Size = new System.Drawing.Size(50, 22);
-            this.mailMessagesIcon.Tag = "mailMessagesPage";
-            this.mailMessagesIcon.Text = "Mail";
-            this.mailMessagesIcon.ToolTipText = "Display EVE mails";
-            this.mailMessagesIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // eveNotificationsIcon
-            // 
-            this.eveNotificationsIcon.Image = ((System.Drawing.Image)(resources.GetObject("eveNotificationsIcon.Image")));
-            this.eveNotificationsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.eveNotificationsIcon.Name = "eveNotificationsIcon";
-            this.eveNotificationsIcon.Size = new System.Drawing.Size(90, 20);
-            this.eveNotificationsIcon.Tag = "eveNotificationsPage";
-            this.eveNotificationsIcon.Text = "Notification";
-            this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
-            this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // toggleSkillsIcon
-            // 
-            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
-            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
-            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
-            this.toggleSkillsIcon.Text = "Toggle All Skills";
-            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
-            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
-            // 
-            // tsToggleSeparator
-            // 
-            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsToggleSeparator.Name = "tsToggleSeparator";
-            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 25);
-            // 
-            // featuresMenu
-            // 
-            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.featuresMenu.Image = ((System.Drawing.Image)(resources.GetObject("featuresMenu.Image")));
-            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.featuresMenu.Name = "featuresMenu";
-            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.featuresMenu.Size = new System.Drawing.Size(29, 22);
-            this.featuresMenu.Text = "Features";
-            this.featuresMenu.ToolTipText = "Full API key features";
-            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
-            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
             // 
             // skillsPanel
             // 
@@ -699,6 +415,7 @@ namespace EVEMon
             // 
             // multiPanel
             // 
+            this.multiPanel.Controls.Add(this.standingsPage);
             this.multiPanel.Controls.Add(this.skillsPage);
             this.multiPanel.Controls.Add(this.ordersPage);
             this.multiPanel.Controls.Add(this.skillQueuePage);
@@ -712,6 +429,25 @@ namespace EVEMon
             this.multiPanel.SelectedPage = this.skillsPage;
             this.multiPanel.Size = new System.Drawing.Size(568, 74);
             this.multiPanel.TabIndex = 14;
+            // 
+            // standingsPage
+            // 
+            this.standingsPage.Controls.Add(this.standingsList);
+            this.standingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.standingsPage.Location = new System.Drawing.Point(0, 0);
+            this.standingsPage.Name = "standingsPage";
+            this.standingsPage.Size = new System.Drawing.Size(568, 74);
+            this.standingsPage.TabIndex = 7;
+            this.standingsPage.Text = "standingsPage";
+            // 
+            // standingsList
+            // 
+            this.standingsList.Character = null;
+            this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.standingsList.Location = new System.Drawing.Point(0, 0);
+            this.standingsList.Name = "standingsList";
+            this.standingsList.Size = new System.Drawing.Size(568, 74);
+            this.standingsList.TabIndex = 0;
             // 
             // skillsPage
             // 
@@ -888,29 +624,329 @@ namespace EVEMon
             this.notificationList.TabIndex = 13;
             this.notificationList.Resize += new System.EventHandler(this.notificationList_Resize);
             // 
-            // skillQueueControl
+            // toolstripPanel
             // 
-            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
-            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
-            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
-            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
-            this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
-            this.skillQueueControl.SkillQueue = null;
-            this.skillQueueControl.TabIndex = 13;
+            this.toolstripPanel.AutoSize = true;
+            this.toolstripPanel.Controls.Add(this.toolStripContextual);
+            this.toolstripPanel.Controls.Add(this.toolStripFeatures);
+            this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
+            this.toolstripPanel.Name = "toolstripPanel";
+            this.toolstripPanel.Size = new System.Drawing.Size(574, 50);
+            this.toolstripPanel.TabIndex = 16;
             // 
-            // Header
+            // toolStripContextual
             // 
-            this.Header.Character = null;
-            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Header.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.Header.Location = new System.Drawing.Point(0, 0);
-            this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 183);
-            this.Header.TabIndex = 15;
+            this.toolStripContextual.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesMenu,
+            this.searchTextBox,
+            this.groupMenu});
+            this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStripContextual.Location = new System.Drawing.Point(0, 25);
+            this.toolStripContextual.Name = "toolStripContextual";
+            this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
+            this.toolStripContextual.TabIndex = 15;
+            // 
+            // preferencesMenu
+            // 
+            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnSettingsMenuItem,
+            this.tsColumnSettingsSeparator,
+            this.hideInactiveMenuItem,
+            this.numberAbsFormatMenuItem,
+            this.tsOptionsSeparator,
+            this.showOnlyCharMenuItem,
+            this.showOnlyCorpMenuItem,
+            this.tsReadingPaneSeparator,
+            this.readingPaneMenuItem});
+            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
+            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.preferencesMenu.Name = "preferencesMenu";
+            this.preferencesMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.preferencesMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
+            this.preferencesMenu.Text = "Preferences";
+            this.preferencesMenu.ToolTipText = "Preferences";
+            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
+            // 
+            // columnSettingsMenuItem
+            // 
+            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.columnSettingsMenuItem.Text = "Column Settings";
+            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
+            // 
+            // tsColumnSettingsSeparator
+            // 
+            this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
+            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // hideInactiveMenuItem
+            // 
+            this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
+            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
+            this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
+            // 
+            // numberAbsFormatMenuItem
+            // 
+            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
+            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
+            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
+            // 
+            // tsOptionsSeparator
+            // 
+            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
+            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // showOnlyCharMenuItem
+            // 
+            this.showOnlyCharMenuItem.CheckOnClick = true;
+            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
+            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
+            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
+            // 
+            // showOnlyCorpMenuItem
+            // 
+            this.showOnlyCorpMenuItem.CheckOnClick = true;
+            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
+            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
+            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
+            // 
+            // tsReadingPaneSeparator
+            // 
+            this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
+            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // readingPaneMenuItem
+            // 
+            this.readingPaneMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.paneRightMenuItem,
+            this.paneBottomMenuItem,
+            this.paneOffMenuItem});
+            this.readingPaneMenuItem.Name = "readingPaneMenuItem";
+            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.readingPaneMenuItem.Text = "Reading Pane";
+            this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
+            // 
+            // paneRightMenuItem
+            // 
+            this.paneRightMenuItem.CheckOnClick = true;
+            this.paneRightMenuItem.Name = "paneRightMenuItem";
+            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneRightMenuItem.Tag = "Right";
+            this.paneRightMenuItem.Text = "Right";
+            this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
+            // 
+            // paneBottomMenuItem
+            // 
+            this.paneBottomMenuItem.CheckOnClick = true;
+            this.paneBottomMenuItem.Name = "paneBottomMenuItem";
+            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneBottomMenuItem.Tag = "Bottom";
+            this.paneBottomMenuItem.Text = "Bottom";
+            this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
+            // 
+            // paneOffMenuItem
+            // 
+            this.paneOffMenuItem.CheckOnClick = true;
+            this.paneOffMenuItem.Name = "paneOffMenuItem";
+            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneOffMenuItem.Tag = "Off";
+            this.paneOffMenuItem.Text = "Off";
+            this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
+            // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+            this.searchTextBox.AutoSize = false;
+            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
+            this.searchTextBox.ToolTipText = "Search";
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // groupMenu
+            // 
+            this.groupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.groupMenu.Image = ((System.Drawing.Image)(resources.GetObject("groupMenu.Image")));
+            this.groupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.groupMenu.Name = "groupMenu";
+            this.groupMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.groupMenu.Size = new System.Drawing.Size(94, 22);
+            this.groupMenu.Text = "Group By...";
+            this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
+            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
+            // 
+            // toolStripFeatures
+            // 
+            this.toolStripFeatures.ContextMenuStrip = this.toolstripContextMenu;
+            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.skillsIcon,
+            this.skillQueueIcon,
+            this.standingsIcon,
+            this.ordersIcon,
+            this.jobsIcon,
+            this.researchIcon,
+            this.mailMessagesIcon,
+            this.eveNotificationsIcon,
+            tsPagesSeparator,
+            this.toggleSkillsIcon,
+            this.tsToggleSeparator,
+            this.featuresMenu});
+            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
+            this.toolStripFeatures.Name = "toolStripFeatures";
+            this.toolStripFeatures.Size = new System.Drawing.Size(574, 25);
+            this.toolStripFeatures.TabIndex = 13;
+            // 
+            // toolstripContextMenu
+            // 
+            this.toolstripContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTextMenuItem});
+            this.toolstripContextMenu.Name = "toolstripContextMenu";
+            this.toolstripContextMenu.Size = new System.Drawing.Size(129, 26);
+            this.toolstripContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toolstripContextMenu_Opening);
+            // 
+            // showTextMenuItem
+            // 
+            this.showTextMenuItem.Name = "showTextMenuItem";
+            this.showTextMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showTextMenuItem.Text = "Show Text";
+            this.showTextMenuItem.Click += new System.EventHandler(this.showTextMenuItem_Click);
+            // 
+            // skillsIcon
+            // 
+            this.skillsIcon.Checked = true;
+            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.skillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsIcon.Image")));
+            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillsIcon.Name = "skillsIcon";
+            this.skillsIcon.Size = new System.Drawing.Size(53, 22);
+            this.skillsIcon.Tag = "skillsPage";
+            this.skillsIcon.Text = "Skills";
+            this.skillsIcon.ToolTipText = "Display skills list";
+            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // skillQueueIcon
+            // 
+            this.skillQueueIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillQueueIcon.Image")));
+            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillQueueIcon.Name = "skillQueueIcon";
+            this.skillQueueIcon.Size = new System.Drawing.Size(62, 22);
+            this.skillQueueIcon.Tag = "skillQueuePage";
+            this.skillQueueIcon.Text = "Queue";
+            this.skillQueueIcon.ToolTipText = "Display skills in queue";
+            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // standingsIcon
+            // 
+            this.standingsIcon.Image = ((System.Drawing.Image)(resources.GetObject("standingsIcon.Image")));
+            this.standingsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.standingsIcon.Name = "standingsIcon";
+            this.standingsIcon.Size = new System.Drawing.Size(79, 22);
+            this.standingsIcon.Tag = "standingsPage";
+            this.standingsIcon.Text = "Standings";
+            this.standingsIcon.ToolTipText = "Display standings";
+            this.standingsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // ordersIcon
+            // 
+            this.ordersIcon.Image = ((System.Drawing.Image)(resources.GetObject("ordersIcon.Image")));
+            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ordersIcon.Name = "ordersIcon";
+            this.ordersIcon.Size = new System.Drawing.Size(64, 22);
+            this.ordersIcon.Tag = "ordersPage";
+            this.ordersIcon.Text = "Market";
+            this.ordersIcon.ToolTipText = "Display market orders";
+            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // jobsIcon
+            // 
+            this.jobsIcon.Image = ((System.Drawing.Image)(resources.GetObject("jobsIcon.Image")));
+            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.jobsIcon.Name = "jobsIcon";
+            this.jobsIcon.Size = new System.Drawing.Size(70, 22);
+            this.jobsIcon.Tag = "jobsPage";
+            this.jobsIcon.Text = "Industry";
+            this.jobsIcon.ToolTipText = "Display industry jobs";
+            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // researchIcon
+            // 
+            this.researchIcon.Image = ((System.Drawing.Image)(resources.GetObject("researchIcon.Image")));
+            this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.researchIcon.Name = "researchIcon";
+            this.researchIcon.Size = new System.Drawing.Size(74, 22);
+            this.researchIcon.Tag = "researchPage";
+            this.researchIcon.Text = "Research";
+            this.researchIcon.ToolTipText = "Display research points";
+            this.researchIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // mailMessagesIcon
+            // 
+            this.mailMessagesIcon.Image = ((System.Drawing.Image)(resources.GetObject("mailMessagesIcon.Image")));
+            this.mailMessagesIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mailMessagesIcon.Name = "mailMessagesIcon";
+            this.mailMessagesIcon.Size = new System.Drawing.Size(50, 20);
+            this.mailMessagesIcon.Tag = "mailMessagesPage";
+            this.mailMessagesIcon.Text = "Mail";
+            this.mailMessagesIcon.ToolTipText = "Display EVE mails";
+            this.mailMessagesIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // eveNotificationsIcon
+            // 
+            this.eveNotificationsIcon.Image = ((System.Drawing.Image)(resources.GetObject("eveNotificationsIcon.Image")));
+            this.eveNotificationsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.eveNotificationsIcon.Name = "eveNotificationsIcon";
+            this.eveNotificationsIcon.Size = new System.Drawing.Size(90, 20);
+            this.eveNotificationsIcon.Tag = "eveNotificationsPage";
+            this.eveNotificationsIcon.Text = "Notification";
+            this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
+            this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // toggleSkillsIcon
+            // 
+            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
+            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
+            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toggleSkillsIcon.Size = new System.Drawing.Size(110, 22);
+            this.toggleSkillsIcon.Text = "Toggle All Skills";
+            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
+            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
+            // 
+            // tsToggleSeparator
+            // 
+            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsToggleSeparator.Name = "tsToggleSeparator";
+            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // featuresMenu
+            // 
+            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.featuresMenu.Image = ((System.Drawing.Image)(resources.GetObject("featuresMenu.Image")));
+            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.featuresMenu.Name = "featuresMenu";
+            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.featuresMenu.Size = new System.Drawing.Size(29, 22);
+            this.featuresMenu.Text = "Features";
+            this.featuresMenu.ToolTipText = "Full API key features";
+            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
+            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
             // 
             // CharacterMonitor
             // 
@@ -935,16 +971,10 @@ namespace EVEMon
             this.skillQueueTimePanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             this.lowerPanel.PerformLayout();
-            this.toolstripPanel.ResumeLayout(false);
-            this.toolstripPanel.PerformLayout();
-            this.toolStripContextual.ResumeLayout(false);
-            this.toolStripContextual.PerformLayout();
-            this.toolStripFeatures.ResumeLayout(false);
-            this.toolStripFeatures.PerformLayout();
-            this.toolstripContextMenu.ResumeLayout(false);
             this.skillsPanel.ResumeLayout(false);
             this.corePanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
+            this.standingsPage.ResumeLayout(false);
             this.skillsPage.ResumeLayout(false);
             this.ordersPage.ResumeLayout(false);
             this.skillQueuePage.ResumeLayout(false);
@@ -952,6 +982,13 @@ namespace EVEMon
             this.researchPage.ResumeLayout(false);
             this.mailMessagesPage.ResumeLayout(false);
             this.eveNotificationsPage.ResumeLayout(false);
+            this.toolstripPanel.ResumeLayout(false);
+            this.toolstripPanel.PerformLayout();
+            this.toolStripContextual.ResumeLayout(false);
+            this.toolStripContextual.PerformLayout();
+            this.toolStripFeatures.ResumeLayout(false);
+            this.toolStripFeatures.PerformLayout();
+            this.toolstripContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1029,5 +1066,8 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton eveNotificationsIcon;
         private Controls.MultiPanelPage eveNotificationsPage;
         private MainWindowEveNotificationsList eveNotificationsList;
+        private System.Windows.Forms.ToolStripButton standingsIcon;
+        private Controls.MultiPanelPage standingsPage;
+        private MainWindowStandingsList standingsList;
     }
 }

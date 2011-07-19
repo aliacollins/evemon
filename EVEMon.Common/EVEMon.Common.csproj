@@ -77,6 +77,16 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
+    <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
+    <Compile Include="Serialization\API\SerializableFactionStanding.cs" />
+    <Compile Include="Serialization\API\SerializableNPCCorporationStanding.cs" />
+    <Compile Include="Serialization\API\SerializableStandings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\API\SerializableStandingsListItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
@@ -94,10 +104,13 @@
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
+    <Compile Include="Serialization\Settings\SerializableStanding.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationsColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationsSettings.cs" />
     <Compile Include="SettingsObjects\UpdatePeriodExtensions.cs" />
+    <Compile Include="Standing.cs" />
+    <Compile Include="StandingCollection.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />

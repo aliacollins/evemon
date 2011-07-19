@@ -26,7 +26,7 @@ namespace EVEMon.Common
         {
             m_items.Clear();
 
-            foreach (var srcResearchPoint in src)
+            foreach (SerializableResearchPoint srcResearchPoint in src)
             {
                 m_items.Add(new ResearchPoint(srcResearchPoint));
             }
@@ -41,7 +41,7 @@ namespace EVEMon.Common
             m_items.Clear();
 
             // Import the research points from the API
-            foreach (var srcResearchPoint in src)
+            foreach (SerializableResearchListItem srcResearchPoint in src)
             {
                 m_items.Add(new ResearchPoint(srcResearchPoint));
             }
@@ -58,7 +58,7 @@ namespace EVEMon.Common
         {
             List<SerializableResearchPoint> serial = new List<SerializableResearchPoint>(m_items.Count);
 
-            foreach (var researchPoint in m_items)
+            foreach (ResearchPoint researchPoint in m_items)
             {
                 serial.Add(researchPoint.Export());
             }

@@ -50,6 +50,7 @@ namespace EVEMon
             Header.Character = character;
             skillsList.Character = character;
             skillQueueList.Character = character;
+            standingsList.Character = character;
             ordersList.Character = character;
             jobsList.Character = character;
             researchList.Character = character;
@@ -74,7 +75,7 @@ namespace EVEMon
             // Update all other controls
             EveClient_SettingsChanged(null, EventArgs.Empty);
 
-            var ccpCharacter = character as CCPCharacter;
+            CCPCharacter ccpCharacter = character as CCPCharacter;
 
             if (ccpCharacter != null)
             {
@@ -85,6 +86,7 @@ namespace EVEMon
                 pnlTraining.Visible = false;
                 skillQueuePanel.Visible = false;
                 skillQueueIcon.Visible = false;
+                standingsIcon.Visible = false;
             }
 
             // Subscribe events
@@ -717,7 +719,7 @@ namespace EVEMon
             // Update the buttons visibility
             toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
             tsToggleSeparator.Visible = featuresMenu.Visible && toggleSkillsIcon.Visible;
-            toolStripContextual.Visible = (e.NewPage != skillsPage && e.NewPage != skillQueuePage);
+            toolStripContextual.Visible = (e.NewPage != skillsPage && e.NewPage != skillQueuePage && e.NewPage != standingsPage);
 
             // Update the page controls
             UpdatePageControls();
