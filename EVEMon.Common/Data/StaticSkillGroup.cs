@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -24,7 +23,7 @@ namespace EVEMon.Common.Data
         {
             m_ID = src.ID;
             m_name = src.Name;
-            foreach (var srcSkill in src.Skills)
+            foreach (SerializableSkill srcSkill in src.Skills)
             {
                 m_items[srcSkill.ID] = new StaticSkill(this, srcSkill, skillArrayIndex);
                 skillArrayIndex++;
@@ -53,7 +52,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a skill from this group by its id
+        /// Gets a skill from this group by its id.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -63,7 +62,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Checks whether this group contains the specified skill
+        /// Checks whether this group contains the specified skill.
         /// </summary>
         /// <param name="skillName"></param>
         /// <returns></returns>
@@ -77,6 +76,10 @@ namespace EVEMon.Common.Data
 
         #region IEnumerable<StaticSkill> Members
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<StaticSkill> GetEnumerator()
         {
             return m_items.Values.GetEnumerator();

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Datafiles;
@@ -53,7 +51,7 @@ namespace EVEMon.Common.Data
             if (src.Agents == null)
                 return;
 
-            foreach (var agent in src.Agents)
+            foreach (SerializableAgent agent in src.Agents)
             {
                 m_agents.Add(agent);
             }
@@ -138,7 +136,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Station other)
         {
-            if (this.SolarSystem != other.SolarSystem) return this.SolarSystem.CompareTo(other.SolarSystem);
+            if (SolarSystem != other.SolarSystem)
+                return SolarSystem.CompareTo(other.SolarSystem);
+
             return m_name.CompareTo(other.m_name);
         }
 

@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<SkillLevel> ToCharacter(this IEnumerable<StaticSkillLevel> src, Character character)
         {
-            foreach (var item in src)
+            foreach (StaticSkillLevel item in src)
             {
                 yield return new SkillLevel(character.Skills[item.Skill], item.Level);
             }
@@ -31,17 +31,17 @@ namespace EVEMon.Common.Data
         /// <param name="includeRoots">When true, the levels in this enumeration are also included.</param>
         public static IEnumerable<StaticSkillLevel> GetAllDependencies(this IEnumerable<StaticSkillLevel> src, bool includeRoots)
         {
-            var set = new SkillLevelSet<StaticSkillLevel>();
-            var list = new List<StaticSkillLevel>();
+            SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
+            List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
             // Fill the set and list
-            foreach (var item in src)
+            foreach (StaticSkillLevel item in src)
             {
                 FillDependencies(set, list, item, includeRoots);
             }
 
             // Return the results
-            foreach (var item in list)
+            foreach (StaticSkillLevel item in list)
             {
                 yield return item;
             }
@@ -61,7 +61,7 @@ namespace EVEMon.Common.Data
         /// <param name="includeRoots"></param>
         internal static void FillDependencies(SkillLevelSet<StaticSkillLevel> set, List<StaticSkillLevel> list, StaticSkillLevel item, bool includeRoots)
         {
-            var skill = item.Skill;
+            StaticSkill skill = item.Skill;
 
             // Add first level and prerequisites
             if (!set.Contains(skill, 1))
@@ -71,13 +71,11 @@ namespace EVEMon.Common.Data
                 {
                     // Deal with recursive skills such as Polaris
                     if (skill != prereq.Skill)
-                    {
                         FillDependencies(set, list, prereq, true);
-                    }
                 }
 
                 // Include the first level
-                var newItem = new StaticSkillLevel(skill, 1);
+                StaticSkillLevel newItem = new StaticSkillLevel(skill, 1);
                 list.Add(newItem);
                 set.Set(newItem);
             }
@@ -88,7 +86,7 @@ namespace EVEMon.Common.Data
             {
                 if (!set.Contains(skill, i))
                 {
-                    var newItem = new StaticSkillLevel(skill, i);
+                    StaticSkillLevel newItem = new StaticSkillLevel(skill, i);
                     list.Add(newItem);
                     set.Set(newItem);
                 }

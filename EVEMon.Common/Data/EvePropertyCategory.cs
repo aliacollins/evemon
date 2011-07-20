@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
@@ -14,7 +10,7 @@ namespace EVEMon.Common.Data
         private readonly string m_displayName;
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="serial"></param>
         internal EvePropertyCategory(SerializablePropertyCategory serial)
@@ -23,7 +19,7 @@ namespace EVEMon.Common.Data
             m_name = serial.Name;
             m_description = serial.Description;
 
-            foreach (var serialProp in serial.Properties)
+            foreach (SerializableProperty serialProp in serial.Properties)
             {
                 m_items.Add(new EveProperty(this, serialProp));
             }
@@ -41,7 +37,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's name
+        /// Gets this category's name.
         /// </summary>
         public string Name
         {
@@ -49,7 +45,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's description
+        /// Gets this category's description.
         /// </summary>
         public string Description
         {

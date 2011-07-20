@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -30,7 +29,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var blueprint in s_blueprintsByID.Values)
+                foreach (Blueprint blueprint in s_blueprintsByID.Values)
                 {
                     yield return blueprint;
                 }
@@ -63,7 +62,7 @@ namespace EVEMon.Common.Data
         /// <returns>The first blueprint which name matches blueprintName, Null if no such blueprint is found.</returns>
         public static Item GetBlueprintByName(string blueprintName)
         {
-            foreach (var item in s_blueprintsByID.Values)
+            foreach (Blueprint item in s_blueprintsByID.Values)
             {
                 if (item.Name == blueprintName)
                     return item;
@@ -88,7 +87,7 @@ namespace EVEMon.Common.Data
 
             s_blueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
 
-            foreach (var srcGroup in s_blueprintMarketGroups)
+            foreach (BlueprintMarketGroup srcGroup in s_blueprintMarketGroups)
             {
                 InitializeDictionaries(srcGroup);
             }
@@ -100,12 +99,12 @@ namespace EVEMon.Common.Data
         /// <param name="group"></param>
         private static void InitializeDictionaries(BlueprintMarketGroup group)
         {
-            foreach (var blueprint in group.Blueprints)
+            foreach (Blueprint blueprint in group.Blueprints)
             {
                 s_blueprintsByID[blueprint.ID] = blueprint;
             }
-            
-            foreach (var childGroup in group.SubGroups)
+
+            foreach (BlueprintMarketGroup childGroup in group.SubGroups)
             {
                 InitializeDictionaries(childGroup);
             }

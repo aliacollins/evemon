@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -24,7 +22,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (var system in s_solarSystemsByID.Values)
+                foreach (SolarSystem system in s_solarSystemsByID.Values)
                 {
                     yield return system;
                 }
@@ -67,7 +65,7 @@ namespace EVEMon.Common.Data
             get
             {
                 EnsureInitialized();
-                foreach (var station in s_stationsByID.Values)
+                foreach (Station station in s_stationsByID.Values)
                 {
                     yield return station;
                 }
@@ -109,24 +107,25 @@ namespace EVEMon.Common.Data
         {
             if (m_initialized)
                 return;
-            var datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
+
+            GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
 
             // Generate the nodes
             foreach (var srcRegion in datafile.Regions)
             {
-                var region = new Region(srcRegion);
+                Region region = new Region(srcRegion);
                 s_regionsByID[srcRegion.ID] = region;
 
                 // Store the children into their dictionaries
-                foreach (var constellation in region)
+                foreach (Constellation constellation in region)
                 {
                     s_constellationsByID[constellation.ID] = constellation;
 
-                    foreach (var solarSystem in constellation)
+                    foreach (SolarSystem solarSystem in constellation)
                     {
                         s_solarSystemsByID[solarSystem.ID] = solarSystem;
 
-                        foreach (var station in solarSystem)
+                        foreach (Station station in solarSystem)
                         {
                             s_stationsByID[station.ID] = station;
                         }
@@ -137,19 +136,19 @@ namespace EVEMon.Common.Data
             // Connects the systems
             foreach (var srcJump in datafile.Jumps)
             {
-                var a = s_solarSystemsByID[srcJump.FirstSystemID];
-                var b = s_solarSystemsByID[srcJump.SecondSystemID];
+                SolarSystem a = s_solarSystemsByID[srcJump.FirstSystemID];
+                SolarSystem b = s_solarSystemsByID[srcJump.SecondSystemID];
                 a.AddNeighbor(b);
                 b.AddNeighbor(a);
             }
-            foreach (var system in s_solarSystemsByID.Values)
+
+            foreach (SolarSystem system in s_solarSystemsByID.Values)
             {
                 system.TrimNeighbors();
             }
 
             // Mark as initialized
             m_initialized = true;
-
         }
     }
 }

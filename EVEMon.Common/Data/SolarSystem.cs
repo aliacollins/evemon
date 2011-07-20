@@ -93,9 +93,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int GetSquareDistanceWith(SolarSystem other)
         {
-            var dx = m_x - other.m_x;
-            var dy = m_y - other.m_y;
-            var dz = m_z - other.m_z;
+            int dx = m_x - other.m_x;
+            int dy = m_y - other.m_y;
+            int dz = m_z - other.m_z;
 
             return dx * dx + dy * dy + dz * dz;
         }
@@ -177,7 +177,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(SolarSystem other)
         {
-            if (this.Constellation != other.Constellation)
+            if (Constellation != other.Constellation)
                 return this.Constellation.CompareTo(other.Constellation);
 
             return m_name.CompareTo(other.m_name);

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a certificate category. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
+    /// Represents a certificate category.
+    /// Every category (i.e. "Business and Industry")
+    /// contains certificate classes (i.e. "Production Manager"),
+    /// which contain certificates (i.e. "Production Manager Basic").
     /// </summary>
     public sealed class StaticCertificateCategory : ReadonlyCollection<StaticCertificateClass>
     {
@@ -22,18 +22,18 @@ namespace EVEMon.Common.Data
         internal StaticCertificateCategory(SerializableCertificateCategory src)
             : base(src.Classes.Length)
         {
-            this.m_id = src.ID;
-            this.m_name = src.Name;
-            this.m_description = src.Description;
+            m_id = src.ID;
+            m_name = src.Name;
+            m_description = src.Description;
 
-            foreach (var srcClass in src.Classes)
+            foreach (SerializableCertificateClass srcClass in src.Classes)
             {
                 m_items.Add(new StaticCertificateClass(this, srcClass));
             }
         }
 
         /// <summary>
-        /// Gets this category's id
+        /// Gets this category's id.
         /// </summary>
         public long ID
         {
@@ -41,7 +41,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's name
+        /// Gets this category's name.
         /// </summary>
         public string Name
         {
@@ -49,7 +49,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's description
+        /// Gets this category's description.
         /// </summary>
         public string Description
         {
@@ -57,12 +57,12 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a string representation of this category
+        /// Gets a string representation of this category.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.m_name;
+            return m_name;
         }
     }
 }

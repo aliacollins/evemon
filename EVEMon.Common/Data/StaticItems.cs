@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -22,7 +21,7 @@ namespace EVEMon.Common.Data
         #region Public Properties
 
         /// <summary>
-        /// Gets the root category, containing all the top level categories
+        /// Gets the root category, containing all the top level categories.
         /// </summary>
         public static MarketGroupCollection MarketGroups
         {
@@ -36,7 +35,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var group in s_groupsByID.Values)
+                foreach (MarketGroup group in s_groupsByID.Values)
                 {
                     yield return group;
                 }
@@ -50,7 +49,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var item in s_itemsByID.Values)
+                foreach (Item item in s_itemsByID.Values)
                 {
                     yield return item;
                 }
@@ -88,7 +87,7 @@ namespace EVEMon.Common.Data
         /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
         public static Item GetItemByName(string itemName)
         {
-            foreach (var item in s_itemsByID.Values)
+            foreach (Item item in s_itemsByID.Values)
             {
                 if (item.Name == itemName)
                     return item;
@@ -97,8 +96,8 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Recursively searches the root category and all underlying categories for the first item with an 
-        /// Id matching the given itemId.
+        /// Recursively searches the root category and all underlying categories
+        /// for the first item with an Id matching the given itemId.
         /// </summary>
         /// <param name="itemId">The id of the item to find.</param>
         /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
@@ -115,7 +114,7 @@ namespace EVEMon.Common.Data
         #region Initializer
 
         /// <summary>
-        /// Initialize static items
+        /// Initialize static items.
         /// </summary>
         internal static void Load()
         {
@@ -130,11 +129,11 @@ namespace EVEMon.Common.Data
             }
 
             // Deserialize the items datafile
-            var datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
+            ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
             s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
 
-            // Gather the items into a by-ID dictionary.
-            foreach (var group in s_roots)
+            // Gather the items into a by-ID dictionary
+            foreach (MarketGroup group in s_roots)
             {
                 InitializeDictionaries(group);
             }
@@ -151,13 +150,13 @@ namespace EVEMon.Common.Data
                 s_shipsGroup = group;
             
             s_groupsByID[group.ID] = group;
-            
-            foreach (var item in group.Items)
+
+            foreach (Item item in group.Items)
             {
                 s_itemsByID[item.ID] = item;
             }
 
-            foreach (var childGroup in group.SubGroups)
+            foreach (MarketGroup childGroup in group.SubGroups)
             {
                 InitializeDictionaries(childGroup);
             }
@@ -171,15 +170,15 @@ namespace EVEMon.Common.Data
             if (s_reprocessingInitialized)
                 return false;
 
-            var datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
+            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
 
-            foreach (var itemMaterials in datafile.Items)
+            foreach (SerializableItemMaterials itemMaterials in datafile.Items)
             {
                 // Skip if no materials
                 if (itemMaterials.Materials == null)
                     continue;
 
-                var item = s_itemsByID[itemMaterials.ID];
+                Item item = s_itemsByID[itemMaterials.ID];
                 item.InitializeReprocessing(itemMaterials.Materials);
             }
 

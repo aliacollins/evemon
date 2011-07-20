@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Xml;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -25,7 +23,7 @@ namespace EVEMon.Common.Data
 		public readonly StaticCertificateClass m_class;
 
 		/// <summary>
-		/// Constructor from XML
+		/// Constructor from XML.
 		/// </summary>
 		/// <param name="certClass"></param>
 		/// <param name="element"></param>
@@ -53,7 +51,7 @@ namespace EVEMon.Common.Data
 		}
 
 		/// <summary>
-		/// Completes the initialization by updating the prerequisites
+		/// Completes the initialization by updating the prerequisites.
 		/// </summary>
 		internal void CompleteInitialization(SerializableCertificatePrerequisite[] prereqs)
 		{
@@ -170,9 +168,9 @@ namespace EVEMon.Common.Data
 				List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
 				// Collect all top prerequisites from certificates
-				foreach (var certPrereq in m_prerequisiteCertificates)
+                foreach (StaticCertificate certPrereq in m_prerequisiteCertificates)
 				{
-					foreach (var certSkilPrereq in certPrereq.AllTopPrerequisiteSkills)
+                    foreach (StaticSkillLevel certSkilPrereq in certPrereq.AllTopPrerequisiteSkills)
 					{
 						if (highestLevels[certSkilPrereq.Skill.ArrayIndex] < certSkilPrereq.Level)
 						{
@@ -183,7 +181,7 @@ namespace EVEMon.Common.Data
 				}
 
 				// Collect all prerequisites from skills
-				foreach (var skillPrereq in m_prerequisiteSkills)
+                foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills)
 				{
 					if (highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level)
 					{
@@ -193,7 +191,7 @@ namespace EVEMon.Common.Data
 				}
 
 				// Return the result
-				foreach (var newItem in list)
+                foreach (StaticSkillLevel newItem in list)
 				{
 					if (highestLevels[newItem.Skill.ArrayIndex] != 0)
 					{
@@ -210,7 +208,7 @@ namespace EVEMon.Common.Data
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return m_class.Name + " " + m_grade.ToString();
+            return String.Format("{0} {1}", m_class.Name, m_grade);
 		}
 
 		/// <summary>

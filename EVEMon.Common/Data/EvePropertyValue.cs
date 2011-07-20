@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -82,13 +80,15 @@ namespace EVEMon.Common.Data
         internal PropertiesCollection(SerializablePropertyValue[] src)
             : base(src == null ? 0 : src.Length)
         {
-            if (src == null) return;
+            if (src == null)
+                return;
 
             m_items.Capacity = src.Length;
             foreach (var srcProp in src)
             {
-                var prop = new EvePropertyValue(srcProp);
-                if(prop.Property != null) m_items.Add(prop);
+                EvePropertyValue prop = new EvePropertyValue(srcProp);
+                if(prop.Property != null)
+                    m_items.Add(prop);
             }
             m_items.Trim();
         }
@@ -102,12 +102,13 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var prop in m_items)
+                foreach (EvePropertyValue prop in m_items)
                 {
                     if (prop.Property == null)
-                        return null;
+                        break;
 
-                    if (prop.Property == property) return prop;
+                    if (prop.Property == property)
+                        return prop;
                 }
                 return null;
             }
@@ -122,12 +123,13 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var prop in m_items)
+                foreach (EvePropertyValue prop in m_items)
                 {
                     if (prop.Property == null)
-                        return null;
+                        break;
 
-                    if (prop.Property.ID == id) return prop;
+                    if (prop.Property.ID == id)
+                        return prop;
                 }
                 return null;
             }

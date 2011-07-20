@@ -4,12 +4,12 @@ using EVEMon.Common.Serialization.Datafiles;
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a read-only collection of items
+    /// Represents a read-only collection of items.
     /// </summary>
     public sealed class MarketGroupCollection : ReadonlyCollection<MarketGroup>
     {
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
         internal MarketGroupCollection(MarketGroup cat, SerializableMarketGroup[] src)
@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
             if (src == null)
                 return;
 
-            foreach (var subCat in src)
+            foreach (SerializableMarketGroup subCat in src)
             {
                 m_items.Add(new MarketGroup(cat, subCat));
             }

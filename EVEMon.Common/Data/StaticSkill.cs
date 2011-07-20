@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -57,7 +56,7 @@ namespace EVEMon.Common.Data
         #region Initializer
 
         /// <summary>
-        /// Completes the initialization by updating the prequisites and checking trainability on trial account
+        /// Completes the initialization by updating the prequisites and checking trainability on trial account.
         /// </summary>
         internal void CompleteInitialization(SerializableSkillPrerequisite[] prereqs)
         {
@@ -70,7 +69,7 @@ namespace EVEMon.Common.Data
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
             if (m_trainableOnTrialAccount)
             {
-                foreach (var prereq in m_prereqs)
+                foreach (StaticSkillLevel prereq in m_prereqs)
                 {
                     if (!prereq.Skill.m_trainableOnTrialAccount)
                     {
@@ -87,7 +86,7 @@ namespace EVEMon.Common.Data
         #region Public Properties
 
         /// <summary>
-        /// Gets the ID of this skill
+        /// Gets the ID of this skill.
         /// </summary>
         public long ID
         {
@@ -95,7 +94,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a zero-based index for skills (allow the use of arrays to optimize computations)
+        /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
         public int ArrayIndex
         {
@@ -103,7 +102,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the name of this skill (interned)
+        /// Gets the name of this skill (interned).
         /// </summary>
         public string Name
         {
@@ -111,7 +110,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the description of this skill
+        /// Gets the description of this skill.
         /// </summary>
         public string Description
         {
@@ -119,7 +118,9 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the description of this skill with a special formatting (what's the point ?).
+        /// Gets the description of this skill with a special formatting
+        /// used when showing description in tooltip
+        /// so the tooltip won't get too long.
         /// </summary>
         public string DescriptionNL
         {
@@ -141,7 +142,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the skill's cost
+        /// Gets the skill's cost.
         /// </summary>
         public long Cost
         {
@@ -157,7 +158,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets false when the skill is not for sale by any NPC (CCP never published it or removed it from the game, it's inactive)
+        /// Gets false when the skill is not for sale by any NPC (CCP never published it or removed it from the game, it's inactive).
         /// </summary>
         public bool IsPublic
         {
@@ -181,7 +182,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Get whether skill is trainable on a trial account
+        /// Get whether skill is trainable on a trial account.
         /// </summary>
         public bool IsTrainableOnTrialAccount
         {
@@ -190,7 +191,7 @@ namespace EVEMon.Common.Data
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
-        /// The order matches the hirerarchy but skills are not duplicated and are systematically trained to the highest required level.
+        /// The order matches the hierarchy but skills are not duplicated and are systematically trained to the highest required level.
         /// For example, if some skill is required to lv3 and, later, to lv4, this first time it is encountered, lv4 is returned.
         /// </summary>
         /// <remarks>Please note they may be redundancies.</remarks>
@@ -202,13 +203,13 @@ namespace EVEMon.Common.Data
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Fill the array
-                foreach (var prereq in this.Prerequisites)
+                foreach (StaticSkillLevel prereq in this.Prerequisites)
                 {
                     StaticSkillEnumerableExtensions.FillPrerequisites(highestLevels, list, prereq, true);
                 }
 
                 // Return the result
-                foreach (var newItem in list)
+                foreach (StaticSkillLevel newItem in list)
                 {
                     if (highestLevels[newItem.Skill.ArrayIndex] != 0)
                     {
@@ -220,7 +221,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the prerequisites a character must satisfy before it can be trained
+        /// Gets the prerequisites a character must satisfy before it can be trained.
         /// </summary>
         public IEnumerable<StaticSkillLevel> Prerequisites
         {
@@ -228,7 +229,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a formatted representation of the price
+        /// Gets a formatted representation of the price.
         /// </summary>
         public string FormattedCost
         {
@@ -253,7 +254,7 @@ namespace EVEMon.Common.Data
         /// <returns>The required nr. of points.</returns>
         public int GetPointsRequiredForLevel(int level)
         {
-            // Much faster than the old formula. This one too may have 1pt difference here and there, only on the lv2 skills.
+            // Much faster than the old formula. This one too may have 1pt difference here and there, only on the lv2 skills
             switch (level)
             {
                 case -1:
@@ -381,7 +382,7 @@ namespace EVEMon.Common.Data
         #region Public Methods
 
         /// <summary>
-        /// Gets this skill's representation for the provided character
+        /// Gets this skill's representation for the provided character.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>

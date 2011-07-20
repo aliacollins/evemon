@@ -62,7 +62,7 @@ namespace EVEMon.Common.Data
             if (src.PrereqSkill == null)
                 return;
 
-            foreach (var prereq in src.PrereqSkill)
+            foreach (SerializablePrereqSkill prereq in src.PrereqSkill)
             {
                 m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level, prereq.Activity));
             }
@@ -94,7 +94,7 @@ namespace EVEMon.Common.Data
             if (src.Prereqs == null)
                 return;
 
-            foreach (var prereq in src.Prereqs)
+            foreach (SerializablePrerequisiteSkill prereq in src.Prereqs)
             {
                 m_prerequisites.Add(new StaticSkillLevel(prereq.ID, prereq.Level));
             }
@@ -111,7 +111,7 @@ namespace EVEMon.Common.Data
         /// <param name="srcMaterials"></param>
         internal void InitializeReprocessing(SerializableMaterialQuantity[] srcMaterials)
         {
-            foreach (var src in srcMaterials)
+            foreach (SerializableMaterialQuantity src in srcMaterials)
             {
                 m_reprocessing.Add(new Material(src));
             }
@@ -217,13 +217,13 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                var property = m_properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
+                Nullable<EvePropertyValue> property = m_properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
 
-                // Returns scrap metal processing by default.
+                // Returns scrap metal processing by default
                 if (property == null)
                     return StaticSkills.GetSkillById(DBConstants.ScrapMetalProcessingSkillID);
 
-                // Returns the reprocessing skill specified by the property.
+                // Returns the reprocessing skill specified by the property
                 int id = property.Value.IValue;
                 return StaticSkills.GetSkillById(id);
             }

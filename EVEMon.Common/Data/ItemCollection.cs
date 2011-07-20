@@ -4,12 +4,12 @@ using EVEMon.Common.Serialization.Datafiles;
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a read-only collection of items
+    /// Represents a read-only collection of items.
     /// </summary>
     public sealed class ItemCollection : ReadonlyCollection<Item>
     {
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="group">Market Group for the item</param>
         /// <param name="src">One or more source serializable items</param>

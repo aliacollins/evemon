@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
@@ -48,9 +46,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         internal static List<SolarSystemRange> GetSystemRangesFrom(SolarSystem system, int maxInclusiveNumberOfJumps)
         {
-            var collectedSystems = new Dictionary<long, SolarSystem>();
-            var ranges = new List<SolarSystemRange>();
-            var lastRange = new SolarSystemRange(system, 0);
+            Dictionary<long, SolarSystem> collectedSystems = new Dictionary<long, SolarSystem>();
+            List<SolarSystemRange> ranges = new List<SolarSystemRange>();
+            SolarSystemRange lastRange = new SolarSystemRange(system, 0);
 
             collectedSystems.Add(system.ID, system);
             lastRange.m_items.Add(system);
@@ -65,7 +63,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// gets the next 
+        /// Gets the next solar system range.
         /// </summary>
         /// <returns></returns>
         private SolarSystemRange GetNextRange(Dictionary<long, SolarSystem> collectedSystems)

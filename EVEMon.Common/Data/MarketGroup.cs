@@ -124,6 +124,7 @@ namespace EVEMon.Common.Data
                 {
                     if (parent != null)
                         fullPathName.Insert(0, " > ");
+
                     fullPathName.Insert(0, parent.Name);
                     parent = parent.ParentGroup;
                 }

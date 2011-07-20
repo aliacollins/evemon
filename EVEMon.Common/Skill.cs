@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
@@ -108,7 +107,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets true if the skill is owned
+        /// Gets or sets true if the skill is owned.
         /// </summary>
         public bool IsOwned
         {
@@ -134,7 +133,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the underlying static data
+        /// Gets the underlying static data.
         /// </summary>
         public StaticSkill StaticData
         {
@@ -142,7 +141,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's id
+        /// Gets this skill's id.
         /// </summary>
         public long ID
         {
@@ -150,7 +149,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a zero-based index for skills (allow the use of arrays to optimize computations)
+        /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
         public int ArrayIndex
         {
@@ -158,7 +157,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's name
+        /// Gets this skill's name.
         /// </summary>
         public string Name
         {
@@ -166,7 +165,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's description
+        /// Gets this skill's description.
         /// </summary>
         public string Description
         {
@@ -198,7 +197,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if this is a public skill
+        /// Gets true if this is a public skill.
         /// </summary>
         public bool IsPublic
         {
@@ -206,7 +205,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a specially formatted description (don't ask, I don't understand the point)
+        /// Gets a specially formatted description,
+        /// used when showing description in tooltip
+        /// so the tooltip won't get too long.
         /// </summary>
         public string DescriptionNL
         {
@@ -214,7 +215,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill cost in ISK
+        /// Gets the skill cost in ISK.
         /// </summary>
         public long Cost
         {
@@ -222,7 +223,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a formatted display of the ISK cost 
+        /// Gets a formatted display of the ISK cost.
         /// </summary>
         public string FormattedCost
         {
@@ -288,7 +289,7 @@ namespace EVEMon.Common
         {
             get 
             {
-                foreach (var level in m_prereqs)
+                foreach (SkillLevel level in m_prereqs)
                 {
                     yield return level;
                 }
@@ -296,7 +297,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. The order matches the hirerarchy.
+        /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.
+        /// The order matches the hierarchy.
         /// </summary>
         /// <remarks>Please note they may be redundancies.</remarks>
         public IEnumerable<SkillLevel> AllPrerequisites
@@ -311,7 +313,7 @@ namespace EVEMon.Common
         {
             get
             {
-                var spPerHour = m_character.GetBaseSPPerHour(this);
+                float spPerHour = m_character.GetBaseSPPerHour(this);
                 return (int)Math.Round(spPerHour);
             }
         }
@@ -322,7 +324,7 @@ namespace EVEMon.Common
         #region Helper properties and methods
 
         /// <summary>
-        /// Return current Level in Roman
+        /// Return current Level in Roman.
         /// </summary>
         public string RomanLevel
         {
@@ -330,7 +332,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if the skill is queued
+        /// Gets true if the skill is queued.
         /// </summary>
         public bool IsQueued
         {
@@ -343,7 +345,7 @@ namespace EVEMon.Common
                     return false;
 
                 SkillQueue skillQueue = ccpCharacter.SkillQueue;
-                foreach (var skill in skillQueue.Where(x=> x.Skill != null))
+                foreach (QueuedSkill skill in skillQueue.Where(x => x.Skill != null))
                 {
                     if (m_staticData.ID == skill.Skill.ID)
                         return true;
@@ -354,13 +356,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if the skill is currently in training
+        /// Gets true if the skill is currently in training.
         /// </summary>
         public bool IsTraining
         {
             get
             {
-                var ccpCharacter = m_character as CCPCharacter;
+                CCPCharacter ccpCharacter = m_character as CCPCharacter;
                 if (ccpCharacter == null)
                     return false;
 
@@ -378,7 +380,7 @@ namespace EVEMon.Common
                 if (!IsTraining)
                     throw new InvalidOperationException("This character is not in training");
 
-                var ccpCharacter = m_character as CCPCharacter;
+                CCPCharacter ccpCharacter = m_character as CCPCharacter;
                 return ccpCharacter.CurrentlyTrainingSkill.Level;
             }
         }
@@ -393,13 +395,13 @@ namespace EVEMon.Common
                 if (!IsTraining)
                     throw new InvalidOperationException("This character is not in training");
 
-                var ccpCharacter = m_character as CCPCharacter;
+                CCPCharacter ccpCharacter = m_character as CCPCharacter;
                 return ccpCharacter.CurrentlyTrainingSkill.EndTime;
             }
         }
 
         /// <summary>
-        /// Gets the current skill points of this skill (possibly estimated for skills in training)
+        /// Gets the current skill points of this skill (possibly estimated for skills in training).
         /// </summary>
         public int SkillPoints
         {
@@ -408,7 +410,7 @@ namespace EVEMon.Common
                 // Is it in training ? Then we estimate the current SP
                 if (IsTraining)
                 {
-                    var ccpCharacter = m_character as CCPCharacter;
+                    CCPCharacter ccpCharacter = m_character as CCPCharacter;
                     return ccpCharacter.CurrentlyTrainingSkill.CurrentSP;
                 }
 
@@ -418,7 +420,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the completed fraction (between 0.0 and 1.0) 
+        /// Gets the completed fraction (between 0.0 and 1.0).
         /// </summary>
         public float FractionCompleted
         {
@@ -429,7 +431,7 @@ namespace EVEMon.Common
                     return 1.0f;
 
                 // Not partially trained ? Then it's 1.0
-                var levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
+                int levelSp = m_staticData.GetPointsRequiredForLevel(m_level);
                 if (SkillPoints <= levelSp)
                     return 0.0f;
 
@@ -442,7 +444,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the percentage completion (between 0.0 and 100.0)
+        /// Gets the percentage completion (between 0.0 and 100.0).
         /// </summary>
         public double PercentCompleted
         {
@@ -467,7 +469,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if all the prerequisites are met
+        /// Gets true if all the prerequisites are met.
         /// </summary>
         public bool ArePrerequisitesMet
         {
@@ -507,12 +509,18 @@ namespace EVEMon.Common
         {
             switch (r)
             {
-                case "I": return 1;
-                case "II": return 2;
-                case "III": return 3;
-                case "IV": return 4;
-                case "V": return 5;
-                default: return 0;
+                case "I":
+                    return 1;
+                case "II":
+                    return 2;
+                case "III":
+                    return 3;
+                case "IV":
+                    return 4;
+                case "V":
+                    return 5;
+                default:
+                    return 0;
             }
         }
 
@@ -526,7 +534,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets this skill's representation for the provided character
+        /// Gets this skill's representation for the provided character.
         /// </summary>
         /// <param name="character"></param>
         /// <returns></returns>

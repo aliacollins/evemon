@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace EVEMon.Common.Data
 {
@@ -39,11 +37,11 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static List<SolarSystem> FindBestPath(SolarSystem start, SolarSystem target, float minSecurityLevel)
         {
-            var result = FindBestPathCore(start, target, minSecurityLevel);
+            PathFinder result = FindBestPathCore(start, target, minSecurityLevel);
 
             // Transforms the result into a list
-            var list = new List<SolarSystem>();
-            for (var item = result; item != null; item = item.m_parent)
+            List<SolarSystem> list = new List<SolarSystem>();
+            for (PathFinder item = result; item != null; item = item.m_parent)
             {
                 list.Insert(0, item.m_system);
             }
@@ -60,15 +58,16 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         private static PathFinder FindBestPathCore(SolarSystem start, SolarSystem target, float minSecurityLevel)
         {
-            var bestDepthes = new Dictionary<SolarSystem, int>();
-            var paths = new SortedList<float, PathFinder>();
+            Dictionary<SolarSystem, int> bestDepthes = new Dictionary<SolarSystem, int>();
+            SortedList<float, PathFinder> paths = new SortedList<float, PathFinder>();
             PathFinder root = new PathFinder(start);
             bestDepthes.Add(start, -1);
             paths.Add(0, root);
 
             while (true)
             {
-                if (paths.Count == 0) return null;
+                if (paths.Count == 0)
+                    return null;
                 PathFinder best = null;
                 int depth = 0;
 
@@ -77,7 +76,8 @@ namespace EVEMon.Common.Data
                 {
                     // Picks the best one, returns if we found our target
                     best = paths.Values[0];
-                    if (best.m_system == target) return best;
+                    if (best.m_system == target)
+                        return best;
 
                     // Removes it from the list
                     paths.RemoveAt(0);
@@ -85,19 +85,23 @@ namespace EVEMon.Common.Data
                     int bestDepth;
                     depth = best.Depth;
                     bestDepthes.TryGetValue(best.m_system, out bestDepth);
-                    if (bestDepth == depth || best.m_system == start) break;
+                    if (bestDepth == depth || best.m_system == start)
+                        break;
                 }
 
-                // Gets the subpaths for the best path so far.
+                // Gets the subpaths for the best path so far
                 depth++;
-                foreach (var child in best.GetChildren(depth, bestDepthes))
+                foreach (PathFinder child in best.GetChildren(depth, bestDepthes))
                 {
                     // Gets the heuristic key: the shorter, the better the candidate.
                     var key = child.m_system.GetSquareDistanceWith(target) * (float)(depth * depth);
-                    if (child.m_system.SecurityLevel < minSecurityLevel) key *= 100.0f;
-                    while (paths.ContainsKey(key)) key++;
-
-                    // Stores it in the sorted list.
+                    if (child.m_system.SecurityLevel < minSecurityLevel)
+                        key *= 100.0f;
+                    while (paths.ContainsKey(key))
+                    {
+                        key++;
+                    }
+                    // Stores it in the sorted list
                     paths.Add(key, child);
                 }
             }
@@ -111,7 +115,7 @@ namespace EVEMon.Common.Data
         private IEnumerable<PathFinder> GetChildren(int depth, Dictionary<SolarSystem, int> bestDepthes)
         {
             // Check this system is not already present with a lesser range.
-            foreach (var neighbor in m_system.Neighbors)
+            foreach (SolarSystem neighbor in m_system.Neighbors)
             {
                 // Checks the best depth so far
                 int bestDepth;
@@ -142,6 +146,9 @@ namespace EVEMon.Common.Data
             }
         }
 
+        /// <summary>
+        /// Gets the name of the solar system.
+        /// </summary>
         public override string ToString()
         {
             return m_system.ToString();

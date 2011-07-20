@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
@@ -22,10 +18,10 @@ namespace EVEMon.Common.Data
         internal StaticRequiredMaterial(SerializableRequiredMaterial src)
             : base(src.ID,  GetName(src.ID))
         {
-            this.Quantity = src.Quantity;
-            this.DamagePerJob = src.DamagePerJob;
-            this.Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.Activity);
-            this.WasteAffected = Convert.ToBoolean(src.WasteAffected);
+            Quantity = src.Quantity;
+            DamagePerJob = src.DamagePerJob;
+            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.Activity);
+            WasteAffected = Convert.ToBoolean(src.WasteAffected);
         }
 
         #endregion
@@ -33,6 +29,11 @@ namespace EVEMon.Common.Data
 
         #region Private Finders
 
+        /// <summary>
+        /// Gets the material's name.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
         private static string GetName(int id)
         {
             Item item = StaticItems.GetItemByID(id);

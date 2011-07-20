@@ -40,7 +40,8 @@ namespace EVEMon.Common.Data
             {
                 foreach (var implant in m_items)
                 {
-                    if (implant.Name == name) return implant;
+                    if (implant.Name == name)
+                        return implant;
                 }
                 return null;
             }

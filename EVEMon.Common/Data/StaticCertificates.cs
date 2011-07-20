@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.IO.Compression;
-using System.Xml;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
 
     /// <summary>
-    /// The static list of the certificates
+    /// The static list of the certificates.
     /// </summary>
     public static class StaticCertificates
     {
@@ -19,26 +15,23 @@ namespace EVEMon.Common.Data
         private static readonly List<StaticCertificateCategory> m_categories = new List<StaticCertificateCategory>();
 
         /// <summary>
-        /// Gets the categories, sorted by name
+        /// Gets the categories, sorted by name.
         /// </summary>
         public static IEnumerable<StaticCertificateCategory> Categories
         {
-            get 
-            {
-                return m_categories; 
-            }
+            get { return m_categories; }
         }
 
         /// <summary>
-        /// Gets the certificate classes, hierarchically sorted (category's name, class's name)
+        /// Gets the certificate classes, hierarchically sorted (category's name, class's name).
         /// </summary>
         public static IEnumerable<StaticCertificateClass> AllClasses
         {
             get
             {
-                foreach (var category in m_categories)
+                foreach (StaticCertificateCategory category in m_categories)
                 {
-                    foreach (var certClass in category)
+                    foreach (StaticCertificateClass certClass in category)
                     {
                         yield return certClass;
                     }
@@ -47,17 +40,17 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the certificates, hierarchically sorted (category's name, class's name, grade)
+        /// Gets the certificates, hierarchically sorted (category's name, class's name, grade).
         /// </summary>
         public static IEnumerable<StaticCertificate> AllCertificates
         {
             get 
             {
-                foreach (var category in m_categories)
+                foreach (StaticCertificateCategory category in m_categories)
                 {
-                    foreach (var certClass in category)
+                    foreach (StaticCertificateClass certClass in category)
                     {
-                        foreach (var cert in certClass)
+                        foreach (StaticCertificate cert in certClass)
                         {
                             yield return cert;
                         }
@@ -67,7 +60,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the certificate with the specified ID
+        /// Gets the certificate with the specified ID.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -77,7 +70,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the certificates class with the specified name
+        /// Gets the certificates class with the specified name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -87,13 +80,13 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Initialize static certificates
+        /// Initialize static certificates.
         /// </summary>
         internal static void Load()
         {
-            var datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
+            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
 
-            foreach (var srcCat in datafile.Categories)
+            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
             {
                 m_categories.Add(new StaticCertificateCategory(srcCat));
             }
@@ -102,12 +95,12 @@ namespace EVEMon.Common.Data
             m_categories.Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
 
             // Build inner collections
-            foreach(var certCategory in m_categories)
+            foreach (StaticCertificateCategory certCategory in m_categories)
             {
-                foreach(var certClass in certCategory)
+                foreach (StaticCertificateClass certClass in certCategory)
                 {
                     m_classesByName[certClass.Name] = certClass;
-                    foreach(var cert in certClass)
+                    foreach (StaticCertificate cert in certClass)
                     {
                         m_certificatesByID[cert.ID] = cert;
                     }
@@ -115,12 +108,12 @@ namespace EVEMon.Common.Data
             }
 
             // Completes intialization
-            foreach (var srcCat in datafile.Categories)
+            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
             {
-                foreach (var srcClass in srcCat.Classes)
+                foreach (SerializableCertificateClass srcClass in srcCat.Classes)
                 {
-                    var certClass = m_classesByName[srcClass.Name];
-                    foreach (var srcCert in srcClass.Certificates)
+                    StaticCertificateClass certClass = m_classesByName[srcClass.Name];
+                    foreach (SerializableCertificate srcCert in srcClass.Certificates)
                     {
                         certClass[srcCert.Grade].CompleteInitialization(srcCert.Prerequisites);
                     }

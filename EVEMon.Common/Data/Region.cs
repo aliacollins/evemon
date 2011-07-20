@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -24,7 +22,7 @@ namespace EVEMon.Common.Data
             m_id = src.ID;
             m_name = src.Name;
 
-            foreach (var srcConstellation in src.Constellations)
+            foreach (SerializableConstellation srcConstellation in src.Constellations)
             {
                 m_items.Add(new Constellation(this, srcConstellation));
             }

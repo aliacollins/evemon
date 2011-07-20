@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Datafiles;
+﻿using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {

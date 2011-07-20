@@ -3,7 +3,7 @@
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents an eve agent of a station.
+    /// Represents an eve agent.
     /// </summary>
     public sealed class SerializableAgent
     {

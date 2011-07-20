@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-
-using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -50,7 +47,7 @@ namespace EVEMon.Common.Data
             m_inventBlueprint = new FastList<int>(src.InventionTypeID != null ? src.InventionTypeID.Length : 0);
             if (src.InventionTypeID != null)
             {
-                foreach (var blueprintID in src.InventionTypeID)
+                foreach (int blueprintID in src.InventionTypeID)
                 {
                     m_inventBlueprint.Add(blueprintID);
                 }
@@ -60,8 +57,8 @@ namespace EVEMon.Common.Data
             m_materialRequirements = new FastList<StaticRequiredMaterial>(src.ReqMaterial != null ? src.ReqMaterial.Length : 0);
             if (src.ReqMaterial == null)
                 return;
-            
-            foreach (var prereq in src.ReqMaterial)
+
+            foreach (SerializableRequiredMaterial prereq in src.ReqMaterial)
             {
                 m_materialRequirements.Add(new StaticRequiredMaterial(prereq));
             }
@@ -163,16 +160,14 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of blueprints this object can invent.
         /// </summary>
-        public List<Blueprint> InventsBlueprint
+        public IEnumerable<Blueprint> InventsBlueprint
         {
             get
             {
-                var list = new List<Blueprint>();
-                foreach (var itemID in m_inventBlueprint)
+                foreach (int itemID in m_inventBlueprint)
                 {
-                    list.Add(StaticBlueprints.GetBlueprintByID(itemID));
+                    yield return (StaticBlueprints.GetBlueprintByID(itemID));
                 }
-                return list;
             }
         }
 

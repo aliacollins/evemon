@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a certificate class. Every category (i.e. "Business and Industry") contains certificate classes (i.e. "Production Manager"), which contain certificates (i.e. "Production Manager Basic").
+    /// Represents a certificate class.
+    /// Every category (i.e. "Business and Industry")
+    /// contains certificate classes (i.e. "Production Manager"),
+    /// which contain certificates (i.e. "Production Manager Basic").
     /// </summary>
     public sealed class StaticCertificateClass : ReadonlyVirtualCollection<StaticCertificate>
     {
@@ -18,26 +20,26 @@ namespace EVEMon.Common.Data
         private readonly StaticCertificate[] m_certificates = new StaticCertificate[4];
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="category"></param>
         /// <param name="element"></param>
         internal StaticCertificateClass(StaticCertificateCategory category, SerializableCertificateClass src)
         {
-            this.m_id = src.ID;
-            this.m_name = src.Name;
-            this.m_description = src.Description;
-            this.m_category = category;
+            m_id = src.ID;
+            m_name = src.Name;
+            m_description = src.Description;
+            m_category = category;
 
-            foreach (var srcCert in src.Certificates)
+            foreach (SerializableCertificate srcCert in src.Certificates)
             {
-                var cert = new StaticCertificate(this, srcCert);
-                this.m_certificates[(int)cert.m_grade] = cert;
+                StaticCertificate cert = new StaticCertificate(this, srcCert);
+                m_certificates[(int)cert.m_grade] = cert;
             }
         }
 
         /// <summary>
-        /// Gets this category's id
+        /// Gets this category's id.
         /// </summary>
         public long ID
         {
@@ -45,7 +47,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's name
+        /// Gets this category's name.
         /// </summary>
         public string Name
         {
@@ -53,7 +55,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this category's description
+        /// Gets this category's description.
         /// </summary>
         public string Description
         {
@@ -69,13 +71,13 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the certificate with the specified grade
+        /// Gets the certificate with the specified grade.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public StaticCertificate this[CertificateGrade grade]
         {
-            get { return this.m_certificates[(int)grade]; }
+            get { return m_certificates[(int)grade]; }
         }
 
         /// <summary>
@@ -85,9 +87,10 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var cert in m_certificates)
+                foreach (StaticCertificate cert in m_certificates)
                 {
-                    if (cert != null) return cert;
+                    if (cert != null) 
+                        return cert;
                 }
                 throw new NotImplementedException();
             }
@@ -103,33 +106,35 @@ namespace EVEMon.Common.Data
             {
                 // Look for the next grade
                 StaticCertificate lastCert = null;
-                foreach (var cert in m_certificates)
+                foreach (StaticCertificate cert in m_certificates)
                 {
-                    if (cert != null) lastCert = cert;
+                    if (cert != null)
+                        lastCert = cert;
                 }
                 return lastCert;
             }
         }
 
         /// <summary>
-        /// Enumerates over the items in this collection
+        /// Enumerates over the items in this collection.
         /// </summary>
         /// <returns></returns>
         protected override IEnumerable<StaticCertificate> Enumerate()
         {
-            foreach (var cert in m_certificates)
+            foreach (StaticCertificate cert in m_certificates)
             {
-                if (cert != null) yield return cert;
+                if (cert != null)
+                    yield return cert;
             }
         }
 
         /// <summary>
-        /// Gets a string representation of this class
+        /// Gets a string representation of this class.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.m_name;
+            return m_name;
         }
     }
 }

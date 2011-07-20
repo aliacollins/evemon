@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -26,7 +24,7 @@ namespace EVEMon.Common.Data
             m_name = src.Name;
             m_owner = owner;
 
-            foreach (var srcSystem in src.Systems)
+            foreach (SerializableSolarSystem srcSystem in src.Systems)
             {
                 m_items.Add(new SolarSystem(this, srcSystem));
             }
@@ -61,7 +59,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public string FullLocation
         {
-            get { return m_owner.Name + " > " + m_name; }
+            get { return String.Format("{0} > {1}", m_owner.Name, m_name); }
         }
 
         /// <summary>
@@ -80,7 +78,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Constellation other)
         {
-            if (this.Region != other.Region) return this.Region.CompareTo(other.Region);
+            if (Region != other.Region)
+                return Region.CompareTo(other.Region);
+
             return m_name.CompareTo(other.m_name);
         }
     }

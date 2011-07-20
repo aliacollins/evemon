@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.Common.Collections;
 
 namespace EVEMon.Common.Data
 {
@@ -22,7 +18,7 @@ namespace EVEMon.Common.Data
             if (src == null)
                 return;
 
-            foreach (var subGroup in src)
+            foreach (SerializableBlueprintGroup subGroup in src)
             {
                 m_items.Add(new BlueprintMarketGroup(group, subGroup));
             }

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents the list of all static skills
+    /// Represents the list of all static skills.
     /// </summary>
     public static class StaticSkills
     {
@@ -18,7 +17,7 @@ namespace EVEMon.Common.Data
         #region Public Properties
 
         /// <summary>
-        /// Gets the total number of zero-based indices given to skills (for optimization purposes, it allows the use of arrays for computations)
+        /// Gets the total number of zero-based indices given to skills (for optimization purposes, it allows the use of arrays for computations).
         /// </summary>
         public static int ArrayIndicesCount
         {
@@ -26,13 +25,13 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the list of groups
+        /// Gets the list of groups.
         /// </summary>
         public static IEnumerable<StaticSkillGroup> AllGroups
         {
             get
             {
-                foreach (var group in m_allGroupsById.Values)
+                foreach (StaticSkillGroup group in m_allGroupsById.Values)
                 {
                     yield return group;
                 }
@@ -40,15 +39,15 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the list of groups
+        /// Gets the list of groups.
         /// </summary>
         public static IEnumerable<StaticSkill> AllSkills
         {
             get
             {
-                foreach (var group in m_allGroupsById.Values)
+                foreach (StaticSkillGroup group in m_allGroupsById.Values)
                 {
-                    foreach (var skill in group)
+                    foreach (StaticSkill skill in group)
                     {
                         yield return skill;
                     }
@@ -62,7 +61,7 @@ namespace EVEMon.Common.Data
         #region Public Finders
         
         /// <summary>
-        /// Gets a skill by its id or its name
+        /// Gets a skill by its id or its name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -77,7 +76,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a skill by its name
+        /// Gets a skill by its name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -89,7 +88,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a skill by its identifier
+        /// Gets a skill by its identifier.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -101,7 +100,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a skill by its array index
+        /// Gets a skill by its array index.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -111,7 +110,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets a group by its name
+        /// Gets a group by its name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -128,7 +127,7 @@ namespace EVEMon.Common.Data
         #region Initializers
 
         /// <summary>
-        /// Initialize static skills
+        /// Initialize static skills.
         /// </summary>
         internal static void Load()
         {
@@ -136,21 +135,21 @@ namespace EVEMon.Common.Data
 
             // Fetch deserialized data
             m_arrayIndicesCount = 0;
-            var prereqs = new List<SerializableSkillPrerequisite[]>();
+            List<SerializableSkillPrerequisite[]> prereqs = new List<SerializableSkillPrerequisite[]>();
             foreach (var srcGroup in datafile.Groups)
             {
-                var group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
+                StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
                 m_allGroupsById[group.ID] = group;
 
                 // Store skills
-                foreach (var skill in group)
+                foreach (StaticSkill skill in group)
                 {
                     m_skillsById[skill.ID] = skill;
                     m_skillsByName[skill.Name] = skill;
                 }
 
                 // Store prereqs
-                foreach (var serialSkill in srcGroup.Skills)
+                foreach (SerializableSkill serialSkill in srcGroup.Skills)
                 {
                     prereqs.Add(serialSkill.Prereqs);
                 }
@@ -158,10 +157,10 @@ namespace EVEMon.Common.Data
 
             // Complete initialization
             m_skills = new StaticSkill[m_arrayIndicesCount];
-            foreach (var ss in m_skillsById.Values)
+            foreach (StaticSkill staticSkill in m_skillsById.Values)
             {
-                ss.CompleteInitialization(prereqs[ss.ArrayIndex]);
-                m_skills[ss.ArrayIndex] = ss;
+                staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
+                m_skills[staticSkill.ArrayIndex] = staticSkill;
             }
         }
 

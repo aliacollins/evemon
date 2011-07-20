@@ -32,26 +32,26 @@ namespace EVEMon.Common.Data
             : base(group, src)
         {
             // Gets the slot
-            var slotProperty = this.Properties[DBConstants.ImplantSlotPropertyID];
+            Nullable<EvePropertyValue> slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
             m_implantSlot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IValue - 1));
 
             // Get the bonus
             switch (m_implantSlot)
             {
                 case ImplantSlots.Charisma:
-                    m_bonus = this.Properties[DBConstants.CharismaModifierPropertyID].Value.IValue;
+                    m_bonus = Properties[DBConstants.CharismaModifierPropertyID].Value.IValue;
                     break;
                 case ImplantSlots.Intelligence:
-                    m_bonus = this.Properties[DBConstants.IntelligenceModifierPropertyID].Value.IValue;
+                    m_bonus = Properties[DBConstants.IntelligenceModifierPropertyID].Value.IValue;
                     break;
                 case ImplantSlots.Memory:
-                    m_bonus = this.Properties[DBConstants.MemoryModifierPropertyID].Value.IValue;
+                    m_bonus = Properties[DBConstants.MemoryModifierPropertyID].Value.IValue;
                     break;
                 case ImplantSlots.Perception:
-                    m_bonus = this.Properties[DBConstants.PerceptionModifierPropertyID].Value.IValue;
+                    m_bonus = Properties[DBConstants.PerceptionModifierPropertyID].Value.IValue;
                     break;
                 case ImplantSlots.Willpower:
-                    m_bonus = this.Properties[DBConstants.WillpowerModifierPropertyID].Value.IValue;
+                    m_bonus = Properties[DBConstants.WillpowerModifierPropertyID].Value.IValue;
                     break;
                 default:
                     break;

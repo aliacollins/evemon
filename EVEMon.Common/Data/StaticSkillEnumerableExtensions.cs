@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace EVEMon.Common.Data
 {
@@ -14,9 +12,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static IEnumerable<Skill> ToCharacter(this IEnumerable<StaticSkill> src, Character character)
         {
-            foreach (var item in src)
+            foreach (StaticSkill skill in src)
             {
-                yield return character.Skills[item];
+                yield return character.Skills[skill];
             }
         }
 
@@ -32,27 +30,27 @@ namespace EVEMon.Common.Data
             List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
             // Fill the array
-            foreach (var item in src)
+            foreach (StaticSkill skill in src)
             {
-                foreach (var prereq in item.Prerequisites)
+                foreach (StaticSkillLevel prereq in skill.Prerequisites)
                 {
                     FillPrerequisites(highestLevels, list, prereq, true);
                 }
             }
 
             // Return the result
-            foreach (var newItem in list)
+            foreach (StaticSkillLevel newSkill in list)
             {
-                if (highestLevels[newItem.Skill.ArrayIndex] != 0)
+                if (highestLevels[newSkill.Skill.ArrayIndex] != 0)
                 {
-                    yield return new StaticSkillLevel(newItem.Skill, highestLevels[newItem.Skill.ArrayIndex]);
-                    highestLevels[newItem.Skill.ArrayIndex] = 0;
+                    yield return new StaticSkillLevel(newSkill.Skill, highestLevels[newSkill.Skill.ArrayIndex]);
+                    highestLevels[newSkill.Skill.ArrayIndex] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// Fills the given levels array with the prerequisites and, when <c>includeRoots</c> is true, the item level itself
+        /// Fills the given levels array with the prerequisites and when <c>includeRoots</c> is true, the item level itself.
         /// </summary>
         /// <param name="highestLevels"></param>
         /// <param name="list"></param>
@@ -63,7 +61,7 @@ namespace EVEMon.Common.Data
             // Prerequisites
             if (highestLevels[item.Skill.ArrayIndex] == 0)
             {
-                foreach (var prereq in item.Skill.Prerequisites)
+                foreach (StaticSkillLevel prereq in item.Skill.Prerequisites)
                 {
                     // Deal with recursive skills such as Polaris
                     if (prereq.Skill != item.Skill)

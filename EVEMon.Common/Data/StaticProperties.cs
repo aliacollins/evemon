@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -18,7 +16,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var category in m_categoriesByName.Values)
+                foreach (EvePropertyCategory category in m_categoriesByName.Values)
                 {
                     yield return category;
                 }
@@ -32,9 +30,9 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var category in m_categoriesByName.Values)
+                foreach (EvePropertyCategory category in m_categoriesByName.Values)
                 {
-                    foreach (var property in category)
+                    foreach (EveProperty property in category)
                     {
                         yield return property;
                     }
@@ -86,13 +84,13 @@ namespace EVEMon.Common.Data
             PropertiesDatafile datafile = Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
 
             // Fetch deserialized data
-            foreach (var srcCategory in datafile.Categories)
+            foreach (SerializablePropertyCategory srcCategory in datafile.Categories)
             {
-                var category = new EvePropertyCategory(srcCategory);
+                EvePropertyCategory category = new EvePropertyCategory(srcCategory);
                 m_categoriesByName[category.Name] = category;
 
                 // Store skills
-                foreach (var property in category)
+                foreach (EveProperty property in category)
                 {
                     m_propertiesByID[property.ID] = property;
                     m_propertiesByName[property.Name] = property;

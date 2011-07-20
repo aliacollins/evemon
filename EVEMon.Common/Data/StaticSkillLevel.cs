@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// Represents a skill and level tuple
+    /// Represents a skill and level tuple.
     /// </summary>
     public struct StaticSkillLevel : ISkillLevel
     {
@@ -20,8 +19,8 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(int id, int level)
             : this()
         {
-            this.Skill = StaticSkills.GetSkillById(id);
-            this.Level = level;
+            Skill = StaticSkills.GetSkillById(id);
+            Level = level;
         }
 
         /// <summary>
@@ -32,8 +31,8 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(string name, int level)
             : this()
         {
-            this.Skill = StaticSkills.GetSkillByName(name);
-            this.Level = level;
+            Skill = StaticSkills.GetSkillByName(name);
+            Level = level;
         }
 
         /// <summary>
@@ -44,8 +43,8 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(StaticSkill skill, int level)
             : this()
         {
-            this.Skill = skill;
-            this.Level = level;
+            Skill = skill;
+            Level = level;
         }
 
         /// <summary>
@@ -55,8 +54,8 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(ISkillLevel level)
             : this()
         {
-            this.Skill = level.Skill;
-            this.Level = level.Level;
+            Skill = level.Skill;
+            Level = level.Level;
         }
 
         /// <summary>
@@ -68,9 +67,9 @@ namespace EVEMon.Common.Data
         public StaticSkillLevel(int id, int level, int activityId)
             : this()
         {
-            this.Skill = StaticSkills.GetSkillById(id);
-            this.Level = level;
-            this.Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
+            Skill = StaticSkills.GetSkillById(id);
+            Level = level;
+            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
         }
 
         #endregion
@@ -118,14 +117,14 @@ namespace EVEMon.Common.Data
         public bool IsDependentOf(ISkillLevel skillLevel)
         {
             // Same skill, lower level ?
-            if (this.Skill == skillLevel.Skill)
+            if (Skill == skillLevel.Skill)
             {
-                return this.Level > skillLevel.Level;
+                return Level > skillLevel.Level;
             }
 
             // Prerequisite
             int neededLevel;
-            this.Skill.HasAsPrerequisite(skillLevel.Skill, out neededLevel);
+            Skill.HasAsPrerequisite(skillLevel.Skill, out neededLevel);
             return skillLevel.Level <= neededLevel;
         }
 
@@ -137,8 +136,8 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                var set = new SkillLevelSet<StaticSkillLevel>();
-                var list = new List<StaticSkillLevel>();
+                SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
+                List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Fill the set and list
                 StaticSkillLevelEnumerableExtensions.FillDependencies(set, list, this, false);
@@ -157,7 +156,7 @@ namespace EVEMon.Common.Data
         #region Public Operators
 
         /// <summary>
-        /// Implicitly converts fromm a non-static training
+        /// Implicitly converts fromm a non-static training.
         /// </summary>
         /// <param name="training"></param>
         /// <returns></returns>
@@ -172,7 +171,7 @@ namespace EVEMon.Common.Data
         #region Overridden Methods
 
         /// <summary>
-        /// Gets a string representation of this prerequisite
+        /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns>Skill Name and Level</returns>
         public override string ToString()
