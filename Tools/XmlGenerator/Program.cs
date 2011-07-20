@@ -206,7 +206,7 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[DBConstants.UpgradeCapacityPropertyID].CategoryID = 1;
             s_attributeTypes[DBConstants.RigSizePropertyID].CategoryID = 1;
             s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID = 4;
-            s_attributeTypes[DBConstants.MetaGroupIDPropertyID].CategoryID = 9;
+            s_attributeTypes[DBConstants.MetaGroupPropertyID].CategoryID = 9;
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
             s_attributeTypes[DBConstants.PGNeedPropertyID].HigherIsBetter = false;

@@ -99,71 +99,71 @@ namespace EVEMon.Common.Data
 
             // Visibility in ships browser
             m_propertiesByName["Base Price"].AlwaysVisibleForShips = true;
-            m_propertiesByID[48].AlwaysVisibleForShips = true; // CPU
-            m_propertiesByID[11].AlwaysVisibleForShips = true; // Powergrid
-            m_propertiesByID[1132].AlwaysVisibleForShips = true; // Calibration
-            m_propertiesByID[14].AlwaysVisibleForShips = true; // High Slots
-            m_propertiesByID[13].AlwaysVisibleForShips = true; // Med Slots
-            m_propertiesByID[12].AlwaysVisibleForShips = true; // Low Slots
+            m_propertiesByID[DBConstants.CPUOutputPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.PGOutputPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.UpgradeCapacityPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.HiSlotsPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.MedSlotsPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.LowSlotsPropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[283].AlwaysVisibleForShips = true; // Drone Capacity
-            m_propertiesByID[1271].AlwaysVisibleForShips = true; // Drone Bandwidth
+            m_propertiesByID[DBConstants.DroneCapacityPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.DroneBandwidthPropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[38].AlwaysVisibleForShips = true; // Cargo Capacity
-            m_propertiesByID[4].AlwaysVisibleForShips = true; // Mass
-            m_propertiesByID[161].AlwaysVisibleForShips = true; // Volume
+            m_propertiesByID[DBConstants.CargoCapacityPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.MassPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.VolumePropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[482].AlwaysVisibleForShips = true; // Capacitor Capacity
-            m_propertiesByID[55].AlwaysVisibleForShips = true; // Recharge time
+            m_propertiesByID[DBConstants.CapacitorCapacityPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.CapacitorRechargeRatePropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[76].AlwaysVisibleForShips = true; // Maximum Targeting Range
-            m_propertiesByID[564].AlwaysVisibleForShips = true; // Scan Resolution
-            m_propertiesByID[552].AlwaysVisibleForShips = true; // Signature Radius
+            m_propertiesByID[DBConstants.MaxTargetRangePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ScanResolutionPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.SignatureRadiusPropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[37].AlwaysVisibleForShips = true; // Max Velocity
-            m_propertiesByID[1281].AlwaysVisibleForShips = true; // Ship Warp Speed
+            m_propertiesByID[DBConstants.MaxVelocityPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShipWarpSpeedPropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[9].AlwaysVisibleForShips = true; // Structure HP
-            m_propertiesByID[263].AlwaysVisibleForShips = true; // Shield HP
-            m_propertiesByID[265].AlwaysVisibleForShips = true; // Armor HP
-            m_propertiesByID[479].AlwaysVisibleForShips = true; // Shield recharge time
+            m_propertiesByID[DBConstants.StructureHitpointsPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShieldHitpointsPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ArmorHitpointsPropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShieldRechargeRatePropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[271].AlwaysVisibleForShips = true; // Shield EM resistances
-            m_propertiesByID[272].AlwaysVisibleForShips = true; // Shield Exp resistances
-            m_propertiesByID[273].AlwaysVisibleForShips = true; // Shield Kin resistances
-            m_propertiesByID[274].AlwaysVisibleForShips = true; // Shield Therm resistances
+            m_propertiesByID[DBConstants.ShieldEMResistancePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShieldExplosiveResistancePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShieldKineticResistancePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ShieldThermalResistancePropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[267].AlwaysVisibleForShips = true; // Armor EM resistances
-            m_propertiesByID[268].AlwaysVisibleForShips = true; // Armor Exp resistances
-            m_propertiesByID[269].AlwaysVisibleForShips = true; // Armor Kin resistances
-            m_propertiesByID[270].AlwaysVisibleForShips = true; // Armor Therm resistances
+            m_propertiesByID[DBConstants.ArmorEMResistancePropertyID].AlwaysVisibleForShips = true; 
+            m_propertiesByID[DBConstants.ArmorExplosiveResistancePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ArmorKineticResistancePropertyID].AlwaysVisibleForShips = true;
+            m_propertiesByID[DBConstants.ArmorThermalResistancePropertyID].AlwaysVisibleForShips = true;
 
             // Hide if default
-            m_propertiesByID[101].HideIfDefault = true; // Launcher hardpoints
-            m_propertiesByID[102].HideIfDefault = true; // Turret hardpoints
+            m_propertiesByID[DBConstants.LauncherSlotsLeftPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.TurretSlotsLeftPropertyID].HideIfDefault = true;
 
-            m_propertiesByID[208].HideIfDefault = true; // RADAR Sensor Strength
-            m_propertiesByID[209].HideIfDefault = true; // LADAR Sensor Strength
-            m_propertiesByID[210].HideIfDefault = true; // Magnetometric Sensor Strength
-            m_propertiesByID[211].HideIfDefault = true; // Gravimetric Sensor Strength
+            m_propertiesByID[DBConstants.ScanRadarStrengthPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.ScanLadarStrengthPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.ScanMagnetometricStrengthPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.ScanGravimetricStrengthPropertyID].HideIfDefault = true;
             
-            m_propertiesByID[974].HideIfDefault = true; // Hull EM resistances
-            m_propertiesByID[975].HideIfDefault = true; // Hull Exp resistances
-            m_propertiesByID[976].HideIfDefault = true; // Hull Kin resistances
-            m_propertiesByID[977].HideIfDefault = true; // Hull Therm resistances
+            m_propertiesByID[DBConstants.HullEMResistancePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.HullExplosiveResistancePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.HullKineticResistancePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.HullThermalResistancePropertyID].HideIfDefault = true;
 
-            m_propertiesByID[114].HideIfDefault = true; // EM damage
-            m_propertiesByID[116].HideIfDefault = true; // Explosive damage
-            m_propertiesByID[117].HideIfDefault = true; // Kinetic damage
-            m_propertiesByID[118].HideIfDefault = true; // Thermal damage
+            m_propertiesByID[DBConstants.EmDamagePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.ExplosiveDamagePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.KineticDamagePropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.ThermalDamagePropertyID].HideIfDefault = true;
 
-            m_propertiesByID[175].HideIfDefault = true; // Charisma Modifier
-            m_propertiesByID[176].HideIfDefault = true; // Intelligence Modifier
-            m_propertiesByID[177].HideIfDefault = true; // Memory Modifier
-            m_propertiesByID[178].HideIfDefault = true; // Perception Modifier
-            m_propertiesByID[179].HideIfDefault = true; // Willpower Modifier
+            m_propertiesByID[DBConstants.CharismaModifierPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.IntelligenceModifierPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.MemoryModifierPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.PerceptionModifierPropertyID].HideIfDefault = true;
+            m_propertiesByID[DBConstants.WillpowerModifierPropertyID].HideIfDefault = true;
 
-            m_propertiesByID[633].HideIfDefault = true; // Meta Level
+            m_propertiesByID[DBConstants.MetaLevelPropertyID].HideIfDefault = true;
         }
     }
 }
