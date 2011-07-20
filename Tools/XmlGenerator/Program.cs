@@ -16,7 +16,7 @@ namespace EVEMon.XmlGenerator
         private static string s_text = String.Empty;
         private static double s_counter;
         private static double s_tablesCount;
-        private static double s_totalTablesCount = 25;
+        private static double s_totalTablesCount = 29;
 
         private static int s_percentOld;
         private static int s_propGenTotal = 1550;
@@ -35,6 +35,10 @@ namespace EVEMon.XmlGenerator
         private static List<InvMarketGroup> s_injectedMarketGroups;
 
         private static Bag<AgtAgents> s_agents;
+        private static Bag<AgtAgentTypes> s_agentTypes;
+        private static List<AgtConfig> s_agentConfig;
+        private static Bag<AgtResearchAgents> s_researchAgents;
+        private static Bag<CrpNPCDivisions> s_npcDivisions;
         private static Bag<EveUnit> s_units;
         private static Bag<EveNames> s_names;
         private static Bag<EveIcons> s_icons;
@@ -74,6 +78,14 @@ namespace EVEMon.XmlGenerator
 
             // Read tables from database
             s_agents = Database.Agents();
+            UpdateProgress();
+            s_agentTypes = Database.AgentTypes();
+            UpdateProgress();
+            s_agentConfig = Database.AgentConfig();
+            UpdateProgress();
+            s_researchAgents = Database.ResearchAgents();
+            UpdateProgress();
+            s_npcDivisions = Database.NPCDivisions();
             UpdateProgress();
             s_units = Database.Units();
             UpdateProgress();
@@ -133,13 +145,13 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine(@"Datafile Generating In Progress");
             Console.WriteLine();
 
-            GenerateProperties();
-            GenerateItems(); // Requires GenerateProperties()
-            GenerateSkills();
-            GenerateCertificates();
-            GenerateBlueprints();
+            //GenerateProperties();
+            //GenerateItems(); // Requires GenerateProperties()
+            //GenerateSkills();
+            //GenerateCertificates();
+            //GenerateBlueprints();
             GenerateGeography();
-            GenerateReprocessing(); // Requires GenerateItems()
+            //GenerateReprocessing(); // Requires GenerateItems()
 
             GenerateMD5Sums();
 
@@ -1854,12 +1866,20 @@ namespace EVEMon.XmlGenerator
                             List<SerializableAgent> stationAgents = new List<SerializableAgent>();
                             foreach (AgtAgents srcAgent in s_agents.Where(x => x.LocationID == srcStation.ID))
                             {
+                                AgtResearchAgents researchAgent = s_researchAgents.FirstOrDefault(x => x.ID == srcAgent.ID);
+                                AgtConfig agentConfig = s_agentConfig.FirstOrDefault(x => x.ID == srcAgent.ID);
                                 SerializableAgent agent = new SerializableAgent
                                                                 {
                                                                     ID = srcAgent.ID,
                                                                     Level = srcAgent.Level,
                                                                     Quality = srcAgent.Quality,
-                                                                    Name = s_names.FirstOrDefault(x => x.ID == srcAgent.ID).Name
+                                                                    Name = s_names.FirstOrDefault(x => x.ID == srcAgent.ID).Name,
+                                                                    DivisionName = s_npcDivisions.FirstOrDefault(x => x.ID == srcAgent.DivisionID).DivisionName,
+                                                                    AgentType = s_agentTypes.FirstOrDefault(x => x.ID == srcAgent.AgentTypeID).AgentType,
+                                                                    ResearchSkillID = (researchAgent != null ? researchAgent.ResearchSkillID : 0),
+                                                                    LocatorService = (agentConfig != null ?
+                                                                                        agentConfig.Key.Contains("agent.LocateCharacterService.enabled") :
+                                                                                        false)
                                                                 };
                                 stationAgents.Add(agent);
                             }

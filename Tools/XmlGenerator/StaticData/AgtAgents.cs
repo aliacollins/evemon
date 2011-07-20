@@ -11,6 +11,9 @@ namespace EVEMon.XmlGenerator.StaticData
             set;
         }
 
+        [XmlElement("divisionID")]
+        public int DivisionID;
+
         [XmlElement("locationID")]
         public int LocationID;
 
@@ -19,5 +22,8 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("quality")]
         public int Quality;
+
+        [XmlElement("agentTypeID")]
+        public int AgentTypeID;
     }
 }

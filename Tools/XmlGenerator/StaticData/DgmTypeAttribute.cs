@@ -24,7 +24,9 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <returns></returns>
         public int GetIntValue()
         {
-            if (ValueInt.HasValue) return ValueInt.Value;
+            if (ValueInt.HasValue)
+                return ValueInt.Value;
+
             return (int)ValueFloat.Value;
         }
 

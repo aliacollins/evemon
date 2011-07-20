@@ -99,6 +99,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IRelation.cs" />
     <Compile Include="StaticData\AgtAgents.cs" />
+    <Compile Include="StaticData\AgtAgentTypes.cs" />
+    <Compile Include="StaticData\AgtConfig.cs" />
+    <Compile Include="StaticData\AgtResearchAgents.cs" />
+    <Compile Include="StaticData\CrpNPCDivisions.cs" />
     <Compile Include="StaticData\EveNames.cs" />
     <Compile Include="StaticData\InvBlueprintTypes.cs" />
     <Compile Include="StaticData\InvTypeMaterials.cs" />

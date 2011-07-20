@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace EVEMon.XmlGenerator
 {
     /// <summary>
-    /// A list of indexed items
+    /// A list of indexed items.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [XmlRoot("list")]
@@ -20,7 +20,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// List of items in the list
+        /// List of items in the list.
         /// </summary>
         [XmlElement("item")]
         public List<T> Items
@@ -30,7 +30,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Converts list to a Bag
+        /// Converts list to a Bag.
         /// </summary>
         /// <returns>Bag of type T</returns>
         public Bag<T> ToBag()

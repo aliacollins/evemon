@@ -21,6 +21,13 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
+        [XmlAttribute("divisionName")]
+        public string DivisionName
+        {
+            get;
+            set;
+        }
+
         [XmlAttribute("level")]
         public int Level
         {
@@ -30,6 +37,27 @@ namespace EVEMon.Common.Serialization.Datafiles
 
         [XmlAttribute("quality")]
         public int Quality
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("agentType")]
+        public string AgentType
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("researchSkillID")]
+        public int ResearchSkillID
+        {
+            get;
+            set;
+        }
+
+        [XmlAttribute("locatorService")]
+        public bool LocatorService
         {
             get;
             set;

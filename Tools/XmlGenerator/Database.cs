@@ -54,24 +54,34 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Agents
+        /// EVE Agents.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Agents</returns>
+        /// <returns><c>Bag</c> of EVE Agents.</returns>
         internal static Bag<AgtAgents> Agents()
         {
-            var list = new IndexedList<AgtAgents>();
+            IndexedList<AgtAgents> list = new IndexedList<AgtAgents>();
 
             foreach (agtAgents agent in Context.agtAgents)
             {
-                var item = new AgtAgents
-                               {
-                                   ID = agent.agentID,
-                                   LocationID = agent.locationID.Value,
-                                   Level = agent.level.Value
-                               };
+                AgtAgents item = new AgtAgents
+                                {
+                                    ID = agent.agentID,
+                                };
+
+                if (agent.divisionID.HasValue)
+                    item.DivisionID = agent.divisionID.Value;
+
+                if (agent.locationID.HasValue)
+                    item.LocationID = agent.locationID.Value;
+
+                if (agent.level.HasValue)
+                    item.Level = agent.level.Value;
 
                 if (agent.quality.HasValue)
                     item.Quality = agent.quality.Value;
+
+                if (agent.agentTypeID.HasValue)
+                    item.AgentTypeID = agent.agentTypeID.Value;
 
                 list.Items.Add(item);
             }
@@ -80,16 +90,104 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Names
+        /// EVE Agent Types.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Names</returns>
+        /// <returns><c>Bag</c> of EVE Agent Types.</returns>
+        internal static Bag<AgtAgentTypes> AgentTypes()
+        {
+            IndexedList<AgtAgentTypes> list = new IndexedList<AgtAgentTypes>();
+
+            foreach (agtAgentTypes agentType in Context.agtAgentTypes)
+            {
+                AgtAgentTypes item = new AgtAgentTypes
+                                {
+                                    ID = agentType.agentTypeID,
+                                    AgentType = agentType.agentType
+                                };
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<AgtAgentTypes>(list);
+        }
+
+        /// <summary>
+        /// EVE Agent Config.
+        /// </summary>
+        /// <returns><c>List</c> of EVE Agent Config.</returns>
+        internal static List<AgtConfig> AgentConfig()
+        {
+            List<AgtConfig> list = new List<AgtConfig>();
+
+            foreach (agtConfig agentConfig in Context.agtConfig)
+            {
+                AgtConfig item = new AgtConfig
+                                {
+                                    ID = agentConfig.agentID,
+                                    Key = agentConfig.k,
+                                    Value = Convert.ToInt32(agentConfig.v)
+                                };
+
+                list.Add(item);
+            }
+
+            return list;
+        }
+        /// <summary>
+        /// EVE Research Agents.
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE Research Agents.</returns>
+        internal static Bag<AgtResearchAgents> ResearchAgents()
+        {
+            IndexedList<AgtResearchAgents> list = new IndexedList<AgtResearchAgents>();
+
+            foreach (agtResearchAgents researchAgent in Context.agtResearchAgents)
+            {
+                AgtResearchAgents item = new AgtResearchAgents
+                                {
+                                    ID = researchAgent.agentID,
+                                    ResearchSkillID = researchAgent.typeID
+                                };
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<AgtResearchAgents>(list);
+        }
+
+        /// <summary>
+        /// EVE NPC Divisions.
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE NPC Divisions.</returns>
+        internal static Bag<CrpNPCDivisions> NPCDivisions()
+        {
+            IndexedList<CrpNPCDivisions> list = new IndexedList<CrpNPCDivisions>();
+
+            foreach (crpNPCDivisions npcDivision in Context.crpNPCDivisions)
+            {
+                CrpNPCDivisions item = new CrpNPCDivisions
+                                {
+                                    ID = npcDivision.divisionID,
+                                    DivisionName = npcDivision.divisionName
+                                };
+
+                list.Items.Add(item);
+            }
+
+            return new Bag<CrpNPCDivisions>(list);
+        }
+
+        /// <summary>
+        /// EVE Names.
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE Names.</returns>
         internal static Bag<EveNames> Names()
         {
-            var list = new IndexedList<EveNames>();
+            IndexedList<EveNames> list = new IndexedList<EveNames>();
 
             foreach (eveNames name in Context.eveNames)
             {
-                var item = new EveNames
+                EveNames item = new EveNames
                                {
                                    ID = name.itemID,
                                    Name = name.itemName
@@ -102,16 +200,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Units
+        /// EVE Units.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Units</returns>
+        /// <returns><c>Bag</c> of EVE Units.</returns>
         internal static Bag<EveUnit> Units()
         {
-            var list = new IndexedList<EveUnit>();
+            IndexedList<EveUnit> list = new IndexedList<EveUnit>();
 
             foreach (eveUnits unit in Context.eveUnits)
             {
-                var item = new EveUnit
+                EveUnit item = new EveUnit
                                {
                                    Description = unit.description.Clean(),
                                    DisplayName = unit.displayName.Clean(),
@@ -126,16 +224,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Icons
+        /// EVE Icons.
         /// </summary>
-        /// <returns><c>Bag</c> of icons</returns>
+        /// <returns><c>Bag</c> of icons.</returns>
         internal static Bag<EveIcons> Icons()
         {
-            var list = new IndexedList<EveIcons>();
+            IndexedList<EveIcons> list = new IndexedList<EveIcons>();
 
             foreach (eveIcons icon in Context.eveIcons)
             {
-                var item = new EveIcons
+                EveIcons item = new EveIcons
                                {
                                    ID = icon.iconID,
                                    Icon = icon.iconFile
@@ -148,16 +246,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Attributes
+        /// EVE Attributes.
         /// </summary>
-        /// <returns><c>Bag</c> of Attributes</returns>
+        /// <returns><c>Bag</c> of Attributes.</returns>
         internal static Bag<DgmAttributeTypes> Attributes()
         {
-            var list = new IndexedList<DgmAttributeTypes>();
+            IndexedList<DgmAttributeTypes> list = new IndexedList<DgmAttributeTypes>();
 
             foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
             {
-                var item = new DgmAttributeTypes
+                DgmAttributeTypes item = new DgmAttributeTypes
                                {
                                    ID = attribute.attributeID,
                                    CategoryID = attribute.categoryID,
@@ -181,16 +279,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Attribute categories
+        /// Attribute categories.
         /// </summary>
-        /// <returns><c>Bag</c> of Attribute Categories</returns>
+        /// <returns><c>Bag</c> of Attribute Categories.</returns>
         internal static Bag<DgmAttributeCategory> AttributeCategories()
         {
-            var list = new IndexedList<DgmAttributeCategory>();
+            IndexedList<DgmAttributeCategory> list = new IndexedList<DgmAttributeCategory>();
 
             foreach (dgmAttributeCategories category in Context.dgmAttributeCategories)
             {
-                var item = new DgmAttributeCategory
+                DgmAttributeCategory item = new DgmAttributeCategory
                                {
                                    ID = category.categoryID,
                                    Description = category.categoryDescription.Clean(),
@@ -204,16 +302,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Regions in the EVE Universe
+        /// Regions in the EVE Universe.
         /// </summary>
-        /// <returns><c>Bag</c> of all regions in EVE</returns>
+        /// <returns><c>Bag</c> of all regions in EVE.</returns>
         internal static Bag<MapRegion> Regions()
         {
-            var list = new IndexedList<MapRegion>();
+            IndexedList<MapRegion> list = new IndexedList<MapRegion>();
 
             foreach (mapRegions region in Context.mapRegions)
             {
-                var item = new MapRegion
+                MapRegion item = new MapRegion
                                {
                                    ID = region.regionID,
                                    Name = region.regionName,
@@ -227,16 +325,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Constallations in the EVE Universe
+        /// Constallations in the EVE Universe.
         /// </summary>
-        /// <returns><c>Bag</c> of Constallations in EVE</returns>
+        /// <returns><c>Bag</c> of Constallations in EVE.</returns>
         internal static Bag<MapConstellation> Constellations()
         {
-            var list = new IndexedList<MapConstellation>();
+            IndexedList<MapConstellation> list = new IndexedList<MapConstellation>();
 
             foreach (mapConstellations constellation in Context.mapConstellations)
             {
-                var item = new MapConstellation
+                MapConstellation item = new MapConstellation
                                {
                                    ID = constellation.constellationID,
                                    Name = constellation.constellationName,
@@ -252,16 +350,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Solar Systems in EVE
+        /// Solar Systems in EVE.
         /// </summary>
-        /// <returns><c>Bag</c> of Solar Systems in the EVE</returns>
+        /// <returns><c>Bag</c> of Solar Systems in the EVE.</returns>
         internal static Bag<MapSolarSystem> Solarsystems()
         {
-            var list = new IndexedList<MapSolarSystem>();
+            IndexedList<MapSolarSystem> list = new IndexedList<MapSolarSystem>();
 
             foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
             {
-                var item = new MapSolarSystem
+                MapSolarSystem item = new MapSolarSystem
                                {
                                    ID = solarsystem.solarSystemID,
                                    Name = solarsystem.solarSystemName
@@ -291,14 +389,14 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Stations in the EVE Universe
         /// </summary>
-        /// <returns><c>Bag</c> of Stations in the EVE Universe</returns>
+        /// <returns><c>Bag</c> of Stations in the EVE Universe.</returns>
         internal static Bag<StaStation> Stations()
         {
-            var list = new IndexedList<StaStation>();
+            IndexedList<StaStation> list = new IndexedList<StaStation>();
 
             foreach (staStations station in Context.staStations)
             {
-                var item = new StaStation
+                StaStation item = new StaStation
                                {
                                    ID = station.stationID,
                                    Name = station.stationName,
@@ -326,16 +424,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Jumps between two solar systems in the EVE Universe
+        /// Jumps between two solar systems in the EVE Universe.
         /// </summary>
-        /// <returns><c>List</c> of jumps between SolarSystems in EVE</returns>
+        /// <returns><c>List</c> of jumps between SolarSystems in EVE.</returns>
         internal static List<MapSolarSystemJump> Jumps()
         {
-            var list = new List<MapSolarSystemJump>();
+            List<MapSolarSystemJump> list = new List<MapSolarSystemJump>();
 
-            foreach (var jump in Context.mapSolarSystemJumps)
+            foreach (mapSolarSystemJumps jump in Context.mapSolarSystemJumps)
             {
-                var item = new MapSolarSystemJump
+                MapSolarSystemJump item = new MapSolarSystemJump
                                {
                                    A = jump.fromSolarSystemID,
                                    B = jump.toSolarSystemID
@@ -348,30 +446,50 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Blueprint Types
+        /// Inventory Blueprint Types.
         /// </summary>
-        /// <returns><c>Bag</c> of Inventory Blueprint Types</returns>
+        /// <returns><c>Bag</c> of Inventory Blueprint Types.</returns>
         internal static Bag<InvBlueprintTypes> BlueprintTypes()
         {
-            var list = new IndexedList<InvBlueprintTypes>();
+            IndexedList<InvBlueprintTypes> list = new IndexedList<InvBlueprintTypes>();
 
-            foreach (var blueprint in Context.invBlueprintTypes)
+            foreach (invBlueprintTypes blueprint in Context.invBlueprintTypes)
             {
-                var item = new InvBlueprintTypes
+                InvBlueprintTypes item = new InvBlueprintTypes
                                {
                                    ID = blueprint.blueprintTypeID,
                                    ParentID = blueprint.parentBlueprintTypeID,
-                                   ProductTypeID = blueprint.productTypeID.Value,
-                                   ProductionTime = blueprint.productionTime.Value,
-                                   TechLevel = blueprint.techLevel.Value,
-                                   ResearchProductivityTime = blueprint.researchProductivityTime.Value,
-                                   ResearchMaterialTime = blueprint.researchMaterialTime.Value,
-                                   ResearchCopyTime = blueprint.researchCopyTime.Value,
-                                   ResearchTechTime = blueprint.researchTechTime.Value,
-                                   ProductivityModifier = blueprint.productivityModifier.Value,
-                                   WasteFactor = blueprint.wasteFactor.Value,
-                                   MaxProductionLimit = blueprint.maxProductionLimit.Value
                                };
+
+                if (blueprint.productTypeID.HasValue)
+                    item.ProductTypeID = blueprint.productTypeID.Value;
+
+                if (blueprint.productionTime.HasValue)
+                    item.ProductionTime = blueprint.productionTime.Value;
+
+                if (blueprint.techLevel.HasValue)
+                    item.TechLevel = blueprint.techLevel.Value;
+
+                if (blueprint.researchProductivityTime.HasValue)
+                    item.ResearchProductivityTime = blueprint.researchProductivityTime.Value;
+
+                if (blueprint.researchMaterialTime.HasValue)
+                    item.ResearchMaterialTime = blueprint.researchMaterialTime.Value;
+
+                if (blueprint.researchCopyTime.HasValue)
+                    item.ResearchCopyTime = blueprint.researchCopyTime.Value;
+
+                if (blueprint.researchTechTime.HasValue)
+                    item.ResearchTechTime = blueprint.researchTechTime.Value;
+
+                if (blueprint.productivityModifier.HasValue)
+                    item.ProductivityModifier = blueprint.productivityModifier.Value;
+
+                if (blueprint.wasteFactor.HasValue)
+                    item.WasteFactor = blueprint.wasteFactor.Value;
+
+                if (blueprint.maxProductionLimit.HasValue)
+                    item.MaxProductionLimit = blueprint.maxProductionLimit.Value;
 
                 list.Items.Add(item);
             }
@@ -380,16 +498,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Item Market Groups
+        /// Inventory Item Market Groups.
         /// </summary>
-        /// <returns><c>Bag</c> of Market Groups available on the market</returns>
+        /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
         internal static Bag<InvMarketGroup> MarketGroups()
         {
-            var list = new IndexedList<InvMarketGroup>();
+            IndexedList<InvMarketGroup> list = new IndexedList<InvMarketGroup>();
 
             foreach (invMarketGroups marketGroup in Context.invMarketGroups)
             {
-                var item = new InvMarketGroup
+                InvMarketGroup item = new InvMarketGroup
                                {
                                    ID = marketGroup.marketGroupID,
                                    Description = marketGroup.description.Clean(),
@@ -405,16 +523,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Item Groups
+        /// Inventory Item Groups.
         /// </summary>
-        /// <returns><c>Bag</c> of Inventory Groups</returns>
+        /// <returns><c>Bag</c> of Inventory Groups.</returns>
         internal static Bag<InvGroup> Groups()
         {
-            var list = new IndexedList<InvGroup>();
+            IndexedList<InvGroup> list = new IndexedList<InvGroup>();
 
             foreach (invGroups group in Context.invGroups)
             {
-                var item = new InvGroup
+                InvGroup item = new InvGroup
                                {
                                    ID = group.groupID,
                                    Name = group.groupName,
@@ -431,16 +549,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Types
+        /// Inventory Types.
         /// </summary>
-        /// <returns><c>Bag</c> of items from the Inventory</returns>
+        /// <returns><c>Bag</c> of items from the Inventory.</returns>
         internal static Bag<InvType> Types()
         {
-            var list = new IndexedList<InvType>();
+            IndexedList<InvType> list = new IndexedList<InvType>();
 
             foreach (invTypes type in Context.invTypes)
             {
-                var item = new InvType
+                InvType item = new InvType
                                {
                                    ID = type.typeID,
                                    Description = type.description.Clean(),
@@ -475,16 +593,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Requirements used for an Activity
+        /// Requirements used for an Activity.
         /// </summary>
         /// <returns>List of Requirements needed for a particular activity.</returns>
         internal static List<RamTypeRequirements> TypeRequirements()
         {
-            var list = new List<RamTypeRequirements>();
+            List<RamTypeRequirements> list = new List<RamTypeRequirements>();
 
             foreach (ramTypeRequirements requirement in Context.ramTypeRequirements)
             {
-                var item = new RamTypeRequirements
+                RamTypeRequirements item = new RamTypeRequirements
                                {
                                    TypeID = requirement.typeID,
                                    ActivityID = requirement.activityID,
@@ -507,16 +625,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Materials 
+        /// Materials.
         /// </summary>
         /// <returns>List of Materials.</returns>
         internal static List<InvTypeMaterials> TypeMaterials()
         {
-            var list = new List<InvTypeMaterials>();
+            List<InvTypeMaterials> list = new List<InvTypeMaterials>();
 
-            foreach (var material in Context.invTypeMaterials)
+            foreach (invTypeMaterials material in Context.invTypeMaterials)
             {
-                var item = new InvTypeMaterials
+                InvTypeMaterials item = new InvTypeMaterials
                                {
                                    TypeID = material.typeID,
                                    MaterialTypeID = material.materialTypeID,
@@ -530,16 +648,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificate Categories
+        /// Certificate Categories.
         /// </summary>
-        /// <returns><c>Bag</c> of Certificate Categories</returns>
+        /// <returns><c>Bag</c> of Certificate Categories.</returns>
         internal static Bag<CrtCategories> CertificateCategories()
         {
-            var list = new IndexedList<CrtCategories>();
+            IndexedList<CrtCategories> list = new IndexedList<CrtCategories>();
 
             foreach (crtCategories category in Context.crtCategories)
             {
-                var item = new CrtCategories
+                CrtCategories item = new CrtCategories
                                {
                                    ID = category.categoryID,
                                    CategoryName = category.categoryName,
@@ -553,16 +671,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificate Classes
+        /// Certificate Classes.
         /// </summary>
-        /// <returns><c>Bag</c> of Classes of Certificate</returns>
+        /// <returns><c>Bag</c> of Classes of Certificate.</returns>
         internal static Bag<CrtClasses> CertificateClasses()
         {
-            var list = new IndexedList<CrtClasses>();
+            IndexedList<CrtClasses> list = new IndexedList<CrtClasses>();
 
             foreach (crtClasses cClass in Context.crtClasses)
             {
-                var item = new CrtClasses
+                CrtClasses item = new CrtClasses
                                {
                                    ID = cClass.classID,
                                    ClassName = cClass.className,
@@ -576,16 +694,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificates
+        /// Certificates.
         /// </summary>
-        /// <returns><c>Bag</c> of Certificates</returns>
+        /// <returns><c>Bag</c> of Certificates.</returns>
         internal static Bag<CrtCertificates> Certificates()
         {
-            var list = new IndexedList<CrtCertificates>();
+            IndexedList<CrtCertificates> list = new IndexedList<CrtCertificates>();
 
             foreach (crtCertificates certificate in Context.crtCertificates)
             {
-                var item = new CrtCertificates
+                CrtCertificates item = new CrtCertificates
                                {
                                    ID = certificate.certificateID,
                                    Description = certificate.description.Clean()
@@ -607,16 +725,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificate Recommendations
+        /// Certificate Recommendations.
         /// </summary>
-        /// <returns><c>Bag</c> of Certificate Recommendations</returns>
+        /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
         internal static Bag<CrtRecommendations> CertificateRecommendations()
         {
-            var list = new IndexedList<CrtRecommendations>();
+            IndexedList<CrtRecommendations> list = new IndexedList<CrtRecommendations>();
 
             foreach (crtRecommendations recommendation in Context.crtRecommendations)
             {
-                var item = new CrtRecommendations
+                CrtRecommendations item = new CrtRecommendations
                                {
                                    ID = recommendation.recommendationID,
                                    Level = recommendation.recommendationLevel,
@@ -635,16 +753,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificate Relationships
+        /// Certificate Relationships.
         /// </summary>
         /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
         internal static Bag<CrtRelationships> CertificateRelationships()
         {
-            var list = new IndexedList<CrtRelationships>();
+            IndexedList<CrtRelationships> list = new IndexedList<CrtRelationships>();
 
             foreach (crtRelationships relationship in Context.crtRelationships)
             {
-                var item = new CrtRelationships
+                CrtRelationships item = new CrtRelationships
                                {
                                    ID = relationship.relationshipID,
                                    ParentID = relationship.parentID,
@@ -664,16 +782,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Type Attribes
+        /// Type Attributes.
         /// </summary>
-        /// <returns><c>RelationSet</c> of attributes for types</returns>
+        /// <returns><c>RelationSet</c> of attributes for types.</returns>
         internal static RelationSet<DgmTypeAttribute> TypeAttributes()
         {
-            var list = new List<DgmTypeAttribute>();
+            List<DgmTypeAttribute> list = new List<DgmTypeAttribute>();
 
-            foreach (var typeAttribute in Context.dgmTypeAttributes)
+            foreach (dgmTypeAttributes typeAttribute in Context.dgmTypeAttributes)
             {
-                var item = new DgmTypeAttribute
+                DgmTypeAttribute item = new DgmTypeAttribute
                                {
                                    AttributeID = typeAttribute.attributeID,
                                    ItemID = typeAttribute.typeID,
@@ -688,16 +806,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Meta Types
+        /// Meta Types.
         /// </summary>
-        /// <returns><c>RelationSet</c> parent-child relationships between types</returns>
+        /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
         internal static RelationSet<InvMetaType> MetaTypes()
         {
-            var list = new List<InvMetaType>();
+            List<InvMetaType> list = new List<InvMetaType>();
 
-            foreach (var metaType in Context.invMetaTypes)
+            foreach (invMetaTypes metaType in Context.invMetaTypes)
             {
-                var item = new InvMetaType
+                InvMetaType item = new InvMetaType
                                {
                                    ItemID = metaType.typeID,
                                    MetaGroupID = Convert.ToInt32(metaType.metaGroupID),
@@ -711,16 +829,16 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Effects of various types
+        /// Effects of various types.
         /// </summary>
-        /// <returns><c>RelationSet</c> of Types and Effects</returns>
+        /// <returns><c>RelationSet</c> of Types and Effects.</returns>
         internal static RelationSet<DgmTypeEffect> TypeEffects()
         {
-            var list = new List<DgmTypeEffect>();
+            List<DgmTypeEffect> list = new List<DgmTypeEffect>();
 
-            foreach (var typeEffect in Context.dgmTypeEffects)
+            foreach (dgmTypeEffects typeEffect in Context.dgmTypeEffects)
             {
-                var item = new DgmTypeEffect
+                DgmTypeEffect item = new DgmTypeEffect
                                {
                                    EffectID = typeEffect.effectID,
                                    ItemID = typeEffect.typeID
