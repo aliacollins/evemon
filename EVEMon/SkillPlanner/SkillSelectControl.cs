@@ -823,8 +823,10 @@ namespace EVEMon.SkillPlanner
             cmiCollapseSelected.Visible = (SelectedSkill == null && node != null && node.IsExpanded);
             cmiExpandSelected.Visible = (SelectedSkill == null && node != null && !node.IsExpanded);
 
-            cmiExpandSelected.Text = (SelectedSkill == null && node != null && !node.IsExpanded ? String.Format("Expand {0}", node.Text) : String.Empty);
-            cmiCollapseSelected.Text = (SelectedSkill == null && node != null && node.IsExpanded ? String.Format("Collapse {0}", node.Text) : String.Empty);
+            cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
+                                    !node.IsExpanded ? String.Format("Expand \"{0}\"", node.Text) : String.Empty);
+            cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
+                                    node.IsExpanded ? String.Format("Collapse \"{0}\"", node.Text) : String.Empty);
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;

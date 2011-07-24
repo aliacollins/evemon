@@ -828,10 +828,10 @@ namespace EVEMon.SkillPlanner
             tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
             tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
 
-            tsmExpandSelected.Text = (certClass == null && node != null && !node.IsExpanded ?
-                String.Format("Expand {0}", node.Text) : String.Empty);
-            tsmCollapseSelected.Text = (certClass == null && node != null && node.IsExpanded ?
-                String.Format("Collapse {0}", node.Text) : String.Empty);
+            tsmExpandSelected.Text = (certClass == null && node != null &&
+                                    !node.IsExpanded ? String.Format("Expand \"{0}\"", node.Text) : String.Empty);
+            tsmCollapseSelected.Text = (certClass == null && node != null &&
+                                    node.IsExpanded ? String.Format("Collapse \"{0}\"", node.Text) : String.Empty);
 
             // "Expand All" and "Collapse All" menu
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
