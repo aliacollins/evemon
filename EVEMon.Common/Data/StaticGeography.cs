@@ -114,9 +114,9 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets an enumeration of all the systems in the universe.
+        /// Gets an enumeration of all the solar systems in the universe.
         /// </summary>
-        public static IEnumerable<SolarSystem> AllSystems
+        public static IEnumerable<SolarSystem> AllSolarSystems
         {
             get
             {
