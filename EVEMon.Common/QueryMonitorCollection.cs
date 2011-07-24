@@ -96,7 +96,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the next query to be auto-updated, or null.
         /// </summary>
-        public IQueryMonitor NextUpdate
+        public IQueryMonitor NextMonitorToBeUpdated
         {
             get
             {

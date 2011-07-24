@@ -233,7 +233,7 @@ namespace EVEMon
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor nextMonitor = ccpCharacter.QueryMonitors.NextUpdate;
+            IQueryMonitor nextMonitor = ccpCharacter.QueryMonitors.NextMonitorToBeUpdated;
 
             if (nextMonitor == null)
             {

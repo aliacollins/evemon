@@ -123,6 +123,9 @@ namespace EVEMon.SettingsUI
             cbWorksafeMode.Checked = m_settings.UI.SafeForWork;
             compatibilityCombo.SelectedIndex = (int)m_settings.Compatibility;
 
+            // Queries Updater
+            btnResetUpdateQueryTimers.Enabled = false;
+
             // Skills icon sets
             cbSkillIconSet.Items.Clear();
             for (int i = 1; i < IconSettings.Default.Properties.Count; i++)
@@ -260,7 +263,6 @@ namespace EVEMon.SettingsUI
                 rbGoogle.Checked = true;
             }
 
-            OnMustEnableOrDisable(externalCalendarCheckbox, e);
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
             tbGooglePassword.Text = m_settings.Calendar.GooglePassword;
             tbGoogleURI.Text = m_settings.Calendar.GoogleURL;
@@ -690,6 +692,14 @@ namespace EVEMon.SettingsUI
                 cbShowPrereqMetSkills.Enabled = true;
                 cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
             }
+
+            // Queries Updater
+            foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
+            {
+                // If any monitor's last update is found to exceed the max period,
+                // enable the queries updater button
+                btnResetUpdateQueryTimers.Enabled |= character.QueryMonitors.Any(x => x.LastUpdate > DateTime.UtcNow.AddDays(7));
+            }
         }
         #endregion
 
@@ -870,8 +880,11 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnUpdateQueryTimers_Click(object sender, EventArgs e)
+        private void btnResetUpdateQueryTimers_Click(object sender, EventArgs e)
         {
+            // Disable the button to prevent spamming
+            btnResetUpdateQueryTimers.Enabled = false;
+
             foreach (CCPCharacter character in EveClient.MonitoredCharacters.Where(x => x is CCPCharacter))
             {
                 character.QueryMonitors.QueryEverything();
@@ -1015,6 +1028,11 @@ namespace EVEMon.SettingsUI
             }
         }
 
+        /// <summary>
+        /// Opens a browser to the BattleClinic's main web page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BattleClinicLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(NetworkConstants.BattleClinicBase);

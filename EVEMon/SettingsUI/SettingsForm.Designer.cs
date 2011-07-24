@@ -2171,7 +2171,7 @@ namespace EVEMon.SettingsUI
             this.btnResetUpdateQueryTimers.TabIndex = 11;
             this.btnResetUpdateQueryTimers.Text = "Update All";
             this.btnResetUpdateQueryTimers.UseVisualStyleBackColor = true;
-            this.btnResetUpdateQueryTimers.Click += new System.EventHandler(this.btnUpdateQueryTimers_Click);
+            this.btnResetUpdateQueryTimers.Click += new System.EventHandler(this.btnResetUpdateQueryTimers_Click);
             // 
             // updateSettingsControl
             // 
