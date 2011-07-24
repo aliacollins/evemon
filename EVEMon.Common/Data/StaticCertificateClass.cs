@@ -13,11 +13,10 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificateClass : ReadonlyVirtualCollection<StaticCertificate>
     {
-        private readonly long m_id;
-        private readonly string m_name;
-        private readonly string m_description;
-        private readonly StaticCertificateCategory m_category;
         private readonly StaticCertificate[] m_certificates = new StaticCertificate[4];
+
+
+        #region Constructor
 
         /// <summary>
         /// Deserialization constructor.
@@ -26,59 +25,42 @@ namespace EVEMon.Common.Data
         /// <param name="element"></param>
         internal StaticCertificateClass(StaticCertificateCategory category, SerializableCertificateClass src)
         {
-            m_id = src.ID;
-            m_name = src.Name;
-            m_description = src.Description;
-            m_category = category;
+            ID = src.ID;
+            Name = src.Name;
+            Description = src.Description;
+            Category = category;
 
             foreach (SerializableCertificate srcCert in src.Certificates)
             {
                 StaticCertificate cert = new StaticCertificate(this, srcCert);
-                m_certificates[(int)cert.m_grade] = cert;
+                m_certificates[(int)cert.Grade] = cert;
             }
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets this category's id.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets this category's description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the certificates class's category.
         /// </summary>
-        public StaticCertificateCategory Category
-        {
-            get { return m_category; }
-        }
-
-        /// <summary>
-        /// Gets the certificate with the specified grade.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public StaticCertificate this[CertificateGrade grade]
-        {
-            get { return m_certificates[(int)grade]; }
-        }
+        public StaticCertificateCategory Category { get; private set; }
 
         /// <summary>
         /// Gets the lowest grade certificate.
@@ -89,7 +71,7 @@ namespace EVEMon.Common.Data
             {
                 foreach (StaticCertificate cert in m_certificates)
                 {
-                    if (cert != null) 
+                    if (cert != null)
                         return cert;
                 }
                 throw new NotImplementedException();
@@ -115,6 +97,26 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        #region Indexer
+
+        /// <summary>
+        /// Gets the certificate with the specified grade.
+        /// </summary>
+        /// <value></value>
+        /// <returns></returns>
+        public StaticCertificate this[CertificateGrade grade]
+        {
+            get { return m_certificates[(int)grade]; }
+        }
+
+        #endregion
+
+
+        #region Overridden Methods
+
         /// <summary>
         /// Enumerates over the items in this collection.
         /// </summary>
@@ -134,7 +136,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
+
+        #endregion
     }
 }

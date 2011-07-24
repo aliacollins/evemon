@@ -10,17 +10,64 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticCertificates
     {
-        private static readonly Dictionary<string, StaticCertificateClass> m_classesByName = new Dictionary<string, StaticCertificateClass>();
-        private static readonly Dictionary<long, StaticCertificate> m_certificatesByID = new Dictionary<long, StaticCertificate>();
-        private static readonly List<StaticCertificateCategory> m_categories = new List<StaticCertificateCategory>();
+        private static readonly Dictionary<string, StaticCertificateClass> s_classesByName = new Dictionary<string, StaticCertificateClass>();
+        private static readonly Dictionary<long, StaticCertificate> s_certificatesByID = new Dictionary<long, StaticCertificate>();
+
+
+        #region Initializer
+
+        /// <summary>
+        /// Initialize static certificates.
+        /// </summary>
+        internal static void Load()
+        {
+            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
+            Categories = new List<StaticCertificateCategory>();
+
+            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
+            {
+                Categories.Add(new StaticCertificateCategory(srcCat));
+            }
+
+            // Sort categories by name
+            Categories.Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
+
+            // Build inner collections
+            foreach (StaticCertificateCategory certCategory in Categories)
+            {
+                foreach (StaticCertificateClass certClass in certCategory)
+                {
+                    s_classesByName[certClass.Name] = certClass;
+                    foreach (StaticCertificate cert in certClass)
+                    {
+                        s_certificatesByID[cert.ID] = cert;
+                    }
+                }
+            }
+
+            // Completes intialization
+            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
+            {
+                foreach (SerializableCertificateClass srcClass in srcCat.Classes)
+                {
+                    StaticCertificateClass certClass = s_classesByName[srcClass.Name];
+                    foreach (SerializableCertificate srcCert in srcClass.Certificates)
+                    {
+                        certClass[srcCert.Grade].CompleteInitialization(srcCert.Prerequisites);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the categories, sorted by name.
         /// </summary>
-        public static IEnumerable<StaticCertificateCategory> Categories
-        {
-            get { return m_categories; }
-        }
+        public static List<StaticCertificateCategory> Categories { get; private set; }
 
         /// <summary>
         /// Gets the certificate classes, hierarchically sorted (category's name, class's name).
@@ -29,7 +76,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (StaticCertificateCategory category in m_categories)
+                foreach (StaticCertificateCategory category in Categories)
                 {
                     foreach (StaticCertificateClass certClass in category)
                     {
@@ -44,9 +91,9 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static IEnumerable<StaticCertificate> AllCertificates
         {
-            get 
+            get
             {
-                foreach (StaticCertificateCategory category in m_categories)
+                foreach (StaticCertificateCategory category in Categories)
                 {
                     foreach (StaticCertificateClass certClass in category)
                     {
@@ -59,6 +106,11 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        #region Public Finders
+
         /// <summary>
         /// Gets the certificate with the specified ID.
         /// </summary>
@@ -66,7 +118,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static StaticCertificate GetCertificate(int id)
         {
-            return m_certificatesByID[id];
+            return s_certificatesByID[id];
         }
 
         /// <summary>
@@ -76,49 +128,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static StaticCertificateClass GetCertificateClass(string name)
         {
-            return m_classesByName[name];
+            return s_classesByName[name];
         }
 
-        /// <summary>
-        /// Initialize static certificates.
-        /// </summary>
-        internal static void Load()
-        {
-            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
-
-            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
-            {
-                m_categories.Add(new StaticCertificateCategory(srcCat));
-            }
-
-            // Sort categories by name
-            m_categories.Sort((c1, c2) => String.CompareOrdinal(c1.Name, c2.Name));
-
-            // Build inner collections
-            foreach (StaticCertificateCategory certCategory in m_categories)
-            {
-                foreach (StaticCertificateClass certClass in certCategory)
-                {
-                    m_classesByName[certClass.Name] = certClass;
-                    foreach (StaticCertificate cert in certClass)
-                    {
-                        m_certificatesByID[cert.ID] = cert;
-                    }
-                }
-            }
-
-            // Completes intialization
-            foreach (SerializableCertificateCategory srcCat in datafile.Categories)
-            {
-                foreach (SerializableCertificateClass srcClass in srcCat.Classes)
-                {
-                    StaticCertificateClass certClass = m_classesByName[srcClass.Name];
-                    foreach (SerializableCertificate srcCert in srcClass.Certificates)
-                    {
-                        certClass[srcCert.Grade].CompleteInitialization(srcCert.Prerequisites);
-                    }
-                }
-            }
-        }
+        #endregion
     }
 }

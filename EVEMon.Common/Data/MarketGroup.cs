@@ -10,13 +10,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class MarketGroup
     {
-        private readonly MarketGroupCollection m_subCategories;
-        private readonly ItemCollection m_items;
-        private readonly MarketGroup m_parent;
-        private readonly string m_name;
-        private readonly long m_id;
-
-
         #region Constructors
 
         /// <summary>
@@ -25,10 +18,10 @@ namespace EVEMon.Common.Data
         /// <param name="src">Source Serializable Market Group</param>
         public MarketGroup(SerializableMarketGroup src)
         {
-            m_id = src.ID;
-            m_name = src.Name;
-            m_subCategories = new MarketGroupCollection(this, src.SubGroups);
-            m_items = new ItemCollection(this, src.Items);
+            ID = src.ID;
+            Name = src.Name;
+            SubGroups = new MarketGroupCollection(this, src.SubGroups);
+            Items = new ItemCollection(this, src.Items);
         }
 
         /// <summary>
@@ -39,7 +32,7 @@ namespace EVEMon.Common.Data
         public MarketGroup(MarketGroup parent, SerializableMarketGroup src)
             : this(src)
         {
-            m_parent = parent;
+            ParentGroup = parent;
         }
 
         /// <summary>
@@ -48,8 +41,8 @@ namespace EVEMon.Common.Data
         /// <param name="src"></param>
         public MarketGroup(SerializableBlueprintGroup src)
         {
-            m_id = src.ID;
-            m_name = src.Name;
+            ID = src.ID;
+            Name = src.Name;
         }
 
         /// <summary>
@@ -60,7 +53,7 @@ namespace EVEMon.Common.Data
         public MarketGroup(MarketGroup parent, SerializableBlueprintGroup src)
             :this (src)
         {
-            m_parent = parent;
+            ParentGroup = parent;
         }
 
         #endregion
@@ -71,67 +64,27 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group ID.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets the parent category. <c>Null</c> for the root category.
         /// </summary>
-        public MarketGroup ParentGroup
-        {
-            get { return m_parent; }
-        }
+        public MarketGroup ParentGroup { get; private set; }
 
         /// <summary>
         /// Gets the sub categories.
         /// </summary>
-        public MarketGroupCollection SubGroups
-        {
-            get { return m_subCategories; }
-        }
+        public MarketGroupCollection SubGroups { get; private set; }
 
         /// <summary>
         /// Gets the items in this category.
         /// </summary>
-        public ItemCollection Items
-        {
-            get { return m_items; }
-        }
+        public ItemCollection Items { get; private set; }
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
-
-        /// <summary>
-        /// Gets this category full category name.
-        /// </summary>
-        public string FullCategoryName
-        {
-            get
-            {
-                StringBuilder fullPathName = new StringBuilder();
-                MarketGroup parent = m_parent;
-
-                fullPathName.Append(m_name);
-                
-                while (parent != null)
-                {
-                    if (parent != null)
-                        fullPathName.Insert(0, " > ");
-
-                    fullPathName.Insert(0, parent.Name);
-                    parent = parent.ParentGroup;
-                }
-
-                return fullPathName.ToString();
-            }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the collection of all the items in this category and its descendants.
@@ -140,19 +93,44 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var item in m_items)
+                foreach (Item item in Items)
                 {
                     yield return item;
                 }
 
-                foreach (var cat in m_subCategories)
+                foreach (MarketGroup cat in SubGroups)
                 {
-                    foreach (var subItem in cat.AllItems)
+                    foreach (Item subItem in cat.AllItems)
                     {
                         yield return subItem;
                     }
                 }
             }
+        }
+
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets this category full category name.
+        /// </summary>
+        public string GetCategoryPath()
+        {
+            StringBuilder fullCategoryPath = new StringBuilder();
+            MarketGroup group = this;
+
+            while (group != null)
+            {
+                fullCategoryPath.Insert(0, group.Name);
+                group = group.ParentGroup;
+                if (group != null)
+                    fullCategoryPath.Insert(0, " > ");
+            }
+
+            return fullCategoryPath.ToString();
         }
 
         #endregion
@@ -166,7 +144,7 @@ namespace EVEMon.Common.Data
         /// <returns>Name of the Market Group.</returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         #endregion

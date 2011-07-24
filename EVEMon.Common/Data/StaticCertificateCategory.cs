@@ -11,50 +11,49 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificateCategory : ReadonlyCollection<StaticCertificateClass>
     {
-        private readonly long m_id;
-        private readonly string m_name;
-        private readonly string m_description;
+        #region Constructor
 
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="element"></param>
         internal StaticCertificateCategory(SerializableCertificateCategory src)
             : base(src.Classes.Length)
         {
-            m_id = src.ID;
-            m_name = src.Name;
-            m_description = src.Description;
+            ID = src.ID;
+            Name = src.Name;
+            Description = src.Description;
 
             foreach (SerializableCertificateClass srcClass in src.Classes)
             {
                 m_items.Add(new StaticCertificateClass(this, srcClass));
             }
         }
+        
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets this category's id.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets this category's description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
+        
+        #endregion
+
+
+        #region Overridden Methods
 
         /// <summary>
         /// Gets a string representation of this category.
@@ -62,7 +61,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
+
+        #endregion
     }
 }

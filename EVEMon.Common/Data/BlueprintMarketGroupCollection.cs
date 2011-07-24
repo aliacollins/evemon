@@ -8,8 +8,10 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class BlueprintMarketGroupCollection : ReadonlyCollection<BlueprintMarketGroup>
     {
+        #region Constructor
+
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
         internal BlueprintMarketGroupCollection(BlueprintMarketGroup group, SerializableBlueprintGroup[] src)
@@ -23,5 +25,7 @@ namespace EVEMon.Common.Data
                 m_items.Add(new BlueprintMarketGroup(group, subGroup));
             }
         }
+
+        #endregion
     }
 }

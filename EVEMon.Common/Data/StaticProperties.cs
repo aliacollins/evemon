@@ -5,79 +5,19 @@ namespace EVEMon.Common.Data
 {
     public static class StaticProperties
     {
+        #region Fileds
+
         private static readonly Dictionary<long, EveProperty> m_propertiesByID = new Dictionary<long, EveProperty>();
         private static readonly Dictionary<string, EveProperty> m_propertiesByName = new Dictionary<string, EveProperty>();
         private static readonly Dictionary<string, EvePropertyCategory> m_categoriesByName = new Dictionary<string, EvePropertyCategory>();
 
-        /// <summary>
-        /// Gets the list of properties categories.
-        /// </summary>
-        public static IEnumerable<EvePropertyCategory> AllCategories
-        {
-            get
-            {
-                foreach (EvePropertyCategory category in m_categoriesByName.Values)
-                {
-                    yield return category;
-                }
-            }
-        }
+        #endregion
+
+
+        #region Initilizer
 
         /// <summary>
-        /// Gets the list of properties
-        /// </summary>
-        public static IEnumerable<EveProperty> AllProperties
-        {
-            get
-            {
-                foreach (EvePropertyCategory category in m_categoriesByName.Values)
-                {
-                    foreach (EveProperty property in category)
-                    {
-                        yield return property;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a property by its name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static EveProperty GetPropertyByName(string name)
-        {
-            EveProperty property = null;
-            m_propertiesByName.TryGetValue(name, out property);
-            return property;
-        }
-
-        /// <summary>
-        /// Gets a property by its identifier
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static EveProperty GetPropertyById(int id)
-        {
-            EveProperty property = null;
-            m_propertiesByID.TryGetValue(id, out property);
-            return property;
-        }
-
-        /// <summary>
-        /// Gets a group by its name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static EvePropertyCategory GetCategoryByName(string name)
-        {
-            EvePropertyCategory category = null;
-            m_categoriesByName.TryGetValue(name, out category);
-            return category;
-        }
-
-        /// <summary>
-        /// Initialize static properties
+        /// Initialize static properties.
         /// </summary>
         internal static void Load()
         {
@@ -133,7 +73,7 @@ namespace EVEMon.Common.Data
             m_propertiesByID[DBConstants.ShieldKineticResistancePropertyID].AlwaysVisibleForShips = true;
             m_propertiesByID[DBConstants.ShieldThermalResistancePropertyID].AlwaysVisibleForShips = true;
 
-            m_propertiesByID[DBConstants.ArmorEMResistancePropertyID].AlwaysVisibleForShips = true; 
+            m_propertiesByID[DBConstants.ArmorEMResistancePropertyID].AlwaysVisibleForShips = true;
             m_propertiesByID[DBConstants.ArmorExplosiveResistancePropertyID].AlwaysVisibleForShips = true;
             m_propertiesByID[DBConstants.ArmorKineticResistancePropertyID].AlwaysVisibleForShips = true;
             m_propertiesByID[DBConstants.ArmorThermalResistancePropertyID].AlwaysVisibleForShips = true;
@@ -146,7 +86,7 @@ namespace EVEMon.Common.Data
             m_propertiesByID[DBConstants.ScanLadarStrengthPropertyID].HideIfDefault = true;
             m_propertiesByID[DBConstants.ScanMagnetometricStrengthPropertyID].HideIfDefault = true;
             m_propertiesByID[DBConstants.ScanGravimetricStrengthPropertyID].HideIfDefault = true;
-            
+
             m_propertiesByID[DBConstants.HullEMResistancePropertyID].HideIfDefault = true;
             m_propertiesByID[DBConstants.HullExplosiveResistancePropertyID].HideIfDefault = true;
             m_propertiesByID[DBConstants.HullKineticResistancePropertyID].HideIfDefault = true;
@@ -165,5 +105,84 @@ namespace EVEMon.Common.Data
 
             m_propertiesByID[DBConstants.MetaLevelPropertyID].HideIfDefault = true;
         }
+
+        #endregion
+
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets the list of properties categories.
+        /// </summary>
+        public static IEnumerable<EvePropertyCategory> AllCategories
+        {
+            get
+            {
+                foreach (EvePropertyCategory category in m_categoriesByName.Values)
+                {
+                    yield return category;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of properties.
+        /// </summary>
+        public static IEnumerable<EveProperty> AllProperties
+        {
+            get
+            {
+                foreach (EvePropertyCategory category in m_categoriesByName.Values)
+                {
+                    foreach (EveProperty property in category)
+                    {
+                        yield return property;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Public Finders
+
+        /// <summary>
+        /// Gets a property by its name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EveProperty GetPropertyByName(string name)
+        {
+            EveProperty property = null;
+            m_propertiesByName.TryGetValue(name, out property);
+            return property;
+        }
+
+        /// <summary>
+        /// Gets a property by its identifier.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static EveProperty GetPropertyById(int id)
+        {
+            EveProperty property = null;
+            m_propertiesByID.TryGetValue(id, out property);
+            return property;
+        }
+
+        /// <summary>
+        /// Gets a group by its name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EvePropertyCategory GetCategoryByName(string name)
+        {
+            EvePropertyCategory category = null;
+            m_categoriesByName.TryGetValue(name, out category);
+            return category;
+        }
+
+        #endregion
     }
 }

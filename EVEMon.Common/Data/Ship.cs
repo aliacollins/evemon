@@ -7,7 +7,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Ship : Item
     {
-        private readonly StaticRecommendations<StaticCertificate> m_recommendations = new StaticRecommendations<StaticCertificate>();
+        # region Constructor
 
         /// <summary>
         /// Constructor.
@@ -16,14 +16,19 @@ namespace EVEMon.Common.Data
         internal Ship(MarketGroup group, SerializableItem src)
             : base(group, src)
         {
+            Recommendations = new StaticRecommendations<StaticCertificate>();
         }
+
+        #endregion
+
+
+        # region Public Properties
 
         /// <summary>
         /// Gets the recommended certificates.
         /// </summary>
-        public StaticRecommendations<StaticCertificate> Recommendations
-        {
-            get { return m_recommendations; }
-        }
+        public StaticRecommendations<StaticCertificate> Recommendations { get; private set; }
+
+        #endregion
     }
  }

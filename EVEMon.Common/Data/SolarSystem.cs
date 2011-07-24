@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -14,13 +13,11 @@ namespace EVEMon.Common.Data
         // Do not set this as readonly !
         private FastList<SolarSystem> m_jumps;
 
-        private readonly long m_id;
-        private readonly string m_name;
-        private readonly float m_securityLevel;
-        private readonly Constellation m_owner;
         private readonly int m_x;
         private readonly int m_y;
         private readonly int m_z;
+
+        # region Constructor
 
         /// <summary>
         /// Constructor.
@@ -28,10 +25,11 @@ namespace EVEMon.Common.Data
         public SolarSystem(Constellation owner, SerializableSolarSystem src)
             : base(src.Stations == null ? 0 : src.Stations.Length)
         {
-            m_id = src.ID;
-            m_owner = owner;
-            m_name = src.Name;
-            m_securityLevel = src.SecurityLevel;
+            ID = src.ID;
+            Constellation = owner;
+            Name = src.Name;
+            SecurityLevel = src.SecurityLevel;
+            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
             m_jumps = new FastList<SolarSystem>(0);
 
             m_x = src.X;
@@ -46,45 +44,41 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        # region Public Properties
+
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the real security level, between -1.0 and +1.0
         /// </summary>
-        public float SecurityLevel
-        {
-            get { return m_securityLevel; }
-        }
+        public float SecurityLevel { get; private set; }
 
         /// <summary>
         /// Gets the constellation this solar system is located.
         /// </summary>
-        public Constellation Constellation
-        {
-            get { return m_owner; }
-        }
+        public Constellation Constellation { get; private set; }
 
         /// <summary>
         /// Gets something like Heimatar > Constellation > Pator.
         /// </summary>
-        public string FullLocation
-        {
-            get { return m_owner.FullLocation + " > " + m_name; }
-        }
+        public string FullLocation { get; private set; }
+
+
+        #endregion
+
+
+        # region Public Methods
 
         /// <summary>
         /// Gets the square distance with the given system.
@@ -135,6 +129,11 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        # region Internal Methods
+
         /// <summary>
         /// Adds a neighbor with a jumpgate connection to this system.
         /// </summary>
@@ -152,13 +151,18 @@ namespace EVEMon.Common.Data
             m_jumps.Trim();
         }
 
+        #endregion
+
+
+        # region Overridden Methods
+
         /// <summary>
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         /// <summary>
@@ -167,8 +171,13 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return (int)m_id;
+            return (int)ID;
         }
+
+        #endregion
+
+
+        # region Comparer Method
 
         /// <summary>
         /// Compares this system with another one.
@@ -180,7 +189,9 @@ namespace EVEMon.Common.Data
             if (Constellation != other.Constellation)
                 return this.Constellation.CompareTo(other.Constellation);
 
-            return m_name.CompareTo(other.m_name);
+            return Name.CompareTo(other.Name);
         }
+
+        #endregion
     }
 }

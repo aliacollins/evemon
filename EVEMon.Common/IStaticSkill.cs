@@ -27,7 +27,7 @@ namespace EVEMon.Common
         long Cost { get; }
         StaticSkillGroup Group { get; }
 
-        IEnumerable<StaticSkillLevel> Prerequisites { get; }
+        List<StaticSkillLevel> Prerequisites { get; }
 
         EveAttribute PrimaryAttribute { get; }
         EveAttribute SecondaryAttribute { get; }

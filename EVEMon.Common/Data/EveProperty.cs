@@ -6,112 +6,85 @@ namespace EVEMon.Common.Data
 {
     public sealed class EveProperty
     {
-        private static EveProperty s_cpuProperty;
-        private static EveProperty s_powergridProperty;
-
-        private readonly EvePropertyCategory m_owner;
-
-        private readonly long m_id;
-        private readonly string m_icon;
-        private readonly string m_unit;
-        private readonly int m_unitID;
-        private readonly string m_name;
-        private readonly string m_description;
-        private readonly string m_defaultValue;
-        private readonly bool m_higherIsBetter;
+        #region Constructor
 
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="serial"></param>
-        internal EveProperty(EvePropertyCategory owner, SerializableProperty serial)
+        internal EveProperty(EvePropertyCategory category, SerializableProperty serial)
         {
-            m_owner = owner;
-            m_id = serial.ID;
-            m_icon = serial.Icon;
-            m_unit = serial.Unit;
-            m_unitID = serial.UnitID;
-            m_description = serial.Description;
-            m_defaultValue = serial.DefaultValue;
-            m_higherIsBetter = serial.HigherIsBetter;
+            ID = serial.ID;
+            Name = serial.Name;
+            Description = serial.Description;
+            DefaultValue = serial.DefaultValue;
+            Icon = serial.Icon;
+            Unit = serial.Unit;
+            UnitID = serial.UnitID;
+            HigherIsBetter = serial.HigherIsBetter;
+            Category = category;
 
-            m_name = serial.Name;
-
-            switch (m_id)
+            switch (ID)
             {
                 case DBConstants.CPUNeedPropertyID:
-                    s_cpuProperty = this;
+                    CPU = this;
                     break;
                 case DBConstants.PGNeedPropertyID:
-                    s_powergridProperty = this;
+                    Powergrid = this;
                     break;
             }
         }
 
+        #endregion
+
+
+        #region Public Properties
+
         /// <summary>
         /// Gets the property's ID.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets the property name (the displayName in the CCP tables).
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the property's description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the string representation of the default value.
         /// </summary>
-        public string DefaultValue
-        {
-            get { return m_defaultValue; }
-        }
+        public string DefaultValue { get; private set; }
 
         /// <summary>
         /// Gets the icon for this property.
         /// </summary>
-        public string Icon
-        {
-            get { return m_icon; }
-        }
+        public string Icon { get; private set; }
 
         /// <summary>
         /// Gets the unit for this property.
         /// </summary>
-        public string Unit
-        {
-            get { return m_unit; }
-        }
+        public string Unit { get; private set; }
 
         /// <summary>
         /// Gets the unitID for this property.
         /// </summary>
-        public int UnitID
-        {
-            get { return m_unitID; }
-        }
+        public int UnitID { get; private set; }
 
         /// <summary>
         /// When true, the higher the value, the better it is.
         /// </summary>
-        public bool HigherIsBetter
-        {
-            get { return m_higherIsBetter; }
-        }
+        public bool HigherIsBetter { get; private set; }
+
+        /// <summary>
+        /// Gets the property's category.
+        /// </summary>
+        public EvePropertyCategory Category { get; private set; }
 
         /// <summary>
         /// When true, the property is always visible in the ships browsers, even when an object has no value for this property.
@@ -126,18 +99,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the CPU Output property.
         /// </summary>
-        public static EveProperty CPU
-        {
-            get { return s_cpuProperty; }
-        }
+        public static EveProperty CPU { get; private set; }
 
         /// <summary>
         /// Gets the Powergrid Output property.
         /// </summary>
-        public static EveProperty Powergrid
-        {
-            get { return s_powergridProperty; }
-        }
+        public static EveProperty Powergrid { get; private set; }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Gets the label of this property's value for the given item or, when the property is absent, the default value.
@@ -149,7 +121,7 @@ namespace EVEMon.Common.Data
         {
             Nullable<EvePropertyValue> value = obj.Properties[this];
             if (value == null)
-                return Format(m_defaultValue);
+                return Format(DefaultValue);
 
             return Format(value.Value.Value);
         }
@@ -167,49 +139,49 @@ namespace EVEMon.Common.Data
                 try
                 {
                     // Format a value of Structure Volume
-                    if (m_id == DBConstants.VolumePropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", numericValue, m_unit);
+                    if (ID == DBConstants.VolumePropertyID)
+                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", numericValue, Unit);
 
                     // Format a value of Capacitor Capacity
-                    if (m_id == DBConstants.CapacitorCapacityPropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", Math.Floor(numericValue), m_unit);
+                    if (ID == DBConstants.CapacitorCapacityPropertyID)
+                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", Math.Floor(numericValue), Unit);
 
                     // Format a value of Ships Warp Speed
-                    if (m_id == DBConstants.ShipWarpSpeedPropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:0.0#} {1}", numericValue, m_unit);
+                    if (ID == DBConstants.ShipWarpSpeedPropertyID)
+                        return String.Format(CultureConstants.DefaultCulture, "{0:0.0#} {1}", numericValue, Unit);
 
-                    switch (m_unitID)
+                    switch (UnitID)
                     {
                         // Format a value of Mass
                         case DBConstants.MassUnitID:
                             if (numericValue <= 1000)
                             {
-                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0#} {1}", numericValue, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0#} {1}", numericValue, Unit);
                             }
                             else
                             {
-                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", numericValue, m_unit);
+                                return String.Format(CultureConstants.DefaultCulture, "{0:#,##0} {1}", numericValue, Unit);
                             }
 
                         // Format a value of Millseconds
                         case DBConstants.MillsecondsUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", numericValue / 1000, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.00} {1}", numericValue / 1000, Unit);
 
                         // Format a value of Absolute Percentage
                         case DBConstants.AbsolutePercentUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (numericValue) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (numericValue) * 100, Unit);
 
                         // Format a value of Inverse Absolute Percentage
                         case DBConstants.InverseAbsolutePercentUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - numericValue) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (1 - numericValue) * 100, Unit);
 
                         // Format a value of Modifier Percentage
                         case DBConstants.ModifierPercentUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (numericValue - 1) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (numericValue - 1) * 100, Unit);
 
                         // Format a value of Inverse Modifier Percentage
                         case DBConstants.InversedModifierPercentUnitID:
-                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - numericValue) * 100, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:0.###} {1}", (1 - numericValue) * 100, Unit);
 
                         // A reference to a group (groupID), it has been pre-transformed on XmlGenerator.
                         case DBConstants.GroupIDUnitID:
@@ -239,7 +211,7 @@ namespace EVEMon.Common.Data
 
                         // Format all other values (use of thousand and decimal separator)
                         default:
-                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", numericValue, m_unit);
+                            return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.###} {1}", numericValue, Unit);
                     }
                 }
                 catch
@@ -261,12 +233,14 @@ namespace EVEMon.Common.Data
             // Retrieve the string for the number
             string number = String.Empty;
             Nullable<EvePropertyValue> value = obj.Properties[this];
-            number = (value == null ? m_defaultValue : value.Value.Value);
+            number = (value == null ? DefaultValue : value.Value.Value);
 
             // Try to parse it as a float
             float result = float.NaN;
             float.TryParse(number, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
             return result;
         }
+
+        #endregion
     }
 }

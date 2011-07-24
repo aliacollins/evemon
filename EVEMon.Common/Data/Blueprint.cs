@@ -6,20 +6,8 @@ namespace EVEMon.Common.Data
 {
     public class Blueprint : Item
     {
-        protected readonly int m_maxProductionLimit;
-        protected readonly short m_produceItemID;
-        protected readonly int m_productionTime;
-        protected readonly int m_productivityModifier;
-        protected readonly int m_researchCopyTime;
-        protected readonly int m_researchMaterialTime;
-        protected readonly int m_researchProductivityTime;
-        protected readonly int m_researchTechTime;
-        protected readonly int m_techLevel;
-        protected readonly short m_wasteFactor;
-
         protected readonly FastList<int> m_inventBlueprint;
         protected readonly FastList<StaticRequiredMaterial> m_materialRequirements;
-
 
         #region Constructors
 
@@ -31,17 +19,16 @@ namespace EVEMon.Common.Data
         internal Blueprint(BlueprintMarketGroup group, SerializableBlueprint src)
             : base(group, src)
         {
-
-            m_maxProductionLimit = src.MaxProductionLimit;
-            m_produceItemID = src.ProduceItemID;
-            m_productionTime= src.ProductionTime;
-            m_productivityModifier = src.ProductivityModifier;
-            m_researchCopyTime = src.ResearchCopyTime;
-            m_researchMaterialTime = src.ResearchMaterialTime;
-            m_researchProductivityTime = src.ResearchProductivityTime;
-            m_researchTechTime = src.ResearchTechTime;
-            m_techLevel = src.TechLevel;
-            m_wasteFactor = src.WasteFactor;
+            RunsPerCopy = src.MaxProductionLimit;
+            ProducesItem = StaticItems.GetItemByID(src.ProduceItemID);
+            ProductionTime = src.ProductionTime;
+            ProductivityModifier = src.ProductivityModifier;
+            ResearchCopyTime = src.ResearchCopyTime;
+            ResearchMaterialTime = src.ResearchMaterialTime;
+            ResearchProductivityTime = src.ResearchProductivityTime;
+            ResearchTechTime = src.ResearchTechTime;
+            TechLevel = src.TechLevel;
+            WasteFactor = src.WasteFactor;
 
             // Invented blueprint
             m_inventBlueprint = new FastList<int>(src.InventionTypeID != null ? src.InventionTypeID.Length : 0);
@@ -72,82 +59,52 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the item this blueprint produces.
         /// </summary>
-        public Item ProducesItem
-        {
-            get { return StaticItems.GetItemByID(m_produceItemID); }
-        }
+        public Item ProducesItem { get; private set; }
 
         /// <summary>
         /// Gets the maximum items this blueprint can produce.
         /// </summary>
-        public int RunsPerCopy
-        {
-            get { return m_maxProductionLimit; }
-        }
+        public int RunsPerCopy { get; private set; }
 
         /// <summary>
         /// Gets the production time of the blueprint.
         /// </summary>
-        public double ProductionTime
-        {
-            get { return m_productionTime; }
-        }
+        public double ProductionTime { get; private set; }
 
         /// <summary>
         /// Gets the production modifier of the blueprint.
         /// </summary>
-        public double ProductivityModifier
-        {
-            get { return m_productivityModifier; }
-        }
+        public double ProductivityModifier { get; private set; }
 
         /// <summary>
         /// Gets the copying time of the blueprint.
         /// </summary>
-        public double ResearchCopyTime
-        {
-            get { return m_researchCopyTime * 2; }
-        }
+        public double ResearchCopyTime { get; private set; }
 
         /// <summary>
         /// Gets the material efficiency research time of the blueprint.
         /// </summary>
-        public double ResearchMaterialTime
-        {
-            get { return m_researchMaterialTime; }
-        }
+        public double ResearchMaterialTime { get; private set; }
 
         /// <summary>
         /// Gets the productivity efficiency research time of the blueprint.
         /// </summary>
-        public double ResearchProductivityTime
-        {
-            get { return m_researchProductivityTime; }
-        }
+        public double ResearchProductivityTime { get; private set; }
 
         /// <summary>
         /// Gets the invention time of the blueprint.
         /// </summary>
-        public double ResearchTechTime
-        {
-            get { return m_researchTechTime; }
-        }
+        public double ResearchTechTime { get; private set; }
 
         /// <summary>
         /// Gets the tech level of the blueprint.
         /// </summary>
-        public int TechLevel
-        {
-            get { return m_techLevel; }
-        }
+        public int TechLevel { get; private set; }
 
         /// <summary>
         /// Gets the wastage factor of the blueprint.
         /// </summary>
-        public short WasteFactor
-        {
-            get { return (m_wasteFactor); }
-        }
+        public short WasteFactor { get; private set; }
 
         /// <summary>
         /// Gets the collection of materials this blueprint must satisfy to be build.

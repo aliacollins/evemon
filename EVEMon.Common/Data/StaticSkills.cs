@@ -14,6 +14,49 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<string, StaticSkill> m_skillsByName = new Dictionary<string, StaticSkill>();
         private static readonly Dictionary<long, StaticSkillGroup> m_allGroupsById = new Dictionary<long, StaticSkillGroup>();
 
+        #region Initializers
+
+        /// <summary>
+        /// Initialize static skills.
+        /// </summary>
+        internal static void Load()
+        {
+            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile);
+
+            // Fetch deserialized data
+            m_arrayIndicesCount = 0;
+            List<SerializableSkillPrerequisite[]> prereqs = new List<SerializableSkillPrerequisite[]>();
+            foreach (var srcGroup in datafile.Groups)
+            {
+                StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
+                m_allGroupsById[group.ID] = group;
+
+                // Store skills
+                foreach (StaticSkill skill in group)
+                {
+                    m_skillsById[skill.ID] = skill;
+                    m_skillsByName[skill.Name] = skill;
+                }
+
+                // Store prereqs
+                foreach (SerializableSkill serialSkill in srcGroup.Skills)
+                {
+                    prereqs.Add(serialSkill.Prereqs);
+                }
+            }
+
+            // Complete initialization
+            m_skills = new StaticSkill[m_arrayIndicesCount];
+            foreach (StaticSkill staticSkill in m_skillsById.Values)
+            {
+                staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
+                m_skills[staticSkill.ArrayIndex] = staticSkill;
+            }
+        }
+
+        #endregion
+
+
         #region Public Properties
 
         /// <summary>
@@ -64,7 +107,11 @@ namespace EVEMon.Common.Data
         /// Gets a skill by its id or its name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns></returns>
+        /// <returns>The static skill</returns>
+        /// <remarks>
+        /// This method exists for backwards compatibility
+        /// with settings that don't contain the skill's id.
+        /// </remarks>
         public static StaticSkill GetSkill(this SerializableSkillPrerequisite src)
         {
             StaticSkill skill = GetSkillById(src.ID);
@@ -73,6 +120,20 @@ namespace EVEMon.Common.Data
                 skill = GetSkillByName(src.Name);
 
             return skill;
+        }
+
+        /// <summary>
+        /// Gets the name of the skill.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The skill name or "Unknown" if the is no such skill in our data.</returns>
+        public static string GetSkillName(long id)
+        {
+            if (id == 0)
+                return string.Empty;
+
+            StaticSkill skill = StaticSkills.GetSkillById(id);
+            return (skill != null ? skill.Name : "Unknown");
         }
 
         /// <summary>
@@ -122,49 +183,5 @@ namespace EVEMon.Common.Data
         }
 
         #endregion
-
-
-        #region Initializers
-
-        /// <summary>
-        /// Initialize static skills.
-        /// </summary>
-        internal static void Load()
-        {
-            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile);
-
-            // Fetch deserialized data
-            m_arrayIndicesCount = 0;
-            List<SerializableSkillPrerequisite[]> prereqs = new List<SerializableSkillPrerequisite[]>();
-            foreach (var srcGroup in datafile.Groups)
-            {
-                StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref m_arrayIndicesCount);
-                m_allGroupsById[group.ID] = group;
-
-                // Store skills
-                foreach (StaticSkill skill in group)
-                {
-                    m_skillsById[skill.ID] = skill;
-                    m_skillsByName[skill.Name] = skill;
-                }
-
-                // Store prereqs
-                foreach (SerializableSkill serialSkill in srcGroup.Skills)
-                {
-                    prereqs.Add(serialSkill.Prereqs);
-                }
-            }
-
-            // Complete initialization
-            m_skills = new StaticSkill[m_arrayIndicesCount];
-            foreach (StaticSkill staticSkill in m_skillsById.Values)
-            {
-                staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
-                m_skills[staticSkill.ArrayIndex] = staticSkill;
-            }
-        }
-
-        #endregion
-
     }
 }

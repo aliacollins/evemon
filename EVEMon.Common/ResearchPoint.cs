@@ -11,17 +11,8 @@ namespace EVEMon.Common
     {
         #region Fields
 
-        private readonly int m_agentID;
         private readonly int m_skillID;
-        private readonly string m_skillName;
-        private readonly DateTime m_researchStartDate;
-        private readonly double m_pointsPerDay;
         private readonly float m_remainderPoints;
-
-        private string m_agentName;
-        private int m_agentLevel;
-        private int m_agentQuality;
-        private long m_stationID;
 
         #endregion
 
@@ -36,11 +27,11 @@ namespace EVEMon.Common
         {
             GetAgentInfoByID(src.AgentID);
 
-            m_agentID = src.AgentID;
+            AgentID = src.AgentID;
             m_skillID = src.SkillID;
-            m_skillName = GetSkillName(src.SkillID);
-            m_researchStartDate = src.ResearchStartDate;
-            m_pointsPerDay = src.PointsPerDay;
+            Field = StaticSkills.GetSkillName(src.SkillID);
+            StartDate = src.ResearchStartDate;
+            PointsPerDay = src.PointsPerDay;
             m_remainderPoints = src.RemainderPoints;
         }
 
@@ -52,11 +43,11 @@ namespace EVEMon.Common
         {
             GetAgentInfoByID(src.AgentID);
 
-            m_agentID = src.AgentID;
+            AgentID = src.AgentID;
             m_skillID = src.SkillID;
-            m_skillName = src.SkillName;
-            m_researchStartDate = src.StartDate;
-            m_pointsPerDay = src.PointsPerDay;
+            Field = src.SkillName;
+            StartDate = src.StartDate;
+            PointsPerDay = src.PointsPerDay;
             m_remainderPoints = src.RemainderPoints;
         }
 
@@ -68,50 +59,32 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the agents ID.
         /// </summary>
-        public int AgentID
-        {
-            get { return m_agentID; }
-        }
+        public int AgentID { get; private set; }
 
         /// <summary>
         /// Gets the agents name.
         /// </summary>
-        public string AgentName
-        {
-            get { return m_agentName; }
-        }
+        public string AgentName { get; private set; }
 
         /// <summary>
         /// Gets the agents level.
         /// </summary>
-        public int AgentLevel
-        {
-            get { return m_agentLevel; }
-        }
+        public int AgentLevel { get; private set; }
 
         /// <summary>
         /// Gets the agents quality.
         /// </summary>
-        public int AgentQuality
-        {
-            get { return m_agentQuality; }
-        }
+        public int AgentQuality { get; private set; }
 
         /// <summary>
         /// Gets the agents field of research.
         /// </summary>
-        public string Field
-        {
-            get { return m_skillName; }
-        }
+        public string Field { get; private set; }
 
         /// <summary>
         /// Gets the research points per day.
         /// </summary>
-        public double PointsPerDay
-        {
-            get { return m_pointsPerDay; }
-        }
+        public double PointsPerDay { get; private set; }
 
         /// <summary>
         /// Cets the current accumulated research points.
@@ -119,26 +92,20 @@ namespace EVEMon.Common
         public double CurrentRP
         {
             get
-            { 
-                return (m_remainderPoints + (m_pointsPerDay * DateTime.UtcNow.Subtract(m_researchStartDate).TotalDays));
+            {
+                return (m_remainderPoints + (PointsPerDay * DateTime.UtcNow.Subtract(StartDate).TotalDays));
             }
         }
 
         /// <summary>
         /// Gets the date the research was started.
         /// </summary>
-        public DateTime StartDate
-        {
-            get { return m_researchStartDate; }
-        }
+        public DateTime StartDate { get; private set; }
 
         /// <summary>
         /// Gets the station where the agent is.
         /// </summary>
-        public Station Station
-        {
-            get { return StaticGeography.GetStationByID(m_stationID); }
-        }
+        public Station Station { get; private set; }
 
         #endregion
 
@@ -151,28 +118,14 @@ namespace EVEMon.Common
         /// <param name="id"></param>
         private void GetAgentInfoByID(int id)
         {
-            foreach (var station in StaticGeography.AllStations)
-            {
-                foreach (var agent in station.Agents.Where(x => x.ID == id))
-                {
-                    m_agentName = agent.Name;
-                    m_agentLevel = agent.Level;
-                    m_agentQuality = agent.Quality;
-                    m_stationID = station.ID;
-                }
-            }
-        }
+            Agent agent = StaticGeography.AllAgents.FirstOrDefault(x => x.ID == id);
+            if (agent == null)
+                return;
 
-        /// <summary>
-        /// Gets the skill name by its ID.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private static string GetSkillName(int id)
-        {
-            StaticSkill skill = StaticSkills.GetSkillById(id);
-
-            return (skill != null ? skill.Name : String.Empty);
+            AgentName = agent.Name;
+            AgentLevel = agent.Level;
+            AgentQuality = agent.Quality;
+            Station = StaticGeography.GetStationByID(agent.Station.ID);
         }
 
         #endregion
@@ -187,12 +140,12 @@ namespace EVEMon.Common
         {
             var serial = new SerializableResearchPoint();
 
-            serial.AgentID = m_agentID;
-            serial.AgentName = m_agentName;
+            serial.AgentID = AgentID;
+            serial.AgentName = AgentName;
             serial.SkillID = m_skillID;
-            serial.SkillName = m_skillName;
-            serial.StartDate = m_researchStartDate;
-            serial.PointsPerDay = m_pointsPerDay;
+            serial.SkillName = Field;
+            serial.StartDate = StartDate;
+            serial.PointsPerDay = PointsPerDay;
             serial.RemainderPoints = m_remainderPoints;
 
             return serial;

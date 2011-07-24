@@ -8,9 +8,8 @@ namespace EVEMon.Common.Data
     /// Represents a region of the EVE universe.
     /// </summary>
     public sealed class Region : ReadonlyCollection<Constellation>, IComparable<Region>
-    {
-        private readonly long m_id;
-        private readonly string m_name;
+    { 
+        # region Constructor
 
         /// <summary>
         /// Constructor.
@@ -19,39 +18,33 @@ namespace EVEMon.Common.Data
         internal Region(SerializableRegion src)
             : base(src.Constellations.Length)
         {
-            m_id = src.ID;
-            m_name = src.Name;
+            ID = src.ID;
+            Name = src.Name;
 
             foreach (SerializableConstellation srcConstellation in src.Constellations)
             {
                 m_items.Add(new Constellation(this, srcConstellation));
             }
         }
+                #endregion
+
+
+        # region Public Properties
 
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
-        /// <summary>
-        /// Gets the name of this object.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return m_name;
-        }
+        #endregion
+
+
+        # region Public Methods
 
         /// <summary>
         /// Compare two regions by their names.
@@ -60,7 +53,23 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public int CompareTo(Region other)
         {
-            return m_name.CompareTo(other.m_name);
+            return Name.CompareTo(other.Name);
         }
+        #endregion
+
+
+        # region Overridden Methods
+
+        /// <summary>
+        /// Gets the name of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        #endregion
+
     }
 }

@@ -97,15 +97,15 @@ namespace EVEMon.Common
             if (ID == 0)
                 return "Unknown";
 
-            // Look into EVEMon's data file if it's an NPC corporation or agent
-            foreach (var station in StaticGeography.AllStations)
-            {
-                if (station.CorporationID == ID && station.CorporationName != null)
-                    return station.CorporationName;
+            // Look into EVEMon's data file if it's an NPC corporation
+            Station station =  StaticGeography.AllStations.FirstOrDefault(x => x.CorporationID == ID && !String.IsNullOrEmpty(x.CorporationName));
+            if (station != null)
+                return station.Name;
 
-                if (station.Agents.Any(x => x.ID == ID))
-                    return station.Agents.First(x => x.ID == ID).Name;
-            }
+            // Look into EVEMon's data file if it's an agent
+            Agent agent = StaticGeography.AllAgents.FirstOrDefault(x => x.ID == ID && !String.IsNullOrEmpty(x.Name));
+            if (agent != null)
+                return agent.Name;
 
             // Lookup if it's a players null sec corporation
             // (while we have the data we can avoid unnecessary queries to the API)

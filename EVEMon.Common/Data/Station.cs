@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Datafiles;
@@ -9,16 +8,9 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Represents a station inside the EVE universe.
     /// </summary>
-    public class Station : IComparable<Station>
+    public class Station : ReadonlyCollection<Agent>, IComparable<Station>
     {
-        private readonly long m_id;
-        private readonly string m_name;
-        private readonly int m_corporationID;
-        private readonly string m_corporationName;
-        private readonly SolarSystem m_owner;
-        private readonly float m_reprocessingTake;
-        private readonly float m_reprocessingEfficiency;
-        private readonly FastList<SerializableAgent> m_agents;
+        #region Constructor
 
         /// <summary>
         /// Constructor.
@@ -26,11 +18,12 @@ namespace EVEMon.Common.Data
         /// <param name="src"></param>
         public Station(SerializableOutpost src)
         {
-            m_id = src.StationID;
-            m_name = src.StationName;
-            m_corporationID = src.CorporationID;
-            m_corporationName = src.CorporationName;
-            m_owner = StaticGeography.GetSystemByID(src.SolarSystemID); 
+            ID = src.StationID;
+            Name = src.StationName;
+            CorporationID = src.CorporationID;
+            CorporationName = src.CorporationName;
+            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
+            FullLocation = String.Format("{0} > {1}", SolarSystem.FullLocation, src.StationName);
         }
 
         /// <summary>
@@ -38,96 +31,74 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="src"></param>
         public Station(SolarSystem owner, SerializableStation src)
+            : base(src.Agents == null ? 0 : src.Agents.Length)
         {
-            m_id = src.ID;
-            m_name = src.Name;
-            m_corporationID = src.CorporationID;
-            m_corporationName = src.CorporationName;
-            m_owner = owner;
-            m_reprocessingTake = src.ReprocessingStationsTake;
-            m_reprocessingEfficiency = src.ReprocessingEfficiency;
-
-            m_agents = new FastList<SerializableAgent>(src.Agents != null ? src.Agents.Length : 0);
+            ID = src.ID;
+            Name = src.Name;
+            CorporationID = src.CorporationID;
+            CorporationName = src.CorporationName;
+            SolarSystem = owner;
+            ReprocessingStationsTake = src.ReprocessingStationsTake;
+            ReprocessingEfficiency = src.ReprocessingEfficiency;
+            FullLocation = String.Format("{0} > {1}", owner.FullLocation, src.Name);
             if (src.Agents == null)
                 return;
 
             foreach (SerializableAgent agent in src.Agents)
             {
-                m_agents.Add(agent);
+                m_items.Add(new Agent(this, agent));
             }
         }
+        
+        #endregion
+
+
+        #region Public Poperties
 
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets this object's corporation id.
         /// </summary>
-        public int CorporationID
-        {
-            get { return m_corporationID; }
-        }
+        public int CorporationID { get; private set; }
 
         /// <summary>
         /// Gets this object's corporation name.
         /// </summary>
-        public string CorporationName
-        {
-            get { return m_corporationName; }
-        }
+        public string CorporationName { get; private set; }
 
         /// <summary>
         /// Gets the solar system where this station is located.
         /// </summary>
-        public SolarSystem SolarSystem
-        {
-            get { return m_owner; }
-        }
+        public SolarSystem SolarSystem { get; private set; }
 
         /// <summary>
         /// Gets something like Heimatar > Constellation > Pator > Pator III - Republic Military School.
         /// </summary>
-        public string FullLocation
-        {
-            get { return m_owner.FullLocation + " > " + m_name; }
-        }
+        public string FullLocation { get; private set; }
 
         /// <summary>
         /// Gets the base reprocessing efficiency of the station.
         /// </summary>
-        public float ReprocessingEfficiency
-        {
-            get { return m_reprocessingEfficiency; }
-        }
+        public float ReprocessingEfficiency { get; private set; }
 
         /// <summary>
         /// Gets the fraction of reprocessing products taken by the station.
         /// </summary>
-        public float ReprocessingStationsTake
-        {
-            get { return m_reprocessingTake; }
-        }
+        public float ReprocessingStationsTake { get; private set; }
+        
+        #endregion
 
-        /// <summary>
-        /// Gets the agents of the station.
-        /// </summary>
-        public IEnumerable<SerializableAgent> Agents
-        {
-            get { return m_agents; }
-        }
+
+        #region Public Methods
 
         /// <summary>
         /// Compares this station with another one.
@@ -139,8 +110,13 @@ namespace EVEMon.Common.Data
             if (SolarSystem != other.SolarSystem)
                 return SolarSystem.CompareTo(other.SolarSystem);
 
-            return m_name.CompareTo(other.m_name);
+            return Name.CompareTo(other.Name);
         }
+        
+        #endregion
+
+
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the name of this object.
@@ -148,7 +124,9 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
+
+        #endregion
     }
 }

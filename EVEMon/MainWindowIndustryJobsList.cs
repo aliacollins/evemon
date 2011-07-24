@@ -345,19 +345,19 @@ namespace EVEMon
                         UpdateContent(groups3);
                         break;
                     case IndustryJobGrouping.InstalledItemType:
-                        var groups4 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.FullCategoryName).OrderBy(x => x.Key);
+                        var groups4 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
                         UpdateContent(groups4);
                         break;
                     case IndustryJobGrouping.InstalledItemTypeDesc:
-                        var groups5 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.FullCategoryName).OrderByDescending(x => x.Key);
+                        var groups5 = jobs.GroupBy(x => x.InstalledItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
                         UpdateContent(groups5);
                         break;
                     case IndustryJobGrouping.OutputItemType:
-                        var groups6 = jobs.GroupBy(x => x.OutputItem.MarketGroup.FullCategoryName).OrderBy(x => x.Key);
+                        var groups6 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderBy(x => x.Key);
                         UpdateContent(groups6);
                         break;
                     case IndustryJobGrouping.OutputItemTypeDesc:
-                        var groups7 = jobs.GroupBy(x => x.OutputItem.MarketGroup.FullCategoryName).OrderByDescending(x => x.Key);
+                        var groups7 = jobs.GroupBy(x => x.OutputItem.MarketGroup.GetCategoryPath()).OrderByDescending(x => x.Key);
                         UpdateContent(groups7);
                         break;
                     case IndustryJobGrouping.Activity:

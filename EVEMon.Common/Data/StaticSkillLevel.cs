@@ -80,28 +80,38 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets or sets the skill.
         /// </summary>
-        public StaticSkill Skill
-        {
-            get;
-            set;
-        }
+        public StaticSkill Skill { get; private set; }
 
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public int Level
-        {
-            get;
-            set;
-        }
+        public int Level { get; private set; }
 
         /// <summary>
         /// Gets or sets the activity for the skill.
         /// </summary>
-        public BlueprintActivity Activity
+        public BlueprintActivity Activity { get; private set; }
+
+        /// <summary>
+        /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
+        /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
+        /// </summary>
+        public IEnumerable<StaticSkillLevel> AllDependencies
         {
-            get;
-            set;
+            get
+            {
+                SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
+                List<StaticSkillLevel> list = new List<StaticSkillLevel>();
+
+                // Fill the set and list
+                StaticSkillLevelEnumerableExtensions.FillDependencies(set, list, this, false);
+
+                // Return the results
+                foreach (var item in list)
+                {
+                    yield return item;
+                }
+            }
         }
 
         #endregion
@@ -126,28 +136,6 @@ namespace EVEMon.Common.Data
             int neededLevel;
             Skill.HasAsPrerequisite(skillLevel.Skill, out neededLevel);
             return skillLevel.Level <= neededLevel;
-        }
-
-        /// <summary>
-        /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
-        /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
-        /// </summary>
-        public IEnumerable<StaticSkillLevel> AllDependencies
-        {
-            get
-            {
-                SkillLevelSet<StaticSkillLevel> set = new SkillLevelSet<StaticSkillLevel>();
-                List<StaticSkillLevel> list = new List<StaticSkillLevel>();
-
-                // Fill the set and list
-                StaticSkillLevelEnumerableExtensions.FillDependencies(set, list, this, false);
-
-                // Return the results
-                foreach (var item in list)
-                {
-                    yield return item;
-                }
-            }
         }
 
         #endregion

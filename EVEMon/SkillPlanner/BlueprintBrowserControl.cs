@@ -294,7 +294,7 @@ namespace EVEMon.SkillPlanner
                 foreach (var marketGroup in StaticItems.AllGroups)
                 {
                     // Create the groups
-                    var group = new ListViewGroup(marketGroup.FullCategoryName);
+                    var group = new ListViewGroup(marketGroup.GetCategoryPath());
                     bool hasItem = false;
                     foreach (var material in m_blueprint.MaterialRequirements.Where(x => x.Activity == Activity && marketGroup.Items.Any(y => y.ID == x.ID)))
                     {

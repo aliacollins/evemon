@@ -10,22 +10,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkill : IStaticSkill
     {
-        private readonly long m_id;
-        private readonly int m_rank;
-        private readonly long m_cost;
-        private readonly bool m_public;
-        private readonly string m_description;
-        private readonly string m_name;
-        private readonly int m_arrayIndex;
-
-        private readonly StaticSkillGroup m_group;
-        private readonly EveAttribute m_primaryAttribute;
-        private readonly EveAttribute m_secondaryAttribute;
-        private readonly List<StaticSkillLevel> m_prereqs = new List<StaticSkillLevel>();
-
-        private bool m_trainableOnTrialAccount;
-        private string m_descriptionNL;
-
         #region Constructors
 
         /// <summary>
@@ -36,18 +20,20 @@ namespace EVEMon.Common.Data
         /// <param name="arrayIndex"></param>
         internal StaticSkill(StaticSkillGroup group, SerializableSkill src, int arrayIndex)
         {
-            m_id = src.ID;
-            m_cost = src.Cost;
-            m_rank = src.Rank;
-            m_public = src.Public;
-            m_name = src.Name;
-            m_description = src.Description;
-            m_descriptionNL = null;
-            m_primaryAttribute = src.PrimaryAttribute;
-            m_secondaryAttribute = src.SecondaryAttribute;
-            m_trainableOnTrialAccount = src.CanTrainOnTrial;
-            m_arrayIndex = arrayIndex;
-            m_group = group;
+            ID = src.ID;
+            Cost = src.Cost;
+            Rank = src.Rank;
+            IsPublic = src.Public;
+            Name = src.Name;
+            Description = src.Description;
+            DescriptionNL = WordWrap(Description, 100);
+            PrimaryAttribute = src.PrimaryAttribute;
+            SecondaryAttribute = src.SecondaryAttribute;
+            IsTrainableOnTrialAccount = src.CanTrainOnTrial;
+            ArrayIndex = arrayIndex;
+            Group = group;
+            Prerequisites = new List<StaticSkillLevel>();
+            FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:#,##0}", Cost);
         }
 
         #endregion
@@ -64,16 +50,16 @@ namespace EVEMon.Common.Data
                 return;
 
             // Create the prerequisites list
-            m_prereqs.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
+            Prerequisites.AddRange(prereqs.Select(x => new StaticSkillLevel(x.GetSkill(), x.Level)));
 
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
-            if (m_trainableOnTrialAccount)
+            if (IsTrainableOnTrialAccount)
             {
-                foreach (StaticSkillLevel prereq in m_prereqs)
+                foreach (StaticSkillLevel prereq in Prerequisites)
                 {
-                    if (!prereq.Skill.m_trainableOnTrialAccount)
+                    if (!prereq.Skill.IsTrainableOnTrialAccount)
                     {
-                        m_trainableOnTrialAccount = false;
+                        IsTrainableOnTrialAccount = false;
                         return;
                     }
                 }
@@ -88,106 +74,74 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ID of this skill.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
-        public int ArrayIndex
-        {
-            get { return m_arrayIndex; }
-        }
+        public int ArrayIndex { get; private set; }
 
         /// <summary>
         /// Gets the name of this skill (interned).
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the description of this skill.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the description of this skill with a special formatting
         /// used when showing description in tooltip
         /// so the tooltip won't get too long.
         /// </summary>
-        public string DescriptionNL
-        {
-            get
-            {
-                if (m_descriptionNL == null)
-                    m_descriptionNL = WordWrap(m_description, 100);
-
-                return m_descriptionNL;
-            }
-        }
+        public string DescriptionNL { get; private set; }
 
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public int Rank
-        {
-            get { return m_rank; }
-        }
+        public int Rank { get; private set; }
 
         /// <summary>
         /// Gets the skill's cost.
         /// </summary>
-        public long Cost
-        {
-            get { return m_cost; }
-        }
+        public long Cost { get; private set; }
 
         /// <summary>
         /// Gets the skill group this skill is part of.
         /// </summary>
-        public StaticSkillGroup Group
-        {
-            get { return m_group; }
-        }
+        public StaticSkillGroup Group { get; private set; }
 
         /// <summary>
         /// Gets false when the skill is not for sale by any NPC (CCP never published it or removed it from the game, it's inactive).
         /// </summary>
-        public bool IsPublic
-        {
-            get { return m_public; }
-        }
+        public bool IsPublic { get; private set; }
 
         /// <summary>
         /// Gets the primary attribute of this skill.
         /// </summary>
-        public EveAttribute PrimaryAttribute
-        {
-            get { return m_primaryAttribute; }
-        }
+        public EveAttribute PrimaryAttribute { get; private set; }
 
         /// <summary>
         /// Gets the secondary attribute of this skill.
         /// </summary>
-        public EveAttribute SecondaryAttribute
-        {
-            get { return m_secondaryAttribute; }
-        }
+        public EveAttribute SecondaryAttribute { get; private set; }
 
         /// <summary>
         /// Get whether skill is trainable on a trial account.
         /// </summary>
-        public bool IsTrainableOnTrialAccount
-        {
-            get { return m_trainableOnTrialAccount; }
-        }
+        public bool IsTrainableOnTrialAccount { get; private set; }
+
+        /// <summary>
+        /// Gets the prerequisites a character must satisfy before it can be trained.
+        /// </summary>
+        public List<StaticSkillLevel> Prerequisites { get; private set; }
+
+        /// <summary>
+        /// Gets a formatted representation of the price.
+        /// </summary>
+        public string FormattedCost { get; private set; }
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>. 
@@ -203,7 +157,7 @@ namespace EVEMon.Common.Data
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Fill the array
-                foreach (StaticSkillLevel prereq in this.Prerequisites)
+                foreach (StaticSkillLevel prereq in Prerequisites)
                 {
                     StaticSkillEnumerableExtensions.FillPrerequisites(highestLevels, list, prereq, true);
                 }
@@ -217,28 +171,6 @@ namespace EVEMon.Common.Data
                         highestLevels[newItem.Skill.ArrayIndex] = 0;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Gets the prerequisites a character must satisfy before it can be trained.
-        /// </summary>
-        public IEnumerable<StaticSkillLevel> Prerequisites
-        {
-            get { return m_prereqs; }
-        }
-
-        /// <summary>
-        /// Gets a formatted representation of the price.
-        /// </summary>
-        public string FormattedCost
-        {
-            get
-            {
-                if (m_cost == 0)
-                    return "0";
-
-                return String.Format(CultureConstants.DefaultCulture, "{0:0,0,0}", m_cost);
             }
         }
 
@@ -261,21 +193,21 @@ namespace EVEMon.Common.Data
                 case 0:
                     return 0;
                 case 1:
-                    return 250 * m_rank;
+                    return 250 * Rank;
                 case 2:
-                    switch (m_rank)
+                    switch (Rank)
                     {
                         case 1: 
                             return 1415;
                         default:
-                            return (int)(m_rank * 1414.3f + 0.5f);
+                            return (int)(Rank * 1414.3f + 0.5f);
                     }
                 case 3:
-                    return 8000 * m_rank;
+                    return 8000 * Rank;
                 case 4:
-                    return (int)(Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * m_rank)));
+                    return (int)(Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * Rank)));
                 case 5:
-                    return 256000 * m_rank;
+                    return 256000 * Rank;
                 default:
                     throw new NotImplementedException(String.Format("One of our devs messed up. Skill level was {0} ?!", level));
             }
@@ -388,7 +320,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public Skill ToCharacter(Character character)
         {
-            return character.Skills.GetByArrayIndex(m_arrayIndex);
+            return character.Skills.GetByArrayIndex(ArrayIndex);
         }
 
         #endregion
@@ -402,7 +334,7 @@ namespace EVEMon.Common.Data
         /// <returns>Name of the Static Skill.</returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         #endregion

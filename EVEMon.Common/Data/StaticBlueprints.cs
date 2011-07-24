@@ -10,7 +10,6 @@ namespace EVEMon.Common.Data
     {
         private static readonly Dictionary<long, Blueprint> s_blueprintsByID = new Dictionary<long, Blueprint>();
         private static readonly Dictionary<int, BlueprintActivity> s_activityByID = new Dictionary<int, BlueprintActivity>();
-        private static BlueprintMarketGroupCollection s_blueprintMarketGroups;
         
         #region Public Properties
 
@@ -19,7 +18,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         public static BlueprintMarketGroupCollection BlueprintMarketGroups
         {
-            get { return s_blueprintMarketGroups; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (s_blueprintMarketGroups != null)
+            if (BlueprintMarketGroups != null)
                 return;
             
             BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
 
-            s_blueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
+            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
 
-            foreach (BlueprintMarketGroup srcGroup in s_blueprintMarketGroups)
+            foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
             {
                 InitializeDictionaries(srcGroup);
             }

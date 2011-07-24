@@ -7,29 +7,33 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class Material
     {
-        private readonly Item m_product;
-        private readonly int m_quantity;
+        # region Constructor
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="src">The SRC.</param>
         public Material(SerializableMaterialQuantity src)
         {
-            m_product = StaticItems.GetItemByID(src.ID);
-            m_quantity = src.Quantity;
+            Product = StaticItems.GetItemByID(src.ID);
+            Quantity = src.Quantity;
         }
+
+        #endregion
+
+
+        # region Public Properties
 
         /// <summary>
         /// Gets the reprocessing product.
         /// </summary>
-        public Item Product
-        {
-            get { return m_product; }
-        }
+        public Item Product { get; private set; }
 
         /// <summary>
         /// Gets the produced quantity.
         /// </summary>
-        public int Quantity
-        {
-            get { return m_quantity; }
-        }
+        public int Quantity { get; private set; }
+
+        #endregion
     }
 }

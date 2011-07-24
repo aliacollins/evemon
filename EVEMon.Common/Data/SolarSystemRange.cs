@@ -8,8 +8,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class SolarSystemRange : ReadonlyCollection<SolarSystem>
     {
-        private SolarSystem m_source;
-        private int m_range;
+        # region Private constructor
 
         /// <summary>
         /// Private constructor.
@@ -18,30 +17,32 @@ namespace EVEMon.Common.Data
         private SolarSystemRange(SolarSystem source, int range)
             : base(1)
         {
-            m_source = source;
-            m_range = range;
+            Source = source;
+            Range = range;
         }
+
+        #endregion
+
+
+        # region Public Properties
 
         /// <summary>
         /// Gets the source solar system.
         /// </summary>
-        public SolarSystem Source
-        {
-            get { return m_source; }
-        }
+        public SolarSystem Source { get; private set; }
 
         /// <summary>
         /// The number of jumps those system are located from the source.
         /// </summary>
-        public int Range
-        {
-            get { return m_range; }
-        }
+        public int Range { get; private set; }
+
+        #endregion
+
 
         /// <summary>
-        /// 
+        /// Gets a list of solar systems within the specified range of the specified solar system.
         /// </summary>
-        /// <param name="system"></param>
+        /// <param name="system">The system.</param>
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps.</param>
         /// <returns></returns>
         internal static List<SolarSystemRange> GetSystemRangesFrom(SolarSystem system, int maxInclusiveNumberOfJumps)
@@ -68,7 +69,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         private SolarSystemRange GetNextRange(Dictionary<long, SolarSystem> collectedSystems)
         {
-            SolarSystemRange nextRange = new SolarSystemRange(m_source, m_range + 1);
+            SolarSystemRange nextRange = new SolarSystemRange(Source, Range + 1);
 
             foreach (var system in m_items)
             {

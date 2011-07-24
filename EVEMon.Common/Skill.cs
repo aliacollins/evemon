@@ -651,7 +651,7 @@ namespace EVEMon.Common
 
         #region IStaticSkill Members
 
-        IEnumerable<StaticSkillLevel> IStaticSkill.Prerequisites
+        List<StaticSkillLevel> IStaticSkill.Prerequisites
         {
             get { return m_staticData.Prerequisites; }
         }

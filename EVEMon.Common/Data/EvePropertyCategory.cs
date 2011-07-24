@@ -5,9 +5,7 @@ namespace EVEMon.Common.Data
 {
     public sealed class EvePropertyCategory : ReadonlyCollection<EveProperty>
     {
-        private readonly string m_name;
-        private readonly string m_description;
-        private readonly string m_displayName;
+        #region Consructor
 
         /// <summary>
         /// Deserialization constructor.
@@ -16,8 +14,8 @@ namespace EVEMon.Common.Data
         internal EvePropertyCategory(SerializablePropertyCategory serial)
             : base(serial.Properties.Length)
         {
-            m_name = serial.Name;
-            m_description = serial.Description;
+            Name = serial.Name;
+            Description = serial.Description;
 
             foreach (SerializableProperty serialProp in serial.Properties)
             {
@@ -25,39 +23,36 @@ namespace EVEMon.Common.Data
             }
 
             // Sets the display name
-            switch (m_name)
+            switch (Name)
             {
                 default:
-                    m_displayName = m_name;
+                    DisplayName = Name;
                     break;
                 case "NULL":
-                    m_displayName = "System";
+                    DisplayName = "System";
                     break;
             }
         }
+        
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
-
+        public string Name { get; private set; }
         /// <summary>
         /// Gets this category's description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the category's display name.
         /// </summary>
-        public string DisplayName
-        {
-            get { return m_displayName; }
-        }
+        public string DisplayName { get; private set; }
+
+        #endregion
     }
 }

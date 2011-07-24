@@ -9,10 +9,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class Implant : Item
     {
-        private readonly static Implant m_none = new Implant();
-
-        private readonly int m_bonus;
-        private readonly ImplantSlots m_implantSlot;
+        #region Constructor
 
         /// <summary>
         /// Private constructor for the default.
@@ -20,7 +17,7 @@ namespace EVEMon.Common.Data
         internal Implant()
             : base(-1, ImplantSlots.None.ToString())
         {
-            m_implantSlot = ImplantSlots.None;
+            Slot = ImplantSlots.None;
         }
 
         /// <summary>
@@ -33,49 +30,80 @@ namespace EVEMon.Common.Data
         {
             // Gets the slot
             Nullable<EvePropertyValue> slotProperty = Properties[DBConstants.ImplantSlotPropertyID];
-            m_implantSlot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IValue - 1));
+            Slot = (slotProperty == null ? ImplantSlots.None : (ImplantSlots)(slotProperty.Value.IValue - 1));
 
-            // Get the bonus
-            switch (m_implantSlot)
-            {
-                case ImplantSlots.Charisma:
-                    m_bonus = Properties[DBConstants.CharismaModifierPropertyID].Value.IValue;
-                    break;
-                case ImplantSlots.Intelligence:
-                    m_bonus = Properties[DBConstants.IntelligenceModifierPropertyID].Value.IValue;
-                    break;
-                case ImplantSlots.Memory:
-                    m_bonus = Properties[DBConstants.MemoryModifierPropertyID].Value.IValue;
-                    break;
-                case ImplantSlots.Perception:
-                    m_bonus = Properties[DBConstants.PerceptionModifierPropertyID].Value.IValue;
-                    break;
-                case ImplantSlots.Willpower:
-                    m_bonus = Properties[DBConstants.WillpowerModifierPropertyID].Value.IValue;
-                    break;
-                default:
-                    break;
-            }
+            /// Sets the implant bonus
+            SetImplantBonus();
 
             // Adds itself to the implants slot
-            StaticItems.GetImplants(m_implantSlot).Add(this);
+            StaticItems.GetImplants(Slot).Add(this);
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the slot.
         /// </summary>
-        public ImplantSlots Slot
-        {
-            get { return m_implantSlot; }
-        }
+        public ImplantSlots Slot { get; private set; }
 
         /// <summary>
         /// For attributes implants, gets the amount of bonus points it grants.
         /// </summary>
-        public int Bonus
+        public int Bonus { get; private set; }
+
+        #endregion
+
+
+        #region Public Static Properties
+
+        /// <summary>
+        /// Gets an implant for an empty set.
+        /// </summary>
+        public static Implant None
         {
-            get { return m_bonus; }
+            get { return new Implant(); }
         }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Sets the implant bonus.
+        /// </summary>
+        private void SetImplantBonus()
+        {
+            // Get the bonus
+            switch (Slot)
+            {
+                case ImplantSlots.Charisma:
+                    Bonus = Properties[DBConstants.CharismaModifierPropertyID].Value.IValue;
+                    break;
+                case ImplantSlots.Intelligence:
+                    Bonus = Properties[DBConstants.IntelligenceModifierPropertyID].Value.IValue;
+                    break;
+                case ImplantSlots.Memory:
+                    Bonus = Properties[DBConstants.MemoryModifierPropertyID].Value.IValue;
+                    break;
+                case ImplantSlots.Perception:
+                    Bonus = Properties[DBConstants.PerceptionModifierPropertyID].Value.IValue;
+                    break;
+                case ImplantSlots.Willpower:
+                    Bonus = Properties[DBConstants.WillpowerModifierPropertyID].Value.IValue;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
+
+
+        #region Static Methods
 
         /// <summary>
         /// Converts the provided slot to an attribute. Returns <see cref="Attribute.None"/> when the provided slot does not match any attribute.
@@ -125,13 +153,7 @@ namespace EVEMon.Common.Data
             }
         }
 
-        /// <summary>
-        /// Gets an implant for an empty set.
-        /// </summary>
-        public static Implant None
-        {
-            get { return m_none; }
-        }
+        #endregion
     }
     #endregion
 }

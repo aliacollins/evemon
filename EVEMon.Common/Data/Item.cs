@@ -12,19 +12,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public class Item
     {
-        protected readonly long m_id;
-        protected readonly int m_metaLevel;
-
-        protected readonly string m_name;
-        protected readonly string m_icon;
-        protected readonly string m_description;
-
-        protected readonly Race m_race;
-        protected readonly ItemSlot m_slot;
-        protected readonly ItemFamily m_family;
-        protected readonly MarketGroup m_marketGroup;
-        protected readonly ItemMetaGroup m_metaGroup;
-        protected readonly PropertiesCollection m_properties;
         protected readonly FastList<StaticSkillLevel> m_prerequisites;
         protected readonly FastList<Material> m_reprocessing;
 
@@ -37,9 +24,9 @@ namespace EVEMon.Common.Data
         /// <param name="name"></param>
         internal Item(int id, string name)
         {
-            m_id = id;
-            m_name = name;
-            m_description = "No description.";
+            ID = id;
+            Name = name;
+            Description = "No description.";
 
             m_reprocessing = new FastList<Material>(0);
             m_prerequisites = new FastList<StaticSkillLevel>(0);
@@ -53,10 +40,10 @@ namespace EVEMon.Common.Data
         internal Item(BlueprintMarketGroup group, SerializableBlueprint src)
             : this(src.ID, src.Name)
         {
-            m_icon = src.Icon;
-            m_metaGroup = src.MetaGroup;
-            m_marketGroup = group;
-            m_family = ItemFamily.Bpo;
+            Icon = src.Icon;
+            MetaGroup = src.MetaGroup;
+            MarketGroup = group;
+            Family = ItemFamily.Bpo;
 
             m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Length : 0);
             if (src.PrereqSkill == null)
@@ -75,22 +62,21 @@ namespace EVEMon.Common.Data
         internal Item(MarketGroup group, SerializableItem src)
             : this(src.ID, src.Name)
         {
-            m_marketGroup = group;
+            MarketGroup = group;
+            Icon = src.Icon;
+            Race = src.Race;
+            FittingSlot = src.Slot;
+            Family = src.Family;
+            Description = src.Description;
 
-            m_icon = src.Icon;
-            m_race = src.Race;
-            m_slot = src.Slot;
-            m_family = src.Family;
-            m_description = src.Description;
+            MetaLevel = src.MetaLevel;
+            MetaGroup = src.MetaGroup;
 
-            m_metaLevel = src.MetaLevel;
-            m_metaGroup = src.MetaGroup;
-
+            Properties = new EvePropertyCollection(src.Properties);
             m_reprocessing = new FastList<Material>(0);
-            m_properties = new PropertiesCollection(src.Properties);
 
             // Skills prerequisites
-            m_prerequisites = new FastList<StaticSkillLevel>((src.Prereqs != null ? src.Prereqs.Length : 0));
+            m_prerequisites = new FastList<StaticSkillLevel>(src.Prereqs != null ? src.Prereqs.Length : 0);
             if (src.Prereqs == null)
                 return;
 
@@ -103,7 +89,7 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Internal Initilizatiors
+        #region Internal Initilizators
 
         /// <summary>
         /// Initializes the reprocessing informations.
@@ -123,76 +109,59 @@ namespace EVEMon.Common.Data
         #region Public Properties
 
         /// <summary>
-        /// Gets this object's ID
+        /// Gets this object's ID.
         /// </summary>
-        public long ID
-        {
-            get { return m_id; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
-        /// Gets this object's icon
+        /// Gets this object's icon.
         /// </summary>
-        public string Icon
-        {
-            get { return m_icon; }
-        }
+        public string Icon { get; private set; }
 
         /// <summary>
         /// Gets this object's name
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the item's family.
         /// </summary>
-        public ItemFamily Family
-        {
-            get { return m_family; }
-        }
+        public ItemFamily Family { get; private set; }
 
         /// <summary>
         /// Gets the race this object is bound to.
         /// </summary>
-        public Race Race
-        {
-            get { return m_race; }
-        }
+        public Race Race { get; private set; }
 
         /// <summary>
-        /// Gets this object's description
+        /// Gets this object's description.
         /// </summary>
-        public string Description
-        {
-            get { return m_description; }
-        }
+        public string Description { get; private set; }
 
         /// <summary>
-        /// Gets the metagroup this item belong to
+        /// Gets the metalevel this item belong to.
         /// </summary>
-        public ItemMetaGroup MetaGroup
-        {
-            get { return m_metaGroup; }
-        }
+        public int MetaLevel { get; private set; }
 
         /// <summary>
-        /// Gets the market group this item belong to
+        /// Gets the metagroup this item belong to.
         /// </summary>
-        public MarketGroup MarketGroup
-        {
-            get { return m_marketGroup; }
-        }
+        public ItemMetaGroup MetaGroup { get; private set; }
+
+        /// <summary>
+        /// Gets the market group this item belong to.
+        /// </summary>
+        public MarketGroup MarketGroup { get; private set; }
 
         /// <summary>
         /// Gets the slot this items fit to.
         /// </summary>
-        public ItemSlot FittingSlot
-        {
-            get { return m_slot; }
-        }
+        public ItemSlot FittingSlot { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of properties of this object.
+        /// </summary>
+        public EvePropertyCollection Properties { get; private set; }
 
         /// <summary>
         /// Gets the collection of skills this object must satisfy to be used.
@@ -203,21 +172,13 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the collection of properties of this object
-        /// </summary>
-        public PropertiesCollection Properties
-        {
-            get { return m_properties; }
-        }
-
-        /// <summary>
         /// Gets the skill used to reprocess those items.
         /// </summary>
         public StaticSkill ReprocessingSkill
         {
             get
             {
-                Nullable<EvePropertyValue> property = m_properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
+                Nullable<EvePropertyValue> property = Properties[StaticProperties.GetPropertyById(DBConstants.ReprocessingSkillPropertyID)];
 
                 // Returns scrap metal processing by default
                 if (property == null)
@@ -301,13 +262,13 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the category path of this item
+        /// Gets the category path of this item.
         /// </summary>
         /// <returns></returns>
         public string GetCategoryPath()
         {
             StringBuilder sb = new StringBuilder();
-            MarketGroup cat = m_marketGroup;
+            MarketGroup cat = MarketGroup;
 
             while (cat != null)
             {
@@ -322,7 +283,7 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Private Static Methods
+        #region Helper Methods
 
         /// <summary>
         /// Tries to strip the given tail from the end of some string.
@@ -331,7 +292,7 @@ namespace EVEMon.Common.Data
         /// <param name="tail">The &quot;tail&quot; to try and remove</param>
         /// <returns>null if stripMe is null, stripMe if tail is null or stripMe doesn't
         /// end in tail, stripMe-with-tail-removed otherwise.</returns>
-        private static String TryStripTail(String stripMe, String tail)
+        private String TryStripTail(String stripMe, String tail)
         {
             if (stripMe == null)
                 return null;
@@ -351,7 +312,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parseMe">The string to try and parse.</param>
         /// <returns>The string as double, or null if failed to parse.</returns>
-        private static double? TryParseNullable(String parseMe)
+        private double? TryParseNullable(String parseMe)
         {
             double? result = null;
             double tempValue;
@@ -360,11 +321,6 @@ namespace EVEMon.Common.Data
 
             return result;
         }
-
-        #endregion
-
-
-        #region Helper Methods
 
         /// <summary>
         /// Searches _properties for a property with the given property name and
@@ -378,7 +334,7 @@ namespace EVEMon.Common.Data
         private String FindProperty(EveProperty property, String defaultValue)
         {
             String result = defaultValue;
-            foreach (EvePropertyValue prop in m_properties)
+            foreach (EvePropertyValue prop in Properties)
             {
                 if (prop.Property != property)
                     continue;
@@ -400,7 +356,7 @@ namespace EVEMon.Common.Data
         /// <returns>Name of the Item</returns>
         public override string ToString()
         {
-            return m_name;
+            return Name;
         }
 
         #endregion

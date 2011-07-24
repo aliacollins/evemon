@@ -8,6 +8,8 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class BlueprintCollection : ReadonlyCollection<Blueprint>
     {
+        #region Constructor
+
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
@@ -24,5 +26,7 @@ namespace EVEMon.Common.Data
                 m_items.Add(new Blueprint(group, blueprint));
             }
         }
+
+        #endregion
     }
 }

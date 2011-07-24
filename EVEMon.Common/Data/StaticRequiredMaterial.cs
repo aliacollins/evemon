@@ -5,7 +5,6 @@ namespace EVEMon.Common.Data
 {
     public class StaticRequiredMaterial : Item
     {
-
         #region Constructors
 
         /// <summary>
@@ -27,6 +26,31 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the quantity.
+        /// </summary>
+        public int Quantity { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the damage per job.
+        /// </summary>
+        public double DamagePerJob { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the activity.
+        /// </summary>
+        public BlueprintActivity Activity { get; private set; }
+
+        /// <summary>
+        /// Gets or sets if waste affected.
+        /// </summary>
+        public bool WasteAffected { get; private set; }
+
+        #endregion
+
+
         #region Private Finders
 
         /// <summary>
@@ -39,47 +63,6 @@ namespace EVEMon.Common.Data
             Item item = StaticItems.GetItemByID(id);
 
             return (item != null ? item.Name : String.Empty);
-        }
-
-        #endregion
-
-
-        #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the quantity.
-        /// </summary>
-        public int Quantity
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the damage per job.
-        /// </summary>
-        public double DamagePerJob
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the activity.
-        /// </summary>
-        public BlueprintActivity Activity
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets if waste affected.
-        /// </summary>
-        public bool WasteAffected
-        {
-            get;
-            set;
         }
 
         #endregion

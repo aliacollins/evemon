@@ -9,9 +9,6 @@ namespace EVEMon.Common.Data
 {
     public sealed class BlueprintMarketGroup : MarketGroup
     {
-        private readonly BlueprintMarketGroupCollection m_subCategories;
-        private readonly BlueprintCollection m_blueprints;
-        
         #region Constructors
 
         /// <summary>
@@ -21,8 +18,8 @@ namespace EVEMon.Common.Data
         public BlueprintMarketGroup(SerializableBlueprintGroup src)
             :base(src)
         {
-            m_subCategories = new BlueprintMarketGroupCollection(this, src.SubGroups);
-            m_blueprints = new BlueprintCollection(this, src.Blueprints);
+            SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
+            Blueprints = new BlueprintCollection(this, src.Blueprints);
         }
 
         /// <summary>
@@ -32,8 +29,8 @@ namespace EVEMon.Common.Data
         public BlueprintMarketGroup(BlueprintMarketGroup parent, SerializableBlueprintGroup src)
             : base(parent, src)
         {
-            m_subCategories = new BlueprintMarketGroupCollection(this, src.SubGroups);
-            m_blueprints = new BlueprintCollection(this, src.Blueprints);
+            SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
+            Blueprints = new BlueprintCollection(this, src.Blueprints);
         }
 
         #endregion
@@ -44,18 +41,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the sub categories.
         /// </summary>
-        public new BlueprintMarketGroupCollection SubGroups
-        {
-            get { return m_subCategories; }
-        }
+        public new BlueprintMarketGroupCollection SubGroups { get; private set; }
 
         /// <summary>
         /// Gets the blueprints in this category.
         /// </summary>
-        public BlueprintCollection Blueprints
-        {
-            get { return m_blueprints; }
-        }
+        public BlueprintCollection Blueprints { get; private set; }
 
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.
@@ -64,14 +55,14 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (var blueprint in m_blueprints)
+                foreach (Blueprint blueprint in Blueprints)
                 {
                     yield return blueprint;
                 }
 
-                foreach (var cat in m_subCategories)
+                foreach (BlueprintMarketGroup cat in SubGroups)
                 {
-                    foreach (var subBlueprint in cat.AllBlueprints)
+                    foreach (Blueprint subBlueprint in cat.AllBlueprints)
                     {
                         yield return subBlueprint;
                     }

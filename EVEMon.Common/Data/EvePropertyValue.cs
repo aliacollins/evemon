@@ -1,5 +1,4 @@
 ﻿using System;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -13,8 +12,10 @@ namespace EVEMon.Common.Data
         private EveProperty m_property;
         private string m_value;
 
+        #region Constructor
+
         /// <summary>
-        /// Deserialization constructor
+        /// Deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
         internal EvePropertyValue(SerializablePropertyValue src)
@@ -22,9 +23,14 @@ namespace EVEMon.Common.Data
             m_property = StaticProperties.GetPropertyById(src.ID);
             m_value = String.Intern(src.Value);
         }
+        
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
-        /// Gets the property
+        /// Gets the property.
         /// </summary>
         public EveProperty Property
         {
@@ -32,7 +38,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the property value
+        /// Gets the property value.
         /// </summary>
         public string Value
         {
@@ -55,85 +61,21 @@ namespace EVEMon.Common.Data
             get { return Single.Parse(m_value); }
         }
 
+        #endregion
+
+
+        # region Overridden Methods
         /// <summary>
-        /// Gets a string representation of this prerequisite
+        /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             return m_property.Name;
         }
+
+        #endregion
     }
-    #endregion
 
-
-    #region PropertiesCollection
-    /// <summary>
-    /// Represents the collection of prerequisites an object must satisfy to be used
-    /// </summary>
-    public sealed class PropertiesCollection : ReadonlyCollection<EvePropertyValue>
-    {
-        /// <summary>
-        /// Deserialization consructor
-        /// </summary>
-        /// <param name="src"></param>
-        internal PropertiesCollection(SerializablePropertyValue[] src)
-            : base(src == null ? 0 : src.Length)
-        {
-            if (src == null)
-                return;
-
-            m_items.Capacity = src.Length;
-            foreach (var srcProp in src)
-            {
-                EvePropertyValue prop = new EvePropertyValue(srcProp);
-                if(prop.Property != null)
-                    m_items.Add(prop);
-            }
-            m_items.Trim();
-        }
-
-        /// <summary>
-        /// Gets a property from its name. If not found, return null.
-        /// </summary>
-        /// <param name="property">The property we're searching for.</param>
-        /// <returns>The wanted property when found; null otherwise.</returns>
-        public Nullable<EvePropertyValue> this[EveProperty property]
-        {
-            get
-            {
-                foreach (EvePropertyValue prop in m_items)
-                {
-                    if (prop.Property == null)
-                        break;
-
-                    if (prop.Property == property)
-                        return prop;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets a property from its name. If not found, return null.
-        /// </summary>
-        /// <param name="property">The property we're searching for.</param>
-        /// <returns>The wanted property when found; null otherwise.</returns>
-        public Nullable<EvePropertyValue> this[int id]
-        {
-            get
-            {
-                foreach (EvePropertyValue prop in m_items)
-                {
-                    if (prop.Property == null)
-                        break;
-
-                    if (prop.Property.ID == id)
-                        return prop;
-                }
-                return null;
-            }
-        }
-    }
-    #endregion
+    # endregion
 }

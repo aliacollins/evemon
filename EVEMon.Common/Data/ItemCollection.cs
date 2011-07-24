@@ -8,6 +8,8 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class ItemCollection : ReadonlyCollection<Item>
     {
+        #region Constructor
+
         /// <summary>
         /// Deserialization constructor.
         /// </summary>
@@ -35,5 +37,7 @@ namespace EVEMon.Common.Data
                 }
             }
         }
+
+        #endregion
     }
 }

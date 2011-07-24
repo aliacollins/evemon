@@ -8,7 +8,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class ImplantCollection : ReadonlyCollection<Implant>
     {
-        private readonly ImplantSlots m_slot;
+        #region Constructor
 
         /// <summary>
         /// Deserialization constructor.
@@ -17,17 +17,23 @@ namespace EVEMon.Common.Data
         internal ImplantCollection(ImplantSlots slot)
             : base()
         {
-            m_slot = slot;
+            Slot = slot;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the slot represented by this group.
         /// </summary>
-        public ImplantSlots Slot
-        {
-            get { return m_slot; }
-        }
+        public ImplantSlots Slot { get; private set; }
 
+        #endregion
+
+
+        #region Indexers
 
         /// <summary>
         /// Gets an implant by its name.
@@ -47,6 +53,11 @@ namespace EVEMon.Common.Data
             }
         }
 
+        #endregion
+
+
+        #region Helper Methods
+
         /// <summary>
         /// Add an implant to this slot.
         /// </summary>
@@ -55,6 +66,9 @@ namespace EVEMon.Common.Data
         {
             m_items.Add(implant);
         }
+
+        #endregion
+
     }
     #endregion
 }

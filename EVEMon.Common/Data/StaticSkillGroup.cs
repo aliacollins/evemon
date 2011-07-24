@@ -9,9 +9,6 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkillGroup : ReadonlyKeyedCollection<int, StaticSkill>
     {
-        private readonly long m_ID;
-        private readonly string m_name;
-
         #region Constructors
 
         /// <summary>
@@ -21,8 +18,8 @@ namespace EVEMon.Common.Data
         /// <param name="skillArrayIndex"></param>
         internal StaticSkillGroup(SerializableSkillGroup src, ref int skillArrayIndex)
         {
-            m_ID = src.ID;
-            m_name = src.Name;
+            ID = src.ID;
+            Name = src.Name;
             foreach (SerializableSkill srcSkill in src.Skills)
             {
                 m_items[srcSkill.ID] = new StaticSkill(this, srcSkill, skillArrayIndex);
@@ -38,18 +35,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group's identifier.
         /// </summary>
-        public long ID
-        {
-            get { return m_ID; }
-        }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets the group's name.
         /// </summary>
-        public string Name
-        {
-            get { return m_name; }
-        }
+        public string Name { get; private set; }
+
+        #endregion
+
+
+        #region Indexers
 
         /// <summary>
         /// Gets a skill from this group by its id.
@@ -60,6 +56,11 @@ namespace EVEMon.Common.Data
         {
             get { return GetByKey(id); }
         }
+
+        #endregion
+
+
+        #region Public Methods
 
         /// <summary>
         /// Checks whether this group contains the specified skill.
