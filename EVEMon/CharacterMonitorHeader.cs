@@ -817,7 +817,7 @@ namespace EVEMon
 
             if (station == null)
             {
-                SolarSystem system = StaticGeography.GetSystemByName(m_character.LastKnownLocation);
+                SolarSystem system = StaticGeography.GetSolarSystemByName(m_character.LastKnownLocation);
                 if (system != null)
                     location = String.Format("{0} ({1:N1})", system.FullLocation, system.SecurityLevel);
             }

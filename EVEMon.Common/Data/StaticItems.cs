@@ -18,6 +18,84 @@ namespace EVEMon.Common.Data
 
         private static bool s_reprocessingInitialized = false;
 
+        #region Initializer
+
+        /// <summary>
+        /// Initialize static items.
+        /// </summary>
+        internal static void Load()
+        {
+            if (s_roots != null)
+                return;
+
+            // Create the implants slots
+            for (int i = 0; i < s_implantSlots.Length; i++)
+            {
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i);
+                s_implantSlots[i].Add(new Implant());
+            }
+
+            // Deserialize the items datafile
+            ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
+            s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
+
+            // Gather the items into a by-ID dictionary
+            foreach (MarketGroup group in s_roots)
+            {
+                InitializeDictionaries(group);
+            }
+        }
+
+        /// <summary>
+        /// Recursively collect the items within all groups and stores them in the dictionaries.
+        /// </summary>
+        /// <param name="group"></param>
+        private static void InitializeDictionaries(MarketGroup group)
+        {
+            // Special groups
+            if (group.ID == DBConstants.ShipsGroupID)
+                s_shipsGroup = group;
+
+            s_groupsByID[group.ID] = group;
+
+            foreach (Item item in group.Items)
+            {
+                s_itemsByID[item.ID] = item;
+            }
+
+            foreach (MarketGroup childGroup in group.SubGroups)
+            {
+                InitializeDictionaries(childGroup);
+            }
+        }
+
+        /// <summary>
+        /// Ensures the reprocessing informations have been intialized.
+        /// </summary>
+        internal static bool EnsureReprocessingInitialized()
+        {
+            if (s_reprocessingInitialized)
+                return false;
+
+            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
+
+            foreach (SerializableItemMaterials itemMaterials in datafile.Items)
+            {
+                // Skip if no materials
+                if (itemMaterials.Materials == null)
+                    continue;
+
+                Item item = s_itemsByID[itemMaterials.ID];
+                item.InitializeReprocessing(itemMaterials.Materials);
+            }
+
+            s_reprocessingInitialized = true;
+            return true;
+        }
+
+        #endregion
+
+
         #region Public Properties
 
         /// <summary>
@@ -80,6 +158,19 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Recursively searches the root category and all underlying categories
+        /// for the first item with an Id matching the given itemId.
+        /// </summary>
+        /// <param name="itemId">The id of the item to find.</param>
+        /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
+        public static Item GetItemByID(long itemId)
+        {
+            Item value = null;
+            s_itemsByID.TryGetValue(itemId, out value);
+            return value;
+        }
+
+        /// <summary>
         /// Recursively searches the root category and all underlying categories for the first item with a 
         /// name that exactly matches the given itemName.
         /// </summary>
@@ -93,97 +184,6 @@ namespace EVEMon.Common.Data
                     return item;
             }
             return null;
-        }
-
-        /// <summary>
-        /// Recursively searches the root category and all underlying categories
-        /// for the first item with an Id matching the given itemId.
-        /// </summary>
-        /// <param name="itemId">The id of the item to find.</param>
-        /// <returns>The first item which id matches itemId, Null if no such item is found.</returns>
-        public static Item GetItemByID(long itemId)
-        {
-            Item value = null;
-            s_itemsByID.TryGetValue(itemId, out value);
-            return value;
-        }
-
-        #endregion
-
-
-        #region Initializer
-
-        /// <summary>
-        /// Initialize static items.
-        /// </summary>
-        internal static void Load()
-        {
-            if (s_roots != null)
-                return;
-
-            // Create the implants slots
-            for (int i = 0; i < s_implantSlots.Length; i++)
-            {
-                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i);
-                s_implantSlots[i].Add(new Implant());
-            }
-
-            // Deserialize the items datafile
-            ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
-            s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
-
-            // Gather the items into a by-ID dictionary
-            foreach (MarketGroup group in s_roots)
-            {
-                InitializeDictionaries(group);
-            }
-        }
-
-        /// <summary>
-        /// Recursively collect the items within all groups and stores them in the dictionaries.
-        /// </summary>
-        /// <param name="group"></param>
-        private static void InitializeDictionaries(MarketGroup group)
-        {
-            // Special groups
-            if (group.ID == DBConstants.ShipsGroupID)
-                s_shipsGroup = group;
-            
-            s_groupsByID[group.ID] = group;
-
-            foreach (Item item in group.Items)
-            {
-                s_itemsByID[item.ID] = item;
-            }
-
-            foreach (MarketGroup childGroup in group.SubGroups)
-            {
-                InitializeDictionaries(childGroup);
-            }
-        }
-
-        /// <summary>
-        /// Ensures the reprocessing informations have been intialized.
-        /// </summary>
-        internal static bool EnsureReprocessingInitialized()
-        {
-            if (s_reprocessingInitialized)
-                return false;
-
-            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
-
-            foreach (SerializableItemMaterials itemMaterials in datafile.Items)
-            {
-                // Skip if no materials
-                if (itemMaterials.Materials == null)
-                    continue;
-
-                Item item = s_itemsByID[itemMaterials.ID];
-                item.InitializeReprocessing(itemMaterials.Materials);
-            }
-
-            s_reprocessingInitialized = true;
-            return true;
         }
 
         #endregion
