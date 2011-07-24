@@ -157,6 +157,7 @@ namespace EVEMon.SkillPlanner
             this.eoImage.Name = "eoImage";
             this.eoImage.PopUpEnabled = true;
             this.eoImage.Size = new System.Drawing.Size(64, 64);
+            this.eoImage.SizeMode = EVEMon.Common.Controls.EveImage.EveImageSizeMode.Normal;
             this.eoImage.TabIndex = 8;
             // 
             // lblEveObjCategory
@@ -168,6 +169,7 @@ namespace EVEMon.SkillPlanner
             this.lblEveObjCategory.Size = new System.Drawing.Size(102, 13);
             this.lblEveObjCategory.TabIndex = 6;
             this.lblEveObjCategory.Text = "EveObject Category";
+            this.lblEveObjCategory.UseMnemonic = false;
             // 
             // lblEveObjName
             // 
