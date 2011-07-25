@@ -12,7 +12,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     internal class HttpWebServiceRequest
     {
-        private int Timeout;
+        private int m_timeout;
 
         private readonly object m_syncLock = new object();
 
@@ -43,16 +43,16 @@ namespace EVEMon.Common.Net
 
             if (timeoutSetting < TimeSpan.FromSeconds(1) || timeoutSetting > TimeSpan.FromMinutes(5))
             {
-                Timeout = 10000;
+                m_timeout = 20000;
             }
             else
             {
-                Timeout = (int)timeoutSetting.TotalMilliseconds;
+                m_timeout = (int)timeoutSetting.TotalMilliseconds;
             }
         }
 
         /// <summary>
-        /// The <see cref="Stream"/> to which the reponse is written.
+        /// The <see cref="Stream"/> to which the response is written.
         /// </summary>
         internal Stream ResponseStream
         {
@@ -268,7 +268,7 @@ namespace EVEMon.Common.Net
             request.KeepAlive = true;
             request.UserAgent = m_webServiceState.UserAgent;
             request.Accept = m_accept;
-            request.Timeout = Timeout;
+            request.Timeout = m_timeout;
 
             if (referer != null)
                 request.Referer = referer;

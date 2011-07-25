@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
 
@@ -78,7 +79,11 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         [XmlElement("useCustomUpdatesUrl")]
-        public bool UseCustomUpdatesUrl { get; set; }
+        public bool UseCustomUpdatesUrl
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Url to patch.xml
@@ -136,20 +141,20 @@ namespace EVEMon.Common.SettingsObjects
             get;
             set;
         }
-        
+
         internal UpdateSettings Clone()
         {
-            var clone = new UpdateSettings();
-            clone.CheckEVEMonVersion = this.CheckEVEMonVersion;
-            clone.CheckTimeOnStartup = this.CheckTimeOnStartup;
-            clone.MostRecentDeniedUpgrade = this.MostRecentDeniedUpgrade;
-            clone.HttpTimeout = this.HttpTimeout;
-            clone.IgnoreNetworkStatus = this.IgnoreNetworkStatus;
-            clone.UpdateFrequency = this.UpdateFrequency;
-            clone.UseCustomUpdatesUrl = this.UseCustomUpdatesUrl;
-            clone.UpdatesUrl = this.UpdatesUrl;
+            UpdateSettings clone = new UpdateSettings();
+            clone.CheckEVEMonVersion = CheckEVEMonVersion;
+            clone.CheckTimeOnStartup = CheckTimeOnStartup;
+            clone.MostRecentDeniedUpgrade = MostRecentDeniedUpgrade;
+            clone.HttpTimeout = HttpTimeout;
+            clone.IgnoreNetworkStatus = IgnoreNetworkStatus;
+            clone.UpdateFrequency = UpdateFrequency;
+            clone.UseCustomUpdatesUrl = UseCustomUpdatesUrl;
+            clone.UpdatesUrl = UpdatesUrl;
 
-            foreach (var pair in this.Periods)
+            foreach (KeyValuePair<APIMethods, UpdatePeriod> pair in Periods)
             {
                 clone.Periods.Add(pair.Key, pair.Value);
             }
