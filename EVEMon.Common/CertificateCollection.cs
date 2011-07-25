@@ -101,7 +101,7 @@ namespace EVEMon.Common
                 cert.Reset();
             }
 
-            foreach (SerializableCharacterCertificate serialCert in certificates.Where(x => m_items[x.CertificateID] != null))
+            foreach (SerializableCharacterCertificate serialCert in certificates.Where(x => this[x.CertificateID] != null))
             {
                 // Take care of the new certs not in our datafiles yet
                 // Mark as granted if it exists

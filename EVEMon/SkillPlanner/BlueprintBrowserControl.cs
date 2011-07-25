@@ -270,7 +270,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateRequiredMaterialsList()
         {
-            int productionEfficiencyLevel = (m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.ProductionEfficiencySkillID)).LastConfirmedLvl;
+            int productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
 
             m_propertiesList.BeginUpdate();
             try

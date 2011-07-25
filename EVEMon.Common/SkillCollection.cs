@@ -11,14 +11,14 @@ namespace EVEMon.Common
     /// Represents a collection of skills.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class SkillCollection : ReadonlyKeyedCollection<string, Skill>
+    public sealed class SkillCollection : ReadonlyKeyedCollection<long, Skill>
     {
         private readonly Character m_character;
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
-        private readonly Dictionary<long, Skill> m_itemsByID = new Dictionary<long, Skill>();
+        private readonly Dictionary<string, Skill> m_itemsByName = new Dictionary<string, Skill>();
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="character"></param>
         internal SkillCollection(Character character)
@@ -28,8 +28,8 @@ namespace EVEMon.Common
             {
                 foreach (var skill in group)
                 {
-                    m_items[skill.Name] = skill;
-                    m_itemsByID[skill.ID] = skill;
+                    m_items[skill.ID] = skill;
+                    m_itemsByName[skill.Name] = skill;
                     m_itemsArray[skill.ArrayIndex] = skill;
                 }
             }
@@ -42,32 +42,32 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill with the provided name
+        /// Gets the skill with the provided name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public Skill this[string name]
         {
-            get { return GetByKey(name); }
-        }
-
-        /// <summary>
-        /// Gets the skill with the provided id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Skill this[long id]
-        {
-            get 
+            get
             {
                 Skill skill = null;
-                m_itemsByID.TryGetValue(id, out skill);
+                m_itemsByName.TryGetValue(name, out skill);
                 return skill;
             }
         }
 
         /// <summary>
-        /// Gets the skill representing the given static skill
+        /// Gets the skill with the provided id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Skill this[long id]
+        {
+            get { return GetByKey(id); }
+        }
+
+        /// <summary>
+        /// Gets the skill representing the given static skill.
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
@@ -77,7 +77,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>)
+        /// Gets the skill with the provided array index (see <see cref="StaticSkill.ArrayIndex"/>).
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -110,10 +110,11 @@ namespace EVEMon.Common
                 skill.Reset(fromCCP);
             }
 
-            foreach (SerializableCharacterSkill serialSkill in skills.Where(x => m_itemsByID[x.ID] != null))
+            foreach (SerializableCharacterSkill serialSkill in skills.Where(x => this[x.ID] != null))
             {
-                // Take care of the new skills not in our datafiles yet. Update if it exists.
-                m_itemsByID[serialSkill.ID].Import(serialSkill, fromCCP);
+                // Take care of the new skills not in our datafiles yet
+                // Update if it exists
+                m_items[serialSkill.ID].Import(serialSkill, fromCCP);
             }
         }
     }

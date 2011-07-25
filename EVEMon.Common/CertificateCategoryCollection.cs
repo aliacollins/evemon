@@ -8,12 +8,12 @@ namespace EVEMon.Common
     /// Represents a certificate category.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class CertificateCategoryCollection : ReadonlyKeyedCollection<string, CertificateCategory>
+    public sealed class CertificateCategoryCollection : ReadonlyKeyedCollection<long, CertificateCategory>
     {
         private readonly Character m_character;
 
         /// <summary>
-        /// Constructor for the character initialization
+        /// Constructor for the character initialization.
         /// </summary>
         /// <param name="character"></param>
         internal CertificateCategoryCollection(Character character)
@@ -23,7 +23,7 @@ namespace EVEMon.Common
             foreach (StaticCertificateCategory srcCategory in StaticCertificates.Categories)
             {
                 CertificateCategory category = new CertificateCategory(character, srcCategory);
-                m_items[category.Name] = category;
+                m_items[category.ID] = category;
             }
         }
     }

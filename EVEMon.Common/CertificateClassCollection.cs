@@ -5,12 +5,12 @@ namespace EVEMon.Common
     /// <summary>
     /// Represetns a collection of character's certificate class
     /// </summary>
-    public sealed class CertificateClassCollection : ReadonlyKeyedCollection<string, CertificateClass>
+    public sealed class CertificateClassCollection : ReadonlyKeyedCollection<long, CertificateClass>
     {
         private readonly Character m_character;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         internal CertificateClassCollection(Character character)
         {
@@ -20,19 +20,19 @@ namespace EVEMon.Common
             {
                 foreach (CertificateClass certClass in category)
                 {
-                    m_items[certClass.Name] = certClass;
+                    m_items[certClass.ID] = certClass;
                 }
             }
         }
 
         /// <summary>
-        /// Gets a certificate class from its name
+        /// Gets a certificate class from its name.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public CertificateClass this[string name]
+        public CertificateClass this[long id]
         {
-            get { return GetByKey(name); }
+            get { return GetByKey(id); }
         }
     }
 }

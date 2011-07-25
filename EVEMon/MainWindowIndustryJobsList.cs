@@ -1083,18 +1083,18 @@ namespace EVEMon
                 && x.Activity != BlueprintActivity.Manufacturing && x.IssuedFor == IssuedFor.Corporation);
             
             // Calculate character's max manufacturing jobs
-            m_skillBasedManufacturingJobs = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.MassProductionSkillID).LastConfirmedLvl
-                + m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.AdvancedMassProductionSkillID).LastConfirmedLvl;
+            m_skillBasedManufacturingJobs = m_character.Skills[DBConstants.MassProductionSkillID].LastConfirmedLvl
+                + m_character.Skills[DBConstants.AdvancedMassProductionSkillID].LastConfirmedLvl;
 
             // Calculate character's max researching jobs
-            m_skillBasedResearchingJobs = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.LaboratoryOperationSkillID).LastConfirmedLvl
-                + m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.AdvancedLaboratoryOperationSkillID).LastConfirmedLvl;
+            m_skillBasedResearchingJobs = m_character.Skills[DBConstants.LaboratoryOperationSkillID].LastConfirmedLvl
+                + m_character.Skills[DBConstants.AdvancedLaboratoryOperationSkillID].LastConfirmedLvl;
 
             // Calculate character's remote manufacturing range
-            m_remoteManufacturingRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.SupplyChainManagementSkillID).LastConfirmedLvl;
+            m_remoteManufacturingRange = m_character.Skills[DBConstants.SupplyChainManagementSkillID].LastConfirmedLvl;
 
             // Calculate character's remote researching range
-            m_remoteResearchingRange = m_character.Skills.FirstOrDefault(x => x.ID == DBConstants.ScientificNetworkingSkillID).LastConfirmedLvl;
+            m_remoteResearchingRange = m_character.Skills[DBConstants.ScientificNetworkingSkillID].LastConfirmedLvl;
 
             // Calculate active manufacturing & researching jobs count (character & corporation issued separately)
             m_activeManufJobsIssuedForCharacterCount = activeManufJobsIssuedForCharacter.Count();
