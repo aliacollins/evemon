@@ -87,28 +87,6 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Gets the local portraits cache path for our character's GUID.
-        /// </summary>
-        /// <remarks>
-        /// We're talking about the cache in %APPDATA%\cache\portraits. 
-        /// This is different from the ImageService's hit cache (%APPDATA%\cache\image) or the game's portrait cache (in EVE Online folder)
-        /// </remarks>
-        public string EVEMonCachePortraitsPath
-        {
-            get
-            {
-                if (m_character == null)
-                    return String.Empty;
-
-                var cacheDir = String.Format(CultureConstants.DefaultCulture, "{1}{0}cache{0}portraits", Path.DirectorySeparatorChar, EveClient.EVEMonDataDir);
-                if (!Directory.Exists(cacheDir))
-                    Directory.CreateDirectory(cacheDir);
-
-                return Path.Combine(cacheDir, String.Format("{0}.png", m_character.Guid));
-            }
-        }
-
-        /// <summary>
         /// Gets or sets true when control or the character it is bound to is updating.
         /// </summary>
         private bool IsUpdating
@@ -140,7 +118,8 @@ namespace EVEMon.Common.Controls
         /// <list type="bullet">
         /// <item>We check for a cached portrait in %APPDATA%\Cache.</item>
         /// <item>It if failed, we assemble the url for a CCP download and give it to ImageService.</item>
-        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images), then download the url if no image was found in cache.</item>
+        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images),
+        /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
         /// <remarks>Note this method will first check the ImageService cache before to resort to download.</remarks>
@@ -179,9 +158,12 @@ namespace EVEMon.Common.Controls
         /// <returns>The character portrait as an Image object</returns>
         private Image GetPortraitFromCache()
         {
-            if (m_id <= 0) return null;
+            if (m_id <= 0)
+                return null;
 
-            string cacheFileName = EVEMonCachePortraitsPath;
+            string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
+                                                String.Format("{0}.png", m_character.Guid));
+
             if (!File.Exists(cacheFileName))
                 return null;
 
@@ -214,7 +196,8 @@ namespace EVEMon.Common.Controls
         /// Download the image from CCP...
         /// <list type="bullet">
         /// <item>We assemble the url for a CCP download and give it to ImageService.</item>
-        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images), then download the url if no image was found in cache.</item>
+        /// <item>ImageService will first check its cache (%APPDATA%\Cache\Images),
+        /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
         private void UpdateCharacterImageFromCCP()
@@ -229,7 +212,8 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// We retrieve a portrait from the ImageService's cache or from the CCP url. We then save it to the portraits' cache (%APPDATA%\Cache).
+        /// We retrieve a portrait from the ImageService's cache or from the CCP url.
+        /// We then save it to the portraits' cache (%APPDATA%\Cache).
         /// </summary>
         /// <param name="i">The retrieved image.</param>
         private void OnGotCharacterImageFromCCP(Image newImage)
@@ -264,7 +248,9 @@ namespace EVEMon.Common.Controls
             try
             {
                 // Save the image to the portrait cache file
-                FileHelper.OverwriteOrWarnTheUser(EVEMonCachePortraitsPath, fs =>
+                string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
+                                                    String.Format("{0}.png", m_character.Guid));
+                FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                 {
                     newImage.Save(fs, ImageFormat.Png);
                     fs.Flush();

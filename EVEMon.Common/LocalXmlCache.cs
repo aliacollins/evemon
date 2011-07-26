@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace EVEMon.Common
 {
@@ -11,25 +10,7 @@ namespace EVEMon.Common
     /// </summary>
     public static class LocalXmlCache
     {
-        private static readonly object m_syncLock = new object();
-        private static string m_cacheDirectory;
-
-
-        /// <summary>
-        /// Static constructor.
-        /// </summary>
-        public static void Initialize()
-        {
-            string EVEMonCacheDir = Path.Combine(EveClient.EVEMonDataDir, "cache");
-            if (!Directory.Exists(EVEMonCacheDir))
-                Directory.CreateDirectory(EVEMonCacheDir);
-
-            string EVEMonXmlCacheDir = Path.Combine(EVEMonCacheDir, "xml");
-            if (!Directory.Exists(EVEMonXmlCacheDir))
-                Directory.CreateDirectory(EVEMonXmlCacheDir);
-
-            m_cacheDirectory = String.Format("{0}{1}", EVEMonXmlCacheDir, Path.DirectorySeparatorChar);
-        }
+        private static readonly object s_syncLock = new object();
 
         /// <summary>
         /// Gets the <see cref="System.IO.FileInfo"/> for the specified character XML.
@@ -38,9 +19,9 @@ namespace EVEMon.Common
         /// <value></value>
         public static FileInfo GetFile(string filename)
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
-                return new FileInfo(String.Format("{0}{1}.xml", m_cacheDirectory, filename));
+                return new FileInfo(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
             }
         }
 
@@ -51,10 +32,10 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static XmlDocument GetCharacterXml(string charName)
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(String.Format("{0}{1}.xml", m_cacheDirectory, charName));
+                doc.Load(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
                 return doc;
             }
         }
@@ -66,13 +47,13 @@ namespace EVEMon.Common
         /// <param name="xdoc">The xml to save.</param>
         public static void Save(string key, XmlDocument xdoc)
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
                 XmlNode characterNode = xdoc.SelectSingleNode("//name");
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file
-                string fileName = Path.Combine(m_cacheDirectory, String.Format("{0}.xml", name));
+                string fileName = Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
                 {
@@ -94,9 +75,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         internal static Uri GetCharacterUri(string characterName)
         {
-            lock (m_syncLock)
+            lock (s_syncLock)
             {
-                return new Uri(String.Format("{0}{1}.xml", m_cacheDirectory, characterName));
+                return new Uri(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
             }
         }
 

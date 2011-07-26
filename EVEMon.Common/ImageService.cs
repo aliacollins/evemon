@@ -12,24 +12,9 @@ namespace EVEMon.Common
 {
     public delegate void GetImageCallback(Image i);
 
-    public class ImageService
+    public static class ImageService
     {
         private static readonly Object s_syncLock = new object();
-
-        /// <summary>
-        /// Gets the directory used to store cached images but (not portraits).
-        /// </summary>
-        private static string ImageCacheDirectory
-        {
-            get
-            {
-                string cacheDir = Path.Combine(Path.Combine(EveClient.EVEMonDataDir, "cache"), "images");
-                if (!Directory.Exists(cacheDir))
-                    Directory.CreateDirectory(cacheDir);
-
-                return cacheDir;
-            }
-        }
 
         /// <summary>
         /// Asynchronously downloads a character portrait from its ID.
@@ -57,7 +42,7 @@ namespace EVEMon.Common
             }
 
             // First check whether the image exists in cache
-            string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
+            string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
             if (File.Exists(cacheFileName))
             {
                 try
@@ -95,7 +80,7 @@ namespace EVEMon.Common
                 try
                 {
                     // Write this image to the cache file
-                    string cacheFileName = Path.Combine(ImageCacheDirectory, GetCacheName(url));
+                    string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs => {
                         image.Save(fs, ImageFormat.Png);
                         fs.Flush();

@@ -129,9 +129,34 @@ namespace EVEMon.Common
         public static string EVEApplicationDataDir { get; private set; }
         
         /// <summary>
-        /// Returns the current data storage directory and initializes SettingsFile.
+        /// Returns the current data storage directory.
         /// </summary>
         public static string EVEMonDataDir { get; private set; }
+
+        /// <summary>
+        /// Returns the current cache directory.
+        /// </summary>
+        public static string EVEMonCacheDir { get; private set; }
+
+        /// <summary>
+        /// Returns the current xml cache directory.
+        /// </summary>
+        public static string EVEMonXmlCacheDir { get; private set; }
+
+        /// <summary>
+        /// Returns the current image cache directory (not portraits).
+        /// </summary>
+        public static string EVEMonImageCacheDir { get; private set; }
+
+        /// <summary>
+        /// Returns the current portraits cache directory.
+        /// </summary>
+        /// <remarks>
+        /// We're talking about the cache in %APPDATA%\cache\portraits
+        /// This is different from the ImageService's hit cache (%APPDATA%\cache\image)
+        /// or the game's portrait cache (in EVE Online folder)
+        ///</remarks>
+        public static string EVEMonPortraitCacheDir { get; private set; }
 
         /// <summary>
         /// Gets the name of the current settings file.
@@ -182,7 +207,6 @@ namespace EVEMon.Common
                     {
                         InitializeEVEMonPaths();
                         InitializeDefaultEvePortraitCachePath();
-                        LocalXmlCache.Initialize();
                         return;
                     }
                     catch (UnauthorizedAccessException exc)
@@ -208,7 +232,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Retrieves the settings file path.
+        /// Initializes all needed EVEMon paths.
         /// </summary>
         private static void InitializeEVEMonPaths()
         {
@@ -225,8 +249,24 @@ namespace EVEMon.Common
                 Directory.CreateDirectory(EVEMonDataDir);
             
             // Create the cache subfolder
-            if (!Directory.Exists(Path.Combine(EVEMonDataDir, "cache")))
-                Directory.CreateDirectory(Path.Combine(EVEMonDataDir, "cache"));
+            EVEMonCacheDir = Path.Combine(EVEMonDataDir, "cache");
+            if (!Directory.Exists(EVEMonCacheDir))
+                Directory.CreateDirectory(EVEMonCacheDir);
+
+            // Create the xml cache subfolder
+            EVEMonXmlCacheDir = Path.Combine(EVEMonCacheDir, "xml");
+            if (!Directory.Exists(EVEMonXmlCacheDir))
+                Directory.CreateDirectory(EVEMonXmlCacheDir);
+
+            // Create the images cache subfolder (not portraits)
+            EVEMonImageCacheDir = Path.Combine(EVEMonCacheDir, "images");
+            if (!Directory.Exists(EVEMonImageCacheDir))
+                Directory.CreateDirectory(EVEMonImageCacheDir);
+
+            // Create the portraits cache subfolder
+            EVEMonPortraitCacheDir = Path.Combine(EVEMonCacheDir, "portraits");
+            if (!Directory.Exists(EVEMonPortraitCacheDir))
+                Directory.CreateDirectory(EVEMonPortraitCacheDir);
         }
 
         /// <summary>
