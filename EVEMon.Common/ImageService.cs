@@ -42,11 +42,12 @@ namespace EVEMon.Common
             }
 
             // First check whether the image exists in cache
+            EnsureImageCacheDir();
             string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
             if (File.Exists(cacheFileName))
             {
                 try
-                {
+                {                   
                     Image img = Image.FromFile(cacheFileName, true);
                     callback(img);
                     return;
@@ -68,6 +69,15 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Ensures the image cache directory is initialized.
+        /// </summary>
+        private static void EnsureImageCacheDir()
+        {
+            if (!Directory.Exists(EveClient.EVEMonImageCacheDir))
+                EveClient.InitializeEVEMonPaths();
+        }
+
+        /// <summary>
         /// Adds the image to the memory cache, flush the cache to the hard drive, then save the image to a cached file.
         /// </summary>
         /// <param name="url"></param>
@@ -80,6 +90,7 @@ namespace EVEMon.Common
                 try
                 {
                     // Write this image to the cache file
+                    EnsureImageCacheDir();
                     string cacheFileName = Path.Combine(EveClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs => {
                         image.Save(fs, ImageFormat.Png);

@@ -16,7 +16,7 @@ namespace EVEMon.Common.Controls
         private bool m_pendingUpdate;
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         public CharacterPortrait()
         {
@@ -153,7 +153,16 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Open the character portrait from the EVEMon cache
+        /// Ensures the portrits cache directory is initialized.
+        /// </summary>
+        private void EnsurePortraitCacheDir()
+        {
+            if (!Directory.Exists(EveClient.EVEMonPortraitCacheDir))
+                EveClient.InitializeEVEMonPaths();
+        }
+
+        /// <summary>
+        /// Open the character portrait from the EVEMon cache.
         /// </summary>
         /// <returns>The character portrait as an Image object</returns>
         private Image GetPortraitFromCache()
@@ -161,8 +170,9 @@ namespace EVEMon.Common.Controls
             if (m_id <= 0)
                 return null;
 
+            EnsurePortraitCacheDir();
             string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
-                                                String.Format("{0}.png", m_character.Guid));
+                                                 String.Format("{0}.png", m_character.Guid));
 
             if (!File.Exists(cacheFileName))
                 return null;
@@ -231,7 +241,7 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Save the specified image to the EVEMon cache as this character's portrait
+        /// Save the specified image to the EVEMon cache as this character's portrait.
         /// </summary>
         /// <param name="newImage">The new portrait image.</param>
         private void SavePortraitToCache(Image newImage)
@@ -248,8 +258,10 @@ namespace EVEMon.Common.Controls
             try
             {
                 // Save the image to the portrait cache file
+                EnsurePortraitCacheDir();
                 string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
                                                     String.Format("{0}.png", m_character.Guid));
+
                 FileHelper.OverwriteOrWarnTheUser(cacheFileName, fs =>
                 {
                     newImage.Save(fs, ImageFormat.Png);
@@ -277,7 +289,7 @@ namespace EVEMon.Common.Controls
 
         #region Mechanisms related to the game folder
         /// <summary>
-        /// Download the image from the EVE cache (in EVE Online client installation folder)
+        /// Download the image from the EVE cache (in EVE Online client installation folder).
         /// </summary>
         private void UpdateCharacterFromEVECache()
         {

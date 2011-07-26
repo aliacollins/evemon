@@ -234,7 +234,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes all needed EVEMon paths.
         /// </summary>
-        private static void InitializeEVEMonPaths()
+        internal static void InitializeEVEMonPaths()
         {
             // If settings.xml exists in the app's directory, we use this one
             EVEMonDataDir = Directory.GetCurrentDirectory();
