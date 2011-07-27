@@ -13,6 +13,7 @@ namespace EVEMon.Common
         #region Fields
 
         private Character m_character;
+        private Image m_image;
 
         #endregion
 
@@ -31,8 +32,6 @@ namespace EVEMon.Common
             EntityName = src.Name;
             StandingValue = src.StandingValue;
             Group = src.GroupType;
-            EntityImage = new Bitmap(32, 32);
-            GetImage();
         }
 
         /// <summary>
@@ -47,8 +46,6 @@ namespace EVEMon.Common
             EntityName = src.EntityName;
             StandingValue = src.StandingValue;
             Group = src.Group;
-            EntityImage = new Bitmap(32, 32);
-            GetImage();
         }
 
         #endregion
@@ -60,31 +57,42 @@ namespace EVEMon.Common
         /// Gets or sets the entity ID.
         /// </summary>
         /// <value>The entity ID.</value>
-        public int EntityID { get; set; }
+        public int EntityID { get; private set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string EntityName { get; set; }
+        public string EntityName { get; private set; }
 
         /// <summary>
         /// Gets or sets the standing value.
         /// </summary>
         /// <value>The standing value.</value>
-        public double StandingValue { get; set; }
+        public double StandingValue { get; private set; }
 
         /// <summary>
         /// Gets or sets the group.
         /// </summary>
         /// <value>The group.</value>
-        public string Group { get; set; }
+        public string Group { get; private set; }
 
         /// <summary>
-        /// Gets or sets the group.
+        /// Gets or sets the entity image.
         /// </summary>
-        /// <value>The group.</value>
-        public Image EntityImage { get; set; }
+        /// <value>The entity image.</value>
+        public Image EntityImage
+        {
+            get
+            {
+                if (m_image == null)
+                {
+                    m_image = GetDefaultImage();
+                    GetImage();
+                }
+                return m_image;
+            }
+        }
 
         /// <summary>
         /// Gets the effective standing.
@@ -129,42 +137,46 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Private Properties
+        #region Helper Methods
+
+        private Image GetDefaultImage()
+        {
+            switch (Group)
+            {
+                case "Agents":
+                    return Properties.Resources.DefaultCharacterImage32;
+                case "NPC Corporations":
+                    return Properties.Resources.DefaultCorporationImage32;
+                case "Factions":
+                    return Properties.Resources.DefaultAllianceImage32;
+            }
+            return new Bitmap(32, 32);
+        }
 
         /// <summary>
         /// Gets the image URL.
         /// </summary>
-        /// <param name="standing">The standing.</param>
         /// <returns></returns>
-        private string ImageUrl
+        private string GetImageUrl()
         {
-            get
-            {
                 if (Group == "Agents")
                     return String.Format(NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32);
 
                 return String.Format(NetworkConstants.CCPIconsFromImageServer,
                     (Group == "Factions" ? "alliance" : "corporation"),
                     EntityID, (int)EveImageSize.x32);
-            }
         }
-
-        #endregion
-
-
-        #region Helper Methods
 
         /// <summary>
         /// Gets the entity image.
         /// </summary>
-        /// <returns></returns>
         private void GetImage()
         {
-            ImageService.GetImageAsync(ImageUrl, true, (img) =>
+            ImageService.GetImageAsync(GetImageUrl(), true, (img) =>
             {
                 if (img != null)
                 {
-                    EntityImage = img;
+                    m_image = img;
 
                     // Notify the subscriber that we got the image
                     // Note that if the image is in cache the event doesn't get fired
