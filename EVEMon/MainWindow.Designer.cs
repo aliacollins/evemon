@@ -53,13 +53,14 @@ namespace EVEMon
             this.addAccountMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.manageAccountsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileManagerHideToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.hideCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.fileExportSaveToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileRestoreResetToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.clearCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileResetExitToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,20 +72,20 @@ namespace EVEMon
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.planSeparatorMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.skillsPieChartMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addBlankCharacterMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.mineralWorksheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.schedulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.skillsPieChartMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsSchedulerImplantGroupsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.implantsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.showOwnedSkillbooksMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsOwnedOptionsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stackExchangeMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -299,6 +300,7 @@ namespace EVEMon
             this.loadSettingsToolStripMenuItem,
             this.saveSettingsToolStripMenuItem,
             this.fileRestoreResetToolStripSeparator,
+            this.clearCacheToolStripMenuItem,
             this.resetSettingsToolStripMenuItem,
             this.fileResetExitToolStripSeparator,
             this.exitToolStripMenuItem});
@@ -327,14 +329,6 @@ namespace EVEMon
             this.fileManagerHideToolStripSeparator.Name = "fileManagerHideToolStripSeparator";
             this.fileManagerHideToolStripSeparator.Size = new System.Drawing.Size(176, 6);
             // 
-            // hideCharacterMenu
-            // 
-            this.hideCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("hideCharacterMenu.Image")));
-            this.hideCharacterMenu.Name = "hideCharacterMenu";
-            this.hideCharacterMenu.Size = new System.Drawing.Size(179, 22);
-            this.hideCharacterMenu.Text = "&Hide Character";
-            this.hideCharacterMenu.Click += new System.EventHandler(this.hideCharacterMenu_Click);
-            // 
             // deleteCharacterMenu
             // 
             this.deleteCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("deleteCharacterMenu.Image")));
@@ -348,21 +342,21 @@ namespace EVEMon
             this.exportCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("exportCharacterMenu.Image")));
             this.exportCharacterMenu.Name = "exportCharacterMenu";
             this.exportCharacterMenu.Size = new System.Drawing.Size(179, 22);
-            this.exportCharacterMenu.Text = "Export &Character...";
+            this.exportCharacterMenu.Text = "&Export Character...";
             this.exportCharacterMenu.Click += new System.EventHandler(this.saveCharacterInfosMenuItem_Click);
+            // 
+            // hideCharacterMenu
+            // 
+            this.hideCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("hideCharacterMenu.Image")));
+            this.hideCharacterMenu.Name = "hideCharacterMenu";
+            this.hideCharacterMenu.Size = new System.Drawing.Size(179, 22);
+            this.hideCharacterMenu.Text = "&Hide Character";
+            this.hideCharacterMenu.Click += new System.EventHandler(this.hideCharacterMenu_Click);
             // 
             // fileExportSaveToolStripSeparator
             // 
             this.fileExportSaveToolStripSeparator.Name = "fileExportSaveToolStripSeparator";
             this.fileExportSaveToolStripSeparator.Size = new System.Drawing.Size(176, 6);
-            // 
-            // saveSettingsToolStripMenuItem
-            // 
-            this.saveSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSettingsToolStripMenuItem.Image")));
-            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
-            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.saveSettingsToolStripMenuItem.Text = "Sa&ve Settings...";
-            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
             // 
             // loadSettingsToolStripMenuItem
             // 
@@ -372,10 +366,26 @@ namespace EVEMon
             this.loadSettingsToolStripMenuItem.Text = "R&estore Settings...";
             this.loadSettingsToolStripMenuItem.Click += new System.EventHandler(this.loadSettingsToolStripMenuItem_Click);
             // 
+            // saveSettingsToolStripMenuItem
+            // 
+            this.saveSettingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSettingsToolStripMenuItem.Image")));
+            this.saveSettingsToolStripMenuItem.Name = "saveSettingsToolStripMenuItem";
+            this.saveSettingsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.saveSettingsToolStripMenuItem.Text = "Sa&ve Settings...";
+            this.saveSettingsToolStripMenuItem.Click += new System.EventHandler(this.saveSettingsToolStripMenuItem_Click);
+            // 
             // fileRestoreResetToolStripSeparator
             // 
             this.fileRestoreResetToolStripSeparator.Name = "fileRestoreResetToolStripSeparator";
             this.fileRestoreResetToolStripSeparator.Size = new System.Drawing.Size(176, 6);
+            // 
+            // clearCacheToolStripMenuItem
+            // 
+            this.clearCacheToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("clearCacheToolStripMenuItem.Image")));
+            this.clearCacheToolStripMenuItem.Name = "clearCacheToolStripMenuItem";
+            this.clearCacheToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.clearCacheToolStripMenuItem.Text = "&Clear Cache";
+            this.clearCacheToolStripMenuItem.Click += new System.EventHandler(this.clearCacheToolStripMenuItem_Click);
             // 
             // resetSettingsToolStripMenuItem
             // 
@@ -472,6 +482,14 @@ namespace EVEMon
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
+            // addBlankCharacterMenu
+            // 
+            this.addBlankCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("addBlankCharacterMenu.Image")));
+            this.addBlankCharacterMenu.Name = "addBlankCharacterMenu";
+            this.addBlankCharacterMenu.Size = new System.Drawing.Size(209, 22);
+            this.addBlankCharacterMenu.Text = "Blank Character Creator...";
+            this.addBlankCharacterMenu.Click += new System.EventHandler(this.blankCharacterMenu_Click);
+            // 
             // mineralWorksheetToolStripMenuItem
             // 
             this.mineralWorksheetToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("mineralWorksheetToolStripMenuItem.Image")));
@@ -480,15 +498,6 @@ namespace EVEMon
             this.mineralWorksheetToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.mineralWorksheetToolStripMenuItem.Text = "&Mineral Worksheet...";
             this.mineralWorksheetToolStripMenuItem.Click += new System.EventHandler(this.mineralWorksheetToolStripMenuItem_Click);
-            // 
-            // skillsPieChartMenu
-            // 
-            this.skillsPieChartMenu.Image = ((System.Drawing.Image)(resources.GetObject("skillsPieChartMenu.Image")));
-            this.skillsPieChartMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillsPieChartMenu.Name = "skillsPieChartMenu";
-            this.skillsPieChartMenu.Size = new System.Drawing.Size(209, 22);
-            this.skillsPieChartMenu.Text = "Skills &Pie Chart...";
-            this.skillsPieChartMenu.Click += new System.EventHandler(this.tsSkillsPieChartTool_Click);
             // 
             // schedulerToolStripMenuItem
             // 
@@ -499,13 +508,14 @@ namespace EVEMon
             this.schedulerToolStripMenuItem.Text = "&Scheduler...";
             this.schedulerToolStripMenuItem.Click += new System.EventHandler(this.schedulerToolStripMenuItem_Click);
             // 
-            // addBlankCharacterMenu
+            // skillsPieChartMenu
             // 
-            this.addBlankCharacterMenu.Image = ((System.Drawing.Image)(resources.GetObject("addBlankCharacterMenu.Image")));
-            this.addBlankCharacterMenu.Name = "addBlankCharacterMenu";
-            this.addBlankCharacterMenu.Size = new System.Drawing.Size(209, 22);
-            this.addBlankCharacterMenu.Text = "Blank Character Creator...";
-            this.addBlankCharacterMenu.Click += new System.EventHandler(this.blankCharacterMenu_Click);
+            this.skillsPieChartMenu.Image = ((System.Drawing.Image)(resources.GetObject("skillsPieChartMenu.Image")));
+            this.skillsPieChartMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillsPieChartMenu.Name = "skillsPieChartMenu";
+            this.skillsPieChartMenu.Size = new System.Drawing.Size(209, 22);
+            this.skillsPieChartMenu.Text = "Skills &Pie Chart...";
+            this.skillsPieChartMenu.Click += new System.EventHandler(this.tsSkillsPieChartTool_Click);
             // 
             // toolsSchedulerImplantGroupsToolStripSeparator
             // 
@@ -554,21 +564,6 @@ namespace EVEMon
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
-            // knownProblemsMenuItem
-            // 
-            this.knownProblemsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("knownProblemsMenuItem.Image")));
-            this.knownProblemsMenuItem.Name = "knownProblemsMenuItem";
-            this.knownProblemsMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.knownProblemsMenuItem.Text = "&Known problems and solutions";
-            this.knownProblemsMenuItem.Click += new System.EventHandler(this.knownProblemsMenu_Click);
-            // 
-            // userVoiceMenuItem
-            // 
-            this.userVoiceMenuItem.Name = "userVoiceMenuItem";
-            this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
-            this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
-            // 
             // stackExchangeMenu
             // 
             this.stackExchangeMenu.Name = "stackExchangeMenu";
@@ -583,6 +578,21 @@ namespace EVEMon
             this.forumsMenuItem.Size = new System.Drawing.Size(238, 22);
             this.forumsMenuItem.Text = "&Forums";
             this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
+            // 
+            // knownProblemsMenuItem
+            // 
+            this.knownProblemsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("knownProblemsMenuItem.Image")));
+            this.knownProblemsMenuItem.Name = "knownProblemsMenuItem";
+            this.knownProblemsMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.knownProblemsMenuItem.Text = "&Known problems and solutions";
+            this.knownProblemsMenuItem.Click += new System.EventHandler(this.knownProblemsMenu_Click);
+            // 
+            // userVoiceMenuItem
+            // 
+            this.userVoiceMenuItem.Name = "userVoiceMenuItem";
+            this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
+            this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
             // 
             // helpAboutKnownProblemsToolStripSeparator
             // 
@@ -1014,5 +1024,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stackExchangeMenu;
         private System.Windows.Forms.ToolStripMenuItem addBlankCharacterMenu;
+        private System.Windows.Forms.ToolStripMenuItem clearCacheToolStripMenuItem;
     }
 }

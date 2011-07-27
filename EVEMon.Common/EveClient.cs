@@ -368,6 +368,28 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Cache Clearing
+
+        public static void ClearCache()
+        {
+            try
+            {
+                List<FileInfo> cachedFiles = new List<FileInfo>();
+                cachedFiles.AddRange(new DirectoryInfo(EVEMonImageCacheDir).GetFiles());
+                cachedFiles.AddRange(new DirectoryInfo(EVEMonXmlCacheDir).GetFiles());
+                cachedFiles.AddRange(new DirectoryInfo(EVEMonPortraitCacheDir).GetFiles());
+
+                cachedFiles.ForEach(x => x.Delete());
+            }
+            finally
+            {
+                InitializeEVEMonPaths();
+            }
+        }
+        
+        #endregion
+
+
         #region Accounts management
 
         /// <summary>

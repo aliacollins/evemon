@@ -1210,16 +1210,32 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// File > Clear Cache.
+        /// Called when the user clickes the "clear cache" toolbar's button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Manually delete the Settings file for any non-recoverable errors
+            DialogResult dr = MessageBox.Show("Are you sure you want to clear the cache ?",
+                "Confirm Cache Clearing", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+
+            if (dr == DialogResult.Yes)
+                EveClient.ClearCache();
+        }
+
+        /// <summary>
         /// File > Reset settings.
-        /// Called when the user clickes the "reset cache" toolbar's button.
+        /// Called when the user clickes the "reset settings" toolbar's button.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Manually delete the Settings file for any non-recoverble errors.
+            // Manually delete the Settings file for any non-recoverable errors
             DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\nEverything will be lost, including the plans.",
-                "Confirm Removal", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                "Confirm Settings Reseting", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 Settings.Reset();
