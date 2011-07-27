@@ -47,10 +47,24 @@ namespace EVEMon.Common
             if (File.Exists(cacheFileName))
             {
                 try
-                {                   
-                    Image img = Image.FromFile(cacheFileName, true);
-                    callback(img);
+                {
+                    // Load the data into a MemoryStream
+                    // before returning the image
+                    // to avoid file locking
+                    Image image;
+
+                    byte[] imageBytes = File.ReadAllBytes(cacheFileName);
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        stream.Write(imageBytes, 0, imageBytes.Length);
+                        stream.Position = 0;
+
+                        image = Image.FromStream(stream);
+                    }
+                    callback(image);
                     return;
+                    
                 }
                 catch (Exception e)
                 {
