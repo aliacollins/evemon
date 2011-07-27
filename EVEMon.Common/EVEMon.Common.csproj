@@ -785,6 +785,9 @@
     </Content>
     <Content Include="Resources\Images\BattleClinic.png" />
     <Content Include="Resources\Images\bee.jpg" />
+    <Content Include="Resources\Images\DefaultAllianceImage32.png" />
+    <Content Include="Resources\Images\DefaultCharacterImage32.png" />
+    <Content Include="Resources\Images\DefaultCorporationImage32.png" />
     <Content Include="Resources\Images\default_char_pic.png" />
     <Content Include="Resources\Images\default_char_pic_old.png" />
     <Content Include="Resources\Images\EVEMail.png" />
