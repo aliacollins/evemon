@@ -79,7 +79,7 @@ namespace EVEMon
         {
             base.OnVisibleChanged(e);
 
-            if (this.Visible)
+            if (Visible)
                 UpdateContent();
         }
 
@@ -233,42 +233,51 @@ namespace EVEMon
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
-            string standingText = String.Format("{0}  {1}", standing.EntityName, standing.EffectiveStanding.ToString("N2"));
+            string standingText = String.Format("{0}  {1:N2}", standing.EntityName, standing.EffectiveStanding);
             string standingStatusText = String.Format("({0})", standing.Status);
-            string standingsDetailsText = String.Format("{0} raises your effective standing from {1}",
+            string standingsDetailsText = String.Format("{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
-                                                        standing.StandingValue.ToString("N2"));
+                                                        standing.StandingValue);
 
             Size standingTextSize = TextRenderer.MeasureText(g, standingText, m_standingsBoldFont, Size.Empty, format);
             Size standingStatusTextSize = TextRenderer.MeasureText(g, standingStatusText, m_standingsBoldFont, Size.Empty, format);
             Size standingsDetailsTextSize = TextRenderer.MeasureText(g, standingsDetailsText, m_standingsFont, Size.Empty, format);
 
+            bool standingsDiffer = (standing.EffectiveStanding != standing.StandingValue);
+            
             // Draw texts
             TextRenderer.DrawText(g, standingText, m_standingsBoldFont,
                                                             new Rectangle(
                                                                 e.Bounds.Left + PadLeft * 6,
-                                                                e.Bounds.Top + PadTop,
+                                                                e.Bounds.Top + (standingsDiffer ?
+                                                                                PadTop :
+                                                                                ((e.Bounds.Height - standingTextSize.Height) / 2)),
                                                                 standingTextSize.Width + PadLeft,
                                                                 standingTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, standingStatusText, m_standingsBoldFont,
                                                             new Rectangle(
                                                                 e.Bounds.Left + PadLeft * 6 + standingTextSize.Width + PadRight,
-                                                                e.Bounds.Top + PadTop,
+                                                                e.Bounds.Top + (standingsDiffer ?
+                                                                                PadTop :
+                                                                                ((e.Bounds.Height - standingStatusTextSize.Height) / 2)),
                                                                 standingStatusTextSize.Width + PadLeft,
                                                                 standingStatusTextSize.Height), GetStatusColor(standing.Status));
 
-            TextRenderer.DrawText(g, standingsDetailsText, m_standingsFont,
-                                                            new Rectangle(
-                                                                e.Bounds.Left + PadLeft * 6,
-                                                                e.Bounds.Top + PadTop + standingTextSize.Height,
-                                                                standingsDetailsTextSize.Width + PadLeft,
-                                                                standingsDetailsTextSize.Height), Color.Black);
+            if (standingsDiffer)
+            {
+                TextRenderer.DrawText(g, standingsDetailsText, m_standingsFont,
+                                                                new Rectangle(
+                                                                    e.Bounds.Left + PadLeft * 6,
+                                                                    e.Bounds.Top + PadTop + standingTextSize.Height,
+                                                                    standingsDetailsTextSize.Width + PadLeft,
+                                                                    standingsDetailsTextSize.Height), Color.Black);
+            }
 
             // Draw the entity image
             if (!Settings.UI.SafeForWork)
             {
-                g.DrawImageUnscaled(standing.EntityImage,
+                g.DrawImage(standing.EntityImage,
                     new Rectangle(e.Bounds.Left + PadLeft / 2, (StandingDetailHeight / 2) - (standing.EntityImage.Height / 2) + e.Bounds.Top,
                     standing.EntityImage.Width, standing.EntityImage.Height));
             }

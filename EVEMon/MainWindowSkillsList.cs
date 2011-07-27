@@ -90,7 +90,7 @@ namespace EVEMon
         {
             base.OnVisibleChanged(e);
 
-            if (this.Visible)
+            if (Visible)
                 UpdateContent();
         }
 

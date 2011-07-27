@@ -162,7 +162,7 @@ namespace EVEMon.Common
         /// <param name="serial"></param>
         internal void Import(SerializableImplantSet serial)
         {
-            // Search whether the api infos are different from the ones currently stored.
+            // Search whether the api infos are different from the ones currently stored
             var newSet = new ImplantSet(m_owner, "temp");
             newSet.Import(serial);
 
@@ -175,7 +175,9 @@ namespace EVEMon.Common
             }
 
             // Imports the API and make a backup
-            if (isDifferent) m_oldAPI.Import(m_api.Export(), false);
+            if (isDifferent)
+                m_oldAPI.Import(m_api.Export(), false);
+
             m_api.Import(serial);
 
             EveClient.OnSettingsChanged();
