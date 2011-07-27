@@ -214,6 +214,27 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap DefaultAllianceImage32 {
+            get {
+                object obj = ResourceManager.GetObject("DefaultAllianceImage32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap DefaultCharacterImage32 {
+            get {
+                object obj = ResourceManager.GetObject("DefaultCharacterImage32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap DefaultCorporationImage32 {
+            get {
+                object obj = ResourceManager.GetObject("DefaultCorporationImage32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap DeleteAccount {
             get {
                 object obj = ResourceManager.GetObject("DeleteAccount", resourceCulture);

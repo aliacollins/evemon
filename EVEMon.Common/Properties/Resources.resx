@@ -415,4 +415,13 @@
   <data name="Error32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\images\error32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DefaultAllianceImage32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\defaultallianceimage32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DefaultCharacterImage32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\defaultcharacterimage32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DefaultCorporationImage32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\images\defaultcorporationimage32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
