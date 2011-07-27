@@ -153,15 +153,6 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Ensures the portrits cache directory is initialized.
-        /// </summary>
-        private void EnsurePortraitCacheDir()
-        {
-            if (!Directory.Exists(EveClient.EVEMonPortraitCacheDir))
-                EveClient.InitializeEVEMonPaths();
-        }
-
-        /// <summary>
         /// Open the character portrait from the EVEMon cache.
         /// </summary>
         /// <returns>The character portrait as an Image object</returns>
@@ -170,7 +161,7 @@ namespace EVEMon.Common.Controls
             if (m_id <= 0)
                 return null;
 
-            EnsurePortraitCacheDir();
+            EveClient.EnsureCacheDirInit();
             string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
                                                  String.Format("{0}.png", m_character.Guid));
 
@@ -258,7 +249,7 @@ namespace EVEMon.Common.Controls
             try
             {
                 // Save the image to the portrait cache file
-                EnsurePortraitCacheDir();
+                EveClient.EnsureCacheDirInit();
                 string cacheFileName = Path.Combine(EveClient.EVEMonPortraitCacheDir,
                                                     String.Format("{0}.png", m_character.Guid));
 

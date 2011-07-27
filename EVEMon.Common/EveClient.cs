@@ -234,7 +234,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes all needed EVEMon paths.
         /// </summary>
-        internal static void InitializeEVEMonPaths()
+        private static void InitializeEVEMonPaths()
         {
             // If settings.xml exists in the app's directory, we use this one
             EVEMonDataDir = Directory.GetCurrentDirectory();
@@ -314,6 +314,14 @@ namespace EVEMon.Common
         internal static void SetEvePortraitCacheFolder(string[] path)
         {
             EvePortraitCacheFolders = path;
+        }
+
+        /// <summary>
+        /// Ensures the cache directories are initialized.
+        /// </summary>
+        internal static void EnsureCacheDirInit()
+        {
+            InitializeEVEMonPaths();
         }
 
         #endregion

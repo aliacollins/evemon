@@ -13,15 +13,6 @@ namespace EVEMon.Common
         private static readonly object s_syncLock = new object();
 
         /// <summary>
-        /// Ensures the xml cache directory is initialized.
-        /// </summary>
-        private static void EnsureXmlCacheDir()
-        {
-            if (!Directory.Exists(EveClient.EVEMonXmlCacheDir))
-                EveClient.InitializeEVEMonPaths();
-        }
-
-        /// <summary>
         /// Gets the <see cref="System.IO.FileInfo"/> for the specified character XML.
         /// If you really want the xml, use GetCharacterXml
         /// </summary>
@@ -30,7 +21,7 @@ namespace EVEMon.Common
         {
             lock (s_syncLock)
             {
-                EnsureXmlCacheDir();
+                EveClient.EnsureCacheDirInit();
                 return new FileInfo(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", filename)));
             }
         }
@@ -45,7 +36,7 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 XmlDocument doc = new XmlDocument();
-                EnsureXmlCacheDir();
+                EveClient.EnsureCacheDirInit();
                 doc.Load(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", charName)));
                 return doc;
             }
@@ -64,7 +55,7 @@ namespace EVEMon.Common
                 string name = (characterNode == null ? key : characterNode.InnerText);
 
                 // Writes in the target file
-                EnsureXmlCacheDir();
+                EveClient.EnsureCacheDirInit();
                 string fileName = Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", name));
                 string content = Util.GetXMLStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName, fs =>
@@ -89,7 +80,7 @@ namespace EVEMon.Common
         {
             lock (s_syncLock)
             {
-                EnsureXmlCacheDir();
+                EveClient.EnsureCacheDirInit();
                 return new Uri(Path.Combine(EveClient.EVEMonXmlCacheDir, String.Format("{0}.xml", characterName)));
             }
         }
