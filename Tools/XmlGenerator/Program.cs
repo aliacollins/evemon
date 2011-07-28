@@ -1068,11 +1068,11 @@ namespace EVEMon.XmlGenerator
                 case DBConstants.ExhumerGroupID:
                     return 3750;
                 case DBConstants.DestroyerGroupID:
+                case DBConstants.InterdictorGroupID:
                 case DBConstants.StrategicCruiserGroupID:
                     return 5000;
                 case DBConstants.CruiserGroupID:
                 case DBConstants.HeavyAssaultShipGroupID:
-                case DBConstants.InterdictorGroupID:
                 case DBConstants.LogisticsGroupID:
                 case DBConstants.ForceReconShipGroupID:
                 case DBConstants.HeavyInterdictorGroupID:
@@ -1886,7 +1886,7 @@ namespace EVEMon.XmlGenerator
                                 SerializableRequiredMaterial material = requiredMaterials
                                     .First(x => x.ID == reprocItem.MaterialTypeID);
 
-                                material.Quantity -= requirement.Quantity*reprocItem.Quantity;
+                                material.Quantity -= requirement.Quantity * reprocItem.Quantity;
 
                                 if (material.Quantity < 1)
                                     requiredMaterials.Remove(material);
