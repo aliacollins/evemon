@@ -23,7 +23,7 @@ namespace EVEMon.Common.Data
             ProducesItem = StaticItems.GetItemByID(src.ProduceItemID);
             ProductionTime = src.ProductionTime;
             ProductivityModifier = src.ProductivityModifier;
-            ResearchCopyTime = src.ResearchCopyTime;
+            ResearchCopyTime = src.ResearchCopyTime * 2;
             ResearchMaterialTime = src.ResearchMaterialTime;
             ResearchProductivityTime = src.ResearchProductivityTime;
             ResearchTechTime = src.ResearchTechTime;
