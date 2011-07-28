@@ -350,7 +350,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the output item (can be a blueprint of item).
+        /// Gets the output item (can be a blueprint or item).
         /// </summary>
         public Item OutputItem
         {

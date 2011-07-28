@@ -233,7 +233,7 @@ namespace EVEMon.SkillPlanner
             // Researching material efficiency character time
             factor = 0.05d;
             activityTime = m_blueprint.ResearchMaterialTime
-                * GetFacilityResearchMultiplier(BlueprintActivity.ResearchingMaterialProductivity) * GetImplantMultiplier("J");
+                * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingMaterialProductivity) * GetImplantMultiplier("J");
             lblResearchMECharTime.Text = CharacterActivityTime(activityTime, DBConstants.MetallurgySkillID, factor, false);
 
             // Researching copy base time
@@ -241,7 +241,7 @@ namespace EVEMon.SkillPlanner
 
             // Researching copy character time
             activityTime = (m_blueprint.ResearchCopyTime / m_blueprint.RunsPerCopy)
-                * GetFacilityResearchMultiplier(BlueprintActivity.Copying) * GetImplantMultiplier("K");
+                * GetResearchFacilityMultiplier(BlueprintActivity.Copying) * GetImplantMultiplier("K");
             lblResearchCopyCharTime.Text = CharacterActivityTime(activityTime, DBConstants.ScienceSkillID, factor, true);
 
             // Researching productivity efficiency base time
@@ -249,7 +249,7 @@ namespace EVEMon.SkillPlanner
 
             // Researching productivity efficiency character time
             activityTime = m_blueprint.ResearchProductivityTime
-                * GetFacilityResearchMultiplier(BlueprintActivity.ResearchingTimeProductivity) * GetImplantMultiplier("I");
+                * GetResearchFacilityMultiplier(BlueprintActivity.ResearchingTimeProductivity) * GetImplantMultiplier("I");
             lblResearchPECharTime.Text = CharacterActivityTime(activityTime, DBConstants.ResearchSkillID, factor, false);
 
             gbResearching.Visible = !m_blueprint.MarketGroup.BelongsIn(new int[] { DBConstants.BlueprintRootNonMarketGroupID });
@@ -262,7 +262,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Invention time
-            lblInventionBaseTime.Text = BaseActivityTime(m_blueprint.ResearchTechTime * GetFacilityResearchMultiplier(BlueprintActivity.Invention));
+            lblInventionBaseTime.Text = BaseActivityTime(m_blueprint.ResearchTechTime * GetResearchFacilityMultiplier(BlueprintActivity.Invention));
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string CharacterActivityTime(double activityTime, int skillID, double factor, bool copyActivity)
         {
-            int skillLevel = (m_character.Skills.FirstOrDefault(x => x.ID == skillID)).LastConfirmedLvl;
+            int skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
             double activityTimeModifier = (1 - (factor * skillLevel));
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier );
             bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
@@ -606,7 +606,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="activity"></param>
         /// <returns></returns>
-        private double GetFacilityResearchMultiplier(BlueprintActivity activity)
+        private double GetResearchFacilityMultiplier(BlueprintActivity activity)
         {
             var text = cbFacility.Text;
 

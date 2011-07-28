@@ -835,8 +835,8 @@ namespace EVEMon.Common
             if (result.HasError)
                 return false;
 
-            // Check to see if other market
-            // orders have been added before
+            // Check to see if other industry
+            // jobs have been added before
             if (!jobsAdded)
                 m_jobs.Clear();
 
