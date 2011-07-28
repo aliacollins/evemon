@@ -69,6 +69,7 @@ namespace EVEMon.Common.Data
             Family = src.Family;
             Description = src.Description;
 
+            PortionSize = src.PortionSize;
             MetaLevel = src.MetaLevel;
             MetaGroup = src.MetaGroup;
 
@@ -132,6 +133,11 @@ namespace EVEMon.Common.Data
         /// Gets the race this object is bound to.
         /// </summary>
         public Race Race { get; private set; }
+
+        /// <summary>
+        /// Gets this object's portion size.
+        /// </summary>
+        public int PortionSize { get; private set; }
 
         /// <summary>
         /// Gets this object's description.

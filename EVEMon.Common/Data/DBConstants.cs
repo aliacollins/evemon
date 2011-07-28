@@ -47,6 +47,13 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Attribute Category IDs
+
+        public const int StructureAtributeCategoryID = 4;
+
+        #endregion
+
+
         #region Attribute types IDs (Properties)
 
         public const int MassPropertyID = 4;
@@ -185,6 +192,44 @@ namespace EVEMon.Common.Data
 
         #region Group IDs
 
+        public const int FrigateGroupID = 25;
+        public const int CruiserGroupID = 26;
+        public const int BattleshipGroupID = 27;
+        public const int IndustrialGroupID = 28;
+        public const int CapsuleGroupID = 29;
+        public const int TitanGroupID = 30;
+        public const int ShuttleGroupID = 31;
+        public const int RookieShipGroupID = 237;
+        public const int AssaultShipGroupID = 324;
+        public const int HeavyAssaultShipGroupID = 358;
+        public const int TransportShipGroupID = 380;
+        public const int EliteBattleshipGroupID = 381;
+        public const int BattlecruiserGroupID = 419;
+        public const int DestroyerGroupID = 420;
+        public const int MiningBargeGroupID = 463;
+        public const int DreadnoughtGroupID = 485;
+        public const int FreighterGroupID = 513;
+        public const int CommandShipGroupID = 540;
+        public const int InterdictorGroupID = 541;
+        public const int ExhumerGroupID = 543;
+        public const int CarrierGroupID = 547;
+        public const int SupercarrierGroupID = 659;
+        public const int CovertOpsGroupID = 830;
+        public const int InterceptorGroupID = 831;
+        public const int LogisticsGroupID = 832;
+        public const int ForceReconShipGroupID = 833;
+        public const int StealthBomberGroupID = 834;
+        public const int CapitalIndustrialShipGroupID = 883;
+        public const int ElectronicAttackShipGroupID = 893;
+        public const int HeavyInterdictorGroupID = 894;
+        public const int BlackOpsGroupID = 898;
+        public const int MarauderGroupID = 900;
+        public const int JumpFreighterGroupID = 902;
+        public const int CombatReconShipGroupID = 906;
+        public const int IndustrialCommandShipGroupID = 941;
+        public const int StrategicCruiserGroupID = 963;
+        public const int PrototypeExplorationShipGroupID = 1022;
+
         public const int PlanetGroupID = 7;
         public const int CorporationManagementSkillsGroupID = 266;
         public const int SocialSkillsGroupID = 278;
@@ -233,9 +278,14 @@ namespace EVEMon.Common.Data
 
         public const int RootNonMarketGroupID = 11000;
 
-        public const int UniqueDesignsRootMarketGroupID = 10000;
+        public const int UniqueDesignsRootNonMarketGroupID = 10000;
         public const int UniqueDesignBattleshipsNonMarketGroupID = 10200;
         public const int UniqueDesignShuttlesNonMarketGroupID = 10900;
+        public const int RookieShipRootGroupID = 11100;
+        public const int RookieShipAmarrGroupID = 11140;
+        public const int RookieShipCaldariGroupID = 11110;
+        public const int RookieShipGallenteGroupID = 11180;
+        public const int RookieShipMinmatarGroupID = 11120;
 
         public const int BlueprintRootNonMarketGroupID = 21000;
         public const int BlueprintTechINonMarketGroupID = 21001;
@@ -304,7 +354,11 @@ namespace EVEMon.Common.Data
         public const int ScientificNetworkingSkillID = 24270;
         public const int DiplomacySkillID = 3357;
         public const int ConnectionsSkillID = 3359;
-
+        public const int ImpairorID = 596;
+        public const int IbisID = 601;
+        public const int VelatorID = 606;
+        public const int ReaperID = 588;
+        public const int CapsuleID = 670;
         public const int WarpDisruptProbeBlueprintID = 22779;
         public const int WildMinerIBlueprintID = 22924;
         public const int AdrestiaBlueprintID = 2837;

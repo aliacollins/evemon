@@ -32,6 +32,7 @@ namespace EVEMon.XmlGenerator
         private static DateTime s_endTime;
 
         private static int s_propBasePriceID;
+        private static int s_propPackagedVolumeID;
         private static List<InvMarketGroup> s_injectedMarketGroups;
 
         private static Bag<AgtAgents> s_agents;
@@ -392,17 +393,37 @@ namespace EVEMon.XmlGenerator
                     // New ID
                     newID = Math.Max(newID, srcProp.ID);
                 }
+
+                // Add EVEMon custom properties (Packaged Volume)
+                if (srcCategory.ID == DBConstants.StructureAtributeCategoryID)
+                {
+                    SerializableProperty pvProp = new SerializableProperty();
+                    properties.Insert(4, pvProp);
+                    pvProp.Name = "Packaged Volume";
+                    pvProp.Unit = "m3";
+                    pvProp.Icon = "02_09";
+                    pvProp.DefaultValue = "0";
+                    pvProp.Description = "The packaged volume of a ship.";
+                    pvProp.UnitID = 9;
+                }
+
                 category.Properties = properties.ToArray();
             }
 
+            // Set packaged volume property ID
+            s_propPackagedVolumeID = ++newID;
+            categories[5].Properties[4].ID = s_propPackagedVolumeID;
+
             // Add EVEMon custom properties (Base Price)
-            SerializableProperty gprop = new SerializableProperty();
-            s_propBasePriceID = newID + 1;
-            gProperties.Insert(0, gprop);
-            gprop.ID = s_propBasePriceID;
-            gprop.Name = "Base Price";
-            gprop.Unit = "ISK";
-            gprop.Description = "The price from NPC vendors (does not mean there is any).";
+            SerializableProperty bpProp = new SerializableProperty();
+            s_propBasePriceID = ++newID;
+            gProperties.Insert(0, bpProp);
+            bpProp.ID = s_propBasePriceID;
+            bpProp.Name = "Base Price";
+            bpProp.Unit = "ISK";
+            bpProp.DefaultValue = "0";
+            bpProp.Description = "The price from NPC vendors (does not mean there is any).";
+            bpProp.UnitID = 133;
 
             // Add properties to custom categories
             general.Properties = gProperties.ToArray();
@@ -445,17 +466,57 @@ namespace EVEMon.XmlGenerator
                                          {
                                              new InvMarketGroup
                                                  {
+                                                     Name = "Rookie Ships",
+                                                     Description = "Capsuleer starter ship",
+                                                     ID = DBConstants.RookieShipRootGroupID,
+                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Amarr",
+                                                     Description = "Amarr rookie ship",
+                                                     ID = DBConstants.RookieShipAmarrGroupID,
+                                                     ParentID = DBConstants.RookieShipRootGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Caldari",
+                                                     Description = "Caldari rookie ship",
+                                                     ID = DBConstants.RookieShipCaldariGroupID,
+                                                     ParentID = DBConstants.RookieShipRootGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Gallente",
+                                                     Description = "Gallente rookie ship",
+                                                     ID = DBConstants.RookieShipGallenteGroupID,
+                                                     ParentID = DBConstants.RookieShipRootGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
+                                                     Name = "Minmatar",
+                                                     Description = "Minmatar rookie ship",
+                                                     ID = DBConstants.RookieShipMinmatarGroupID,
+                                                     ParentID = DBConstants.RookieShipRootGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
+                                                 },
+                                             new InvMarketGroup
+                                                 {
                                                      Name = "Various Non-Market",
                                                      Description = "Non-Market Items",
                                                      ID = DBConstants.RootNonMarketGroupID,
                                                      ParentID = null,
-                                                     IconID = null
+                                                     IconID = DBConstants.UnknownShipIconID
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Unique Designs",
                                                      Description = "Ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignsRootMarketGroupID,
+                                                     ID = DBConstants.UniqueDesignsRootNonMarketGroupID,
                                                      ParentID = DBConstants.ShipsMarketGroupID,
                                                      IconID = DBConstants.UnknownShipIconID
                                                  },
@@ -464,17 +525,18 @@ namespace EVEMon.XmlGenerator
                                                      Name = "Unique Shuttles",
                                                      Description = "Fast ships of a unique design",
                                                      ID = DBConstants.UniqueDesignShuttlesNonMarketGroupID,
-                                                     ParentID = DBConstants.UniqueDesignsRootMarketGroupID,
-                                                     IconID = null
+                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Unique Battleships",
                                                      Description = "Battleships ships of a unique design",
                                                      ID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID,
-                                                     ParentID = DBConstants.UniqueDesignsRootMarketGroupID,
-                                                     IconID = null
+                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
+                                                     IconID = DBConstants.UnknownShipIconID
                                                  },
+
                                          };
 
             // Manually set some items attributes
@@ -489,6 +551,11 @@ namespace EVEMon.XmlGenerator
             s_types[DBConstants.ShatteredPlanetID].Published = true;
             s_types[DBConstants.ChalcopyriteID].Published = true;
             s_types[DBConstants.SmallEWDroneRangeAugmentorIIID].Published = true;
+            s_types[DBConstants.ImpairorID].Published = true;
+            s_types[DBConstants.IbisID].Published = true;
+            s_types[DBConstants.VelatorID].Published = true;
+            s_types[DBConstants.ReaperID].Published = true;
+            s_types[DBConstants.CapsuleID].Published = true;
             
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvType srcItem in s_types.Where(x => x.Published && x.MarketGroupID == null))
@@ -496,6 +563,22 @@ namespace EVEMon.XmlGenerator
                 // Set some ships market group and race
                 switch (srcItem.ID)
                 {
+                    case DBConstants.ImpairorID:
+                        srcItem.MarketGroupID = DBConstants.RookieShipAmarrGroupID;
+                        break;
+                    case DBConstants.IbisID:
+                        srcItem.MarketGroupID = DBConstants.RookieShipCaldariGroupID;
+                        break;
+                    case DBConstants.VelatorID:
+                        srcItem.MarketGroupID = DBConstants.RookieShipGallenteGroupID;
+                        break;
+                    case DBConstants.ReaperID:
+                        srcItem.MarketGroupID = DBConstants.RookieShipMinmatarGroupID;
+                        break;
+                    case DBConstants.CapsuleID:
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignsRootNonMarketGroupID;
+                        srcItem.RaceID = (int)Race.All;
+                        break;
                     case DBConstants.MegathronFederateIssueID:
                     case DBConstants.RavenStateIssueID:
                     case DBConstants.TempestTribalIssueID:
@@ -648,6 +731,9 @@ namespace EVEMon.XmlGenerator
 
             // Icon
             item.Icon = (srcItem.IconID.HasValue ? s_icons[srcItem.IconID.Value].Icon : String.Empty);
+
+            // Portion Size (the batch)
+            item.PortionSize = srcItem.PortionSize;
             
             // Initialize item metagroup
             item.MetaGroup = ItemMetaGroup.Empty;
@@ -767,10 +853,16 @@ namespace EVEMon.XmlGenerator
                 if (srcProp.AttributeID == DBConstants.WarpSpeedMultiplierPropertyID)
                     warpSpeedMultiplier = srcProp.ValueFloat.Value;
 
-                // We calculate the Ships Warp Speed
+                // We calculate and add the ships warp speed
                 if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
+                {
                     props.Add(new SerializablePropertyValue
-                                    {ID = srcProp.AttributeID, Value = (baseWarpSpeed*warpSpeedMultiplier).ToString()});
+                                    { ID = srcProp.AttributeID, Value = (baseWarpSpeed * warpSpeedMultiplier).ToString() });
+
+                    // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
+                    props.Add(new SerializablePropertyValue
+                                    { ID = s_propPackagedVolumeID, Value = GetPackagedVolume(srcItem.GroupID).ToString() });
+                }
 
                 // Other props
                 props.Add(new SerializablePropertyValue
@@ -839,7 +931,7 @@ namespace EVEMon.XmlGenerator
 
             // Add base price as a prop
             props.Add(new SerializablePropertyValue
-                        { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
+                        { ID = s_propBasePriceID, Value = srcItem.BasePrice.FormatDecimal()});
 
             // Add properties info to item
             item.Properties = props.ToArray();
@@ -947,6 +1039,67 @@ namespace EVEMon.XmlGenerator
                     srcVariationItem.RaceID = (int)Race.Faction;
                     CreateItem(srcVariationItem, groupItems);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the packaged volume of a ship.
+        /// </summary>
+        /// <param name="groupID">The group ID.</param>
+        /// <returns></returns>
+        private static int GetPackagedVolume(int groupID)
+        {
+            switch (groupID)
+            {
+                default:
+                case DBConstants.CapsuleGroupID:
+                case DBConstants.ShuttleGroupID:
+                case DBConstants.PrototypeExplorationShipGroupID:
+                    return 500;
+                case DBConstants.FrigateGroupID:
+                case DBConstants.RookieShipGroupID:
+                case DBConstants.AssaultShipGroupID:
+                case DBConstants.CovertOpsGroupID:
+                case DBConstants.InterceptorGroupID:
+                case DBConstants.StealthBomberGroupID:
+                case DBConstants.ElectronicAttackShipGroupID:
+                    return 2500;
+                case DBConstants.MiningBargeGroupID:
+                case DBConstants.ExhumerGroupID:
+                    return 3750;
+                case DBConstants.DestroyerGroupID:
+                case DBConstants.StrategicCruiserGroupID:
+                    return 5000;
+                case DBConstants.CruiserGroupID:
+                case DBConstants.HeavyAssaultShipGroupID:
+                case DBConstants.InterdictorGroupID:
+                case DBConstants.LogisticsGroupID:
+                case DBConstants.ForceReconShipGroupID:
+                case DBConstants.HeavyInterdictorGroupID:
+                case DBConstants.CombatReconShipGroupID:
+                    return 10000;
+                case DBConstants.BattlecruiserGroupID:
+                case DBConstants.CommandShipGroupID:
+                    return 15000;
+                case DBConstants.IndustrialGroupID:
+                case DBConstants.TransportShipGroupID:
+                    return 20000;
+                case DBConstants.BattleshipGroupID:
+                case DBConstants.EliteBattleshipGroupID:
+                case DBConstants.BlackOpsGroupID:
+                case DBConstants.MarauderGroupID:
+                    return 50000;
+                case DBConstants.IndustrialCommandShipGroupID:
+                    return 500000;
+                case DBConstants.DreadnoughtGroupID:
+                case DBConstants.FreighterGroupID:
+                case DBConstants.CarrierGroupID:
+                case DBConstants.SupercarrierGroupID:
+                case DBConstants.CapitalIndustrialShipGroupID:
+                case DBConstants.JumpFreighterGroupID:
+                    return 1000000;
+                case DBConstants.TitanGroupID:
+                    return 10000000;
             }
         }
 

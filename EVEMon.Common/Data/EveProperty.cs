@@ -138,6 +138,10 @@ namespace EVEMon.Common.Data
             {
                 try
                 {
+                    // Format a value of Packaged Volume
+                    if (Name == "Packaged Volume")
+                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0} {1}", numericValue, Unit);
+
                     // Format a value of Structure Volume
                     if (ID == DBConstants.VolumePropertyID)
                         return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", numericValue, Unit);

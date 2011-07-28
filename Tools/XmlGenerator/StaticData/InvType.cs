@@ -33,6 +33,9 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("capacity")]
         public double Capacity;
 
+        [XmlElement("portionSize")]
+        public int PortionSize;
+
         [XmlElement("raceID")]
         public Nullable<int> RaceID;
 

@@ -70,6 +70,13 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
+        [XmlAttribute("portionSize")]
+        public int PortionSize
+        {
+            get;
+            set;
+        }
+
         [XmlElement("s")]
         public SerializablePrerequisiteSkill[] Prereqs
         {

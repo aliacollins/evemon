@@ -586,6 +586,9 @@ namespace EVEMon.XmlGenerator
                 if (type.volume.HasValue)
                     item.Volume = type.volume.Value;
 
+                if (type.portionSize.HasValue)
+                    item.PortionSize = type.portionSize.Value;
+
                 list.Items.Add(item);
             }
 
