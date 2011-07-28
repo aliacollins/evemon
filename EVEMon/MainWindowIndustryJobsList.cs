@@ -520,7 +520,7 @@ namespace EVEMon
                     break;
 
                 case IndustryJobColumn.InstalledItem:
-                    item.Text = job.InstalledItem.ToString();
+                    item.Text = job.InstalledItem.Name;
                     break;
 
                 case IndustryJobColumn.InstalledItemType:
@@ -528,7 +528,7 @@ namespace EVEMon
                     break;
 
                 case IndustryJobColumn.OutputItem:
-                    item.Text = String.Format("{0} Unit{1} of {2}", GetUnitCount(job), (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.ToString());
+                    item.Text = String.Format("{0} Unit{1} of {2}", GetUnitCount(job), (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
                     break;
 
                 case IndustryJobColumn.OutputItemType:
@@ -616,29 +616,8 @@ namespace EVEMon
             if (job.Activity != BlueprintActivity.Manufacturing)
                 return 1;
 
-            if (job.InstalledItem.ID == DBConstants.WarpDisruptProbeBlueprintID)
-                return job.Runs * 2;
-
-            switch (job.InstalledItem.MarketGroup.ID)
-            {
-                case DBConstants.BoostersChargesBlueprintsMarketGroupID:
-                    return job.Runs * 10;
-                case DBConstants.BombsBlueprintsMarketGroupID:
-                    return job.Runs * 20;
-            }
-
-            if (job.InstalledItem.MarketGroup.ParentGroup != null)
-            {
-                switch (job.InstalledItem.MarketGroup.ParentGroup.ID)
-                {
-                    case DBConstants.ProjectileAmmunitionBlueprintsMarketGroupID:
-                    case DBConstants.HybridAmmunitionBlueprintsMarketGroupID:
-                    case DBConstants.MissilesAmmunitionBlueprintsMarketGroupID:
-                        return job.Runs * 100;
-                }
-            }
-
-            return job.Runs;
+            // Returns the ammount produced
+            return job.Runs * job.OutputItem.PortionSize;
         }
 
         /// <summary>
