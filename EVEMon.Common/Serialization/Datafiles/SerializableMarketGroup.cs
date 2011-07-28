@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
-        [XmlAttribute("name")]
+        [XmlAttribute("Name")]
         public string Name
         {
             get;
