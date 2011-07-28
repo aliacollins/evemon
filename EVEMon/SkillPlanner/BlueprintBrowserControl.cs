@@ -399,20 +399,20 @@ namespace EVEMon.SkillPlanner
                 switch (Activity)
                 {
                     case BlueprintActivity.Manufacturing:
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.DronesGroupID })
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.DronesMarketGroupID })
                             && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsGroupIDs))
                             cbFacility.Items.Add("Drone Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.AmmosAndChargesGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.AmmosAndChargesMarketGroupID }))
                             cbFacility.Items.Add("Ammunition Assembly Array");
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ShipEquipmentGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ShipEquipmentsMarketGroupID }))
                         {
                             cbFacility.Items.Add("Equipment Assembly Array");
                             cbFacility.Items.Add("Rapid Equipment Assembly Array");
                         }
 
-                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ComponentsGroupID }))
+                        if (producedItem.MarketGroup.BelongsIn(new int[] { DBConstants.ComponentsMarketGroupID }))
                             cbFacility.Items.Add("Component Assembly Array");
 
                         if (producedItem.MarketGroup.BelongsIn(DBConstants.StategicComponentsGroupIDs))

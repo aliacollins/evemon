@@ -15,7 +15,7 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor for root category only.
         /// </summary>
         /// <param name="src"></param>
-        public BlueprintMarketGroup(SerializableBlueprintGroup src)
+        public BlueprintMarketGroup(SerializableBlueprintMarketGroup src)
             :base(src)
         {
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);
@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
-        public BlueprintMarketGroup(BlueprintMarketGroup parent, SerializableBlueprintGroup src)
+        public BlueprintMarketGroup(BlueprintMarketGroup parent, SerializableBlueprintMarketGroup src)
             : base(parent, src)
         {
             SubGroups = new BlueprintMarketGroupCollection(this, src.SubGroups);

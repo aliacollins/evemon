@@ -177,7 +177,7 @@ namespace EVEMon.SkillPlanner
                 tvItems.Nodes.Clear();
 
                 // Create the nodes
-                foreach (MarketGroup group in StaticItems.Ships.SubGroups)
+                foreach (MarketGroup group in StaticItems.ShipsMarketGroup.SubGroups)
                 {
                     TreeNode node = new TreeNode() 
                     {

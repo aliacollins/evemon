@@ -3,9 +3,9 @@
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents a blueprint group in our datafile
+    /// Represents a blueprint group in our datafile.
     /// </summary>
-    public sealed class SerializableBlueprintGroup
+    public sealed class SerializableBlueprintMarketGroup
     {
         [XmlAttribute("id")]
         public int ID
@@ -30,7 +30,7 @@ namespace EVEMon.Common.Serialization.Datafiles
 
         [XmlArray("subGroups")]
         [XmlArrayItem("subGroup")]
-        public SerializableBlueprintGroup[] SubGroups
+        public SerializableBlueprintMarketGroup[] SubGroups
         {
             get;
             set;

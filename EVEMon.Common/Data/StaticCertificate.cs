@@ -38,7 +38,7 @@ namespace EVEMon.Common.Data
             {
                 foreach (SerializableCertificateRecommendation recommendation in src.Recommendations)
                 {
-                    Ship ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == recommendation.Ship) as Ship;
+                    Ship ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == recommendation.Ship) as Ship;
                     if (ship != null)
                     {
                         ship.Recommendations.Add(this);

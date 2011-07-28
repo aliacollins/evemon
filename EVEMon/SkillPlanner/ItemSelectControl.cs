@@ -46,12 +46,12 @@ namespace EVEMon.SkillPlanner
             m_metaGroups.AddRange(EnumExtensions.GetBaseValues<ItemMetaGroup>());
 
             // Set the presets
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ImplantsAndBoostersGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.StarbaseStructuresGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipModificationsGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentGroupID));
-            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.AmmosAndChargesMarketGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ImplantsAndBoostersMarketGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.StarbaseStructuresMarketGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipModificationsMarketGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.ShipEquipmentsMarketGroupID));
+            m_presetGroups.Add(StaticItems.MarketGroups.First(x => x.ID == DBConstants.DronesMarketGroupID));
 
             // Initialize the metagroup combo
             ccbGroupFilter.Items.Clear();

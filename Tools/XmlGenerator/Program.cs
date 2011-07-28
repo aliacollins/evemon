@@ -455,24 +455,24 @@ namespace EVEMon.XmlGenerator
                                                  {
                                                      Name = "Unique Designs",
                                                      Description = "Ships of a unique design",
-                                                     ID = DBConstants.RootUniqueDesignsGroupID,
-                                                     ParentID = DBConstants.ShipsGroupID,
+                                                     ID = DBConstants.UniqueDesignsRootMarketGroupID,
+                                                     ParentID = DBConstants.ShipsMarketGroupID,
                                                      IconID = DBConstants.UnknownShipIconID
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Unique Shuttles",
                                                      Description = "Fast ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignShuttlesGroupID,
-                                                     ParentID = DBConstants.RootUniqueDesignsGroupID,
+                                                     ID = DBConstants.UniqueDesignShuttlesNonMarketGroupID,
+                                                     ParentID = DBConstants.UniqueDesignsRootMarketGroupID,
                                                      IconID = null
                                                  },
                                              new InvMarketGroup
                                                  {
                                                      Name = "Unique Battleships",
                                                      Description = "Battleships ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignBattleshipsGroupID,
-                                                     ParentID = DBConstants.RootUniqueDesignsGroupID,
+                                                     ID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID,
+                                                     ParentID = DBConstants.UniqueDesignsRootMarketGroupID,
                                                      IconID = null
                                                  },
                                          };
@@ -499,13 +499,13 @@ namespace EVEMon.XmlGenerator
                     case DBConstants.MegathronFederateIssueID:
                     case DBConstants.RavenStateIssueID:
                     case DBConstants.TempestTribalIssueID:
-                        srcItem.MarketGroupID = DBConstants.UniqueDesignBattleshipsGroupID;
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
                     case DBConstants.GorusShuttleID:
                     case DBConstants.GuristasShuttleID:
                     case DBConstants.InterbusShuttleID:
-                        srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesGroupID;
+                        srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
 
@@ -573,7 +573,7 @@ namespace EVEMon.XmlGenerator
                 }
 
                 // If this is an implant group, we add the implants with no market groups in this one.
-                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantGroupID || srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsGroupID)
+                if (srcGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID || srcGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
                 {
                     string slotString = srcGroup.Name.Substring("Implant Slot ".Length);
                     int slot = Int32.Parse(slotString);
@@ -606,11 +606,11 @@ namespace EVEMon.XmlGenerator
             }
 
             // Pick the family
-            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsGroupID], ItemFamily.Bpo);
-            SetItemFamilyByMarketGroup(groups[DBConstants.ShipsGroupID], ItemFamily.Ship);
-            SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsGroupID], ItemFamily.Implant);
-            SetItemFamilyByMarketGroup(groups[DBConstants.DronesGroupID], ItemFamily.Drone);
-            SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresGroupID], ItemFamily.StarbaseStructure);
+            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Bpo);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ShipsMarketGroupID], ItemFamily.Ship);
+            SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsMarketGroupID], ItemFamily.Implant);
+            SetItemFamilyByMarketGroup(groups[DBConstants.DronesMarketGroupID], ItemFamily.Drone);
+            SetItemFamilyByMarketGroup(groups[DBConstants.StarbaseStructuresMarketGroupID], ItemFamily.StarbaseStructure);
 
             // Sort groups
             IOrderedEnumerable<SerializableMarketGroup> rootGroups =
@@ -900,10 +900,10 @@ namespace EVEMon.XmlGenerator
 
             // Set race to ORE if it is in the ORE market groups
             // within mining barges, exhumers, industrial or capital industrial ships
-            if (srcItem.MarketGroupID == DBConstants.MiningBargesGroupID
-                || srcItem.MarketGroupID == DBConstants.ExhumersGroupID
-                || srcItem.MarketGroupID == DBConstants.IndustrialsGroupID
-                || srcItem.MarketGroupID == DBConstants.CapitalIndustrialsGroupID)
+            if (srcItem.MarketGroupID == DBConstants.MiningBargesMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.ExhumersMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.IndustrialsMarketGroupID
+                || srcItem.MarketGroupID == DBConstants.CapitalIndustrialsMarketGroupID)
                 item.Race = Race.Ore;
 
             // Set race to Faction if ship has Pirate Faction property
@@ -1308,12 +1308,12 @@ namespace EVEMon.XmlGenerator
             // Configure blueprints with Null market group
             ConfigureNullMarketBlueprint();
 
-            Dictionary<int, SerializableBlueprintGroup> groups = new Dictionary<int, SerializableBlueprintGroup>();
+            Dictionary<int, SerializableBlueprintMarketGroup> groups = new Dictionary<int, SerializableBlueprintMarketGroup>();
 
             // Export blueprint groups           
             foreach (InvMarketGroup marketGroup in s_marketGroups.Concat(s_injectedMarketGroups))
             {
-                SerializableBlueprintGroup group = new SerializableBlueprintGroup
+                SerializableBlueprintMarketGroup group = new SerializableBlueprintMarketGroup
                                                         {
                                                             ID = marketGroup.ID,
                                                             Name = marketGroup.Name,
@@ -1335,17 +1335,17 @@ namespace EVEMon.XmlGenerator
             }
 
             // Create the parent-children groups relations
-            foreach (SerializableBlueprintGroup group in groups.Values)
+            foreach (SerializableBlueprintMarketGroup group in groups.Values)
             {
-                IEnumerable<SerializableBlueprintGroup> children = s_marketGroups.Concat(
+                IEnumerable<SerializableBlueprintMarketGroup> children = s_marketGroups.Concat(
                     s_injectedMarketGroups).Where(x => x.ParentID == group.ID).Select(x => groups[x.ID]);
 
                 group.SubGroups = children.OrderBy(x => x.Name).ToArray();
             }
 
             // Sort groups
-            IOrderedEnumerable<SerializableBlueprintGroup> blueprintGroups = s_marketGroups.Concat(
-                s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsGroupID)
+            IOrderedEnumerable<SerializableBlueprintMarketGroup> blueprintGroups = s_marketGroups.Concat(
+                s_injectedMarketGroups).Where(x => x.ParentID == DBConstants.BlueprintsMarketGroupID)
                 .Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
             s_endTime = DateTime.Now;
@@ -1353,7 +1353,7 @@ namespace EVEMon.XmlGenerator
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
-            datafile.Groups = blueprintGroups.ToArray();
+            datafile.MarketGroups = blueprintGroups.ToArray();
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
 
@@ -1370,7 +1370,7 @@ namespace EVEMon.XmlGenerator
                                                Name = "Various Non-Market",
                                                Description = "Various blueprints not in EVE market",
                                                ID = DBConstants.BlueprintRootNonMarketGroupID,
-                                               ParentID = DBConstants.BlueprintsGroupID,
+                                               ParentID = DBConstants.BlueprintsMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
 
@@ -1378,7 +1378,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Tech I",
                                                Description = "Tech I blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketTechIGroupID,
+                                               ID = DBConstants.BlueprintTechINonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1387,7 +1387,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Tech II",
                                                Description = "Tech II blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketTechIIGroupID,
+                                               ID = DBConstants.BlueprintTechIINonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1396,7 +1396,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Storyline",
                                                Description = "Storyline blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketStorylineGroupID,
+                                               ID = DBConstants.BlueprintStorylineNonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1405,7 +1405,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Faction",
                                                Description = "Faction blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketFactionGroupID,
+                                               ID = DBConstants.BlueprintFactionNonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1414,7 +1414,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Officer",
                                                Description = "Officer blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketOfficerGroupID,
+                                               ID = DBConstants.BlueprintOfficerNonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1423,7 +1423,7 @@ namespace EVEMon.XmlGenerator
                                            {
                                                Name = "Tech III",
                                                Description = "Tech III blueprints not in EVE market",
-                                               ID = DBConstants.BlueprintNonMarketTechIIIGroupID,
+                                               ID = DBConstants.BlueprintTechIIINonMarketGroupID,
                                                ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                                                IconID = DBConstants.UnknownBlueprintBackdropIconID
                                            });
@@ -1434,7 +1434,7 @@ namespace EVEMon.XmlGenerator
                 switch (item.ID)
                 {
                     case DBConstants.WildMinerIBlueprintID:
-                        item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
+                        item.MarketGroupID = DBConstants.BlueprintStorylineNonMarketGroupID;
                         break;
                     case DBConstants.AdrestiaBlueprintID:
                     case DBConstants.EchelonBlueprintID:
@@ -1457,7 +1457,7 @@ namespace EVEMon.XmlGenerator
                     case DBConstants.InterbusShuttleBlueprintID:
                     case DBConstants.FrekiBlueprintID:
                     case DBConstants.MimirBlueprintID:
-                        item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
+                        item.MarketGroupID = DBConstants.BlueprintFactionNonMarketGroupID;
                         break;
                     case DBConstants.LegionBlueprintID:
                     case DBConstants.LegionDefensiveAdaptiveAugmenterBlueprintID:
@@ -1483,10 +1483,10 @@ namespace EVEMon.XmlGenerator
                     case DBConstants.TenguEngineeringPowerCoreMultiplierBlueprintID:
                     case DBConstants.TenguOffensiveAcceleratedEjectionBayBlueprintID:
                     case DBConstants.TenguPropulsionIntercalatedNanofibersBlueprintID:
-                        item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
+                        item.MarketGroupID = DBConstants.BlueprintTechIIINonMarketGroupID;
                         break;
                     case DBConstants.SmallEWDroneRangeAugmentorIIBlueprintID:
-                        item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
+                        item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
                         break;
                 }
             }
@@ -1505,25 +1505,25 @@ namespace EVEMon.XmlGenerator
                     switch (relation.MetaGroupID)
                     {
                         case DBConstants.TechIIMetaGroupID:
-                            item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIGroupID;
+                            item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
                             break;
                         case DBConstants.StorylineMetaGroupID:
-                            item.MarketGroupID = DBConstants.BlueprintNonMarketStorylineGroupID;
+                            item.MarketGroupID = DBConstants.BlueprintStorylineNonMarketGroupID;
                             break;
                         case DBConstants.FactionMetaGroupID:
-                            item.MarketGroupID = DBConstants.BlueprintNonMarketFactionGroupID;
+                            item.MarketGroupID = DBConstants.BlueprintFactionNonMarketGroupID;
                             break;
                         case DBConstants.OfficerMetaGroupID:
-                            item.MarketGroupID = DBConstants.BlueprintNonMarketOfficerGroupID;
+                            item.MarketGroupID = DBConstants.BlueprintOfficerNonMarketGroupID;
                             break;
                         case DBConstants.TechIIIMetaGroupID:
-                            item.MarketGroupID = DBConstants.BlueprintNonMarketTechIIIGroupID;
+                            item.MarketGroupID = DBConstants.BlueprintTechIIINonMarketGroupID;
                             break;
                     }
                 }
 
                 if (item.MarketGroupID == null)
-                    item.MarketGroupID = DBConstants.BlueprintNonMarketTechIGroupID;
+                    item.MarketGroupID = DBConstants.BlueprintTechINonMarketGroupID;
             }
         }
 
@@ -1598,16 +1598,16 @@ namespace EVEMon.XmlGenerator
             // Metagroup for the custom market groups
             switch (srcBlueprint.MarketGroupID)
             {
-                case DBConstants.BlueprintNonMarketStorylineGroupID:
+                case DBConstants.BlueprintStorylineNonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.Storyline;
                     break;
-                case DBConstants.BlueprintNonMarketFactionGroupID:
+                case DBConstants.BlueprintFactionNonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.Faction;
                     break;
-                case DBConstants.BlueprintNonMarketTechIIIGroupID:
+                case DBConstants.BlueprintTechIIINonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.T3;
                     break;
-                case DBConstants.BlueprintNonMarketTechIIGroupID:
+                case DBConstants.BlueprintTechIINonMarketGroupID:
                     blueprint.MetaGroup = ItemMetaGroup.T2;
                     break;
             }

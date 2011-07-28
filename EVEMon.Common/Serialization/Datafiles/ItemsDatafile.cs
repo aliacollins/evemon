@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Root ItemsDatafile Serialization Class
+    /// Represents our items datafile.
     /// </summary>
     [XmlRoot("itemsDatafile")]
     public sealed class ItemsDatafile

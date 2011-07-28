@@ -14,13 +14,13 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="src"></param>
-        internal BlueprintMarketGroupCollection(BlueprintMarketGroup group, SerializableBlueprintGroup[] src)
+        internal BlueprintMarketGroupCollection(BlueprintMarketGroup group, SerializableBlueprintMarketGroup[] src)
             : base(src == null ? 0 : src.Length)
         {
             if (src == null)
                 return;
 
-            foreach (SerializableBlueprintGroup subGroup in src)
+            foreach (SerializableBlueprintMarketGroup subGroup in src)
             {
                 m_items.Add(new BlueprintMarketGroup(group, subGroup));
             }

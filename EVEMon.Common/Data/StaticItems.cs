@@ -9,12 +9,9 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticItems
     {
-        private static readonly Dictionary<long, MarketGroup> s_groupsByID = new Dictionary<long, MarketGroup>();
+        private static readonly Dictionary<long, MarketGroup> s_marketGroupsByID = new Dictionary<long, MarketGroup>();
         private static readonly Dictionary<long, Item> s_itemsByID = new Dictionary<long, Item>();
         private static readonly ImplantCollection[] s_implantSlots = new ImplantCollection[10];
-
-        private static MarketGroupCollection s_roots;
-        private static MarketGroup s_shipsGroup;
 
         private static bool s_reprocessingInitialized = false;
 
@@ -25,7 +22,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (s_roots != null)
+            if (MarketGroups != null)
                 return;
 
             // Create the implants slots
@@ -37,33 +34,33 @@ namespace EVEMon.Common.Data
 
             // Deserialize the items datafile
             ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile);
-            s_roots = new MarketGroupCollection(null, datafile.MarketGroups);
+            MarketGroups = new MarketGroupCollection(null, datafile.MarketGroups);
 
             // Gather the items into a by-ID dictionary
-            foreach (MarketGroup group in s_roots)
+            foreach (MarketGroup marketGroup in MarketGroups)
             {
-                InitializeDictionaries(group);
+                InitializeDictionaries(marketGroup);
             }
         }
 
         /// <summary>
         /// Recursively collect the items within all groups and stores them in the dictionaries.
         /// </summary>
-        /// <param name="group"></param>
-        private static void InitializeDictionaries(MarketGroup group)
+        /// <param name="marketGroup"></param>
+        private static void InitializeDictionaries(MarketGroup marketGroup)
         {
             // Special groups
-            if (group.ID == DBConstants.ShipsGroupID)
-                s_shipsGroup = group;
+            if (marketGroup.ID == DBConstants.ShipsMarketGroupID)
+                ShipsMarketGroup = marketGroup;
 
-            s_groupsByID[group.ID] = group;
+            s_marketGroupsByID[marketGroup.ID] = marketGroup;
 
-            foreach (Item item in group.Items)
+            foreach (Item item in marketGroup.Items)
             {
                 s_itemsByID[item.ID] = item;
             }
 
-            foreach (MarketGroup childGroup in group.SubGroups)
+            foreach (MarketGroup childGroup in marketGroup.SubGroups)
             {
                 InitializeDictionaries(childGroup);
             }
@@ -101,10 +98,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the root category, containing all the top level categories.
         /// </summary>
-        public static MarketGroupCollection MarketGroups
-        {
-            get { return s_roots; }
-        }
+        public static MarketGroupCollection MarketGroups { get; private set; }
+
+        /// <summary>
+        /// Gets the market group for ships.
+        /// </summary>
+        public static MarketGroup ShipsMarketGroup { get; private set; }
 
         /// <summary>
         /// Gets the collection of all the market groups in this category and its descendants.
@@ -113,7 +112,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                foreach (MarketGroup group in s_groupsByID.Values)
+                foreach (MarketGroup group in s_marketGroupsByID.Values)
                 {
                     yield return group;
                 }
@@ -132,14 +131,6 @@ namespace EVEMon.Common.Data
                     yield return item;
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the market group for ships.
-        /// </summary>
-        public static MarketGroup Ships
-        {
-            get { return s_shipsGroup; }
         }
 
         #endregion

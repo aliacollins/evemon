@@ -166,7 +166,7 @@ namespace EVEMon.SkillPlanner
             // Retrieve the ship
             int commaIndex = line.IndexOf(',');
             string shipTypeName = line.Substring(1, commaIndex - 1);
-            Item ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
+            Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
             if (ship != null)
             {
                 m_objects.Add(ship);
@@ -288,7 +288,7 @@ namespace EVEMon.SkillPlanner
 			// Retrieve the ship
 			int commaIndex = line.IndexOf(',');
 			string shipTypeName = line.Substring(1, commaIndex - 1);
-			Item ship = StaticItems.Ships.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
+			Item ship = StaticItems.ShipsMarketGroup.AllItems.FirstOrDefault(x => x.Name == shipTypeName);
 			if (ship == null)
 				return false;
 
@@ -334,15 +334,15 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Is it a rig?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.ShipModificationsGroupID }))
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.ShipModificationsMarketGroupID }))
                     nodeName = "Rigs";
 
                 // Is it a subsystem?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.AdvancedSubsystemsGroupID }))
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.AdvancedSubsystemsMarketGroupID }))
                     nodeName = "Subsystems";
 
                 // Is it a drone?
-                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.DronesGroupID }))
+                if (item.MarketGroup.BelongsIn(new int[] { DBConstants.DronesMarketGroupID }))
                     nodeName = "Drones";
 
                 // Gets or create the node for the slot

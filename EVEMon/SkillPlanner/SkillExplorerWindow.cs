@@ -327,7 +327,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 List<Item> items = new List<Item>(StaticItems.AllItems.Concat(StaticBlueprints.AllBlueprints).
-                    Where(x => x.MarketGroup.ParentGroup != null && x.MarketGroup.ParentGroup.ID != DBConstants.SkillGroupID). // exclude skills
+                    Where(x => x.MarketGroup.ParentGroup != null && x.MarketGroup.ParentGroup.ID != DBConstants.SkillsMarketGroupID). // exclude skills
                     Where(x => x.Prerequisites.Any(y => y.Skill == m_skill.StaticData)).
                     Where(x => !cbShowBaseOnly.Checked || x.MetaGroup == ItemMetaGroup.T1 || x.MetaGroup == ItemMetaGroup.T2));
 

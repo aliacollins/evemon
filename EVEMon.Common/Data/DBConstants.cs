@@ -198,33 +198,33 @@ namespace EVEMon.Common.Data
 
         #region Market group IDs
 
-        public const int ShipsGroupID = 4;
-        public const int SkillGroupID = 150;
-        public const int DronesGroupID = 157;
-        public const int BlueprintsGroupID = 2;
-        public const int ImplantsGroupID = 27;
-        public const int ShipsBlueprintsGroupID = 204;
-        public const int ComponentsGroupID = 475;
-        public const int ShipEquipmentGroupID = 9;
-        public const int AdvancedSubsystemsGroupID = 1112;
-        public const int AmmosAndChargesGroupID = 11;
-        public const int ShipModificationsGroupID = 955;
-        public const int ImplantsAndBoostersGroupID = 24;
-        public const int StarbaseStructuresGroupID = 477;
+        public const int ShipsMarketGroupID = 4;
+        public const int SkillsMarketGroupID = 150;
+        public const int DronesMarketGroupID = 157;
+        public const int BlueprintsMarketGroupID = 2;
+        public const int ImplantsMarketGroupID = 27;
+        public const int ShipsBlueprintsMarketGroupID = 204;
+        public const int ComponentsMarketGroupID = 475;
+        public const int ShipEquipmentsMarketGroupID = 9;
+        public const int AdvancedSubsystemsMarketGroupID = 1112;
+        public const int AmmosAndChargesMarketGroupID = 11;
+        public const int ShipModificationsMarketGroupID = 955;
+        public const int ImplantsAndBoostersMarketGroupID = 24;
+        public const int StarbaseStructuresMarketGroupID = 477;
 
-        public const int MiningBargesGroupID = 495;
-        public const int ExhumersGroupID = 875;
-        public const int IndustrialsGroupID = 1390;
-        public const int CapitalIndustrialsGroupID = 1048;
+        public const int MiningBargesMarketGroupID = 495;
+        public const int ExhumersMarketGroupID = 875;
+        public const int IndustrialsMarketGroupID = 1390;
+        public const int CapitalIndustrialsMarketGroupID = 1048;
 
-        public const int ProjectileAmmunitionBlueprintsGroupID = 299;
-        public const int HybridAmmunitionBlueprintsGroupID = 300;
-        public const int MissilesAmmunitionBlueprintsGroupID = 314;
-        public const int BombsBlueprintsGroupID = 1016;
-        public const int BoostersChargesBlueprintsGroupID = 339;
+        public const int ProjectileAmmunitionBlueprintsMarketGroupID = 299;
+        public const int HybridAmmunitionBlueprintsMarketGroupID = 300;
+        public const int MissilesAmmunitionBlueprintsMarketGroupID = 314;
+        public const int BombsBlueprintsMarketGroupID = 1016;
+        public const int BoostersChargesBlueprintsMarketGroupID = 339;
 
-        public const int SkillHardwiringImplantGroupID = 531;
-        public const int AttributeEnhancersImplantsGroupID = 532;
+        public const int SkillHardwiringImplantsMarketGroupID = 531;
+        public const int AttributeEnhancersImplantsMarketGroupID = 532;
 
         #endregion
 
@@ -233,17 +233,17 @@ namespace EVEMon.Common.Data
 
         public const int RootNonMarketGroupID = 11000;
 
-        public const int RootUniqueDesignsGroupID = 10000;
-        public const int UniqueDesignBattleshipsGroupID = 10200;
-        public const int UniqueDesignShuttlesGroupID = 10900;
+        public const int UniqueDesignsRootMarketGroupID = 10000;
+        public const int UniqueDesignBattleshipsNonMarketGroupID = 10200;
+        public const int UniqueDesignShuttlesNonMarketGroupID = 10900;
 
         public const int BlueprintRootNonMarketGroupID = 21000;
-        public const int BlueprintNonMarketTechIGroupID = 21001;
-        public const int BlueprintNonMarketTechIIGroupID = 21002;
-        public const int BlueprintNonMarketStorylineGroupID = 21003;
-        public const int BlueprintNonMarketFactionGroupID = 21004;
-        public const int BlueprintNonMarketOfficerGroupID = 21005;
-        public const int BlueprintNonMarketTechIIIGroupID = 21014;
+        public const int BlueprintTechINonMarketGroupID = 21001;
+        public const int BlueprintTechIINonMarketGroupID = 21002;
+        public const int BlueprintStorylineNonMarketGroupID = 21003;
+        public const int BlueprintFactionNonMarketGroupID = 21004;
+        public const int BlueprintOfficerNonMarketGroupID = 21005;
+        public const int BlueprintTechIIINonMarketGroupID = 21014;
 
         #endregion
 

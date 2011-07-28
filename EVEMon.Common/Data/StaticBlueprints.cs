@@ -85,7 +85,7 @@ namespace EVEMon.Common.Data
             
             BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
 
-            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.Groups);
+            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
 
             foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
             {
@@ -96,15 +96,15 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Recursively collect the blueprints within all groups and stores them in the dictionaries.
         /// </summary>
-        /// <param name="group"></param>
-        private static void InitializeDictionaries(BlueprintMarketGroup group)
+        /// <param name="marketGroup"></param>
+        private static void InitializeDictionaries(BlueprintMarketGroup marketGroup)
         {
-            foreach (Blueprint blueprint in group.Blueprints)
+            foreach (Blueprint blueprint in marketGroup.Blueprints)
             {
                 s_blueprintsByID[blueprint.ID] = blueprint;
             }
 
-            foreach (BlueprintMarketGroup childGroup in group.SubGroups)
+            foreach (BlueprintMarketGroup childGroup in marketGroup.SubGroups)
             {
                 InitializeDictionaries(childGroup);
             }

@@ -3,7 +3,7 @@
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents an items category (standard item categories, not market groups) from our datafile
+    /// Represents an items category (standard item categories, not market groups) from our datafile.
     /// </summary>
     public sealed class SerializableMarketGroup
     {
@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.Datafiles
             set;
         }
 
-        [XmlAttribute("Name")]
+        [XmlAttribute("name")]
         public string Name
         {
             get;

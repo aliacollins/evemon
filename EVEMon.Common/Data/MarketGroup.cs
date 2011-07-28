@@ -39,7 +39,7 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor for root category only
         /// </summary>
         /// <param name="src"></param>
-        public MarketGroup(SerializableBlueprintGroup src)
+        public MarketGroup(SerializableBlueprintMarketGroup src)
         {
             ID = src.ID;
             Name = src.Name;
@@ -50,7 +50,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="parent">The Market Group this Market Group is contained within</param>
         /// <param name="src">Source Blueprint Group</param>
-        public MarketGroup(MarketGroup parent, SerializableBlueprintGroup src)
+        public MarketGroup(MarketGroup parent, SerializableBlueprintMarketGroup src)
             :this (src)
         {
             ParentGroup = parent;
