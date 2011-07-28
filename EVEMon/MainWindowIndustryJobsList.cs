@@ -621,9 +621,9 @@ namespace EVEMon
 
             switch (job.InstalledItem.MarketGroup.ID)
             {
-                case DBConstants.BoostersChargesBlueprintsGroupID:
+                case DBConstants.BoostersChargesBlueprintsMarketGroupID:
                     return job.Runs * 10;
-                case DBConstants.BombsBlueprintsGroupID:
+                case DBConstants.BombsBlueprintsMarketGroupID:
                     return job.Runs * 20;
             }
 
@@ -631,9 +631,9 @@ namespace EVEMon
             {
                 switch (job.InstalledItem.MarketGroup.ParentGroup.ID)
                 {
-                    case DBConstants.ProjectileAmmunitionBlueprintsGroupID:
-                    case DBConstants.HybridAmmunitionBlueprintsGroupID:
-                    case DBConstants.MissilesAmmunitionBlueprintsGroupID:
+                    case DBConstants.ProjectileAmmunitionBlueprintsMarketGroupID:
+                    case DBConstants.HybridAmmunitionBlueprintsMarketGroupID:
+                    case DBConstants.MissilesAmmunitionBlueprintsMarketGroupID:
                         return job.Runs * 100;
                 }
             }
