@@ -103,10 +103,7 @@ namespace EVEMon.LogitechG15
         /// <returns></returns>
         public static Lcdisplay Instance()
         {
-            if (s_singleInstance == null)
-                s_singleInstance = new Lcdisplay();
-
-            return s_singleInstance;
+            return s_singleInstance ?? (s_singleInstance = new Lcdisplay());
         }
         
         #endregion
