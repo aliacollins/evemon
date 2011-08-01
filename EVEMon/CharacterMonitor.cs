@@ -7,11 +7,11 @@ using System.Linq;
 using System.Windows.Forms;
 
 using EVEMon.Common;
+using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
-using EVEMon.ExternalCalendar;
 
 namespace EVEMon
 {
@@ -736,21 +736,21 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occurs when the user click the "add to calendar" button.
-        /// We open the unique external calendar window.
+        /// Occurs when the user click the "Update Calendar" button.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnAddToCalendar_Click(object sender, EventArgs e)
+        private void btnUpdateCalendar_Click(object sender, EventArgs e)
         {
-            // Ensure that we are trying to use the external calendar.
+            // Ensure that we are trying to use the external calendar
             if (!Settings.Calendar.Enabled)
             {
                 btnAddToCalendar.Visible = false;
                 return;
             }
 
-            WindowsFactory<ExternalCalendarWindow>.ShowByTag(m_character);
+            if (m_character is CCPCharacter)
+                ExternalCalendar.UpdateCalendar(m_character as CCPCharacter);
         }
 
         /// <summary>

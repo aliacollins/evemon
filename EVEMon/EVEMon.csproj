@@ -50,30 +50,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Google.GData.AccessControl, Version=1.0.9.9, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.GData.Calendar, Version=1.0.9.9, Culture=neutral, PublicKeyToken=aa6748391206b888">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Calendar.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.GData.Client, Version=1.0.9.9, Culture=neutral, PublicKeyToken=04a59ca9b0273830">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.GData.Extensions, Version=1.0.9.9, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.Microsoft.Office.Core, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Interop.Microsoft.Office.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.Outlook, Version=9.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Interop.Outlook.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -362,13 +338,6 @@
     </Compile>
     <Compile Include="DataUpdateNotifyForm.Designer.cs">
       <DependentUpon>DataUpdateNotifyForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
-    <Compile Include="ExternalCalendar\ExternalCalendarWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ExternalCalendar\ExternalCalendarWindow.designer.cs">
-      <DependentUpon>ExternalCalendarWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ImplantControls\ImplantSetsWindow.cs">
       <SubType>Form</SubType>
@@ -1040,9 +1009,6 @@
     <EmbeddedResource Include="SkillCompletionWindow.resx">
       <DependentUpon>SkillCompletionWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExternalCalendar\ExternalCalendarWindow.resx">
-      <DependentUpon>ExternalCalendarWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImplantControls\ImplantTooltip.resx">
       <DependentUpon>ImplantTooltip.cs</DependentUpon>

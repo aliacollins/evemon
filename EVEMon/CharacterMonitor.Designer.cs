@@ -275,7 +275,7 @@ namespace EVEMon
             this.btnAddToCalendar.TabIndex = 0;
             this.btnAddToCalendar.Text = "Update Calendar";
             this.btnAddToCalendar.UseVisualStyleBackColor = true;
-            this.btnAddToCalendar.Click += new System.EventHandler(this.btnAddToCalendar_Click);
+            this.btnAddToCalendar.Click += new System.EventHandler(this.btnUpdateCalendar_Click);
             // 
             // upperPanel
             // 

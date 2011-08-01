@@ -13,9 +13,9 @@ namespace EVEMon.Common.SettingsObjects
             GoogleReminder = GoogleCalendarReminder.Email;
             RemindingInterval = 10;
 
-            var today = DateTime.Now.Date;
-            EarlyReminding = today.AddHours(8);
-            LateReminding = today.AddHours(20);
+            EarlyReminding = DateTime.Now.Date.AddHours(8);
+            LateReminding = DateTime.Now.Date.AddHours(20);
+            LastQueuedSkillOnly = true;
         }
 
         [XmlAttribute("enabled")]
@@ -40,7 +40,7 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// Interval between reminidings, in minutes
+        /// Interval between remindings, in minutes
         /// </summary>
         [XmlElement("remindingInterval")]
         public int RemindingInterval
@@ -93,6 +93,13 @@ namespace EVEMon.Common.SettingsObjects
 
         [XmlElement("googleReminder")]
         public GoogleCalendarReminder GoogleReminder
+        {
+            get;
+            set;
+        }
+
+        [XmlElement("lastQueuedSkillOnly")]
+        public bool LastQueuedSkillOnly
         {
             get;
             set;

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Security;
 using System.Windows.Forms;
-
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -61,6 +61,7 @@ namespace EVEMon.SettingsUI
         }
 
         #region Core methods
+
         /// <summary>
         /// Occurs when the user click "Cancel".
         /// We restore the old settings.
@@ -229,14 +230,9 @@ namespace EVEMon.SettingsUI
             removeConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour == ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
 
             // Skill Browser Icon Set
-            if (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count && m_settings.UI.SkillBrowser.IconsGroupIndex > 0)
-            {
-                cbSkillIconSet.SelectedIndex = m_settings.UI.SkillBrowser.IconsGroupIndex - 1;
-            }
-            else
-            {
-                cbSkillIconSet.SelectedIndex = 0;
-            }
+            cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
+                                            m_settings.UI.SkillBrowser.IconsGroupIndex > 0 ?
+                                            m_settings.UI.SkillBrowser.IconsGroupIndex - 1 : 0);
 
             // System tray popup/tooltip
             trayPopupRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm);
@@ -251,17 +247,14 @@ namespace EVEMon.SettingsUI
             panelColorSingle2.BackColor = (Color)m_settings.UI.Scheduler.SimpleEventGradientEnd;
             panelColorText.BackColor = (Color)m_settings.UI.Scheduler.TextColor;
 
+            // Google calendar reminder method
+            InitilizeGoogleCalendarReminderDropDown();
+
             // External calendar
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            if (m_settings.Calendar.Provider == CalendarProvider.Outlook)
-            {
-                rbMSOutlook.Checked = true;
-            }
-            else
-            {
-                rbGoogle.Checked = true;
-            }
+            rbMSOutlook.Checked = m_settings.Calendar.Provider == CalendarProvider.Outlook;
+            rbGoogle.Checked = m_settings.Calendar.Provider == CalendarProvider.Google;
 
             tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
             tbGooglePassword.Text = m_settings.Calendar.GooglePassword;
@@ -272,6 +265,7 @@ namespace EVEMon.SettingsUI
             cbUseAlterateReminder.Checked = m_settings.Calendar.UseRemindingRange;
             dtpEarlyReminder.Value = m_settings.Calendar.EarlyReminding;
             dtpLateReminder.Value = m_settings.Calendar.LateReminding;
+            cbLastQueuedSkillOnly.Checked = m_settings.Calendar.LastQueuedSkillOnly;
 
             // Run at system startup
             RegistryKey rk = null;
@@ -449,23 +443,20 @@ namespace EVEMon.SettingsUI
 
             // External calendar settings
             m_settings.Calendar.Enabled = externalCalendarCheckbox.Checked;
-            if (rbMSOutlook.Checked)
-            {
-                m_settings.Calendar.Provider = CalendarProvider.Outlook;
-            }
-            else
-            {
-                m_settings.Calendar.Provider = CalendarProvider.Google;
-            }
+            m_settings.Calendar.Provider = (rbMSOutlook.Checked ? CalendarProvider.Outlook : CalendarProvider.Google);
+
             m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text;
             m_settings.Calendar.GooglePassword = tbGooglePassword.Text;
             m_settings.Calendar.GoogleURL = tbGoogleURI.Text;
-            m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1 ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex : GoogleCalendarReminder.None;
+            m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1 ?
+                                (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex : GoogleCalendarReminder.None;
+
             m_settings.Calendar.UseReminding = cbSetReminder.Checked;
             m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text);
             m_settings.Calendar.UseRemindingRange = cbUseAlterateReminder.Checked;
             m_settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
             m_settings.Calendar.LateReminding = dtpLateReminder.Value;
+            m_settings.Calendar.LastQueuedSkillOnly = cbLastQueuedSkillOnly.Checked;
 
             // Updates API provider choices
             m_settings.APIProviders.CurrentProviderName = (string)cbAPIServer.SelectedItem;
@@ -476,7 +467,8 @@ namespace EVEMon.SettingsUI
                 RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
                 if (runAtStartupComboBox.Checked)
                 {
-                    rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture, "\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
+                    rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture,
+                                                "\"{0}\" {1}", Application.ExecutablePath.ToString(), "-startMinimized"));
                 }
                 else
                 {
@@ -546,6 +538,20 @@ namespace EVEMon.SettingsUI
             // Disable the drop down box if only one available
             cbAPIServer.Enabled = cbAPIServer.Items.Count > 1;
         }
+
+        /// <summary>
+        /// Populates the combobox for the google reminder.
+        /// </summary>
+        private void InitilizeGoogleCalendarReminderDropDown()
+        {
+            cbGoogleReminder.Items.Clear();
+            foreach (Enum item in GoogleAppointmentFilter.ReminderMethods)
+            {
+                string text = item.ToString();
+                cbGoogleReminder.Items.Add(char.ToUpper(text[0]) + text.Substring(1));
+            }
+        }
+
         #endregion
 
 
@@ -631,10 +637,12 @@ namespace EVEMon.SettingsUI
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
         #endregion
 
 
         #region Updates
+
         /// <summary>
         /// This handler occurs because some controls' values changed and requires to enable/disable other controls.
         /// </summary>
@@ -676,6 +684,11 @@ namespace EVEMon.SettingsUI
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
             gbGoogle.Enabled = rbGoogle.Checked;
+            cbSetReminder.Enabled = !cbUseAlterateReminder.Checked;
+            tbReminder.Enabled = cbSetReminder.Checked;
+            cbUseAlterateReminder.Enabled = !cbSetReminder.Checked;
+            dtpEarlyReminder.Enabled = cbUseAlterateReminder.Checked;
+            dtpLateReminder.Enabled = cbUseAlterateReminder.Checked;
 
             // Main window filters (show non-public skills and such)
             if (cbShowAllPublicSkills.Checked)
@@ -701,10 +714,12 @@ namespace EVEMon.SettingsUI
                 btnResetUpdateQueryTimers.Enabled |= character.QueryMonitors.Any(x => x.LastUpdate > DateTime.UtcNow.AddDays(7));
             }
         }
+
         #endregion
 
 
         #region Buttons handlers
+
         /// <summary>
         /// Alerts > Email alerts > Send test email button.
         /// </summary>
@@ -890,10 +905,12 @@ namespace EVEMon.SettingsUI
                 character.QueryMonitors.QueryEverything();
             }
         }
+
         #endregion
 
 
         #region Other handlers
+
         /// <summary>
         /// Skill Planner > Skill browser icon set > Icons set combo.
         /// Updates the sample below the combo box.
@@ -1039,6 +1056,11 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
+
+        private void cbGoogleReminder_DropDown(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }

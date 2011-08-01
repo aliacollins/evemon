@@ -50,6 +50,28 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.GData.AccessControl, Version=1.4.0.2, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalCalendar\Google.GData.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Calendar">
+      <HintPath>ExternalCalendar\Google.GData.Calendar.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Google.GData.Client">
+      <HintPath>ExternalCalendar\Google.GData.Client.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Google.GData.Extensions">
+      <HintPath>ExternalCalendar\Google.GData.Extensions.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>ExternalCalendar\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -66,6 +88,10 @@
     <Compile Include="EveMailingListsCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
     <Compile Include="EventArgs\BCAPIEventArgs.cs" />
+    <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
+    <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
+    <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
+    <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
     <Compile Include="IEveMessage.cs" />
     <Compile Include="EveNotification.cs" />
     <Compile Include="EveNotificationsCollection.cs" />
@@ -856,6 +882,9 @@
     <None Include="Resources\info_balloon.png" />
     <Content Include="Serialization\Exportation\output-html.xslt" />
     <Content Include="Serialization\Importation\input-settings-and-plan.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
