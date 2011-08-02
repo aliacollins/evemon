@@ -49,7 +49,10 @@ namespace EVEMon.Common.Data
 
         #region Attribute Category IDs
 
+        public const int FittingAtributeCategoryID = 1;
         public const int StructureAtributeCategoryID = 4;
+        public const int MiscellaneousAttributeCategoryID = 7;
+        public const int NULLAtributeCategoryID = 9;
 
         #endregion
 
@@ -140,6 +143,13 @@ namespace EVEMon.Common.Data
         public const int DroneBandwidthPropertyID = 1271;
         public const int DroneBandwidthUsedPropertyID = 1272;
         public const int ShipWarpSpeedPropertyID = 1281;
+        public const int MaxSubSystemsPropertyID = 1367;
+        public const int TurretHardPointModifierPropertyID = 1368;
+        public const int LauncherHardPointModifierPropertyID = 1369;
+        public const int HiSlotModifierPropertyID = 1374;
+        public const int MedSlotModifierPropertyID = 1375;
+        public const int LowSlotModifierPropertyID = 1376;
+        public const int FitsToShipTypePropertyID = 1380;
         public const int AITargetSwitchTimerPropertyID = 1416;
         public const int RigSizePropertyID = 1547;
         public const int MetaGroupPropertyID = 1692;

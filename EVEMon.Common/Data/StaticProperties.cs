@@ -81,6 +81,13 @@ namespace EVEMon.Common.Data
             s_propertiesByID[DBConstants.LauncherSlotsLeftPropertyID].HideIfDefault = true;
             s_propertiesByID[DBConstants.TurretSlotsLeftPropertyID].HideIfDefault = true;
 
+            s_propertiesByID[DBConstants.TurretHardPointModifierPropertyID].HideIfDefault = true;
+            s_propertiesByID[DBConstants.LauncherHardPointModifierPropertyID].HideIfDefault = true;
+
+            s_propertiesByID[DBConstants.HiSlotModifierPropertyID].HideIfDefault = true;
+            s_propertiesByID[DBConstants.MedSlotModifierPropertyID].HideIfDefault = true;
+            s_propertiesByID[DBConstants.LowSlotModifierPropertyID].HideIfDefault = true;
+
             s_propertiesByID[DBConstants.ScanRadarStrengthPropertyID].HideIfDefault = true;
             s_propertiesByID[DBConstants.ScanLadarStrengthPropertyID].HideIfDefault = true;
             s_propertiesByID[DBConstants.ScanMagnetometricStrengthPropertyID].HideIfDefault = true;

@@ -27,6 +27,9 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("iconID")]
         public Nullable<int> IconID;
 
+        [XmlElement("published")]
+        public bool Published;
+
         [XmlElement("unitID")]
         public Nullable<int> UnitID;
 

@@ -13,13 +13,15 @@ namespace EVEMon.XmlGenerator
 {
     internal class Program
     {
+        #region Static Fields
+
         private static string s_text = String.Empty;
         private static double s_counter;
         private static double s_tablesCount;
         private static double s_totalTablesCount = 29;
 
         private static int s_percentOld;
-        private static int s_propGenTotal = 1550;
+        private static int s_propGenTotal = 1602;
         private static int s_itemGenTotal = 8751;
         private static int s_skillGenTotal = 454;
         private static int s_certGenTotal = 4272;
@@ -64,6 +66,9 @@ namespace EVEMon.XmlGenerator
         private static Bag<CrtCertificates> s_certificates;
         private static Bag<CrtRecommendations> s_crtRecommendations;
         private static Bag<CrtRelationships> s_crtRelationships;
+        
+        #endregion
+
 
         #region Initilization
 
@@ -162,6 +167,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Properties Datafile
 
         /// <summary>
@@ -178,6 +184,14 @@ namespace EVEMon.XmlGenerator
             s_startTime = DateTime.Now;
 
             int newID = 0;
+
+            // Set attributes with CategoryID 'NULL" to NULL category
+            foreach (DgmAttributeTypes attribute in s_attributeTypes.Where(x => x.CategoryID == null))
+            {
+                attribute.CategoryID = (attribute.Published ?
+                                        DBConstants.MiscellaneousAttributeCategoryID :
+                                        DBConstants.NULLAtributeCategoryID);
+            }
 
             // Change some display names and default values
             s_attributeTypes[DBConstants.StructureHitpointsPropertyID].DisplayName = "Structure HP";
@@ -215,10 +229,16 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[DBConstants.CPUPenaltyPercentPropertyID].DisplayName = "CPU Penalty";
 
             // Changing the categoryID for some attributes 
-            s_attributeTypes[DBConstants.UpgradeCapacityPropertyID].CategoryID = 1;
-            s_attributeTypes[DBConstants.RigSizePropertyID].CategoryID = 1;
-            s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID = 4;
-            s_attributeTypes[DBConstants.MetaGroupPropertyID].CategoryID = 9;
+            s_attributeTypes[DBConstants.UpgradeCapacityPropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
+            s_attributeTypes[DBConstants.RigSizePropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
+            s_attributeTypes[DBConstants.MaxSubSystemsPropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
+            s_attributeTypes[DBConstants.FitsToShipTypePropertyID].CategoryID = DBConstants.FittingAtributeCategoryID;
+            s_attributeTypes[DBConstants.ShipMaintenanceBayCapacityPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.TurretHardPointModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.LauncherHardPointModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.HiSlotModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.MedSlotModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
+            s_attributeTypes[DBConstants.LowSlotModifierPropertyID].CategoryID = DBConstants.StructureAtributeCategoryID;
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
             s_attributeTypes[DBConstants.PGNeedPropertyID].HigherIsBetter = false;
@@ -443,6 +463,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Items Datafile
 
@@ -1122,6 +1143,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Skills Datafile
 
         /// <summary>
@@ -1265,6 +1287,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Certificates Datafile
 
@@ -1441,6 +1464,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Blueprints Datafile
 
@@ -1952,6 +1976,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Geography Datafile
 
         /// <summary>
@@ -2078,6 +2103,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region Reprocessing Datafile
 
         /// <summary>
@@ -2130,6 +2156,7 @@ namespace EVEMon.XmlGenerator
 
         #endregion
 
+
         #region MD5Sums
 
         /// <summary>
@@ -2141,6 +2168,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
 
         #region Helper Methods
 

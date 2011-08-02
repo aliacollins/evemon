@@ -263,11 +263,14 @@ namespace EVEMon.XmlGenerator
                                    DisplayName = attribute.displayName.Clean(),
                                    IconID = attribute.iconID,
                                    Name = attribute.attributeName.Clean(),
-                                   UnitID = attribute.unitID
+                                   UnitID = attribute.unitID,
                                };
 
                 if (attribute.defaultValue.HasValue)
                     item.DefaultValue = attribute.defaultValue.Value.ToString();
+
+                if (attribute.published.HasValue)
+                    item.Published = attribute.published.Value;
 
                 if (attribute.highIsGood.HasValue)
                     item.HigherIsBetter = attribute.highIsGood.Value;
