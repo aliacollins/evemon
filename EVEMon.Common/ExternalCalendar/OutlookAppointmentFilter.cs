@@ -62,7 +62,7 @@ namespace EVEMon.Common.ExternalCalendar
                                                     DateTime.Now,
                                                     queuePositionString));
 
-            appointmentItem.ReminderSet = ItemReminder;
+            appointmentItem.ReminderSet = ItemReminder || AlternateReminder;
             appointmentItem.BusyStatus = OlBusyStatus.olBusy;
             appointmentItem.AllDayEvent = false;
             appointmentItem.Location = String.Empty;
@@ -91,7 +91,7 @@ namespace EVEMon.Common.ExternalCalendar
                 Minutes = appointmentItem.ReminderMinutesBeforeStart;
             }
 
-            appointmentItem.ReminderMinutesBeforeStart = ItemReminder ? Minutes : 0;
+            appointmentItem.ReminderMinutesBeforeStart = (appointmentItem.ReminderSet ? Minutes : 0);
             appointmentItem.Save();
         }
 
