@@ -243,33 +243,25 @@ namespace EVEMon.Common.Data
 
         #region Market group IDs
 
+        public const int BlueprintsMarketGroupID = 2;
         public const int ShipsMarketGroupID = 4;
+        public const int ShipEquipmentsMarketGroupID = 9;
+        public const int AmmosAndChargesMarketGroupID = 11;
+        public const int ImplantsAndBoostersMarketGroupID = 24;
+        public const int ImplantsMarketGroupID = 27;
         public const int SkillsMarketGroupID = 150;
         public const int DronesMarketGroupID = 157;
-        public const int BlueprintsMarketGroupID = 2;
-        public const int ImplantsMarketGroupID = 27;
         public const int ShipsBlueprintsMarketGroupID = 204;
         public const int ComponentsMarketGroupID = 475;
-        public const int ShipEquipmentsMarketGroupID = 9;
-        public const int AdvancedSubsystemsMarketGroupID = 1112;
-        public const int AmmosAndChargesMarketGroupID = 11;
-        public const int ShipModificationsMarketGroupID = 955;
-        public const int ImplantsAndBoostersMarketGroupID = 24;
         public const int StarbaseStructuresMarketGroupID = 477;
-
         public const int MiningBargesMarketGroupID = 495;
-        public const int ExhumersMarketGroupID = 875;
-        public const int IndustrialsMarketGroupID = 1390;
-        public const int CapitalIndustrialsMarketGroupID = 1048;
-
-        public const int ProjectileAmmunitionBlueprintsMarketGroupID = 299;
-        public const int HybridAmmunitionBlueprintsMarketGroupID = 300;
-        public const int MissilesAmmunitionBlueprintsMarketGroupID = 314;
-        public const int BombsBlueprintsMarketGroupID = 1016;
-        public const int BoostersChargesBlueprintsMarketGroupID = 339;
-
         public const int SkillHardwiringImplantsMarketGroupID = 531;
         public const int AttributeEnhancersImplantsMarketGroupID = 532;
+        public const int ExhumersMarketGroupID = 875;
+        public const int ShipModificationsMarketGroupID = 955;
+        public const int CapitalIndustrialsMarketGroupID = 1048;
+        public const int AdvancedSubsystemsMarketGroupID = 1112;
+        public const int IndustrialsMarketGroupID = 1390;
 
         #endregion
 
@@ -322,8 +314,8 @@ namespace EVEMon.Common.Data
 
         #region Icon IDs
 
-        public const int UnknownBlueprintBackdropIconID = 2703;
         public const int UnknownShipIconID = 1443;
+        public const int UnknownBlueprintBackdropIconID = 2703;
 
         #endregion
 

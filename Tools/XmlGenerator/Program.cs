@@ -183,7 +183,6 @@ namespace EVEMon.XmlGenerator
             s_attributeTypes[DBConstants.StructureHitpointsPropertyID].DisplayName = "Structure HP";
             s_attributeTypes[DBConstants.ShieldHitpointsPropertyID].DisplayName = "Shield HP";
             s_attributeTypes[DBConstants.ArmorHitpointsPropertyID].DisplayName = "Armor HP";
-
             s_attributeTypes[DBConstants.CargoCapacityPropertyID].DisplayName = "Cargo Capacity";
             s_attributeTypes[DBConstants.CPUOutputPropertyID].DisplayName = "CPU";
             s_attributeTypes[DBConstants.PGOutputPropertyID].DisplayName = "Powergrid";
