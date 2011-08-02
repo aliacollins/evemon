@@ -115,9 +115,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the implant modifier list when the settings changed.
         /// </summary>
-        protected override void EveClient_SettingsChanged(object sender, EventArgs e)
+        protected override void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            base.EveClient_SettingsChanged(sender, e);
+            base.EveMonClient_SettingsChanged(sender, e);
             UpdateImplantSetModifier();
         }
 

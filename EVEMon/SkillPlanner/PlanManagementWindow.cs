@@ -36,7 +36,7 @@ namespace EVEMon.SkillPlanner
             m_character = character;
             m_columnSorter = new PlanComparer(PlanSort.Name);
 
-            EveMonClient.CharacterPlanCollectionChanged += new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
+            EveMonClient.CharacterPlanCollectionChanged += new EventHandler<CharacterChangedEventArgs>(EveMonClient_CharacterPlanCollectionChanged);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            EveMonClient.CharacterPlanCollectionChanged -= new EventHandler<CharacterChangedEventArgs>(EveClient_CharacterPlanCollectionChanged);
+            EveMonClient.CharacterPlanCollectionChanged -= new EventHandler<CharacterChangedEventArgs>(EveMonClient_CharacterPlanCollectionChanged);
             base.OnClosing(e);
         }
 
@@ -99,7 +99,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterPlanCollectionChanged(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterPlanCollectionChanged(object sender, CharacterChangedEventArgs e)
         {
             UpdateContent(true);
         }

@@ -37,7 +37,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.BCAPIEventArgs"/> instance containing the event data.</param>
-        private void EveClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
+        private void EveMonClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
         {
             Enabled = BCAPI.IsAuthenticated;
         }
@@ -54,7 +54,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SettingsFileStorageControl_Load(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated += EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;
 
             alwaysUploadCheckBox.Checked = BCAPISettings.Default.UploadAlways;
@@ -69,7 +69,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated -= EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated -= EveMonClient_BCAPICredentialsUpdated;
             Disposed -= OnDisposed;
         }
 

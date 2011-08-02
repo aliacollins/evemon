@@ -29,7 +29,7 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BlankCharacterWindow_Load(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
 
             buttonOK.Enabled = false;
@@ -39,11 +39,11 @@ namespace EVEMon.BlankCharacter
         #region Event Handlers
 
         /// <summary>
-        /// Handles the TimerTick event of the EveClient control.
+        /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.tbCharacterName.Text);
             buttonOK.Text = (!buttonOK.Enabled || m_fileSaved ? "Import" : "Save");
@@ -56,7 +56,7 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
         

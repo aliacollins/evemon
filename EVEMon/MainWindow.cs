@@ -118,13 +118,13 @@ namespace EVEMon
             standardToolStripMenuItem.Checked = standardToolbar.Visible = Settings.UI.MainWindow.ShowToolBar;
 
             // Subscribe events
-            EveMonClient.NotificationSent += EveClient_NotificationSent;
-            EveMonClient.NotificationInvalidated += EveClient_NotificationInvalidated;
-            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveMonClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
-            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            EveMonClient.NotificationInvalidated += EveMonClient_NotificationInvalidated;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
 
             // Initialize all of our business objects
             EveMonClient.Run(this);
@@ -150,7 +150,7 @@ namespace EVEMon
                 CheckTimeSynchronization();
 
             // Apply the intial settings
-            EveClient_SettingsChanged(null, null);
+            EveMonClient_SettingsChanged(null, null);
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             if (m_isUpdatingTabOrder)
                 return;
@@ -525,7 +525,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
+        void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             lblServerStatus.Text = String.Format("// {0}", e.Server.StatusText);
         }
@@ -535,7 +535,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
+        void EveMonClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
         {
             UpdateNotifications();
         }
@@ -545,7 +545,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_NotificationSent(object sender, Notification e)
+        void EveMonClient_NotificationSent(object sender, Notification e)
         {
             // Updates the notifications list of the main window
             UpdateNotifications();
@@ -745,7 +745,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             // Play a sound
             TryPlaySkillCompletionSound();
@@ -780,7 +780,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateStatusLabel();
             UpdateWindowTitle();
@@ -1802,7 +1802,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon != SystemTrayBehaviour.Disabled)

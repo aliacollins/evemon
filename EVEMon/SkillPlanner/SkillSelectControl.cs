@@ -44,7 +44,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             Disposed -= OnDisposed;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             cbShowNonPublic.Checked = Settings.UI.SkillBrowser.ShowNonPublicSkills;
@@ -71,7 +71,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Updates the controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
             

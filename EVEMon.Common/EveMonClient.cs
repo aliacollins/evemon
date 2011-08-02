@@ -50,7 +50,7 @@ namespace EVEMon.Common
 
                 s_initialized = true;
 
-                Trace("EveClient.Initialize - begin");
+                Trace("EveMonClient.Initialize - begin");
 
                 // Members instantiations
                 HttpWebService = new HttpWebService();
@@ -75,7 +75,7 @@ namespace EVEMon.Common
                 // Network monitoring (connection availability changes)
                 NetworkMonitor.Initialize();
 
-                Trace("EveClient.Initialize - done");
+                Trace("EveMonClient.Initialize - done");
             }
         }
 
@@ -86,7 +86,7 @@ namespace EVEMon.Common
         /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
         public static void Run(Form mainForm)
         {
-            Trace("EveClient.Run");
+            Trace("EveMonClient.Run");
 
             s_running = true;
             Dispatcher.Run(new UIActor(mainForm));
@@ -625,7 +625,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnSettingsChanged()
         {
-            Trace("EveClient.OnSettingsChanged");
+            Trace("EveMonClient.OnSettingsChanged");
             Settings.Save();
             UpdateSettings();
             if (SettingsChanged != null)
@@ -637,7 +637,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnSchedulerChanged()
         {
-            Trace("EveClient.OnSchedulerChanged");
+            Trace("EveMonClient.OnSchedulerChanged");
             Settings.Save();
             if (SchedulerChanged != null)
                 SchedulerChanged(null, EventArgs.Empty);
@@ -648,7 +648,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnAccountCollectionChanged()
         {
-            Trace("EveClient.OnAccountCollectionChanged");
+            Trace("EveMonClient.OnAccountCollectionChanged");
             Settings.Save();
             if (AccountCollectionChanged != null)
                 AccountCollectionChanged(null, EventArgs.Empty);
@@ -659,7 +659,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnMonitoredCharactersChanged()
         {
-            Trace("EveClient.OnMonitoredCharactersChanged");
+            Trace("EveMonClient.OnMonitoredCharactersChanged");
             Settings.Save();
             if (MonitoredCharacterCollectionChanged != null)
                 MonitoredCharacterCollectionChanged(null, EventArgs.Empty);
@@ -670,7 +670,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnCharacterCollectionChanged()
         {
-            Trace("EveClient.OnCharacterCollectionChanged");
+            Trace("EveMonClient.OnCharacterCollectionChanged");
             Settings.Save();
             if (CharacterCollectionChanged != null)
                 CharacterCollectionChanged(null, EventArgs.Empty);
@@ -681,7 +681,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static void OnConquerableStationListUpdated()
         {
-            Trace("EveClient.OnAccountStatusUpdated");
+            Trace("EveMonClient.OnAccountStatusUpdated");
             if (ConquerableStationListUpdated != null)
                 ConquerableStationListUpdated(null, EventArgs.Empty);
         }
@@ -692,7 +692,7 @@ namespace EVEMon.Common
         /// <param name="account">The account.</param>
         internal static void OnCharacterListUpdated(Account account)
         {
-            Trace("EveClient.OnCharacterListUpdated - {0}", account);
+            Trace("EveMonClient.OnCharacterListUpdated - {0}", account);
             Settings.Save();
             if (CharacterListUpdated != null)
                 CharacterListUpdated(null, EventArgs.Empty);
@@ -704,7 +704,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterUpdated != null)
                 CharacterUpdated(null, new CharacterChangedEventArgs(character));
@@ -716,7 +716,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterInfoUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterInfoUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterInfoUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterInfoUpdated != null)
                 CharacterInfoUpdated(null, new CharacterChangedEventArgs(character));
@@ -728,7 +728,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterSkillQueueUpdated(Character character)
         {
-            Trace("EveClient.OnSkillQueueUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnSkillQueueUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterSkillQueueUpdated != null)
                 CharacterSkillQueueUpdated(null, new CharacterChangedEventArgs(character));
@@ -741,7 +741,7 @@ namespace EVEMon.Common
         /// <param name="skillsCompleted">The skills completed.</param>
         internal static void OnCharacterQueuedSkillsCompleted(Character character, IEnumerable<QueuedSkill> skillsCompleted)
         {
-            Trace("EveClient.OnCharacterQueuedSkillsCompleted - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterQueuedSkillsCompleted - {0}", character.Name);
             if (QueuedSkillsCompleted != null)
                 QueuedSkillsCompleted(null, new QueuedSkillsEventArgs(character, skillsCompleted));
         }
@@ -752,7 +752,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterStandingsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterStandingsUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterStandingsUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterStandingsUpdated != null)
                 CharacterStandingsUpdated(null, new CharacterChangedEventArgs(character));
@@ -764,7 +764,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterMarketOrdersUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterMarketOrdersUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterMarketOrdersUpdated != null)
                 CharacterMarketOrdersUpdated(null, new CharacterChangedEventArgs(character));
@@ -776,7 +776,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterIndustryJobsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterIndustryJobsUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterIndustryJobsUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterIndustryJobsUpdated != null)
                 CharacterIndustryJobsUpdated(null, new CharacterChangedEventArgs(character));
@@ -789,7 +789,7 @@ namespace EVEMon.Common
         /// <param name="jobsCompleted">The jobs completed.</param>
         internal static void OnCharacterIndustryJobsCompleted(Character character, IEnumerable<IndustryJob> jobsCompleted)
         {
-            Trace("EveClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterIndustryJobsCompleted - {0}", character.Name);
             if (CharacterIndustryJobsCompleted != null)
                 CharacterIndustryJobsCompleted(null, new IndustryJobsEventArgs(character, jobsCompleted));
         }
@@ -800,7 +800,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterResearchPointsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterResearchPointsUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterResearchPointsUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterResearchPointsUpdated != null)
                 CharacterResearchPointsUpdated(null, new CharacterChangedEventArgs(character));
@@ -812,7 +812,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailMessagesUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterEVEMailMessagesUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterEVEMailMessagesUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterEVEMailMessagesUpdated != null)
                 CharacterEVEMailMessagesUpdated(null, new CharacterChangedEventArgs(character));
@@ -824,7 +824,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVEMailBodyDownloaded(Character character)
         {
-            Trace("EveClient.OnCharacterEVEMailBodyDownloaded - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterEVEMailBodyDownloaded - {0}", character.Name);
             if (CharacterEVEMailBodyDownloaded != null)
                 CharacterEVEMailBodyDownloaded(null, new CharacterChangedEventArgs(character));
         }
@@ -835,7 +835,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVENotificationsUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterEVENotificationsUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterEVENotificationsUpdated - {0}", character.Name);
             Settings.Save();
             if (CharacterEVENotificationsUpdated != null)
                 CharacterEVENotificationsUpdated(null, new CharacterChangedEventArgs(character));
@@ -847,7 +847,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterEVENotificationTextDownloaded(Character character)
         {
-            Trace("EveClient.OnCharacterEVENotificationTextDownloaded - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterEVENotificationTextDownloaded - {0}", character.Name);
             if (CharacterEVENotificationTextDownloaded != null)
                 CharacterEVENotificationTextDownloaded(null, new CharacterChangedEventArgs(character));
         }
@@ -858,7 +858,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPortraitUpdated(Character character)
         {
-            Trace("EveClient.OnCharacterPortraitUpdated - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterPortraitUpdated - {0}", character.Name);
             if (CharacterPortraitUpdated != null)
                 CharacterPortraitUpdated(null, new CharacterChangedEventArgs(character));
         }
@@ -869,7 +869,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnCharacterPlanCollectionChanged(Character character)
         {
-            Trace("EveClient.OnCharacterPlanCollectionChanged - {0}", character.Name);
+            Trace("EveMonClient.OnCharacterPlanCollectionChanged - {0}", character.Name);
             Settings.Save();
             if (CharacterPlanCollectionChanged != null)
                 CharacterPlanCollectionChanged(null, new CharacterChangedEventArgs(character));
@@ -882,7 +882,7 @@ namespace EVEMon.Common
         /// <param name="plan">The plan.</param>
         internal static void OnPlanChanged(Plan plan)
         {
-            Trace("EveClient.OnPlanChanged - {0}", plan.Name);
+            Trace("EveMonClient.OnPlanChanged - {0}", plan.Name);
             Settings.Save();
             if (PlanChanged != null)
                 PlanChanged(null, new PlanChangedEventArgs(plan));
@@ -894,7 +894,7 @@ namespace EVEMon.Common
         /// <param name="plan">The plan.</param>
         internal static void OnPlanNameChanged(Plan plan)
         {
-            Trace("EveClient.OnPlanNameChanged - {0}", plan.Name);
+            Trace("EveMonClient.OnPlanNameChanged - {0}", plan.Name);
             Settings.Save();
             if (PlanNameChanged != null)
                 PlanNameChanged(null, new PlanChangedEventArgs(plan));
@@ -908,7 +908,7 @@ namespace EVEMon.Common
         /// <param name="status">The status.</param>
         internal static void OnServerStatusUpdated(EveServer server, ServerStatus previousStatus, ServerStatus status)
         {
-            Trace("EveClient.OnServerStatusUpdated");
+            Trace("EveMonClient.OnServerStatusUpdated");
             if (ServerStatusUpdated != null)
                 ServerStatusUpdated(null, new EveServerEventArgs(server, previousStatus, status));
         }
@@ -920,7 +920,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal static void OnAccountCharactersSkillInTrainingUpdated(Account account)
         {
-            Trace("EveClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
+            Trace("EveMonClient.OnAccountCharactersSkillInTrainingUpdated - {0}", account);
             if (AccountCharactersSkillInTrainingUpdated != null)
                 AccountCharactersSkillInTrainingUpdated(null, EventArgs.Empty);
         }
@@ -931,7 +931,7 @@ namespace EVEMon.Common
         /// <param name="account">The account.</param>
         internal static void OnAccountStatusUpdated(Account account)
         {
-            Trace("EveClient.OnAccountStatusUpdated - {0}", account);
+            Trace("EveMonClient.OnAccountStatusUpdated - {0}", account);
             if (AccountStatusUpdated != null)
                 AccountStatusUpdated(null, EventArgs.Empty);
         }
@@ -942,7 +942,7 @@ namespace EVEMon.Common
         /// <param name="notification">The notification.</param>
         internal static void OnNotificationSent(Notification notification)
         {
-            Trace("EveClient.OnNotificationSent - {0}", notification);
+            Trace("EveMonClient.OnNotificationSent - {0}", notification);
             if (NotificationSent != null)
                 NotificationSent(null, notification);
         }
@@ -953,7 +953,7 @@ namespace EVEMon.Common
         /// <param name="args">The <see cref="EVEMon.Common.Notifications.NotificationInvalidationEventArgs"/> instance containing the event data.</param>
         internal static void OnNotificationInvalidated(NotificationInvalidationEventArgs args)
         {
-            Trace("EveClient.OnNotificationInvalidated");
+            Trace("EveMonClient.OnNotificationInvalidated");
             if (NotificationInvalidated != null)
                 NotificationInvalidated(null, args);
         }
@@ -972,7 +972,7 @@ namespace EVEMon.Common
                                                 Version currentVersion, Version newestVersion,
                                                 bool canAutoInstall, string installArgs)
         {
-            Trace("EveClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
+            Trace("EveMonClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
                                         currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
                 UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage,
@@ -986,7 +986,7 @@ namespace EVEMon.Common
         /// <param name="changedFiles">The changed files.</param>
         internal static void OnDataUpdateAvailable(string updateUrl, List<SerializableDatafile> changedFiles)
         {
-            Trace("EveClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
+            Trace("EveMonClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
                 DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(updateUrl, changedFiles));
         }
@@ -997,7 +997,7 @@ namespace EVEMon.Common
         /// <param name="errorMessage">The error message.</param>
         internal static void OnBCAPICredentialsUpdated(string errorMessage)
         {
-            Trace("EveClient.OnBCAPICredentialsUpdated");
+            Trace("EveMonClient.OnBCAPICredentialsUpdated");
             if (BCAPICredentialsUpdated != null)
                 BCAPICredentialsUpdated(null, new BCAPIEventArgs(errorMessage));
         }

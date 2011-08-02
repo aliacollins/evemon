@@ -40,8 +40,8 @@ namespace EVEMon.SkillPlanner
             m_plan = plan;
             m_character = m_plan.Character;
 
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
         }
 
         #endregion
@@ -81,8 +81,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             base.OnClosing(e);
         }
 
@@ -118,7 +118,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             if(e.Plan == m_plan) UpdatePlanStatus();
         }
@@ -128,7 +128,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character) return;
             UpdatePlanStatus();

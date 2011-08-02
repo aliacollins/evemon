@@ -28,8 +28,8 @@ namespace EVEMon.LogitechG15
         /// </summary>
         public static void Initialize()
         {
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
 
             // Subscribe to events which occur of G15 buttons pressed
             Lcdisplay.APIUpdateRequested += Lcdisplay_APIUpdateRequested;
@@ -160,7 +160,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void EveClient_TimerTick(object sender, EventArgs e)
+        static void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateOnTimerTick();
         }
@@ -170,7 +170,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        private static void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             if (s_running)
             {

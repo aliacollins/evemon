@@ -53,8 +53,8 @@ namespace EVEMon
 
             Resize += MainWindowResearchPointsList_Resize;
 
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
             Disposed += OnDisposed;
         }
 
@@ -161,7 +161,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -527,7 +527,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (m_columnsChanged)
             {
@@ -545,7 +545,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)

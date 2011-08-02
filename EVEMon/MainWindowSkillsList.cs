@@ -55,9 +55,9 @@ namespace EVEMon
 
             m_requireRefresh = true;
 
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
         
@@ -75,9 +75,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             this.Disposed -= OnDisposed;
         }
 
@@ -917,7 +917,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // We trigger a refresh of the list to eliminate a designer leftover (scrollbar)
             if (m_requireRefresh)
@@ -950,7 +950,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
@@ -963,7 +963,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

@@ -36,7 +36,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.BCAPIEventArgs"/> instance containing the event data.</param>
-        private void EveClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
+        private void EveMonClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
         {
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
@@ -83,7 +83,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void BattleClinicAPIControl_Load(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated += EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
             Disposed += OnDisposed;
 
             if (!BCAPI.HasCredentialsStored)
@@ -102,7 +102,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated -= EveClient_BCAPICredentialsUpdated;
+            EveMonClient.BCAPICredentialsUpdated -= EveMonClient_BCAPICredentialsUpdated;
             Disposed -= OnDisposed;
         }
 

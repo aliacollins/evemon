@@ -23,7 +23,7 @@ namespace EVEMon.Common.Controls
             InitializeComponent();
             pictureBox.Image = pictureBox.InitialImage;
 
-            EveMonClient.CharacterPortraitUpdated += EveClient_CharacterPortraitUpdated;
+            EveMonClient.CharacterPortraitUpdated += EveMonClient_CharacterPortraitUpdated;
             Disposed += OnDisposed;
         }
 
@@ -34,7 +34,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterPortraitUpdated -= EveClient_CharacterPortraitUpdated;
+            EveMonClient.CharacterPortraitUpdated -= EveMonClient_CharacterPortraitUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -409,11 +409,11 @@ namespace EVEMon.Common.Controls
 
         #region Controls and global events handler
         /// <summary>
-        /// Handles the CharacterPortraitUpdated event of the EveClient control.
+        /// Handles the CharacterPortraitUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterPortraitUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterPortraitUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible)
             {

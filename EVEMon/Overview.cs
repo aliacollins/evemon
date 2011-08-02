@@ -23,8 +23,8 @@ namespace EVEMon
             this.DoubleBuffered = true;
             this.AutoScroll = true;
 
-            EveMonClient.SettingsChanged += new EventHandler(EveClient_SettingsChanged);
-            EveMonClient.MonitoredCharacterCollectionChanged += new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
+            EveMonClient.SettingsChanged += new EventHandler(EveMonClient_SettingsChanged);
+            EveMonClient.MonitoredCharacterCollectionChanged += new EventHandler(EveMonClient_MonitoredCharacterCollectionChanged);
             this.Disposed += new EventHandler(Overview_Disposed);
         }
 
@@ -35,8 +35,8 @@ namespace EVEMon
         /// <param name="e"></param>
         void Overview_Disposed(object sender, EventArgs e)
         {
-            EveMonClient.SettingsChanged -= new EventHandler(EveClient_SettingsChanged);
-            EveMonClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveClient_MonitoredCharacterCollectionChanged);
+            EveMonClient.SettingsChanged -= new EventHandler(EveMonClient_SettingsChanged);
+            EveMonClient.MonitoredCharacterCollectionChanged -= new EventHandler(EveMonClient_MonitoredCharacterCollectionChanged);
             this.Disposed -= new EventHandler(Overview_Disposed);
         }
 
@@ -240,7 +240,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -250,7 +250,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

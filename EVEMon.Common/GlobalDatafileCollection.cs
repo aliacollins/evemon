@@ -10,7 +10,7 @@ namespace EVEMon.Common
     public sealed class GlobalDatafileCollection : ReadonlyCollection<Datafile>
     {
         /// <summary>
-        /// Default constructor. This class is only instantiated by EveClient
+        /// Default constructor. This class is only instantiated by EveMonClient
         /// </summary>
         internal GlobalDatafileCollection()
         {

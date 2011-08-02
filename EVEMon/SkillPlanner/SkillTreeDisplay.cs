@@ -303,9 +303,9 @@ namespace EVEMon.SkillPlanner
             SetStyle(ControlStyles.Opaque, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
 
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
         }
 
@@ -316,9 +316,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             Disposed -= OnDisposed;
         }
 
@@ -735,7 +735,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             Invalidate();
         }
@@ -745,7 +745,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (m_plan == null) 
                 return;
@@ -761,7 +761,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             Invalidate();
         }

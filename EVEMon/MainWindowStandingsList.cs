@@ -45,8 +45,8 @@ namespace EVEMon
 
             DoubleBuffered = true;
 
-            EveMonClient.CharacterStandingsUpdated += EveClient_CharacterStandingsUpdated;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
         }
 
@@ -65,8 +65,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterStandingsUpdated -= EveClient_CharacterStandingsUpdated;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.CharacterStandingsUpdated -= EveMonClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -485,7 +485,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterStandingsUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterStandingsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
@@ -499,7 +499,7 @@ namespace EVEMon
         /// <remarks>In case 'SafeForWork' gets enabled.</remarks>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

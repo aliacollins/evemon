@@ -73,7 +73,7 @@ namespace EVEMon
             warningLabel.Visible = false;
 
             // Update all other controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
@@ -90,17 +90,17 @@ namespace EVEMon
             }
 
             // Subscribe events
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
-            EveMonClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
-            EveMonClient.CharacterResearchPointsUpdated += EveClient_CharacterResearchPointsUpdated;
-            EveMonClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVENotificationsUpdated += EveClient_CharacterEVENotificationsUpdated;
-            EveMonClient.NotificationSent += EveClient_NotificationSent;
-            EveMonClient.NotificationInvalidated += EveClient_NotificationInvalidated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            EveMonClient.NotificationInvalidated += EveMonClient_NotificationInvalidated;
             Disposed += OnDisposed;
         }
 
@@ -111,17 +111,17 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
-            EveMonClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
-            EveMonClient.CharacterResearchPointsUpdated -= EveClient_CharacterResearchPointsUpdated;
-            EveMonClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVENotificationsUpdated -= EveClient_CharacterEVENotificationsUpdated;
-            EveMonClient.NotificationSent -= EveClient_NotificationSent;
-            EveMonClient.NotificationInvalidated -= EveClient_NotificationInvalidated;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
+            EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_CharacterEVENotificationsUpdated;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            EveMonClient.NotificationInvalidated -= EveMonClient_NotificationInvalidated;
             Disposed -= OnDisposed;
         }
 
@@ -206,7 +206,7 @@ namespace EVEMon
             SuspendLayout();
             try
             {
-                EveClient_TimerTick(null, EventArgs.Empty);
+                EveMonClient_TimerTick(null, EventArgs.Empty);
             }
             finally
             {
@@ -469,7 +469,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -482,7 +482,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -495,7 +495,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -508,7 +508,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -521,7 +521,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -534,7 +534,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -548,7 +548,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // Read the settings
             if (!Settings.UI.SafeForWork)
@@ -594,7 +594,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // No need to do anything when the control is not visible
             if (!Visible)
@@ -632,7 +632,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SchedulerChanged(object sender, EventArgs e)
+        private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
             UpdateTrainingInfo();
         }
@@ -642,7 +642,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationInvalidationEventArgs"/> instance containing the event data.</param>
-        private void EveClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
+        private void EveMonClient_NotificationInvalidated(object sender, NotificationInvalidationEventArgs e)
         {
             UpdateNotifications();
         }
@@ -652,7 +652,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        private void EveClient_NotificationSent(object sender, Notification e)
+        private void EveMonClient_NotificationSent(object sender, Notification e)
         {
             UpdateNotifications();
         }
@@ -1229,7 +1229,7 @@ namespace EVEMon
         private void showTextMenuItem_Click(object sender, EventArgs e)
         {
             Settings.UI.ShowTextInToolStrip = showTextMenuItem.Checked = !showTextMenuItem.Checked;
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         # endregion

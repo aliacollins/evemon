@@ -29,8 +29,8 @@ namespace EVEMon
             InitializeComponent();
             this.Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints, FontStyle.Regular, GraphicsUnit.Point);
 
-            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace EVEMon
         /// <param name="e"></param>
         protected override void OnClosed(EventArgs e)
         {
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             displayTimer.Stop();
             base.OnClosed(e);
         }
@@ -252,7 +252,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateCharactersList();
         }
@@ -262,7 +262,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateCharactersList();
         }

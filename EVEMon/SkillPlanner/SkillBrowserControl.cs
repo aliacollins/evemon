@@ -42,12 +42,12 @@ namespace EVEMon.SkillPlanner
 
             skillTreeDisplay.SkillClicked += skillTreeDisplay_SkillClicked;
             
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
 
             //Update the controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
 
             base.OnLoad(e);
         }
@@ -60,8 +60,8 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             skillTreeDisplay.SkillClicked -= skillTreeDisplay_SkillClicked;
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -116,7 +116,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdatePlannedLevel();
         }
@@ -126,7 +126,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             if (!Settings.UI.SafeForWork)
             {

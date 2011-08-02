@@ -46,12 +46,12 @@ namespace EVEMon.Accounting
             charactersListView.KeyDown += charactersListView_KeyDown;
             charactersListView.ItemChecked += charactersListView_ItemChecked;
 
-            EveMonClient.AccountCollectionChanged += EveClient_AccountCollectionChanged;
-            EveMonClient.CharacterCollectionChanged += EveClient_CharacterCollectionChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.AccountCollectionChanged += EveMonClient_AccountCollectionChanged;
+            EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
 
-            EveClient_AccountCollectionChanged(null, null);
-            EveClient_CharacterCollectionChanged(null, null);
+            EveMonClient_AccountCollectionChanged(null, null);
+            EveMonClient_CharacterCollectionChanged(null, null);
             AdjustColumns();
 
             // Selects the second page if no account known so far.
@@ -64,9 +64,9 @@ namespace EVEMon.Accounting
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveMonClient.AccountCollectionChanged -= EveClient_AccountCollectionChanged;
-            EveMonClient.CharacterCollectionChanged -= EveClient_CharacterCollectionChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.AccountCollectionChanged -= EveMonClient_AccountCollectionChanged;
+            EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             base.OnClosing(e);
         }
 
@@ -88,7 +88,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_AccountCollectionChanged(object sender, EventArgs e)
+        void EveMonClient_AccountCollectionChanged(object sender, EventArgs e)
         {
             accountsListBox.Accounts = EveMonClient.Accounts;
             accountsMultiPanel.SelectedPage = (EveMonClient.Accounts.IsEmpty() ? noAccountsPage : accountsListPage);
@@ -203,7 +203,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterCollectionChanged(object sender, EventArgs e)
+        void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
         {
             // Begin the update
             m_refreshingCharactersCounter++;
@@ -233,7 +233,7 @@ namespace EVEMon.Accounting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             m_refreshingCharactersCounter++;
             UpdateCharactersListContent();

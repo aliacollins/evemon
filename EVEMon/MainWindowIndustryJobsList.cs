@@ -65,9 +65,9 @@ namespace EVEMon
 
             Resize += MainWindowIndustryJobsList_Resize;
 
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.CharacterIndustryJobsUpdated += EveClient_CharacterIndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted += EveClient_IndustryJobsCompleted;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.CharacterIndustryJobsUpdated += EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_IndustryJobsCompleted;
             Disposed += OnDisposed;
         }
                 
@@ -212,9 +212,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.CharacterIndustryJobsUpdated -= EveClient_CharacterIndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted -= EveClient_IndustryJobsCompleted;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.CharacterIndustryJobsUpdated -= EveMonClient_CharacterIndustryJobsUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_IndustryJobsCompleted;
             Disposed -= OnDisposed;
         }
 
@@ -826,7 +826,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_IndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
+        void EveMonClient_IndustryJobsCompleted(object sender, IndustryJobsEventArgs e)
         {
             UpdateContent();
         }
@@ -837,7 +837,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterIndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
             if (e.Character != ccpCharacter)
@@ -854,7 +854,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             var colIndexTTC = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == IndustryJobColumn.TTC));
 

@@ -74,10 +74,10 @@ namespace EVEMon
             lblSkillQueueTrainingTime.Text = String.Empty;
 
             // Global events
-            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -154,10 +154,10 @@ namespace EVEMon
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
 
@@ -333,7 +333,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (!Visible)
                 return;
@@ -352,7 +352,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SchedulerChanged(object sender, EventArgs e)
+        private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -362,7 +362,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -385,7 +385,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -409,7 +409,7 @@ namespace EVEMon
                 if (m_pendingUpdate)
                     UpdateContent();
 
-                EveClient_TimerTick(null, null);
+                EveMonClient_TimerTick(null, null);
             }
             base.OnVisibleChanged(e);
         }

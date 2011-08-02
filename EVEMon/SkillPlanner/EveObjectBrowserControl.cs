@@ -47,7 +47,7 @@ namespace EVEMon.SkillPlanner
         private void OnDisposed(object sender, EventArgs e)
         {
             m_selectControl.SelectionChanged -= OnSelectionChanged;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -79,7 +79,7 @@ namespace EVEMon.SkillPlanner
             // Watch for selection changes
             m_selectControl.SelectionChanged += OnSelectionChanged;
 
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
@@ -88,7 +88,7 @@ namespace EVEMon.SkillPlanner
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
             // Updates the control
-            EveClient_SettingsChanged(null, null);
+            EveMonClient_SettingsChanged(null, null);
 
             // Force a refresh
             OnSelectionChanged(null, null);
@@ -104,7 +104,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void EveClient_SettingsChanged(object sender, EventArgs e)
+        protected virtual void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             if (Settings.UI.SafeForWork)
             {

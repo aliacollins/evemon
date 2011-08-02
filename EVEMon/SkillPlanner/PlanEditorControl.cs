@@ -76,11 +76,11 @@ namespace EVEMon.SkillPlanner
             tsSortPriorities.Click += tsSortPriorities_Clicked;
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.SchedulerChanged += EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             Disposed += OnDisposed;
         }
 
@@ -91,11 +91,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.SchedulerChanged -= EveClient_SchedulerChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             Disposed -= OnDisposed;
         }
 
@@ -210,7 +210,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible || e.Character != m_character)
                 return;
@@ -224,7 +224,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdateDisplayPlan();
             UpdateSkillList(true);
@@ -237,7 +237,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateImplantSetList();
             cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex;
@@ -252,7 +252,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SchedulerChanged(object sender, EventArgs e)
+        private void EveMonClient_SchedulerChanged(object sender, EventArgs e)
         {
             UpdateSkillList(true);
             UpdateListColumns();
@@ -264,7 +264,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (!Visible)
                 return;

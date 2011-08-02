@@ -77,8 +77,8 @@ namespace EVEMon
 
             Resize += MainWindowMarketOrdersList_Resize;
 
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.CharacterMarketOrdersUpdated += EveClient_CharacterMarketOrdersUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             Disposed += OnDisposed;
         }
 
@@ -219,8 +219,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.CharacterMarketOrdersUpdated -= EveClient_CharacterMarketOrdersUpdated;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -848,7 +848,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (m_columnsChanged)
             {
@@ -867,7 +867,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterMarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = m_character as CCPCharacter;
             if (e.Character != ccpCharacter)

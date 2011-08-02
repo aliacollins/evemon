@@ -27,9 +27,9 @@ namespace EVEMon.Controls
             m_toolTip = new SkillQueueToolTip(this);
 
             this.Disposed += OnDisposed;
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             this.Disposed -= OnDisposed;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             m_toolTip.Dispose();
         }
 
@@ -51,7 +51,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (DateTime.Now > m_nextRepainting)
                 Invalidate();
@@ -62,7 +62,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             this.Invalidate();
         }
@@ -72,7 +72,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = e.Character as CCPCharacter;
 

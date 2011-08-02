@@ -193,7 +193,7 @@ namespace EVEMon
                 {
                     s_showWindowOnError = false;
 
-                    // Shutdown EveClient timer incase that was causing the crash
+                    // Shutdown EveMonClient timer incase that was causing the crash
                     // so we don't get multiple crashes
                     try
                     {

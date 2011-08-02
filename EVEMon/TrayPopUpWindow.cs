@@ -52,11 +52,11 @@ namespace EVEMon
             mainPanel.BackColor = SystemColors.ControlLightLight;
 
             // Client events
-            EveMonClient.MonitoredCharacterCollectionChanged += EveClient_MonitoredCharacterCollectionChanged;
-            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveMonClient.ServerStatusUpdated += EveClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
 
             // Character Details
             UpdateContent();
@@ -69,11 +69,11 @@ namespace EVEMon
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveClient_MonitoredCharacterCollectionChanged;
-            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveMonClient.ServerStatusUpdated -= EveClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
+        void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
@@ -164,7 +164,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
+        private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
         {
             UpdateServerStatusLabel();
         }
@@ -174,7 +174,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateEveTimeLabel();
         }
@@ -184,7 +184,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             UpdateContent();
         }
@@ -194,7 +194,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

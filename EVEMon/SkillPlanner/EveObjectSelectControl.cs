@@ -52,19 +52,19 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Subscribe the events
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Update the controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
-        /// Handles the SettingsChanged event of the EveClient control.
+        /// Handles the SettingsChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
         }
@@ -76,7 +76,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 

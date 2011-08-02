@@ -35,11 +35,11 @@ namespace EVEMon
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             // Subscribe to events
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.CharacterInfoUpdated += EveClient_CharacterInfoUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated += EveClient_MarketOrdersUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             Disposed += OnDisposed;
         }
         #endregion
@@ -548,19 +548,19 @@ namespace EVEMon
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.CharacterMarketOrdersUpdated -= EveClient_MarketOrdersUpdated;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             Disposed -= OnDisposed;
         }
 
         /// <summary>
-        /// Handles the TimerTick event of the EveClient control.
+        /// Handles the TimerTick event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
@@ -570,11 +570,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the SettingsChanged event of the EveClient control.
+        /// Handles the SettingsChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
@@ -584,11 +584,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterUpdated event of the EveClient control.
+        /// Handles the CharacterUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
@@ -598,11 +598,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the CharacterInfoUpdated event of the EveClient control.
+        /// Handles the CharacterInfoUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
@@ -612,11 +612,11 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Handles the MarketOrdersChanged event of the EveClient control.
+        /// Handles the MarketOrdersChanged event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)

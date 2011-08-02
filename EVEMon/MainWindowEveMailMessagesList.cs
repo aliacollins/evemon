@@ -53,9 +53,9 @@ namespace EVEMon
             DoubleBuffered = true;
             ListViewHelper.EnableDoubleBuffer(lvMailMessages);
 
-            EveMonClient.TimerTick += EveClient_TimerTick;
-            EveMonClient.CharacterEVEMailMessagesUpdated += EveClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVEMailBodyDownloaded += EveClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
             Disposed += OnDisposed;
         }
 
@@ -189,9 +189,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.TimerTick -= EveClient_TimerTick;
-            EveMonClient.CharacterEVEMailMessagesUpdated -= EveClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVEMailBodyDownloaded -= EveClient_CharacterEVEMailBodyDownloaded;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
+            EveMonClient.CharacterEVEMailBodyDownloaded -= EveMonClient_CharacterEVEMailBodyDownloaded;
             Disposed -= OnDisposed;
         }
 
@@ -710,7 +710,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_TimerTick(object sender, EventArgs e)
+        void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (m_columnsChanged)
             {
@@ -728,7 +728,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)
@@ -743,7 +743,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EVEMon.Common.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
         {
             var ccpCharacter = Character as CCPCharacter;
             if (e.Character != ccpCharacter)

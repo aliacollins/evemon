@@ -61,8 +61,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Global events (unsubscribed on window closing)
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             ResizeEnd += PlanWindow_ResizeEnd;
 
             // Force an update
@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
                               "\"View Plan\" from the drop down in the upper left.");
 
             //Update the controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
             
             //Update the status bar
             UpdateStatusBar();
@@ -120,8 +120,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // Unsubscribe global events
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Settings.Save();
 
             // We're closing down
@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             if (m_plan != e.Plan)
                 return;
@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             tabControl.ImageList = (!Settings.UI.SafeForWork ?
                 ilTabIcons :

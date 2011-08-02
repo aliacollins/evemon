@@ -50,7 +50,7 @@ namespace EVEMon.SkillPlanner
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             Disposed += OnDisposed;
         }
 
@@ -66,7 +66,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -179,7 +179,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             UpdateTree();
         }

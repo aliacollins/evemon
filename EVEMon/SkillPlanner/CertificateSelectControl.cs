@@ -48,7 +48,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             
             tbSearchText.KeyPress -= tbSearchText_KeyPress;
             tbSearchText.Enter -= tbSearchText_Enter;
@@ -70,7 +70,7 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
 
             tbSearchText.KeyPress += tbSearchText_KeyPress;
             tbSearchText.Enter += tbSearchText_Enter;
@@ -99,7 +99,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Updates the controls
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_SettingsChanged(object sender, EventArgs e)
+        void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
 

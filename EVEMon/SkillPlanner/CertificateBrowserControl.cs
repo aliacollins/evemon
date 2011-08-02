@@ -42,8 +42,8 @@ namespace EVEMon.SkillPlanner
             certSelectCtl.SelectionChanged += certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged += certDisplayCtl_SelectionChanged;
 
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
@@ -52,7 +52,7 @@ namespace EVEMon.SkillPlanner
                 lblHelp.Location = new Point(lblHelp.Location.X, result[0].Location.Y);
 
             // Check SafeForWork setting
-            EveClient_SettingsChanged(null, EventArgs.Empty);
+            EveMonClient_SettingsChanged(null, EventArgs.Empty);
 
             base.OnLoad(e);
         }
@@ -67,8 +67,8 @@ namespace EVEMon.SkillPlanner
             certSelectCtl.SelectionChanged -= certSelectCtl_SelectionChanged;
             certDisplayCtl.SelectionChanged -= certDisplayCtl_SelectionChanged;
 
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
 
@@ -396,7 +396,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             if (e.Plan == m_plan)
                 UpdateEligibility();
@@ -407,7 +407,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // Read the SafeForWork settings
             if (Settings.UI.SafeForWork)

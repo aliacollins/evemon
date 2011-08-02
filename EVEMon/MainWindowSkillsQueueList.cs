@@ -52,10 +52,10 @@ namespace EVEMon
             m_boldSkillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsQueueLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
-            EveMonClient.QueuedSkillsCompleted += EveClient_QueuedSkillsCompleted;
-            EveMonClient.SettingsChanged += EveClient_SettingsChanged;
-            EveMonClient.TimerTick += EveClient_TimerTick;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
         }
 
@@ -84,10 +84,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.QueuedSkillsCompleted -= EveClient_QueuedSkillsCompleted;
-            EveMonClient.SettingsChanged -= EveClient_SettingsChanged;
-            EveMonClient.TimerTick -= EveClient_TimerTick;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
             Disposed -= OnDisposed;
         }
 
@@ -737,7 +737,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             if (Character.IsTraining && Visible)
             {
@@ -764,7 +764,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != Character)
                 return;
@@ -777,7 +777,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             UpdateContent();
         }
@@ -787,7 +787,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveClient_SettingsChanged(object sender, EventArgs e)
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }

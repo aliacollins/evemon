@@ -466,7 +466,7 @@ namespace EVEMon.Common
                         if (saveFile != DialogResult.OK)
                             return;
 
-                        FileHelper.OverwriteOrWarnTheUser(EveClient.SettingsFileNameFullPath, fileDialog.FileName);
+                        FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
                     }
                 }
             }

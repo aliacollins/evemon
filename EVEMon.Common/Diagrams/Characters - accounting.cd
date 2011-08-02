@@ -190,7 +190,7 @@
       <Property Name="Characters" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="EVEMon.Common.EveClient">
+  <Class Name="EVEMon.Common.EveMonClient">
     <Position X="0.5" Y="3.25" Width="2" />
     <Members>
       <Property Name="ApiProviders" Hidden="true" />
@@ -233,7 +233,7 @@
     </AssociationLine>
     <TypeIdentifier>
       <HashCode>AABAAAAkAgEAAQgEATIFAEAABAQAAICESAADAJggBQE=</HashCode>
-      <FileName>EveClient.cs</FileName>
+      <FileName>EveMonClient.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="CharacterIdentities" />

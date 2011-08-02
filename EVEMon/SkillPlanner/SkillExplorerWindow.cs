@@ -68,8 +68,8 @@ namespace EVEMon.SkillPlanner
             m_planWindow = planWindow;
             Skill = skill;
 
-            EveMonClient.PlanChanged += EveClient_PlanChanged;
-            EveMonClient.CharacterUpdated += EveClient_CharacterUpdated;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
         }
 
         #endregion
@@ -83,8 +83,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveClient_CharacterUpdated;
-            EveMonClient.PlanChanged -= EveClient_PlanChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             base.OnClosing(e);
         }
 
@@ -553,7 +553,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
             UpdatePlanName();
         }
@@ -563,7 +563,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void EveClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
