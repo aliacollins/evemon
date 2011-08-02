@@ -135,7 +135,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </returns>
         public DateTime WorkOutAlternateReminders()
         {
-            // See whether the appointment falls within the middle of the two, it it does, set the early reminder.
+            // See whether the appointment falls within the middle of the two, it it does, set the early reminder
             if ((StartDate >= EarlyReminder) && (StartDate <= LateReminder))
                 return EarlyReminder;
 

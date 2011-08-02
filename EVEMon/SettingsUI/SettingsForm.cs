@@ -684,9 +684,9 @@ namespace EVEMon.SettingsUI
             // Calendar
             externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
             gbGoogle.Enabled = rbGoogle.Checked;
-            cbSetReminder.Enabled = !cbUseAlterateReminder.Checked;
+            cbSetReminder.Enabled = lblMinutes.Enabled = !cbUseAlterateReminder.Checked;
             tbReminder.Enabled = cbSetReminder.Checked;
-            cbUseAlterateReminder.Enabled = !cbSetReminder.Checked;
+            cbUseAlterateReminder.Enabled = lblEarlyReminder.Enabled = lblLateReminder.Enabled = !cbSetReminder.Checked;
             dtpEarlyReminder.Enabled = cbUseAlterateReminder.Checked;
             dtpLateReminder.Enabled = cbUseAlterateReminder.Checked;
 
@@ -1056,11 +1056,5 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
-
-        private void cbGoogleReminder_DropDown(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

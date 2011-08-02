@@ -29,7 +29,6 @@ namespace EVEMon.Common.ExternalCalendar
 
                 try
                 {
-
                     if (Settings.Calendar.Provider == CalendarProvider.Outlook)
                         DoOutlookAppointment(queuedSkill, queuePosition);
 
