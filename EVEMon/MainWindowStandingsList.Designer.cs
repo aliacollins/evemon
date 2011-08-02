@@ -60,6 +60,7 @@ namespace EVEMon
             this.lbStandings.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbStandings_MeasureItem);
             this.lbStandings.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbStandings_MouseDown);
             this.lbStandings.MouseHover += new System.EventHandler(this.lbStandings_MouseHover);
+            this.lbStandings.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbStandings_MouseWheel);
             // 
             // MainWindowStandingsList
             // 

@@ -367,6 +367,64 @@ namespace EVEMon
         }
 
         /// <summary>
+        /// Handles the MouseWheel event of the lbStandings control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbStandings_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Update the drawing based upon the mouse wheel scrolling
+            int numberOfItemLinesToMove = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
+            int lines = numberOfItemLinesToMove;
+            if (lines == 0)
+                return;
+
+            // Compute the number of lines to move
+            int direction = lines / Math.Abs(lines);
+            int[] numberOfPixelsToMove = new int[lines * direction];
+            for (int i = 1; i <= Math.Abs(lines); i++)
+            {
+                object item = null;
+
+                // Going up
+                if (direction == Math.Abs(direction))
+                {
+                    // Retrieve the next top item
+                    if (lbStandings.TopIndex - i >= 0)
+                        item = lbStandings.Items[lbStandings.TopIndex - i];
+                }
+                // Going down
+                else
+                {
+                    // Compute the height of the items from current the topindex (included)
+                    int height = 0;
+                    for (int j = lbStandings.TopIndex + i - 1; j < lbStandings.Items.Count; j++)
+                    {
+                        height += GetItemHeight(lbStandings.Items[j]);
+                    }
+
+                    // Retrieve the next bottom item
+                    if (height > lbStandings.ClientSize.Height)
+                        item = lbStandings.Items[lbStandings.TopIndex + i - 1];
+                }
+
+                // If found a new item as top or bottom
+                if (item != null)
+                {
+                    numberOfPixelsToMove[i - 1] = GetItemHeight(item) * direction;
+                }
+                else
+                {
+                    lines -= direction;
+                }
+            }
+
+            // Scroll 
+            if (lines != 0)
+                lbStandings.Invalidate();
+        }
+
+        /// <summary>
         /// Handles the MouseDown event of the lbStandings control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

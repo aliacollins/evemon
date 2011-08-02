@@ -75,9 +75,9 @@
             this.lbSkills.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbSkills_DrawItem);
             this.lbSkills.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.lbSkills_MeasureItem);
             this.lbSkills.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseDown);
-            this.lbSkills.MouseHover += new System.EventHandler(this.lbSkills_MouseHover);
             this.lbSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkills.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseWheel);
+            this.lbSkills.MouseHover += new System.EventHandler(this.lbSkills_MouseHover);
             // 
             // MainWindowSkillsList
             // 
